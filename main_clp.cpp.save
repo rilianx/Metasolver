@@ -1,0 +1,74 @@
+/*
+ * main_clp.cpp
+ *
+ *  Created on: 29 jun. 2017
+ *      Author: iaraya
+ */
+
+#include <iostream>
+//#include "objects/State.cpp"
+#include "clp/clpState.h"
+#include "clp/evaluators/VCS_Function.h"
+#include "clp/evaluators/VCS_Function.h"
+#include "metasolver/strategies/Greedy.h"
+#include "metasolver/strategies/BSGpath.h"
+#include "metasolver/strategies/DoubleEffort.h"
+#include "metasolver/GlobalVariables.h"
+
+bool global::TRACE = false;
+
+using namespace std;
+
+//State* new_state(string file, int instance);
+
+
+
+int main(int argc, char** argv){
+
+	string file=argv[1];
+	int inst=atoi(argv[2]);
+	double min_fr=atof(argv[3]);
+	int max_time=atoi(argv[4]);
+
+    double alpha=atof(argv[5]); //0.0 - 10.0
+    double beta=atof(argv[6]); //0.0 - 10.0
+    double gamma=atof(argv[7]); //0.0 - 1.0
+    double p=atof(argv[8]); //0.0 - 0.1
+    double delta=atof(argv[9]); //0.0 - 10.0
+    double r=atof(argv[10]);
+
+	srand(1);
+
+	clock_t begin_time=clock();
+
+    cout << "cargando la instancia..." << endl;
+	clpState& s0 = *new_state(file,inst, min_fr, 10000);
+    cout << "n_blocks:"<< s0.get_n_valid_blocks() << endl;
+
+    cout << "creando VCS " <<  endl;
+    ActionEvaluator* vcs = new VCS_Function(s0.nb_left_boxes, s0.cont, 
+    alpha, beta, gamma, p, delta, r);
+	cout << "creando Expander " <<  endl;
+	Expander* exp  = new ExpanderHF (*vcs);
+    cout << "creando el greedy" << endl;
+    SearchStrategy *gr = new Greedy (*exp);
+    cout << "creando el BSG" << endl;
+    BSG_path *bsg= new BSG_path(*gr, *exp, 4);
+    bsg->set_shuffle_best_path(true); 
+    cout << "creando DoubleEffort" << endl;
+    SearchStrategy *de= new DoubleEffort(*bsg);
+    cout << "copiando estado" << endl;
+	State& s_copy= *s0.copy(true);
+    cout << "corriendo el bsg" << endl;
+
+ 
+   // cout << s0.valid_blocks.size() << endl;
+
+	//cout << ((clpState*)de->get_best_state())->cont.blocks->size() << endl;
+	cout << 1-de->run(s_copy, max_time, begin_time) << endl;
+
+
+	//dynamic_cast<const clpState*>(bsg->get_best_state())->cont.MatLab_print();
+
+
+}
