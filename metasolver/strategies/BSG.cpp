@@ -5,12 +5,12 @@
  *      Author: iaraya
  */
 
-#include "BSGpath.h"
+#include "BSG.h"
 
 namespace clp {
 
 
-list<State*> BSG_path::next(list<State*>& S){
+list<State*> BSG::next(list<State*>& S){
     
      //no hay mas estados en el arbol
      if(S.size()==0) return S;
@@ -28,7 +28,9 @@ list<State*> BSG_path::next(list<State*>& S){
          
          //each level of the search tree should explore max_level_size nodes, thus...
          int w =  (double) max_level_size / (double) S.size() + 0.5;
-         expander.best_actions(state, w, best_actions);
+         state.get_best_actions(best_actions, w);
+
+         //expander.best_actions(state, w, best_actions);
 
 
          //the actions are evaluated and saved in the sorted map

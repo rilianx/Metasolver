@@ -20,7 +20,7 @@ namespace clp {
 
 
 
-void clpState::get_actions(list< Action* >& actions, int n){
+void clpState::get_actions(list< Action* >& actions){
 	list<const Block*>::iterator it;
 
     const Space* sp=NULL;
@@ -155,7 +155,7 @@ int clpState::shuffle_path() {
     return i;
 }
 
-clpState* new_state(string file, int i, double min_fr, int max_bl,bool fsb){
+clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 	Block::FSB=fsb;
 
 	ifstream in(file.c_str());

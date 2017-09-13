@@ -13,7 +13,7 @@ namespace clp {
 BlockSet* clpState_kd::blocks=NULL;
 
 
-void clpState_kd::get_actions(list< Action* >& actions, int n){
+int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 
 	list<const Block*>::iterator it;
 
@@ -37,6 +37,8 @@ void clpState_kd::get_actions(list< Action* >& actions, int n){
 
 
 	}
+
+	return actions.size();
 
 }
 

@@ -12,17 +12,17 @@
 #include <iostream>
 #include <list>
 
-#include "BSGpath.h"
+#include "BSG.h"
 
 using namespace std;
 
 namespace clp {
 
-class BSG_midBSG : public BSG_path {
+class BSG_midBSG : public BSG {
 public:
 
-	BSG_midBSG(SearchStrategy& greedy, Expander& expander, int beams, double p_elite=0.0,
-			int max_level_size=0) :	BSG_path(greedy, expander, beams, p_elite, max_level_size) { }
+	BSG_midBSG(SearchStrategy& greedy, int beams, double p_elite=0.0,
+			int max_level_size=0) :	BSG(greedy, beams, p_elite, max_level_size) { }
 
 
 	virtual ~BSG_midBSG() { }
@@ -37,7 +37,7 @@ public:
 
 		list<State*> S;
 
-		BSG_path::run(s,tl,bt);
+		BSG::run(s,tl,bt);
 
 	    map<double, pair<State*, State*> >::iterator state_action=state_actions.begin();
 
@@ -51,7 +51,7 @@ public:
         delete s0;
 
 		cout << "midBSG(" << S.size() << ")" << endl;
-		return BSG_path::run(S,tl,bt);
+		return BSG::run(S,tl,bt);
 
 
 	}
