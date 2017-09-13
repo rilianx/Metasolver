@@ -5,11 +5,10 @@
  *      Author: iaraya
  */
 
-#ifndef STRATEGIES_BSGPATH_H_
-#define STRATEGIES_BSGPATH_H_
+#ifndef STRATEGIES_BSG_H_
+#define STRATEGIES_BSG_H_
 
 #include "../SearchStrategy.h"
-#include "../Expander.h"
 
 namespace clp {
 
@@ -19,7 +18,7 @@ namespace clp {
  * Variante del beam search que utiliza una lista the best_path
  * para guiarse en la busqueda
  */
-class BSG_path : public SearchStrategy {
+class BSG : public SearchStrategy {
 public:
 	/**
 	 * Constructor
@@ -29,8 +28,8 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG_path(SearchStrategy& greedy, Expander& expander, int beams, double p_elite=0.0, int max_level_size=0) :
-		greedy(greedy), expander(expander), beams(beams),
+	BSG(SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
+		greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),  
 		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
 
@@ -92,7 +91,6 @@ protected:
 private:
 	
 	SearchStrategy& greedy;
-	Expander& expander;
 
 	/**
 	 * Number of beams
@@ -115,4 +113,4 @@ private:
 
 } /* namespace clp */
 
-#endif /* STRATEGIES_BSGPATH_H_ */
+#endif /* STRATEGIES_BSG_H_ */

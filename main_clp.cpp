@@ -15,9 +15,9 @@
 #include "clp/evaluators/VCS_Function.h"
 #include "clp/objects2/SpaceSet.h"
 #include "metasolver/strategies/Greedy.h"
-#include "metasolver/strategies/BSGpath.h"
 #include "metasolver/strategies/DoubleEffort.h"
 #include "metasolver/GlobalVariables.h"
+#include "metasolver/strategies/BSG.h"
 
 bool global::TRACE = false;
 
@@ -82,11 +82,9 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, s0->cont,
     alpha, beta, gamma, p, delta, r);
 
-	Expander* exp ;
 	if(!kdtree)
-		exp = new ExpanderHF (*vcs);
+		s0->set_evaluator(vcs);
 	else{
-		exp = new Expander ();
 		kd_block::set_vcs(*vcs);
 		kd_block::set_alpha(alpha);
 		kd_block::set_alpha(p);
@@ -96,9 +94,9 @@ int main(int argc, char** argv){
 	//	exp->best_action(*s0);
 
 
-    SearchStrategy *gr = new Greedy (*exp);
+    SearchStrategy *gr = new Greedy ();
 
-    BSG_path *bsg= new BSG_path(*gr, *exp, 4);
+    BSG *bsg= new BSG(*gr, 4);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);

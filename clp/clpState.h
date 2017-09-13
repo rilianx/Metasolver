@@ -64,7 +64,7 @@ public:
 		return ((double) cont.getOccupiedVolume()/(double) cont.getVolume());
 	}
 
-	virtual void get_actions(list< Action* >& actions, int n);
+	virtual void get_actions(list< Action* >& actions);
 
 	/*
 	* Rearranges the elements in the path pseudo-randomly

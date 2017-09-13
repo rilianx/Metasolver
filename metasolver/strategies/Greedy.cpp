@@ -12,7 +12,7 @@ namespace clp {
 list<State*> Greedy::next(list<State*>& S) {
 	State& s= **S.begin();
 
-	Action* action = expander.best_action(s);
+	Action* action = s.best_action();
 
 	if(action){
 		//std::cout << "selected box:" << action->block << endl;

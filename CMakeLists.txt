@@ -28,10 +28,8 @@ LINK_LIBRARIES(
 ADD_LIBRARY(
 bsg
 metasolver/GlobalVariables.cpp
-#metasolver/strategies/BSG.cpp
-metasolver/strategies/BSGpath.cpp
+metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp  
-metasolver/Expander.cpp 
 )
 
 ADD_LIBRARY(
@@ -45,7 +43,6 @@ clp/objects2/Block.cpp
 clp/objects2/BoxShape.cpp 
 clp/objects2/Space.cpp
 clp/objects2/SpaceSet.cpp
-#clp/objects2/RandSpaceSet.cpp
 clp/objects2/Block_fsb.cpp
 clp/clpState.cpp 
 )
@@ -55,7 +52,6 @@ clp_kdtree
 clp/plugins/kdtree/clpStatekd.cpp 
 clp/plugins/kdtree/kdNode.cpp 
 clp/plugins/kdtree/BlockSet.cpp 
-#clp/plugins/kdtree/Expanderkdtree.cpp
 )
 
 IF (WIN32)

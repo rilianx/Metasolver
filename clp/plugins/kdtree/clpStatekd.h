@@ -45,7 +45,15 @@ public:
 	}
 */
 
-	virtual void get_actions(list< Action* >& actions, int n);
+	//it is not required
+	virtual void get_actions(list< Action* >& actions) {
+		cout << "clpState_kd::get_actions has not been implemented";
+		exit(0);
+	}
+
+	virtual int get_best_actions(list< Action* >& actions, int n);
+
+
 
 friend class Expander_kdtree;
 private:
