@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 #include <iostream>
+#include <functional>
 
 
 
@@ -147,6 +148,8 @@ public:
 
 	list<const Action*>& get_path() const{ return path;}
 
+	ActionEvaluator* get_evaluator(){ return evl; }
+
 	virtual void print() {  }
 
 protected:
@@ -164,7 +167,14 @@ protected:
 };
 
 
+class MO_State : public State {
 
+	/**
+	 * The value of the second objective function
+	 */
+	virtual double get_value2() const = 0;
+
+};
 
 
 }

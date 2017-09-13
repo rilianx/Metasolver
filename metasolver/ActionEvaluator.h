@@ -26,7 +26,7 @@ class ActionEvaluator {
 public:
 	ActionEvaluator(double r) : r(r) { };
 
-	virtual ~ActionEvaluator() { };
+	virtual ~ActionEvaluator() { }
 
 	virtual double eval_action_rand(const State& s, const Action& a){
 		double eval=eval_action(s, a);
@@ -40,6 +40,24 @@ public:
 	double r;
 
 };
+
+class MO_ActionEvaluator : public ActionEvaluator{
+public:
+	MO_ActionEvaluator(double r) : ActionEvaluator (r), alpha (1.0) { }
+
+	virtual ~MO_ActionEvaluator(){ }
+
+	//set the value of alpha
+	virtual void set_alpha(double a){
+		alpha = a;
+	}
+
+protected:
+	double alpha;
+
+};
+
+
 }
 
 #endif /* HEURISTIC_FUNCTION_H_ */

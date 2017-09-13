@@ -88,8 +88,6 @@ public:
 protected:
 	map<double, pair<State*, State*> > state_actions;
 
-private:
-	
 	SearchStrategy& greedy;
 
 	/**
@@ -104,8 +102,6 @@ private:
 
 	double p_elite;
 	int n_elite;
-
-	
 
 	bool shuffle_best_path;
 
