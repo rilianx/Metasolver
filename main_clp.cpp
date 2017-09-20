@@ -26,28 +26,6 @@ using namespace std;
 //State* new_state(string file, int instance);
 
 
-
-int best_cut(clpState* s){
-
-	long cut=0;
-	set<int> promising_cuts;
-	//se recorre la lista de bloques del contenedor
-	//y se obtienen todos los cortes
-	const AABB* b=&s->cont.blocks->top();
-	while(b){
-		promising_cuts.insert(b->getXmin());
-		promising_cuts.insert(b->getXmax());
-		if(s->cont.blocks->has_next())
-			b=&s->cont.blocks->next();
-		else b=NULL;
-	}
-
-    list<const AABB*> blocks = s->cont.blocks->get_bisected_objects(cut);
-
-	return 0;
-}
-
-
 int main(int argc, char** argv){
 
 	string file=argv[1];

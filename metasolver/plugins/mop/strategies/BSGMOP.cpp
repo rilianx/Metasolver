@@ -18,6 +18,15 @@ BSG_MOP::~BSG_MOP() {
 
 
 
+void BSG_MOP::select_coeff(list<float>& coeff, int n){
+   double coeficiente=100.0/(double) n;
+   coeff.push_back(0);
+
+   for(int i=1;i<=n;i++){
+     coeff.push_back((double)(coeficiente*i)/ 100.0);
+   }
+}
+
 list<State*> BSG_MOP::next(list<State*>& S){
 
     //no hay mas estados en el arbol
@@ -32,7 +41,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //se genera la lista de coeficientes que ponderan las funciones objetivo
         //max alpha*f1 + (1-alpha)*f2
-        list<double> alpha_v = select_coeff(state, NDS, w2);
+        list<double> alpha_v = select_coeff(state, w2);
 
         list < pair < Action*, double > > action_alpha;
 
