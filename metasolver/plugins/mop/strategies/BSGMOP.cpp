@@ -10,10 +10,7 @@
 
 namespace clp {
 
-BSG_MOP::BSG_MOP() {
-	// TODO Auto-generated constructor stub
 
-}
 
 BSG_MOP::~BSG_MOP() {
 	// TODO Auto-generated destructor stub
