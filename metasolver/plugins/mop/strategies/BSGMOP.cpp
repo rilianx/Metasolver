@@ -41,7 +41,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //se genera la lista de coeficientes que ponderan las funciones objetivo
         //max alpha*f1 + (1-alpha)*f2
-        list<double> alpha_v = select_coeff(state, w2);
+        list<double> alpha_v = select_coeff(state, n);
 
         list < pair < Action*, double > > action_alpha;
 

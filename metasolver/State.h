@@ -169,6 +169,7 @@ protected:
 
 class MO_State : public State {
 
+public:
 	/**
 	 * The value of the second objective function
 	 */
