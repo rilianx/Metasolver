@@ -48,7 +48,7 @@ public:
 	Block(long l, long w, long h);
 
 	Block(long l, long w, long h, bool fake) : Volume(l,w,h), n_boxes(1),
-			spaces(NULL), blocks(NULL)  {
+			spaces(NULL), blocks(NULL), total_weight(0.0)  {
 
 		occupied_volume = getVolume();
 	}
@@ -56,7 +56,7 @@ public:
 	/**
 	 * Constructs a single-box block
 	 */
-	Block(const BoxShape & b, BoxShape::Orientation o);
+	Block(const BoxShape & b, BoxShape::Orientation o, double weight=0.0);
 
 	virtual ~Block();
 
@@ -72,6 +72,8 @@ public:
     virtual void insert(const Block& b, const Vector3& p, const Vector3 min_dim=Vector3(0,0,0));
 
     virtual long getOccupiedVolume() const {return occupied_volume;}
+
+    virtual long getTotalWeight() const {return total_weight;}
 
 	bool verify_solution();
 
@@ -131,6 +133,8 @@ protected:
     }
 
 	long occupied_volume;
+
+	double total_weight;
 
 	static set<const Block*, block_order> all_blocks;
 

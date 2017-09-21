@@ -17,13 +17,13 @@ namespace clp {
 bool Block::FSB=false;
 set<const Block*, block_order> Block::all_blocks;
 
-Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), n_boxes(0),
+Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), total_weight(0.0), n_boxes(0),
 		spaces(new SpaceSet(*this)), blocks(new AABBList()) {
 	spaces->insert(Space (*this));
 }
 
-Block::Block(const BoxShape& box, BoxShape::Orientation o) :
-		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(box.getVolume()),
+Block::Block(const BoxShape& box, BoxShape::Orientation o, double weight) :
+		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(box.getVolume()), total_weight(weight),
 		n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	nb_boxes[&box]=1;
@@ -51,6 +51,7 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 
     //Se actualiza el volumen ocupado
     occupied_volume += block.getOccupiedVolume();
+    total_weight += block.getTotalWeight();
 
 	AABB b(point, &block);
 
