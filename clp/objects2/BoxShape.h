@@ -37,9 +37,13 @@ public:
     }
 
 
+    double get_weight() const { return weight; }
+
 private:
 	int id;
 	bool is_valid_orientation[6];
+
+	double weight;
 
 };
 

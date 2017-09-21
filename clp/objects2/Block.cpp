@@ -22,9 +22,9 @@ Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), total_w
 	spaces->insert(Space (*this));
 }
 
-Block::Block(const BoxShape& box, BoxShape::Orientation o, double weight) :
-		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(box.getVolume()), total_weight(weight),
-		n_boxes(1), spaces(NULL), blocks(NULL) {
+Block::Block(const BoxShape& box, BoxShape::Orientation o) :
+		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(box.getVolume()),
+		total_weight(box.get_weight()), n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	nb_boxes[&box]=1;
 };

@@ -56,7 +56,7 @@ public:
 	/**
 	 * Constructs a single-box block
 	 */
-	Block(const BoxShape & b, BoxShape::Orientation o, double weight=0.0);
+	Block(const BoxShape & b, BoxShape::Orientation o);
 
 	virtual ~Block();
 
