@@ -45,12 +45,6 @@ public:
 
     static bool left;
 
-	clpState(const clpState& S, bool root) : State(S,root),
-	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim){
-
-	}
-
 	virtual State* copy(bool root=false) const{
 		State* st=new clpState(*this, root);
 		return st;
@@ -84,6 +78,13 @@ public:
 	}
 
 protected:
+
+	clpState(const clpState& S, bool root) : State(S,root),
+	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
+	valid_blocks(S.valid_blocks), mindim(S.mindim){
+
+	}
+
 	virtual void _transition(const Action& action);
 
 private:

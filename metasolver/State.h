@@ -45,12 +45,6 @@ public:
 
 	State() : parent (NULL), root(false), evl(NULL) {}
 
-	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
-		list<const Action*>::iterator it=S.get_path().begin();
-		for(;it!=S.path.end();it++)
-			path.push_back((*it)->clone());
-	}
-
 	virtual State* copy(bool root=false) const = 0;
 
 	virtual void set_evaluator(ActionEvaluator* _evl){
@@ -153,6 +147,13 @@ public:
 	virtual void print() {  }
 
 protected:
+
+	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
+		list<const Action*>::iterator it=S.get_path().begin();
+		for(;it!=S.path.end();it++)
+			path.push_back((*it)->clone());
+	}
+
 
 	virtual void _transition(const Action& action) = 0;
 

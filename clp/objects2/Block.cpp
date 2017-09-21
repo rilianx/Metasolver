@@ -17,9 +17,6 @@ namespace clp {
 bool Block::FSB=false;
 set<const Block*, block_order> Block::all_blocks;
 
-Block::Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()), occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
-		spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)) {	}
-
 Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), n_boxes(0),
 		spaces(new SpaceSet(*this)), blocks(new AABBList()) {
 	spaces->insert(Space (*this));
