@@ -60,9 +60,6 @@ public:
 
 	virtual ~Block();
 
-
-	Block(const Block& b);
-
 	static Block* create_block(const BoxShape & b, BoxShape::Orientation o, bool fsb);
 
 	/**
