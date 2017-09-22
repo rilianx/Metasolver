@@ -53,6 +53,10 @@ public:
 		occupied_volume = getVolume();
 	}
 
+	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
+		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
+	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)) {	}
+
 	/**
 	 * Constructs a single-box block
 	 */
