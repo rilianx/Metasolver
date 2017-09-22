@@ -73,7 +73,7 @@ public:
 
     virtual long getOccupiedVolume() const {return occupied_volume;}
 
-    virtual long getTotalWeight() const {return total_weight;}
+    virtual double getTotalWeight() const {return total_weight;}
 
 	bool verify_solution();
 

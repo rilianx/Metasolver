@@ -29,7 +29,7 @@ public:
 class MO_Greedy : public Greedy {
 public:
 
-	virtual pair<double, double> run(MO_State& s, double tl=99999.9, clock_t bt=clock()){
+	virtual pair<double, double> MO_run(State& s, double tl=99999.9, clock_t bt=clock()){
 		Greedy::run(s, tl, bt);
 
 		return make_pair(s.get_value(), s.get_value2());

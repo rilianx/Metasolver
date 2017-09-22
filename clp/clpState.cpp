@@ -18,8 +18,6 @@ using namespace std;
 namespace clp {
 
 
-
-
 void clpState::get_actions(list< Action* >& actions){
 	list<const Block*>::iterator it;
 
@@ -153,6 +151,16 @@ int clpState::shuffle_path() {
     left= !left;
 
     return i;
+}
+
+long rand(long seed)
+{
+  long a = 1103515245;
+  long m = 2<<32;
+  long c = 12345;
+
+  seed = (a * seed + c) % m;
+  return seed;
 }
 
 clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
