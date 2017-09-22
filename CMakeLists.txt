@@ -30,6 +30,7 @@ bsg
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp  
+metasolver/plugins/mop/strategies/BSGMOP.cpp
 )
 
 ADD_LIBRARY(

@@ -11,10 +11,10 @@
 #include <list>
 #include "../../../SearchStrategy.h"
 
-
+using namespace std;
 namespace clp {
 
-class BSG_MOP : public BSG{
+class BSG_MOP : public BSG {
 public:
 	/**
 	 * Constructor
@@ -44,7 +44,7 @@ private:
 
 	//evaluador de acciones con parametro alpha
 	MO_ActionEvaluator& evl;
-
+	void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2);
 	void select_coeff(list<double>& coeff, int n);
 };
 

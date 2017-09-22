@@ -19,8 +19,26 @@ BSG_MOP::~BSG_MOP() {
 
 
 
-void BSG_MOP::update(list<State*>& NDS, State& state_copy, value){
-    state_copy.get_value
+void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2){
+    //buscar si domina algun
+    int flag=0;//la bandera se mantiene en cero si no domina a ningun estado
+    for(auto NDstate : NDS){
+      if(NDstate.get_value()<valuef1 && NDstate.get_value2()<valuef2){
+        NDS.erase(NDstate);
+        flag=1;
+      }
+      if(NDstate.get_value()==valuef1 && NDstate.get_value2()<=valuef2){
+        NDS.erase(NDstate);
+        flag=1;
+      }
+      if(NDstate.get_value()<=valuef1 && NDstate.get_value2()==valuef2){
+        NDS.erase(NDstate);
+        flag=1;
+      }
+
+    }
+    if(flag==1)NDS.insert(state_copy);
+
 }
 
 void BSG_MOP::select_coeff(list<double>& coeff, int n){
@@ -36,7 +54,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
-    int n=10//aun no se de donde lo obtendremos
+    int n=10;//aun no se de donde lo obtendremos
     //se expanden los nodos de la lista S
     int i=0;
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
@@ -46,8 +64,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //se genera la lista de coeficientes que ponderan las funciones objetivo
         //max alpha*f1 + (1-alpha)*f2
-        list<double> alpha_v
-        select_coeff(alpha_v, n);
+        list<double> alpha_v;
+        BSG_MOP::select_coeff(alpha_v, n);
 
         list < pair < Action*, double > > action_alpha;
 
