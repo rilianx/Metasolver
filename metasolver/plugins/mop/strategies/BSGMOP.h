@@ -10,6 +10,7 @@
 
 #include <list>
 #include "../../../SearchStrategy.h"
+#include "../../../strategies/BSG.h"
 
 using namespace std;
 namespace clp {
@@ -44,7 +45,7 @@ private:
 
 	//evaluador de acciones con parametro alpha
 	MO_ActionEvaluator& evl;
-	void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2);
+	void update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2);
 	void select_coeff(list<double>& coeff, int n);
 };
 

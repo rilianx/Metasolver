@@ -23,10 +23,10 @@ void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, doubl
     //buscar si domina algun
 
     list<State*>::iterator it;
-    for(it=NDS.begin(); it!=NDS.end(); it++){
-      if(*it->get_value()<=valuef1 && *it->get_value2()<=valuef2){
-        NDS->erase(*it);
-      }
+    for(it=NDS.begin(); it!=NDS.end(); ){
+      if((*it)->get_value()<=valuef1 && (*it)->get_value2()<=valuef2)
+        it=NDS.erase(it);
+      else it++;
     }
 
     int flag=1;//la bandera se mantiene en cero si no domina a ningun estado
@@ -95,21 +95,23 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	delete a_a.first;
 
         	evl.set_alpha(a_a.second);
-        	pair<double, double> value = greedy.run(state_copy, timelimit, begin_time);
+        	greedy.run(state_copy, timelimit, begin_time);
+
+        	pair<double, double> value = make_pair(state_copy.get_value(), state_copy.get_value2());
 
         	//si state_copy es solucion no dominada se agrega a NDS
-        	update(NDS, state_copy.copy(), value.first,value.second);
+        	update(NDS, *state_copy.copy(), value.first,value.second);
 
 
+        	/*
             if(sorted_states.find(value)==state_actions.end())
            	 state_actions[value]= make_pair(&state, &state_copy);
             else delete &state_copy;
+            */
 
         }
 
-
-
-
+    }
 }
 
 } /* namespace clp */
