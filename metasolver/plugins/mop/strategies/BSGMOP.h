@@ -45,7 +45,7 @@ private:
 	//evaluador de acciones con parametro alpha
 	MO_ActionEvaluator& evl;
 
-	void select_coeff(list<float>& coeff, int n);
+	void select_coeff(list<double>& coeff, int n);
 };
 
 } /* namespace clp */

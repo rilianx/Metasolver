@@ -18,7 +18,12 @@ BSG_MOP::~BSG_MOP() {
 
 
 
-void BSG_MOP::select_coeff(list<float>& coeff, int n){
+
+void BSG_MOP::update(list<State*>& NDS, State& state_copy, value){
+    state_copy.get_value
+}
+
+void BSG_MOP::select_coeff(list<double>& coeff, int n){
    double coeficiente=100.0/(double) n;
    coeff.push_back(0);
 
@@ -31,7 +36,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
-
+    int n=10//aun no se de donde lo obtendremos
     //se expanden los nodos de la lista S
     int i=0;
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
@@ -41,7 +46,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //se genera la lista de coeficientes que ponderan las funciones objetivo
         //max alpha*f1 + (1-alpha)*f2
-        list<double> alpha_v = select_coeff(state, n);
+        list<double> alpha_v
+        select_coeff(alpha_v, n);
 
         list < pair < Action*, double > > action_alpha;
 
@@ -49,7 +55,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         for(auto alpha : alpha_v){
 
             //each level of the search tree should explore max_level_size nodes, thus...
-            int w =  (double) max_level_size / (double) S.size() + 0.5;
+          int w =  (double) max_level_size / (double) S.size() + 0.5;
 
         	list< Action* > best_actions;
         	evl.set_alpha(alpha);
@@ -72,7 +78,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	pair<double, double> value = greedy.run(state_copy, timelimit, begin_time);
 
         	//si state_copy es solucion no dominada se agrega a NDS
-        	update(NDS, state_copy.copy(), value);
+        	update(NDS, state_copy.copy(), value.first,value.second);
 
 
             if(sorted_states.find(value)==state_actions.end())
