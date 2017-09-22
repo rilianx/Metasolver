@@ -85,7 +85,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         		action_alpha.push_back(make_pair(action,alpha));
         }
 
-        //estados ordenados por (f1,f2)
+        //TODO: ordenar por dominancia + distance crowding
         map< pair<double, double>, pair<State*, State*> > sorted_states;
 
         //Actions are evaluated using the greedy algorithm
@@ -101,6 +101,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         	//si state_copy es solucion no dominada se agrega a NDS
         	update(NDS, *state_copy.copy(), value.first,value.second);
+
 
 
         	/*
