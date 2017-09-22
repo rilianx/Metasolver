@@ -51,6 +51,12 @@ public:
 		evl=_evl;
 	}
 
+	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
+		list<const Action*>::iterator it=S.get_path().begin();
+		for(;it!=S.path.end();it++)
+			path.push_back((*it)->clone());
+	}
+
 	virtual State* create_neighbor(State* s0){
 		return NULL;
 	}
@@ -66,6 +72,11 @@ public:
 	 * The value of the objective function
 	 */
 	virtual double get_value() const = 0;
+
+	/**
+	 * The value of the second objective function
+	 */
+	virtual double get_value2() const { return 0.0; }
 
 	void transition(const Action& action) {
 		path.push_back(action.clone());
@@ -148,13 +159,6 @@ public:
 
 protected:
 
-	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
-		list<const Action*>::iterator it=S.get_path().begin();
-		for(;it!=S.path.end();it++)
-			path.push_back((*it)->clone());
-	}
-
-
 	virtual void _transition(const Action& action) = 0;
 
 	const State* parent;
@@ -164,17 +168,6 @@ protected:
 	mutable list<const Action*> path;
 
 	ActionEvaluator* evl;
-
-};
-
-
-class MO_State : public State {
-
-public:
-	/**
-	 * The value of the second objective function
-	 */
-	virtual double get_value2() const = 0;
 
 };
 

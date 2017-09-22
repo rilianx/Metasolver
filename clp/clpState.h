@@ -45,6 +45,12 @@ public:
 
     static bool left;
 
+	clpState(const clpState& S, bool root) : State(S,root),
+	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
+	valid_blocks(S.valid_blocks), mindim(S.mindim){
+
+	}
+
 	virtual State* copy(bool root=false) const{
 		State* st=new clpState(*this, root);
 		return st;
@@ -57,6 +63,12 @@ public:
 	virtual double get_value() const{
 		return ((double) cont.getOccupiedVolume()/(double) cont.getVolume());
 	}
+
+	virtual double get_value2() const{
+		return 0.0;
+		//return cont.getTotalWeight() / weight_of_allboxes;
+	}
+
 
 	virtual void get_actions(list< Action* >& actions);
 
@@ -78,12 +90,6 @@ public:
 	}
 
 protected:
-
-	clpState(const clpState& S, bool root) : State(S,root),
-	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim){
-
-	}
 
 	virtual void _transition(const Action& action);
 

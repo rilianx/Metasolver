@@ -86,7 +86,7 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	global::n_eval=0;
-    double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << global::n_eval << endl;
 	cout << eval << endl;
 /*

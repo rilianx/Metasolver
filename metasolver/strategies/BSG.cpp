@@ -30,19 +30,21 @@ list<State*> BSG::next(list<State*>& S){
          int w =  (double) max_level_size / (double) S.size() + 0.5;
          state.get_best_actions(best_actions, w);
 
-         //expander.best_actions(state, w, best_actions);
 
 
          //the actions are evaluated and saved in the sorted map
          list< Action* >::iterator it = best_actions.begin();
+
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
 
         	 State& state_copy = *state.copy();
+        	 cout << 1 << endl;
         	 state_copy.transition(**it);
-        	// cout << state_copy.get_value() << endl;
+        	 cout << 2 << endl;
         	 delete *it;
 
              double value = greedy.run(state_copy, timelimit, begin_time);
+
 
             //best_state update
              if(value > get_best_value()){
@@ -52,9 +54,11 @@ list<State*> BSG::next(list<State*>& S){
             			 << best_state->get_path().size() << " nodes" << endl;
              }
 
+
              if(state_actions.find(-value)==state_actions.end())
             	 state_actions[-value]= make_pair(&state, &state_copy);
              else delete &state_copy;
+
          }
      }
      

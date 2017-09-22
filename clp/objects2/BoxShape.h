@@ -17,7 +17,7 @@ public:
 	enum Orientation{LWH=0, LHW, WLH, WHL, HLW, HWL, OR};
 
 
-	BoxShape(int id, long l, long w, long h, bool rot1=true, bool rot2=true, bool rot3=true);
+	BoxShape(int id, long l, long w, long h, bool rot1=true, bool rot2=true, bool rot3=true, double weight=1.0);
 
 	bool is_valid(Orientation o) const {return is_valid_orientation[o];}
 
