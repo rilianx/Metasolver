@@ -22,10 +22,10 @@ BSG_MOP::~BSG_MOP() {
 void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2){
     //buscar si domina algun
 
-
-    for(auto NDstate : NDS){
-      if(NDstate->get_value()<=valuef1 && NDstate->get_value2()<=valuef2){
-        NDS->erase(NDstate);
+    list<State*>::iterator it;
+    for(it=NDS.begin(); it!=NDS.end(); it++){
+      if(*it->get_value()<=valuef1 && *it->get_value2()<=valuef2){
+        NDS->erase(*it);
       }
     }
 
