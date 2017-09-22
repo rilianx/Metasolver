@@ -21,23 +21,25 @@ BSG_MOP::~BSG_MOP() {
 
 void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, double valuef2){
     //buscar si domina algun
-    int flag=0;//la bandera se mantiene en cero si no domina a ningun estado
-    for(auto NDstate : NDS){
-      if(NDstate.get_value()<valuef1 && NDstate.get_value2()<valuef2){
-        NDS.erase(NDstate);
-        flag=1;
-      }
-      if(NDstate.get_value()==valuef1 && NDstate.get_value2()<=valuef2){
-        NDS.erase(NDstate);
-        flag=1;
-      }
-      if(NDstate.get_value()<=valuef1 && NDstate.get_value2()==valuef2){
-        NDS.erase(NDstate);
-        flag=1;
-      }
 
+
+    for(auto NDstate : NDS){
+      if(NDstate->get_value()<=valuef1 && NDstate->get_value2()<=valuef2){
+        NDS->erase(NDstate);
+      }
     }
-    if(flag==1)NDS.insert(state_copy);
+
+    int flag=1;//la bandera se mantiene en cero si no domina a ningun estado
+    for(auto NDstate : NDS){
+        // nuevo estado es dominado por un estado existente
+    	if(NDstate->get_value()>=valuef1 && NDstate->get_value2()>=valuef2){
+        flag=0; break;
+      }
+    }
+
+    if(flag==1)NDS.push_back(&state_copy);
+
+
 
 }
 
