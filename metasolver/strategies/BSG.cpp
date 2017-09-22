@@ -38,9 +38,7 @@ list<State*> BSG::next(list<State*>& S){
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
 
         	 State& state_copy = *state.copy();
-        	 cout << 1 << endl;
         	 state_copy.transition(**it);
-        	 cout << 2 << endl;
         	 delete *it;
 
              double value = greedy.run(state_copy, timelimit, begin_time);
