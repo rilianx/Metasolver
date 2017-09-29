@@ -60,9 +60,7 @@ void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list
 
 //la segunda frontera es formada por los elementos restantes(es decir la lista d estados menos lo elementos de la primera frontera), donde al n presente se le resta 1.
 //los elementos que la forman  son aquellos que tienen n=0
-void BSG_MOP::crowdingDistance(map< pair<double, double>, pair<State*, State*> > sorted_states){
 
-}
 
 void BSG_MOP::select_coeff(list<double>& coeff, int n){
    double coeficiente=100.0/(double) n;

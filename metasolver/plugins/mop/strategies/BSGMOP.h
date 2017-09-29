@@ -38,6 +38,8 @@ public:
 	 */
 	virtual list<State*> next(list<State*>& S)=0 ;
 
+	void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
+
 private:
 
 	//conjunto de soluciones no dominadas
