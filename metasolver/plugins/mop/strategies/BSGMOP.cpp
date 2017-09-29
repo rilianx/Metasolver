@@ -43,8 +43,17 @@ void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, doubl
 
 
 }
-void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> > sorted_list){
+void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list){
+  //lista de dominancia por State
+  list<int> dominancia(sorted_list.size());
+  //iteradores
+  list< pair<State*,State*> >::iterator it_sortList;
+  list<int>::iterator it_dom;
 
+  //crearemos las fronteras hasta que llegemos al n
+  for(it_sortList=sorted_list.begin(), it_dom=dominancia.begin(); it_sortList!=sorted_list.end();){
+
+  }
 
 }
 //la primera frontera se encuentra formada por todos los estados que no se encuentras dominados, es decir n=0;donde n se obtiene al contar la cantidad de stados que dominan al estados
