@@ -50,9 +50,17 @@ void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list
   list< pair<State*,State*> >::iterator it_sortList;
   list<int>::iterator it_dom;
 
-  //crearemos las fronteras hasta que llegemos al n
-  for(it_sortList=sorted_list.begin(), it_dom=dominancia.begin(); it_sortList!=sorted_list.end();){
 
+  //crearemos las fronteras hasta que llegemos al n
+  for(int i=0;i<=N){
+	  for(it_sortList=sorted_list.begin(), it_dom=dominancia.begin(); it_sortList!=sorted_list.end();){
+		  //por elemento revisamos si tiene dominancia
+		  //(*it_sortList).second
+			for(it_sortList=sorted_list.begin()){
+
+			}
+
+	  }
   }
 
 }
