@@ -166,19 +166,24 @@ long rand(long seed)
 
 double clpState::weight_of_allboxes=0.0;
 
-clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
+
+clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb, int f){
 	Block::FSB=fsb;
 
 	ifstream in(file.c_str());
 	string line;
-	getline(in,line); //number of instances
+	if(f==clpState::BR)
+		getline(in,line); //number of instances
 
 	clpState *s=NULL;
 
 	for(int inst=0;inst<=i; inst++){
 
 		string line;
-		getline(in, line ); //n_inst best_sol?
+
+		if(f==clpState::BR)
+			getline(in, line ); //n_inst best_sol?
+
 		getline(in, line); //L W H
 
 
@@ -187,9 +192,19 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 			long l,w,h;
 			ss >> l >> w >> h;
 			s= new clpState(l,w,h);
+			cout << l << "," << w << "," << h << endl;
+			cout << "Vmax:" << l*w*h << endl;
 		}
 
-		getline(in, line);
+		if(f==clpState::_1C){
+			getline(in, line );
+			std::stringstream ss1(line);
+			ss1 >> clpState::weight_of_allboxes ;
+		}
+
+
+		getline(in, line); //types of boxes
+
 		std::stringstream ss0(line);
 		int nb_types;
 		ss0 >> nb_types;
@@ -199,20 +214,35 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 		//y restricciones de rotación
 		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
 
+		//clpState::weight_of_allboxes=0.0;
 
 		for(int j=0;j<nb_types;j++){
 			getline(in, line );
 
 			int n, id;
 			long l,h,w;
+			double weight = 1.0;
 			bool rot1, rot2, rot3;
 			std::stringstream ss1(line);
-			ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
+
+			if(f==clpState::BR)
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
+			else if(f==clpState::_1C){
+				double ll,hh,ww;
+				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
+				l = ceil(ll);
+				w = ceil(ww);
+				h = ceil(hh);
+			}
+
+
 
 			if(inst==i){
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3);
+				//cout << *boxt << endl;
+				//cout << weight << " x " << n <<  endl;
+				if (f==clpState::BR) clpState::weight_of_allboxes += weight*(double) n;
 
-				clpState::weight_of_allboxes += boxt->get_weight()*(double) n;
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o))
@@ -220,7 +250,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 				}
 
 			}
+
 		}
+		cout << "Wmax:" << clpState::weight_of_allboxes << endl;
 	}
 
 	s->general_block_generator(min_fr, max_bl, s->cont);

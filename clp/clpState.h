@@ -45,6 +45,8 @@ public:
 
     static bool left;
 
+    enum Format{BR, _1C};
+
 	clpState(const clpState& S, bool root) : State(S,root),
 	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
 	valid_blocks(S.valid_blocks), mindim(S.mindim){
@@ -58,7 +60,7 @@ public:
 
 	virtual State* create_neighbor(State* s0);
 
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl,bool fsb);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl,bool fsb, int f);
 
 	virtual double get_value() const{
 		return ((double) cont.getOccupiedVolume()/(double) cont.getVolume());
@@ -142,7 +144,7 @@ private:
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000,bool fsb=false);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000,bool fsb=false, int i=clpState::BR);
 
 } /* namespace clp */
 

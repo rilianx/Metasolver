@@ -45,7 +45,7 @@ int main(int argc, char** argv){
     cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
-    clpState* s0 = new_state(file,inst, min_fr, 10000);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, false, clpState::BR);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 
     SearchStrategy *gr = new Greedy ();
 
-    BSG *bsg= new BSG_MOP(*gr, 4);
+    BSG_MOP *bsg= new BSG_MOP(*gr, 4);
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
@@ -68,7 +68,11 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
     double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
-	cout << eval << endl;
+
+    auto pareto = bsg->get_pareto_front();
+    for(auto point : pareto){
+    	cout << point.first.first << "," << point.first.second << endl;
+    }
 /*
  *
 	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();

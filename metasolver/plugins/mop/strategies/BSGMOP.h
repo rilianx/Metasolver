@@ -55,6 +55,10 @@ public:
 	 */
 	virtual list<State*> next(list<State*>& S);
 
+	map< pair<double, double>, State*, nd_sort> get_pareto_front(){
+		return NDS;
+	}
+
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
 private:

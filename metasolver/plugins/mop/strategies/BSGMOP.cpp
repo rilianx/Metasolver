@@ -24,17 +24,21 @@ bool BSG_MOP::update(map< pair<double, double>, State*, nd_sort>& NDS, State& st
 
 	map< pair<double, double>, State*, nd_sort>::iterator it;
     for(it=NDS.begin(); it!=NDS.end(); ){
-      if((*it).first.first<=valuef1 && (*it).first.second<=valuef2)
+      if((*it).first.first<valuef1 && (*it).first.second<=valuef2)
+          it=NDS.erase(it);
+      else if((*it).first.first<=valuef1 && (*it).first.second<valuef2)
         it=NDS.erase(it);
+
+
       else it++;
     }
 
     int flag=1;//la bandera se mantiene en cero si no domina a ningun estado
     for(auto NDstate : NDS){
         // nuevo estado es dominado por un estado existente
-    	if(NDstate.first.first>=valuef1 && NDstate.first.second>=valuef2){
-        flag=0; break;
-      }
+       if(NDstate.first.first>=valuef1 && NDstate.first.second>=valuef2){
+         flag=0; break;
+       }
     }
 
     if(flag==1) {
