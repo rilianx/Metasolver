@@ -41,7 +41,37 @@ void BSG_MOP::update(list<State*>& NDS, State& state_copy, double valuef1, doubl
 
 
 
+
 }
+
+/*
+void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list){
+  //lista de dominancia por State
+  list<int> dominancia(sorted_list.size());
+  //iteradores
+  list< pair<State*,State*> >::iterator it_sortList;
+  list<int>::iterator it_dom;
+
+
+  //crearemos las fronteras hasta que llegemos al n
+  for(int i=0;i<=N){
+	  for(it_sortList=sorted_list.begin(), it_dom=dominancia.begin(); it_sortList!=sorted_list.end();){
+		  //por elemento revisamos si tiene dominancia
+		  //(*it_sortList).second
+			for(it_sortList=sorted_list.begin()){
+
+			}
+
+	  }
+  }
+}*/
+
+
+//la primera frontera se encuentra formada por todos los estados que no se encuentras dominados, es decir n=0;donde n se obtiene al contar la cantidad de stados que dominan al estados
+
+//la segunda frontera es formada por los elementos restantes(es decir la lista d estados menos lo elementos de la primera frontera), donde al n presente se le resta 1.
+//los elementos que la forman  son aquellos que tienen n=0
+
 
 void BSG_MOP::select_coeff(list<double>& coeff, int n){
    double coeficiente=100.0/(double) n;
@@ -88,6 +118,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //nd_sort ordena por dominancia
         map< pair<double, double>, pair<State*, State*>, nd_sort > sorted_states;
+
 
         //Actions are evaluated using the greedy algorithm
         for(auto a_a : action_alpha){
