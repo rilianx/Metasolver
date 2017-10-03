@@ -150,7 +150,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	bool bbb = update(NDS, *state_copy.copy(), value.first,value.second);
         	if(bbb){
         		cout << "new best solution found: (" << value.first << "," << value.second << ")" << endl;
-        		cout << "NDS size:" << NDS.size() << endl;
+        		//cout << "NDS size:" << NDS.size() << endl;
         	}
 
             if(sorted_states.find(value)==sorted_states.end())

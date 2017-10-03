@@ -69,6 +69,7 @@ int main(int argc, char** argv){
 
     double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
 
+    cout << "pareto_front" << endl;
     auto pareto = bsg->get_pareto_front();
     for(auto point : pareto){
     	cout << point.first.first << "," << point.first.second << endl;
