@@ -52,9 +52,9 @@ int main(int argc, char** argv){
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, s0->cont,
-    alpha, beta, gamma, p, delta, r);
+    alpha, beta, gamma, p, delta);
 
-    MO_clpBasicEvaluator evl(*vcs);
+    MO_clpBasicEvaluator evl(*vcs, r);
 	s0->set_evaluator(&evl);
 
     SearchStrategy *gr = new Greedy ();
@@ -67,7 +67,7 @@ int main(int argc, char** argv){
  
    // cout << s0.valid_blocks.size() << endl;
 
-    double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, max_time, begin_time) ;
 
     cout << "pareto_front" << endl;
     auto pareto = bsg->get_pareto_front();

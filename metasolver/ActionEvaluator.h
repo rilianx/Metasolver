@@ -29,6 +29,7 @@ public:
 	virtual ~ActionEvaluator() { }
 
 	virtual double eval_action_rand(const State& s, const Action& a){
+
 		double eval=eval_action(s, a);
 		double ran=(r>0.0)? ((double) rand() / (double) RAND_MAX) : 1.0;
 		return (eval * pow(ran, r));

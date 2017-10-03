@@ -84,10 +84,11 @@ void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list
 
 void BSG_MOP::select_coeff(list<double>& coeff, int n){
    double coeficiente=100.0/(double) n;
-   coeff.push_back(0);
+   //coeff.push_back(0);
 
    for(int i=1;i<=n;i++){
-     coeff.push_back((double)(coeficiente*i)/ 100.0);
+	   coeff.push_back(1.0);
+     // coeff.push_back((double)(coeficiente*i)/ 100.0);
    }
 }
 
@@ -118,7 +119,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         for(auto alpha : alpha_v){
 
             //each level of the search tree should explore max_level_size nodes, thus...
-          int w =  (double) max_level_size / (double) S.size() + 0.5;
+            int w =  (double) max_level_size / (double) S.size() + 0.5;
 
         	list< Action* > best_actions;
         	dynamic_cast<MO_ActionEvaluator*>(state.get_evaluator())->set_alpha(alpha);
@@ -162,8 +163,44 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
     }
 
-    //TODO: ordenar por distance crowding
-    return get_next_states(sorted_states);
+	list<State*> nextS;
+	map< pair<double, double>, pair<State*, State*>, nd_sort > ::iterator state_action=sorted_states.begin();
+
+	//par que marca el final de las soluciones no dominadas
+	pair<double, double>  last_pair (make_pair(0.0, 0.0));
+	bool first=true;
+
+	//Para cada state->final_state se rescata la accion
+	//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
+	//se elimina final_state y el elemento del mapa
+	int k=0;
+	while(state_action!=sorted_states.end()){
+		State* s= state_action->second.first;
+		State* final_state=state_action->second.second;
+		Action* a = (s)? s->next_action(*final_state):NULL;
+
+		if((nextS.size()<beams || state_action->first.first > last_pair.first) && a){
+			s=s->copy();
+			state_action->second.first=s;
+			s->transition(*a);
+			nextS.push_back(s);
+			if(state_action->first.first > last_pair.first) last_pair = state_action->first;
+			else first=false;
+	 }else state_action->second.first=NULL;
+
+		//other elements are removed from the state_actions
+		 if(k>=beams && !first){
+			delete final_state;
+		   state_action=sorted_states.erase(state_action);
+		 }else state_action++;
+
+	 if(a) delete a;
+	 k++;
+	}
+
+	return nextS;
+
+
 }
 
 } /* namespace clp */

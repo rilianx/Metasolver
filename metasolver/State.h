@@ -100,12 +100,12 @@ public:
 	}
 
 	virtual int get_best_actions(list< Action* >& bactions, int n){
+
 		if(!evl) {
 			cout << "The function State::get_best_actions should be implemented or an "
 					<< "ActionEvaluator should be provided" << endl;
 			exit(0);
 		}
-
 		//the best n actions ranked from worst to best
 		multimap<double,Action*> ranked_actions;
 		//map<double,Action*> ranked_actions;

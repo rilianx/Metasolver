@@ -97,7 +97,6 @@ protected:
 		//se elimina final_state y el elemento del mapa
 		int k=0;
 		while(state_action!=sorted_states.end()){
-
 			State* s= state_action->second.first;
 			State* final_state=state_action->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
