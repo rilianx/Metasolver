@@ -248,11 +248,10 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb, int
 					if(boxt->is_valid((BoxShape::Orientation) o))
 					     s->valid_blocks.push_back(Block::create_block(*boxt,(BoxShape::Orientation) o,fsb));
 				}
-
+				//cout << "Wmax:" << clpState::weight_of_allboxes << endl;
 			}
-
 		}
-		cout << "Wmax:" << clpState::weight_of_allboxes << endl;
+
 	}
 
 	s->general_block_generator(min_fr, max_bl, s->cont);

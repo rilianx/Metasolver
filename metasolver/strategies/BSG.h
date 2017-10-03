@@ -88,7 +88,7 @@ public:
 protected:
 
 	template<class map_container>
-	list<State*> get_next_states(map_container sorted_states){
+	list<State*> get_next_states(map_container& sorted_states){
 		list<State*> nextS;
 		typename map_container::iterator state_action=sorted_states.begin();
 
