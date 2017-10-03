@@ -9,7 +9,5 @@
 
 namespace clp {
 
-int global::n_eval=0;
-
 
 } /* namespace clp */

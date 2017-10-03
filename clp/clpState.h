@@ -65,8 +65,8 @@ public:
 	}
 
 	virtual double get_value2() const{
-		return 0.0;
-		//return cont.getTotalWeight() / weight_of_allboxes;
+		//return 0.0;
+		return cont.getTotalWeight() / weight_of_allboxes;
 	}
 
 
@@ -136,6 +136,7 @@ private:
 	//menor dimension de las cajas restantes
 	Vector3 mindim;
 
+	static double weight_of_allboxes;
 
 };
 

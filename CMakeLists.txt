@@ -64,10 +64,13 @@ ELSE()
 
 ADD_EXECUTABLE(CLP2017 main_clp.cpp)
 
+ADD_EXECUTABLE(CLP_MOP test_clp_mop.cpp)
+
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
+
+target_link_libraries(CLP_MOP bsg clp)
  
 ENDIF()
-
 
 
 

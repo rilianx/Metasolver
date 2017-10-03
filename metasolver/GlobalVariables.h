@@ -13,7 +13,6 @@ namespace clp {
 class global{
 public:
 	static bool TRACE;
-	static int n_eval;
 };
 
 } /* namespace clp */

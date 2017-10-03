@@ -153,6 +153,7 @@ int clpState::shuffle_path() {
     return i;
 }
 
+/* TODO: Creacion aleatoria reproducible de pesos para cajas
 long rand(long seed)
 {
   long a = 1103515245;
@@ -161,7 +162,9 @@ long rand(long seed)
 
   seed = (a * seed + c) % m;
   return seed;
-}
+}*/
+
+double clpState::weight_of_allboxes=0.0;
 
 clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 	Block::FSB=fsb;
@@ -196,6 +199,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 		//y restricciones de rotación
 		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
 
+
 		for(int j=0;j<nb_types;j++){
 			getline(in, line );
 
@@ -207,6 +211,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb){
 
 			if(inst==i){
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3);
+
+				clpState::weight_of_allboxes += boxt->get_weight()*(double) n;
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o))

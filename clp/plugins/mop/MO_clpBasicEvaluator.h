@@ -18,7 +18,7 @@ namespace clp {
  */
 class MO_clpBasicEvaluator : public MO_ActionEvaluator{
 public:
-	MO_clpBasicEvaluator(ActionEvaluator& ev1, double r) : MO_ActionEvaluator(&ev1, NULL, r) { };
+	MO_clpBasicEvaluator(ActionEvaluator& ev1, double r=0.0) : MO_ActionEvaluator(&ev1, NULL, r) { };
 
 protected:
 

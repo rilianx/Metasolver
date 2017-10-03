@@ -41,8 +41,6 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
     if(resL<0 || resW<0 || resH<0) return -1.0;
 
-
-    global::n_eval++;
 	double loss_vol=VLossFunction::eval_action(s, a);
 
 	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
