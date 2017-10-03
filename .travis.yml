@@ -1,1 +1,8 @@
-language:cpp
+language: cpp
+compiler: gcc
+
+script: 
+ - cmake
+ - make
+ - ./CLP_MOP
+
