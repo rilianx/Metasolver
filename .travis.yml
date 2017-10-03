@@ -4,5 +4,4 @@ compiler: gcc
 script: 
  - cmake .
  - make
- - ./CLP_MOP
-
+ - ./CLP_MOP ../data/BR15.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0
