@@ -5,3 +5,4 @@ script:
  - cmake .
  - make
  - ./CLP_MOP ../data/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0
+ - ./CLP2017 ../data/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0
