@@ -57,6 +57,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
     int n=10;//aun no se de donde lo obtendremos
+
     //se expanden los nodos de la lista S
     int i=0;
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
@@ -85,8 +86,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
         		action_alpha.push_back(make_pair(action,alpha));
         }
 
-        //TODO: ordenar por dominancia + distance crowding
-        map< pair<double, double>, pair<State*, State*> > sorted_states;
+        //nd_sort ordena por dominancia
+        map< pair<double, double>, pair<State*, State*>, nd_sort > sorted_states;
 
         //Actions are evaluated using the greedy algorithm
         for(auto a_a : action_alpha){
@@ -104,13 +105,19 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 
 
-        	/*
-            if(sorted_states.find(value)==state_actions.end())
-           	 state_actions[value]= make_pair(&state, &state_copy);
+
+            if(sorted_states.find(value)==sorted_states.end())
+            	sorted_states[value]= make_pair(&state, &state_copy);
             else delete &state_copy;
-            */
+
 
         }
+
+        //TODO: ordenar por distance crowding
+
+        //siguiente generacion de estados
+
+        return get_next_states(sorted_states);
 
     }
 }

@@ -49,6 +49,22 @@ private:
 	void select_coeff(list<double>& coeff, int n);
 };
 
+struct nd_sort {
+  bool operator() (const pair<double, double>& p1, const pair<double, double>& p2) const
+  {
+	  //no se aceptan repetidos
+	  if(p1.first == p2.first && p1.second == p2.second) return false;
+
+	  //p1 domina a p2
+	  if(p1.first >= p2.first && p1.second >= p2.second) return true;
+
+	  if(p1.first < p2.first) return true;
+
+	  return false;
+
+  }
+};
+
 } /* namespace clp */
 
 #endif /* PLUGINS_MOP_BSGMOP_H_ */

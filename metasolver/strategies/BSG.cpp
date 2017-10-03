@@ -62,37 +62,7 @@ list<State*> BSG::next(list<State*>& S){
      
   
      //siguiente generacion de estados
-     list<State*> nextS;
-     map<double, pair<State*, State*> >::iterator state_action=state_actions.begin();
-     
-     //Para cada state->final_state se rescata la accion
-     //Si no hay acción posible o si la cuota the beams ha sido sobrepasada
-     //se elimina final_state y el elemento del mapa
-     int k=0;
-     while(state_action!=state_actions.end()){
-         
-         State* s= state_action->second.first;
-         State* final_state=state_action->second.second;
-         Action* a = (s)? s->next_action(*final_state):NULL;
-
-         if(nextS.size()<beams && a){
-    	    s=s->copy();
-    	    state_action->second.first=s;
-    	    s->transition(*a);
-    	    nextS.push_back(s);
-    	 }else state_action->second.first=NULL;
-    	   
-         //other elements are removed from the state_actions
-     	 if(k>=beams){
-     	    delete final_state;
-            state_action=state_actions.erase(state_action);
-     	 }else state_action++;
-    	 
-    	 if(a) delete a;
-    	 k++;
-     }
-
-     return nextS;
+     return get_next_states(state_actions);
 }
 
 
