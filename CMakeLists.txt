@@ -4,13 +4,13 @@
 set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
-../bullet-2.80-rev2531/src
+lib/bullet-2.80/src
 )
 
 LINK_DIRECTORIES(
-../bullet-2.80-rev2531/src/BulletCollision
-../bullet-2.80-rev2531/src/BulletDynamics
-../bullet-2.80-rev2531/src/LinearMath
+lib/bullet-2.80/src/BulletCollision
+lib/bullet-2.80/src/BulletDynamics
+lib/bullet-2.80/src/LinearMath
 )
 
 LINK_LIBRARIES(
@@ -55,12 +55,6 @@ clp/plugins/kdtree/kdNode.cpp
 clp/plugins/kdtree/BlockSet.cpp 
 )
 
-IF (WIN32)
-	ADD_EXECUTABLE(MainCLP
-		MainCLP-REVIEW.cpp
-		${BULLET_PHYSICS_SOURCE_DIR}/msvc/bullet.rc
-	)
-ELSE()
 
 ADD_EXECUTABLE(CLP2017 main_clp.cpp)
 
