@@ -59,6 +59,41 @@ public:
 		return NDS;
 	}
 
+	/**
+	 * TODO: the states in states are sorted by non-dominance  + crowding distance and the best n
+	 * are inserted into filtered_states
+	 *
+	 * 1. Sort the solutions by applying the non-dominated sorting
+	 * 2. The first frontier is fully copied to filtered_states
+	 * 3. while size(next frontier) + size(filtered_states) <= n the next frontier is copied into filtered_states
+	 * 4. if size(next frontier) + size(filtered_states) > n, the frontier is sorted by crowding
+	 * distance and only the first n - size(filtered_states) are copied to filtered_states
+	 */
+
+	/*
+	 * Para cada par de states debemos hacer lo siguiente
+	 	 	State* s= par.first;
+			State* final_state=par.second;
+			Action* a = (s)? s->next_action(*final_state):NULL;
+	 * Antes de insertar el par a filtered_states debemos "avanzar" al siguiente estado:
+			//si a==NULL el estado no se inserta
+	 		s=s->copy();
+			s->transition(*a);
+			par.first=s;
+
+	 * Los estados finales no insertados en filtered_states deben ser eliminados:
+		 	delete final_state;
+	 * Las acciones (a) deben ser eliminadas: if(a) delete a;
+	 */
+
+	void filter_nondominated_sort (list< pair<State*,State*> >&states, list< pair<State*,State*> >& filtered_states, int n);
+
+	/**
+	 * TODO: the states in frontier are sorted by crowding distance and the best n1
+	 * are inserted into filtered_states
+	 */
+	void filter_crowding_distance (list< pair<State*,State*> >&frontier, list< pair<State*,State*> >& filtered_states, int n1);
+
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
 private:

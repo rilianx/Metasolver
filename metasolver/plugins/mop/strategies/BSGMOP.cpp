@@ -53,6 +53,7 @@ bool BSG_MOP::update(map< pair<double, double>, State*, nd_sort>& NDS, State& st
 
 }
 
+
 /*
 void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list){
   //lista de dominancia por State
@@ -98,8 +99,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
     if(S.size()==0) return S;
     int n=5;//aun no se de donde lo obtendremos
 
-    //nd_sort ordena por dominancia
-    map< pair<double, double>, pair<State*, State*>, nd_sort > sorted_states;
+    //estados de la siguiente generacion
+    list< pair<State*, State*> > next_states;
 
     //se expanden los nodos de la lista S
     int i=0;
@@ -154,16 +155,20 @@ list<State*> BSG_MOP::next(list<State*>& S){
         		//cout << "NDS size:" << NDS.size() << endl;
         	}
 
-            if(sorted_states.find(value)==sorted_states.end())
-            	sorted_states[value]= make_pair(&state, &state_copy);
-            else delete &state_copy;
-
+        	next_states.push_back(make_pair(&state, &state_copy));
 
         }
 
     }
 
-	list<State*> nextS;
+
+    list< pair<State*, State*> > filtered_states;
+
+	filter_nondominated_sort (next_states, filtered_states, beams);
+
+	return filtered_states;
+
+	/*
 	map< pair<double, double>, pair<State*, State*>, nd_sort > ::iterator state_action=sorted_states.begin();
 
 	//par que marca el final de las soluciones no dominadas
@@ -198,8 +203,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 	 k++;
 	}
 
-	return nextS;
-
+*/
 
 }
 
