@@ -6,7 +6,10 @@
  */
 
 #include "BSGMOP.h"
-#include <unordered_map>
+#include "../../../State.h"
+
+#include <map>
+
 
 namespace clp {
 
