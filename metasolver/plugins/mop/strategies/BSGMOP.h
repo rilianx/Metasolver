@@ -3,6 +3,7 @@
  *
  *  Created on: 13 sept. 2017
  *      Author: iaraya
+ *      		MMoyano
  */
 
 #ifndef PLUGINS_MOP_BSGMOP_H_
@@ -104,6 +105,9 @@ public:
 
 			}
 			if((filtered_states.size()+frontera.size())<=n){
+				for(it1=frontera.begin();it1!=frontera.end();it1++){
+					filtered_states.push_back((*it1).second);
+				}
 				//filtered_states.push_back()
 			}
 			else{
@@ -122,7 +126,7 @@ public:
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
 	 * are inserted into filtered_states
 	 */
-	void filter_crowding_distance (list< pair<State*,State*> >&frontier, list< State* >& filtered_states, int n1) { };
+	void filter_crowding_distance (list< pair<State*,State*> >&frontier, list< State* >& filtered_states, int n1) { };//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
