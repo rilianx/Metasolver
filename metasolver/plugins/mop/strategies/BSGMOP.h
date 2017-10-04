@@ -107,7 +107,7 @@ public:
 				//filtered_states.push_back()
 			}
 			else{
-				filter_crowding_distance(frontera,filtered_states,3);
+				filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
 			}
 
 
