@@ -96,6 +96,53 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
    }
 }
 
+//TODO: Eliminar estado final de states sin insertar en filtered_states
+
+void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >&states, list< State* >& filtered_states, int n) {
+	list< pair<State*,State*> >::iterator it1, it2;//it1=states , it2=filtered_states
+	list< pair<State*,State*>  > frontera;
+	while(true){
+		for(it1=states.begin();it1!=states.end();){
+			State* s= it1->first;
+			State* final_state= it1->second;
+			Action* a = (s)? s->next_action(*final_state):NULL;
+			if(!a) {delete final_state; continue;}
+
+			int domin=0;
+			for(it2=states.begin();it2!=states.end();){
+				if((*it1)!=(*it2))
+				if(final_state->get_value()<=final_state->get_value()){
+					domin=domin+1;
+				}
+			}
+			if( domin == 0){
+				frontera.push_back((*it1));
+			}
+		}
+
+		if((filtered_states.size()+frontera.size())<=n){
+			for(it1=frontera.begin();it1!=frontera.end();it1++){
+				State* s= it1->first;
+				State* final_state= it1->second;
+				Action* a = (s)? s->next_action(*final_state):NULL;
+
+		 		s=s->copy();
+				s->transition(*a);
+				it1->first=s;
+
+				filtered_states.push_back(s);
+			}
+			//filtered_states.push_back()
+		}
+		else{
+			filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
+			return;
+		}
+
+
+	}
+}
+
 list<State*> BSG_MOP::next(list<State*>& S){
 
     //no hay mas estados en el arbol
@@ -103,6 +150,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
     int n=5;//aun no se de donde lo obtendremos
 
     //estados de la siguiente generacion
+    //TODO: crear mapa global con clave (f1,f2) para no perder caminos a mejores soluciones
     list< pair<State*, State*> > next_states;
 
     //se expanden los nodos de la lista S

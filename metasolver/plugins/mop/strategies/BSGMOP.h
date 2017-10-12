@@ -86,37 +86,7 @@ public:
 	 * Las acciones (a) deben ser eliminadas: if(a) delete a;
 	 */
 
-	void filter_nondominated_sort (list< pair<State*,State*> >&states, list< State* >& filtered_states, int n) {
-		list< pair<State*,State*> >::iterator it1, it2;//it1=states , it2=filtered_states
-		list< pair<State*,State*>  > frontera;
-		for(int i=0;i<=n;){
-			for(it1=states.begin();it1!=states.end();){
-				int domin=0;
-				for(it2=states.begin();it2!=states.end();){
-					if((*it1)!=(*it2))
-					if((*it1).second->get_value()<=(*it2).second->get_value()){
-						domin=domin+1;
-					}
-				}
-				if( domin == 0){
-				  frontera.push_back((*it1));
-				}
-
-
-			}
-			if((filtered_states.size()+frontera.size())<=n){
-				for(it1=frontera.begin();it1!=frontera.end();it1++){
-					filtered_states.push_back((*it1).second);
-				}
-				//filtered_states.push_back()
-			}
-			else{
-				filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
-			}
-
-
-		}
-	}
+	void filter_nondominated_sort (list< pair<State*,State*> >&states, list< State* >& filtered_states, int n);
 
 
 
