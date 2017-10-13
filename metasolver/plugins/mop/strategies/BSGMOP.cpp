@@ -6,7 +6,10 @@
  */
 
 #include "BSGMOP.h"
-#include <unordered_map>
+#include "../../../State.h"
+
+#include <map>
+
 
 namespace clp {
 
@@ -19,10 +22,10 @@ BSG_MOP::~BSG_MOP() {
 
 
 
-bool BSG_MOP::update(map< pair<double, double>, State*, nd_sort>& NDS, State& state_copy, double valuef1, double valuef2){
+bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2){
     //buscar si domina algun
 
-	map< pair<double, double>, State*, nd_sort>::iterator it;
+	map< pair<double, double>, State*>::iterator it;
     for(it=NDS.begin(); it!=NDS.end(); ){
       if((*it).first.first<valuef1 && (*it).first.second<=valuef2)
           it=NDS.erase(it);
@@ -52,6 +55,7 @@ bool BSG_MOP::update(map< pair<double, double>, State*, nd_sort>& NDS, State& st
 
 
 }
+
 
 /*
 void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list){
@@ -84,12 +88,106 @@ void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list
 
 void BSG_MOP::select_coeff(list<double>& coeff, int n){
    double coeficiente=100.0/(double) n;
-   coeff.push_back(0);
+   //coeff.push_back(0);
 
    for(int i=1;i<=n;i++){
-     coeff.push_back((double)(coeficiente*i)/ 100.0);
+	   coeff.push_back(1.0);
+     // coeff.push_back((double)(coeficiente*i)/ 100.0);
    }
 }
+
+bool mycomp(pair<State*, State*> a, pair<State*, State*> b ){
+	return a.second->get_value() <b.second->get_value();
+}
+
+void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n1){
+	list< pair<State*, State*> >::iterator anterior,actual,siguiente,it1;
+
+	long distance[n1];
+	//la distancia de cada punto se iguala a 0
+	//se ordena la frontera por el las funciones objetivos, como el problema es biobjetivo y son no dominados, solo lo ordenaremos por la primera funcion objetivo
+	//
+
+	sort(frontera.begin(),frontera.end(),mycomp);
+	//se debe ordenar la frontera si o si dejando al primer elemento como el que maximiza el objetivo 1(get_value)
+	it1=frontera.begin()++;// el for comienza desde el segundo elemento y termina en el penultimo
+	for(int i=0;it1!=frontera.end()--;i++){
+
+		actual=it1;
+		anterior=actual--;
+		actual=it1;
+		siguiente=actual++;
+		//valor siguiente - valor anterior/
+		distance[i]=distance[i]+((siguiente->second->get_value()-anterior->second->get_value())/(frontera.begin()->second->get_value()-frontera.begin()->second->get_value2()));
+	}
+
+}
+
+
+/** TODO: Eliminar final_state (delete final_state) de pares descartados del mapa states
+ *  y eliminar pares descartados del mapa states (fronteras descartadas y soluciones descartadas de ultima frontera)
+ */
+
+void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_states, int n) {
+	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
+	list< pair<State*, State*> > frontera;
+
+
+	while(true){
+		frontera.clear();
+		for(it1=state_actions.begin();it1!=state_actions.end();){
+			State* s= it1->second.first;
+			State* final_state= it1->second.second;
+			Action* a = (s)? s->next_action(*final_state):NULL;
+			if(!a) {
+				delete final_state; it1++;
+				continue;
+			}
+
+			int domin=0;
+			for(it2=state_actions.begin();it2!=state_actions.end();it2++){
+				if((*it1)!=(*it2))
+				if(final_state->get_value()<=final_state->get_value()){
+					domin=domin+1;
+				}
+			}
+			if( domin == 0){
+				frontera.push_back(it1->second);
+				it2=it1;
+				it2++;
+			    state_actions.erase(it1);
+			    it1=it2;
+			}else it1++;
+
+
+		}
+
+		if((filtered_states.size()+frontera.size())<=n){
+			for(it1=frontera.begin();it1!=frontera.end();it1++){
+				State* s= it1->second.first;
+				State* final_state= it1->second.second;
+				Action* a = (s)? s->next_action(*final_state):NULL;
+
+		 		s=s->copy();
+				s->transition(*a);
+				it1->second.first=s;
+
+				filtered_states.push_back(it1->second);
+			}
+			//filtered_states.push_back()
+		}
+		else{
+			filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
+
+			break;
+		}
+	}
+
+
+
+}
+
+
 
 list<State*> BSG_MOP::next(list<State*>& S){
 
@@ -97,8 +195,6 @@ list<State*> BSG_MOP::next(list<State*>& S){
     if(S.size()==0) return S;
     int n=5;//aun no se de donde lo obtendremos
 
-    //nd_sort ordena por dominancia
-    map< pair<double, double>, pair<State*, State*>, nd_sort > sorted_states;
 
     //se expanden los nodos de la lista S
     int i=0;
@@ -118,7 +214,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         for(auto alpha : alpha_v){
 
             //each level of the search tree should explore max_level_size nodes, thus...
-          int w =  (double) max_level_size / (double) S.size() + 0.5;
+            int w =  (double) max_level_size / (double) S.size() + 0.5;
 
         	list< Action* > best_actions;
         	dynamic_cast<MO_ActionEvaluator*>(state.get_evaluator())->set_alpha(alpha);
@@ -150,20 +246,61 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	bool bbb = update(NDS, *state_copy.copy(), value.first,value.second);
         	if(bbb){
         		cout << "new best solution found: (" << value.first << "," << value.second << ")" << endl;
-        		cout << "NDS size:" << NDS.size() << endl;
+        		//cout << "NDS size:" << NDS.size() << endl;
         	}
 
-            if(sorted_states.find(value)==sorted_states.end())
-            	sorted_states[value]= make_pair(&state, &state_copy);
-            else delete &state_copy;
-
+        	//se inserta el estado si no hay uno equivalente en el mapa
+        	if(state_actions.find(value) == state_actions.end())
+        		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
 
         }
 
     }
 
-    //TODO: ordenar por distance crowding
-    return get_next_states(sorted_states);
+
+    list< pair<State*,State*> >filtered_states;
+
+	filter_nondominated_sort (filtered_states, beams);
+
+	return filtered_states;
+
+	/*
+	map< pair<double, double>, pair<State*, State*>, nd_sort > ::iterator state_action=sorted_states.begin();
+
+	//par que marca el final de las soluciones no dominadas
+	pair<double, double>  last_pair (make_pair(0.0, 0.0));
+	bool first=true;
+
+	//Para cada state->final_state se rescata la accion
+	//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
+	//se elimina final_state y el elemento del mapa
+	int k=0;
+	while(state_action!=sorted_states.end()){
+		State* s= state_action->second.first;
+		State* final_state=state_action->second.second;
+		Action* a = (s)? s->next_action(*final_state):NULL;
+
+		if((nextS.size()<beams || state_action->first.first > last_pair.first) && a){
+			s=s->copy();
+			state_action->second.first=s;
+			s->transition(*a);
+			nextS.push_back(s);
+			if(state_action->first.first > last_pair.first) last_pair = state_action->first;
+			else first=false;
+	 }else state_action->second.first=NULL;
+
+		//other elements are removed from the state_actions
+		 if(k>=beams && !first){
+			delete final_state;
+		   state_action=sorted_states.erase(state_action);
+		 }else state_action++;
+
+	 if(a) delete a;
+	 k++;
+	}
+
+*/
+
 }
 
 } /* namespace clp */

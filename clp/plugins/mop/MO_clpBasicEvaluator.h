@@ -26,7 +26,6 @@ protected:
 		const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 
         return b.getTotalWeight()/(double) b.getOccupiedVolume();
-
 	}
 
 

@@ -3,6 +3,7 @@
  *
  *  Created on: 13 sept. 2017
  *      Author: iaraya
+ *      		MMoyano
  */
 
 #ifndef PLUGINS_MOP_BSGMOP_H_
@@ -15,22 +16,18 @@
 using namespace std;
 namespace clp {
 
-
-struct nd_sort {
+/*
+struct sort {
   bool operator() (const pair<double, double>& p1, const pair<double, double>& p2) const
   {
-	  //no se aceptan repetidos
-	  if(p1.first == p2.first && p1.second == p2.second) return false;
+	  if(p1.first > p2.first) return true;
 
-	  //p1 domina a p2
-	  if(p1.first >= p2.first && p1.second >= p2.second) return true;
-
-	  if(p1.first < p2.first) return true;
+	  if(p1.first == p2.first && p1.second > p2.second) return true;
 
 	  return false;
 
   }
-};
+};*/
 
 class BSG_MOP : public BSG {
 public:
@@ -55,18 +52,61 @@ public:
 	 */
 	virtual list<State*> next(list<State*>& S);
 
-	map< pair<double, double>, State*, nd_sort> get_pareto_front(){
+	map< pair<double, double>, State*> get_pareto_front(){
 		return NDS;
 	}
+
+	/**
+	 * TODO: the states in states are sorted by non-dominance  + crowding distance and the best n
+	 * are inserted into filtered_states
+	 *
+	 * 1. Sort the solutions by applying the non-dominated sorting
+	 * 2. while size(next frontier) + size(filtered_states) <= n the next frontier is copied into filtered_states
+	 * 3. if size(next frontier) + size(filtered_states) > n, the frontier is sorted by crowding
+	 * distance and only the first n - size(filtered_states) are copied to filtered_states
+	 */
+
+	/*
+	 * Para cada par de states debemos hacer lo siguiente
+	 	 	State* s= par.first;
+			State* final_state=par.second;
+			Action* a = (s)? s->next_action(*final_state):NULL;
+	 * Antes de insertar el estado a filtered_states debemos "avanzar" al siguiente estado:
+			//si a==NULL el estado no se inserta
+	 		s=s->copy();
+			s->transition(*a);
+			par.first=s;
+
+	 * Los estados finales no insertados en filtered_states deben ser eliminados:
+		 	delete final_state;
+	 * Las acciones (a) deben ser eliminadas: if(a) delete a;
+	 */
+
+	void filter_nondominated_sort (list< pair<State*,State*> >& filtered_states, int n);
+
+
+
+
+
+	/**
+	 * TODO: the states in frontier are sorted by crowding distance and the best n1
+	 * are inserted into filtered_states
+	 */
+	void filter_crowding_distance (list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n);
+	//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
 private:
 
 	//conjunto de soluciones no dominadas
-	map< pair<double, double>, State*, nd_sort> NDS;
+	map< pair<double, double>, State*> NDS;
 
-	bool update(map< pair<double, double>, State*, nd_sort>& NDS, State& state_copy, double valuef1, double valuef2);
+
+    //estados y caminos del beam para no perder soluciones
+    map< pair<double, double>, pair<State*, State*> > state_actions;
+
+	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
 	void select_coeff(list<double>& coeff, int n);
 };
 
