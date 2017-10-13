@@ -223,7 +223,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
     list< State* > filtered_states;
 
-	filter_nondominated_sort (state_actions, filtered_states, beams);
+	filter_nondominated_sort (filtered_states, beams);
 
 	return filtered_states;
 
