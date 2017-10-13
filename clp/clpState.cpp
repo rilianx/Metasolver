@@ -274,7 +274,8 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 	    	list<const Block*> :: iterator itB=B.begin();
 	    	for(;itB!=B.end() && B.size()+new_elems<max_bl ; itB++){
 
-				list<const Block*> newB = create_new_blocks(**itP, **itB, min_fr, max_dim);
+	    		//cout << "new_blocks" << endl;
+				list<const Block*> newB = (*itP)->create_new_blocks(*itB, min_fr, max_dim);
 
 				list<const Block*>:: iterator itNew=newB.begin();
 				for(;itNew!=newB.end();itNew++){
@@ -292,7 +293,6 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 		B.insert(B.end(),N.begin(),N.end());
 		P=N;
 	}
-
 }
 
 

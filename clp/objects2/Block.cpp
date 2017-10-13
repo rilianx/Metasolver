@@ -37,8 +37,13 @@ Block::~Block() {
 
 
 Block* Block::create_block(const BoxShape & b, BoxShape::Orientation o, bool fsb){
-	if(fsb) return new Block_fsb(b,o);
-	else return new Block(b,o);
+	if(fsb){
+		cout << "creating simple fsb blocks!" << endl;
+		return new Block_fsb(b,o);
+	}else{
+		cout << "creating simple no-fsb blocks!" << endl;
+		return new Block(b,o);
+	}
 }
 
 void Block::insert(const Block& block, const Vector3& point, const Vector3 min_dim){
@@ -61,35 +66,37 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 }
 
 
-list<const Block* > create_new_blocks(const Block& b1, const Block& b2, double min_fr, const Vector3& max_dim){
+list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const{
 
+	const Block* b1=this;
 	list<const Block*> blocks;
 
+	cout << "creating no-fsb blocks!" << endl;
 	for(int i=0; i<3; i++){
-		long ll= max(b1.getL(),b2.getL());
-		long ww= max(b1.getW(),b2.getW());
-		long hh= max(b1.getH(),b2.getH());
+		long ll= max(b1->getL(),b2->getL());
+		long ww= max(b1->getW(),b2->getW());
+		long hh= max(b1->getH(),b2->getH());
 
 		long x2=0, y2=0, z2=0;
 
 		switch(i){
 			case 0:
-			  ll=(b1.getL()+b2.getL()); x2=b1.getL();  break;
+			  ll=(b1->getL()+b2->getL()); x2=b1->getL();  break;
 			case 1:
-			  ww=(b1.getW()+b2.getW()); y2=b1.getW(); break;
+			  ww=(b1->getW()+b2->getW()); y2=b1->getW(); break;
 			case 2:
-			  hh=(b1.getH()+b2.getH()); z2=b1.getH();
+			  hh=(b1->getH()+b2->getH()); z2=b1->getH();
 		}
 
 		long vol= ll*ww*hh;
 
-		if( ((double) (b1.occupied_volume+b2.occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
+		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
 
 			Block* new_block;
 
 			new_block=new Block(ll,ww,hh);
-			new_block->insert(b1, Vector3(0,0,0));
-			new_block->insert(b2, Vector3(x2,y2,z2));
+			new_block->insert(*b1, Vector3(0,0,0));
+			new_block->insert(*b2, Vector3(x2,y2,z2));
 
 			if(Block::all_blocks.find(new_block)==Block::all_blocks.end()){
 				Block::all_blocks.insert(new_block);

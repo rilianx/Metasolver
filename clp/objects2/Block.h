@@ -70,8 +70,7 @@ public:
 	 * Crea una lista de a lo mas 3 bloques juntando los bloques b1 y b2
 	 * Bloques son creados solo si  volumen_ocupado >= min_fr * volumen
 	 */
-	friend
-	list<const Block* > create_new_blocks(const Block &b1, const Block &b2, double min_fr, const Vector3& max_dim);
+	virtual list<const Block* > create_new_blocks(const Block *b2, double min_fr, const Vector3& max_dim) const;
 
     virtual void insert(const Block& b, const Vector3& p, const Vector3 min_dim=Vector3(0,0,0));
 
@@ -161,8 +160,7 @@ public:
 
 	virtual void insert(const Block& block, const Vector3& point, const Vector3 min_dim);
 
-	friend
-	list<const Block* > create_new_blocks(const Block_fsb& b1, const Block_fsb& b2, double min_fr, const Vector3& max_dim);
+	list<const Block* > create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const;
 
 private:
 	//usados en variante con restriccion fsb (full supported blocks)
@@ -171,11 +169,6 @@ private:
 };
 
 
-
-
-
-	list<const Block* > create_new_blocks(const Block &b1, const Block &b2, double min_fr, const Vector3& max_dim);
-	list<const Block* > create_new_blocks(const Block_fsb& b1, const Block_fsb& b2, double min_fr, const Vector3& max_dim);
 
 }
 

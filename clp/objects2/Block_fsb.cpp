@@ -23,38 +23,42 @@ long Block_fsb::getPA_L() const{return pa_l;}
 long Block_fsb::getPA_W() const{return pa_l;}
 
 
-list<const Block* > create_new_blocks(const Block_fsb& b1, const Block_fsb& b2, double min_fr, const Vector3& max_dim){
+list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr, const Vector3& max_dim) const{
 
+	const Block_fsb* b1=this;
+	const Block_fsb* b2=dynamic_cast<const Block_fsb*>(_b2);
+
+	cout << "creating fsb blocks!" << endl;
 	list<const Block*> blocks;
 
 	for(int i=0; i<3; i++){
-		long ll= max(b1.getL(),b2.getL());
-		long ww= max(b1.getW(),b2.getW());
-		long hh= max(b1.getH(),b2.getH());
+		long ll= max(b1->getL(),b2->getL());
+		long ww= max(b1->getW(),b2->getW());
+		long hh= max(b1->getH(),b2->getH());
 
 		long x2=0, y2=0, z2=0;
 
 		switch(i){
 			case 0:
-			  if(b1.getH()!=b2.getH() || b1.pa_l!=b1.getL() || b2.pa_l!=b2.getL()) continue;
-			  ll=(b1.getL()+b2.getL()); x2=b1.getL();  break;
+			  if(b1->getH()!=b2->getH() || b1->pa_l!=b1->getL() || b2->pa_l!=b2->getL()) continue;
+			  ll=(b1->getL()+b2->getL()); x2=b1->getL();  break;
 			case 1:
-			  if(b1.getH()!=b2.getH() || b1.pa_w!=b1.getW() || b2.pa_w!=b2.getW()) continue;
-			  ww=(b1.getW()+b2.getW()); y2=b1.getW(); break;
+			  if(b1->getH()!=b2->getH() || b1->pa_w!=b1->getW() || b2->pa_w!=b2->getW()) continue;
+			  ww=(b1->getW()+b2->getW()); y2=b1->getW(); break;
 			case 2:
-			  if((b1.pa_w<b2.getW() || b1.pa_l<b2.getL()) && (b2.pa_w<b1.getW() || b2.pa_l<b1.getL())) continue;
-			  hh=(b1.getH()+b2.getH()); z2=b1.getH();
+			  if((b1->pa_w<b2->getW() || b1->pa_l<b2->getL()) && (b2->pa_w<b1->getW() || b2->pa_l<b1->getL())) continue;
+			  hh=(b1->getH()+b2->getH()); z2=b1->getH();
 		}
 
 		long vol= ll*ww*hh;
 
-		if( ((double) (b1.occupied_volume+b2.occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
+		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
 
 			Block* new_block;
 
 			new_block=new Block_fsb(ll,ww,hh);
-			new_block->insert(b1, Vector3(0,0,0));
-			new_block->insert(b2, Vector3(x2,y2,z2));
+			new_block->insert(*b1, Vector3(0,0,0));
+			new_block->insert(*b2, Vector3(x2,y2,z2));
 
 			if(Block::all_blocks.find(new_block)==Block::all_blocks.end()){
 				Block::all_blocks.insert(new_block);

@@ -39,7 +39,8 @@ int main(int argc, char** argv){
     double p=atof(argv[8]); //0.0 - 0.1
     double delta=atof(argv[9]); //0.0 - 10.0
     double r=atof(argv[10]);
-    bool kdtree=atoi(argv[11]);
+    bool fsb=(atoi(argv[11])==1);
+    bool kdtree=atoi(argv[12]);
 
 	srand(1);
 
@@ -48,7 +49,7 @@ int main(int argc, char** argv){
 	//SpaceSet::random_spaces=true; 
 
     cout << "cargando la instancia..." << endl;
-    clpState* s0 = new_state(file,inst, min_fr, 10000);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, fsb);
 
     if(kdtree)
        s0 = new clpState_kd(*s0);
@@ -88,16 +89,16 @@ int main(int argc, char** argv){
 
     double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
-/*
- *
-	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();
-	while(dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->has_next()){
-		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->next();
-	}
-*/
 
-	//dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
+
+	/*const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->top();
+	while(dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->has_next()){
+		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
+		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->next();
+	}
+	 */
+
+	dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
 
 
 }
