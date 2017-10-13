@@ -131,6 +131,7 @@ void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, l
 void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_states, int n) {
 	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
 	list< pair<State*, State*> > frontera;
+	list< pair<State*, State*> >::iterator it3;
 
 
 	while(true){
