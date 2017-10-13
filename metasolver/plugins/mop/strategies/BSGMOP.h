@@ -16,22 +16,18 @@
 using namespace std;
 namespace clp {
 
-
-struct nd_sort {
+/*
+struct sort {
   bool operator() (const pair<double, double>& p1, const pair<double, double>& p2) const
   {
-	  //no se aceptan repetidos
-	  if(p1.first == p2.first && p1.second == p2.second) return false;
+	  if(p1.first > p2.first) return true;
 
-	  //p1 domina a p2
-	  if(p1.first >= p2.first && p1.second >= p2.second) return true;
-
-	  if(p1.first < p2.first) return true;
+	  if(p1.first == p2.first && p1.second > p2.second) return true;
 
 	  return false;
 
   }
-};
+};*/
 
 class BSG_MOP : public BSG {
 public:
@@ -56,7 +52,7 @@ public:
 	 */
 	virtual list<State*> next(list<State*>& S);
 
-	map< pair<double, double>, State*, nd_sort> get_pareto_front(){
+	map< pair<double, double>, State*> get_pareto_front(){
 		return NDS;
 	}
 
@@ -86,7 +82,7 @@ public:
 	 * Las acciones (a) deben ser eliminadas: if(a) delete a;
 	 */
 
-	void filter_nondominated_sort (list< pair<State*,State*> >&states, list< State* >& filtered_states, int n);
+	void filter_nondominated_sort (map< pair<double, double>, pair<State*, State*> >&states, list< State* >& filtered_states, int n);
 
 
 
@@ -96,16 +92,20 @@ public:
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
 	 * are inserted into filtered_states
 	 */
-	void filter_crowding_distance (list< pair<State*,State*> >&frontier, list< State* >& filtered_states, int n1) { };//aqui suceda la magia del sur
+	void filter_crowding_distance (map< pair<double, double>, pair<State*, State*> >&frontier, list< State* >& filtered_states, int n1) { };//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
 private:
 
 	//conjunto de soluciones no dominadas
-	map< pair<double, double>, State*, nd_sort> NDS;
+	map< pair<double, double>, State*> NDS;
 
-	bool update(map< pair<double, double>, State*, nd_sort>& NDS, State& state_copy, double valuef1, double valuef2);
+
+    //estados y caminos del beam para no perder soluciones
+    map< pair<double, double>, pair<State*, State*> > state_actions;
+
+	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
 	void select_coeff(list<double>& coeff, int n);
 };
 

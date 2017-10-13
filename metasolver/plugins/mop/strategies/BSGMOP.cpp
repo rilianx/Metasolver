@@ -22,10 +22,10 @@ BSG_MOP::~BSG_MOP() {
 
 
 
-bool BSG_MOP::update(map< pair<double, double>, State*, nd_sort>& NDS, State& state_copy, double valuef1, double valuef2){
+bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2){
     //buscar si domina algun
 
-	map< pair<double, double>, State*, nd_sort>::iterator it;
+	map< pair<double, double>, State*>::iterator it;
     for(it=NDS.begin(); it!=NDS.end(); ){
       if((*it).first.first<valuef1 && (*it).first.second<=valuef2)
           it=NDS.erase(it);
@@ -96,39 +96,46 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
    }
 }
 
-//TODO: Eliminar estado final de states sin insertar en filtered_states
+/** TODO: Eliminar final_state (delete final_state) de pares descartados del mapa states
+ *  y eliminar pares descartados del mapa states
+ */
 
-void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >&states, list< State* >& filtered_states, int n) {
-	list< pair<State*,State*> >::iterator it1, it2;//it1=states , it2=filtered_states
-	list< pair<State*,State*>  > frontera;
+void BSG_MOP::filter_nondominated_sort (map< pair<double, double>, pair<State*, State*> >&states, list< State* >& filtered_states, int n) {
+	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
+	map< pair<double, double>, pair<State*, State*> > frontera;
+
+
 	while(true){
-		for(it1=states.begin();it1!=states.end();){
-			State* s= it1->first;
-			State* final_state= it1->second;
+		for(it1=states.begin();it1!=states.end();it1++){
+			State* s= it1->second.first;
+			State* final_state= it1->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
-			if(!a) {delete final_state; continue;}
+			if(!a) {
+				delete final_state;
+				continue;
+			}
 
 			int domin=0;
-			for(it2=states.begin();it2!=states.end();){
+			for(it2=states.begin();it2!=states.end();it2++){
 				if((*it1)!=(*it2))
 				if(final_state->get_value()<=final_state->get_value()){
 					domin=domin+1;
 				}
 			}
 			if( domin == 0){
-				frontera.push_back((*it1));
+				frontera.insert(*it1);
 			}
 		}
 
 		if((filtered_states.size()+frontera.size())<=n){
 			for(it1=frontera.begin();it1!=frontera.end();it1++){
-				State* s= it1->first;
-				State* final_state= it1->second;
+				State* s= it1->second.first;
+				State* final_state= it1->second.second;
 				Action* a = (s)? s->next_action(*final_state):NULL;
 
 		 		s=s->copy();
 				s->transition(*a);
-				it1->first=s;
+				it1->second.first=s;
 
 				filtered_states.push_back(s);
 			}
@@ -136,11 +143,13 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >&states, list
 		}
 		else{
 			filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
-			return;
+			break;
 		}
-
-
 	}
+
+
+
+
 }
 
 list<State*> BSG_MOP::next(list<State*>& S){
@@ -149,9 +158,6 @@ list<State*> BSG_MOP::next(list<State*>& S){
     if(S.size()==0) return S;
     int n=5;//aun no se de donde lo obtendremos
 
-    //estados de la siguiente generacion
-    //TODO: crear mapa global con clave (f1,f2) para no perder caminos a mejores soluciones
-    list< pair<State*, State*> > next_states;
 
     //se expanden los nodos de la lista S
     int i=0;
@@ -206,7 +212,9 @@ list<State*> BSG_MOP::next(list<State*>& S){
         		//cout << "NDS size:" << NDS.size() << endl;
         	}
 
-        	next_states.push_back(make_pair(&state, &state_copy));
+        	//se inserta el estado si no hay uno equivalente en el mapa
+        	if(state_actions.find(value) == state_actions.end())
+        		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
 
         }
 
@@ -215,7 +223,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
     list< State* > filtered_states;
 
-	filter_nondominated_sort (next_states, filtered_states, beams);
+	filter_nondominated_sort (state_actions, filtered_states, beams);
 
 	return filtered_states;
 

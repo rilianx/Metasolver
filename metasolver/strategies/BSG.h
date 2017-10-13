@@ -102,11 +102,11 @@ protected:
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
 			if(nextS.size()<beams && a){
-			s=s->copy();
-			state_action->second.first=s;
-			s->transition(*a);
-			nextS.push_back(s);
-		 }else state_action->second.first=NULL;
+				s=s->copy();
+				state_action->second.first=s;
+				s->transition(*a);
+				nextS.push_back(s);
+			}else state_action->second.first=NULL;
 
 			//other elements are removed from the state_actions
 			 if(k>=beams){
