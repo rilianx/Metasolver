@@ -277,6 +277,7 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 	    		//cout << "new_blocks" << endl;
 				list<const Block*> newB = (*itP)->create_new_blocks(*itB, min_fr, max_dim);
 
+
 				list<const Block*>:: iterator itNew=newB.begin();
 				for(;itNew!=newB.end();itNew++){
 				   if(is_constructible(*this,**itNew) && **itNew <= cont){

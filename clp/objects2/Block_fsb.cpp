@@ -38,6 +38,7 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 
 		long x2=0, y2=0, z2=0;
 
+		cout << 3 << endl;
 		switch(i){
 			case 0:
 			  if(b1->getH()!=b2->getH() || b1->pa_l!=b1->getL() || b2->pa_l!=b2->getL()) continue;
@@ -49,6 +50,7 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 			  if((b1->pa_w<b2->getW() || b1->pa_l<b2->getL()) && (b2->pa_w<b1->getW() || b2->pa_l<b1->getL())) continue;
 			  hh=(b1->getH()+b2->getH()); z2=b1->getH();
 		}
+
 
 		long vol= ll*ww*hh;
 
@@ -66,7 +68,9 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 			}else
 				delete new_block;
 
+
 		}
+
 	}
 
 	return blocks;
@@ -83,12 +87,15 @@ void Block_fsb::insert(const Block& block, const Vector3& point, const Vector3 m
 
     //Se actualiza el volumen ocupado
     occupied_volume += block.getOccupiedVolume();
+    total_weight += block.getTotalWeight();
 
 	AABB b(point, &block);
 
     AABB b1(b.getXmin(), b.getYmin(), b.getZmin(), b.getXmax(), b.getYmax(), b.getH());
+    //TODO: Fix this bug
+	cout << 4 << endl;
     spaces->crop_volume(b1, *this, min_dim);
-
+	cout << 5 << endl;
 	AABB b2(b.getXmin(), b.getYmin(), b.getZmax(), b.getXmin()+block_fsb->getPA_L(), b.getYmin()+block_fsb->getPA_W(), getH());
 	spaces->insert(Space(b2, *this));
 
