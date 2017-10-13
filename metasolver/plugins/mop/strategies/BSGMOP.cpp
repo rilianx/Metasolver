@@ -96,19 +96,19 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
    }
 }
 
-
+bool mycomp(pair<State*, State*> a, pair<State*, State*> b ){
+	return a.second->get_value() <b.second->get_value();
+}
 
 void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n1){
 	list< pair<State*, State*> >::iterator anterior,actual,siguiente,it1;
 
-	long distance[n1]
+	long distance[n1];
 	//la distancia de cada punto se iguala a 0
 	//se ordena la frontera por el las funciones objetivos, como el problema es biobjetivo y son no dominados, solo lo ordenaremos por la primera funcion objetivo
 	//
 
-	for(){
-
-	}
+	sort(frontera.begin(),frontera.end(),mycomp);
 	//se debe ordenar la frontera si o si dejando al primer elemento como el que maximiza el objetivo 1(get_value)
 	it1=frontera.begin()++;// el for comienza desde el segundo elemento y termina en el penultimo
 	for(int i=0;it1!=frontera.end()--;i++){
