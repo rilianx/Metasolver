@@ -50,7 +50,7 @@ public:
 	 * Performs an iteration of the strategy
 	 * @returns true if the search strategy has not finished yet
 	 */
-	virtual list<State*> next(list<State*>& S);
+	virtual list< pair<State*,State*> > next(list<State*>& S);
 
 	map< pair<double, double>, State*> get_pareto_front(){
 		return NDS;
