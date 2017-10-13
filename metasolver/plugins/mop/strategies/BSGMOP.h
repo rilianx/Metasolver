@@ -82,7 +82,7 @@ public:
 	 * Las acciones (a) deben ser eliminadas: if(a) delete a;
 	 */
 
-	void filter_nondominated_sort (map< pair<double, double>, pair<State*, State*> >&states, list< State* >& filtered_states, int n);
+	void filter_nondominated_sort (list< State* >& filtered_states, int n);
 
 
 

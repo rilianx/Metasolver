@@ -97,16 +97,16 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
 }
 
 /** TODO: Eliminar final_state (delete final_state) de pares descartados del mapa states
- *  y eliminar pares descartados del mapa states
+ *  y eliminar pares descartados del mapa states (fronteras descartadas y soluciones descartadas de ultima frontera)
  */
 
-void BSG_MOP::filter_nondominated_sort (map< pair<double, double>, pair<State*, State*> >&states, list< State* >& filtered_states, int n) {
+void BSG_MOP::filter_nondominated_sort (list< State* >& filtered_states, int n) {
 	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
 	map< pair<double, double>, pair<State*, State*> > frontera;
 
 
 	while(true){
-		for(it1=states.begin();it1!=states.end();it1++){
+		for(it1=state_actions.begin();it1!=state_actions.end();it1++){
 			State* s= it1->second.first;
 			State* final_state= it1->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
@@ -116,7 +116,7 @@ void BSG_MOP::filter_nondominated_sort (map< pair<double, double>, pair<State*, 
 			}
 
 			int domin=0;
-			for(it2=states.begin();it2!=states.end();it2++){
+			for(it2=state_actions.begin();it2!=state_actions.end();it2++){
 				if((*it1)!=(*it2))
 				if(final_state->get_value()<=final_state->get_value()){
 					domin=domin+1;
