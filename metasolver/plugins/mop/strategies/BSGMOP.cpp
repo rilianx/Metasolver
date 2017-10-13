@@ -268,7 +268,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 	for(auto states:filtered_states)
 		return_states.push_back(states.second);
 
-	return filtered_states;
+	return return_states;
 
 	/*
 	map< pair<double, double>, pair<State*, State*>, nd_sort > ::iterator state_action=sorted_states.begin();
