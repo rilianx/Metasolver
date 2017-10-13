@@ -164,16 +164,17 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 		}
 
 		if((filtered_states.size()+frontera.size())<=n){
-			for(it1=frontera.begin();it1!=frontera.end();it1++){
-				State* s= it1->second.first;
-				State* final_state= it1->second.second;
+			for(it3=frontera.begin();it3!=frontera.end();it3++){
+
+				State* s= it3->first;
+				State* final_state= it3->second;
 				Action* a = (s)? s->next_action(*final_state):NULL;
 
 		 		s=s->copy();
 				s->transition(*a);
-				it1->second.first=s;
+				it3->first=s;
 
-				filtered_states.push_back(it1->second);
+				filtered_states.push_back((*it3));
 			}
 			//filtered_states.push_back()
 		}
