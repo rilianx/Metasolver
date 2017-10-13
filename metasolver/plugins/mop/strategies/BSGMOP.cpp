@@ -96,22 +96,46 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
    }
 }
 
+
+
+void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> > frontera&, list< pair<State*,State*> >& filtered_states, int n){
+	list< pair<State*, State*> >::iterator anterior,actual,siguiente,it1;
+
+
+	//la distancia de cada punto se iguala a 0
+	//se ordena la frontera por el las funciones objetivos, como el problema es biobjetivo y son no dominados, solo lo ordenaremos por la primera funcion objetivo
+	//
+
+	for(it1=frontera.begin(), int i=0;it1!=frontera.end();i++){
+
+		actual=it1;
+		anterior=actual--;
+		actual=it1;
+		siguiente=actual++;
+		//valor siguiente - valor anterior/
+		distance[i]=distance[i]+(()/())
+	}
+
+}
+
+
 /** TODO: Eliminar final_state (delete final_state) de pares descartados del mapa states
  *  y eliminar pares descartados del mapa states (fronteras descartadas y soluciones descartadas de ultima frontera)
  */
 
-void BSG_MOP::filter_nondominated_sort (list< State* >& filtered_states, int n) {
+void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_states, int n) {
 	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
-	map< pair<double, double>, pair<State*, State*> > frontera;
+	list< pair<State*, State*> > frontera;
 
 
 	while(true){
-		for(it1=state_actions.begin();it1!=state_actions.end();it1++){
+		frontera.clear();
+		for(it1=state_actions.begin();it1!=state_actions.end();){
 			State* s= it1->second.first;
 			State* final_state= it1->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
 			if(!a) {
-				delete final_state;
+				delete final_state; it1++;
 				continue;
 			}
 
@@ -123,8 +147,14 @@ void BSG_MOP::filter_nondominated_sort (list< State* >& filtered_states, int n) 
 				}
 			}
 			if( domin == 0){
-				frontera.insert(*it1);
-			}
+				frontera.push_back(it1->second);
+				it2=it1;
+				it2++;
+			    state_actions.erase(it1);
+			    it1=it2;
+			}else it1++;
+
+
 		}
 
 		if((filtered_states.size()+frontera.size())<=n){
@@ -137,20 +167,22 @@ void BSG_MOP::filter_nondominated_sort (list< State* >& filtered_states, int n) 
 				s->transition(*a);
 				it1->second.first=s;
 
-				filtered_states.push_back(s);
+				filtered_states.push_back(it1->second);
 			}
 			//filtered_states.push_back()
 		}
 		else{
 			filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
+
 			break;
 		}
 	}
 
 
 
-
 }
+
+
 
 list<State*> BSG_MOP::next(list<State*>& S){
 
