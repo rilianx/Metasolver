@@ -60,7 +60,7 @@ list<State*> BSG::next(list<State*>& S){
 
          }
      }
-     
+
   
      //siguiente generacion de estados
      return get_next_states(state_actions);

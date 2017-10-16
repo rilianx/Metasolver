@@ -21,12 +21,12 @@ bool SpaceSet::random_spaces = false;
 void SpaceSet::crop_volume(const AABB& volume, const Vector3& cont, const Vector3& min_dim){
 	list<const Space*> intersected_objects = get_intersected_objects(volume);
 
+
 	list<Space> new_objects;
 	//se eliminan todos los objetos que itersectan a volume
 	while(!intersected_objects.empty()){
 		const Space& obj = *intersected_objects.front();
 		intersected_objects.pop_front();
-
 		if(obj.strict_intersects(volume)){
 			list<AABB> sub = obj.subtract(volume);
             while(sub.size()){
@@ -39,6 +39,7 @@ void SpaceSet::crop_volume(const AABB& volume, const Vector3& cont, const Vector
 
 		erase(obj);
 	}
+
 
 	//se filtran y se agregal los nuevos objetos
 	remove_nonmaximal_objects(new_objects);
@@ -61,10 +62,13 @@ void SpaceSet::remove_nonmaximal_objects(list<Space>& objs){
   }
 }
 
-const Space& SpaceSet::_insert(const Space& sp){
+const Space* SpaceSet::_insert(const Space& sp){
 	pair<set<Space, by_manhattan_distance>::iterator,bool> p = data.insert(sp);
 	if(global::TRACE) cout << "insert_space:+" <<  (*p.first) << ";" << &(*p.first) << endl;
-	return (*p.first);
+    if(p.second)
+    	return (&(*p.first));
+    else
+    	return NULL;
 }
 
 /*
@@ -109,7 +113,6 @@ const Space& SpaceSet::top() const{
 void SpaceSet::_erase(const Space& sp){
 	if(global::TRACE) cout << "delete_space: " << sp << ";" << &sp << endl;
     data.erase(sp);
-
 }
 
 class SpaceSet ;

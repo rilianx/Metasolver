@@ -38,8 +38,11 @@ public:
 	virtual ~AABBContainer() { }
 
 	void insert(const T& object){
-		tree.insert(_insert(object));
-		sz++;
+		const T* o = _insert(object);
+		if(o){
+			tree.insert(*o);
+			sz++;
+		}
 	}
 
 	void erase(const T& object){tree.erase(object); _erase(object);  sz--;}
@@ -81,7 +84,7 @@ protected:
 	/**
 	 * returns a reference to the inserted object
 	 */
-	virtual const T& _insert(const T& object)=0;
+	virtual const T* _insert(const T& object)=0;
 	virtual void _erase(const T& object)=0;// { };
 
 private:

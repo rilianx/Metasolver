@@ -25,10 +25,10 @@ void clpState::get_actions(list< Action* >& actions){
 
    // cout << valid_blocks.size() << endl;
 
-	while(cont.spaces->size()>0 && actions.size()==0){
+	while(cont->spaces->size()>0 && actions.size()==0){
 		//cout << "spaces:" << cont.spaces->size() << endl;
 
-	    sp=&cont.spaces->top();
+	    sp=&cont->spaces->top();
 
 		for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
 			if(**it <= sp->getDimensions()) actions.push_back(new clpAction(**it,*sp));
@@ -36,7 +36,7 @@ void clpState::get_actions(list< Action* >& actions){
 		//the space is removed
 		if(actions.size()==0){
 			//cout << "to delete: " << *sp << ";" << sp << endl;
-			cont.spaces->pop();
+			cont->spaces->pop();
 		}
 	}
 }
@@ -46,7 +46,7 @@ void clpState::compute_supports(map<const AABB*,int>& n_supports, set<const AABB
 	set<const AABB*> visited;
 
     //we calculate the number of supported blocks for each block
-    const AABB* block = &cont.blocks->top();
+    const AABB* block = &cont->blocks->top();
     int i=0;
     while(true){
         visited.insert(block);
@@ -54,11 +54,11 @@ void clpState::compute_supports(map<const AABB*,int>& n_supports, set<const AABB
 
         if(n_supports.find(block)==n_supports.end()) zero_support_aabb.insert(block);
 
-        list<const AABB*> adj = cont.blocks->get_intersected_objects(*block);
+        list<const AABB*> adj = cont->blocks->get_intersected_objects(*block);
         for( auto aabb : adj )
             if(visited.find(aabb)==visited.end()) n_supports[aabb]++;
 
-        if(cont.blocks->has_next()) block = &cont.blocks->next();
+        if(cont->blocks->has_next()) block = &cont->blocks->next();
         else break;
     }
 }
@@ -67,7 +67,7 @@ void clpState::update_supports(const AABB* block,
 		map<const AABB*,int>& n_supports, set<const AABB*>& zero_support_aabb){
 
 	zero_support_aabb.erase(block);
-    list<const AABB*> adj = cont.blocks->get_intersected_objects(*block);
+    list<const AABB*> adj = cont->blocks->get_intersected_objects(*block);
     for( auto aabb : adj )
         if(n_supports.find(aabb)!=n_supports.end()) {
             n_supports[aabb]--;
@@ -108,36 +108,36 @@ int clpState::shuffle_path() {
 
     list<const Action*> new_path;
 
-    const AABB* block = &cont.blocks->top();
+    const AABB* block = &cont->blocks->top();
     //se genera el path colocando todos los bloques de la izquierda de cont
     while(true){
-    	if(((left && block->getXmin() <= cont.getL() - block->getXmax())||
-    			(!left && block->getXmin() > cont.getL() - block->getXmax())) &&
+    	if(((left && block->getXmin() <= cont->getL() - block->getXmax())||
+    			(!left && block->getXmin() > cont->getL() - block->getXmax())) &&
     			zero_support_aabb.find(block)!=zero_support_aabb.end()){
 
 
-    		 new_path.push_back(new clpAction(*block, cont));
+    		 new_path.push_back(new clpAction(*block, *cont));
 
     		 update_supports(block, n_supports, zero_support_aabb);
     	}
 
-        if(cont.blocks->has_next()) block = &cont.blocks->next();
+        if(cont->blocks->has_next()) block = &cont->blocks->next();
         else break;
     }
 
     int i=new_path.size();
 
-    block = &cont.blocks->top();
+    block = &cont->blocks->top();
      //se coloca el resto de loc bloques en el path
      while(true){
      	if(zero_support_aabb.find(block)!=zero_support_aabb.end()){
 
-     		 new_path.push_back(new clpAction(*block, cont));
+     		 new_path.push_back(new clpAction(*block, *cont));
 
      		 update_supports(block, n_supports, zero_support_aabb);
      	}
 
-         if(cont.blocks->has_next()) block = &cont.blocks->next();
+         if(cont->blocks->has_next()) block = &cont->blocks->next();
          else break;
      }
 
@@ -167,8 +167,7 @@ long rand(long seed)
 double clpState::weight_of_allboxes=0.0;
 
 
-clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb, int f){
-	Block::FSB=fsb;
+clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
 	ifstream in(file.c_str());
 	string line;
@@ -191,7 +190,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb, int
 			std::stringstream ss(line);
 			long l,w,h;
 			ss >> l >> w >> h;
-			s= new clpState(l,w,h);
+			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 			cout << l << "," << w << "," << h << endl;
 			cout << "Vmax:" << l*w*h << endl;
 		}
@@ -246,17 +245,20 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, bool fsb, int
 
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
-					if(boxt->is_valid((BoxShape::Orientation) o))
-					     s->valid_blocks.push_back(Block::create_block(*boxt,(BoxShape::Orientation) o,fsb));
+					if(boxt->is_valid((BoxShape::Orientation) o)){
+						if(!Block::FSB)
+							s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o));
+						else
+							s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o));
+					}
 				}
-
+				//cout << "Wmax:" << clpState::weight_of_allboxes << endl;
 			}
-
 		}
-		cout << "Wmax:" << clpState::weight_of_allboxes << endl;
+
 	}
 
-	s->general_block_generator(min_fr, max_bl, s->cont);
+	s->general_block_generator(min_fr, max_bl, *s->cont);
 
 	s->update_min_dim();
 
@@ -275,11 +277,13 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 	    	list<const Block*> :: iterator itB=B.begin();
 	    	for(;itB!=B.end() && B.size()+new_elems<max_bl ; itB++){
 
-				list<const Block*> newB = create_new_blocks(**itP, **itB, min_fr, max_dim);
+	    		//cout << "new_blocks" << endl;
+				list<const Block*> newB = (*itP)->create_new_blocks(*itB, min_fr, max_dim);
+
 
 				list<const Block*>:: iterator itNew=newB.begin();
 				for(;itNew!=newB.end();itNew++){
-				   if(is_constructible(*this,**itNew) && **itNew <= cont){
+				   if(is_constructible(*this,**itNew) && **itNew <= *cont){
 					  int NoldSize=N.size();
 					  N.push_back(*itNew);
 					  new_elems++;
@@ -293,7 +297,6 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 		B.insert(B.end(),N.begin(),N.end());
 		P=N;
 	}
-
 }
 
 
@@ -334,7 +337,7 @@ void clpState::_transition(const Action& action) {
 	//if(update) update_min_dim();
 
 	//se inserta el bloque en el contenedor
-	cont.insert(b, act.space.get_location(b), mindim);
+	cont->insert(b, act.space.get_location(b), mindim);
 
 	//se actualizan los bloques validos
 	update_valid_blocks();
