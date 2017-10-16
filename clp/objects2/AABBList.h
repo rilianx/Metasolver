@@ -33,10 +33,10 @@ public:
 		}
 	}
 
-	virtual const AABB& _insert(const AABB& object){
+	virtual const AABB* _insert(const AABB& object){
 		data.push_back(object);
 		//cout << "insert_box:" <<  data.back() << endl;
-		return data.back();
+		return &data.back();
 	}
 
 	virtual void _erase(const AABB& object){

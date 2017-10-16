@@ -53,9 +53,9 @@ public:
 		occupied_volume = getVolume();
 	}
 
-	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
-		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
-	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)), total_weight(b.total_weight) {	}
+	virtual Block* clone(){
+		return new Block(*this);
+	}
 
 	/**
 	 * Constructs a single-box block
@@ -63,8 +63,6 @@ public:
 	Block(const BoxShape & b, BoxShape::Orientation o);
 
 	virtual ~Block();
-
-	static Block* create_block(const BoxShape & b, BoxShape::Orientation o, bool fsb);
 
 	/**
 	 * Crea una lista de a lo mas 3 bloques juntando los bloques b1 y b2
@@ -104,6 +102,10 @@ public:
 
 protected:
 
+	//only the clone function can use the copy constructor
+	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
+		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
+	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)), total_weight(b.total_weight) {	}
 
 
     void MatLab_printR(int i=1, int j=1, double R=0.0, double G=0.0, double B=0.0, double alpha=1.0, Vector3 mins=Vector3(0,0,0)) const{
@@ -141,6 +143,7 @@ protected:
 
 	static set<const Block*, block_order> all_blocks;
 
+
 };
 
 class Block_fsb : public Block{
@@ -155,12 +158,20 @@ public:
 	 */
 	Block_fsb(const BoxShape & b, BoxShape::Orientation o);
 
+	virtual Block* clone(){
+		return new Block_fsb(*this);
+	}
+
 	long getPA_L() const;
 	long getPA_W() const;
 
-	virtual void insert(const Block& block, const Vector3& point, const Vector3 min_dim);
+	virtual void insert(const Block& block, const Vector3& point, const Vector3 min_dim=Vector3(0,0,0));
 
-	list<const Block* > create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const;
+	virtual list<const Block* > create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const;
+
+protected:
+	//only the clone function can use the copy constructor
+	Block_fsb(const Block_fsb& b) : Block(b), pa_l(b.pa_l), pa_w(b.pa_w) {	}
 
 private:
 	//usados en variante con restriccion fsb (full supported blocks)

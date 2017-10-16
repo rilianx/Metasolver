@@ -20,7 +20,7 @@ Block_fsb::Block_fsb(const BoxShape & b, BoxShape::Orientation o) : Block(b,o) {
 }
 
 long Block_fsb::getPA_L() const{return pa_l;}
-long Block_fsb::getPA_W() const{return pa_l;}
+long Block_fsb::getPA_W() const{return pa_w;}
 
 
 list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr, const Vector3& max_dim) const{
@@ -28,7 +28,7 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 	const Block_fsb* b1=this;
 	const Block_fsb* b2=dynamic_cast<const Block_fsb*>(_b2);
 
-	cout << "creating fsb blocks!" << endl;
+	//cout << "creating fsb blocks!" << endl;
 	list<const Block*> blocks;
 
 	for(int i=0; i<3; i++){
@@ -38,7 +38,7 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 
 		long x2=0, y2=0, z2=0;
 
-		cout << 3 << endl;
+		//cout << 3 << endl;
 		switch(i){
 			case 0:
 			  if(b1->getH()!=b2->getH() || b1->pa_l!=b1->getL() || b2->pa_l!=b2->getL()) continue;
@@ -56,17 +56,32 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 
 		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
 
-			Block* new_block;
+			Block_fsb* new_block=new Block_fsb(ll,ww,hh);
 
-			new_block=new Block_fsb(ll,ww,hh);
 			new_block->insert(*b1, Vector3(0,0,0));
 			new_block->insert(*b2, Vector3(x2,y2,z2));
+
+			switch(i){
+			case 2:
+				new_block->pa_l=min( b1->pa_l, b2->pa_l);
+				new_block->pa_w=min( b1->pa_w, b2->pa_w);
+				break;
+			case 0:
+				new_block->pa_l=ll;
+				new_block->pa_w=min(b1->pa_w,b2->pa_w);
+				break;
+			case 1:
+				new_block->pa_w=ww;
+				new_block->pa_l=min(b1->pa_l,b2->pa_l);
+				break;
+			}
 
 			if(Block::all_blocks.find(new_block)==Block::all_blocks.end()){
 				Block::all_blocks.insert(new_block);
 				blocks.push_back(new_block);
 			}else
 				delete new_block;
+
 
 
 		}
@@ -91,11 +106,10 @@ void Block_fsb::insert(const Block& block, const Vector3& point, const Vector3 m
 
 	AABB b(point, &block);
 
-    AABB b1(b.getXmin(), b.getYmin(), b.getZmin(), b.getXmax(), b.getYmax(), b.getH());
-    //TODO: Fix this bug
-	cout << 4 << endl;
+    AABB b1(b.getXmin(), b.getYmin(), b.getZmin(), b.getXmax(), b.getYmax(), getH());
+
     spaces->crop_volume(b1, *this, min_dim);
-	cout << 5 << endl;
+
 	AABB b2(b.getXmin(), b.getYmin(), b.getZmax(), b.getXmin()+block_fsb->getPA_L(), b.getYmin()+block_fsb->getPA_W(), getH());
 	spaces->insert(Space(b2, *this));
 

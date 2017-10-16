@@ -19,10 +19,10 @@ int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 
     const Space* sp=NULL;
 
-	while(cont.spaces->size()>0 && actions.size()==0){
+	while(cont->spaces->size()>0 && actions.size()==0){
 		//cout << "spaces:" << cont.spaces->size() << endl;
 
-	    sp=&cont.spaces->top();
+	    sp=&cont->spaces->top();
 
 	    list<const Block*> valid_blocks;
 
@@ -33,7 +33,7 @@ int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 		for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
 			 actions.push_back(new clpAction(**it,*sp));
 
-		if(actions.size()==0) cont.spaces->pop();
+		if(actions.size()==0) cont->spaces->pop();
 
 
 	}

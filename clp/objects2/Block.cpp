@@ -36,16 +36,6 @@ Block::~Block() {
 
 
 
-Block* Block::create_block(const BoxShape & b, BoxShape::Orientation o, bool fsb){
-	if(fsb){
-		cout << "creating simple fsb blocks!" << endl;
-		return new Block_fsb(b,o);
-	}else{
-		cout << "creating simple no-fsb blocks!" << endl;
-		return new Block(b,o);
-	}
-}
-
 void Block::insert(const Block& block, const Vector3& point, const Vector3 min_dim){
     //Se actualiza la cantidad de cajas
 	map<const BoxShape*, int>::const_iterator it_nb;
@@ -71,7 +61,6 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 	const Block* b1=this;
 	list<const Block*> blocks;
 
-	cout << "creating no-fsb blocks!" << endl;
 	for(int i=0; i<3; i++){
 		long ll= max(b1->getL(),b2->getL());
 		long ww= max(b1->getW(),b2->getW());

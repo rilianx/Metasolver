@@ -48,10 +48,15 @@ public:
     enum Format{BR, _1C};
 
 	clpState(const clpState& S, bool root) : State(S,root),
-	cont(S.cont), nb_left_boxes(S.nb_left_boxes),
+	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
 	valid_blocks(S.valid_blocks), mindim(S.mindim){
 
 	}
+
+	virtual ~clpState(){
+		if(cont) delete cont;
+	}
+
 
 	virtual State* copy(bool root=false) const{
 		State* st=new clpState(*this, root);
@@ -60,15 +65,15 @@ public:
 
 	virtual State* create_neighbor(State* s0);
 
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl,bool fsb, int f);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, int f);
 
 	virtual double get_value() const{
-		return ((double) cont.getOccupiedVolume()/(double) cont.getVolume());
+		return ((double) cont->getOccupiedVolume()/(double) cont->getVolume());
 	}
 
 	virtual double get_value2() const{
 		//return 0.0;
-		return cont.getTotalWeight() / weight_of_allboxes;
+		return cont->getTotalWeight() / weight_of_allboxes;
 	}
 
 
@@ -83,12 +88,12 @@ public:
 	int get_n_valid_blocks() {return valid_blocks.size();}
 
 	//member variables
-	Block cont;
+	Block* cont;
 	map<const BoxShape*, int> nb_left_boxes;
 	list<const Block*> valid_blocks;
 
 	virtual void print() {
-		cont.MatLab_print();
+		cont->MatLab_print();
 	}
 
 protected:
@@ -97,7 +102,7 @@ protected:
 
 private:
 
-	clpState(int l, int w, int h) : cont(l,w,h), mindim(l,w,h) {  };
+	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
 
 	/**
 	 * Remove the free spaces in the container that cannot
@@ -144,7 +149,7 @@ private:
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000,bool fsb=false, int i=clpState::BR);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, int i=clpState::BR);
 
 } /* namespace clp */
 

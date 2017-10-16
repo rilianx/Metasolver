@@ -73,7 +73,7 @@ public:
 
 
 protected:
-	virtual const Space& _insert(const Space& sp);
+	virtual const Space* _insert(const Space& sp);
 
 	virtual void _erase(const Space& sp);
 

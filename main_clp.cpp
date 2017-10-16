@@ -47,9 +47,12 @@ int main(int argc, char** argv){
 
 
 	//SpaceSet::random_spaces=true; 
+    //global::TRACE=true;
 
     cout << "cargando la instancia..." << endl;
-    clpState* s0 = new_state(file,inst, min_fr, 10000, fsb);
+
+    Block::FSB=fsb;
+    clpState* s0 = new_state(file,inst, min_fr, 10000);
 
     if(kdtree)
        s0 = new clpState_kd(*s0);
@@ -58,7 +61,7 @@ int main(int argc, char** argv){
 
     clock_t begin_time=clock();
 
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, s0->cont,
+    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, r);
 
 	if(!kdtree)
@@ -72,21 +75,24 @@ int main(int argc, char** argv){
 	//for(int i=0;i<10000; i++)
 	//	exp->best_action(*s0);
 
-
+	cout << "greedy" << endl;
     SearchStrategy *gr = new Greedy ();
 
+	cout << "bsg" << endl;
     BSG *bsg= new BSG(*gr, 4);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
 
+	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*bsg);
 
+	cout << "copying state" << endl;
 	State& s_copy= *s0->copy(true);
  
    // cout << s0.valid_blocks.size() << endl;
 
-
+	cout << "running" << endl;
     double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
 
@@ -98,7 +104,7 @@ int main(int argc, char** argv){
 	}
 	 */
 
-	dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
+	dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
 
 
 }

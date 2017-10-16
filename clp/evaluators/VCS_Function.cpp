@@ -65,7 +65,7 @@ double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){
 	   for(int i=0; i<6; i++) cs[i]=0.0;
 
 	   std::list<const AABB*> blocks =
-			   dynamic_cast<const clpState*>(&s)->cont.blocks->get_intersected_objects(bexp);
+			   dynamic_cast<const clpState*>(&s)->cont->blocks->get_intersected_objects(bexp);
 
 	   std::list<const AABB*>::iterator it;
 
@@ -73,7 +73,7 @@ double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){
 		   surface=surface+_surface_in_contact(bb,**it);
 	   }
 
-	   surface=surface+_surface_in_contact(bb, dynamic_cast<const clpState*>(&s)->cont);
+	   surface=surface+_surface_in_contact(bb, *dynamic_cast<const clpState*>(&s)->cont);
 
 	   return (double)surface / (double)(bb.getSurface());
 }
