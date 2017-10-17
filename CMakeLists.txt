@@ -30,7 +30,14 @@ bsg
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp  
-#metasolver/plugins/mop/strategies/BSGMOP.cpp
+)
+
+ADD_LIBRARY(
+bsg_mop
+metasolver/GlobalVariables.cpp
+metasolver/strategies/BSG.cpp
+metasolver/strategies/Greedy.cpp  
+metasolver/plugins/mop/strategies/BSGMOP.cpp
 )
 
 ADD_LIBRARY(
@@ -58,11 +65,11 @@ clp/plugins/kdtree/BlockSet.cpp
 
 ADD_EXECUTABLE(CLP2017 main_clp.cpp)
 
-#ADD_EXECUTABLE(CLP_MOP test_clp_mop.cpp)
+ADD_EXECUTABLE(CLP_MOP test_clp_mop.cpp)
 
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
 
-#target_link_libraries(CLP_MOP bsg clp)
+target_link_libraries(CLP_MOP bsg bsg_mop clp)
  
 ENDIF()
 
