@@ -10,27 +10,52 @@
 namespace clp {
 
 
-NSGA2::~NSGA2() {
-	// TODO Auto-generated destructor stub
+
+//Basado: http://www.cleveralgorithms.com/nature-inspired/evolution/nsga.html
+virtual list<Chromosome*> NSGA2::next(vector<Chromosome*>& pop){
+
+
+	vector<Chromosome*> selected(pop_size);
+	binary_tournament_selection(pop, selected);
+
+	//reproduccion
+	list<Chromosome*> children;
+	Chromosome *p1, *p2;
+	for(int i=0; i<selected.size();i++){
+		p1=selected[i];
+		int j = (i%0==0)?  i+1 : i-1;
+		if(j == selected.size()-1) p2=selected[0];
+		else p2=selected[j];
+
+
+		//cruzamiento
+		Chromosome* child = p1;
+		if((double)rand()/(double)RAND_MAX < p_cross){
+			child = p1->crossover(p2);
+			children.push_back(child);
+		}
+
+		//mutacion
+		if((double)rand()/(double)RAND_MAX < p_mut){
+			children.push_back(child->mutate());
+		}
+	}
+
+	calculate_objectives(children);
+	list<Chromosome*> union2 = children;
+	union2.insert(union2.begin(), pop.begin(), pop.end());
+
+	return filter_nondominated_sort(union2);
 }
 
-//Basarse en este algoritmo: http://www.cleveralgorithms.com/nature-inspired/evolution/nsga.html
-virtual list<Chromosome*> NSGA2::next(list<Chromosome*>& G){
+void NSGA2::binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromosome*>& selection){
 
-	list<Chromosome*> offspringC = crossover(G);
-
-	list<Chromosome*> offspringM = mutation(G);
-
-	//se insertan los nuevos inidividuos a la poblacion G
-	G.insert(G.end(), offspringC.begin(), offspringC.end());
-
-	G.insert(G.end(), offspringM.begin(), offspringM.end());
-
-
-	//se seleccionan los mejores individios para la siguiente iteracion
-	return selection(G);
-
-
+	//asumo que la poblacion esta ordenada por frontera y luego distancia
+	for(int i=0; i<pop_size; i++){
+		int r1=rand()%pop_size;
+		int r2=rand()%pop_size;
+		selection[i]=pop[min(r1,r2)];
+	}
 }
 
 } /* namespace clp */

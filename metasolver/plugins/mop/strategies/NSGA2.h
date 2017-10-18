@@ -27,11 +27,14 @@ class Chromosome {
 public:
 	Chromosome(list<Gen>& genes) : genes(genes){ }
 
+	virtual ~Chromosome() { };
+
 	Chromosome* copy() {
 		return new Chromosome(genes);
 	}
 
 	/*
+	 * TODO: Operador de mutacion
 	 * Mutates the chromosome
 	 */
 	Chromosome* mutate(){
@@ -42,19 +45,30 @@ public:
 		return c_new;
 	}
 
+	/*
+	 * TODO: Operador de cruzamiento (Cristobal)
+	 */
+	Chromosome* crossover(Chromosome* c2){
+		Chromosome* c_new = copy();
+
+		//cruzar this con c2
+
+		return c_new;
+	}
 
 	/**
-	* The random movements used by the mutation operator
-	*/
+	 * TODO: movimientos del operador de mutacion (Cristobal)
+	 * The random movements used by the mutation operator
+	 */
 	void add_rnd_gene();
 	void remove_rnd_gene();
 	void change_rnd_gene();
 
 	/**
-	 * TODO: (Ignacio) Evaluate the objectives
+	 * TODO: (Ignacio) Calculate the objectives
 	 */
-	double get_value();
-	double get_value2();
+	virtual double get_value();
+	virtual double get_value2();
 
 
 	list<Gen> genes;
@@ -65,7 +79,7 @@ class NSGA2 {
 public:
 
 
-	NSGA2(double p_mut=0.3, double p_cross=0.9) : p_mut(p_mut), p_cross(p_cross) { };
+	NSGA2(double p_mut=0.3, double p_cross=0.9, double pop_size) : p_mut(p_mut), p_cross(p_cross), pop_size(pop_size) { };
 
 	virtual ~NSGA2() { };
 
@@ -73,19 +87,23 @@ public:
 	 * Performs an iteration of the strategy
 	 * @returns true if the search strategy has not finished yet
 	 */
-	virtual list<Chromosome*> next(list<Chromosome*>& G);
+	virtual list<Chromosome*> next(vector<Chromosome*>& G);
 
 	/**
-	 * The mutation operator
+	 * compute the objective values of the chromosomes
 	 */
-	virtual list<Chromosome*> mutation(list<Chromosome*>& G);
+	void calculate_objectives(list<Chromosome*>& children){
+		for(auto chrom : children){
+			chrom->get_value();
+			chrom->get_value2();
+		}
+	}
 
-	/**
-	 * The crossover operator
-	 */
-	virtual list<Chromosome*> crossover(list<Chromosome*>& G);
+	//TODO: filter_nondominated_sort
+	vector<Chromosome*> filter_nondominated_sort(list<Chromosome*>& G);
 
 
+	void binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromosome*>& selection);
 
 
 private:
@@ -99,6 +117,11 @@ private:
 	 * Crossover probability
 	 */
 	double p_cross;
+
+	/**
+	 * Size of the population
+	 */
+	int pop_size;
 
 };
 
