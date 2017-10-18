@@ -100,6 +100,9 @@ public:
 	}
 
 	//TODO: filter_nondominated_sort
+	/**
+	 * The filtered chromosomes should be deleted
+	 */
 	vector<Chromosome*> filter_nondominated_sort(list<Chromosome*>& G);
 
 

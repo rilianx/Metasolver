@@ -41,11 +41,9 @@ virtual list<Chromosome*> NSGA2::next(vector<Chromosome*>& pop){
 		}
 	}
 
-	calculate_objectives(children);
-	list<Chromosome*> union2 = children;
-	union2.insert(union2.begin(), pop.begin(), pop.end());
+	children.insert(children.begin(), pop.begin(), pop.end());
 
-	return filter_nondominated_sort(union2);
+	return filter_nondominated_sort(children);
 }
 
 void NSGA2::binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromosome*>& selection){
