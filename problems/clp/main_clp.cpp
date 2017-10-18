@@ -7,17 +7,17 @@
 
 #include <iostream>
 //#include "objects/State.cpp"
-#include "clp/clpState.h"
-#include "clp/plugins/kdtree/clpStatekd.h"
-#include "clp/plugins/kdtree/BlockSet.h"
-#include "metasolver/strategies/BSG_midBSG.h"
-#include "clp/evaluators/VCS_Function.h"
-#include "clp/evaluators/VCS_Function.h"
-#include "clp/objects2/SpaceSet.h"
-#include "metasolver/strategies/Greedy.h"
-#include "metasolver/strategies/DoubleEffort.h"
-#include "metasolver/GlobalVariables.h"
-#include "metasolver/strategies/BSG.h"
+#include "clpState.h"
+#include "clpStatekd.h"
+#include "BlockSet.h"
+#include "BSG_midBSG.h"
+#include "VCS_Function.h"
+#include "VCS_Function.h"
+#include "SpaceSet.h"
+#include "Greedy.h"
+#include "DoubleEffort.h"
+#include "GlobalVariables.h"
+#include "BSG.h"
 
 bool global::TRACE = false;
 
