@@ -93,7 +93,7 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = 1-de->run(s_copy, max_time, begin_time) ;
+    double eval = 1-gr->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
 
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv){
 	}
 	 */
 
-	dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
+	dynamic_cast<const clpState*>(gr->get_best_state())->cont->MatLab_print();
 
 
 }

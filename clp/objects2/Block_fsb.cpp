@@ -56,16 +56,15 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 
 		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
 
+			//TODO: Revisar que bloques construidos sean coherentes con packing areas definidas
 			Block_fsb* new_block=new Block_fsb(ll,ww,hh);
 
-			new_block->insert(*b1, Vector3(0,0,0));
-			new_block->insert(*b2, Vector3(x2,y2,z2));
+			if(i!=2){
+				new_block->insert(*b1, Vector3(0,0,0));
+				new_block->insert(*b2, Vector3(x2,y2,z2));
+			}
 
 			switch(i){
-			case 2:
-				new_block->pa_l=min( b1->pa_l, b2->pa_l);
-				new_block->pa_w=min( b1->pa_w, b2->pa_w);
-				break;
 			case 0:
 				new_block->pa_l=ll;
 				new_block->pa_w=min(b1->pa_w,b2->pa_w);
@@ -73,6 +72,17 @@ list<const Block* > Block_fsb::create_new_blocks(const Block* _b2, double min_fr
 			case 1:
 				new_block->pa_w=ww;
 				new_block->pa_l=min(b1->pa_l,b2->pa_l);
+				break;
+			case 2:
+				if(b1->pa_l >= b2->pa_l && b1->pa_w >= b2->pa_w){
+					new_block->insert(*b1, Vector3(0,0,0));
+					new_block->insert(*b2, Vector3(0,0,b1->getH()));
+				}else{
+					new_block->insert(*b2, Vector3(0,0,0));
+					new_block->insert(*b1, Vector3(0,0,b2->getH()));
+				}
+				new_block->pa_l=min( b1->pa_l, b2->pa_l);
+				new_block->pa_w=min( b1->pa_w, b2->pa_w);
 				break;
 			}
 
@@ -110,6 +120,7 @@ void Block_fsb::insert(const Block& block, const Vector3& point, const Vector3 m
 
     spaces->crop_volume(b1, *this, min_dim);
 
+    //TODO: revisar concordancia entre packing areas y los bloques
 	AABB b2(b.getXmin(), b.getYmin(), b.getZmax(), b.getXmin()+block_fsb->getPA_L(), b.getYmin()+block_fsb->getPA_W(), getH());
 	spaces->insert(Space(b2, *this));
 
