@@ -12,7 +12,7 @@
 
 
 using namespace std;
-
+using namespace metasolver;
 
 namespace clp{
 

@@ -7,12 +7,12 @@
 
 #include "Greedy.h"
 
-namespace clp {
+namespace metasolver {
 
 list<State*> Greedy::next(list<State*>& S) {
 	State& s= **S.begin();
 
-	Action* action = s.best_action();
+	Action* action = best_action(s);
 
 	if(action){
 		//std::cout << "selected box:" << action->block << endl;

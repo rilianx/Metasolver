@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace clp{
+namespace metasolver{
 
 class State;
 class Action;

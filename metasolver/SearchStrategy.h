@@ -15,11 +15,11 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class SearchStrategy {
 public:
-	SearchStrategy() : best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
 
 	virtual ~SearchStrategy() {
 
@@ -93,10 +93,27 @@ public:
 	 */
 	virtual bool double_effort() { return false; }
 
+
+
+
 protected:
+
+	/*
+	 * \brief return the best action according to the ActionEvaluator
+	 */
+	virtual Action* best_action(const State& s);
+
+
+	/**
+	 * \brief return the n best actions according to the ActionEvaluator
+	 */
+	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
+
 	double timelimit;
 	State* best_state;
 	clock_t begin_time;
+
+	ActionEvaluator* evl;
 
 };
 

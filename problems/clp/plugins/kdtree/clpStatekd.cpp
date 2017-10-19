@@ -12,7 +12,7 @@ namespace clp {
 
 BlockSet* clpState_kd::blocks=NULL;
 
-
+/* TODO: create a searchStrategy for this
 int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 
 	list<const Block*>::iterator it;
@@ -40,10 +40,10 @@ int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 
 	return actions.size();
 
-}
+}*/
 
 
-clpState_kd::clpState_kd(const clpState& S) : clpState(S,root)  {
+clpState_kd::clpState_kd(const clpState& S) : clpState(S)  {
 	clpState_kd::blocks = new BlockSet(S.valid_blocks);
 	valid_blocks.clear();
 }

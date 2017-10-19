@@ -14,10 +14,12 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class Greedy : public SearchStrategy {
 public:
+
+	Greedy(ActionEvaluator* evl) : SearchStrategy(evl) { }
 
 	/**
 	 * Performs an iteration of the strategy

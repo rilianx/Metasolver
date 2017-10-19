@@ -21,7 +21,7 @@ public:
 
 
 
-	clpState_kd(const clpState_kd& S, bool root) : clpState(S,root) {
+	clpState_kd(const clpState_kd& S) : clpState(S) {
 
 
 	}
@@ -29,8 +29,8 @@ public:
 	//first state
 	clpState_kd(const clpState& S);
 
-	virtual State* copy(bool root=false) const{
-		State* st=new clpState_kd(*this, root);
+	virtual State* clone() const{
+		State* st=new clpState_kd(*this);
 		return st;
 	}
 
@@ -46,12 +46,11 @@ public:
 */
 
 	//it is not required
-	virtual void get_actions(list< Action* >& actions) {
+	virtual void get_actions(list< Action* >& actions) const {
 		cout << "clpState_kd::get_actions has not been implemented";
 		exit(0);
 	}
 
-	virtual int get_best_actions(list< Action* >& actions, int n);
 
 
 

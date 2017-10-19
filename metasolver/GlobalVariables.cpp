@@ -7,7 +7,7 @@
 
 #include "GlobalVariables.h"
 
-namespace clp {
+namespace metasolver {
 
 
 } /* namespace clp */

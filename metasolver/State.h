@@ -23,7 +23,7 @@
 
 
 using namespace std;
-namespace clp{
+namespace metasolver{
 
 class Action{
 public:
@@ -43,15 +43,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), root(false), evl(NULL) {}
+	State() : parent (NULL){}
 
-	virtual State* copy(bool root=false) const = 0;
+	virtual State* clone() const = 0;
 
-	virtual void set_evaluator(ActionEvaluator* _evl){
-		evl=_evl;
-	}
 
-	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
+	State(const State& S) : parent(&S){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -93,52 +90,9 @@ public:
 	}
 
 
-	virtual Action* best_action(){
-		list< Action* > actions;
-		if(get_best_actions(actions,1)) return *actions.begin();
-		else return NULL;
-	}
 
-	virtual int get_best_actions(list< Action* >& bactions, int n){
 
-		if(!evl) {
-			cout << "The function State::get_best_actions should be implemented or an "
-					<< "ActionEvaluator should be provided" << endl;
-			exit(0);
-		}
-		//the best n actions ranked from worst to best
-		multimap<double,Action*> ranked_actions;
-		//map<double,Action*> ranked_actions;
-
-		list< Action* > actions;
-		get_actions(actions);
-
-		//if(actions.size()<=n) {bactions=actions; return bactions.size();}
-
-		while(!actions.empty()){
-			Action* a=actions.front(); actions.pop_front();
-			double eval = evl->eval_action_rand(*this,*a);
-			if(eval>0 && (ranked_actions.size()<n || ranked_actions.begin()->first < eval)){
-				ranked_actions.insert(make_pair(eval,a));
-				if(ranked_actions.size()==n+1) {
-					delete (ranked_actions.begin()->second);
-					ranked_actions.erase(ranked_actions.begin());
-				}
-			}else delete a;
-		}
-
-		//se colocan las acciones en la lista en el orden inverso
-		while(ranked_actions.size()>0){
-			//cout << "eval:" << ranked_actions.begin()->first << endl;
-			bactions.push_front( ranked_actions.begin()->second );
-			ranked_actions.erase(ranked_actions.begin());
-		}
-
-		return bactions.size();
-
-	}
-
-	virtual void get_actions(list< Action* >& actions) = 0;
+	virtual void get_actions(list< Action* >& actions) const = 0;
 
 	virtual Action* next_action(State& final){
 	    if(get_path().size() >= final.get_path().size() ) return NULL; 
@@ -149,11 +103,9 @@ public:
     	return (*act)->clone();
 	}
 
-	bool is_root(){ return root; }
+	bool is_root(){ return (path.size()==0); }
 
 	list<const Action*>& get_path() const{ return path;}
-
-	ActionEvaluator* get_evaluator(){ return evl; }
 
 	virtual void print() {  }
 
@@ -162,12 +114,10 @@ protected:
 	virtual void _transition(const Action& action) = 0;
 
 	const State* parent;
-	bool root;
+	//bool root;
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
-
-	ActionEvaluator* evl;
 
 };
 

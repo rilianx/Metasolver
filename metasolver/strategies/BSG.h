@@ -10,7 +10,7 @@
 
 #include "../SearchStrategy.h"
 
-namespace clp {
+namespace metasolver {
 
 
 
@@ -28,8 +28,8 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
-		greedy(greedy), beams(beams),
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
+		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),  
 		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
 
@@ -102,7 +102,7 @@ protected:
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
 			if(nextS.size()<beams && a){
-				s=s->copy();
+				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
 				nextS.push_back(s);

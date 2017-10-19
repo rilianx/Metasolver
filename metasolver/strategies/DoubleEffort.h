@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class DoubleEffort : public SearchStrategy {
 public:
@@ -21,10 +21,10 @@ public:
 	virtual list<State*> next(list<State*>& S){
 		State& s= **S.begin();
 
-		bsg.run(*s.copy(true), timelimit, begin_time);
+		bsg.run(*s.clone(), timelimit, begin_time);
 
 		if(get_best_value() < bsg.get_best_value()){
-			best_state=bsg.get_best_state()->copy();
+			best_state=bsg.get_best_state()->clone();
 			cout << "[DoubleEffort] new best_solution_found ("<< get_time() <<"): " << get_best_value() << endl;
 		}
 

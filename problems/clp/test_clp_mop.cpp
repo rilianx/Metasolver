@@ -7,12 +7,12 @@
 
 #include <iostream>
 //#include "objects/State.cpp"
-#include "clp/clpState.h"
-#include "clp/plugins/mop/MO_clpBasicEvaluator.h"
+#include "clpState.h"
+#include "plugins/mop/MO_clpBasicEvaluator.h"
 #include "metasolver/strategies/BSG_midBSG.h"
-#include "clp/evaluators/VCS_Function.h"
-#include "clp/evaluators/VCS_Function.h"
-#include "clp/objects2/SpaceSet.h"
+#include "evaluators/VCS_Function.h"
+#include "evaluators/VCS_Function.h"
+#include "objects2/SpaceSet.h"
 #include "metasolver/strategies/Greedy.h"
 #include "metasolver/strategies/DoubleEffort.h"
 #include "metasolver/GlobalVariables.h"

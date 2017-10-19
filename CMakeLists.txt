@@ -5,6 +5,14 @@ set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
+metasolver
+metasolver/strategies/
+problems/clp/containers
+problems/clp/objects2
+problems/clp/evaluators
+problems/clp
+problems/clp/plugins/kdtree
+metasolver/plugins/mop/strategies/
 )
 
 LINK_DIRECTORIES(
@@ -27,49 +35,47 @@ LINK_LIBRARIES(
 
 ADD_LIBRARY(
 bsg
+metasolver/SearchStrategy.cpp  
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp  
 )
 
-ADD_LIBRARY(
-bsg_mop
-metasolver/GlobalVariables.cpp
-metasolver/strategies/BSG.cpp
-metasolver/strategies/Greedy.cpp  
-metasolver/plugins/mop/strategies/BSGMOP.cpp
-)
+#ADD_LIBRARY(
+#bsg_mop
+#metasolver/plugins/mop/strategies/BSGMOP.cpp
+#)
 
 ADD_LIBRARY(
 clp
-clp/containers/AABBContainer.cpp 
-clp/containers/AABBTree.cpp 
-clp/evaluators/VCS_Function.cpp 
-clp/evaluators/VLossFunction.cpp 
-clp/objects2/AABB.cpp 
-clp/objects2/Block.cpp 
-clp/objects2/BoxShape.cpp 
-clp/objects2/Space.cpp
-clp/objects2/SpaceSet.cpp
-clp/objects2/Block_fsb.cpp
-clp/clpState.cpp 
+problems/clp/containers/AABBContainer.cpp 
+problems/clp/containers/AABBTree.cpp 
+problems/clp/evaluators/VCS_Function.cpp 
+problems/clp/evaluators/VLossFunction.cpp 
+problems/clp/objects2/AABB.cpp 
+problems/clp/objects2/Block.cpp 
+problems/clp/objects2/BoxShape.cpp 
+problems/clp/objects2/Space.cpp
+problems/clp/objects2/SpaceSet.cpp
+problems/clp/objects2/Block_fsb.cpp
+problems/clp/clpState.cpp 
 )
 
 ADD_LIBRARY(
 clp_kdtree
-clp/plugins/kdtree/clpStatekd.cpp 
-clp/plugins/kdtree/kdNode.cpp 
-clp/plugins/kdtree/BlockSet.cpp 
+problems/clp/plugins/kdtree/clpStatekd.cpp 
+problems/clp/plugins/kdtree/kdNode.cpp 
+problems/clp/plugins/kdtree/BlockSet.cpp 
 )
 
 
-ADD_EXECUTABLE(CLP2017 main_clp.cpp)
+ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
 
-ADD_EXECUTABLE(CLP_MOP test_clp_mop.cpp)
+#ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
 
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
 
-target_link_libraries(CLP_MOP bsg bsg_mop clp)
+#target_link_libraries(CLP_MOP bsg bsg_mop clp)
  
 ENDIF()
 
