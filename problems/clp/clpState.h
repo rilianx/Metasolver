@@ -47,7 +47,7 @@ public:
 
     enum Format{BR, _1C};
 
-	clpState(const clpState& S, bool root) : State(S,root),
+	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
 	valid_blocks(S.valid_blocks), mindim(S.mindim){
 
@@ -58,8 +58,8 @@ public:
 	}
 
 
-	virtual State* copy(bool root=false) const{
-		State* st=new clpState(*this, root);
+	virtual State* clone() const{
+		State* st=new clpState(*this);
 		return st;
 	}
 

@@ -102,7 +102,7 @@ protected:
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
 			if(nextS.size()<beams && a){
-				s=s->copy();
+				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
 				nextS.push_back(s);

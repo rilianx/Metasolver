@@ -88,7 +88,7 @@ int main(int argc, char** argv){
     SearchStrategy *de= new DoubleEffort(*bsg);
 
 	cout << "copying state" << endl;
-	State& s_copy= *s0->copy(true);
+	State& s_copy= *s0->clone();
  
    // cout << s0.valid_blocks.size() << endl;
 

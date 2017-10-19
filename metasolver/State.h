@@ -43,15 +43,15 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), root(false), evl(NULL) {}
+	State() : parent (NULL), evl(NULL) {}
 
-	virtual State* copy(bool root=false) const = 0;
+	virtual State* clone() const = 0;
 
 	virtual void set_evaluator(ActionEvaluator* _evl){
 		evl=_evl;
 	}
 
-	State(const State& S, bool root) : evl(S.evl), parent(&S), root(root){
+	State(const State& S) : evl(S.evl), parent(&S){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -149,7 +149,7 @@ public:
     	return (*act)->clone();
 	}
 
-	bool is_root(){ return root; }
+	bool is_root(){ return (path.size()==0); }
 
 	list<const Action*>& get_path() const{ return path;}
 
@@ -162,7 +162,7 @@ protected:
 	virtual void _transition(const Action& action) = 0;
 
 	const State* parent;
-	bool root;
+	//bool root;
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;

@@ -33,7 +33,7 @@ public:
 	 */
 	virtual double run(State& s, double tl=99999.9, clock_t bt=clock()){
 
-		State* s0=s.copy();
+		State* s0=s.clone();
 
 		list<State*> S;
 

@@ -38,7 +38,7 @@ list<State*> BSG::next(list<State*>& S){
 
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
 
-        	 State& state_copy = *state.copy();
+        	 State& state_copy = *state.clone();
         	 state_copy.transition(**it);
         	 delete *it;
 
@@ -48,7 +48,7 @@ list<State*> BSG::next(list<State*>& S){
             //best_state update
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
-            	 best_state = state_copy.copy();
+            	 best_state = state_copy.clone();
             	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }

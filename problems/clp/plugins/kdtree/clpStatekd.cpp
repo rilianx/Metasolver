@@ -43,7 +43,7 @@ int clpState_kd::get_best_actions(list< Action* >& actions, int n){
 }
 
 
-clpState_kd::clpState_kd(const clpState& S) : clpState(S,root)  {
+clpState_kd::clpState_kd(const clpState& S) : clpState(S)  {
 	clpState_kd::blocks = new BlockSet(S.valid_blocks);
 	valid_blocks.clear();
 }

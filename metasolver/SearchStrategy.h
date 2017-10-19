@@ -98,6 +98,8 @@ protected:
 	State* best_state;
 	clock_t begin_time;
 
+
+
 };
 
 } /* namespace clp */

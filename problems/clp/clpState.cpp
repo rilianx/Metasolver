@@ -79,7 +79,7 @@ void clpState::update_supports(const AABB* block,
 }
 
 State* clpState::create_neighbor(State* s0){
-	clpState* s1=(clpState*) s0->copy();
+	clpState* s1=(clpState*) s0->clone();
 
 	int n=path.size()/2;
 	//we recover the partial state between s0 and best_state
