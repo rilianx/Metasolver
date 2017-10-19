@@ -16,7 +16,7 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class BSG_midBSG : public BSG {
 public:

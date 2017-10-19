@@ -15,11 +15,13 @@
 #include "clpState.h"
 
 using namespace std;
+using namespace metasolver;
+
 namespace clp {
 
 
-void clpState::get_actions(list< Action* >& actions){
-	list<const Block*>::iterator it;
+void clpState::get_actions(list< Action* >& actions) const{
+	list<const Block*>::const_iterator it;
 
     const Space* sp=NULL;
 

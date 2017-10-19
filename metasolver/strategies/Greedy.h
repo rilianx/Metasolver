@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class Greedy : public SearchStrategy {
 public:

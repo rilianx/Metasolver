@@ -19,6 +19,7 @@
 
 
 using namespace std;
+using namespace metasolver;
 
 namespace clp {
 
@@ -77,7 +78,7 @@ public:
 	}
 
 
-	virtual void get_actions(list< Action* >& actions);
+	virtual void get_actions(list< Action* >& actions) const;
 
 	/*
 	* Rearranges the elements in the path pseudo-randomly

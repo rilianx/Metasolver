@@ -11,6 +11,8 @@
 #ifndef HEURISTICS_VLOSSFUNCTION_H_
 #define HEURISTICS_VLOSSFUNCTION_H_
 
+using namespace metasolver;
+
 namespace clp {
 
 class VLossFunction : public ActionEvaluator{

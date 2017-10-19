@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace clp {
+namespace metasolver {
 
 class DoubleEffort : public SearchStrategy {
 public:

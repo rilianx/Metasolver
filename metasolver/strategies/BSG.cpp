@@ -7,7 +7,7 @@
 
 #include "BSG.h"
 
-namespace clp {
+namespace metasolver {
 
 
 list<State*> BSG::next(list<State*>& S){
@@ -29,7 +29,7 @@ list<State*> BSG::next(list<State*>& S){
          //each level of the search tree should explore max_level_size nodes, thus...
          int w =  (double) max_level_size / (double) S.size() + 0.5;
 
-         state.get_best_actions(best_actions, w);
+         get_best_actions(state, best_actions, w);
 
 
 

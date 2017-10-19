@@ -46,12 +46,11 @@ public:
 */
 
 	//it is not required
-	virtual void get_actions(list< Action* >& actions) {
+	virtual void get_actions(list< Action* >& actions) const {
 		cout << "clpState_kd::get_actions has not been implemented";
 		exit(0);
 	}
 
-	virtual int get_best_actions(list< Action* >& actions, int n);
 
 
 

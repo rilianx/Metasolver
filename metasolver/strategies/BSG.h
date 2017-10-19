@@ -10,7 +10,7 @@
 
 #include "../SearchStrategy.h"
 
-namespace clp {
+namespace metasolver {
 
 
 
