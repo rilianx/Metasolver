@@ -64,9 +64,7 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, r);
 
-	if(!kdtree)
-		s0->set_evaluator(vcs);
-	else{
+	if(kdtree){
 		kd_block::set_vcs(*vcs);
 		kd_block::set_alpha(alpha);
 		kd_block::set_alpha(p);
@@ -76,10 +74,10 @@ int main(int argc, char** argv){
 	//	exp->best_action(*s0);
 
 	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy ();
+    SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(*gr, 4);
+    BSG *bsg= new BSG(vcs,*gr, 4);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);

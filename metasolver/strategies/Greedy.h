@@ -19,6 +19,8 @@ namespace clp {
 class Greedy : public SearchStrategy {
 public:
 
+	Greedy(ActionEvaluator* evl) : SearchStrategy(evl) { }
+
 	/**
 	 * Performs an iteration of the strategy
 	 */

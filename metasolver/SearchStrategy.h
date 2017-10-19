@@ -19,7 +19,7 @@ namespace clp {
 
 class SearchStrategy {
 public:
-	SearchStrategy() : best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
 
 	virtual ~SearchStrategy() {
 
@@ -98,7 +98,7 @@ protected:
 	State* best_state;
 	clock_t begin_time;
 
-
+	ActionEvaluator* evl;
 
 };
 
