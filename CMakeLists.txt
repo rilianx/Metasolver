@@ -4,6 +4,7 @@
 set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
+lib
 lib/bullet-2.80/src
 metasolver
 metasolver/strategies/
@@ -69,14 +70,26 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
 
-ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
+ADD_LIBRARY(Catch INTERFACE)
+target_include_directories(Catch INTERFACE lib)
 
+add_executable(my_test 
+problems/clp/test01.cpp)
+
+target_link_libraries(my_test Catch)
+
+enable_testing()
+add_test(NAME MyAwesomeTest COMMAND my_test)
+
+
+
+ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
 #ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
 
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
-
 #target_link_libraries(CLP_MOP bsg bsg_mop clp)
  
+
 ENDIF()
 
 
