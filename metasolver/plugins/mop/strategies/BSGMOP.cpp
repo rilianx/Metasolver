@@ -96,30 +96,121 @@ void BSG_MOP::select_coeff(list<double>& coeff, int n){
    }
 }
 
-bool mycomp(pair<State*, State*> a, pair<State*, State*> b ){
-	return a.second->get_value() <b.second->get_value();
-}
+
+
 
 void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n1){
-	//list< pair<State*, State*> >::iterator anterior,actual,siguiente,it1;
+	list< pair<State*, State*> >::iterator it1;
+	list< pair<State*, State*> > new_frontera;
+	list< pair<pair<State*, State*>,long>> crowding_list;
+	list< pair<pair<State*, State*>,long>>::iterator it_list,it_anterior,it_siguiente;
+	//se crea la lista y se le asigna el valor de la distancia
+	for(it1=frontera.begin();it1!=frontera.end();it1++){
+		crowding_list.push_back(make_pair((*it1),0));
+		it_list=crowding_list.end();
+		it_list->second=0;
+	}
+	//Se corre por cada funcion objetivo
+	for(int i=0;i<2;i++){
+		//crear furcion aparte para ordenar
+		function_sort(crowding_list,i);
+		//se asigna infinito a los puntos extremos
+		it_list=crowding_list.begin();
+		it_list->second=100000;
+		it_list=crowding_list.end();
+		it_list->second=100000;
 
-	//long distance[n1];
-	//la distancia de cada punto se iguala a 0
-	//se ordena la frontera por el las funciones objetivos, como el problema es biobjetivo y son no dominados, solo lo ordenaremos por la primera funcion objetivo
-	//
+		//por item se obtiene la distancia
+		//no se sacan las distancia de los puntos extremos
+		for(it_list=crowding_list.begin()++;it_list!=crowding_list.end()--;it_list++){
+			it_anterior=it_list;
+			it_anterior--;
+			it_siguiente=it_list;
+			it_siguiente++;
+			if(i==0){
+				it_list->second=it_list->second+((it_siguiente->first.first->get_value()-it_anterior->first.first->get_value())/(crowding_list.begin()->first.first->get_value()-crowding_list.end()->first.first->get_value()));
+			}
+			else
+				continue;
+				it_list->second=it_list->second+((it_siguiente->first.first->get_value2()-it_anterior->first.first->get_value2())/(crowding_list.begin()->first.first->get_value2()-crowding_list.end()->first.first->get_value2()));
 
-	//sort(frontera.begin(),frontera.end(),mycomp);
-	//se debe ordenar la frontera si o si dejando al primer elemento como el que maximiza el objetivo 1(get_value)
-	//it1=frontera.begin()++;// el for comienza desde el segundo elemento y termina en el penultimo
-	//for(int i=0;it1!=frontera.end()--;i++){
 
-	//	actual=it1;
-	//	anterior=actual--;
-	//	actual=it1;
-	//	siguiente=actual++;
-		//valor siguiente - valor anterior/
-	//	distance[i]=distance[i]+((siguiente->second->get_value()-anterior->second->get_value())/(frontera.begin()->second->get_value()-frontera.begin()->second->get_value2()));
-	//}
+		}
+
+	}
+	function_sort(crowding_list,2);
+
+	//creamos la nueva frontera
+	int j=0;
+	it_list=crowding_list.begin();
+	while(j<n1){
+		new_frontera.push_front(it_list->first);
+		it_list++;
+		j++;
+	}
+	frontera.swap(new_frontera);
+
+	//se ordenan por valor de distancia
+	//se escogen los n necesario
+
+
+
+
+}
+
+
+void BSG_MOP::function_sort(list< pair<pair<State*, State*>,long>>& crowding_list,int funtion){
+	bool swapped=true;
+	list< pair<pair<State*, State*>,long>>::iterator it2,siguiente;
+	list< pair<pair<State*, State*>,long>>temp;
+	if(funtion==0){
+		while(swapped==true){
+
+			for(it2=crowding_list.begin();it2!=crowding_list.end()--;it2++){
+				siguiente=it2;
+				siguiente++;
+				swapped=false;
+				if((it2->first.first->get_value()<=siguiente->first.first->get_value())){
+					swapped=true;
+					crowding_list.insert(siguiente,(*it2));
+					crowding_list.erase(it2);
+				}
+			}
+
+		}
+	}
+	if(funtion==1){
+			while(swapped==true){
+
+				for(it2=crowding_list.begin();it2!=crowding_list.end()--;it2++){
+					siguiente=it2;
+					siguiente++;
+					swapped=false;
+					if((it2->first.first->get_value2()<=siguiente->first.first->get_value2())){
+						swapped=true;
+						crowding_list.insert(siguiente,(*it2));
+						crowding_list.erase(it2);
+					}
+				}
+
+			}
+		}
+	if(funtion==2){
+			while(swapped==true){
+
+				for(it2=crowding_list.begin();it2!=crowding_list.end()--;it2++){
+					siguiente=it2;
+					siguiente++;
+					swapped=false;
+					if((it2->second>siguiente->second)){
+						swapped=true;
+						crowding_list.insert(siguiente,(*it2));
+						crowding_list.erase(it2);
+					}
+				}
+
+			}
+		}
 
 }
 
@@ -266,7 +357,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 	filter_nondominated_sort (filtered_states, beams);
 
 	for(auto states:filtered_states)
-		return_states.push_back(states.second);
+		return_states.push_back(states.first);
 
 	return return_states;
 

@@ -87,6 +87,7 @@ public:
 
 
 
+	void function_sort(list< pair<pair<State*, State*>,long>>& crowding_list,int funtion);
 
 	/**
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
