@@ -239,7 +239,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
 
 			if(inst==i){
-				if(f==clpState::BR) weight= (double) rand()/(double) RAND_MAX;
+				if(f==clpState::BR) weight= 1.0;
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
 				//cout << *boxt << endl;
 				//cout << weight << " x " << n <<  endl;

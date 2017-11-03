@@ -75,7 +75,7 @@ ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
 
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
 
-target_link_libraries(CLP_MOP bsg bsg_mop clp)
+target_link_libraries(CLP_MOP bsg_mop bsg clp)
 
 ENDIF()
 

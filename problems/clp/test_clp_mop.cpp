@@ -36,6 +36,18 @@ int main(int argc, char** argv){
     double delta=atof(argv[9]); //0.0 - 10.0
     double r=atof(argv[10]);
 
+    cout << endl <<  "******* Parameters *********" << endl;
+    cout << "file:" << file << "(instance: " << inst << ")" <<  endl;
+    cout << "min_fr:" << min_fr << endl;
+    cout << "max_time:" << max_time << endl;
+    cout << "alpha:" << alpha << endl;
+    cout << "beta:" << beta << endl;
+    cout << "gamma:" << gamma << endl;
+    cout << "p:" << p << endl;
+    cout << "delta:" << delta << endl;
+    cout << "r:" << r << endl;
+    cout << "*****************************" << endl << endl;
+
 	srand(1);
 
 	//SpaceSet::random_spaces=true;
@@ -52,7 +64,7 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta);
 
-    MO_clpBasicEvaluator evl(*vcs, r);
+    //MO_clpBasicEvaluator evl(*vcs, r);
 
     SearchStrategy *gr = new Greedy (vcs);
 
@@ -64,7 +76,7 @@ int main(int argc, char** argv){
 
    // cout << s0.valid_blocks.size() << endl;
 
-    double eval = 1-de->run(s_copy, max_time, begin_time) ;
+    double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
 
     cout << "pareto_front" << endl;
     auto pareto = bsg->get_pareto_front();
