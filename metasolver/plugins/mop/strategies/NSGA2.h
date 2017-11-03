@@ -9,9 +9,9 @@
 #define PLUGINS_MOP_STRATEGIES_NSGA2_H_
 
 #include <list>
-#include "../../../SearchStrategy.h"
+#include "SearchStrategy.h"
 
-namespace clp {
+namespace metasolver {
 
 
 class Gen {

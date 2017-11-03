@@ -9,14 +9,12 @@
 //#include "objects/State.cpp"
 #include "clpState.h"
 #include "plugins/mop/MO_clpBasicEvaluator.h"
-#include "metasolver/strategies/BSG_midBSG.h"
-#include "evaluators/VCS_Function.h"
-#include "evaluators/VCS_Function.h"
-#include "objects2/SpaceSet.h"
-#include "metasolver/strategies/Greedy.h"
-#include "metasolver/strategies/DoubleEffort.h"
-#include "metasolver/GlobalVariables.h"
-#include "metasolver/plugins/mop/strategies/BSGMOP.h"
+#include "VCS_Function.h"
+#include "SpaceSet.h"
+#include "Greedy.h"
+#include "DoubleEffort.h"
+#include "GlobalVariables.h"
+#include "BSGMOP.h"
 
 bool global::TRACE = false;
 
@@ -40,31 +38,30 @@ int main(int argc, char** argv){
 
 	srand(1);
 
-	//SpaceSet::random_spaces=true; 
+	//SpaceSet::random_spaces=true;
 
     cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
-    clpState* s0 = new_state(file,inst, min_fr, 10000, false, clpState::BR);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, clpState::BR);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
     clock_t begin_time=clock();
 
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, s0->cont,
+    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta);
 
     MO_clpBasicEvaluator evl(*vcs, r);
-	s0->set_evaluator(&evl);
 
-    SearchStrategy *gr = new Greedy ();
+    SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(*gr, 4);
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4);
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
-	State& s_copy= *s0->copy(true);
- 
+	State& s_copy= *s0->clone();
+
    // cout << s0.valid_blocks.size() << endl;
 
     double eval = 1-de->run(s_copy, max_time, begin_time) ;

@@ -6,18 +6,14 @@
  */
 
 #include "BSGMOP.h"
-#include "../../../State.h"
+#include "State.h"
 
 #include <map>
 
 
-namespace clp {
+namespace metasolver {
 
 
-
-BSG_MOP::~BSG_MOP() {
-	// TODO Auto-generated destructor stub
-}
 
 
 
@@ -261,7 +257,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				State* final_state= it3->second;
 				Action* a = (s)? s->next_action(*final_state):NULL;
 
-		 		s=s->copy();
+		 		s=s->clone();
 				s->transition(*a);
 				it3->first=s;
 
@@ -310,9 +306,9 @@ list<State*> BSG_MOP::next(list<State*>& S){
             int w =  (double) max_level_size / (double) S.size() + 0.5;
 
         	list< Action* > best_actions;
-        	dynamic_cast<MO_ActionEvaluator*>(state.get_evaluator())->set_alpha(alpha);
+        	dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(alpha);
 
-        	state.get_best_actions(best_actions, w);
+        	get_best_actions(state, best_actions, w);
 
 
         	for(auto action : best_actions)
@@ -324,19 +320,19 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //Actions are evaluated using the greedy algorithm
         for(auto a_a : action_alpha){
-        	State& state_copy = *state.copy();
+        	State& state_copy = *state.clone();
         	state_copy.transition(*a_a.first);
         	delete a_a.first;
 
         	//cout << a_a.second << endl;
 
-        	dynamic_cast<MO_ActionEvaluator*>(state.get_evaluator())->set_alpha(a_a.second);
+        	dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(a_a.second);
         	greedy.run(state_copy, timelimit, begin_time);
 
         	pair<double, double> value = make_pair(state_copy.get_value(), state_copy.get_value2());
 
         	//si state_copy es solucion no dominada se agrega a NDS
-        	bool bbb = update(NDS, *state_copy.copy(), value.first,value.second);
+        	bool bbb = update(NDS, *state_copy.clone(), value.first,value.second);
         	if(bbb){
         		cout << "new best solution found: (" << value.first << "," << value.second << ")" << endl;
         		//cout << "NDS size:" << NDS.size() << endl;

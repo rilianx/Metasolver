@@ -7,7 +7,7 @@
 
 #include "NSGA2.h"
 
-namespace clp {
+namespace metasolver {
 
 
 
