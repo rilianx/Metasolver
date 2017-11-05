@@ -38,15 +38,16 @@ int main(int argc, char** argv){
     double gamma=atof(argv[7]); //0.0 - 1.0
     double p=atof(argv[8]); //0.0 - 0.1
     double delta=atof(argv[9]); //0.0 - 10.0
-    double r=atof(argv[10]);
-    bool fsb=(atoi(argv[11])==1);
-    bool kdtree=atoi(argv[12]);
+		double f=atof(argv[10]);
+    double r=atof(argv[11]);
+    bool fsb=(atoi(argv[12])==1);
+    bool kdtree=atoi(argv[13]);
 
 	srand(1);
 
 
 
-	//SpaceSet::random_spaces=true; 
+	//SpaceSet::random_spaces=true;
     //global::TRACE=true;
 
     cout << "cargando la instancia..." << endl;
@@ -62,7 +63,7 @@ int main(int argc, char** argv){
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, r);
+    alpha, beta, gamma, p, delta, f, r);
 
 	if(kdtree){
 		kd_block::set_vcs(*vcs);
@@ -87,11 +88,11 @@ int main(int argc, char** argv){
 
 	cout << "copying state" << endl;
 	State& s_copy= *s0->clone();
- 
+
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = 1-gr->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
 
 
@@ -102,7 +103,7 @@ int main(int argc, char** argv){
 	}
 	 */
 
-	dynamic_cast<const clpState*>(gr->get_best_state())->cont->MatLab_print();
+	dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
 
 
 }

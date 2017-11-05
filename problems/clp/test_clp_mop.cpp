@@ -8,7 +8,7 @@
 #include <iostream>
 //#include "objects/State.cpp"
 #include "clpState.h"
-#include "plugins/mop/MO_clpBasicEvaluator.h"
+//#include "plugins/mop/MO_clpBasicEvaluator.h"
 #include "VCS_Function.h"
 #include "SpaceSet.h"
 #include "Greedy.h"
@@ -34,7 +34,8 @@ int main(int argc, char** argv){
     double gamma=atof(argv[7]); //0.0 - 1.0
     double p=atof(argv[8]); //0.0 - 0.1
     double delta=atof(argv[9]); //0.0 - 10.0
-    double r=atof(argv[10]);
+		double f=atof(argv[10]);
+    double r=atof(argv[11]);
 
     cout << endl <<  "******* Parameters *********" << endl;
     cout << "file:" << file << "(instance: " << inst << ")" <<  endl;
@@ -62,7 +63,7 @@ int main(int argc, char** argv){
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta);
+    alpha, beta, gamma, p, delta, f);
 
     //MO_clpBasicEvaluator evl(*vcs, r);
 
