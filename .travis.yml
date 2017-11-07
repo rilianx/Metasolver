@@ -1,5 +1,6 @@
 language: cpp
 compiler: gcc
+dist: xenial
 
 script:
  - cmake .
@@ -7,4 +8,4 @@ script:
  - ./testCLP ../data/BR8.txt 1 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
  - ./CLP_MOP ../data/BR6.txt 1 0.98 60 4.0 1.0 0.2 0.04 1.0 0.0 0 0
  
- dist: xenial
+
