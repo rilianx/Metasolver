@@ -71,6 +71,12 @@ bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy,
 
 void BSG_MOP::select_coeff(vector<double>& coeff){
 	 int n=coeff.size();
+
+	 if(n==1){
+		 coeff[0] = 0.5;
+		 return;
+	 }
+
    double step=1.0/(double) (n-1);
 
    for(int i=0;i<n;i++){
@@ -319,8 +325,11 @@ list<State*> BSG_MOP::next(list<State*>& S){
        //each level of the search tree should explore max_level_size nodes, thus...
         int w =  (double) max_level_size / (double) S.size() + 0.5;
 
-      	list< Action* > best_actions;
+        //we attempt to orient the search to the objective lambda1[i]) * f1 + lambda2[i] * f2,
+				//where lambda1 = 1 - lambda2
       	evl->set_lambda2(lambda2_v[i]);
+
+      	list< Action* > best_actions;
       	get_best_actions(state, best_actions, w);
 
         //Actions are evaluated using the greedy algorithm
