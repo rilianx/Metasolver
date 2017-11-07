@@ -29,7 +29,7 @@ class clpState;
 class clpAction : public Action{
 public:
 	clpAction(const Block& block, const Space& space) : block(block), space(space) { }
-	
+
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
 	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
@@ -69,12 +69,12 @@ public:
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, int f);
 
 	virtual double get_value() const{
-		return ((double) cont->getOccupiedVolume()/(double) cont->getVolume());
+		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
 	}
 
 	virtual double get_value2() const{
 		//return 0.0;
-		return cont->getTotalWeight() / weight_of_allboxes;
+		return  round((cont->getTotalWeight() / weight_of_allboxes)*10000.0)/10000.0;
 	}
 
 
@@ -84,7 +84,7 @@ public:
 	* Rearranges the elements in the path pseudo-randomly
 	*/
 	virtual int shuffle_path();
-	
+
 
 	int get_n_valid_blocks() {return valid_blocks.size();}
 

@@ -70,10 +70,13 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 
 ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(testCLP problems/clp/test_clp.cpp)
 ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
 ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 
 target_link_libraries(CLP2017 bsg clp clp_kdtree)
+target_link_libraries(testCLP bsg clp clp_kdtree)
+
 target_link_libraries(CLP_MOP bsg_mop bsg clp)
 target_link_libraries(testEvalMOP bsg_mop bsg clp)
 

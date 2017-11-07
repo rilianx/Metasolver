@@ -1,8 +1,8 @@
 language: cpp
 compiler: gcc
 
-script: 
+script:
  - cmake .
  - make
- - ./CLP_MOP benchs/BR/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0
- - ./CLP2017 benchs/BR/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0
+ - ./testCLP ../data/BR8.txt 1 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
+ - ./testCLP ../data/BR6.txt 1 0.98 60 4.0 1.0 0.2 0.04 1.0 0.0 0 0

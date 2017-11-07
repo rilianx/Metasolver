@@ -29,13 +29,12 @@ int main(int argc, char** argv){
 	double min_fr=atof(argv[3]);
 	int max_time=atoi(argv[4]);
 
-    double alpha=atof(argv[5]); //0.0 - 10.0
-    double beta=atof(argv[6]); //0.0 - 10.0
-    double gamma=atof(argv[7]); //0.0 - 1.0
-    double p=atof(argv[8]); //0.0 - 0.1
-    double delta=atof(argv[9]); //0.0 - 10.0
-		double f=atof(argv[10]);
-    double r=atof(argv[11]);
+    double alpha=atof(argv[5]); //4.0
+    double beta=atof(argv[6]); //1.0
+    double gamma=atof(argv[7]); //0.2
+    double p=atof(argv[8]); //0.04
+    double delta=atof(argv[9]); //1.0
+    double r=atof(argv[10]); //0.0
 
     cout << endl <<  "******* Parameters *********" << endl;
     cout << "file:" << file << "(instance: " << inst << ")" <<  endl;
@@ -56,14 +55,14 @@ int main(int argc, char** argv){
     cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
-    clpState* s0 = new_state(file,inst, min_fr, 10000, clpState::BR);
+    clpState* s0 = new_state(file,inst, min_fr, 1000, clpState::BR);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, f);
+    alpha, beta, gamma, p, delta);
 
     //MO_clpBasicEvaluator evl(*vcs, r);
 
@@ -73,11 +72,10 @@ int main(int argc, char** argv){
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
-	State& s_copy= *s0->clone();
+	  State& s_copy= *s0->clone();
 
    // cout << s0.valid_blocks.size() << endl;
-
-    double eval = 1-bsg->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, max_time, begin_time) ;
 
     cout << "pareto_front" << endl;
     auto pareto = bsg->get_pareto_front();
