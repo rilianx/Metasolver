@@ -69,13 +69,13 @@ bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy,
 //los elementos que la forman  son aquellos que tienen n=0
 
 
-void BSG_MOP::select_coeff(list<double>& coeff, int n){
-   double coeficiente=100.0/(double) n;
-   //coeff.push_back(0);
+void BSG_MOP::select_coeff(vector<double>& coeff){
+	 int n=coeff.size();
+   double step=1.0/(double) (n-1);
 
-   for(int i=1;i<=n;i++){
-	   coeff.push_back(1.0);
-     // coeff.push_back((double)(coeficiente*i)/ 100.0);
+   for(int i=0;i<n;i++){
+		 if(i==n-1) coeff[i] = 1.0;
+		 else coeff[i] = step * (double) i;
    }
 }
 
@@ -167,7 +167,7 @@ void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, l
 
 }
 
-
+/*
 void BSG_MOP::function_sort(list< pair<pair<State*, State*>,double>>& crowding_list,int funtion){
 	bool swapped=true;
 	list< pair<pair<State*, State*>,double>>::iterator it2,siguiente;
@@ -222,12 +222,11 @@ void BSG_MOP::function_sort(list< pair<pair<State*, State*>,double>>& crowding_l
 		}
 
 }
-
+*/
 
 /** TODO: Eliminar final_state (delete final_state) de pares descartados del mapa states
  *  y eliminar pares descartados del mapa states (fronteras descartadas y soluciones descartadas de ultima frontera)
  */
-
 void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_states, int n) {
 	map< pair<double, double>, pair<State*, State*> >::iterator it1, it2; //it1=states , it2=filtered_states
 	list< pair<State*, State*> > frontera;
@@ -305,27 +304,23 @@ list<State*> BSG_MOP::next(list<State*>& S){
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
 
+
+    int n=S.size();
+		//se genera la lista de coeficientes que ponderan las funciones objetivo
+		vector<double> lambda2_v(n);
+		select_coeff (lambda2_v);
+
+		int i=0;
     //se expanden los nodos de la lista S
-    int i=0;
-    for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
+    for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++, i++){
         State& state=**itS;
-
         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
-
-        //se genera la lista de coeficientes que ponderan las funciones objetivo
-        //max alpha*f1 + (1-alpha)*f2
-        //list<double> alpha_v;
-        //BSG_MOP::select_coeff(alpha_v, n);
-
-        //list < pair < Action*, double > > action_alpha;
-
 
        //each level of the search tree should explore max_level_size nodes, thus...
         int w =  (double) max_level_size / (double) S.size() + 0.5;
 
       	list< Action* > best_actions;
-      	//dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(alpha);
-
+      	evl->set_lambda2(lambda2_v[i]);
       	get_best_actions(state, best_actions, w);
 
         //Actions are evaluated using the greedy algorithm
@@ -333,8 +328,6 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	State& state_copy = *state.clone();
         	state_copy.transition(*action);
         	delete action;
-
-        	//cout << a_a.second << endl;
 
         	//dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(a_a.second);
         	greedy.run(state_copy, timelimit, begin_time);
@@ -378,42 +371,6 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 	return return_states;
 
-	/*
-	map< pair<double, double>, pair<State*, State*>, nd_sort > ::iterator state_action=sorted_states.begin();
-
-	//par que marca el final de las soluciones no dominadas
-	pair<double, double>  last_pair (make_pair(0.0, 0.0));
-	bool first=true;
-
-	//Para cada state->final_state se rescata la accion
-	//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
-	//se elimina final_state y el elemento del mapa
-	int k=0;
-	while(state_action!=sorted_states.end()){
-		State* s= state_action->second.first;
-		State* final_state=state_action->second.second;
-		Action* a = (s)? s->next_action(*final_state):NULL;
-
-		if((nextS.size()<beams || state_action->first.first > last_pair.first) && a){
-			s=s->copy();
-			state_action->second.first=s;
-			s->transition(*a);
-			nextS.push_back(s);
-			if(state_action->first.first > last_pair.first) last_pair = state_action->first;
-			else first=false;
-	 }else state_action->second.first=NULL;
-
-		//other elements are removed from the state_actions
-		 if(k>=beams && !first){
-			delete final_state;
-		   state_action=sorted_states.erase(state_action);
-		 }else state_action++;
-
-	 if(a) delete a;
-	 k++;
-	}
-
-*/
 
 }
 

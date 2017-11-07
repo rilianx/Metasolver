@@ -18,18 +18,21 @@ namespace clp {
 class VLossFunction : public ActionEvaluator{
 public:
 	VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double beta=1.0, double delta=1.0,
-		  double f=0.0, double r=0.0);
+		  double theta=0.0, double r=0.0);
 
 	virtual ~VLossFunction();
 
 	virtual double eval_action(const State& , const Action& );
 
-	//set the value of alpha for MOP
-	virtual void set_alpha(double a){
-		ActionEvaluator::alpha = a;
+	//set the value of alpha for MOP (mapping the lambda2 to the theta value)
+	virtual void set_lambda2(double l){
+		ActionEvaluator::set_lambda2(l);
+    theta = l*1.5;
+	}
 
-		//TODO: improve this
-		f=a;
+	//set the value of alpha for MOP (mapping the lambda2 to the theta value)
+	virtual void set_theta(double th){
+		theta = th;
 	}
 
 protected:
@@ -64,8 +67,8 @@ private:
 
 	double beta, delta;
 
-  // parameter ponderating the weight of the boxes
-	double f;
+  // parameter for ponderating the weight of the boxes
+	double theta;
 
     //for the knapsack solutions
     long *mL, *mW, *mH;

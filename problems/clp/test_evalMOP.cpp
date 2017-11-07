@@ -63,14 +63,14 @@ int main(int argc, char** argv){
 
     SearchStrategy *gr = new Greedy (vcs);
 
-    for(double f=0.0; f<=4.0 ; f+=0.1){
+    for(double theta=0.0; theta<=4.0 ; theta+=0.1){
       State& s_copy= *s0->clone();
-      vcs->set_alpha(f);
+      vcs->set_theta(theta);
       gr->run(s_copy, max_time) ;
 
       const State* s=gr->get_best_state();
-      sum[f].first+= s->get_value();
-      sum[f].second += s->get_value2();
+      sum[theta].first+= s->get_value();
+      sum[theta].second += s->get_value2();
       //cout << s->get_value2() << endl;
       delete &s_copy;
     }
@@ -81,7 +81,7 @@ int main(int argc, char** argv){
   }
 
   for(double f=0.0; f<=4.0 ; f+=0.1){
-    cout << f <<":(" << sum[f].first/100.0 << ","<< sum[f].second/100.0 << ")" << endl;
+    cout <<  sum[f].second/100.0  << endl;
   }
 
 

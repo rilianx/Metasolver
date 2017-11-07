@@ -24,7 +24,7 @@ class Action;
  */
 class ActionEvaluator {
 public:
-	ActionEvaluator(double r) : r(r) { };
+	ActionEvaluator(double r) : r(r), lambda2(0.0)  { };
 
 	virtual ~ActionEvaluator() { }
 
@@ -37,16 +37,17 @@ public:
 
 	virtual double eval_action(const State& s, const Action& a) =0;
 
-	//set the value of alpha for MOP
-	virtual void set_alpha(double a){
-		alpha = a;
+	//set the weitght of the second objective
+	virtual void set_lambda2(double l){
+		lambda2 = l;
 	}
 
 	double get_r() const { return r; }
 
 protected:
 
-  double alpha;
+  //weitght of the second objective (lambda1=1-lambda2)
+  double lambda2;
 
 	private:
 	double r;
