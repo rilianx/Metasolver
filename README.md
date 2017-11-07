@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
 # Metasolver
 
 
@@ -20,8 +21,8 @@ TODO
 
 **Beam Search** con función *alpha*:
  - [x] Crear evaluadorMOP que incorpore el segundo objetivo con parametro f.
- - [ ] Modificar BSGMOP que considere valores de alpha de acuerdo al numero de
+ - [x] Modificar BSGMOP que considere valores de alpha de acuerdo al numero de
       beams.
- - [ ] Probar greedy para instancias con pesos aleatorios con distintos valores
+ - [x] Probar greedy para instancias con pesos aleatorios con distintos valores
        de f. Objetivo: encontrar f que maximice promedio de los pesos.
- - [ ] Definir mapeo alpha->f
+ - [x] Definir mapeo lambda2->f
