@@ -344,9 +344,9 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 
     int n=S.size();
-		//se genera la lista de coeficientes que ponderan las funciones objetivo
-		vector<double> lambda2_v(n);
-		select_coeff (lambda2_v);
+	//se genera la lista de coeficientes que ponderan las funciones objetivo
+	vector<double> lambda2_v(n);
+	select_coeff (lambda2_v);
 
 		int i=0;
     //se expanden los nodos de la lista S

@@ -29,3 +29,22 @@ TODO
  - [x] Probar greedy para instancias con pesos aleatorios con distintos valores
        de f. Objetivo: encontrar f que maximice promedio de los pesos.
  - [x] Definir mapeo lambda2->f
+
+Experimentos
+---- 
+
+** Tecnicas: **
+- BSG
+- BSG-MOP con VCS
+- BSG-MOP con VCS con pesos para cada beam
+- NSGA-II (Yamira)
+
+**Instancias:**
+
+- BR modificadas para dos objetivos
+  - Uniform-weights
+  - Random-weights
+  - Random-proportional-weights
+- Yamira
+
+
