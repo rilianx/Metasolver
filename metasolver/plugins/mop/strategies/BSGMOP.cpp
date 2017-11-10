@@ -101,7 +101,7 @@ bool minf2(pair<double, pair<State*, State*>>& p1, pair<double, pair<State*, Sta
 }
 
 
-
+//TODO: arreglar!
 void BSG_MOP::filter_crowding_distance(list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n1){
 	list< pair<State*, State*> >::iterator it1;
 	list< pair<State*, State*> > new_frontera;
@@ -298,7 +298,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 			}
 		}
 		else{
-
+			//TODO: reemplazar por filter_crowding_distance cuando funcione bien!
 			int i=filtered_states.size();
 			frontera.sort(maxf1);
 			for(it3=frontera.begin();it3!=frontera.end();i++, it3++){
@@ -315,6 +315,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 					delete final_state;
 			}
 			break;
+
 			//filter_crowding_distance(frontera,filtered_states,(n-filtered_states.size()));
 		}
 		frontera.clear();

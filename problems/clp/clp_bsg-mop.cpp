@@ -18,7 +18,6 @@ bool global::TRACE = false;
 
 using namespace std;
 
-//State* new_state(string file, int instance);
 
 int main(int argc, char** argv){
 
@@ -48,12 +47,10 @@ int main(int argc, char** argv){
 
 	srand(1);
 
-	//SpaceSet::random_spaces=true;
-
     cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
-    clpState* s0 = new_state(file,inst, min_fr, 100, clpState::BR);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, clpState::BR);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -62,16 +59,14 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta);
 
-
     SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 2);
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4);
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
 	State& s_copy= *s0->clone();
 
-   // cout << s0.valid_blocks.size() << endl;
     double eval = 1-de->run(s_copy, max_time, begin_time) ;
 
     cout << "pareto_front" << endl;

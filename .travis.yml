@@ -5,5 +5,4 @@ dist: xenial
 script:
  - cmake .
  - make
- - ./testCLP problems/clp/benchs/BR/BR8.txt 1 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
- - ./CLP_MOP problems/clp/benchs/BR/BR6.txt 1 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0 0
+ - make CTEST_OUTPUT_ON_FAILURE=1 test ARGS="-V"

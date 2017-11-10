@@ -78,7 +78,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4);
+    BSG *bsg= new BSG(vcs,*gr, 2);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);

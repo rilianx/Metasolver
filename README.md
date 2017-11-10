@@ -16,8 +16,11 @@ Nota: Para que el programa funcione se debe tener en el directorio origen los di
 TODO
 ----
 
- - [ ] **(Mauricio)** Non-dominated sort + crowding distance
+ - [ ] **(Mauricio)** Arreglar crowding distance!
  - [ ] **(Cristobal, Ignacio)** NSGA-II
+ - [ ] Agregar restriccion de peso maximo (en funcion de evaluacion VLoss)
+ - [ ] Calcular hipervolumen
+ - [ ] Comparar con resultados e instancias de otros papers
 
 **Beam Search** con función *alpha*:
  - [x] Crear evaluadorMOP que incorpore el segundo objetivo con parametro f.
