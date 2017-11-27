@@ -96,14 +96,29 @@ int main(int argc, char** argv){
 	cout << eval << endl;
 
 
+	list<const Action*> actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
 
 
+	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
+
+	for(auto action:actions){
+		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
+		s00->transition(*clp_action);
+
+
+		cout << "block :" << clp_action->block << endl;
+		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
+
+
+	}
+
+/*
 	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
 	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
 		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
 		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
 	}
-
+*/
 
 	//dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
 
