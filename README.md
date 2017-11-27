@@ -23,10 +23,12 @@ TODO
 ----
 
 **Ariel:**
-- [ ] Hacer un generador de instancias
-- [ ] Resolver instancias usando BSG (opcion fsb=1)
+- [ ] Hacer un generador de instancias siguiendo parametros del paper
+- [ ] Resolver instancias generadas usando BSG (opcion fsb=1)
+- [ ] Crear archivos con set de entrenamiento y pruebas (input/output de la red) (definir formato con Braulio)
+
 
 **Ignacio:**
-- [ ] Modificar heuristica de seleccion de cajas para problemas con fsb=0 (de abajo hacia arriba)
+- [ ] Ordenar path
 
 
