@@ -14,9 +14,13 @@ Correr el programa con el siguiente comando
 ./BSG_CLP problems/clp/benchs/BR/BR8.txt <inst_id> <min_fr> <maxtime> <alpha> <beta> <gamma> <p> <delta> <theta> <r> <fsb> <kdtree>
 
 inst_id: id de la instancia
+
 min_fr: minimo volumen necesario para construir bloques
+
 alpha, beta, gamma, p, delta, theta, r: parametros de la funcion VCS 
+
 fsb: variante full-supported
+
 kdtree: uso de estructura kdtree
 
 TODO
