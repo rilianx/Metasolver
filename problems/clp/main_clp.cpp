@@ -96,7 +96,8 @@ int main(int argc, char** argv){
 	cout << eval << endl;
 
 
-	list<const Action*> actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
+	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
+    actions.sort(clpState::height_sort);
 
 
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
@@ -120,7 +121,7 @@ int main(int argc, char** argv){
 	}
 */
 
-	//dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
+	s00->cont->MatLab_print();
 
 
 }

@@ -77,6 +77,16 @@ public:
 		return  round((cont->getTotalWeight() / weight_of_allboxes)*10000.0)/10000.0;
 	}
 
+	static bool height_sort(const Action* a1, const Action* a2){
+		const clpAction* ca1 = dynamic_cast<const clpAction*> (a1);
+		const clpAction* ca2 = dynamic_cast<const clpAction*> (a2);
+
+		if(ca1->space.get_location(ca1->block).getZ() < ca2->space.get_location(ca2->block).getZ())
+			return true;
+		return false;
+
+
+	}
 
 	virtual void get_actions(list< Action* >& actions) const;
 

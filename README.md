@@ -33,6 +33,6 @@ TODO
 
 
 **Ignacio:**
-- [ ] Ordenar path
+- [x] Ordenar path
 
 
