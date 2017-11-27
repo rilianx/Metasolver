@@ -8,43 +8,25 @@ git clone https://github.com/rilianx/Metasolver.git
 Compilar el proyecto con el comando
 cmake .
 Correr el programa con el siguiente comando
-./CLP2017 ../data/BR15.txt 14 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0
+./BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 1 0
 
-Nota: Para que el programa funcione se debe tener en el directorio origen los directorios bullet-2.80-rev2531 y data
 
+./BSG_CLP problems/clp/benchs/BR/BR8.txt <inst_id> <min_fr> <maxtime> <alpha> <beta> <gamma> <p> <delta> <theta> <r> <fsb> <kdtree>
+
+inst_id: id de la instancia
+min_fr: minimo volumen necesario para construir bloques
+alpha, beta, gamma, p, delta, theta, r: parametros de la funcion VCS 
+fsb: variante full-supported
+kdtree: uso de estructura kdtree
 
 TODO
 ----
 
- - [ ] **(Mauricio)** Arreglar crowding distance!
- - [ ] **(Cristobal, Ignacio)** NSGA-II
- - [ ] Agregar restriccion de peso maximo (en funcion de evaluacion VLoss)
- - [ ] Calcular hipervolumen
- - [ ] Comparar con resultados e instancias de otros papers
+**Ariel:**
+- [ ] Hacer un generador de instancias
+- [ ] Resolver instancias usando BSG (opcion fsb=1)
 
-**Beam Search** con función *alpha*:
- - [x] Crear evaluadorMOP que incorpore el segundo objetivo con parametro f.
- - [x] Modificar BSGMOP que considere valores de alpha de acuerdo al numero de
-      beams.
- - [x] Probar greedy para instancias con pesos aleatorios con distintos valores
-       de f. Objetivo: encontrar f que maximice promedio de los pesos.
- - [x] Definir mapeo lambda2->f
-
-Experimentos
----- 
-
-** Tecnicas: **
-- BSG
-- BSG-MOP con VCS
-- BSG-MOP con VCS con pesos para cada beam
-- NSGA-II (Yamira)
-
-**Instancias:**
-
-- BR modificadas para dos objetivos
-  - Uniform-weights
-  - Random-weights
-  - Random-proportional-weights
-- Yamira
+**Ignacio:**
+- [ ] Modificar heuristica de seleccion de cajas para problemas con fsb=0 (de abajo hacia arriba)
 
 

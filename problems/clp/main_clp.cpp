@@ -38,7 +38,7 @@ int main(int argc, char** argv){
     double gamma=atof(argv[7]); //0.0 - 1.0
     double p=atof(argv[8]); //0.0 - 0.1
     double delta=atof(argv[9]); //0.0 - 10.0
-		double f=atof(argv[10]);
+	double f=atof(argv[10]);
     double r=atof(argv[11]);
     bool fsb=(atoi(argv[12])==1);
     bool kdtree=atoi(argv[13]);
@@ -96,12 +96,14 @@ int main(int argc, char** argv){
 	cout << eval << endl;
 
 
-	/*const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->top();
-	while(dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->has_next()){
+
+
+	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
+	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
 		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->next();
+		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
 	}
-	 */
+
 
 	//dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
 
