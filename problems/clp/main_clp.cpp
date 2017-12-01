@@ -23,25 +23,26 @@ bool global::TRACE = false;
 
 using namespace std;
 
-//State* new_state(string file, int instance);
+// para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
+// para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
 
 int main(int argc, char** argv){
 
 	string file=argv[1];
 	int inst=atoi(argv[2]);
-	double min_fr=atof(argv[3]);
-	int max_time=atoi(argv[4]);
+	double min_fr=atof(argv[3]); //<-- 0.98 o 1.0
 
-    double alpha=atof(argv[5]); //0.0 - 10.0
-    double beta=atof(argv[6]); //0.0 - 10.0
-    double gamma=atof(argv[7]); //0.0 - 1.0
-    double p=atof(argv[8]); //0.0 - 0.1
-    double delta=atof(argv[9]); //0.0 - 10.0
-	double f=atof(argv[10]);
-    double r=atof(argv[11]);
-    bool fsb=(atoi(argv[12])==1);
-    bool kdtree=atoi(argv[13]);
+	int max_time=atoi(argv[4]); //500
+    double alpha=atof(argv[5]); //4.0
+    double beta=atof(argv[6]); //1.0
+    double gamma=atof(argv[7]); //0.2
+    double p=atof(argv[8]); //0.04
+    double delta=atof(argv[9]); //1.0
+	double f=atof(argv[10]); //0.0
+    double r=atof(argv[11]); //0.0
+    bool fsb=(atoi(argv[12])==1); //0
+    bool kdtree=atoi(argv[13]); //0
 
 	srand(1);
 
@@ -105,6 +106,8 @@ int main(int argc, char** argv){
 	for(auto action:actions){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
 		s00->transition(*clp_action);
+		//s00->cont
+		//s00->nb_left_boxes;
 
 
 		cout << "block :" << clp_action->block << endl;
