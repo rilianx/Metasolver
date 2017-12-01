@@ -18,133 +18,133 @@ int main() {
 	//input parameters:
 	//int p=1;
 	ofstream myfile;
-	myfile.open("/benchs/ann_a/data01.txt");
+	myfile.open("problems/clp/benchs/ann_a/data01.txt");
 	int semilla;
 	int n_casos=100;
 	int n_tipos_cajas=1;
     myfile<<n_casos<<endl;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data03.txt");
+	myfile.open("problems/clp/benchs/ann_a/data03.txt");
     n_tipos_cajas=3;
     myfile<<n_casos<<endl;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data05.txt");
+	myfile.open("problems/clp/benchs/ann_a/data05.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=5;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data08.txt");
+	myfile.open("problems/clp/benchs/ann_a/data08.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=8;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data10.txt");
+	myfile.open("problems/clp/benchs/ann_a/data10.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=10;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data12.txt");
+	myfile.open("problems/clp/benchs/ann_a/data12.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=12;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data15.txt");
+	myfile.open("problems/clp/benchs/ann_a/data15.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=15;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data20.txt");
+	myfile.open("problems/clp/benchs/ann_a/data20.txt");
 	myfile<<n_casos<<endl;
 	n_tipos_cajas=20;
 	for(int i=1;i<=n_casos;i++){
-		semilla=2502505+100*(i-1);
+		semilla=101+100*(i-1);
 		generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 	}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data30.txt");
+	myfile.open("problems/clp/benchs/ann_a/data30.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=30;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data40.txt");
+	myfile.open("problems/clp/benchs/ann_a/data40.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=40;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data50.txt");
+	myfile.open("problems/clp/benchs/ann_a/data50.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=50;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data60.txt");
+	myfile.open("problems/clp/benchs/ann_a/data60.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=60;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data70.txt");
+	myfile.open("problems/clp/benchs/ann_a/data70.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=70;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data80.txt");
+	myfile.open("problems/clp/benchs/ann_a/data80.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=80;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data90.txt");
+	myfile.open("problems/clp/benchs/ann_a/data90.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=90;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
-	myfile.open("/benchs/ann_a/data100.txt");
+	myfile.open("problems/clp/benchs/ann_a/data100.txt");
 		myfile<<n_casos<<endl;
 		n_tipos_cajas=100;
 		for(int i=1;i<=n_casos;i++){
-			semilla=2502505+100*(i-1);
+			semilla=101+100*(i-1);
 			generaInstancia(i,587,233,220,n_tipos_cajas,30,25,20,120,100,80,2,semilla,myfile);
 		}
 	myfile.close();
