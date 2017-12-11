@@ -6,7 +6,10 @@
  */
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include <iostream>
+#include <stdlib.h>
+#include <string.h>
 //#include "objects/State.cpp"
 #include "clpState.h"
 #include "clpStatekd.h"
@@ -26,6 +29,10 @@ using namespace std;
 
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
+
+void whiteBackground( vector< vector< int > >& , int ) ;
+void printBlock(vector< vector< int > >& , vector<int> , vector<int> ,int );
+void printPgm(string ,vector< vector< int > > ,int  );
 
 
 int main(int argc, char** argv){
@@ -96,25 +103,43 @@ int main(int argc, char** argv){
 	cout << "running" << endl;
     double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
+	 string path1="problems/clp/benchs/ann_a/"; //directorio de entrada;
+	 string path="problems/clp/train_samples/"; //directorio de salida;
+		if(file.compare(path1+"data01.txt")==0)path=path+"1/";//direccion de salida particular
+		if(file.compare(path1+"data03.txt")==0)path=path+"3/";
+		if(file.compare(path1+"data05.txt")==0)path=path+"5/";
+		if(file.compare(path1+"data08.txt")==0)path=path+"8/";
+		if(file.compare(path1+"data10.txt")==0)path=path+"10/";
+		if(file.compare(path1+"data12.txt")==0)path=path+"12/";
+		if(file.compare(path1+"data15.txt")==0)path=path+"15/";
+		if(file.compare(path1+"data20.txt")==0)path=path+"20/";
+		if(file.compare(path1+"data30.txt")==0)path=path+"30/";
+		if(file.compare(path1+"data40.txt")==0)path=path+"40/";
+		if(file.compare(path1+"data50.txt")==0)path=path+"50/";
+		if(file.compare(path1+"data60.txt")==0)path=path+"60/";
+		if(file.compare(path1+"data70.txt")==0)path=path+"70/";
+		if(file.compare(path1+"data80.txt")==0)path=path+"80/";
+		if(file.compare(path1+"data90.txt")==0)path=path+"90/";
+		if(file.compare(path1+"data100.txt")==0)path=path+"100/";
 
-	 string path="problems/clp/train_samples/";
-		if(file.compare("data01.txt"))path=path+"1";
-		if(file.compare("data01.txt"))path=path+"3";
-		if(file.compare("data01.txt"))path=path+"5";
-		if(file.compare("data01.txt"))path=path+"8";
-		if(file.compare("data10.txt"))path=path+"10";
-		if(file.compare("data12.txt"))path=path+"12";
-		if(file.compare("data15.txt"))path=path+"15";
-		if(file.compare("data20.txt"))path=path+"20";
-		if(file.compare("data30.txt"))path=path+"30";
-		if(file.compare("data40.txt"))path=path+"40";
-		if(file.compare("data50.txt"))path=path+"50";
-		if(file.compare("data60.txt"))path=path+"60";
-		if(file.compare("data70.txt"))path=path+"70";
-		if(file.compare("data80.txt"))path=path+"80";
-		if(file.compare("data90.txt"))path=path+"90";
-		if(file.compare("data100.txt"))path=path+"100";
 
+//hasta ahora el path de output seria ej: "problems/clp/train_samples/10/"
+
+
+
+
+		cout<<"path:"<<path<<endl;
+
+
+		stringstream ss;
+		ss << inst;
+		string indiceInstancia = ss.str();
+
+		cout <<"indice instancia"<<indiceInstancia<<endl;
+
+		path=path+"trainSample";
+
+		cout<<"path:"<<path<<endl;
 
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);
@@ -122,32 +147,42 @@ int main(int argc, char** argv){
 
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
 
+
+
 	const AABB* aux= &s00->cont->blocks->top();
 	int width=587,length=233, maxval=220;
 
 	//int image[width][length];
 
-	 vector<vector<int> > imageMatrix(width, vector<int>(length, 0));
+	 //vector<vector<int> > imageMatrix(width, vector<int>(length, 0));
 
-	// whiteBackground(imageMatrix, maxval);
+	//whiteBackground(imageMatrix, maxval);
+	ofstream myfile;
+	path=path+indiceInstancia+".txt";
+	myfile.open(path);
+
+
+	cout<<"path:"<<path<<endl;
 
 
 
 
 	//ofstream img ("picture.pgm");
 	//recorro cada accion
+	string sampleName=path;
 	int i=0;
 	for(auto action:actions){
+
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
 		//ofstream img ("picture"+i+".pgm");
 		//recorro los bloques
 		const AABB* aux= &s00->cont->blocks->top();
 		cout<<"recorro los bloques"<<endl;
 	    while(true){
-			//...
+			/*//...
 	    	//aqui deberia formar
 			if(!(s00->is_root())) {
-	    	cout<<"bloque:"<<endl;
+			cout<<"bloque:"<<endl;
 	    	cout<<"xmax:"<<aux->getXmax()<<endl;
 	    	cout<<"ymax:"<<aux->getYmax()<<endl;
 	    	cout<<"zmax:"<<aux->getZmax()<<endl;
@@ -159,7 +194,7 @@ int main(int argc, char** argv){
 				cout<<"no hay bloques"<<endl;
 				//string filename=
 				//printPgm();
-			}
+			}*/
 	    	if(s00->cont->blocks->has_next())
 			  aux=&s00->cont->blocks->next();
 
@@ -168,13 +203,17 @@ int main(int argc, char** argv){
 	    //pongo un bloque
 		s00->transition(*clp_action);
 		//s00->nb_left_boxes;
-		cout<<"pongo un bloque"<<endl;
+		//cout<<"pongo un bloque"<<endl;
 		//imprimo el bloque puesto y su posicion
-		cout << "block :" << clp_action->block << endl;
 
+		cout << "block :" << clp_action->block << endl;
+		myfile << clp_action->block << endl;
 		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
+		myfile << clp_action->space.get_location(clp_action->block) << endl;
+
 		i++;
 	}
+	myfile.close();
 
 /*
 	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
@@ -213,8 +252,25 @@ void printBlock(vector< vector< int > >& imageMatrix, vector<int> tamano, vector
 	}
 }
 
-void printPgm(string filename,vector< vector< int > > imageMatrix ){
+void printPgm(string filename,vector< vector< int > > imageMatrix,int maxVal ){
+	ofstream img (filename+".pgm");
+	int width=imageMatrix.size();//filas
+	int length=imageMatrix[0].size();//columnas
 
+	img <<  "P2" << endl;
+	img << width << " " << length<< endl ;
+	img << "255" << endl;
+	img << maxVal<< endl;
+		for(int x = 0; x < width; x++){
+			for(int y=0;y < length;y++){
+
+				img << imageMatrix[x][y] <<" ";
+
+
+		}
+		img << endl;
+	}
+		img.close();
 }
 
 
