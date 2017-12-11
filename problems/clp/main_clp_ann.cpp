@@ -34,8 +34,18 @@ void whiteBackground( vector< vector< int > >& , int ) ;
 void printBlock(vector< vector< int > >& , vector<int> , vector<int> ,int );
 void printPgm(string ,vector< vector< int > > ,int  );
 
+void extract_boxes(AABB aabb, list< AABB >& uni_blocks);
+
+/**
+ * comparacion para ordenar de menor a mayor altura
+ */
+bool compare_aabb(AABB& aabb1, AABB& aabb2){
+	return aabb1.getZmin() < aabb2.getZmin();
+}
 
 int main(int argc, char** argv){
+
+	Space::bottom_up=true;
 
 	string file=argv[1];
 	int inst=atoi(argv[2]);
@@ -142,7 +152,7 @@ int main(int argc, char** argv){
 		cout<<"path:"<<path<<endl;
 
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
-    actions.sort(clpState::height_sort);
+  //  actions.sort(clpState::height_sort);
 
 
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
@@ -171,6 +181,21 @@ int main(int argc, char** argv){
 	//recorro cada accion
 	string sampleName=path;
 	int i=0;
+
+/*	const clpState* sol = dynamic_cast<const clpState*>(de->get_best_state());
+
+	list< AABB > uni_blocks;
+	extract_boxes(AABB( Vector3(0,0,0), sol->cont), uni_blocks);
+
+	uni_blocks.sort(compare_aabb);
+
+	cout << uni_blocks.size() << endl;
+	for(auto aabb:uni_blocks){
+		cout << aabb << endl;
+	}
+
+	return 1;*/
+
 	for(auto action:actions){
 
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
@@ -207,6 +232,19 @@ int main(int argc, char** argv){
 		//imprimo el bloque puesto y su posicion
 
 		cout << "block :" << clp_action->block << endl;
+
+		/*
+		list< AABB > uni_blocks;
+		extract_boxes(AABB( clp_action->space.get_location(clp_action->block), clp_action->block), uni_blocks);
+
+		uni_blocks.sort(compare_aabb);
+
+		cout << uni_blocks.size() << endl;
+		for(auto aabb:uni_blocks){
+			cout << aabb << endl;
+		}*/
+
+
 		myfile << clp_action->block << endl;
 		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
 		myfile << clp_action->space.get_location(clp_action->block) << endl;
@@ -223,9 +261,34 @@ int main(int argc, char** argv){
 	}
 */
 
-	//s00->cont->MatLab_print();
+
+	s00->cont->MatLab_print();
 
 
+}
+
+
+void extract_boxes(AABB aabb, list< AABB >& uni_blocks){
+	const Block* block=aabb.getBlock();
+	Vector3 pos = aabb.getMins();
+
+	if(block->n_boxes==1){
+		uni_blocks.push_back(aabb);
+		return;
+	}
+
+	const AABB* aux= &block->blocks->top();
+
+	while(true){
+
+		AABB aabb2 (pos+aux->getMins(), aux->getBlock());
+		extract_boxes(aabb2, uni_blocks);
+
+		if(block->blocks->has_next())
+			aux=&block->blocks->next();
+
+		else break;
+	}
 }
 
 
