@@ -73,6 +73,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
+ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
 
 ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
@@ -84,6 +85,7 @@ ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 target_link_libraries(BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
+target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
 
 target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
