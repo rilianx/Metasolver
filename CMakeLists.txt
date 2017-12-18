@@ -72,7 +72,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
-ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/main_clp_ann.cpp)
+ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
 
 ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
