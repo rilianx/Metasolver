@@ -1,0 +1,267 @@
+[base]
+test_instances = instances.txt
+mintime = 0.0001
+maxtime = 30
+factors = 1 0.833 0.665 0.5 0.2 0.1
+sig_gain = 1.2
+max_seeds = 100
+min_seeds = 100
+algo_names = bs_sample2
+#bsg150 bs_be150
+#bsg bs_be
+#mcts-bs2
+#mcts-bsC
+#bsg150
+#bsg puregrasp5 grasp-based5-10 grasp-based5-20 
+#bsgw3 lsg-ee
+#lsg lsg-ee
+#vcs-best-comp fit-degree
+#vcs-best-fsb vcs-p-fsb vcs-best-fsb150
+
+[bs_sample]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 150 4.0 2.0 0.2 0.04 bs_sample 4 0.5 _SEED
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bs_sample2]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 bs_sample 4 2 _SEED
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bs_rand150]
+tuning_param = delta
+tuning_values = 0.0 0.1 0.2 0.3
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 150 4.0 2.0 0.2 0.04 bs_rand 4 _delta _SEED
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bs_mp]
+description = "bsg + multipath"
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 bs_mp 4 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bs_be150]
+description = "bsg + block_extraction + bsg"
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 150 4.0 2.0 0.2 0.04 bs_be 4 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bs-dynamicn]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 mcts 50 1.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[mcts-bs2]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 mcts 50 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+
+[mcts]
+tuning_param = C
+tuning_values = 0.0005 0.0
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 mcts 500 _C 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[mcts-bs]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 30 4.0 2.0 0.2 0.04 mcts 500 0 1.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[mcts150]
+tuning_param = C
+tuning_values = 0.01 0.005 0.001 0.0
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 150 4.0 2.0 0.2 0.04 mcts 30 _C 1.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+
+[bsg150]
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2" 
+params = _INSTANCE 150 4.0 2.0 0.2 0.04 bs 4 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[grasp-based5-10]
+# exec = "/home/iaraya/clp/CLP2016/CLP2"
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 5 10
+outputpos_times = 1
+outputpos_boxes = 2
+
+[grasp-based5-20]
+# exec = "/home/iaraya/clp/CLP2016/CLP2"
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 5 20
+outputpos_times = 1
+outputpos_boxes = 2
+
+[puregrasp5]
+# exec = "/home/iaraya/clp/CLP2016/CLP2"
+exec = "/home/iaraya/clp/CLP2016-graspbased/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 5 0 
+outputpos_times = 1
+outputpos_boxes = 2
+
+
+[bsg]
+# exec = "/home/iaraya/clp/CLP2016/CLP2"
+exec = "/home/iaraya/clp/CLP2016-limited-search/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 bs
+outputpos_times = 1
+outputpos_boxes = 2
+
+[bsgw3]
+# exec = "/home/iaraya/clp/CLP2016/CLP2"
+exec = "/home/iaraya/clp/CLP2016-limited-search/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 bs
+outputpos_times = 1
+outputpos_boxes = 2
+
+[lsg]
+exec = "/home/iaraya/clp/CLP2016-limited-search/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 ls
+outputpos_times = 1
+outputpos_boxes = 2
+
+[lsg-ee]
+exec = "/home/iaraya/clp/CLP2016-limited-search/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 ee
+outputpos_times = 1
+outputpos_boxes = 2
+
+
+
+[fit-degree]
+exec = "/home/iaraya/clp/CLP2016/CLP2-FitDegree"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-best-comp]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-best-fsb]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha-fsb]
+tuning_param = ALPHA
+tuning_values = 0.0
+exec = "/home/iaraya/clp/CLP2016/CLP2-per"
+params = _INSTANCE _MAXTIME _ALPHA 0.0 0.0 0.0 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-beta-fsb]
+tuning_param = BETA
+tuning_values = 0.5 1.0 2.0 4.0
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 2.0 _BETA 0.0 0.0 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-gamma-fsb]
+tuning_param = GAMMA
+tuning_values = 0.0 0.1 0.2 0.3 0.4
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 2.0 2.0 _GAMMA 0.0 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-p-fsb]
+tuning_param = P
+tuning_values = 0.01 0.02 0.03 0.04 0.05
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 2.0 2.0 0.2 _P fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-best-fsb150]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE 150 2.0 2.0 0.2 0.03 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha-fsb2]
+tuning_param = ALPHA
+tuning_values = 1.0 2.0 4.0
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME _ALPHA 0.0 0.0 0.0 fsb
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-best]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 2.0 0.2 0.04
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-best2]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+tuning_param = BETA
+tuning_values = 2.0
+params = _INSTANCE _MAXTIME 4.0 _BETA 0.2 0.04
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha]
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha2]
+description = "se cambia mecanismo de deteccion de estados iguales (volumen+fitness)"
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha3]
+description = "se cambia mecanismo de deteccion de estados iguales (volumen+fitness)"
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha4]
+description = "se agrega calculo de espacio perdido"
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 0.0 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+[vcs-alpha-beta]
+tuning_param = BETA
+tuning_values = 1.0 1.5 2.0
+exec = "/home/iaraya/clp/CLP2016/CLP2"
+params = _INSTANCE _MAXTIME 4.0 _BETA 0.0 0.0
+outputpos_times = 1
+outputpos_boxes = 2
+
+
+[bs-clp-vloss2]
+tuning_param = ALPHA
+tuning_values = 1.0 2.0 3.0 4.0 5.0
+exec = "/home/iaraya/Dropbox/PUCV/4_Experiments/clp/CLP2014/CLP2-vloss2"
+params = _INSTANCE 0 _MAXTIME _ALPHA
+outputpos_times = 1
+outputpos_boxes = 2
