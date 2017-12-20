@@ -358,7 +358,7 @@ int main(int argc, char** argv) {
 
 	int _s=1;
 	if(s) _s=s.Get();
-	srand(s);
+	srand(_s);
 
 	double _min_fr=0.98;
 	int _maxtime=2;
