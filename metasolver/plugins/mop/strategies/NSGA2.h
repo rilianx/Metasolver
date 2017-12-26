@@ -11,106 +11,10 @@
 #include <list>
 #include "SearchStrategy.h"
 
-namespace metasolver {
-
-
-class Gen {
-
-public:
-	int type; //type of box
-	int n; //number of boxes
-	int o; //orientation
-};
-
-class Chromosome {
-
-public:
-	Chromosome(list<Gen>& genes) : genes(genes){ }
-
-	virtual ~Chromosome() { };
-
-	Chromosome* copy() {
-		return new Chromosome(genes);
-	}
-
-	/*
-	 * TODO: Operador de mutacion
-	 * Mutates the chromosome
-	 */
-	Chromosome* mutate(){
-		Chromosome* c_new = copy();
-
-		//modifica sus genes de acuerdo a alguna probabilidad
-
-		return c_new;
-	}
-
-	/*
-	 * TODO: Operador de cruzamiento (Cristobal)
-	 */
-	Chromosome* crossover(Chromosome* c2){
-		Chromosome* c_new = copy();
-
-		//cruzar this con c2
-
-		return c_new;
-	}
-
-	/**
-	 * TODO: movimientos del operador de mutacion (Cristobal)
-	 * The random movements used by the mutation operator
-	 */
-	void add_rnd_gene();
-	void remove_rnd_gene();
-	void change_rnd_gene();
-
-	/**
-	 * TODO: (Ignacio) Calculate the objectives
-	 */
-	virtual double get_value();
-	virtual double get_value2();
-
-
-	list<Gen> genes;
-
-};
+using namespace metasolver; /* namespace clp */
 
 class NSGA2 {
-public:
-
-
-	NSGA2(double p_mut=0.3, double p_cross=0.9, double pop_size) : p_mut(p_mut), p_cross(p_cross), pop_size(pop_size) { };
-
-	virtual ~NSGA2() { };
-
-	/**
-	 * Performs an iteration of the strategy
-	 * @returns true if the search strategy has not finished yet
-	 */
-	virtual list<Chromosome*> next(vector<Chromosome*>& G);
-
-	/**
-	 * compute the objective values of the chromosomes
-	 */
-	void calculate_objectives(list<Chromosome*>& children){
-		for(auto chrom : children){
-			chrom->get_value();
-			chrom->get_value2();
-		}
-	}
-
-	//TODO: filter_nondominated_sort
-	/**
-	 * The filtered chromosomes should be deleted
-	 */
-	vector<Chromosome*> filter_nondominated_sort(list<Chromosome*>& G);
-
-
-	void binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromosome*>& selection);
-
-
-private:
-
+	private:
 	/**
 	 * Mutation probability
 	 */
@@ -126,8 +30,39 @@ private:
 	 */
 	int pop_size;
 
-};
+	public:
+		NSGA2::NSGA2(double p_mut=0.3, double p_cross=0.9, double pop_size) : p_mut(p_mut), p_cross(p_cross), pop_size(pop_size) { };
 
-} /* namespace clp */
+		virtual NSGA2::~NSGA2() { };
+
+		/**
+		 * Performs an iteration of the strategy
+		 * @returns true if the search strategy has not finished yet
+		 */
+		virtual std::list<Chromosome*> next(vector<Chromosome*>& G);
+
+		/**
+		 * compute the objective values of the chromosomes
+		 */
+		void NSGA2::calculate_objectives(list<Chromosome*>& children);
+
+		//TODO: filter_nondominated_sort
+		/**
+		 * The filtered chromosomes should be deleted
+		 */
+		std::vector<Chromosome*> filter_nondominated_sort(list<Chromosome*>& G);
+
+
+		void NSGA2::binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromosome*>& selection);
+
+		void NSGA2::setP_mut(double p_mut);
+		void NSGA2::setP_cross(double p_cross);
+		void NSGA2::setPop_size(int pop_size);
+
+		double NSGA2::getP_mut();
+		double NSGA2::getP_cross();
+		int NSGA2::getPop_size();
+
+};
 
 #endif /* PLUGINS_MOP_STRATEGIES_NSGA2_H_ */
