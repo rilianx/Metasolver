@@ -5,11 +5,9 @@
  *      Author: iaraya
  */
 
+#include "Gen.h"
+#include "Chromosome.h"
 #include "NSGA2.h"
-
-namespace metasolver {
-
-
 
 //Basado: http://www.cleveralgorithms.com/nature-inspired/evolution/nsga.html
 virtual list<Chromosome*> NSGA2::next(vector<Chromosome*>& pop){
@@ -56,4 +54,29 @@ void NSGA2::binary_tournament_selection(vector<Chromosome*>& pop, vector<Chromos
 	}
 }
 
-} /* namespace clp */
+void NSGA2::calculate_objectives(list<Chromosome*>& children){
+	for(auto chrom : children){
+		chrom->get_value();
+		chrom->get_value2();
+	}
+}
+
+void NSGA2::setP_mut(double p_mut){
+	this->p_mut = p_mut;
+}
+void NSGA2::setP_cross(double p_cross){
+	this->p_cross = p_cross;
+}
+void NSGA2::setPop_size(int pop_size){
+	this->pop_size = pop_size;
+}
+
+double NSGA2::getP_mut(){
+	return this->p_mut;
+}
+double NSGA2::getP_cross(){
+	return this->p_cross;
+}
+int NSGA2::getPop_size(){
+	return this->pop_size;
+}
