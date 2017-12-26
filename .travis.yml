@@ -1,8 +1,8 @@
 language: cpp
 compiler: gcc
+dist: xenial
 
-script: 
+script:
  - cmake .
  - make
- - ./CLP_MOP benchs/BR/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0
- - ./CLP2017 benchs/BR/BR4.txt 2 0.98 10 4.0 1.0 0.2 0.04 1.0 0.0 0
+ - make CTEST_OUTPUT_ON_FAILURE=1 test ARGS="-V"

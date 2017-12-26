@@ -33,7 +33,8 @@ public:
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
 		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
 
-  virtual ~BSG(){}
+
+	virtual ~BSG();
 
     virtual void set_shuffle_best_path(bool b){
         shuffle_best_path=b;

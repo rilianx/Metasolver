@@ -69,13 +69,33 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
 
-ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
 
-ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
 
-target_link_libraries(CLP2017 bsg clp clp_kdtree)
+ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
+ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
+ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
 
-target_link_libraries(CLP_MOP bsg bsg_mop clp)
+ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
+ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
+
+ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
+
+target_link_libraries(BSG_CLP bsg clp clp_kdtree)
+target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
+target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
+target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
+
+target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(testEvalMOP bsg_mop bsg clp)
+
+enable_testing()
+
+add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
+add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
+
 
 ENDIF()
 

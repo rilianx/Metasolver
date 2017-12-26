@@ -9,6 +9,9 @@
 
 namespace metasolver {
 
+BSG::~BSG(){
+
+}
 
 list<State*> BSG::next(list<State*>& S){
     

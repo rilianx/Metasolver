@@ -44,7 +44,7 @@ public:
 
 	}
 
-  virtual ~BSG_MOP(){}
+    virtual ~BSG_MOP();
 
 	/**
 	 * Performs an iteration of the strategy
@@ -87,7 +87,7 @@ public:
 
 
 
-	void function_sort(list< pair<pair<State*, State*>,long>>& crowding_list,int funtion);
+//	void function_sort(list< pair<pair<State*, State*>,double>>& crowding_list,int funtion);
 
 	/**
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
@@ -108,7 +108,7 @@ private:
     map< pair<double, double>, pair<State*, State*> > state_actions;
 
 	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
-	void select_coeff(list<double>& coeff, int n);
+	void select_coeff(vector<double>& coeff);
 };
 
 

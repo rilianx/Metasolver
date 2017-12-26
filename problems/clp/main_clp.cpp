@@ -23,30 +23,32 @@ bool global::TRACE = false;
 
 using namespace std;
 
-//State* new_state(string file, int instance);
+// para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
+// para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
 
 int main(int argc, char** argv){
 
 	string file=argv[1];
 	int inst=atoi(argv[2]);
-	double min_fr=atof(argv[3]);
-	int max_time=atoi(argv[4]);
+	double min_fr=atof(argv[3]); //<-- 0.98 o 1.0
 
-    double alpha=atof(argv[5]); //0.0 - 10.0
-    double beta=atof(argv[6]); //0.0 - 10.0
-    double gamma=atof(argv[7]); //0.0 - 1.0
-    double p=atof(argv[8]); //0.0 - 0.1
-    double delta=atof(argv[9]); //0.0 - 10.0
-    double r=atof(argv[10]);
-    bool fsb=(atoi(argv[11])==1);
-    bool kdtree=atoi(argv[12]);
+	int max_time=atoi(argv[4]); //500
+    double alpha=atof(argv[5]); //4.0
+    double beta=atof(argv[6]); //1.0
+    double gamma=atof(argv[7]); //0.2
+    double p=atof(argv[8]); //0.04
+    double delta=atof(argv[9]); //1.0
+	double f=atof(argv[10]); //0.0
+    double r=atof(argv[11]); //0.0
+    bool fsb=(atoi(argv[12])==1); //0
+    bool kdtree=atoi(argv[13]); //0
 
 	srand(1);
 
 
 
-	//SpaceSet::random_spaces=true; 
+	//SpaceSet::random_spaces=true;
     //global::TRACE=true;
 
     cout << "cargando la instancia..." << endl;
@@ -62,7 +64,7 @@ int main(int argc, char** argv){
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, r);
+    alpha, beta, gamma, p, delta, f, r);
 
 	if(kdtree){
 		kd_block::set_vcs(*vcs);
@@ -87,22 +89,42 @@ int main(int argc, char** argv){
 
 	cout << "copying state" << endl;
 	State& s_copy= *s0->clone();
- 
+
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = 1-gr->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, max_time, begin_time) ;
 	cout << eval << endl;
 
 
-	/*const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->top();
-	while(dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->has_next()){
-		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont.blocks->next();
-	}
-	 */
+	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
+    actions.sort(clpState::height_sort);
 
-	dynamic_cast<const clpState*>(gr->get_best_state())->cont->MatLab_print();
+
+	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
+
+	for(auto action:actions){
+		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
+		s00->transition(*clp_action);
+		//s00->cont
+		//s00->nb_left_boxes;
+
+
+		cout << "block :" << clp_action->block << endl;
+		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
+
+
+	}
+
+/*
+	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
+	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
+		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
+		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
+	}
+*/
+
+	s00->cont->MatLab_print();
 
 
 }

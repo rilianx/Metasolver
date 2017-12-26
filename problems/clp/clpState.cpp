@@ -171,6 +171,8 @@ double clpState::weight_of_allboxes=0.0;
 
 clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
+  clpState::weight_of_allboxes=0.0;
+
 	ifstream in(file.c_str());
 	string line;
 	if(f==clpState::BR)
@@ -193,8 +195,6 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 			long l,w,h;
 			ss >> l >> w >> h;
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
-			cout << l << "," << w << "," << h << endl;
-			cout << "Vmax:" << l*w*h << endl;
 		}
 
 		if(f==clpState::_1C){
@@ -239,7 +239,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
 
 			if(inst==i){
-				if(f==clpState::BR) weight= (double) rand()/(double) RAND_MAX;
+				if(f==clpState::BR) weight = (double)rand()/(double)RAND_MAX;
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
 				//cout << *boxt << endl;
 				//cout << weight << " x " << n <<  endl;
