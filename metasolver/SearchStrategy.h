@@ -18,6 +18,7 @@ using namespace std;
 
 namespace metasolver {
 
+//TODO: refactorizar
 class SearchStrategy {
 public:
 	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
@@ -74,9 +75,9 @@ public:
 	 * Performs an iteration of the strategy
 	 * @returns true if the search strategy has not finished yet
 	 */
-	virtual list<State*> next(list<State*>& S)=0 ;
+	virtual list<State*> next(list<State*>& S) { };
 
-	virtual double get_best_value() {
+	virtual double get_best_value() const {
 		if(best_state)
 			return best_state->get_value();
 		else return 0;
@@ -95,6 +96,10 @@ public:
 	virtual bool double_effort() { return false; }
 
 
+	/**
+	 * \brief return the n best actions according to the ActionEvaluator
+	 */
+	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
 
 protected:
@@ -105,10 +110,6 @@ protected:
 	virtual Action* best_action(const State& s);
 
 
-	/**
-	 * \brief return the n best actions according to the ActionEvaluator
-	 */
-	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
 	double timelimit;
 	State* best_state;

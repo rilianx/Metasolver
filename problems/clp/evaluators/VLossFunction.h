@@ -35,6 +35,12 @@ public:
 		theta = th;
 	}
 
+
+	virtual void set_beta(double b){ beta = b; }
+
+	virtual void set_delta(double d){ delta = d; }
+
+
 protected:
 	double Loss(const std::map<const BoxShape*, int>& nb_boxes, const Block& block, const Space& free_space);
 

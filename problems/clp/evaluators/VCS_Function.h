@@ -30,6 +30,13 @@ public:
 
 	double CS_p(const State& s, const Block& b, const Space& sp);
 
+
+	virtual void set_alpha(double a){ alpha = a; }
+
+	virtual void set_gamma(double g){ gamma = g; }
+
+	virtual void set_p(double pp){ p = pp; }
+
 protected:
 
 	long _surface_in_contact(const AABB& b, const AABB& bi);

@@ -12,6 +12,7 @@ problems/clp/objects2
 problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
+problems/clp/plugins/ga
 metasolver/plugins/mop/strategies/
 )
 
@@ -43,7 +44,14 @@ metasolver/strategies/Greedy.cpp
 
 ADD_LIBRARY(
 bsg_mop
-metasolver/plugins/mop/strategies/BSGMOP.cpp
+ metasolver/plugins/mop/strategies/BSGMOP.cpp
+)
+
+ADD_LIBRARY(
+nsga2
+ metasolver/plugins/mop/strategies/Chromosome.cpp
+ metasolver/plugins/mop/strategies/NSGA2.cpp
+ problems/clp/plugins/ga/clp_chromosome.cpp
 )
 
 ADD_LIBRARY(
@@ -75,21 +83,21 @@ ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-
 ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
-
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
+ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
+target_link_libraries(NSGA_CLP bsg clp nsga2)
 
 target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
-target_link_libraries(testEvalMOP bsg_mop bsg clp)
+target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
 enable_testing()
 

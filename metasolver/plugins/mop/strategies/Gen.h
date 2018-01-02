@@ -12,23 +12,21 @@ using namespace metasolver;
 
 class Gen {
 
-	private:
-		int type; //type of box
-		int n; //number of boxes
-		int o; //orientation
-
 	public:
-		Gen::Gen();
-		Gen::Gen(int type, int n, int o);
 
-		void setType(int type);
-		void setN(int n);
-		void setO(int o);
+	    virtual ~Gen() { }
 
-		int getType();
-		int getN();
-		int getO();
+		virtual Gen* clone()=0;
+
+		virtual void mutate()=0;
+
+		virtual void mutate2()=0;
+
+		virtual void write(std::ostream&) const=0;
+
+		friend std::ostream& operator<<(std::ostream &strm, const Gen &a){ a.write(strm); return strm; }
 
 };
+
 
 #endif //PLUGINS_MOP_STRATEGIES_GEN_H_
