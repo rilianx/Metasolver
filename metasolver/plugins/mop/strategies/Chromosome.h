@@ -34,6 +34,11 @@ public:
 
 	std::list<Gen*> genes;
 
+	/**
+	* For the behaviour of mutation (p) (0:lineal, 1:sqrt, 2:sqr, 3:standard random mutation)
+	*/
+	static int mode;
+
 };
 
 

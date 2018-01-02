@@ -26,7 +26,7 @@ void GenCLP::mutate(){
 
 void GenCLP::mutate2(){
 
-	rank=rand() % (max_rank/10) + 1;
+	rank=rand() % (max_rank/10+1)+1;
 
 }
 

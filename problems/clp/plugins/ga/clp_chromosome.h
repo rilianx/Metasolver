@@ -23,7 +23,10 @@ public:
 	}
 
 	GenCLP(){
-		rank=1;//rand() % max_rank + 1;
+		if (Chromosome::mode!=3)
+			rank=1;//rand() % max_rank + 1;
+		else
+		  rank= rand() % max_rank + 1;
 		//alpha= random(min_alpha,max_alpha);
 		//beta= random(min_beta,max_beta);
 		//gamma= random(min_gamma,max_gamma);

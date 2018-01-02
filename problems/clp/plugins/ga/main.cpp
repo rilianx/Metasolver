@@ -37,6 +37,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _pmut(parser, "int", "Probability of mutation (NSGA-II)", {"pmut"});
 	args::ValueFlag<double> _pcr(parser, "int", "Probability of crossover (NSGA-II)", {"pcr"});
 	args::ValueFlag<double> _maxrank(parser, "int", "Max ranking of genes (NSGA-II)", {"maxrank"});
+	args::ValueFlag<int> _mode(parser, "int", "For the behaviour of mutation (p) (0:lineal, 1:sqrt, 2:sqr, 3:standard random mutation) (NSGA-II)", {"mode"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
@@ -74,6 +75,8 @@ int main(int argc, char** argv){
 	double pmut=(_pmut)? _pmut.Get():0.1;
 	double pcr=(_pcr)? _pcr.Get():0.4;
 	GenCLP::max_rank=(_maxrank)? _maxrank.Get():100;
+  Chromosome::mode = (_mode)? _mode.Get():0;
+
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
 
@@ -99,8 +102,8 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = 1-nsga2->run(s_copy) ;
-	cout << eval << endl;
+  double eval = 1-nsga2->run(s_copy) ;
+	cout << eval << " "<< nsga2->get_time() << endl;
 
 
 

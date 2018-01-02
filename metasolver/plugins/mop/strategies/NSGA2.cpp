@@ -9,6 +9,8 @@
 #include "Chromosome.h"
 #include "NSGA2.h"
 
+
+
 double NSGA2::run(State& s, double tl, clock_t bt){
 	begin_time=bt;
 	timelimit=tl;
