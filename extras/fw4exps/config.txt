@@ -13,21 +13,21 @@ algo_names = clp_ann
 [clp_ann]
 exec = "/home/ignacio/clp/Metasolver/CLP_GENSOLV" 
 params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/train2/
-outputpos_times = 1
-outputpos_boxes = 1
+outputpos_times = 0
+outputpos_boxes = 0
 
 [clp_nsga2]
 tuning_param = mode
 tuning_values = 0 1 2
 exec = "/home/ignacio/clp/Metasolver/NSGA_CLP" 
 params = _INSTANCE --pop=50 --maxrank=20 --pmut=1.1 --pcr=0.0 --maxiter=_MAXTIME --mode=_mode
-outputpos_times = 1
-outputpos_boxes = 1
+outputpos_times = 0
+outputpos_boxes = 0
 
 [clp_nsga_cr]
 tuning_param = cr
 tuning_values = 0.2 0.4 0.6
 exec = "/home/ignacio/clp/Metasolver/NSGA_CLP"
 params = _INSTANCE --pop=50 --maxrank=20 --pmut=0.2 --pcr=_cr --maxiter=_MAXTIME --mode=3
-outputpos_times = 1
-outputpos_boxes = 1
+outputpos_times = 0
+outputpos_boxes = 0
