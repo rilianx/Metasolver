@@ -6,7 +6,7 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = clp_nsga2
+algo_names = clp_nsga2 clp_nsga_cr
 
 
 [clp_ann]
@@ -16,9 +16,17 @@ outputpos_times = 1
 outputpos_boxes = 1
 
 [clp_nsga2]
-tuning_param = MAXRANK 
-tunin_values = 5 10 25 50
-exec = "/home/iaraya/clp/clp2017/NSGA_CLP" 
-params = _INSTANCE --pop=50 --maxrank=_MAXRANK --pmut=1.1 --pcr=0.0 --maxiter=_MAXTIME 
+tuning_param = mode
+tuning_values = 0 1 2
+exec = "/home/ignacio/clp/Metasolver/NSGA_CLP" 
+params = _INSTANCE --pop=50 --maxrank=20 --pmut=1.1 --pcr=0.0 --maxiter=_MAXTIME --mode=_mode
+outputpos_times = 1
+outputpos_boxes = 1
+
+[clp_nsga_cr]
+tuning_param = cr
+tuning_values = 0.2 0.4 0.6
+exec = "/home/ignacio/clp/Metasolver/NSGA_CLP"
+params = _INSTANCE --pop=50 --maxrank=20 --pmut=0.2 --pcr=_cr --maxiter=_MAXTIME --mode=3
 outputpos_times = 1
 outputpos_boxes = 1
