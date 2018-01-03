@@ -36,6 +36,7 @@ public:
     	return (id<bt.id);
     }
 
+    inline int get_id() const {return id;}
 
     double get_weight() const { return weight; }
 
