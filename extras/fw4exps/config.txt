@@ -11,7 +11,7 @@ algo_names = clp_ann
 
 
 [clp_ann]
-exec = "/home/ignacio/clp/Metasolver/NSGA_CLP" 
+exec = "/home/ignacio/clp/Metasolver/CLP_GENSOLV" 
 params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/train2/
 outputpos_times = 1
 outputpos_boxes = 1
