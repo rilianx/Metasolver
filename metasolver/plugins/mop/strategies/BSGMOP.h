@@ -12,6 +12,7 @@
 #include <list>
 #include "SearchStrategy.h"
 #include "BSG.h"
+#include <vector>
 
 using namespace std;
 namespace metasolver {
@@ -106,9 +107,9 @@ private:
 
     //estados y caminos del beam para no perder soluciones
     map< pair<double, double>, pair<State*, State*> > state_actions;
-
-	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
 	void select_coeff(vector<double>& coeff);
+	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
+
 };
 
 
