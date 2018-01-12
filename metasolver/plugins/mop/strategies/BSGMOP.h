@@ -94,7 +94,7 @@ public:
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
 	 * are inserted into filtered_states
 	 */
-	void filter_crowding_distance (list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n);
+	void filter_crowding_distance (list< pair<State*,State*> >& frontera, int n);
 	//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
