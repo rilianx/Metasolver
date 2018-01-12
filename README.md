@@ -16,7 +16,7 @@ Nota: Para que el programa funcione se debe tener en el directorio origen los di
 TODO
 ----
 
- - [ ] **(Mauricio)** Arreglar crowding distance!
+ - [X] **(Mauricio)** Arreglar crowding distance!
  - [ ] **(Cristobal, Ignacio)** NSGA-II
  - [ ] Agregar restriccion de peso maximo (en funcion de evaluacion VLoss)
  - [ ] Calcular hipervolumen
