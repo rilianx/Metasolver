@@ -24,13 +24,14 @@ public:
 	double normal_cdf(double);
 	double z_value(double,double,double);
 	double probability_greater_than(double,double,double);
+	void addPoint(double,double);
+
 private:
 	double slope,intercept,alpha;//coeficientes de la recta, a: pendiente, b:
 	vector <pair<double,double>> points;
 	void update_coeficients();
 	double standart_deviation(vector<double>);
 	double meean(vector<double>);
-	void addPoint(pair<double,double>);
 
 };
 /*
@@ -59,6 +60,8 @@ public:
 class MCTS {
 public:
 	double bestValue;
+	Stimator stimator;
+
 	//priority_queue<mcts_node_, vector<mcts_node_>, Compare_node> node_queue;
 
 	MCTS();
@@ -71,6 +74,8 @@ public:
 		return (double(clock()-begin_time)/double(CLOCKS_PER_SEC));
 	}
 	MctsNode* selection(MctsNode*);
+	MctsNode* selectRandom(MctsNode*);
+
 private:
 	double timelimit;
 	MctsNode* best_node;
@@ -79,7 +84,6 @@ private:
 	ActionEvaluator* evl;
 	MctsNode* root;
 	SearchStrategy* greedy;
-	Stimator stimator;
 	typedef std::pair<MctsNode*, double> node_pair;
 	vector < node_pair>nodes;
 	void firstSimulations(MctsNode*,double,double);
