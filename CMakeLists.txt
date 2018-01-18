@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
+lib/inference/boost/math/distributions
 metasolver
 metasolver/strategies/
 problems/clp/containers
@@ -68,9 +69,13 @@ problems/clp/plugins/kdtree/kdNode.cpp
 problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
+ADD_LIBRARY(
+mcts
+metasolver/strategies/MCTS.cpp
+)
 
 
-
+ADD_EXECUTABLE(MTCSv2 problems/clp/main_mcts.cpp)
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
@@ -86,6 +91,9 @@ target_link_libraries(BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
+target_link_libraries(MTCSv2 bsg clp clp_kdtree mcts )
+
+
 
 target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)

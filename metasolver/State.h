@@ -43,12 +43,15 @@ public:
 class State {
 public:
 
-	State() : parent (NULL){}
+	State() : parent (NULL){
+
+	}
 
 	virtual State* clone() const = 0;
 
 
 	State(const State& S) : parent(&S){
+
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -118,6 +121,8 @@ protected:
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
+
+
 
 };
 
