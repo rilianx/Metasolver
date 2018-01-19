@@ -192,7 +192,9 @@ public:
 		return mean;
 	}
 	double get_sd(){return standart_deviation;}
-	int get_num_simulations(){return simulations.size();}
+	int get_num_simulations(){
+		return simulations.size();
+	}
 };
 
 } /* namespace std */

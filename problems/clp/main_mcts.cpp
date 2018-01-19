@@ -37,12 +37,10 @@ int main(int argc, char** argv){
 	double f=atof(argv[10]); //0.0
     double r=atof(argv[11]); //0.0
     bool fsb=(atoi(argv[12])==1); //0
-    bool kdtree=atoi(argv[13]); //0
-
-
 
     cout << "cargando la instancia..." << endl;
 
+    Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000);
 
     cout << "cargo la instancia"<<endl;

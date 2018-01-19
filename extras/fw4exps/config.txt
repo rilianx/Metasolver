@@ -1,16 +1,27 @@
 [base]
 test_instances = instances.txt
 mintime = 0.0001
-maxtime = 500
+maxtime = 30
 factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = clp_ann
+# algo_names = mctsv2 BSG
+algo_names = BSG
+
+[mctsv2]
+# tuning_param = BETA
+# tuning_values = 1.0 1.5 2.0
+exec = "/home/investigador/Documentos/Metasolver/MTCSv2" 
+params = _INSTANCE _MAXTIME 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0
+outputpos_times = 0
+outputpos_boxes = 0
 
 
-[clp_ann]
-exec = "/home/iaraya/clp/clp2017/CLP_GENSOLV" 
-params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/iaraya/clp/clp2017/problems/clp/plugins/ann/train/
-outputpos_times = 1
-outputpos_boxes = 1
+
+[BSG]
+exec = "/home/investigador/Documentos/Metasolver/BSG_CLP"
+params = _INSTANCE _MAXTIME 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
+outputpos_times = 0
+outputpos_boxes = 0
+

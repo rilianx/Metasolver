@@ -94,14 +94,16 @@ int main(int argc, char** argv){
 
 	cout << "running" << endl;
     double eval = 1-de->run(s_copy, max_time, begin_time) ;
-	cout << eval << endl;
+	cout <<1- eval << endl;
 
 
+	/*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);
 
 
-	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
+
+    clpState* s00 = dynamic_cast<clpState*> (s0->clone());
 
 	for(auto action:actions){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
@@ -114,7 +116,7 @@ int main(int argc, char** argv){
 		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
 
 
-	}
+	}*/
 
 /*
 	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
@@ -124,7 +126,7 @@ int main(int argc, char** argv){
 	}
 */
 
-	s00->cont->MatLab_print();
+	//s00->cont->MatLab_print();
 
 
 }
