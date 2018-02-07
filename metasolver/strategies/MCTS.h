@@ -76,6 +76,7 @@ public:
 	MctsNode* selection(MctsNode*);
 	MctsNode* selectRandom(MctsNode*);
 
+	string pointsToString();
 private:
 	double timelimit;
 	MctsNode* best_node;
@@ -84,8 +85,8 @@ private:
 	ActionEvaluator* evl;
 	MctsNode* root;
 	SearchStrategy* greedy;
-	typedef std::pair<MctsNode*, double> node_pair;
-	vector < node_pair>nodes;
+	//typedef std::pair<MctsNode*, double> node_pair;
+	vector < MctsNode*>nodes;
 	void firstSimulations(MctsNode*,double,double);
 	void reevaluation_of_nodes();
 

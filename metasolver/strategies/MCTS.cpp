@@ -19,20 +19,20 @@ double Stimator::z_value(double mean,double sd, double x){
 }
 double Stimator::stimate_standart_deviation(double volume){
 	double sd=volume*slope+intercept;
-	cout<<"stimated standart deviation:"<<sd<<endl;
+	//cout<<"stimated standart deviation:"<<sd<<endl;
 	return volume*slope+intercept;
 }
 double Stimator::probability_greater_than(double best,double mean,double sd){
-	cout<<"probability greater than "<<best<<endl;
+	//cout<<"probability greater than "<<best<<endl;
 	double z=z_value(best,mean,sd);
-	cout<<"probability:"<<1-normal_cdf(z)<<endl;
+	//cout<<"probability:"<<1-normal_cdf(z)<<endl<<endl;
 	return 1-normal_cdf(z);
 }
 
 void Stimator::addPoint(vector<double> simulations, double volume){
-	cout << "adding point to regression"<<endl;
+	//cout << "adding point to regression"<<endl;
 	int N=simulations.size();
-	cout<<"simulations size:"<<N<<endl;
+	//cout<<"simulations size:"<<N<<endl;
 	using boost::math::chi_squared;
      using boost::math::quantile;
      using boost::math::complement;
@@ -58,7 +58,7 @@ void Stimator::addPoint(double upper, double volume){
 
 
 void Stimator::update_coeficients(){
-	cout<<"updating coeficients of regression"<<endl;
+	//cout<<"updating coeficients of regression"<<endl;
 	int n=points.size();
 	//variables for sums/sigma of xi,yi,xi^2,xiyi etc
     double xsum=0,x2sum=0,ysum=0,xysum=0;
@@ -70,7 +70,7 @@ void Stimator::update_coeficients(){
     }
     slope=(n*xysum-xsum*ysum)/(n*x2sum-xsum*xsum);
     intercept=(x2sum*ysum-xsum*xysum)/(x2sum*n-xsum*xsum);
-    cout <<"new regression: sd=vol*"<<slope<<" + "<<intercept<<endl;
+    //cout <<"new regression: sd=vol*"<<slope<<" + "<<intercept<<endl;
 }
 
 double Stimator::standart_deviation(vector<double> simulations){
@@ -97,6 +97,7 @@ double Stimator::meean(vector <double> numbers){
 
 
 double MCTS::run(State& beginState,double tl,clock_t bt=clock()){
+
 	srand (time(NULL));
 
 	begin_time=bt;
@@ -108,10 +109,14 @@ double MCTS::run(State& beginState,double tl,clock_t bt=clock()){
 	firstSimulations(root,bt,tl);
 
 	while(true){
+		cout<<"______________________"<<endl;
 		cout<<"new iteration"<<endl;
+		cout<<"______________________"<<endl<<endl;
+
+		cout<<"best value so far:\t"<<bestValue<<endl<<endl;
 		MctsNode* node=root;
 		//Seleccion:
-		//cout <<"selection"<<endl;
+		cout <<"selection"<<endl;
 		if(node->hasChildren()){
 			node = selection(root);
 			node->addVisit();
@@ -119,11 +124,22 @@ double MCTS::run(State& beginState,double tl,clock_t bt=clock()){
 			//	node = selectRandom(root);
 
 		}
-		cout<<"selected node to expand:"<<node<<endl;
+		cout<<"selected node to expand:\t"<<node<<endl;
 		cout<<"number of simulations of this node:"<<node->get_num_simulations()<<endl;
+		cout<<"mean of the simulations:\t"<<node->getValue()<<endl;
+		cout<<"standart deviation\t\t:"<<node->get_sd()<<endl;
+		cout<<"depth of the node:\t\t"<<node->getDepth()<<endl;
+		cout<<"number of children nodes\t:"<<node->getNumChild()<<endl;
+		cout<<"number of times visited\t:"<<node->getNumVisits()<<endl;
+		cout<<"actions left:\t\t\t\t"<<node->getNumActions()<<endl;
+		cout<<"probability of overcome best:"<<node->getMctsValue()<<endl;
 		if( !node->isTerminal()&&!node->isFullyExpanded()) {
-			for(int i=0;i<expansions&&i<node->getNumActions();i++)
+			//cout<<"expanding"<<endl;
+			//cout<<"numactions left:"<<node->getNumActions()<<endl;
+			for(int i = 0 ;  i < expansions  && i < node->getNumActions(); i++)
 				 expansiones.push_back(node->expand());
+				 //cout<<"ok"<<endl;
+
 		 }else{
 			break;
 			//node = selectRandom(root);
@@ -134,43 +150,53 @@ double MCTS::run(State& beginState,double tl,clock_t bt=clock()){
 		 for(int i=0; i < expansions && i < node->getNumActions() ; i++){
 
 	     node=expansiones[i];
-	     cout<<"added node: "<<node<<endl;
+	     cout<<"added node: "<<node<<endl<<endl;
     	 State& state_copy = *(node->getState()->clone());
 
-
-
-         double value = greedy->run(state_copy, timelimit, begin_time);
-         node->addSimul(value);
-         pair <MctsNode*,double> aux_node;
-         aux_node.first=node;
-
-
          double volume = state_copy.get_value();
+         cout<<"volume of this node"<<volume<<endl;
+
+
+    	 cout<<"simulation"<<endl;
+         double value = greedy->run(state_copy, timelimit, begin_time);
+         cout<<"value from simulation:"<<value<<endl<<endl;
+         node->addSimul(value);
+         //MctsNode* aux_node;
+         //aux_node=node;
+
+
 
          if(node->get_num_simulations()<3){
+        	 cout <<"stimating sd:"<<endl;
 			 double standart_deviation=stimator.stimate_standart_deviation(volume);
 			 cout<<"stimated standart deviation: "<<standart_deviation<<endl;
-			 aux_node.second=stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation);
+			 node->setMctsValue(stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation));
 		 }else{
 			 double standart_deviation= node->get_sd();
-			 aux_node.second=stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation);
+			 node->setMctsValue(stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation));
 			 stimator.addPoint(node->simulations,volume);
          }
-         nodes.push_back(aux_node);
+         nodes.push_back(node);
 		 reevaluation_of_nodes();
 
 			 if(bestValue<value){
 				 bestValue=value;
 				 best_node=node;
 				 best_state=&state_copy;
+			 	 cout<<"______________________"<<endl;
 				 cout <<"new best value founded:"<<value<<endl;
+				 cout<<"______________________"<<endl;
+
 			 }
 		 }
 		 expansiones.clear();
          if(getTime()>timelimit) break;
+ 		cout<<"______________________"<<endl;
+ 		cout<<"\tend of i	teration"<<endl;
+		cout<<"______________________"<<endl;
 	}
 
-	return best_node->getValue();
+	return bestValue;
 }
 
 MctsNode* MCTS::bestChild(MctsNode* node){
@@ -190,14 +216,14 @@ MctsNode* MCTS::bestChild(MctsNode* node){
 //retorna el mejor hijo basado en
 
 MctsNode* MCTS::selection(MctsNode* root){
-	cout<<"selection"<<endl;
+	//cout<<"selection"<<endl;
 	double bestScore=-1;
 	MctsNode* bestChildnode=NULL;
 	int size=nodes.size();
 	for(int i = 0; i< size ; i++){
-		if(nodes[i].second>bestScore){
-			bestChildnode=nodes[i].first;
-			bestScore=nodes[i].second;
+		if(nodes[i]->getMctsValue()>bestScore&&!nodes[i]->isTerminal()){
+			bestChildnode=nodes[i];
+			bestScore=nodes[i]->getMctsValue();
 		}
 	}
 	return bestChildnode;
@@ -206,10 +232,10 @@ MctsNode* MCTS::selectRandom(MctsNode* root){
 	MctsNode* random_node=NULL;
 	int size=nodes.size();
 	int index = rand()%size;
-	random_node=nodes[index].first;
+	random_node=nodes[index];
 	while(random_node->isTerminal()){
 		index = rand()%size;
-		random_node=nodes[index].first;
+		random_node=nodes[index];
 	}
 	return random_node;
 }
@@ -244,18 +270,18 @@ void MCTS::firstSimulations(MctsNode* root,double begin_time,double timelimit){
 	 for(int i=0; i < expansions && i < node->getNumActions() ; i++){
 	     node=expansiones[i];
 
-         pair <MctsNode*,double> aux_node;
-         aux_node.first=node;
+         //pair <MctsNode*,double> aux_node;
+        // aux_node.first=node;
 
          State& state_copy = *(node->getState()->clone());
 
          double volume = state_copy.get_value();
          double standart_deviation=stimator.stimate_standart_deviation(volume);
          cout<<"stimated standart deviation: "<<standart_deviation<<endl;
-         aux_node.second=stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation);
+         node->setMctsValue(stimator.probability_greater_than(bestValue,node->getValue(),standart_deviation));
 
 		 cout<<"adding node to list"<<endl;
-         nodes.push_back(aux_node);
+         nodes.push_back(node);
 	 }
 	 //reevaluation_of_nodes();
 		cout<<"______________________"<<endl;
@@ -264,22 +290,25 @@ void MCTS::firstSimulations(MctsNode* root,double begin_time,double timelimit){
 
 }
 void MCTS::reevaluation_of_nodes(){
-	cout<<"reevaluation of nodes"<<endl;
+	//cout<<endl<<"reevaluation of nodes"<<endl;
 	int size=nodes.size();
 	for(int i = 0; i<size;i++){
-        double volume = nodes[i].first->getState()->get_value();
-        if(nodes[i].first->get_num_simulations()<3){
-        	cout<<"not enough simulations, stimating"<<endl;
+        double volume = nodes[i]->getState()->get_value();
+        if(nodes[i]->get_num_simulations()<3){
+        	//cout<<"not enough simulations, stimating"<<endl;
 			double standart_deviation=stimator.stimate_standart_deviation(volume);
-			nodes[i].second=stimator.probability_greater_than(bestValue,nodes[i].first->getValue(),standart_deviation);
-			stimator.addPoint(nodes[i].first->simulations,volume);
+			nodes[i]->setMctsValue(stimator.probability_greater_than(bestValue,nodes[i]->getValue(),standart_deviation));
         }else{
-        	cout<<"enough simulations"<<endl;
-            double standart_deviation=nodes[i].first->get_sd();
-    		nodes[i].second=stimator.probability_greater_than(bestValue,nodes[i].first->getValue(),standart_deviation);
-    		stimator.addPoint(nodes[i].first->simulations,volume);
+        	//cout<<"enough simulations"<<endl;
+            double standart_deviation=nodes[i]->get_sd();
+            nodes[i]->setMctsValue(stimator.probability_greater_than(bestValue,nodes[i]->getValue(),standart_deviation));
+    		stimator.addPoint(nodes[i]	->simulations,volume);
         }
     }
 }
+/*borrar*/
+string pointsToString(){
 
+	return "Mcts";
+}
 } /* namespace metasolver */

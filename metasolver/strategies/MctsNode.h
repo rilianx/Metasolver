@@ -9,8 +9,8 @@
 #define MCTSNODE_H_
 
 #include "../State.h"
-
-//#include "../MTCSestimator.h"
+#include <string>
+#include <sstream>
 
 namespace metasolver {
 
@@ -26,14 +26,17 @@ private:
 	MctsNode* parent;
 	double value;//mean of the simulations
 	double standart_deviation;
+	double mcts_value;
 	vector< MctsNode* > children;
 	list<Action*> actions;
 	int depth;
 	int num_visits;
 	//functions
 	//add a child node by an action
-	MctsNode* add_child( bool many_times){
-		if(!many_times){
+	//MctsNode* add_child( bool many_times){
+		//if(!many_times){
+	MctsNode* add_child( ){
+
 		Action* action=actions.front();
 		MctsNode* child= new MctsNode(this,*action);
 		child->state->transition(*action);
@@ -42,7 +45,7 @@ private:
 		children.push_back(child);
 
 		return child;
-		}else{
+		/*}else{
 			//cout<<"num_visits:"<<num_visits<<endl;
 		int index=actions.size()%2;
 		int i=0;
@@ -54,15 +57,15 @@ private:
 				break;
 			}
 			i++;
-		}
-		MctsNode* child= new MctsNode(this,*action);
+		}*/
+		/*MctsNode* child= new MctsNode(this,*action);
 		child->state->transition(*action);
 		child->state->get_actions(child->actions);
 		actions.pop_front();
 		children.push_back(child);
 
 		return child;
-		}
+		*/
 	}
 	void updateValue(){
 		int size = simulations.size();
@@ -86,6 +89,7 @@ public:
 		depth=parent->depth+1;
 		num_visits=0;
 		standart_deviation=0;
+		mcts_value=0;
 		//state->get_actions(actions);
 
 	}
@@ -100,6 +104,7 @@ public:
 		value=0;
 		depth=0;
 		num_visits=0;
+		mcts_value=0;
 		standart_deviation=0;
 		state->get_actions(actions);
 	}
@@ -108,7 +113,8 @@ public:
 	int getNumChild(){return children.size();}
 
 	MctsNode* expand(){
-		return add_child(num_visits==2);
+		//return add_child(num_visits==2);
+		return add_child();
 	}
 
 	bool isFullyExpanded(){
@@ -136,7 +142,7 @@ public:
 		double mean=0;
 		for (int i = 0;i<size;i++)
 		{
-			mean+=simulations[i];
+			mean+=parent->simulations[i];
 		}
 		mean=mean/size;
 		parent->value=mean;
@@ -191,9 +197,22 @@ public:
 		mean=mean/size;
 		return mean;
 	}
+	double getMctsValue(){return mcts_value; }
+	void setMctsValue(double val){ mcts_value=val; }
+
 	double get_sd(){return standart_deviation;}
 	int get_num_simulations(){
 		return simulations.size();
+	}
+	string pointToString(){
+		State& state_copy = *(state->clone());
+        double volume = state_copy.get_value();
+
+		stringstream strs;
+		strs << volume;
+		string str = strs.str();
+
+		return str;
 	}
 };
 

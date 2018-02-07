@@ -59,9 +59,13 @@ int main(int argc, char** argv){
     cout <<"Corriendo montecarlo"<<endl;
     double value= mtcs->run(*s0,(double)max_time,begin_time);
 
-    cout <<"best value founded:"<<value<<endl;
-    cout <<"algoritmo MTCS v2"<<endl;
+    cout <<"best value founded:"<<endl;
 
+    cout <<value<<endl;
+    //cout <<"algoritmo MTCS v2"<<endl;
 
+    /*borrar luego*/
+    //cout << mtcs->pointsToString();
+//kjkjkh
 	return 0;
 }
