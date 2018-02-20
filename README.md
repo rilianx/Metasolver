@@ -23,16 +23,4 @@ fsb: variante full-supported
 
 kdtree: uso de estructura kdtree
 
-TODO
-----
-
-**Ariel:**
-- [x] Hacer un generador de instancias siguiendo parametros del paper
-- [ ] Resolver instancias generadas usando BSG (opcion fsb=1)
-- [ ] Crear archivos con set de entrenamiento y pruebas (input/output de la red) (definir formato con Braulio)
-
-
-**Ignacio:**
-- [x] Ordenar path
-
 
