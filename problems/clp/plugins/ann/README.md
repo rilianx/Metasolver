@@ -37,3 +37,9 @@ Generates a random instance and solves it.
       --solve                           Solve the generated instance
 ```
 
+Generación de un training set:
+
+1. Entrar a carpeta fwexps y modificar ejecutable y directorio output de clp_ann segun corresponda.
+
+2. En el archivo instances.txt definir parámetros para el generador de instancias (-N, -s) 
+y parámetros del solver que dependen del tipo de instancia (e.g., min_fr) 
