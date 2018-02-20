@@ -169,26 +169,26 @@ long rand(long seed)
 double clpState::weight_of_allboxes=0.0;
 
 
-clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
+clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f){
 
   clpState::weight_of_allboxes=0.0;
 
 	ifstream in(file.c_str());
 	string line;
-	if(f==clpState::BR)
+	if(f==clpState::BR || f==clpState::BRw){
 		getline(in,line); //number of instances
+	}
 
 	clpState *s=NULL;
 
 	for(int inst=0;inst<=i; inst++){
-
 		string line;
 
-		if(f==clpState::BR)
+		if(f==clpState::BR || f==clpState::BRw){
 			getline(in, line ); //n_inst best_sol?
+		}
 
 		getline(in, line); //L W H
-
 
 		if(inst==i){
 			std::stringstream ss(line);
@@ -220,6 +220,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 		for(int j=0;j<nb_types;j++){
 			getline(in, line );
 
+
 			int n, id;
 			long l,h,w;
 			double weight = 1.0;
@@ -228,6 +229,10 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
 			if(f==clpState::BR)
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
+
+			if(f==clpState::BRw)
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
+
 			else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
@@ -239,11 +244,11 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 
 
 			if(inst==i){
-				if(f==clpState::BR) weight = (double)rand()/(double)RAND_MAX;
+
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
 				//cout << *boxt << endl;
 				//cout << weight << " x " << n <<  endl;
-				if (f==clpState::BR) clpState::weight_of_allboxes += weight*(double) n;
+				if (f==clpState::BR || f==clpState::BRw) clpState::weight_of_allboxes += weight*(double) n;
 
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
@@ -259,6 +264,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 		}
 
 	}
+
 
 	s->general_block_generator(min_fr, max_bl, *s->cont);
 

@@ -51,7 +51,7 @@ int main(int argc, char** argv){
 	//SpaceSet::random_spaces=true;
     //global::TRACE=true;
 
-    cout << "cargando la instancia..." << endl;
+   // cout << "cargando la instancia..." << endl;
 
     Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000);

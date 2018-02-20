@@ -13,6 +13,7 @@
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
 #include "BSGMOP.h"
+#include "args.hxx"
 
 bool global::TRACE = false;
 
@@ -21,40 +22,84 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-	string file=argv[1];
-	int inst=atoi(argv[2]);
-	double min_fr=atof(argv[3]);
-	int max_time=atoi(argv[4]);
+	args::ArgumentParser parser("********* BSG-MOP CLP *********.", "BSG-MOP Solver for CLP.");
+	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
+	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
+	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
+	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
+	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
+	args::ValueFlag<int> _alpha(parser, "double", "Alpha parameter", {"alpha"});
+	args::ValueFlag<int> _beta(parser, "double", "Beta parameter", {"beta"});
+	args::ValueFlag<int> _gamma(parser, "double", "Gamma parameter", {"gamma"});
+	args::ValueFlag<int> _delta(parser, "double", "Delta parameter", {"delta"});
+	args::ValueFlag<int> _p(parser, "double", "p parameter", {'p'});
 
-    double alpha=atof(argv[5]); //4.0
-    double beta=atof(argv[6]); //1.0
-    double gamma=atof(argv[7]); //0.2
-    double p=atof(argv[8]); //0.04
-    double delta=atof(argv[9]); //1.0
-    double r=atof(argv[10]); //0.0
 
-    cout << endl <<  "******* Parameters *********" << endl;
-    cout << "file:" << file << "(instance: " << inst << ")" <<  endl;
-    cout << "min_fr:" << min_fr << endl;
-    cout << "max_time:" << max_time << endl;
-    cout << "alpha:" << alpha << endl;
-    cout << "beta:" << beta << endl;
-    cout << "gamma:" << gamma << endl;
-    cout << "p:" << p << endl;
-    cout << "delta:" << delta << endl;
-    cout << "r:" << r << endl;
-    cout << "*****************************" << endl << endl;
+	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
+	args::Flag trace(parser, "trace", "Trace", {"trace"});
+	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
 
-	srand(1);
+		cout.precision(8);
+		try
+		{
+			parser.ParseCLI(argc, argv);
 
-    cout << "cargando la instancia..." << endl;
+		}
+		catch (args::Help&)
+		{
+			std::cout << parser;
+			return 0;
+		}
+		catch (args::ParseError& e)
+		{
+			std::cerr << e.what() << std::endl;
+			std::cerr << parser;
+			return 1;
+		}
+		catch (args::ValidationError& e)
+		{
+			std::cerr << e.what() << std::endl;
+			std::cerr << parser;
+			return 1;
+		}
+
+		string file=_file.Get();
+		int inst=(_inst)? _inst.Get():0;
+		double min_fr=(_min_fr)? _min_fr.Get():0.98;
+		int maxtime=(_maxtime)? _maxtime.Get():100;
+
+		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04;
+		if(_maxtime) maxtime=_maxtime.Get();
+		if(_alpha) alpha=_alpha.Get();
+		if(_beta) beta=_beta.Get();
+		if(_gamma) gamma=_gamma.Get();
+		if(_delta) delta=_delta.Get();
+		if(_p) p=_p.Get();
+
+		string format="BR";
+		if(_format) format=_format.Get();
+
+		clpState::Format f;
+		if(format=="BR")
+			f=clpState::BR;
+		else if(format=="BRw")
+			f=clpState::BRw;
+		else if(format=="1C")
+			f=clpState::_1C;
+
+		int seed=(_seed)? _seed.Get():1;
+		srand(seed);
+
+   // cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
-    clpState* s0 = new_state(file,inst, min_fr, 10000, clpState::BR);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
     clock_t begin_time=clock();
+
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta);
@@ -67,7 +112,7 @@ int main(int argc, char** argv){
 
 	State& s_copy= *s0->clone();
 
-    double eval = 1-de->run(s_copy, max_time, begin_time) ;
+    double eval = 1-de->run(s_copy, maxtime, begin_time) ;
 
     cout << "pareto_front" << endl;
     auto pareto = bsg->get_pareto_front();

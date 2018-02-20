@@ -46,7 +46,7 @@ public:
 
     static bool left;
 
-    enum Format{BR, _1C};
+    enum Format{BR, _1C, BRw};
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
@@ -66,7 +66,7 @@ public:
 
 	virtual State* create_neighbor(State* s0);
 
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, int f);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f);
 
 	virtual double get_value() const{
 		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
@@ -106,6 +106,8 @@ public:
 	virtual void print() {
 		cont->MatLab_print();
 	}
+
+
 
 protected:
 
@@ -154,13 +156,14 @@ private:
 	//menor dimension de las cajas restantes
 	Vector3 mindim;
 
+
 	static double weight_of_allboxes;
 
 };
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, int i=clpState::BR);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR);
 
 } /* namespace clp */
 
