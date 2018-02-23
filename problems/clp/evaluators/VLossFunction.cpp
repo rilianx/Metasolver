@@ -17,7 +17,8 @@ using namespace std;
 namespace clp {
 
 VLossFunction::VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double beta,
-		double delta, double theta, double r) : ActionEvaluator (r), beta(beta), delta(delta), theta(theta){
+		double delta, double theta, double r, double max_theta) :
+				ActionEvaluator (r), beta(beta), delta(delta), theta(theta), max_theta(max_theta){
 	// TODO Auto-generated constructor stub
 
 	mL= new long[dims.getX()+1];
@@ -59,6 +60,8 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 /*
 			((double) b.getOccupiedVolume()/
 					double(dynamic_cast<const clpState*>(&s)->cont.getVolume())) : 1.0;*/
+
+	//cout << theta << endl;
 
 	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()) );
 }

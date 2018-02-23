@@ -40,8 +40,9 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG_MOP(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
-		BSG(evl, greedy, beams, p_elite, max_level_size){
+	BSG_MOP(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0,
+			bool oriented_greedy=false) :
+		BSG(evl, greedy, beams, p_elite, max_level_size), oriented_greedy(oriented_greedy){
 
 	}
 
@@ -98,6 +99,8 @@ public:
 	//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
+
+	bool oriented_greedy;
 
 private:
 
