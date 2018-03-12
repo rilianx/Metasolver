@@ -135,15 +135,21 @@ int main(int argc, char** argv){
     double eval = 1-de->run(s_copy, maxtime, begin_time) ;
 
     cout << "pareto_front" << endl;
-    auto pareto = bsg->get_pareto_front();
+    map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
     double x_old=0.0;
     double hv = 0.0;
+    int i=0; double best_volume, best_weight;
     for(auto point : pareto){
+    	if(i==1) best_volume=point.first.second;
+    	if(i==pareto.size()-2) best_weight=point.first.first;
+
     	hv += (point.first.first - x_old) * point.first.second;
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
+    	i++;
     }
-    cout << "hypervolume:" << hv << endl;
+    cout << "best_volume best_weight hypervolume" << endl;
+    cout << best_volume << " " <<  best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
 /*
  *
 	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();

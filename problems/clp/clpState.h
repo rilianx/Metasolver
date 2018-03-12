@@ -108,6 +108,7 @@ public:
 	}
 
 
+	static double weight_of_allboxes;
 
 protected:
 
@@ -157,7 +158,7 @@ private:
 	Vector3 mindim;
 
 
-	static double weight_of_allboxes;
+
 
 };
 

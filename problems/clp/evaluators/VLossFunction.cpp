@@ -63,7 +63,7 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 
 	//cout << theta << endl;
 
-	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()) );
+	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()/clpState::weight_of_allboxes) );
 }
 
 double VLossFunction::Loss(const std::map<const BoxShape*, int>& nb_boxes, const Block& block, const Space& free_space){
