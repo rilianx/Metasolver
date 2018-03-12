@@ -53,7 +53,7 @@ class Algo:
 		output = output.splitlines()[-1]
 
 		try:
-			return (float(output.split()[int(self.outputpos_times)]), float(output.split()[int(self.outputpos_boxes)]))
+			return (float(output.split()[int(self.outputpos_times)]), float(output.split()[int(self.outputpos_boxes)]), output)
 		except ValueError:
 			print "error with instance " + inst.split('/')[-1] + "\n" + output
 			return -2.0
@@ -128,7 +128,7 @@ def read_times(name,i,config):
 			if idx==len(config.instances): break
 			for line in lines.split():
 				if seed==config.max_seeds: break
-				shared_boxes[i,idx + len(config.instances)*seed ] = float(line)
+				#shared_boxes[i,idx + len(config.instances)*seed ] = float(line)
 				if shared_boxes[i,idx + len(config.instances)*seed]==-1.5: shared_boxes[i,idx + len(config.instances)*seed]=-1.0
 				seed += 1
 			idx+=1			
@@ -170,16 +170,6 @@ def write_times(name,i,config):
 
 	f = open("%(dir)s/%(name)s_boxes.out" % {"dir":config.algos[i].output_dir,"name":name}, "w")
 	f2 = open("%(dir)s/%(name)s_meanboxes.out" % {"dir":config.algos[i].output_dir,"name":name}, "w")
-	
-	for j in  range(len(config.instances)):
-		for k in range(config.max_seeds):	
-			f.write("%.4f " % shared_boxes[i][k*len(config.instances)+j])
-		f.write("\n")
-		
-		(mean,h,n) = mean_error_boxes(config, i, j, config.max_seeds)
-		f2.write("%.4f " % mean)
-		f2.write("+- %.2f" % h)
-		f2.write(" (%d)\n" % n)
 		
 	f.close()
 	f2.close()
@@ -570,7 +560,7 @@ def next_run(config):
 	lock.release()
 
 	inst=config.instances[config.idx2inst[idx]]
-	(output_time, output_box) = config.algos[id_algo].run(inst,seed)
+	(output_time, output_box, output) = config.algos[id_algo].run(inst,seed)
 
 	lock.acquire()
 	
@@ -578,6 +568,17 @@ def next_run(config):
 	
 	shared_times[id_algo,len(config.instances)*(seed-1)+config.idx2inst[idx]] = output_time
 	shared_boxes[id_algo,len(config.instances)*(seed-1)+config.idx2inst[idx]] = output_box
+ 
+ 	#the output file is updated
+	import os.path
+	if not os.path.isfile("%(dir)s/%(name)s_output.out" % {"dir":config.algos[id_algo].output_dir,"name":config.algos[id_algo].name}):
+		open("%(dir)s/%(name)s_output.out" % {"dir":config.algos[id_algo].output_dir,"name":config.algos[id_algo].name}, "w")
+ 	lines = open("%(dir)s/%(name)s_output.out" % {"dir":config.algos[id_algo].output_dir,"name":config.algos[id_algo].name}).read().splitlines()
+ 	while len(lines)<len(config.instances):
+ 	 	lines.append( '' );
+ 	lines[config.idx2inst[idx]] = output
+	open("%(dir)s/%(name)s_output.out" % {"dir":config.algos[id_algo].output_dir,"name":config.algos[id_algo].name}, "w").write('\n'.join(lines))
+ 
 	print config.algos[id_algo].name, inst, output_time
 	update_share(config,id_algo,len(config.instances)*(seed-1)+config.idx2inst[idx])
 	write_times(config.algos[id_algo].name,id_algo,config)

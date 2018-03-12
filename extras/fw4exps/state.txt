@@ -1,7 +1,7 @@
-algos:clp_ann 
-gains (average relative times):1.000000 
-gains (total time)            :1.000000 
-compared instances:  0 
-runs    :  0 
-L:  0 
-W:  0 
+algos:NDSdist-x_X5 NDSdist-x_X1 NDSdist-x_X3 NDSdist-x_X10 NDSdist-x_X20 NDSdist-x_X100 
+gains (average relative times):1.000000 0.263696 0.901948 1.222758 1.304645 1.437513 
+gains (total time)            :1.000000 0.123141 1.053346 1.285612 1.403236 1.919032 
+compared instances: 20  20  20  20  20  20 
+runs    : 20  20  20  20  20  20 
+L:  0  19   7   0   2   2 
+W:  0   0   2   9   9  10 

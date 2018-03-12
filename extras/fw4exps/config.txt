@@ -1,33 +1,109 @@
 [base]
 test_instances = instances.txt
 mintime = 0.0001
-maxtime = 500
+maxtime = 3600
 factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = clp_ann 
-#clp_nsga2 clp_nsga_cr
+algo_names = NDSdist-x
 
 
-[clp_ann]
-exec = "/home/ignacio/clp/Metasolver/CLP_GENSOLV" 
-params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/train2/
+[hc4]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f hc4 --nb_ub_sols=1 -b largestfirst -s weighted_sum --linear-relax=no
 outputpos_times = 0
-outputpos_boxes = 0
+outputpos_boxes = 1
 
-[clp_nsga2]
-tuning_param = mode
-tuning_values = 0 1 2
-exec = "/home/ignacio/clp/Metasolver/NSGA_CLP" 
-params = _INSTANCE --pop=50 --maxrank=20 --pmut=1.1 --pcr=0.0 --maxiter=_MAXTIME --mode=_mode
+[acidhc4]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+tuning_param = X
+tuning_values = 1 3 5 10 20 50
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --nb_ub_sols=_X -b largestfirst -s weighted_sum --linear-relax=no
 outputpos_times = 0
-outputpos_boxes = 0
+outputpos_boxes = 1
 
-[clp_nsga_cr]
-tuning_param = cr
-tuning_values = 0.2 0.4 0.6
-exec = "/home/ignacio/clp/Metasolver/NSGA_CLP"
-params = _INSTANCE --pop=50 --maxrank=20 --pmut=0.2 --pcr=_cr --maxiter=_MAXTIME --mode=3
+[fullctc]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+tuning_param = BISECTOR
+tuning_values = largestfirst largestfirst_noy lsmear
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=10 -b _BISECTOR --cy-contract-full --eps-contract -s NDSdist 
 outputpos_times = 0
-outputpos_boxes = 0
+outputpos_boxes = 1
+
+[NDSdist-x]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+tuning_param = X
+tuning_values = 5 1 3 10 20 100
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=_X -b largestfirst -s NDSdist --cy-contract-full --eps-contract 
+outputpos_times = 0
+outputpos_boxes = 2
+
+[fullctc-nb]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+tuning_param = X
+tuning_values = 5 1 3 10 20 50
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=_X -b largestfirst -s weighted_sum 
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=5 -b largestfirst -s weighted_sum --cy-contract
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-50]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=50 -b largestfirst -s weighted_sum --cy-contract
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-full]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=5 -b largestfirst -s weighted_sum --cy-contract-full
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-full-10]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=10 -b largestfirst -s weighted_sum --cy-contract-full
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-full-20]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=20 -b largestfirst -s weighted_sum --cy-contract-full
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-full-50]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=50 -b largestfirst -s weighted_sum --cy-contract-full
+outputpos_times = 0
+outputpos_boxes = 2
+
+[cy-contract-full-100]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=100 -b largestfirst -s weighted_sum --cy-contract-full
+outputpos_times = 0
+outputpos_boxes = 2
+
+[eps-contract]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=50 -b largestfirst -s weighted_sum --cy-contract-full --eps-contract
+outputpos_times = 0
+outputpos_boxes = 2
+
+[NDSdist]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=50 -b largestfirst -s NDSdist --cy-contract-full --eps-contract 
+outputpos_times = 0
+outputpos_boxes = 2
+
+[diving-NDSdist]
+exec = "/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/examples/optimizer-mop"
+params = _INSTANCE --time=_MAXTIME -f acidhc4 --linear-relax=compo --nb_ub_sols=50 -b largestfirst -s diving-NDSdist --cy-contract-full --eps-contract
+outputpos_times = 0
+outputpos_boxes = 2
+
