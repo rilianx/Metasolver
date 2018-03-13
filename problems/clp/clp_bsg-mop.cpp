@@ -93,6 +93,8 @@ int main(int argc, char** argv){
 		int seed=(_seed)? _seed.Get():1;
 		srand(seed);
 
+		global::TRACE = trace;
+
    // cout << "cargando la instancia..." << endl;
 
     //a las cajas se les inicializan sus pesos en 1
@@ -138,10 +140,14 @@ int main(int argc, char** argv){
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
     double x_old=0.0;
     double hv = 0.0;
-    int i=0; double best_volume, best_weight;
+    int i=0; double best_volume, best_volume_weight, best_weight;
     for(auto point : pareto){
-    	if(i==1) best_volume=point.first.second;
-    	if(i==pareto.size()-2) best_weight=point.first.first;
+    	if(i==1) best_weight=point.first.second;
+
+    	if(i==pareto.size()-2) {
+    		best_volume=point.first.first;
+    		best_volume_weight=point.first.second;
+    	}
 
     	hv += (point.first.first - x_old) * point.first.second;
     	x_old = point.first.first;
@@ -149,7 +155,7 @@ int main(int argc, char** argv){
     	i++;
     }
     cout << "best_volume best_weight hypervolume" << endl;
-    cout << best_volume << " " <<  best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
+    cout << best_volume << " " << best_volume_weight << " " << best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
 /*
  *
 	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();

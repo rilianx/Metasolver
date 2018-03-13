@@ -102,6 +102,8 @@ int main(int argc, char** argv){
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
 
+	global::TRACE = trace;
+
 // cout << "cargando la instancia..." << endl;
 
 //a las cajas se les inicializan sus pesos en 1
@@ -183,7 +185,7 @@ int main(int argc, char** argv){
 	cout << "running" << endl;
     double eval = de->run(s_copy, maxtime, begin_time) ;
 
-    cout << "best_volume best_weight hypervolume" << endl;
+    cout << "best_volume  best_volume(weight) hypervolume" << endl;
 	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
 
 /*

@@ -49,8 +49,10 @@ bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy,
 
 		if(aux!=NDS.begin()){
 			--aux;
+			delete it2->second;
 			NDS.erase(it2);
 		}else{
+			delete it2->second;
 			NDS.erase(it2);
 			break;
 		}
@@ -58,7 +60,7 @@ bool BSG_MOP::update(map< pair<double, double>, State*>& NDS, State& state_copy,
 		it2 = aux;
 	}
 
-	NDS[make_pair(state_copy.get_value(),state_copy.get_value2())] = &state_copy;
+	NDS[make_pair(state_copy.get_value(),state_copy.get_value2())] = state_copy.clone();
 	return true;
 
 
@@ -105,12 +107,11 @@ bool minf2(pair<double, pair<State*, State*>>& p1, pair<double, pair<State*, Sta
 //TODO: arreglar!
 void BSG_MOP::filter_crowding_distance(list< pair<State*,State*> >& frontera, int n1){
 	list< pair<State*, State*> >::iterator it1;
-	list< pair<State*, State*> > new_frontera;
 	list< pair<double, pair<State*, State*>>> crowding_list;
 	list< pair<double, pair<State*, State*>>>::iterator it_list,it_siguiente;
 
 	//se crea la lista y se le asigna el valor de la distancia
-
+    //cout << "front size:" << frontera.size() << " "<< n1 << endl;
 
 	for(it1=frontera.begin();it1!=frontera.end();it1++){
 		crowding_list.push_back(make_pair(0.0,(*it1)));
@@ -127,8 +128,8 @@ void BSG_MOP::filter_crowding_distance(list< pair<State*,State*> >& frontera, in
 
 		//function_sort(crowding_list,i);
 		//se asigna infinito a los puntos extremos
-		crowding_list.front().first=1000.0;
-		crowding_list.back().first=1000.0;
+		crowding_list.front().first=1e20;
+		crowding_list.back().first=1e20;
 
 		/*
 		it_list=crowding_list.begin();
@@ -170,29 +171,35 @@ void BSG_MOP::filter_crowding_distance(list< pair<State*,State*> >& frontera, in
 
 	}
 	//se ordena por crowding distance
-	//se toman los valores menores
+	//se toman los valores mayores
 	crowding_list.sort();
 
 
 
-
+	list< pair<State*, State*> > new_frontera;
 
 	//creamos la nueva frontera
 	int j=0;
 	list< pair<double, pair<State*, State*>>>::reverse_iterator it_revlist=crowding_list.rbegin();
+
+    //cout << crowding_list.size() << endl;
 	while(j<n1){
 		//cout << it_revlist->second.second->get_value() << "\t" << it_revlist->second.second->get_value2() << "\t" << it_revlist->first << endl;
 		new_frontera.push_front(it_revlist->second);
 		it_revlist++;
 		j++;
 	}
-	frontera.swap(new_frontera);
+
+	while(it_revlist != crowding_list.rend()){
+		//we remove the discarded final states
+		//cout << "rem:" << it_revlist->second.second->get_value() << "\t" << it_revlist->second.second->get_value2() << "\t" << it_revlist->first << endl;
+		delete it_revlist->second.second;
+		it_revlist++;
+	}
+	frontera=new_frontera;
 
 	//se ordenan por valor de distancia
 	//se escogen los n necesario
-
-
-
 
 }
 
@@ -208,7 +215,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 	list< pair<State*, State*> >::iterator it3;
 
 	//Se ordena por cada objetivo
-	while(state_actions.size()>0){
+	while(state_actions.size()>0 && filtered_states.size() < n){
 
 		for(it1=state_actions.begin();it1!=state_actions.end();){
 			State* s= it1->second.first;
@@ -236,8 +243,8 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				frontera.push_back(it1->second);
 				it2=it1;
 				it2++;
-			  state_actions.erase(it1);
-			  it1=it2;
+				state_actions.erase(it1);
+				it1=it2;
 			}else it1++;
 		}
 
@@ -275,27 +282,6 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				it3->first=s;
 				filtered_states.push_back((*it3));
 			}
-			//TODO: reemplazar por filter_crowding_distance cuando funcione bien!
-
-			/*
-			int i=filtered_states.size();
-			frontera.sort(maxf1);
-			for(it3=frontera.begin();it3!=frontera.end();i++, it3++){
-				State* s= it3->first;
-				State* final_state= it3->second;
-				Action* a = s->next_action(*final_state);
-
-				if(i<n){
-		 			s=s->clone();
-					s->transition(*a);
-					it3->first=s;
-					filtered_states.push_back((*it3));
-				}else
-					delete final_state;
-			}
-			break;
-			*/
-
 
 		}
 		frontera.clear();
@@ -364,23 +350,17 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 
         	//si state_copy es solucion no dominada se agrega a NDS
-        	bool bbb = update(NDS, *state_copy.clone(), value.first,value.second);
-        	if(bbb){
 
-        		/*cout <<  "(" << value.first << "," << value.second << ")" ;
-        		cout << endl << "--" << endl;
-        		for(auto nds : NDS)
-        		   cout << "(" << nds.first.first << "," << nds.first.second << ")" << endl;
-        		cout << "--" << endl;
-        		*/
-        		//cout << "NDS size:" << NDS.size() << endl;
-        	}//else cout << "false" << endl;
+        	bool bbb = update(NDS, state_copy, value.first,value.second);
+        	if(bbb){
+        		cout << "[BSGMOP] new non-dominated solution found ("<< get_time() <<"): " << "(" << value.first << "," << value.second << ")" << " "
+        		            			 << state_copy.get_path().size() << " nodes" << endl;
+        	}
 
         	//se inserta el estado si no hay uno equivalente en el mapa
-        	if(state_actions.find(value) == state_actions.end()){
+        	if(state_actions.find(value) == state_actions.end())
         		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
-					}
-					else delete &state_copy;
+			else delete &state_copy;
         }
 
     }
@@ -389,29 +369,27 @@ list<State*> BSG_MOP::next(list<State*>& S){
     list< pair<State*,State*> >filtered_states;
     list <State*>return_states;
 
-/*
-    cout << "++" << endl;
-    for(auto sa : state_actions)
-       cout << "(" << sa.first.first << "," << sa.first.second << ")" << endl;
-    cout << "++" << endl;
-*/
-    cout << "pre_filtered" << endl;
-	for(auto states:state_actions)
-		  cout << states.first.first << "\t" <<  states.first.second << endl;
+ 	 if(global::TRACE){
 
-    cout << endl;
+ 		 cout << "pre_filtered" << endl;
+ 		 for(auto states:state_actions)
+ 			 cout << states.first.first << "\t" <<  states.first.second << endl;
+
+ 		 cout << endl;
+ 	 }
+
 
 	filter_nondominated_sort (filtered_states, beams);
 
 
-	/*if(global::TRACE)*/  cout << "filtered_states" << endl;
-	for(auto states:filtered_states){
-	  //if(global::TRACE)
-		  cout <<  states.second->get_value() << "\t" <<  states.second->get_value2()  << endl;
-	      return_states.push_back(states.first);
-	}
-	cout << endl;
-	/*if(global::TRACE)*/  cout << "--" << endl;
+	if(global::TRACE) cout << "filtered_states" << endl;
+
+		for(auto states:filtered_states){
+			if(global::TRACE)
+				cout <<  states.second->get_value() << "\t" <<  states.second->get_value2()  << endl;
+			return_states.push_back(states.first);
+		}
+		if(global::TRACE)  cout << "--" << endl;
 
 
 	return return_states;
