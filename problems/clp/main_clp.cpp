@@ -142,7 +142,7 @@ int main(int argc, char** argv){
    // cout << "cargando la instancia..." << endl;
 
     Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, 10000);
+    clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
     if(kdtree)
        s0 = new clpState_kd(*s0);
@@ -182,7 +182,9 @@ int main(int argc, char** argv){
 
 	cout << "running" << endl;
     double eval = de->run(s_copy, maxtime, begin_time) ;
-	cout << eval << endl;
+
+    cout << "best_volume best_weight hypervolume" << endl;
+	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
