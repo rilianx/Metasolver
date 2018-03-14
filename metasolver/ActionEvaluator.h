@@ -28,12 +28,15 @@ public:
 
 	virtual ~ActionEvaluator() { }
 
+	virtual double initialize(const State &s) { }
+
 	virtual double eval_action_rand(const State& s, const Action& a){
 
 		double eval=eval_action(s, a);
 		double ran=(r>0.0)? ((double) rand() / (double) RAND_MAX) : 1.0;
 		return ( eval + r*log(ran) );
 	}
+
 
 	virtual double eval_action(const State& s, const Action& a) =0;
 
