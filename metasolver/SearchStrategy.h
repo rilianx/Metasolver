@@ -96,6 +96,10 @@ public:
 
 
 
+	/**
+	 * \brief return the n best actions according to the ActionEvaluator
+	 */
+	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
 protected:
 
@@ -105,10 +109,6 @@ protected:
 	virtual Action* best_action(const State& s);
 
 
-	/**
-	 * \brief return the n best actions according to the ActionEvaluator
-	 */
-	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
 	double timelimit;
 	State* best_state;

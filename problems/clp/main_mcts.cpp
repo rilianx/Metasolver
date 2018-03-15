@@ -22,50 +22,48 @@ bool global::TRACE = false;
 
 using namespace std;
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
-	string file=argv[1];
-	int inst=atoi(argv[2]);
-	double min_fr=atof(argv[3]); //<-- 0.98 o 1.0
+	string file = argv[1];
+	int inst = atoi(argv[2]);
+	double min_fr = atof(argv[3]); //<-- 0.98 o 1.0
 
-	int max_time=atoi(argv[4]); //500
-    double alpha=atof(argv[5]); //4.0
-    double beta=atof(argv[6]); //1.0
-    double gamma=atof(argv[7]); //0.2
-    double p=atof(argv[8]); //0.04
-    double delta=atof(argv[9]); //1.0
-	double f=atof(argv[10]); //0.0
-    double r=atof(argv[11]); //0.0
-    bool fsb=(atoi(argv[12])==1); //0
+	int max_time = atoi(argv[4]); //500
+	double alpha = atof(argv[5]); //4.0
+	double beta = atof(argv[6]); //1.0
+	double gamma = atof(argv[7]); //0.2
+	double p = atof(argv[8]); //0.04
+	double delta = atof(argv[9]); //1.0
+	double f = atof(argv[10]); //0.0
+	double r = atof(argv[11]); //0.0
+	bool fsb = (atoi(argv[12]) == 1); //0
 
-    cout << "cargando la instancia..." << endl;
+	cout << "cargando la instancia..." << endl;
 
-    Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, 10000);
+	Block::FSB = fsb;
+	clpState* s0 = new_state(file, inst, min_fr, 10000);
 
-    cout << "cargo la instancia"<<endl;
-    clock_t begin_time=clock();
+	cout << "cargo la instancia" << endl;
+	clock_t begin_time = clock();
 
-    cout <<"Funcion evaluadora"<<endl;
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, f, r);
+	cout << "Funcion evaluadora" << endl;
+	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont, alpha,
+			beta, gamma, p, delta, f, r);
 
-    cout <<"Funcion greedy"<<endl;
-    SearchStrategy *gr = new Greedy (vcs);
+	cout << "Funcion greedy" << endl;
+	SearchStrategy *gr = new Greedy(vcs);
 
-    cout <<"Creando montecarlo"<<endl;
-    MCTS *mtcs=new  MCTS(vcs,gr);
+	cout << "Creando montecarlo" << endl;
+	MCTS *mtcs = new MCTS(vcs, gr);
 
-    cout <<"Corriendo montecarlo"<<endl;
-    double value= mtcs->run(*s0,(double)max_time,begin_time);
+	cout << "Corriendo montecarlo" << endl;
+	double value = mtcs->run(*s0, (double) max_time, begin_time);
 
-    cout <<"best value founded:"<<endl;
+	cout << "best value founded:" << endl;
 
-    cout <<value<<endl;
-    //cout <<"algoritmo MTCS v2"<<endl;
+	cout << value << endl;
 
-    /*borrar luego*/
-    //cout << mtcs->pointsToString();
-//kjkjkh
+	//mtcs->pointsToTxt();
+	//cout << mtcs->pointsToString();
 	return 0;
 }

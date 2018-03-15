@@ -9,6 +9,4 @@
 
 namespace std {
 
-
-
 } /* namespace std */

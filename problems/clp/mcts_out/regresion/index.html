@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+<title>Regresion</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script type="text/javascript" src="d3.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+
+</head>
+<body>
+  <div class="row" style="text-align: center;">
+    <div class="btn-group" role="group" aria-label="...">
+<button onclick="back();" type="button" class="btn btn-info">back</button>
+<button onclick="play();" type="button" class="btn btn-link">play</button>
+<button onclick="pause();" type="button" class="btn btn-warning">pause</button>
+<button onclick="next();" type="button" class="btn btn-info">next</button>
+</div>
+  </div>
+  <div class="row" style="text-align: center">
+      <h1>Regresion n° <span id="Iteration_number" > <span> </h1>
+      <h2> R^2: <span id="rsquared"></span></h2>
+  </div>
+  <div id="svg-container" style="height: 90%" class="row">
+
+  </div>
+  <div class="row" >
+    <div class="col-md-2 col-md-offset-1">
+      <h3>Lista de puntos</h3>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>volumen</th>
+            <th>upperCB</th>
+          </tr>
+        </thead>
+        <tbody id="listapuntos">
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <script type="text/javascript" src="regresion.js"></script>
+</body>
+</html>
