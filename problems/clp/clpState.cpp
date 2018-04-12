@@ -246,7 +246,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			if(inst==i){
 
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
-				//cout << *boxt << endl;
+
 				//cout << weight << " x " << n <<  endl;
 				if (f==clpState::BR || f==clpState::BRw) clpState::weight_of_allboxes += weight*(double) n;
 

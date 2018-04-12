@@ -15,6 +15,7 @@ BSG::~BSG(){
 
 list<State*> BSG::next(list<State*>& S){
     
+	// cout << "next" << endl;
      //no hay mas estados en el arbol
      if(S.size()==0) return S;
 
@@ -22,6 +23,7 @@ list<State*> BSG::next(list<State*>& S){
      int i=0;
      for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
          State& state=**itS;
+        // cout << state.get_value() << endl;
 
          if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
@@ -43,6 +45,7 @@ list<State*> BSG::next(list<State*>& S){
 
         	 State& state_copy = *state.clone();
         	 state_copy.transition(**it);
+        	 //cout << state_copy.get_value() << endl;
         	 delete *it;
 
              double value = greedy.run(state_copy, timelimit, begin_time);
@@ -57,16 +60,31 @@ list<State*> BSG::next(list<State*>& S){
              }
 
 
-             if(state_actions.find(-value)==state_actions.end())
+             if(state_actions.find(-value)==state_actions.end()){
+            	// cout << value << endl;
             	 state_actions[-value]= make_pair(&state, &state_copy);
-             else delete &state_copy;
+             }else delete &state_copy;
 
          }
      }
 
-  
+
+  	// if(global::TRACE){
+
+  		/* cout << "pre_filtered" << endl;
+  		 for(auto states:state_actions)
+  			 cout << states.first<< endl;
+
+  		 cout << endl;*/
+  	 //}
+
+
+  	list<State*> l=get_next_states(state_actions);
+  	//state_actions.clear();
+
+
      //siguiente generacion de estados
-     return get_next_states(state_actions);
+     return l;
 }
 
 

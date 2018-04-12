@@ -32,6 +32,9 @@ struct sort {
 
 class BSG_MOP : public BSG {
 public:
+
+   enum sel_rule{NSGA2, MIN1, MIN2};
+
 	/**
 	 * Constructor
 	 * @param greedy The underlying greedy algorithm
@@ -41,8 +44,8 @@ public:
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
 	BSG_MOP(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0,
-			bool oriented_greedy=false) :
-		BSG(evl, greedy, beams, p_elite, max_level_size), oriented_greedy(oriented_greedy){
+			bool oriented_greedy=false, sel_rule rule=NSGA2) :
+		BSG(evl, greedy, beams, p_elite, max_level_size), oriented_greedy(oriented_greedy), rule(rule){
 
 	}
 
@@ -112,6 +115,8 @@ private:
     map< pair<double, double>, pair<State*, State*> > state_actions;
 	void select_coeff(vector<double>& coeff);
 	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
+
+	sel_rule rule;
 
 };
 

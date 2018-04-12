@@ -35,6 +35,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::ValueFlag<double> _maxtheta(parser, "double", "ponderation of the weight of a box for maximizing the total weight", {"maxtheta"});
+	args::ValueFlag<string> _srule(parser, "double", "BSGMOP selection rule (NSGA2, MINF1, MINF2)", {"srule"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -66,6 +67,7 @@ int main(int argc, char** argv){
 		}
 
 		string file=_file.Get();
+		BSG_MOP::sel_rule srule=BSG_MOP::NSGA2;
 		int inst=(_inst)? _inst.Get():0;
 		double min_fr=(_min_fr)? _min_fr.Get():0.98;
 		int maxtime=(_maxtime)? _maxtime.Get():100;
@@ -78,6 +80,14 @@ int main(int argc, char** argv){
 		if(_delta) delta=_delta.Get();
 		if(_p) p=_p.Get();
 		if(_maxtheta) maxtheta=_maxtheta.Get();
+		if(_srule){
+			if(_srule.Get()=="NSGA2")
+				srule = BSG_MOP::NSGA2;
+			else if(_srule.Get()=="MIN1")
+				srule = BSG_MOP::MIN1;
+			else if(_srule.Get()=="MIN2")
+				srule = BSG_MOP::MIN2;
+		}
 
 		string format="BR";
 		if(_format) format=_format.Get();
@@ -127,7 +137,7 @@ int main(int argc, char** argv){
 
     SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (maxtheta>0.0) );
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (maxtheta>0.0), srule );
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 

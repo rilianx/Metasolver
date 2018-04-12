@@ -1,42 +1,17 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-NDSdist-x_X1   7   9  15  16  19  20   0   0   0   0   0   0 
-NDSdist-x_X3   0   0   1   4   7  15   6   2   2   0   0   0 
-NDSdist-x_X10   0   0   0   0   0   3  18   9   3   1   0   0 
-NDSdist-x_X20   0   0   0   0   2   8  14   9   7   3   0   0 
-NDSdist-x_X100   0   0   0   1   2   9  11  10   8   7   2   1 
-NDSdist-x_X1 NDSdist-x_X3 NDSdist-x_X10 NDSdist-x_X20 NDSdist-x_X100 
-1.000000 0/20 6/15 18/3 14/8 11/9 
-1.200480 0/19 2/7 9/0 9/2 10/2 
-1.503759 0/16 2/4 3/0 7/0 8/1 
-2.000000 0/15 0/1 1/0 3/0 7/0 
-5.000000 0/9 0/0 0/0 0/0 2/0 
-10.000000 0/7 0/0 0/0 0/0 1/0 
+
+1.000000 
+1.200480 
+1.503759 
+2.000000 
+5.000000 
+10.000000 
 
 
 instances with significative gains (1.2)
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/binh.txt --eps=0.01 5 nan 12 nan 6 nan 3 nan 2 nan 1 nan 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/kim.txt --eps=0.01 18 13437 22 17795 16 12335 13 10049 23 17615 14 8681 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/nbi.txt --eps=0.01 11 3883 469 295417 14 5175 8 2583 7 2045 9 1763 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/osy.txt --eps=0.01 57 25493 1095 745383 92 43491 39 17947 29 12385 24 8559 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/sr.txt --eps=0.01 84 16089 3600 1391738 176 28653 36 7969 18 4459 7 1881 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/tan.txt --eps=0.0001 3 2577 13 19021 6 4785 2 1505 1 1111 2 925 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/wb.txt --eps=0.0001 9 4429 3600 3407645 9 4677 8 4147 9 4291 9 4437 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/cf3-3b.txt --eps=0.01 4 2423 26 21087 3 2407 4 2889 4 2853 6 2773 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/cf3-5b.txt --eps=0.01 209 80323 3600 1230517 207 78277 200 73795 217 81665 239 87167 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp1-3m.txt --eps=0.01 0 361 1 2817 0 361 0 357 0 349 0 351 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp1-5m.txt --eps=0.01 10 6201 13 10711 10 6555 11 6611 11 6725 11 6499 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp2-3m.txt --eps=0.01 1 953 2 4729 1 985 1 951 1 951 1 941 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp2-5m.txt --eps=0.01 46 49175 50 59919 28 25151 45 47053 46 49659 47 47053 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp6-3m.txt --eps=0.01 7 6107 52 87019 7 6203 7 5845 8 5849 8 5913 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp6-4m.txt --eps=0.01 192 115425 519 519441 196 117693 190 114041 190 111575 200 114065 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp7-4m.txt --eps=0.0001 2 nan 225 191941 3 nan 1 nan 1 nan 1 nan 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/ctp7-5m.txt --eps=0.0001 7 3547 3601 2709606 8 4327 6 3081 6 2887 6 2825 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/mop-7.txt --eps=0.1 98 32337 204 76309 107 37263 85 28171 75 24733 53 16591 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/mop-10.txt --eps=0.5  882 267463 1245 382459 1009 309139 637 185123 623 189933 399 111269 
-/home/iaraya/github/ibex/ibex-dev-dag/ibex-lib/plugins/optim/benchs/MOP/mop-13.txt --eps=2.5 802 182573 1511 359021 421 95275 607 137333 471 105181 237 49909 
 
 gains
-0.000100 1.000000 20 0.263696 20 0.901948 20 1.222758 20 1.304645 20 1.437513 20 
-total time: 1.000000 0.123141 1.053346 1.285612 1.403236 1.919032 
+0.000100 1.000000 1600 
+total time: 1.000000 

@@ -294,7 +294,12 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 	state_actions.clear();
 
   for(auto fs:filtered_states){
-		state_actions.insert(make_pair(make_pair(fs.second->get_value(),fs.second->get_value2()),fs));
+	  pair<double, double> value=make_pair(fs.second->get_value(),fs.second->get_value2());
+
+	  if(rule==MIN1) value.second = 0.0;
+	  else if(rule==MIN2) value.first = 0.0;
+
+	  state_actions.insert(make_pair(value,fs));
 	}
 
 	filtered_states.sort(maxf1);
@@ -305,6 +310,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 //TODO: states should be sorted in decreasing order by objetive 1
 list<State*> BSG_MOP::next(list<State*>& S){
 
+	//cout << "next" << endl;
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
 
@@ -324,6 +330,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
     //se expanden los nodos de la lista S
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++, i++){
         State& state=**itS;
+       // cout << state.get_value() << endl;
         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
        //each level of the search tree should explore max_level_size nodes, thus...
@@ -358,8 +365,13 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	}
 
         	//se inserta el estado si no hay uno equivalente en el mapa
-        	if(state_actions.find(value) == state_actions.end())
+        	if(rule==MIN1) value.second = 0.0;
+        	else if(rule==MIN2) value.first = 0.0;
+
+        	if(state_actions.find(value) == state_actions.end()){
+        	//	cout << value.first << endl;
         		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
+        	}
 			else delete &state_copy;
         }
 
@@ -376,20 +388,24 @@ list<State*> BSG_MOP::next(list<State*>& S){
  			 cout << states.first.first << "\t" <<  states.first.second << endl;
 
  		 cout << endl;
- 	 }
+ 	}
 
 
 	filter_nondominated_sort (filtered_states, beams);
 
 
-	if(global::TRACE) cout << "filtered_states" << endl;
+	if(global::TRACE)
+	  cout << "filtered_states" << endl;
 
 		for(auto states:filtered_states){
-			if(global::TRACE)
+			if(global::TRACE){
+			cout <<  states.first->get_value() << "\t" <<  states.first->get_value2()  <<  "-->";
 				cout <<  states.second->get_value() << "\t" <<  states.second->get_value2()  << endl;
+			}
 			return_states.push_back(states.first);
 		}
-		if(global::TRACE)  cout << "--" << endl;
+		if(global::TRACE)
+			cout << "--" << endl;
 
 
 	return return_states;
