@@ -117,7 +117,10 @@ protected:
        	   	while(true){
        	   		if(i==1){
        	   			cout << "pause(1);" << endl;
-       	   			R=double_rand(); G=double_rand(); B=double_rand(); ii++;
+
+       	   			//R= double_rand(); G=double_rand(); B=double_rand(); ii++;
+       	   			R=b->getZmax()/255.0; G=b->getZmax()/255.0; B=b->getZmax()/255.0; ii++;
+
        	   		}
        	   		else j++;
 

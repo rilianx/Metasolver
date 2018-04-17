@@ -28,7 +28,7 @@ public:
 
 	virtual ~ActionEvaluator() { }
 
-	virtual double initialize(const State &s) { }
+	virtual void initialize(const State &s) { }
 
 	virtual double eval_action_rand(const State& s, const Action& a){
 
