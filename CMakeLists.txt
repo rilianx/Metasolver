@@ -13,6 +13,7 @@ problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
 problems/clp/plugins/ga
+problems/clp/plugins/ann/evaluators
 metasolver/plugins/mop/strategies/
 )
 
@@ -79,7 +80,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 ADD_LIBRARY(
 ann
-problems/clp/evaluators/ANNEvaluator.cpp
+problems/clp/plugins/ann/evaluators/ANNEvaluator.cpp
 )
 
 ADD_EXECUTABLE(BSG_ANN_CLP problems/clp/plugins/ann/main_BSG_ANN_CLP.cpp)
