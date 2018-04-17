@@ -200,7 +200,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 		if(f==clpState::_1C){
 			getline(in, line );
 			std::stringstream ss1(line);
-			ss1 >> clpState::weight_of_allboxes ;
+			ss1 >> clpState::weight_of_allboxes;
 		}
 
 

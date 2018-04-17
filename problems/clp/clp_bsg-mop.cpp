@@ -121,7 +121,7 @@ int main(int argc, char** argv){
 	cout << "Maxtime:" << maxtime << endl;
 
 
-
+	Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 	cout << "Dimensions: " << s0->cont->getL() << " x " << s0->cont->getW() << " x " << s0->cont->getH() << endl;
     cout << "Number of generated blocks:"<< s0->get_n_valid_blocks() << endl;
@@ -171,14 +171,13 @@ int main(int argc, char** argv){
     }
     cout << "best_volume best_weight hypervolume #_nondominated_solutions" << endl;
     cout << best_volume <<  " " << best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
-/*
- *
-	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();
-	while(dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->has_next()){
-		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->next();
-	}
-*/
+
+
+   /* map< pair<double, double>, State*> ::iterator it = pareto.end();
+    it--;
+    it--;
+    dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();;*/
+
 
 	//dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
 

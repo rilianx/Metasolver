@@ -45,12 +45,15 @@ VLossFunction::~VLossFunction() {
 double VLossFunction::eval_action(const State& s,  const Action &a){
 	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
+	const clpState* ss =dynamic_cast<const clpState*>(&s);
 
     long resL=sp.getL() - b.getL();
     long resW=sp.getW() - b.getW();
     long resH=sp.getH() - b.getH();
 
     if(resL<0 || resW<0 || resH<0) return -1.0;
+    if(ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::weight_of_allboxes) 	return -1.0;
+
 
 	double loss=(beta>0.0)?
 			Loss(dynamic_cast<const clpState*>(&s)->nb_left_boxes, b, sp) : 0.0;
