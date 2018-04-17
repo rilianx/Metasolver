@@ -87,7 +87,12 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN1;
 			else if(_srule.Get()=="MIN2")
 				srule = BSG_MOP::MIN2;
+		}else if(maxtheta==-1.0){
+			maxtheta=0.0;
+			srule = BSG_MOP::MIN1;
 		}
+
+
 
 		string format="BR";
 		if(_format) format=_format.Get();
@@ -164,8 +169,8 @@ int main(int argc, char** argv){
     	cout << point.first.first << "," << point.first.second << endl;
     	i++;
     }
-    cout << "best_volume best_weight hypervolume" << endl;
-    cout << best_volume << " " << best_volume_weight << " " << best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
+    cout << "best_volume best_weight hypervolume #_nondominated_solutions" << endl;
+    cout << best_volume <<  " " << best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
 /*
  *
 	const AABB* b = &dynamic_cast<const clpState*>(gr->get_best_state())->cont.blocks->top();
