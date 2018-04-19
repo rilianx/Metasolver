@@ -93,6 +93,10 @@ bool maxf1(pair<State*, State*>& p1, pair<State*, State*>& p2){
 	return p1.second->get_value() > p2.second->get_value();
 }
 
+bool max_angle(pair<State*, State*>& p1, pair<State*, State*>& p2){
+	return atan2(p1.second->get_value(),p1.second->get_value2()) > atan2(p2.second->get_value(),p2.second->get_value2());
+}
+
 bool minf1(pair<double, pair<State*, State*>>& p1, pair<double, pair<State*, State*>>& p2){
 	if(p1.second.second->get_value() != p2.second.second->get_value()) return p1.second.second->get_value() < p2.second.second->get_value();
 	return p1.second.second->get_value2() < p2.second.second->get_value2();
@@ -302,7 +306,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 	  state_actions.insert(make_pair(value,fs));
 	}
 
-	filtered_states.sort(maxf1);
+	filtered_states.sort(max_angle);
 
 
 }
@@ -315,8 +319,10 @@ list<State*> BSG_MOP::next(list<State*>& S){
     if(S.size()==0) return S;
 
     //the state is duplicated
-    if(S.size()==1 && oriented_greedy)
-    	S.push_back((*S.begin())->clone());
+    if(S.size()==1 && oriented_greedy){
+    	//for(int i=1; i<beams; i++)
+    		S.push_back((*S.begin())->clone());
+    }
 
 
 
@@ -341,6 +347,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 		//we assume that states of S are sorted by decreasing order w.r.t. objective 1
       	if(oriented_greedy) evl->set_lambda2(lambda2_v[i]);
 
+
       	list< Action* > best_actions;
       	get_best_actions(state, best_actions, w);
 
@@ -360,8 +367,9 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         	bool bbb = update(NDS, state_copy, value.first,value.second);
         	if(bbb){
-        		cout << "[BSGMOP] new non-dominated solution found ("<< get_time() <<"): " << "(" << value.first << "," << value.second << ")" << " "
-        		            			 << state_copy.get_path().size() << " nodes" << endl;
+        		cout << "[BSGMOP] new non-dominated solution found ("<< get_time() <<"): " << "("
+						<< value.first << "," << value.second << ")" << " "
+						<< state_copy.get_path().size() << " nodes, lambda:"  << evl->get_lambda2()  << endl;
         	}
 
         	//se inserta el estado si no hay uno equivalente en el mapa
@@ -400,7 +408,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 		for(auto states:filtered_states){
 			if(global::TRACE){
 			cout <<  states.first->get_value() << "\t" <<  states.first->get_value2()  <<  "-->";
-				cout <<  states.second->get_value() << "\t" <<  states.second->get_value2()  << endl;
+				cout <<  states.second->get_value() << "\t" <<  states.second->get_value2() << " " <<
+				atan2(states.second->get_value2(),states.second->get_value())  << endl;
 			}
 			return_states.push_back(states.first);
 		}

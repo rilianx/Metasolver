@@ -27,6 +27,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
+	args::ValueFlag<int> _maxblocks(parser, "int", "Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
@@ -34,8 +35,9 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<double> _theta(parser, "double", "Weight of the second objective in the greedy", {"theta"});
 	args::ValueFlag<double> _maxtheta(parser, "double", "ponderation of the weight of a box for maximizing the total weight", {"maxtheta"});
-	args::ValueFlag<string> _srule(parser, "double", "BSGMOP selection rule (NSGA2, MINF1, MINF2)", {"srule"});
+	args::ValueFlag<string> _srule(parser, "double", "BSGMOP selection rule (NSGA2, MIN1, MIN2)", {"srule"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -69,16 +71,18 @@ int main(int argc, char** argv){
 		string file=_file.Get();
 		BSG_MOP::sel_rule srule=BSG_MOP::NSGA2;
 		int inst=(_inst)? _inst.Get():0;
-		double min_fr=(_min_fr)? _min_fr.Get():0.98;
+		double min_fr=(_min_fr)? _min_fr.Get():1.0;
 		int maxtime=(_maxtime)? _maxtime.Get():100;
+		int max_blocks=(_maxblocks)? _maxblocks.Get():10000;
 
-		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
+		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, theta=0.0, maxtheta=0.0;
 		if(_maxtime) maxtime=_maxtime.Get();
 		if(_alpha) alpha=_alpha.Get();
 		if(_beta) beta=_beta.Get();
 		if(_gamma) gamma=_gamma.Get();
 		if(_delta) delta=_delta.Get();
 		if(_p) p=_p.Get();
+		if(_theta) theta=_theta.Get();
 		if(_maxtheta) maxtheta=_maxtheta.Get();
 		if(_srule){
 			if(_srule.Get()=="NSGA2")
@@ -87,9 +91,11 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN1;
 			else if(_srule.Get()=="MIN2")
 				srule = BSG_MOP::MIN2;
-		}else if(maxtheta==-1.0){
+		}
+
+		if(maxtheta==-1.0){
 			maxtheta=0.0;
-			srule = BSG_MOP::MIN1;
+			if(!_srule) srule = BSG_MOP::MIN1;
 		}
 
 
@@ -118,15 +124,17 @@ int main(int argc, char** argv){
 	cout << "File("<< format <<"): " << file << endl;
 	cout << "Instance:" << inst+1 << endl;
 	cout << "min_fr:" << min_fr << endl;
+	cout << "max_blocks:" << max_blocks << endl;
 	cout << "Maxtime:" << maxtime << endl;
 
+	clock_t begin_time=clock();
 
 	Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, 10000, f);
+    clpState* s0 = new_state(file,inst, min_fr, max_blocks, f);
 	cout << "Dimensions: " << s0->cont->getL() << " x " << s0->cont->getW() << " x " << s0->cont->getH() << endl;
     cout << "Number of generated blocks:"<< s0->get_n_valid_blocks() << endl;
 
-    clock_t begin_time=clock();
+
 
 
     cout << endl << "***** Creating the heuristic function VCS *****" << endl;
@@ -138,7 +146,7 @@ int main(int argc, char** argv){
     cout << "maxtheta: " << maxtheta << endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, 0.0, 0.0, maxtheta);
+    alpha, beta, gamma, p, delta, theta, 0.0, maxtheta);
 
     SearchStrategy *gr = new Greedy (vcs);
 
@@ -155,22 +163,22 @@ int main(int argc, char** argv){
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
     double x_old=0.0;
     double hv = 0.0;
-    int i=0; double best_volume, best_volume_weight, best_weight;
+    int n=0; double best_volume=0.0, best_weight=0.0;
     for(auto point : pareto){
-    	if(i==1) best_weight=point.first.second;
+    	if(best_weight==0.0 && point.second) best_weight=point.first.second;
 
-    	if(i==pareto.size()-2) {
+    	if(point.second){
+    		n++;
     		best_volume=point.first.first;
-    		best_volume_weight=point.first.second;
     	}
+
 
     	hv += (point.first.first - x_old) * point.first.second;
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
-    	i++;
     }
-    cout << "best_volume best_weight hypervolume #_nondominated_solutions" << endl;
-    cout << best_volume <<  " " << best_weight<< " " << hv <<  " "<<  pareto.size()-2 <<endl;
+    cout << "best_volume best_weight hypervolume #nondominated_solutions" << endl;
+    cout << 1.001-best_volume <<  " " << 1.001-best_weight<< " " << 1.001-hv <<  " "<<  n <<endl;
 
 
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();

@@ -28,6 +28,7 @@ public:
 	virtual void set_lambda2(double l){
 		ActionEvaluator::set_lambda2(l);
 		theta = l*max_theta;
+		//cout << theta << endl;
 	}
 
 	//set the value of alpha for MOP (mapping the lambda2 to the theta value)

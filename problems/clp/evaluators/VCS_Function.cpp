@@ -47,7 +47,8 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
-	return (loss_vol + alpha * log (cs) + gamma*log(n) );
+	return (loss_vol * pow(cs,alpha) * pow(n,gamma) );
+	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
 }
 
 double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){

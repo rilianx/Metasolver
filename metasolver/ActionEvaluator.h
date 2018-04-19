@@ -42,6 +42,10 @@ public:
 		lambda2 = l;
 	}
 
+	virtual double get_lambda2(){
+		return lambda2;
+	}
+
 	double get_r() const { return r; }
 
 protected:
