@@ -156,6 +156,11 @@ int main(int argc, char** argv){
 
 	State& s_copy= *s0->clone();
 
+   gr->run(s_copy, maxtime, begin_time) ;
+
+   cout << 1-s_copy.get_value() << " " << 1-s_copy.get_value2() << endl;
+	 return 0;
+
 	cout << "***** Running the solver BSGMOP solver *****" << endl;
     double eval = 1-de->run(s_copy, maxtime, begin_time) ;
 

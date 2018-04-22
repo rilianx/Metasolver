@@ -66,7 +66,7 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 
 
 
-	double vol_rel = (double) b.getOccupiedVolume()	/ ss->cont->getVolume();
+	double vol_rel = (double) b.getVolume()	/ ss->cont->getVolume();
 	double weight_rel = b.getTotalWeight()/clpState::weight_of_allboxes;
 	double density = weight_rel/vol_rel;
 
@@ -74,7 +74,7 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 
 	//cout << theta << endl;
 
-	return ( pow( (1-theta)*vol_rel + theta*weight_rel , delta)  * pow((1.0-loss),beta) /* pow(weight_rel, theta )*/);
+	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(density, theta ));
 
 //	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()/clpState::weight_of_allboxes) );
 }
