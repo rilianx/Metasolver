@@ -26,7 +26,7 @@ outputpos_boxes = 2
 [bsg-weight]
 tuning_param = X
 tuning_values = 0.0 0.5
-exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
+exec = "../../BSGMOP_CLP"
 params =  _INSTANCE -t _MAXTIME -f BRw --maxtheta=_X
 outputpos_times = 2
 outputpos_boxes = 2
