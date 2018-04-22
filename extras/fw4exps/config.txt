@@ -1,7 +1,7 @@
 [base]
 test_instances = instancesBRrw.txt
 mintime = 0.0001
-maxtime = 30
+maxtime = 50
 factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
@@ -25,7 +25,7 @@ outputpos_boxes = 2
 
 [bsg-weight]
 tuning_param = X
-tuning_values = 0.0 0.4 0.6 0.8 1.0
+tuning_values = 0.0 0.5
 exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
 params =  _INSTANCE -t _MAXTIME -f BRw --maxtheta=_X
 outputpos_times = 2

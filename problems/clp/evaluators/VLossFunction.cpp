@@ -74,7 +74,7 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 
 	//cout << theta << endl;
 
-	return ( pow(vol,delta)  * pow((1.0-loss),beta) * pow(density, theta ));
+	return ( pow( vol , delta)  * pow((1.0-loss),beta) * pow(density, theta ));
 
 //	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()/clpState::weight_of_allboxes) );
 }
