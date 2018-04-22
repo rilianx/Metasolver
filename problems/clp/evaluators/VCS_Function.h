@@ -37,14 +37,6 @@ public:
 
 	virtual void set_p(double pp){ p = pp; }
 
-	//set the value of alpha for MOP (mapping the lambda2 to the theta value)
-	virtual void set_lambda2(double l){
-		VLossFunction::set_lambda2(l);
-		theta = l*max_theta;
-		alpha = 4.0 - l; //(from 4.0 to 3.0)
-		//cout << theta << endl;
-	}
-
 protected:
 
 	long _surface_in_contact(const AABB& b, const AABB& bi);

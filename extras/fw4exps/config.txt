@@ -17,9 +17,9 @@ outputpos_boxes = 0
 
 [greedy1]
 tuning_param = X
-tuning_values = 3.0 4.0
+tuning_values = 3.0 4.0 5.0
 exec = "../../BSGMOP_CLP"
-params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --theta=1.0
+params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=0.0 --gamma=0.0 -p 0.00 --theta=0.0
 outputpos_times = 0
 outputpos_boxes = 0
 
