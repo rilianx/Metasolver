@@ -6,7 +6,7 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = bsg-weight
+algo_names = greedy1
 
 
 [bsg]
@@ -17,9 +17,9 @@ outputpos_boxes = 0
 
 [greedy1]
 tuning_param = X
-tuning_values = 3.0 4.0 5.0
+tuning_values = 0.5 0.7 0.9
 exec = "../../BSGMOP_CLP"
-params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=0.0 --gamma=0.0 -p 0.00 --theta=0.0
+params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.7 -p 0.04 --theta=0.0
 outputpos_times = 0
 outputpos_boxes = 0
 
@@ -27,6 +27,6 @@ outputpos_boxes = 0
 tuning_param = X
 tuning_values = -1.0 0.0 0.25 0.5 0.75 1.0
 exec = "../../BSGMOP_CLP"
-params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --maxtheta=_X
+params =  _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.7 -p 0.04 --maxtheta=_X
 outputpos_times = 2
 outputpos_boxes = 2
