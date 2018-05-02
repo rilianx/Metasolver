@@ -10,11 +10,14 @@ int glue_initPyHandler(PyHandler pyHandler, const char *pathScript, const char *
     Py_Initialize();
     PySys_SetPath((char *) pathScript);
 
+
     // Cargando script e importando modulo
     pyHandler.pName = PyString_FromString(nameScript);
-    pyHandler.pModule = PyImport_Import(pyHandler.pModule);
+
+    pyHandler.pModule = PyImport_Import(pyHandler.pName);
     if(pyHandler.pModule == NULL){
-        printf("[initPyHandler] Error cargando %s", nameScript);
+        printf("[initPyHandler] Error cargando %s\n", nameScript);
+        PyErr_Print();
         return 0;
     }
 

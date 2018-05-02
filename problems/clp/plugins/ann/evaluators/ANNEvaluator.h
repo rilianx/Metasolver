@@ -8,10 +8,17 @@
 #include "ActionEvaluator.h"
 #include "Block.h"
 #include "clpState.h"
-#include "../glue/glue.h"
+//#include "glue.h"
+
+
+//#include "glue.c"
 
 #ifndef EVALUATORS_ANNEVALUATOR_H_
 #define EVALUATORS_ANNEVALUATOR_H_
+
+extern "C" {
+#include "glue.h"
+}
 
 using namespace metasolver;
 
@@ -21,16 +28,17 @@ namespace clp {
 	public:
 
 		ANNEvaluator(int L, int W) : ActionEvaluator(0.0), L(L), W(W) {
+
 			matrix = new int*[L];
 			for(int i=0; i<L; i++)
 				matrix[i] = new int[W];
 
 
 			// Inicializando red
-			const char* pathScript = "/home/braulio/CLionProjects/Metasolver/problems/clp/plugins/ann/";
-			const char* nameScript = "AnnScriptRun.py";
+			const char* pathScript = "/home/iaraya/clp/clp2017/problems/clp/plugins/ann/";
+			const char* nameScript = "annCom";
 
-			pyHandler = glue_createPyHandler();
+			PyHandler pyHandler;
 			glue_initPyHandler(pyHandler, pathScript, nameScript);
 			//TODO: Inicializar la red
 		}
@@ -44,6 +52,8 @@ namespace clp {
 		virtual void initialize(const State& s){
 			const char *nFuncInput1 = "setValueInput1"; // Nombre de la funcion para actualizar input 1 de la red (En Python)
 			//const char *nFuncInput2 = "putInput2"; // Nombre de la funcion para actualizar input 2 de la red (En Python)
+
+
 
 			const clpState* state = dynamic_cast<const clpState*>(&s);
 			AABB block = state->cont->blocks->top();
@@ -65,6 +75,15 @@ namespace clp {
 					block=state->cont->blocks->next();
 
 			}while(state->cont->blocks->has_next());
+
+			list< Action* > actions;
+			s.get_actions(actions);
+
+			const Space& sp = state->cont->spaces->top();
+			//sp.getXmin()
+			//sp.getXmax()
+			//sp.getYmin()
+			//sp.getYmax()
 
 			//TODO: buscar forma de generar el input 2
 

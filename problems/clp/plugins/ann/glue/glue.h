@@ -15,12 +15,6 @@ typedef struct{
 }PyHandler;
 
 /**
- * Crea un handler con los valores inicializados en null
- * @return
- */
-PyHandler glue_createPyHandler();
-
-/**
  * Inicializa el PyHandler y prepara la red para operar
  * @param pyHandler
  * @param pathScript

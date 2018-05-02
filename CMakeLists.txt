@@ -1,7 +1,9 @@
 # HelloWorld is a minimal sample creating, stepping and deleting a Bullet dynamics world
 
-
 set (CMAKE_CXX_STANDARD 11)
+
+find_package(PythonLibs 2.7 REQUIRED)
+set(PYTHON_INCLUDE_DIRS "/usr/include/python2.7")
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
@@ -15,6 +17,8 @@ problems/clp/plugins/kdtree
 problems/clp/plugins/ga
 problems/clp/plugins/ann/evaluators
 metasolver/plugins/mop/strategies/
+problems/clp/plugins/ann/glue
+${PYTHON_INCLUDE_DIRS}
 )
 
 LINK_DIRECTORIES(
@@ -81,9 +85,13 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 ADD_LIBRARY(
 ann
 problems/clp/plugins/ann/evaluators/ANNEvaluator.cpp
+problems/clp/plugins/ann/glue/glue.c
 )
 
-ADD_EXECUTABLE(BSG_ANN_CLP problems/clp/plugins/ann/main_BSG_ANN_CLP.cpp)
+ADD_EXECUTABLE(BSG_ANN_CLP 
+  problems/clp/plugins/ann/main_BSG_ANN_CLP.cpp
+  #problems/clp/plugins/ann/glue/glue.c
+)
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
@@ -94,7 +102,7 @@ ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(BSG_CLP bsg clp clp_kdtree)
-target_link_libraries(BSG_ANN_CLP bsg ann clp)
+target_link_libraries(BSG_ANN_CLP bsg ann clp ${PYTHON_LIBRARIES})
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
 target_link_libraries(NSGA_CLP bsg clp nsga2)
