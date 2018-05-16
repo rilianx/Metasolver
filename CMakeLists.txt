@@ -3,6 +3,7 @@
 set (CMAKE_CXX_STANDARD 11)
 
 find_package(PythonLibs 2.7 REQUIRED)
+find_package(PythonInterp 2.7 REQUIRED)
 set(PYTHON_INCLUDE_DIRS "/usr/include/python2.7")
 
 INCLUDE_DIRECTORIES(
@@ -115,9 +116,6 @@ enable_testing()
 
 add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
 add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
-
-
-ENDIF()
 
 
 
