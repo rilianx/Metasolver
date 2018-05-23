@@ -17,7 +17,7 @@
 #define EVALUATORS_ANNEVALUATOR_H_
 
 extern "C" {
-#include "glue.h"
+	#include "../glue/glue.h"
 }
 
 using namespace metasolver;
@@ -51,7 +51,7 @@ namespace clp {
 
 		virtual void initialize(const State& s){
 			const char *nFuncInput1 = "setValueInput1"; // Nombre de la funcion para actualizar input 1 de la red (En Python)
-			//const char *nFuncInput2 = "putInput2"; // Nombre de la funcion para actualizar input 2 de la red (En Python)
+			const char *nFuncInput2 = "setValueInput2"; // Nombre de la funcion para actualizar input 2 de la red (En Python)
 
 
 
@@ -65,6 +65,7 @@ namespace clp {
 				for(int j=0; j<W; j++)
 					matrix[i][j]= 0;
 
+            // Generando el input 1
 			do{
 				for(long i = block.getXmin(); i < block.getXmax(); i++) {
 					for (long j = block.getYmin(); j < block.getYmax(); j++) {
@@ -79,13 +80,18 @@ namespace clp {
 			list< Action* > actions;
 			s.get_actions(actions);
 
+            // Generando el input 2
+            // FIXME: los valores del input 2 fuera del rango de este, no se actualizan
 			const Space& sp = state->cont->spaces->top();
+			for(long i = sp.getXmin(); i < sp.getXmax(); i++){
+				for(long j = sp.getYmin(); j < sp.getYmax(); j++){
+					glue_putInput(pyHandler, nFuncInput2, i, j, 1);
+				}
+			}
 			//sp.getXmin()
 			//sp.getXmax()
 			//sp.getYmin()
 			//sp.getYmax()
-
-			//TODO: buscar forma de generar el input 2
 
 			/*for(int i=0; i<L; i++){
                 for(int j=0; j<W; j++)
@@ -110,17 +116,26 @@ namespace clp {
 		virtual double eval_action(const State& s, const Action& a){
 			const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 			const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
+            double eval = 0;
+            double l = b.getL() * (5.0/sp.getL());
+            double w = b.getW() * (5.0/sp.getW());
+            double h = b.getH() * (5.0/sp.getH());
 
-			//if(!(b <= sp)) return -1.0;
+            // Actualizando cubo de soluciones
+            const int xMax = 5;
+            const int yMax = 5;
+            const int zMax = 5;
+            for(long i = 0; i < xMax; i++) {
+                for (long j = 0; j < yMax; j++) {
+                    for (long k = 0; k < zMax; k++) {
+                        eval += prob[i][j][k] *
+                                (1 - sqrt(pow(l - i, 2) + pow(w - j, 2) + pow(h - k, 2)) /
+                                sqrt(pow(xMax, 2) + pow(yMax, 2) + pow(zMax, 2)));
+                    }
+                }
+            }
 
-			//clpState* state = dynamic_cast<const clpAction*>(&s);
-			//TODO: recibir vector y mapearlo a dimensiones del espacio
-
-			//evaluar bloque de acuerdo a cajita de probabilidades
-			//sp.getH(); sp.getW(); sp.getL();
-			//b.getH(); b.getW(); b.getL();
-
-			return double_rand();
+			return eval;
 
 		}
 

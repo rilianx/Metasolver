@@ -62,7 +62,7 @@ def exists(modelFile, weights):
     if os.path.isfile(modelFile):
         if os.path.isfile(weights):
             return True
-    return false
+    return False
 
 '''
 	Permite modificar el tamanno de las matrices de entradas de la red
