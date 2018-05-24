@@ -13,6 +13,7 @@ problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
 problems/clp/plugins/ga
+problems/cpmp
 metasolver/plugins/mop/strategies/
 )
 
@@ -67,6 +68,11 @@ problems/clp/objects2/Space.cpp
 problems/clp/objects2/SpaceSet.cpp
 problems/clp/objects2/Block_fsb.cpp
 problems/clp/clpState.cpp
+)
+
+ADD_LIBRARY(
+cpmp
+problems/cpmp/cpmpState.cpp
 )
 
 ADD_LIBRARY(

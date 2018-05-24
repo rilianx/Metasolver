@@ -42,9 +42,10 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="problems/clp|metasolver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="problems/cpmp|problems/clp|metasolver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="metasolver"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="problems/clp"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="problems/cpmp"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

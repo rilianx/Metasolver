@@ -54,6 +54,9 @@ public:
 			path.push_back((*it)->clone());
 	}
 
+	/**
+	 * deprecated
+	 */
 	virtual State* create_neighbor(State* s0){
 		return NULL;
 	}
