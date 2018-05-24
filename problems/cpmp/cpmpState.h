@@ -29,6 +29,8 @@ public:
 
 	virtual void _transition(const Action& action) = 0;
 
+private:
+
 
 
 };
