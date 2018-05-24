@@ -110,7 +110,13 @@ public:
 
 	list<const Action*>& get_path() const{ return path;}
 
-	virtual void print() {  }
+	virtual void print() const{  }
+
+
+	virtual int get_lower_bound() {
+		cout << "Error: LowerBound is not implemented"<< endl;
+		return 0.0;
+	}
 
 protected:
 
