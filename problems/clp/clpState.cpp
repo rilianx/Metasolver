@@ -25,12 +25,13 @@ void clpState::get_actions(list< Action* >& actions) const{
 
     const Space* sp=NULL;
 
-   // cout << valid_blocks.size() << endl;
+    //cout << valid_blocks.size() << endl;
 
 	while(cont->spaces->size()>0 && actions.size()==0){
-		//cout << "spaces:" << cont.spaces->size() << endl;
+
 
 	    sp=&cont->spaces->top();
+	    //cout << "spaces:" << cont->spaces->size() << endl;
 
 		for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
 			if(**it <= sp->getDimensions()) actions.push_back(new clpAction(**it,*sp));
@@ -194,6 +195,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			std::stringstream ss(line);
 			long l,w,h;
 			ss >> l >> w >> h;
+			cout << l << " " <<  w << " " << h << endl;
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 
@@ -224,21 +226,23 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			int n, id;
 			long l,h,w;
 			double weight = 1.0;
+			double vol;
 			bool rot1, rot2, rot3;
 			std::stringstream ss1(line);
 
-			if(f==clpState::BR)
+			if(f==clpState::BR){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
-
-			if(f==clpState::BRw)
+				vol=l*h*w;
+			}if(f==clpState::BRw){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
-
-			else if(f==clpState::_1C){
+				vol=l*h*w;
+			}else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
 				l = ceil(ll);
 				w = ceil(ww);
 				h = ceil(hh);
+				vol=ll*hh*ww;
 			}
 
 
@@ -247,16 +251,15 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
 
-				//cout << weight << " x " << n <<  endl;
 				if (f==clpState::BR || f==clpState::BRw) clpState::weight_of_allboxes += weight*(double) n;
 
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o)){
 						if(!Block::FSB)
-							s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o));
+							s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o, vol));
 						else
-							s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o));
+							s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o, vol));
 					}
 				}
 				//cout << "Wmax:" << clpState::weight_of_allboxes << endl;

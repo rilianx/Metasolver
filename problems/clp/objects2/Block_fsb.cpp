@@ -14,7 +14,7 @@ namespace clp {
 
 Block_fsb::Block_fsb(long l, long w, long h) : Block(l,w,h), pa_l(l), pa_w(w) { }
 
-Block_fsb::Block_fsb(const BoxShape & b, BoxShape::Orientation o) : Block(b,o) {
+Block_fsb::Block_fsb(const BoxShape & b, BoxShape::Orientation o, double occupied_volume) : Block(b,o,occupied_volume) {
 	pa_l=getL();
 	pa_w=getW();
 }

@@ -60,7 +60,7 @@ public:
 	/**
 	 * Constructs a single-box block
 	 */
-	Block(const BoxShape & b, BoxShape::Orientation o);
+	Block(const BoxShape & b, BoxShape::Orientation o,double occupied_volume);
 
 	virtual ~Block();
 
@@ -137,7 +137,7 @@ protected:
              << R << " " << G << " " << B << "]," << alpha << ");" << endl;
     }
 
-	long occupied_volume;
+	double occupied_volume;
 
 	double total_weight;
 
@@ -156,7 +156,7 @@ public:
 	/**
 	 * Constructs a single-box block
 	 */
-	Block_fsb(const BoxShape & b, BoxShape::Orientation o);
+	Block_fsb(const BoxShape & b, BoxShape::Orientation o, double occupied_volume);
 
 	virtual Block* clone(){
 		return new Block_fsb(*this);
