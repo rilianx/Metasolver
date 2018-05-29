@@ -196,6 +196,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			long l,w,h;
 			ss >> l >> w >> h;
 			cout << l << " " <<  w << " " << h << endl;
+			if(f==clpState::_1C) l*=10; w*=10; h*=10;
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 
@@ -239,6 +240,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			}else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
+				ll*=10; ww*=10; hh*=10;
 				l = ceil(ll);
 				w = ceil(ww);
 				h = ceil(hh);

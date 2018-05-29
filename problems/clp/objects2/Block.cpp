@@ -23,7 +23,7 @@ Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), total_w
 }
 
 Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volume) :
-		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume((occupied_volume==0)? box.getVolume():occupied_volume),
+		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(occupied_volume),
 		total_weight(box.get_weight()), n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	nb_boxes[&box]=1;
