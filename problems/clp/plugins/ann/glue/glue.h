@@ -21,7 +21,7 @@ typedef struct{
  * @param nameScript
  * @return retorna 1 si se pudo inicializar correctamente y 0 si hubo algun error
  */
-int glue_initPyHandler(PyHandler pyHandler, const char *pathScript,
+PyObject *glue_initPyHandler(PyHandler pyHandler, const char *pathScript,
                        const char *nameScript);
 
 /**
@@ -35,6 +35,11 @@ int glue_initPyHandler(PyHandler pyHandler, const char *pathScript,
  * @return retorna 1 si se ejecuto la funcion correctamente, en caso contrario retorna 0
  */
 int glue_putInput(PyHandler pyHandler, const char *nomrbeFuncion, long x, long y, long value);
+
+/**
+ *  Establece todos los valores del input 2 en 0
+ */
+void glue_resetInput2(PyHandler pyHandler);
 
 
 /**

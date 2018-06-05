@@ -4,6 +4,9 @@ set (CMAKE_CXX_STANDARD 11)
 
 find_package(PythonLibs 2.7 REQUIRED)
 find_package(PythonInterp 2.7 REQUIRED)
+message(${PYTHON_INCLUDE_DIRS})
+message(${PYTHON_LIBRARIES})
+
 set(PYTHON_INCLUDE_DIRS "/usr/include/python2.7")
 
 INCLUDE_DIRECTORIES(

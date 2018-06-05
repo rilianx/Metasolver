@@ -3,22 +3,32 @@
 //
 
 #include "glue.h"
+#define DEB 0
 
-int glue_initPyHandler(PyHandler pyHandler, const char *pathScript, const char *nameScript) {
+PyObject *glue_initPyHandler(PyHandler pyHandler, const char *pathScript, const char *nameScript) {
 
     // Preparando Python
     Py_Initialize();
-    PySys_SetPath((char *) pathScript);
+    //PySys_SetPath((char *) pathScript);
 
+    // Importando modulos externos
+    PyObject *pKerasStr = PyUnicode_FromString("keras");
+    PyObject *pKerasMod = PyImport_Import(pKerasStr);
+    PyObject *pNumpyStr = PyUnicode_FromString("numpy");
+    PyObject *pNumpyMod = PyImport_Import(pNumpyStr); 
+
+    PySys_SetPath((char *) pathScript);
 
     // Cargando script e importando modulo
     pyHandler.pName = PyString_FromString(nameScript);
-
-    pyHandler.pModule = PyImport_Import(pyHandler.pName);
-    if(pyHandler.pModule == NULL){
+    pyHandler.pModule = PyImport_ImportModule(nameScript);
+    if(pyHandler.pModule == NULL || PyErr_Occurred()){
         printf("[initPyHandler] Error cargando %s\n", nameScript);
         PyErr_Print();
         return 0;
+    }
+    else{
+        printf("[initPyHandler] Python initilized\n");
     }
 
     /*
@@ -28,7 +38,7 @@ int glue_initPyHandler(PyHandler pyHandler, const char *pathScript, const char *
      * funciones.
      */
 
-    return 1;
+    return pyHandler.pModule;
 }
 
 int glue_putInput(PyHandler pyHandler, const char *nombreFuncion, long x, long y, long value) {
@@ -36,9 +46,8 @@ int glue_putInput(PyHandler pyHandler, const char *nombreFuncion, long x, long y
     PyObject *pX = PyInt_FromLong(x);
     PyObject *pY = PyInt_FromLong(y);
     PyObject *pValue = PyInt_FromLong(value);
-
     if(!pValue || !pX || !pY){
-        printf("[glue_putInput] Error en la transformacion de variables");
+        printf("[glue_putInput] Error en la transformacion de variables\n");
         return 0;
     }
 
@@ -50,11 +59,15 @@ int glue_putInput(PyHandler pyHandler, const char *nombreFuncion, long x, long y
 
     // Preparando funcion
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
-    if(!pFunc || PyCallable_Check(pFunc)) {
-        if(PyErr_Occurred())
-            PyErr_Print();
-        printf("[glue_putInput] Error no se pudo encontrar la funcion %s", nombreFuncion);
-    }
+    
+    // Comprobando errores
+    if(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_putInput] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+     
 
     // Ejecutando funcion
     PyObject_CallObject(pFunc, pArgs);
@@ -70,11 +83,36 @@ void glue_operate(PyHandler pyHandler){
 
     // Preparando funcion
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
-    if(!pFunc || PyCallable_Check(pFunc)) {
-        if(PyErr_Occurred())
-            PyErr_Print();
-        printf("[glue_operate] Error no se pudo encontrar la funcion %s", nombreFuncion);
-    }
+    
+    // Comprobando errores
+    if(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_putInput] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion
+    PyObject_CallObject(pFunc, NULL);
+}
+
+void glue_resetInput2(PyHandler pyHandler){
+    /*
+     * nomreFuncion es el nombre que tiene la funcion dentron del script de ejecucion
+     * de la red (Python) para operar las entradas y generar una salida.
+     */
+    const char* nombreFuncion = "resetInput2";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+    
+    // Comprobando errores
+    if(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_putInput] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
 
     // Ejecutando funcion
     PyObject_CallObject(pFunc, NULL);
@@ -86,7 +124,7 @@ double glue_getSolution(PyHandler pyHandler, long x, long y, long z) {
      * de la red (Python) para retornar la solucion que se encuentra en la coordenada
      * (x,y,z) dentro del cubo de solucion.
      */
-    const char* nombreFuncion = "getSolution";
+    const char* nombreFuncion = "getValue";
 
     // Transformacion de variables de C a Python
     PyObject *pX = PyInt_FromLong(x);
@@ -104,11 +142,14 @@ double glue_getSolution(PyHandler pyHandler, long x, long y, long z) {
 
     // Preparando funcion
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
-    if(!pFunc || PyCallable_Check(pFunc)) {
-        if(PyErr_Occurred())
-            PyErr_Print();
-        printf("[glue_getSolution] Error no se pudo encontrar la funcion %s", nombreFuncion);
-    }
+    
+    // Comprobando errores
+    if(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_putInput] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
 
     // Ejecutando funcion y obteniendo solucion
     PyObject *pRet = PyObject_CallObject(pFunc, pArgs);
