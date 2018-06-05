@@ -196,7 +196,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			long l,w,h;
 			ss >> l >> w >> h;
 			cout << l << " " <<  w << " " << h << endl;
-			if(f==clpState::_1C) l*=10; w*=10; h*=10;
+			if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 

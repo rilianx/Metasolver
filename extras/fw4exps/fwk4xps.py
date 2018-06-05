@@ -16,6 +16,7 @@ from scipy.stats import t
 from scipy import stats
 import os
 from sets import Set
+import sys
 
 lock = Lock()
 shared_times = []
@@ -586,8 +587,7 @@ def next_run(config):
 
 
 if __name__ == '__main__':
-
-	config = Config('config.txt')
+	config = Config(sys.argv[1])
 
 	max_algos = len(config.algos)
 	shared_times_base = multiprocessing.Array(ctypes.c_float, len(config.instances)*max_algos*config.max_seeds)
