@@ -13,7 +13,8 @@
 #define CPMPSTATE_H_
 
 using namespace metasolver;
-using namespace std;
+
+//Viendo si funciona profesor
 
 /*
  *
