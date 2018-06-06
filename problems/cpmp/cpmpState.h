@@ -13,9 +13,7 @@
 #define CPMPSTATE_H_
 
 using namespace metasolver;
-
 using namespace std;
-
 
 /*
  *
