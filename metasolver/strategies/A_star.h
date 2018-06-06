@@ -52,7 +52,6 @@ public:
 			for(auto action:actions){
 				State* copy=s->clone();
 				copy->transition(*action);
-
 				//TODO: revisar si el nuevo estado ya fue creado anteriormente
 
 				q.push(copy);

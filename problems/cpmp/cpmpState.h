@@ -14,6 +14,9 @@
 
 using namespace metasolver;
 
+using namespace std;
+
+
 /*
  *
  * 	Esta Clase fue creada con motivo de ayudar a implementar de forma

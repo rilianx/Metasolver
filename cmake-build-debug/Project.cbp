@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="bsg_mop">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbsg_mop.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 bsg_mop"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="bsg_mop/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbsg_mop.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 bsg_mop/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="base">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbase.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 base"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="base/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbase.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 base/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="bsg">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbsg.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 bsg"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="bsg/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libbsg.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 bsg/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSG_CLP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSG_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSG_CLP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSG_CLP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSG_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSG_CLP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="a_star">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/liba_star.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 a_star"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="a_star/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/liba_star.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 a_star/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clp_kdtree">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libclp_kdtree.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clp_kdtree"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clp_kdtree/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libclp_kdtree.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clp_kdtree/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="nsga2">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libnsga2.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 nsga2"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="nsga2/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libnsga2.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 nsga2/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clp">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libclp.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clp"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clp/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libclp.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clp/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cpmp">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libcpmp.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 cpmp"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cpmp/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/libcpmp.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 cpmp/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSG_CLP_ANN">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSG_CLP_ANN.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSG_CLP_ANN"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSG_CLP_ANN/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSG_CLP_ANN.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSG_CLP_ANN/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CLP_GENSOLV">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/CLP_GENSOLV.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 CLP_GENSOLV"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CLP_GENSOLV/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/CLP_GENSOLV.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 CLP_GENSOLV/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_BSG_CLP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/test_BSG_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 test_BSG_CLP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_BSG_CLP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/test_BSG_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 test_BSG_CLP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="A_CPMP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/A_CPMP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 A_CPMP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="A_CPMP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/A_CPMP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 A_CPMP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSGMOP_CLP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSGMOP_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSGMOP_CLP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="BSGMOP_CLP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/BSGMOP_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 BSGMOP_CLP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_BSGMOP_CLP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/test_BSGMOP_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 test_BSGMOP_CLP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_BSGMOP_CLP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/test_BSGMOP_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 test_BSGMOP_CLP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="testEvalMOP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/testEvalMOP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 testEvalMOP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="testEvalMOP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/testEvalMOP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 testEvalMOP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CLP_gen">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/CLP_gen.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 CLP_gen"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CLP_gen/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/CLP_gen.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 CLP_gen/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="NSGA_CLP">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/NSGA_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 NSGA_CLP"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="NSGA_CLP/fast">
+				<Option output="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/NSGA_CLP.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/lib/bullet-2.80/src"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp"/>
+					<Add directory="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/include-fixed"/>
+					<Add directory="C:/mingw32/bin/../lib/gcc/i686-w64-mingw32/4.9.2/../../../../i686-w64-mingw32/include"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/mingw32/lib/gcc/../../i686-w64-mingw32/include/c++/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 NSGA_CLP/fast"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test">
+				<Option working_dir="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
+					<CompileFile command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/mingw32/bin/mingw32-make.exe -f &quot;C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/GlobalVariables.cpp">
+			<Option target="base"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/GlobalVariables.h">
+			<Option target="base"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/SearchStrategy.cpp">
+			<Option target="base"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/SearchStrategy.h">
+			<Option target="base"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/BSGMOP.cpp">
+			<Option target="bsg_mop"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/BSGMOP.h">
+			<Option target="bsg_mop"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/Chromosome.cpp">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/Chromosome.h">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/NSGA2.cpp">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/plugins/mop/strategies/NSGA2.h">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/A_star.cpp">
+			<Option target="a_star"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/A_star.h">
+			<Option target="a_star"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/BSG.cpp">
+			<Option target="bsg"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/BSG.h">
+			<Option target="bsg"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/Greedy.cpp">
+			<Option target="bsg"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/metasolver/strategies/Greedy.h">
+			<Option target="bsg"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/ClpInstanceGenerator.cpp">
+			<Option target="CLP_gen"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/clpState.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/clpState.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/clp_bsg-mop.cpp">
+			<Option target="BSGMOP_CLP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers/AABBContainer.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers/AABBContainer.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers/AABBTree.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/containers/AABBTree.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators/VCS_Function.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators/VCS_Function.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators/VLossFunction.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/evaluators/VLossFunction.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/main_clp.cpp">
+			<Option target="BSG_CLP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/AABB.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/AABB.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/Block.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/Block.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/Block_fsb.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/BoxShape.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/BoxShape.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/Space.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/Space.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/SpaceSet.cpp">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/objects2/SpaceSet.h">
+			<Option target="clp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ann/gen_ran_inst_solve.cpp">
+			<Option target="CLP_GENSOLV"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ann/main_clp_ann.cpp">
+			<Option target="BSG_CLP_ANN"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga/clp_chromosome.cpp">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga/clp_chromosome.h">
+			<Option target="nsga2"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/ga/main.cpp">
+			<Option target="NSGA_CLP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/BlockSet.cpp">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/BlockSet.h">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/clpStatekd.cpp">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/clpStatekd.h">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/kdNode.cpp">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/plugins/kdtree/kdNode.h">
+			<Option target="clp_kdtree"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/test_clp.cpp">
+			<Option target="test_BSG_CLP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/test_clp_mop.cpp">
+			<Option target="test_BSGMOP_CLP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/clp/test_evalMOP.cpp">
+			<Option target="testEvalMOP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp/cpmpState.cpp">
+			<Option target="cpmp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp/cpmpState.h">
+			<Option target="cpmp"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/problems/cpmp/cpmp_main.cpp">
+			<Option target="A_CPMP"/>
+		</Unit>
+		<Unit filename="C:/Users/Mario Dorochesi/Documents/GitHub/Metasolver/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
