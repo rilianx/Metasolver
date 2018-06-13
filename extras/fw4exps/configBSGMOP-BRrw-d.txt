@@ -11,7 +11,7 @@ algo_names = bsg-mop-BRrw-d
 [bsg-mop-BRrw-d]
 tuning_param = X
 tuning_values = -1.0 0.0 0.5
-exec = "/home/csc123/clp/clp2017/BSGMOP_CLP"
+exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
 params = _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --maxtheta=_X
 outputpos_times = 0
 outputpos_boxes = 0
