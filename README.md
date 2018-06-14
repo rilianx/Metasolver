@@ -7,20 +7,72 @@ git clone https://github.com/rilianx/Metasolver.git
 
 Compilar el proyecto con el comando
 cmake .
-Correr el programa con el siguiente comando
-./BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 1 0
 
+## BSG_CLP
 
-./BSG_CLP problems/clp/benchs/BR/BR8.txt <inst_id> <min_fr> <maxtime> <alpha> <beta> <gamma> <p> <delta> <theta> <r> <fsb> <kdtree>
+```
+./BSG_CLP {OPTIONS} [instance-set]
 
-inst_id: id de la instancia
+    ********* BSG-CLP *********.
 
-min_fr: minimo volumen necesario para construir bloques
+  OPTIONS:
 
-alpha, beta, gamma, p, delta, theta, r: parametros de la funcion VCS 
+      -h, --help                        Display this help menu
+      -i[int]                           Instance
+      -f[string]                        Format: (BR, BRw, 1C)
+      --min_fr=[double]                 Minimum volume occupied by a block
+                                        (proportion)
+      -t[int], --timelimit=[int]        Timelimit
+      --seed=[int]                      Random seed
+      --alpha=[double]                  Alpha parameter
+      --beta=[double]                   Beta parameter
+      --gamma=[double]                  Gamma parameter
+      --delta=[double]                  Delta parameter
+      -p[double]                        p parameter
+      --fsb                             full-support blocks
+      --trace                           Trace
+      instance-set                      The name of the instance set
+      "--" can be used to terminate flag options and force all following
+      arguments to be treated as positional options
 
-fsb: variante full-supported
+    BSG Solver for CLP.
+```
 
-kdtree: uso de estructura kdtree
+## BSGMOP_CLP
+
+```
+  ./BSGMOP_CLP {OPTIONS} [instance-set]
+
+    ********* BSG-MOP CLP *********.
+
+  OPTIONS:
+
+      -h, --help                        Display this help menu
+      -i[int]                           Instance
+      -f[string]                        Format: (BR, BRw, 1C)
+      --min_fr=[double]                 Minimum volume occupied by a block
+                                        (proportion)
+      --maxb=[int]                      Maximum number ob generated blocks
+      -t[int], --timelimit=[int]        Timelimit
+      --seed=[int]                      Random seed
+      --alpha=[double]                  Alpha parameter
+      --beta=[double]                   Beta parameter
+      --gamma=[double]                  Gamma parameter
+      --delta=[double]                  Delta parameter
+      -p[double]                        p parameter
+      --theta=[double]                  Weight of the second objective in the
+                                        greedy
+      --maxtheta=[double]               ponderation of the weight of a box for
+                                        maximizing the total weight
+      --srule=[double]                  BSGMOP selection rule (NSGA2, MIN1,
+                                        MIN2)
+      --fsb                             full-support blocks
+      --trace                           Trace
+      instance-set                      The name of the instance set
+      "--" can be used to terminate flag options and force all following
+      arguments to be treated as positional options
+
+    BSG-MOP Solver for CLP.
+```
 
 
