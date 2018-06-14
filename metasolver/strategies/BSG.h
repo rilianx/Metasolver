@@ -23,15 +23,18 @@ public:
 	/**
 	 * Constructor
 	 * @param greedy The underlying greedy algorithm
-	 * @param expander 
+	 * @param expander
 	 * @param beams the number of beams
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
 	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
-		max_level_size((max_level_size==0)? beams*beams:max_level_size),  
+		max_level_size((max_level_size==0)? beams*beams:max_level_size),
 		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
+
+
+	virtual ~BSG();
 
     virtual void set_shuffle_best_path(bool b){
         shuffle_best_path=b;
@@ -47,7 +50,7 @@ public:
 
         for(int i=0; state_action!=state_actions.end();i++){
            	if(i>=n_elite){
-        	    delete state_action->second.second; 
+        	    delete state_action->second.second;
                 state_action=state_actions.erase(state_action);
         	}else{
         	    state_action->second.first = s;
@@ -66,7 +69,7 @@ public:
 		while(!S.empty()){ delete S.front(), S.pop_front(); }
 
 	}
-	
+
 	/*
 	 * Esta funcion "duplica" el esfuerzo de la estrategia.
 	 * Si el esfuerzo es duplicado satisfactoriamente retorna true.
@@ -96,6 +99,7 @@ protected:
 		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
+		//cout << "filtered_states" << endl;
 		while(state_action!=sorted_states.end()){
 			State* s= state_action->second.first;
 			State* final_state=state_action->second.second;
@@ -106,6 +110,10 @@ protected:
 				state_action->second.first=s;
 				s->transition(*a);
 				nextS.push_back(s);
+
+		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
+
+
 			}else state_action->second.first=NULL;
 
 			//other elements are removed from the state_actions

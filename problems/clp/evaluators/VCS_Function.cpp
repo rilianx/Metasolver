@@ -19,8 +19,8 @@ using namespace std;
 namespace clp {
 
 VCS_Function::VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha, double beta,
-		double gamma, double p, double delta, double r):
-		VLossFunction (nb_boxes, dims, beta, delta, r), alpha(alpha),
+		double gamma, double p, double delta, double theta, double r, double max_theta):
+		VLossFunction (nb_boxes, dims, beta, delta, theta, r, max_theta), alpha(alpha),
 		gamma(gamma), p(p){ }
 
 VCS_Function::~VCS_Function(){
@@ -41,13 +41,14 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
     if(resL<0 || resW<0 || resH<0) return -1.0;
 
-	double loss_vol=VLossFunction::eval_action(s, a);
+	double loss_vol = VLossFunction::eval_action(s, a);
 
 	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
 
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
-	return (loss_vol * pow(cs,alpha) * pow(n, gamma));
+	return (loss_vol * pow(cs,alpha) * pow(n,gamma) );
+	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
 }
 
 double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){

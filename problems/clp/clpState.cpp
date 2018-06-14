@@ -25,12 +25,13 @@ void clpState::get_actions(list< Action* >& actions) const{
 
     const Space* sp=NULL;
 
-   // cout << valid_blocks.size() << endl;
+    //cout << valid_blocks.size() << endl;
 
 	while(cont->spaces->size()>0 && actions.size()==0){
-		//cout << "spaces:" << cont.spaces->size() << endl;
+
 
 	    sp=&cont->spaces->top();
+	    //cout << "spaces:" << cont->spaces->size() << endl;
 
 		for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
 			if(**it <= sp->getDimensions()) actions.push_back(new clpAction(**it,*sp));
@@ -169,38 +170,40 @@ long rand(long seed)
 double clpState::weight_of_allboxes=0.0;
 
 
-clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
+clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f){
+
+  clpState::weight_of_allboxes=0.0;
 
 	ifstream in(file.c_str());
 	string line;
-	if(f==clpState::BR)
+	if(f==clpState::BR || f==clpState::BRw){
 		getline(in,line); //number of instances
+	}
 
 	clpState *s=NULL;
 
 	for(int inst=0;inst<=i; inst++){
-
 		string line;
 
-		if(f==clpState::BR)
+		if(f==clpState::BR || f==clpState::BRw){
 			getline(in, line ); //n_inst best_sol?
+		}
 
 		getline(in, line); //L W H
-
 
 		if(inst==i){
 			std::stringstream ss(line);
 			long l,w,h;
 			ss >> l >> w >> h;
+			cout << l << " " <<  w << " " << h << endl;
+			if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
-			cout << l << "," << w << "," << h << endl;
-			cout << "Vmax:" << l*w*h << endl;
 		}
 
 		if(f==clpState::_1C){
 			getline(in, line );
 			std::stringstream ss1(line);
-			ss1 >> clpState::weight_of_allboxes ;
+			ss1 >> clpState::weight_of_allboxes;
 		}
 
 
@@ -220,38 +223,45 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 		for(int j=0;j<nb_types;j++){
 			getline(in, line );
 
+
 			int n, id;
 			long l,h,w;
 			double weight = 1.0;
+			double vol;
 			bool rot1, rot2, rot3;
 			std::stringstream ss1(line);
 
-			if(f==clpState::BR)
+			if(f==clpState::BR){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
-			else if(f==clpState::_1C){
+				vol=l*h*w;
+			}if(f==clpState::BRw){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
+				vol=l*h*w;
+			}else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
+				ll*=10; ww*=10; hh*=10;
 				l = ceil(ll);
 				w = ceil(ww);
 				h = ceil(hh);
+				vol=ll*hh*ww;
 			}
 
 
 
 			if(inst==i){
-				if(f==clpState::BR) weight= (double) rand()/(double) RAND_MAX;
+
 				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
-				//cout << *boxt << endl;
-				//cout << weight << " x " << n <<  endl;
-				if (f==clpState::BR) clpState::weight_of_allboxes += weight*(double) n;
+
+				if (f==clpState::BR || f==clpState::BRw) clpState::weight_of_allboxes += weight*(double) n;
 
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o)){
 						if(!Block::FSB)
-							s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o));
+							s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o, vol));
 						else
-							s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o));
+							s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o, vol));
 					}
 				}
 				//cout << "Wmax:" << clpState::weight_of_allboxes << endl;
@@ -259,6 +269,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, int f){
 		}
 
 	}
+
 
 	s->general_block_generator(min_fr, max_bl, *s->cont);
 

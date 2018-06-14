@@ -1,0 +1,15 @@
+[base]
+test_instances = instances.txt
+mintime = 0.0001
+maxtime = 500
+factors = 1 0.833 0.665 0.5 0.2 0.1
+sig_gain = 1.2
+max_seeds = 1
+min_seeds = 1
+algo_names = clp_ann 
+
+[clp_ann]
+exec = "/home/ignacio/clp/Metasolver/CLP_GENSOLV" 
+params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/train_03_3200/
+outputpos_times = 0
+outputpos_boxes = 0

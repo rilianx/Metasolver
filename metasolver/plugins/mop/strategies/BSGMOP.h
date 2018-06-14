@@ -10,11 +10,12 @@
 #define PLUGINS_MOP_BSGMOP_H_
 
 #include <list>
-#include "../../../SearchStrategy.h"
-#include "../../../strategies/BSG.h"
+#include "SearchStrategy.h"
+#include "BSG.h"
+#include <vector>
 
 using namespace std;
-namespace clp {
+namespace metasolver {
 
 /*
 struct sort {
@@ -31,6 +32,9 @@ struct sort {
 
 class BSG_MOP : public BSG {
 public:
+
+   enum sel_rule{NSGA2, MIN1, MIN2};
+
 	/**
 	 * Constructor
 	 * @param greedy The underlying greedy algorithm
@@ -39,12 +43,13 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG_MOP(SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
-		BSG(greedy, beams, p_elite, max_level_size){
+	BSG_MOP(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0,
+			bool oriented_greedy=false, sel_rule rule=NSGA2) :
+		BSG(evl, greedy, beams, p_elite, max_level_size), oriented_greedy(oriented_greedy), rule(rule){
 
 	}
 
-	virtual ~BSG_MOP();
+    virtual ~BSG_MOP();
 
 	/**
 	 * Performs an iteration of the strategy
@@ -87,15 +92,18 @@ public:
 
 
 
+//	void function_sort(list< pair<pair<State*, State*>,double>>& crowding_list,int funtion);
 
 	/**
 	 * TODO: the states in frontier are sorted by crowding distance and the best n1
 	 * are inserted into filtered_states
 	 */
-	void filter_crowding_distance (list< pair<State*, State*> >& frontera, list< pair<State*,State*> >& filtered_states, int n);
+	void filter_crowding_distance (list< pair<State*,State*> >& frontera, int n);
 	//aqui suceda la magia del sur
 
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
+
+	bool oriented_greedy;
 
 private:
 
@@ -105,9 +113,11 @@ private:
 
     //estados y caminos del beam para no perder soluciones
     map< pair<double, double>, pair<State*, State*> > state_actions;
-
+	void select_coeff(vector<double>& coeff);
 	bool update(map< pair<double, double>, State*>& NDS, State& state_copy, double valuef1, double valuef2);
-	void select_coeff(list<double>& coeff, int n);
+
+	sel_rule rule;
+
 };
 
 

@@ -4,7 +4,6 @@
 set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
-lib
 lib/bullet-2.80/src
 metasolver
 metasolver/strategies/
@@ -13,6 +12,7 @@ problems/clp/objects2
 problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
+problems/clp/plugins/ga
 metasolver/plugins/mop/strategies/
 )
 
@@ -36,59 +36,74 @@ LINK_LIBRARIES(
 
 ADD_LIBRARY(
 bsg
-metasolver/SearchStrategy.cpp  
+metasolver/SearchStrategy.cpp
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
-metasolver/strategies/Greedy.cpp  
+metasolver/strategies/Greedy.cpp
 )
 
-#ADD_LIBRARY(
-#bsg_mop
-#metasolver/plugins/mop/strategies/BSGMOP.cpp
-#)
+ADD_LIBRARY(
+bsg_mop
+ metasolver/plugins/mop/strategies/BSGMOP.cpp
+)
+
+ADD_LIBRARY(
+nsga2
+ metasolver/plugins/mop/strategies/Chromosome.cpp
+ metasolver/plugins/mop/strategies/NSGA2.cpp
+ problems/clp/plugins/ga/clp_chromosome.cpp
+)
 
 ADD_LIBRARY(
 clp
-problems/clp/containers/AABBContainer.cpp 
-problems/clp/containers/AABBTree.cpp 
-problems/clp/evaluators/VCS_Function.cpp 
-problems/clp/evaluators/VLossFunction.cpp 
-problems/clp/objects2/AABB.cpp 
-problems/clp/objects2/Block.cpp 
-problems/clp/objects2/BoxShape.cpp 
+problems/clp/containers/AABBContainer.cpp
+problems/clp/containers/AABBTree.cpp
+problems/clp/evaluators/VCS_Function.cpp
+problems/clp/evaluators/VLossFunction.cpp
+problems/clp/objects2/AABB.cpp
+problems/clp/objects2/Block.cpp
+problems/clp/objects2/BoxShape.cpp
 problems/clp/objects2/Space.cpp
 problems/clp/objects2/SpaceSet.cpp
 problems/clp/objects2/Block_fsb.cpp
-problems/clp/clpState.cpp 
+problems/clp/clpState.cpp
 )
 
 ADD_LIBRARY(
 clp_kdtree
-problems/clp/plugins/kdtree/clpStatekd.cpp 
-problems/clp/plugins/kdtree/kdNode.cpp 
-problems/clp/plugins/kdtree/BlockSet.cpp 
+problems/clp/plugins/kdtree/clpStatekd.cpp
+problems/clp/plugins/kdtree/kdNode.cpp
+problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
 
-ADD_LIBRARY(Catch INTERFACE)
-target_include_directories(Catch INTERFACE lib)
 
-add_executable(my_test 
-problems/clp/test01.cpp)
 
-target_link_libraries(my_test Catch)
+ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
+ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
+ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
+ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
+ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
+ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
+ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
+
+target_link_libraries(BSG_CLP bsg clp clp_kdtree)
+target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
+target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
+target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
+target_link_libraries(NSGA_CLP bsg clp nsga2)
+
+target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
 enable_testing()
-add_test(NAME MyAwesomeTest COMMAND my_test)
 
+add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
+add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
 
-
-ADD_EXECUTABLE(CLP2017 problems/clp/main_clp.cpp)
-#ADD_EXECUTABLE(CLP_MOP problems/clp/test_clp_mop.cpp)
-
-target_link_libraries(CLP2017 bsg clp clp_kdtree)
-#target_link_libraries(CLP_MOP bsg bsg_mop clp)
- 
 
 ENDIF()
 

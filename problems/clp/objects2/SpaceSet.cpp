@@ -16,7 +16,6 @@ using namespace metasolver;
 
 namespace clp{
 
-bool SpaceSet::random_spaces = false;
 
 void SpaceSet::crop_volume(const AABB& volume, const Vector3& cont, const Vector3& min_dim){
 	list<const Space*> intersected_objects = get_intersected_objects(volume);
@@ -79,34 +78,12 @@ const Space& SpaceSet::top() const{
 	return sp;
 }*/
 
+
 const Space& SpaceSet::top() const{
 
-	//generar corner aleatorio
-	bool corner[3]={rand()%2,rand()%2,rand()%2};
-
-	//se recorre el mapa hasta encontrar el primer espacio
-	//con anchor_corner = corner
-	int min_dist=1000;
-	long min_vol=216000000;
-
-	for (auto &it : data){
-
-		int dist = it.get_manhattan_distance(cont,corner);
-		if(dist < min_dist || (dist==min_dist && it.getVolume()<min_vol)){
-			min_dist=dist;
-			marked=&it;
-			min_vol=it.getVolume();
-		}
-
-		if(!random_spaces || (it.get_anchor()[0]==corner[0] &&
-				it.get_anchor()[1]==corner[1] &&
-				it.get_anchor()[2]==corner[2]))
-			break;
-
-	}
-
 	data_it = data.begin();
-    if(&(*data_it) == marked) data_it++;
+	marked=&(*data_it);
+    data_it++;
 	return *marked;
 }
 

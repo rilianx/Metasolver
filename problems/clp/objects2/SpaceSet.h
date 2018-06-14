@@ -34,8 +34,6 @@ class SpaceSet : public AABBContainer<Space> {
 public:
 
 
-	static bool random_spaces;
-
 	SpaceSet (Vector3& cont ) : cont(cont), marked(NULL) { }
 
 	SpaceSet (const AABBContainer<Space>& a, Vector3& cont) : AABBContainer<Space>(), cont(cont), marked(NULL) {

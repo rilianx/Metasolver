@@ -29,7 +29,7 @@ class clpState;
 class clpAction : public Action{
 public:
 	clpAction(const Block& block, const Space& space) : block(block), space(space) { }
-	
+
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
 	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
@@ -46,7 +46,7 @@ public:
 
     static bool left;
 
-    enum Format{BR, _1C};
+    enum Format{BR, _1C, BRw};
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
@@ -66,17 +66,27 @@ public:
 
 	virtual State* create_neighbor(State* s0);
 
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, int f);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f);
 
 	virtual double get_value() const{
-		return ((double) cont->getOccupiedVolume()/(double) cont->getVolume());
+		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
 	}
 
 	virtual double get_value2() const{
 		//return 0.0;
-		return cont->getTotalWeight() / weight_of_allboxes;
+		return  round((cont->getTotalWeight() / weight_of_allboxes)*10000.0)/10000.0;
 	}
 
+	static bool height_sort(const Action* a1, const Action* a2){
+		const clpAction* ca1 = dynamic_cast<const clpAction*> (a1);
+		const clpAction* ca2 = dynamic_cast<const clpAction*> (a2);
+
+		if(ca1->space.get_location(ca1->block).getZ() < ca2->space.get_location(ca2->block).getZ())
+			return true;
+		return false;
+
+
+	}
 
 	virtual void get_actions(list< Action* >& actions) const;
 
@@ -84,7 +94,7 @@ public:
 	* Rearranges the elements in the path pseudo-randomly
 	*/
 	virtual int shuffle_path();
-	
+
 
 	int get_n_valid_blocks() {return valid_blocks.size();}
 
@@ -96,6 +106,9 @@ public:
 	virtual void print() {
 		cont->MatLab_print();
 	}
+
+
+	static double weight_of_allboxes;
 
 protected:
 
@@ -144,13 +157,14 @@ private:
 	//menor dimension de las cajas restantes
 	Vector3 mindim;
 
-	static double weight_of_allboxes;
+
+
 
 };
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, int i=clpState::BR);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR);
 
 } /* namespace clp */
 
