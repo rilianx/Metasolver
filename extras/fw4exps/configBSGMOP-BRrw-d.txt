@@ -6,12 +6,20 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = bsg-mop-BRrw-d
+algo_names = bsg-mop-BRdwtheta
 
 [bsg-mop-BRrw-d]
 tuning_param = X
 tuning_values = -1.0 0.0 0.5
 exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
 params = _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --maxtheta=_X
+outputpos_times = 0
+outputpos_boxes = 0
+
+[bsg-mop-BRdwtheta]
+tuning_param = X
+tuning_values = 0.25 0.5 0.75 1.0
+exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
+params = _INSTANCE -t _MAXTIME -f BRw --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --maxtheta=0.0 --theta=_X
 outputpos_times = 0
 outputpos_boxes = 0
