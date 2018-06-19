@@ -5,6 +5,8 @@
  *      Author: ignacio
  */
 
+#include<vector>
+
 #ifndef AABBCONTAINER_AABBLIST_H_
 #define AABBCONTAINER_AABBLIST_H_
 
