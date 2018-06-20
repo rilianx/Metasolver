@@ -191,8 +191,21 @@ int main(int argc, char** argv){
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();
     it--;
     it--;
-    dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();;*/
+    dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();*/
+/*
+    AABBContainer<AABB>* blocks = dynamic_cast<const clpState*>(pareto.begin()->second)->cont->blocks;
+    const AABB* aabb = &blocks->top();
 
+    while(true){
+    	cout << *aabb << endl;
+    	for(auto p:aabb->getBlock()->nb_boxes)
+    		cout << *p.first << ":" << p.second << endl;
+
+
+    	if(blocks->has_next())
+    		aabb=&blocks->next();
+    	else break;
+    }*/
 
 	//dynamic_cast<const clpState*>(pareto.begin()->second)->cont->MatLab_print();
 

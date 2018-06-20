@@ -48,6 +48,10 @@ private:
 
 };
 
+inline std::ostream& operator <<(std::ostream& os, const BoxShape& v){
+	return os << "(" << v.getX() << "," << v.getY() << "," << v.getZ() << "," << v.get_weight() << ")" ;
+}
+
 } /* namespace clp */
 
 #endif /* OBJECTS_BOXSHAPE_H_ */
