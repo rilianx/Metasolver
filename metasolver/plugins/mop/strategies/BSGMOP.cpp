@@ -15,6 +15,7 @@
 
 namespace metasolver {
 
+int BSG_MOP::greedy_calls=0;
 
 BSG_MOP::~BSG_MOP(){
 
@@ -357,6 +358,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	state_copy.transition(*action);
         	delete action;
 
+        	BSG_MOP::greedy_calls++;
         	//dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(a_a.second);
         	greedy.run(state_copy, timelimit, begin_time);
 

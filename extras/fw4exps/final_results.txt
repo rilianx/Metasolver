@@ -1,69 +1,20 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-bsg-mop-BRwtheta_X0.5   0   0   0  48 1072 1597 1561 629  22   1   0   0 
-bsg-mop-BRwtheta_X0.75   0   0   1 148 1298 1599 1389 372  14   0   0   0 
-bsg-mop-BRwtheta_X1.0   0   0   9 388 1422 1598 955 193  11   1   0   0 
-bsg-mop-BRwtheta_X0.5 bsg-mop-BRwtheta_X0.75 bsg-mop-BRwtheta_X1.0 
-1.000000 1561/1597 1389/1599 955/1598 
-1.200480 629/1072 372/1298 193/1422 
-1.503759 22/48 14/148 11/388 
-2.000000 1/0 0/1 1/9 
+bsg-mop-BRdwtheta_X0.5   0   0   0  21 941 1596 1595 929  21   0   0   0 
+bsg-mop-BRdwtheta_X0.75   0   0   0  28 938 1594 1588 938  27   0   0   0 
+bsg-mop-BRdwtheta_X1.0   0   0   1  29 900 1593 1589 922  33   0   0   0 
+bsg-mop-BRdwtheta_X0.5 bsg-mop-BRdwtheta_X0.75 bsg-mop-BRdwtheta_X1.0 
+1.000000 1595/1596 1588/1594 1589/1593 
+1.200480 929/941 938/938 922/900 
+1.503759 21/21 27/28 33/29 
+2.000000 0/0 0/0 0/1 
 5.000000 0/0 0/0 0/0 
 10.000000 0/0 0/0 0/0 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BR/BR15.txt -i 38 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR14.txt -i 43 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR9.txt -i 0 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 43 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR14.txt -i 16 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR5.txt -i 28 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR5.txt -i 32 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR5.txt -i 37 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR13.txt -i 8 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 65 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 98 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR2.txt -i 90 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR1.txt -i 63 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 72 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR1.txt -i 71 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR14.txt -i 52 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR14.txt -i 53 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR8.txt -i 15 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR13.txt -i 31 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR13.txt -i 34 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR10.txt -i 81 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR5.txt -i 71 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR9.txt -i 57 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR9.txt -i 78 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR12.txt -i 21 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR12.txt -i 49 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR11.txt -i 1 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR2.txt -i 7 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 22 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR8.txt -i 3 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR5.txt -i 96 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR2.txt -i 13 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 93 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 0 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 36 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR11.txt -i 68 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 40 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR8.txt -i 74 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 48 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR6.txt -i 21 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 22 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR3.txt -i 71 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR6.txt -i 28 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 34 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR13.txt -i 98 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR14.txt -i 28 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR7.txt -i 62 --min_fr=1.0 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR15.txt -i 32 --min_fr=0.98 0 0 0 0 0 0 0 0 
-../../problems/clp/benchs/BR/BR12.txt -i 78 --min_fr=0.98 0 0 0 0 0 0 0 0 
 
 gains
-0.000100 1.000000 1600 0.989783 1600 0.935916 1600 0.872230 1600 
-total time: 1.000000 0.969423 0.917586 0.856643 
+0.000100 1.000000 1600 1.023297 1600 1.022017 1600 1.022619 1600 
+total time: 1.000000 1.000617 0.998778 0.999304 

@@ -105,6 +105,9 @@ public:
 
 	bool oriented_greedy;
 
+	//cuenta greedy
+	static int greedy_calls;
+
 private:
 
 	//conjunto de soluciones no dominadas

@@ -182,6 +182,8 @@ int main(int argc, char** argv){
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
     }
+
+    cout << BSG_MOP::greedy_calls << endl;
     cout << "best_volume best_weight hypervolume #nondominated_solutions" << endl;
     cout << 1.001-best_volume <<  " " << 1.001-best_weight<< " " << 1.001-hv <<  " "<<  n <<endl;
 
@@ -192,7 +194,7 @@ int main(int argc, char** argv){
     dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();;*/
 
 
-	//dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
+	//dynamic_cast<const clpState*>(pareto.begin()->second)->cont->MatLab_print();
 
 
 }
