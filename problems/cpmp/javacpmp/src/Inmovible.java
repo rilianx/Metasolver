@@ -1,7 +1,7 @@
 /*
  * 	Esta Clase fue Creada con motivo de facilitar la implementación
  * 	y representación de un container en especifico que se necesite
- * 	para el cálculo de LowerBound, Maximos, Restricciones , etc.
+ * 	para el cálculo de calcularLowerBound, Maximos, Restricciones , etc.
  *
  * */
 

@@ -294,8 +294,8 @@ int main(int argc, char** argv) {
 	args::ArgumentParser parser("********* CLP Instance Generator (and solver) *********.", "Generates a random instance and solves it.");
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> L(parser, "int", "Length of the container", {'L'});
-	args::ValueFlag<int> W(parser, "int", "Width of the container", {'W'});
-	args::ValueFlag<int> H(parser, "int", "Height of the container", {'H'});
+	args::ValueFlag<int> W(parser, "int", "width of the container", {'W'});
+	args::ValueFlag<int> H(parser, "int", "height of the container", {'H'});
 	args::ValueFlag<int> N(parser, "int", "Number of box types", {'N'});
 	args::ValueFlag<int> min_l(parser, "int", "Minimum length", {"minl"});
 	args::ValueFlag<int> min_w(parser, "int", "Minimum width", {"minw"});

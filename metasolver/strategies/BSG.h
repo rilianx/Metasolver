@@ -41,7 +41,7 @@ public:
     }
 
 	/*
-	 * Initialize the variables of the specific strategy
+	 * inicializar the variables of the specific strategy
 	 */
 	virtual void initialize (State* s=NULL){
 	    if(!s) return;

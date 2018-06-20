@@ -9,7 +9,7 @@
 
 namespace cpmp {
 
-cpmpState::cpmpState() {
+cpmpState::cpmpState(string File) {
 	// TODO Auto-generated constructor stub
 
 }

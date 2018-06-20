@@ -8,6 +8,8 @@
 #include "State.h"
 #include <functional>   // std::greater
 #include <algorithm>    // std::sort
+#include <fstream>
+#include <set>
 
 #ifndef CPMPSTATE_H_
 #define CPMPSTATE_H_
@@ -23,7 +25,7 @@ using namespace metasolver;
  * 	sencilla el cálculo del Lowerbound().
  *
  *
- * 	Calculo del GX del LowerBound en Base al Paper de Andreas Bortfeldt
+ * 	Calculo del GX del calcularLowerBound en Base al Paper de Andreas Bortfeldt
  * 	A tree search procedure for the contianer pre-marshalling problem
  * 	doi: 10.1016/j.ejor.2011.10005
  *
@@ -31,7 +33,7 @@ using namespace metasolver;
  * */
 
 class GX{
-private:
+public:
     int number;
     int demand;
     int cumulative_demand;
@@ -39,17 +41,16 @@ private:
     int cumulative_supply;
     int cumulative_demand_surplus;
 
-public:
+
     /**
      * 	Constructor de GX
      * @param number
      */
-    GX(int number) : number(number), demand(demand), cumulative_demand(cumulative_demand),
-	potential_supply(potential_supply), cumulative_supply(cumulative_supply),
-	cumulative_demand_surplus(cumulative_demand_surplus){
-
+    GX(int number) : number(number), demand(0), cumulative_demand(0),
+	potential_supply(0), cumulative_supply(0),
+	cumulative_demand_surplus(0){
     }
-}
+};
 
 
 class cpmpAction : public Action{
@@ -71,87 +72,84 @@ public:
 
 	virtual ~cpmpState();
 
-	   /**
-	     * 	Constructor que recibe el Alto y Ancho
-	     * 	Retorna una Matriz de Height x Width
-	     * 	@param Height
-	     * 	@param Width
-	     */
 
-	cpmpState(int Height , int Width) : Layout(Height, vector(Width,0)), Height(Height), Width(Width),
-			Cantidad_Movimientos(0), Total_Containers(0), Well_Placed(0), Bad_Placed(0),
-			Minimum_Bad_Placed(0), Movimientos(""), Lower_Bound(0){
+	cpmpState(const cpmpState from){
+	    height = from.height;
+	    width = from.width;
+	    layout = from.layout;
+	    cantidadMovimientos = from.cantidadMovimientos;
+	    totalContainers = from.totalContainers;
+	    bienUbicados = from.bienUbicados;
+	    malUbicados = from.malUbicados;
+	    minimoMalUbicados = from.minimoMalUbicados;
+	    movimientos = from.movimientos;
+	    lowerBound = from.lowerBound;
 	}
 
 
-	cpmpState(string File) : Cantidad_Movimientos(0), Total_Containers(0), Well_Placed(0), Bad_Placed(0),
-			Minimum_Bad_Placed(0), Movimientos(""), Lower_Bound(0){
+	cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), bienUbicados(0), malUbicados(0),
+			minimoMalUbicados(0), movimientos(""), lowerBound(0){
 
-		ifstream in(File.c_str());
-		string line;
-		getline(in,line); //number of instances
+	    totalContainers = 0 , width = 0;
 
-		std::stringstream ss(line);
-		long l,w,h;
-		ss >> l >> w >> h;
+	    //Tamano Maximo encontrado
+	    int maxHeight = 0;
+	    int primerNumeroLinea;
 
+	    string line;
 
+	    ifstream myfile;
 
+	    myfile.open(File);
 
+	    /*
+	     *  La Primera lectura del archivo se encargara de encontrar los siguientes valores.
+	     *  - Cantidad de Stacks
+	     *  - Cantidad de Containers
+	     *  - Maxima altura que hay en un Stack
+	     * */
 
-		int totalContainers = 0, width = 0;
-		int maxHeight = 0;
+	    if(myfile.is_open()) {
 
-		/*
-		BufferedReader br = null;
+            //Primero se obtiene el ancho de la Matriz
+            getline(myfile, line, ' ');
 
-		String line = "" , separador = " ";
-		String[] separada;
+            width = stoi(line);
+            //Luego se obtiene la cantidad total de Containers
+            getline(myfile, line, ' ');
 
+            totalContainers = stoi(line);
+            //Skip First Line
+            getline(myfile,line);
 
+	        while(getline(myfile,line,' ')){
+	            primerNumeroLinea = stoi(line.substr(0,line.find(' ')));
+	            if(primerNumeroLinea > maxHeight){
+                    maxHeight = primerNumeroLinea;
+                }
+	            cout << line << '\n';
+	        }
+	        myfile.close();
+	    }
+	    else{
+	        cout << "Imposible abrir el archivo";
+	    }
 
-		try{
-			br = new BufferedReader(new FileReader(File));
-			line = br.readLine();
-			separada = line.split(separador);
-			width = Integer.parseInt(separada[0]);
-			totalContainers = Integer.parseInt(separada[1]);
-			line = br.readLine();
-
-			while(line != null){
-				separada = line.split(separador);
-				if(Integer.parseInt(separada[0])> maxHeight){
-
-					maxHeight = Integer.parseInt(separada[0]);
-				}
-				line = br.readLine();
-			}
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if(br != null) {
-				try {
-					br.close();
-				}
-				catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
 
 		maxHeight = maxHeight+2;
 
+		layout = vector(maxHeight, vector(width,0));
+		height = maxHeight;
 
-		Layout = vector(maxHeight, vector(width,0));
-		Height = maxHeight;
-		Width = width;
+		myfile.open(File);
 
-		Total_Containers = totalContainers;
+		if(myfile.is_open()){
+		    getline(myfile,line);
+		}
+
+		else{
+		    cout << "No se pudo abrir el archivo";
+		}
 
 		/*
 		try{
@@ -167,7 +165,7 @@ public:
 				while(n.hasNext()){
 					if(n.hasNextInt()){
 						//System.out.println("Agregando en " + altura + " " + col);
-						Layout[altura][col] = n.nextInt();
+						layout[altura][col] = n.nextInt();
 						altura--;
 					}
 				}
@@ -192,7 +190,7 @@ public:
 		}*/
 
 
-		Initialize();
+        inicializar();
 
 	}
 
@@ -214,33 +212,33 @@ public:
 
             //Skip First Line
             Line = br.readLine();
-            //Linea Width
+            //Linea width
             Line = br.readLine();
-            int Width = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
-            //Linea Height
+            int width = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
+            //Linea height
             Line = br.readLine();
-            int Height = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
+            int height = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
             //Linea Total Containers
             Line = br.readLine();
             int Total = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
 
-            this.Layout = new int[Height][Width];
-            this.Height = Height;
-            this.Width = Width;
-            this.Cantidad_Movimientos = 0;
-            this.Total_Containers = 0;
-            this.Well_Placed = 0;
-            this.Bad_Placed = 0;
-            this.Minimum_Bad_Placed = 0;
-            this.Movimientos =  "";
-            this.Total_Containers = Total;
-            this.Lower_Bound = 0;
+            this.layout = new int[height][width];
+            this.height = height;
+            this.width = width;
+            this.cantidadMovimientos = 0;
+            this.totalContainers = 0;
+            this.bienUbicados = 0;
+            this.malUbicados = 0;
+            this.minimoMalUbicados = 0;
+            this.movimientos =  "";
+            this.totalContainers = Total;
+            this.lowerBound = 0;
 
 
-            for(int j = 0; j < Width; j++) {
+            for(int j = 0; j < width; j++) {
                 Line = br.readLine().split(Separador)[1];
                 Scanner n = new Scanner(Line);
-                int i = Height-1;
+                int i = height-1;
                 while(n.hasNext()) {
                     if(n.hasNextInt()) {
                         this.Set_Value(i, j, n.nextInt());
@@ -266,7 +264,7 @@ public:
                 }
             }
         }
-        this.Initialize();
+        this.inicializar();
     }*/
 
 
@@ -276,12 +274,12 @@ public:
      * 		El valor del container más alto.
      */
 
-    int Max_Value() {
+    int maxValue() {
         int i , j;
         int Max = 0;
-        for(i = 0; i < Height; i++) {
-            for(j = 0; j < Width; j++) {
-                if(Layout[i][j] > Max) Max = Layout[i][j];
+        for(i = 0; i < height; i++) {
+            for(j = 0; j < width; j++) {
+                if(layout[i][j] > Max) Max = layout[i][j];
             }
         }
         return Max;
@@ -290,18 +288,18 @@ public:
 
     int hashCode() {
         int h = 0;
-        int p = Max_Value();
+        int p = maxValue();
         int i , j;
-        for(i = 0; i < Height; i++) {
-            for(j = 0; j < Width; j++) {
-                h = (int) (h * p * 0.6180334 + Layout[i][j]);
+        for(i = 0; i < height; i++) {
+            for(j = 0; j < width; j++) {
+                h = (int) (h * p * 0.6180334 + layout[i][j]);
             }
         }
         return h;
     }
 
-    int getCantidad_Movimientos() {
-        return Cantidad_Movimientos;
+    int getCantidadMovimientos() {
+        return cantidadMovimientos;
     }
 
     /**
@@ -316,32 +314,23 @@ public:
       */
 
     virtual void print() const {
-         cout << "Height: " << Height << " Width: " << Width << endl;
-         System.out.println("LowerBound: " + this.Lower_Bound);
-         System.out.println("Cantidad de Movimientos: " + this.Cantidad_Movimientos);
-         System.out.println("Total de Containers: " + this.Total_Containers);
-         System.out.println("Total Bien Ubicados: " + this.Well_Placed);
-         System.out.println("Total Mal Ubicados : " + this.Bad_Placed);
-         System.out.println("Minimo de Mal Ubicados: " + this.Minimum_Bad_Placed);
-         System.out.println("Movimientos Realizados: " + this.Movimientos);
-         Show_Matrix_Only();
+         cout << "height: " << height << " width: " << width << endl;
+         cout << "Lower Bound: " << lowerBound << endl;
+         cout << "Cantidad de Movimientos: " << cantidadMovimientos << endl;
+         cout << "Total de Containers: " << totalContainers << endl;
+         cout << "Total Bien Ubicados: " << bienUbicados << endl;
+         cout << "Total Mal Ubicados: " <<  malUbicados << endl;
+         cout << "Minimo de  Mal Ubicados: " << minimoMalUbicados << endl;
+         cout << "Movimientos Realizados: " << movimientos << endl;
+        showOnlyMatrix();
      }
 
-     /**
-      * Muestra únicamente la Matriz, sin mostrar
-      * los otros parámetros asociados como el Lowerbound.
-      *
-      * @param
-      *
-      * @return
-      * 		No retorna nada
-      *
-      *  */
 
-     void Show_Matrix_Only() const {
-         for(int i = 0 ; i < Height; i++) {
-             for(int j = 0; j < Width; j++) {
-                 System.out.print(this.Layout[i][j] + "   ");
+
+     void showOnlyMatrix() const {
+         for(int i = 0 ; i < height; i++) {
+             for(int j = 0; j < width; j++) {
+                 cout << layout[i][j] << " ";
              }
              cout << endl;
          }
@@ -358,12 +347,12 @@ public:
       *		Retorna (True/False)
       * */
 
-     bool Compare_To(cpmpState& A) {
-         if (Height != A.Height || Width != A.Width) return false;
+     bool compareTo(cpmpState &A) {
+         if (height != A.height || width != A.width) return false;
          else {
-             for(int i = 0; i < Height; i++) {
-                 for(int j = 0; j < Width; j++) {
-                     if(Layout[i][j] != A.Layout[i][j]) return false;
+             for(int i = 0; i < height; i++) {
+                 for(int j = 0; j < width; j++) {
+                     if(layout[i][j] != A.layout[i][j]) return false;
                  }
              }
              return true;
@@ -380,30 +369,30 @@ public:
          * 		No Retorna Nada.
          */
 
-	void Badly_Placed_Containers() {
+	void containersMalUbicados() {
 		int Minimum = 9999;
 		int Total = 0;
 		int Local = 0;
 		int Bottom = 0;
 		int Bad = 0;
 		int aux = 9999;
-		for(int i=0; i<Width; i++) {
+		for(int i=0; i<width; i++) {
 			Local = 0;
-			Bottom = Layout[Height-1][i];
+			Bottom = layout[height-1][i];
 			Bad = 0;
 			Minimum = 9999;
-			for(int j = Height -1;j>=0;j--) {
-				if(Layout[j][i] == 0) {break;}
-				if(Layout[j][i] < Minimum ) {Minimum = Layout[j][i];}
-				if(Layout[j][i] > Bottom || Layout[j][i] > Minimum){Bad=1;}
+			for(int j = height -1;j>=0;j--) {
+				if(layout[j][i] == 0) {break;}
+				if(layout[j][i] < Minimum ) {Minimum = layout[j][i];}
+				if(layout[j][i] > Bottom || layout[j][i] > Minimum){Bad=1;}
 				if(Bad==1) {Local++;}
 			}
 			Total = Total + Local;
 			if(Local < aux) {aux = Local;}
 		}
-		Minimum_Bad_Placed = aux;
-		Bad_Placed = Total;
-		Well_Placed = Total_Containers - Total;
+		minimoMalUbicados = aux;
+		malUbicados = Total;
+		bienUbicados = totalContainers - Total;
 	}
 
     /**
@@ -414,9 +403,9 @@ public:
      * 		Retorna (True/False) dependiendo si es posible realizar el movimiento
      */
 
-    bool Possible_Movement(int CI ,int CF) {
+    bool verificarMovimiento(int CI, int CF) const {
 
-        if(Layout[0][CF-1]!= 0 || CF > Width || Layout[Height-1][CI-1] == 0) return false;
+        if(layout[0][CF-1]!= 0 || CF > width || layout[height-1][CI-1] == 0) return false;
         return true;
 
     }
@@ -425,7 +414,7 @@ public:
 
 
 	virtual State* clone() const{
-		State* st=new cpmpState(*this);
+		State* st= new cpmpState(*this);
 		return st;
 	}
 
@@ -434,11 +423,11 @@ public:
       * @return
       * 		La Matriz Copiada.
       */
-    cpmpState(cpmpState& st) : Layout(st.Layout), Height(st.Height), Width(st.Width),
-			Cantidad_Movimientos(st.Cantidad_Movimientos), Total_Containers(st.Total_Containers),
-			Well_Placed(st.Well_Placed), Bad_Placed(st.Bad_Placed),
-			Minimum_Bad_Placed(st.Minimum_Bad_Placed), Movimientos(st.Movimientos),
-			Lower_Bound(st.Lower_Bound)  {
+    cpmpState(cpmpState& st) : layout(st.layout), height(st.height), width(st.width),
+			cantidadMovimientos(st.cantidadMovimientos), totalContainers(st.totalContainers),
+			bienUbicados(st.bienUbicados), malUbicados(st.malUbicados),
+			minimoMalUbicados(st.minimoMalUbicados), movimientos(st.movimientos),
+			lowerBound(st.lowerBound)  {
      }
 
 
@@ -451,7 +440,11 @@ public:
 	/**
 	 * The value of the objective function
 	 */
-	virtual double get_value() const{ return (double) Cantidad_Movimientos;}
+	virtual double get_value() const{ return (double) cantidadMovimientos;}
+
+	virtual double get_value2() const{
+        return (lowerBound + cantidadMovimientos);
+	}
 
 	virtual void _transition(const Action& action) {
 		cpmpAction *act = dynamic_cast<cpmpAction*>(&action);
@@ -465,19 +458,19 @@ public:
         //aux = this.Copy_Matrix();
 
         while(true) {
-            if(rowi+1 == Height || Layout[rowi][CI-1]!= 0) break;
+            if(rowi+1 == height || layout[rowi][CI-1]!= 0) break;
             rowi++;
         }
         while(true) {
-            if(rowf+1 == Height || Layout[rowf+1][CF-1] != 0) break;
+            if(rowf+1 == height || layout[rowf+1][CF-1] != 0) break;
             rowf++;
         }
 
-        Layout[rowf][CF-1] = Layout[rowi][CI-1];
-        Layout[rowi][CI-1] = 0;
-        Movimientos = Movimientos + "\nC" + string(CI) + " -> C" + string(CF) + "";
-        Cantidad_Movimientos++;
-        Initialize();
+        layout[rowf][CF-1] = layout[rowi][CI-1];
+        layout[rowi][CI-1] = 0;
+        movimientos = movimientos + "\nC" + to_string(CI) + " -> C" + to_string(CF) + "";
+        cantidadMovimientos++;
+        inicializar();
 	}
 
     /**
@@ -488,10 +481,10 @@ public:
      * 		está bien ordenada.
      */
 
-    bool Check_Column(int Column) {
+    bool comprobarColumna(int Column) {
         int j;
-        for(j=Height-1; j>=1; j--) {
-            if(Layout[j][Column-1] < Layout[j-1][Column-1]) return false;
+        for(j=height-1; j>=1; j--) {
+            if(layout[j][Column-1] < layout[j-1][Column-1]) return false;
         }
         return true;
     }
@@ -502,11 +495,11 @@ public:
      *	No agrega repetidos en la Lista
      */
 
-    set<int, std::greater<int> > Tier_Set(){
+    set<int, std::greater<int> > getTierSet(){
     	set<int, std::greater<int> > Tier;
-    	for(int j = 0; j < Height ;j++)
-    	    for(int k = 0; k < Width ; k++)
-    	    	Tier.insert(Layout[j][k]);
+    	for(int j = 0; j < height ;j++)
+    	    for(int k = 0; k < width ; k++)
+    	    	Tier.insert(layout[j][k]);
         return Tier;
     }
 
@@ -516,8 +509,8 @@ public:
       * 	doi: 10.1016/j.ejor.2011.10005
       */
 
-     int Calculate_GX() {
-    	 set<int, std::greater<int> > Tier = Tier_Set();
+     int calcularGX() {
+    	 set<int, std::greater<int> > Tier = getTierSet();
          list<GX> GX_Items;
 
          int Iterar;
@@ -531,28 +524,28 @@ public:
          int Bottom;
          int Last_Item;
 
-         for(auto type:Tier){
-             GX Auxiliar = new GX(type);
+         for(int type:Tier){
+             GX* Auxiliar = new GX(type);
              Bad_Placed = 0;
              Supply = 0;
-             for(i = 0; i < Width; i++) {
+             for(i = 0; i < width; i++) {
                  Minimum_Stack = 9999;
                  Bad = 0;
-                 Bottom = Layout[Height-1][i];
+                 Bottom = layout[height-1][i];
                  Last_Item = Bottom;
-                 for(j = Height-1; j>=0; j--) {
-                     if(Layout[j][i] < Minimum_Stack) {Minimum_Stack = Layout[j][i];}
-                     if(Layout[j][i] > Bottom || Layout[j][i] > Minimum_Stack) {Bad=1;}
-                     if(Bad==1 && Layout[j][i] == type) {Bad_Placed++;Cumulative_Bad_Placed++;}
+                 for(j = height-1; j>=0; j--) {
+                     if(layout[j][i] < Minimum_Stack) {Minimum_Stack = layout[j][i];}
+                     if(layout[j][i] > Bottom || layout[j][i] > Minimum_Stack) {Bad=1;}
+                     if(Bad==1 && layout[j][i] == type) {Bad_Placed++;Cumulative_Bad_Placed++;}
                      if(Bad==1 && Last_Item == type) {Supply++;Cumulative_Supply++;}
-                     if(Bad==0) {Last_Item = Layout[j][i];}
+                     if(Bad==0) {Last_Item = layout[j][i];}
                  }
              }
-             Auxiliar.demand = Bad_Placed;
-             Auxiliar.cumulative_demand = Cumulative_Bad_Placed;
-             Auxiliar.potential_supply = Supply;
-             Auxiliar.cumulative_supply  = Cumulative_Supply;
-             GX_Items.push_back(Auxiliar);
+             Auxiliar->demand = Bad_Placed;
+             Auxiliar->cumulative_demand = Cumulative_Bad_Placed;
+             Auxiliar->potential_supply = Supply;
+             Auxiliar->cumulative_supply  = Cumulative_Supply;
+             GX_Items.push_back(*Auxiliar);
          }
 
          int min = -9999;
@@ -569,10 +562,10 @@ public:
       * 	LowerBound calculado
       */
 
-     int LowerBound() {
-         Badly_Placed_Containers();
-         Lower_Bound = Minimum_Bad_Placed + Bad_Placed + Calculate_GX();
-         return Lower_Bound;
+     int calcularLowerBound() {
+         containersMalUbicados();
+         lowerBound = minimoMalUbicados + malUbicados + calcularGX();
+         return lowerBound;
      }
 
      /**
@@ -580,34 +573,34 @@ public:
       * 	a la las funciones LowerBound y Badly_Placed_Containers
       */
 
-     void Initialize() {
-         LowerBound();
+     void inicializar() {
+         calcularLowerBound();
      }
 
      virtual void get_actions(list< Action* >& action) const {
-         for(int i = 1; i <= Width; i++)
-             for(int j=1; j <= Width; j++)
-                 if(i!=j && Possible_Movement(i,j))
+         for(int i = 1; i <= width; i++)
+             for(int j=1; j <= width; j++)
+                 if(i!=j && verificarMovimiento(i, j))
                  	 action.push_back(new cpmpAction(i,j));
      }
 
 
      virtual int get_lower_bound() {
-         return Lower_Bound;
+         return lowerBound;
      }
 
 
 private:
 
-	vector<vector<int> > Layout;
-    int Lower_Bound;
-    int Height, Width;
-    int Cantidad_Movimientos;
-    int Total_Containers;
-    int Well_Placed;
-    int Bad_Placed;
-    int Minimum_Bad_Placed;
-    string Movimientos;
+	vector<vector<int> > layout;
+    int lowerBound;
+    int height, width;
+    int cantidadMovimientos;
+    int totalContainers;
+    int bienUbicados;
+    int malUbicados;
+    int minimoMalUbicados;
+    string movimientos;
 
 
 

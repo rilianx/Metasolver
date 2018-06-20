@@ -70,7 +70,7 @@ public:
 
 private:
     /*
-     * Initialize a reference array by creating references into the coordinates array.
+     * inicializar a reference array by creating references into the coordinates array.
      *
      * calling parameters:
      *

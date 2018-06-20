@@ -400,7 +400,7 @@ using namespace std;
     KdNode* KdNode::createKdTree(const list<const KdData*>& lista,vector<long*>& coordinates, const long numDimensions)
     {
 
-	// Initialize and sort the reference arrays.
+	// inicializar and sort the reference arrays.
   //aqui dejaremos las pruebas con los bloques
 
     //creamos el vector que va a contener los bloques

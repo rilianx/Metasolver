@@ -4,7 +4,7 @@
  * 	sencilla el cálculo del Lowerbound().
  *
  *
- * 	Calculo del GX del LowerBound en Base al Paper de Andreas Bortfeldt
+ * 	Calculo del GX del calcularLowerBound en Base al Paper de Andreas Bortfeldt
  * 	A tree search procedure for the contianer pre-marshalling problem
  * 	doi: 10.1016/j.ejor.2011.10005
  *

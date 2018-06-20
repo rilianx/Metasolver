@@ -14,15 +14,15 @@ import java.util.*;
  * */
 public class Matrix {
 
-    private int[][] Layout;
-    private int Lower_Bound;
-    private int Height, Width;
-    private int Cantidad_Movimientos;
-    private int Total_Containers;
-    private int Well_Placed;
-    private int Bad_Placed;
-    private int Minimum_Bad_Placed;
-    private String Movimientos;
+    private int[][] layout;
+    private int lowerBound;
+    private int height, width;
+    private int cantidadMovimientos;
+    private int totalContainers;
+    private int bienUbicados;
+    private int malUbicados;
+    private int minimoMalUbicados;
+    private String movimientos;
 
     /**
      *	Constructor Natural sin Parametros
@@ -31,37 +31,37 @@ public class Matrix {
      */
 
     public Matrix() {
-        this.Layout = new int[0][0];
-        this.Height = Height;
-        this.Width = Width;
-        this.Cantidad_Movimientos = 0;
-        this.Total_Containers = 0;
-        this.Well_Placed = 0;
-        this.Bad_Placed = 0;
-        this.Minimum_Bad_Placed = 0;
-        this.Movimientos = "";
-        this.Lower_Bound = 0;
+        this.layout = new int[0][0];
+        this.height = height;
+        this.width = width;
+        this.cantidadMovimientos = 0;
+        this.totalContainers = 0;
+        this.bienUbicados = 0;
+        this.malUbicados = 0;
+        this.minimoMalUbicados = 0;
+        this.movimientos = "";
+        this.lowerBound = 0;
     }
 
 
     /**
      * 	Constructor que recibe el Alto y Ancho
-     * 	Retorna una Matriz de Height x Width
-     * 	@param Height
-     * 	@param Width
+     * 	Retorna una Matriz de height x width
+     * 	@param height
+     * 	@param width
      */
 
-    public Matrix(int Height , int Width) {
-        this.Layout = new int[Height][Width];
-        this.Height = Height;
-        this.Width = Width;
-        this.Cantidad_Movimientos = 0;
-        this.Total_Containers = 0;
-        this.Well_Placed = 0;
-        this.Bad_Placed = 0;
-        this.Minimum_Bad_Placed = 0;
-        this.Movimientos =  "";
-        this.Lower_Bound = 0;
+    public Matrix(int height , int width) {
+        this.layout = new int[height][width];
+        this.height = height;
+        this.width = width;
+        this.cantidadMovimientos = 0;
+        this.totalContainers = 0;
+        this.bienUbicados = 0;
+        this.malUbicados = 0;
+        this.minimoMalUbicados = 0;
+        this.movimientos =  "";
+        this.lowerBound = 0;
     }
 
 
@@ -110,17 +110,17 @@ public class Matrix {
         }
 
         maxHeight = maxHeight+2;
-        this.Layout = new int[maxHeight][width];
-        this.Height = maxHeight;
-        this.Width = width;
-        this.Cantidad_Movimientos = 0;
-        this.Total_Containers = 0;
-        this.Well_Placed = 0;
-        this.Bad_Placed = 0;
-        this.Minimum_Bad_Placed = 0;
-        this.Movimientos =  "";
-        this.Total_Containers = totalContainers;
-        this.Lower_Bound = 0;
+        this.layout = new int[maxHeight][width];
+        this.height = maxHeight;
+        this.width = width;
+        this.cantidadMovimientos = 0;
+        this.totalContainers = 0;
+        this.bienUbicados = 0;
+        this.malUbicados = 0;
+        this.minimoMalUbicados = 0;
+        this.movimientos =  "";
+        this.totalContainers = totalContainers;
+        this.lowerBound = 0;
 
         try{
             br = new BufferedReader(new FileReader(File));
@@ -135,7 +135,7 @@ public class Matrix {
                 while(n.hasNext()){
                     if(n.hasNextInt()){
                         //System.out.println("Agregando en " + altura + " " + col);
-                        Layout[altura][col] = n.nextInt();
+                        layout[altura][col] = n.nextInt();
                         altura--;
                     }
                 }
@@ -180,33 +180,33 @@ public class Matrix {
 
             //Skip First Line
             Line = br.readLine();
-            //Linea Width
+            //Linea width
             Line = br.readLine();
-            int Width = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
-            //Linea Height
+            int width = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
+            //Linea height
             Line = br.readLine();
-            int Height = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
+            int height = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
             //Linea Total Containers
             Line = br.readLine();
             int Total = Integer.parseInt(Line.split(Separador)[1].split(" ")[1]);
 
-            this.Layout = new int[Height][Width];
-            this.Height = Height;
-            this.Width = Width;
-            this.Cantidad_Movimientos = 0;
-            this.Total_Containers = 0;
-            this.Well_Placed = 0;
-            this.Bad_Placed = 0;
-            this.Minimum_Bad_Placed = 0;
-            this.Movimientos =  "";
-            this.Total_Containers = Total;
-            this.Lower_Bound = 0;
+            this.layout = new int[height][width];
+            this.height = height;
+            this.width = width;
+            this.cantidadMovimientos = 0;
+            this.totalContainers = 0;
+            this.bienUbicados = 0;
+            this.malUbicados = 0;
+            this.minimoMalUbicados = 0;
+            this.movimientos =  "";
+            this.totalContainers = Total;
+            this.lowerBound = 0;
 
 
-            for(int j = 0; j < Width; j++) {
+            for(int j = 0; j < width; j++) {
                 Line = br.readLine().split(Separador)[1];
                 Scanner n = new Scanner(Line);
-                int i = Height-1;
+                int i = height-1;
                 while(n.hasNext()) {
                     if(n.hasNextInt()) {
                         this.Set_Value(i, j, n.nextInt());
@@ -240,21 +240,21 @@ public class Matrix {
         int h = 0;
         int p = this.Max_Value();
         int i , j;
-        for(i = 0; i < this.Height; i++) {
-            for(j = 0; j < this.Width; j++) {
-                h = (int) (h * p * 0.6180334 + this.Layout[i][j]);
+        for(i = 0; i < this.height; i++) {
+            for(j = 0; j < this.width; j++) {
+                h = (int) (h * p * 0.6180334 + this.layout[i][j]);
             }
         }
         return h;
     }
 
-    public int getCantidad_Movimientos() {
-        return Cantidad_Movimientos;
+    public int getCantidadMovimientos() {
+        return cantidadMovimientos;
     }
 
     /**
      *	Mostrar todos los datos relativos a la configuración como su actual
-     *	Lowerbound , Cantidad de Movimientos Realizados , Secuencia de Movimientos Realizados
+     *	Lowerbound , Cantidad de movimientos Realizados , Secuencia de movimientos Realizados
      *	Y Además muestra la configuración actual.
      *
      *
@@ -264,17 +264,17 @@ public class Matrix {
      */
 
     public void Show_Matrix() {
-        System.out.println("Height: " + this.Height + " Width: " + this.Width);
-        System.out.println("LowerBound: " + this.Lower_Bound);
-        System.out.println("Cantidad de Movimientos: " + this.Cantidad_Movimientos);
-        System.out.println("Total de Containers: " + this.Total_Containers);
-        System.out.println("Total Bien Ubicados: " + this.Well_Placed);
-        System.out.println("Total Mal Ubicados : " + this.Bad_Placed);
-        System.out.println("Minimo de Mal Ubicados: " + this.Minimum_Bad_Placed);
-        System.out.println("Movimientos Realizados: " + this.Movimientos);
-        for(int i = 0 ; i < Height; i++) {
-            for(int j = 0; j < Width; j++) {
-                System.out.print(this.Layout[i][j] + " ");
+        System.out.println("height: " + this.height + " width: " + this.width);
+        System.out.println("LowerBound: " + this.lowerBound);
+        System.out.println("Cantidad de movimientos: " + this.cantidadMovimientos);
+        System.out.println("Total de Containers: " + this.totalContainers);
+        System.out.println("Total Bien Ubicados: " + this.bienUbicados);
+        System.out.println("Total Mal Ubicados : " + this.malUbicados);
+        System.out.println("Minimo de Mal Ubicados: " + this.minimoMalUbicados);
+        System.out.println("movimientos Realizados: " + this.movimientos);
+        for(int i = 0 ; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+                System.out.print(this.layout[i][j] + " ");
             }
             System.out.println();
         }
@@ -293,10 +293,10 @@ public class Matrix {
      *
      *  */
 
-    public void Show_Matrix_Only() {
-        for(int i = 0 ; i < Height; i++) {
-            for(int j = 0; j < Width; j++) {
-                System.out.print(this.Layout[i][j] + "   ");
+    public void showOnlyMatrix() {
+        for(int i = 0 ; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+                System.out.print(this.layout[i][j] + "   ");
             }
             System.out.println();
         }
@@ -314,8 +314,8 @@ public class Matrix {
      */
 
     public void Set_Value(int i , int j , int val) {
-        if(i < this.Height && j < this.Width) {
-            this.Layout[i][j] = val;
+        if(i < this.height && j < this.width) {
+            this.layout[i][j] = val;
         }
         else {
             System.out.println("Imposible");
@@ -335,12 +335,12 @@ public class Matrix {
      *		Retorna (True/False)
      * */
 
-    public boolean Compare_To(Matrix A) {
-        if (this.Height != A.Height || this.Width != A.Width) return false;
+    public boolean compareTo(Matrix A) {
+        if (this.height != A.height || this.width != A.width) return false;
         else {
-            for(int i = 0; i < this.Height; i++) {
-                for(int j = 0; j < this.Width; j++) {
-                    if(this.Layout[i][j] != A.Layout[i][j]) return false;
+            for(int i = 0; i < this.height; i++) {
+                for(int j = 0; j < this.width; j++) {
+                    if(this.layout[i][j] != A.layout[i][j]) return false;
                 }
             }
             return true;
@@ -364,23 +364,23 @@ public class Matrix {
         int Bottom = 0;
         int Bad = 0;
         int aux = 9999;
-        for(int i=0; i<this.Width; i++) {
+        for(int i=0; i<this.width; i++) {
             Local = 0;
-            Bottom = this.Layout[Height-1][i];
+            Bottom = this.layout[height-1][i];
             Bad = 0;
             Minimum = 9999;
-            for(int j = this.Height -1;j>=0;j--) {
-                if(this.Layout[j][i] == 0) {break;}
-                if(this.Layout[j][i] < Minimum ) {Minimum = this.Layout[j][i];}
-                if(this.Layout[j][i] > Bottom || this.Layout[j][i] > Minimum){Bad=1;}
+            for(int j = this.height -1;j>=0;j--) {
+                if(this.layout[j][i] == 0) {break;}
+                if(this.layout[j][i] < Minimum ) {Minimum = this.layout[j][i];}
+                if(this.layout[j][i] > Bottom || this.layout[j][i] > Minimum){Bad=1;}
                 if(Bad==1) {Local++;}
             }
             Total = Total + Local;
             if(Local < aux) {aux = Local;}
         }
-        this.Minimum_Bad_Placed = aux;
-        this.Bad_Placed = Total;
-        this.Well_Placed = this.Total_Containers - Total;
+        this.minimoMalUbicados = aux;
+        this.malUbicados = Total;
+        this.bienUbicados = this.totalContainers - Total;
 
     }
 
@@ -395,9 +395,9 @@ public class Matrix {
     public int Max_Value() {
         int i , j;
         int Max = 0;
-        for(i = 0; i < this.Height; i++) {
-            for(j = 0; j < this.Width; j++) {
-                if(this.Layout[i][j] > Max) Max = this.Layout[i][j];
+        for(i = 0; i < this.height; i++) {
+            for(j = 0; j < this.width; j++) {
+                if(this.layout[i][j] > Max) Max = this.layout[i][j];
             }
         }
         return Max;
@@ -415,7 +415,7 @@ public class Matrix {
 
     public boolean Possible_Movement(int CI ,int CF) {
 
-        if(this.Layout[0][CF-1]!= 0 || CF > this.Width || this.Layout[this.Height-1][CI-1] == 0) return false;
+        if(this.layout[0][CF-1]!= 0 || CF > this.width || this.layout[this.height-1][CI-1] == 0) return false;
         return true;
 
     }
@@ -429,19 +429,19 @@ public class Matrix {
          */
 
         public Matrix Copy_Matrix() {
-            Matrix M = new Matrix(this.Height,this.Width);
-            M.Lower_Bound = this.Lower_Bound;
-            M.Bad_Placed = this.Bad_Placed;
-            M.Cantidad_Movimientos = this.Cantidad_Movimientos;
-            M.Lower_Bound = this.Lower_Bound;
-            M.Minimum_Bad_Placed = this.Minimum_Bad_Placed;
-            M.Movimientos = this.Movimientos;
-            M.Total_Containers = this.Total_Containers;
-            M.Well_Placed = this.Well_Placed;
+            Matrix M = new Matrix(this.height,this.width);
+            M.lowerBound = this.lowerBound;
+            M.malUbicados = this.malUbicados;
+            M.cantidadMovimientos = this.cantidadMovimientos;
+            M.lowerBound = this.lowerBound;
+            M.minimoMalUbicados = this.minimoMalUbicados;
+            M.movimientos = this.movimientos;
+            M.totalContainers = this.totalContainers;
+            M.bienUbicados = this.bienUbicados;
             int i , j;
-            for(i = 0; i < this.Height; i++) {
-                for(j=0; j< this.Width; j++) {
-                    M.Layout[i][j] = this.Layout[i][j];
+            for(i = 0; i < this.height; i++) {
+                for(j=0; j< this.width; j++) {
+                    M.layout[i][j] = this.layout[i][j];
                 }
             }
             M.Initialize();
@@ -465,18 +465,18 @@ public class Matrix {
         aux = this.Copy_Matrix();
         String mov = "";
         while(true) {
-            if(rowi+1 == this.Height || this.Layout[rowi][CI-1]!= 0) break;
+            if(rowi+1 == this.height || this.layout[rowi][CI-1]!= 0) break;
             rowi++;
         }
         while(true) {
-            if(rowf+1 == this.Height || this.Layout[rowf+1][CF-1] != 0) break;
+            if(rowf+1 == this.height || this.layout[rowf+1][CF-1] != 0) break;
             rowf++;
         }
-        aux.Layout[rowf][CF-1] = aux.Layout[rowi][CI-1];
-        aux.Layout[rowi][CI-1] = 0;
+        aux.layout[rowf][CF-1] = aux.layout[rowi][CI-1];
+        aux.layout[rowi][CI-1] = 0;
         mov = mov + "\nC" + String.valueOf(CI) + " -> C" + String.valueOf(CF) + "";
-        aux.Movimientos = aux.Movimientos + mov;
-        aux.Cantidad_Movimientos++;
+        aux.movimientos = aux.movimientos + mov;
+        aux.cantidadMovimientos++;
         aux.Initialize();
         return aux;
     }
@@ -497,19 +497,19 @@ public class Matrix {
         aux = this.Copy_Matrix();
         String mov = "";
         while(true) {
-            if(rowi+1==this.Height || aux.Layout[rowi][CI-1]!=0) break;
+            if(rowi+1==this.height || aux.layout[rowi][CI-1]!=0) break;
             rowi++;
         }
         while(true) {
-            if(rowf+1==this.Height || aux.Layout[rowf+1][CF-1]!=0) break;
+            if(rowf+1==this.height || aux.layout[rowf+1][CF-1]!=0) break;
             rowf++;
         }
 
-        aux.Layout[rowf][CF-1] = aux.Layout[rowi][CI-1];
-        aux.Layout[rowi][CI-1] = 0;
+        aux.layout[rowf][CF-1] = aux.layout[rowi][CI-1];
+        aux.layout[rowi][CI-1] = 0;
         mov = "C"+String.valueOf(CF) + " -> C"+String.valueOf(CI) + " -- ";
-        aux.Movimientos = mov + aux.Movimientos;
-        aux.Cantidad_Movimientos++;
+        aux.movimientos = mov + aux.movimientos;
+        aux.cantidadMovimientos++;
         aux.Initialize();
         return aux;
 
@@ -527,8 +527,8 @@ public class Matrix {
 
     public boolean Check_Column(int Column) {
         int j;
-        for(j=this.Height-1; j>=1; j--) {
-            if(this.Layout[j][Column-1] < this.Layout[j-1][Column-1]) return false;
+        for(j=this.height-1; j>=1; j--) {
+            if(this.layout[j][Column-1] < this.layout[j-1][Column-1]) return false;
         }
         return true;
     }
@@ -552,7 +552,7 @@ public class Matrix {
         aux = this.Copy_Matrix();
         aux = aux.Traslado_Container(CI, CF);
         boolean A = this.Check_Column(CI);
-        boolean B = aux.Check_Column(CF);
+        boolean B = aux.comprobarColumna(CF);
 
         if(A == false && B == true ) return 1;
         else if(A == true && B == false) return 2;
@@ -573,9 +573,9 @@ public class Matrix {
         int i , j , k , Validador;
         for( i = this.Max_Value(); i > 0; i--) {
             Validador = 1;
-            for(j = 0; j < this.Height && Validador==1;j++) {
-                for(k = 0; k < this.Width && Validador==1; k++) {
-                    if(this.Layout[j][k] == i) {
+            for(j = 0; j < this.height && Validador==1;j++) {
+                for(k = 0; k < this.width && Validador==1; k++) {
+                    if(this.layout[j][k] == i) {
                         Tier.add(i);
                         Validador=0;
                     }
@@ -601,7 +601,7 @@ public class Matrix {
         int Minimum_Stack;
         int Bad;
         int  i ,j;
-        int Bad_Placed;
+        int malUbicados;
         int Cumulative_Bad_Placed = 0;
         int Supply;
         int Cumulative_Supply=0;
@@ -610,22 +610,22 @@ public class Matrix {
 
         for(Iterar = 0; Iterar < Tier.size(); Iterar++) {
             GX Auxiliar = new GX(Tier.get(Iterar));
-            Bad_Placed = 0;
+            malUbicados = 0;
             Supply = 0;
-            for(i = 0; i < this.Width; i++) {
+            for(i = 0; i < this.width; i++) {
                 Minimum_Stack = 9999;
                 Bad = 0;
-                Bottom = this.Layout[this.Height-1][i];
+                Bottom = this.layout[this.height-1][i];
                 Last_Item = Bottom;
-                for(j = this.Height-1; j>=0; j--) {
-                    if(this.Layout[j][i] < Minimum_Stack) {Minimum_Stack = this.Layout[j][i];}
-                    if(this.Layout[j][i] > Bottom || this.Layout[j][i] > Minimum_Stack) {Bad=1;}
-                    if(Bad==1 && this.Layout[j][i] == Tier.get(Iterar)) {Bad_Placed++;Cumulative_Bad_Placed++;}
+                for(j = this.height-1; j>=0; j--) {
+                    if(this.layout[j][i] < Minimum_Stack) {Minimum_Stack = this.layout[j][i];}
+                    if(this.layout[j][i] > Bottom || this.layout[j][i] > Minimum_Stack) {Bad=1;}
+                    if(Bad==1 && this.layout[j][i] == Tier.get(Iterar)) {malUbicados++;Cumulative_Bad_Placed++;}
                     if(Bad==1 && Last_Item == Tier.get(Iterar)) {Supply++;Cumulative_Supply++;}
-                    if(Bad==0) {Last_Item = this.Layout[j][i];}
+                    if(Bad==0) {Last_Item = this.layout[j][i];}
                 }
             }
-            Auxiliar.demand = Bad_Placed;
+            Auxiliar.demand = malUbicados;
             Auxiliar.cumulative_demand = Cumulative_Bad_Placed;
             Auxiliar.potential_supply = Supply;
             Auxiliar.cumulative_supply  = Cumulative_Supply;
@@ -649,19 +649,19 @@ public class Matrix {
 
     public int LowerBound() {
         this.Badly_Placed_Containers();
-        this.Lower_Bound = this.Minimum_Bad_Placed + this.Bad_Placed + this.Calculate_GX();
-        return this.Lower_Bound;
+        this.lowerBound = this.minimoMalUbicados + this.malUbicados + this.calcularGX();
+        return this.lowerBound;
     }
 
 
 
     /**
      * 	Inicializa los parámetros de la Matriz llamando
-     * 	a la las funciones LowerBound y Badly_Placed_Containers
+     * 	a la las funciones LowerBound y containersMalUbicados
      */
 
     public void Initialize() {
-        this.LowerBound();
+        this.calcularLowerBound();
     }
 
 
@@ -679,14 +679,14 @@ public class Matrix {
     public List<Matrix> Lista_Vecinos(List<Inmovible> Restricciones){
         List<Matrix> Vecinos = new ArrayList<>();
         int i , j;
-        for(i=1;i<=this.Width;i++) {
-            for(j=1;j<=this.Width;j++) {
+        for(i=1;i<=this.width;i++) {
+            for(j=1;j<=this.width;j++) {
                 if(i!=j) {
                     if(this.Possible_Movement(i, j)) {
                         int valid = 1;
                         Matrix aux = this.Traslado_Container(i, j);
                         for(int k = 0; k < Restricciones.size(); k++) {
-                            if(aux.Layout[Restricciones.get(k).Pos_I][Restricciones.get(k).Pos_J] != Restricciones.get(k).Valor) {
+                            if(aux.layout[Restricciones.get(k).Pos_I][Restricciones.get(k).Pos_J] != Restricciones.get(k).Valor) {
                                 valid=0;
                                 break;
                             }
@@ -701,8 +701,8 @@ public class Matrix {
 
     public List<Matrix> Lista_Vecinos(){
         List<Matrix> Vecinos = new ArrayList<>();
-        for(int i = 1; i <= this.Width; i++){
-            for(int j=1; j <= this.Width; j++){
+        for(int i = 1; i <= this.width; i++){
+            for(int j=1; j <= this.width; j++){
                 if(i!=j){
                     if(this.Possible_Movement(i,j)){
                         Matrix aux = this.Traslado_Container(i,j);
@@ -728,10 +728,10 @@ public class Matrix {
     public List<Matrix> Lista_Vecinos_Inversos(){
         List<Matrix> Vecinos = new ArrayList<>();
         int i , j;
-        for(i=1;i<=this.Width;i++) {
-            for(j=1;j<=this.Width;j++) {
+        for(i=1;i<=this.width;i++) {
+            for(j=1;j<=this.width;j++) {
                 if(i!=j) {
-                    if(this.Possible_Movement(i, j)) {
+                    if(this.verificarMovimiento(i, j)) {
                         if(this.Good_Bad_Movement(i, j) == 2 || this.Good_Bad_Movement(i, j) == 3) {
                             Matrix aux = this.Traslado_Container_Inverso(i, j);
                             Vecinos.add(aux);
@@ -755,8 +755,8 @@ public class Matrix {
 
     public boolean Container_Bien_Ubicado(int Pos_I , int Pos_J) {
         int j;
-        for(j=this.Height-1; j>Pos_I;j--) {
-            if(this.Layout[j][Pos_J] < this.Layout[j-1][Pos_J]) return false;
+        for(j=this.height-1; j>Pos_I;j--) {
+            if(this.layout[j][Pos_J] < this.layout[j-1][Pos_J]) return false;
         }
         return true;
     }
@@ -774,17 +774,17 @@ public class Matrix {
 
         int Aux;
 
-        for(Repeat = 0; Repeat < this.Width && Cont < this.Width; Repeat++) {
+        for(Repeat = 0; Repeat < this.width && Cont < this.width; Repeat++) {
             Aux = temporal.Max_Value();
-            for(int i = this.Height-1; i>=0; i--) {
-                for(int j = 0; j<this.Width;j++) {
-                    if(temporal.Layout[i][j] == Aux) {
+            for(int i = this.height-1; i>=0; i--) {
+                for(int j = 0; j<this.width;j++) {
+                    if(temporal.layout[i][j] == Aux) {
                         Cont++;
                         if(this.Container_Bien_Ubicado(i, j)) {
-                            Inmovible Auxi = new Inmovible(temporal.Layout[i][j],i,j);
+                            Inmovible Auxi = new Inmovible(temporal.layout[i][j],i,j);
                             No_Mover.add(Auxi);
                         }
-                        temporal.Layout[i][j] = 0;
+                        temporal.layout[i][j] = 0;
                     }
 
                 }
@@ -818,13 +818,13 @@ public class Matrix {
 
     public Matrix Solucion_Ordenar_Columnas() {
         Matrix Temporal = this.Copy_Matrix();
-        for(int j = 0; j < this.Width; j++) {
-            for(int i = 0; i< this.Height; i++) {
-                for(int k = i + 1; k < this.Height; k++) {
-                    if(Temporal.Layout[i][j] > Temporal.Layout[k][j]) {
-                        int aux = Temporal.Layout[i][j];
-                        Temporal.Layout[i][j] = Temporal.Layout[k][j];
-                        Temporal.Layout[k][j] = aux;
+        for(int j = 0; j < this.width; j++) {
+            for(int i = 0; i< this.height; i++) {
+                for(int k = i + 1; k < this.height; k++) {
+                    if(Temporal.layout[i][j] > Temporal.layout[k][j]) {
+                        int aux = Temporal.layout[i][j];
+                        Temporal.layout[i][j] = Temporal.layout[k][j];
+                        Temporal.layout[k][j] = aux;
                     }
                 }
             }
@@ -862,46 +862,46 @@ public class Matrix {
         float Contador = 0 , cont;
         int Promedio , Auxi;
 
-        int I_Matrix = this.Height - 1 , J_Matrix = 0;
+        int I_Matrix = this.height - 1 , J_Matrix = 0;
 
-        for(j = 0; j < this.Width; j++) {
+        for(j = 0; j < this.width; j++) {
             cont = 0;
-            for(i = this.Height - 1; i >=0; i--) {
-                if(this.Layout[i][j] != 0) {cont++;}
+            for(i = this.height - 1; i >=0; i--) {
+                if(this.layout[i][j] != 0) {cont++;}
                 else {break;}
             }
             Contador = Contador + cont;
         }
 
-        Promedio = Math.round(Contador/this.Width);
+        Promedio = Math.round(Contador/this.width);
 
-        for(i = 0; i < this.Height; i++) {
-            for(j = 0; j < this.Width; j++) {
-                Temporal.Layout[i][j] = 0;
-                Aux.Layout[i][j] = this.Layout[i][j];
+        for(i = 0; i < this.height; i++) {
+            for(j = 0; j < this.width; j++) {
+                Temporal.layout[i][j] = 0;
+                Aux.layout[i][j] = this.layout[i][j];
             }
         }
 
-        for(k = 0; k < this.Total_Containers; k++) {
+        for(k = 0; k < this.totalContainers; k++) {
             Auxi = Aux.Max_Value();
-            for(i = 0; i < this.Height; i++) {
-                for(j = 0; j < this.Width; j++) {
-                    if(Aux.Layout[i][j]==Auxi) {
-                        Aux.Layout[i][j] = 0;
-                        i = this.Height;
-                        j = this.Width;
+            for(i = 0; i < this.height; i++) {
+                for(j = 0; j < this.width; j++) {
+                    if(Aux.layout[i][j]==Auxi) {
+                        Aux.layout[i][j] = 0;
+                        i = this.height;
+                        j = this.width;
                         break;
                     }
                 }
             }
-            if(I_Matrix == this.Height-1-Promedio) {
-                I_Matrix = this.Height-1;
+            if(I_Matrix == this.height-1-Promedio) {
+                I_Matrix = this.height-1;
                 J_Matrix++;
             }
-            Temporal.Layout[I_Matrix][J_Matrix] = Auxi;
+            Temporal.layout[I_Matrix][J_Matrix] = Auxi;
             I_Matrix--;
         }
-        Temporal.Initialize();
+        Temporal.inicializar();
         return Temporal;
     }
 
@@ -928,21 +928,21 @@ public class Matrix {
      */
 
     public List<Inmovible> Get_Priority_Containers(){
-        int Max = this.Max_Value();
+        int Max = this.maxValue();
         int Cont = 0;
         boolean Valid = true;
         List<Inmovible> Lista = new ArrayList<>();
         Matrix Temporal = this.Copy_Matrix();
         for(int i = Max; i > 0 && Valid; i--) {
-            for(int j = 0; j < this.Height && Valid; j++) {
-                for(int k = 0; k < this.Width && Valid; k++) {
-                    if(Temporal.Layout[j][k] == i) {
+            for(int j = 0; j < this.height && Valid; j++) {
+                for(int k = 0; k < this.width && Valid; k++) {
+                    if(Temporal.layout[j][k] == i) {
                         Inmovible Aux = new Inmovible(i,j,k);
-                        Temporal.Layout[j][k] = 0;
+                        Temporal.layout[j][k] = 0;
                         Lista.add(Aux);
                         Cont++;
                     }
-                    if(Cont == this.Width) {
+                    if(Cont == this.width) {
                         Valid = false;
                     }
                 }
@@ -979,7 +979,7 @@ public class Matrix {
                 //Se Establece que la columna donde se apilaran las cosas es la de la restriccion
                 Drop_To = Restricciones.get(0).Pos_J;
                 int Cont = 9999;
-                for(int i = 0; i < this.Width; i++) {
+                for(int i = 0; i < this.width; i++) {
                     if(i != Drop_To && i != Max.Pos_J) {
                         if(Aux.Containers_Columna(i) < Cont) {
                             Cont = Aux.Containers_Columna(i);
@@ -996,14 +996,14 @@ public class Matrix {
             else {
                 System.out.println("CASO B");
                 int Cont = 0;
-                for(int i = 0; i < this.Width; i++) {
-                    if(this.Layout[this.Height-1][i] > Cont && i != Max.Pos_J) {
+                for(int i = 0; i < this.width; i++) {
+                    if(this.layout[this.height-1][i] > Cont && i != Max.Pos_J) {
                         Drop_To =i;
-                        Cont = this.Layout[this.Height-1][i];
+                        Cont = this.layout[this.height-1][i];
                     }
                 }
                 Cont = 9999;
-                for(int i = 0; i < this.Width; i++) {
+                for(int i = 0; i < this.width; i++) {
                     if(i != Drop_To && i != Max.Pos_J) {
                         if(Aux.Containers_Columna(i) < Cont) {
                             Cont = Aux.Containers_Columna(i);
@@ -1047,8 +1047,8 @@ public class Matrix {
 
     public int Containers_Columna(int Columna) {
         int Contador = 0;
-        for(int i = this.Height-1; i > 0; i--) {
-            if(this.Layout[i][Columna] != 0) {
+        for(int i = this.height-1; i > 0; i--) {
+            if(this.layout[i][Columna] != 0) {
                 Contador++;
             }
             else {
@@ -1070,9 +1070,9 @@ public class Matrix {
 
     public boolean On_Top_Stack(Inmovible A) {
         int Num = 0;
-        for(int i=this.Height-1; i > 0; i--) {
-            if(this.Layout[i][A.Pos_J] != 0) {
-                Num = this.Layout[i][A.Pos_J];
+        for(int i=this.height-1; i > 0; i--) {
+            if(this.layout[i][A.Pos_J] != 0) {
+                Num = this.layout[i][A.Pos_J];
             }
             else {
                 break;
@@ -1093,14 +1093,14 @@ public class Matrix {
 
     public Inmovible Max_Get(){
         Inmovible Aux = new Inmovible(0,0,0);
-        for(int i = 0; i < this.Height; i++) {
-            for(int j = 0; j < this.Width; j++) {
-                if(this.Layout[i][j] > Aux.Valor) {
-                    Aux.Valor = this.Layout[i][j];
+        for(int i = 0; i < this.height; i++) {
+            for(int j = 0; j < this.width; j++) {
+                if(this.layout[i][j] > Aux.Valor) {
+                    Aux.Valor = this.layout[i][j];
                     Aux.Pos_I = i;
                     Aux.Pos_J = j;
                 }
-                if(this.Layout[i][j] == Aux.Valor) {
+                if(this.layout[i][j] == Aux.Valor) {
                     if(i < Aux.Pos_I) {
                         Aux.Pos_I = i;
                         Aux.Pos_J = j;
@@ -1112,79 +1112,79 @@ public class Matrix {
     }
 
     public int getLower_Bound() {
-        return Lower_Bound;
+        return lowerBound;
     }
 
     public int[][] getLayout() {
-        return Layout;
+        return layout;
     }
 
     public void setLayout(int[][] layout) {
-        Layout = layout;
+        layout = layout;
     }
 
     public void setLower_Bound(int lower_Bound) {
-        Lower_Bound = lower_Bound;
+        lowerBound = lower_Bound;
     }
 
     public int getHeight() {
-        return Height;
+        return height;
     }
 
     public void setHeight(int height) {
-        Height = height;
+        height = height;
     }
 
     public int getWidth() {
-        return Width;
+        return width;
     }
 
     public void setWidth(int width) {
-        Width = width;
+        width = width;
     }
 
     public void setCantidad_Movimientos(int cantidad_Movimientos) {
-        Cantidad_Movimientos = cantidad_Movimientos;
+        cantidadMovimientos = cantidad_Movimientos;
     }
 
     public int getTotal_Containers() {
-        return Total_Containers;
+        return totalContainers;
     }
 
     public void setTotal_Containers(int total_Containers) {
-        Total_Containers = total_Containers;
+        totalContainers = total_Containers;
     }
 
     public int getWell_Placed() {
-        return Well_Placed;
+        return bienUbicados;
     }
 
     public void setWell_Placed(int well_Placed) {
-        Well_Placed = well_Placed;
+        bienUbicados = well_Placed;
     }
 
     public int getBad_Placed() {
-        return Bad_Placed;
+        return malUbicados;
     }
 
     public void setBad_Placed(int bad_Placed) {
-        Bad_Placed = bad_Placed;
+        malUbicados = bad_Placed;
     }
 
     public int getMinimum_Bad_Placed() {
-        return Minimum_Bad_Placed;
+        return minimoMalUbicados;
     }
 
     public void setMinimum_Bad_Placed(int minimum_Bad_Placed) {
-        Minimum_Bad_Placed = minimum_Bad_Placed;
+        minimoMalUbicados = minimum_Bad_Placed;
     }
 
     public String getMovimientos() {
-        return Movimientos;
+        return movimientos;
     }
 
     public void setMovimientos(String movimientos) {
-        Movimientos = movimientos;
+        movimientos = movimientos;
     }
 }
 

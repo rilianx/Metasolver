@@ -16,8 +16,8 @@ Generates a random instance and solves it.
 
       -h, --help                        Display this help menu
       -L[int]                           Length of the container
-      -W[int]                           Width of the container
-      -H[int]                           Height of the container
+      -W[int]                           width of the container
+      -H[int]                           height of the container
       -N[int]                           Number of box types
       --minl=[int]                      Minimum length
       --minw=[int]                      Minimum width

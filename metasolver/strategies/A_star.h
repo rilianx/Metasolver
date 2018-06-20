@@ -8,14 +8,29 @@
 #ifndef STRATEGIES_A_STAR_H_
 #define STRATEGIES_A_STAR_H_
 
-using namespace std;
+
+#include <SearchStrategy.h>
+#include <State.h>
+#include <queue>
 
 namespace metasolver {
 
-class A_star : SearchStrategy {
-public:
-	A_star();
-	virtual ~A_star();
+    class Compare{
+    public:
+        bool operator() (State a , State b){
+            if(a.get_value2() < b.get_value2()) return false;
+            else if(a.get_value2() == b.get_value2()){
+                if(a.get_value() < b.get_value()) return false;
+                else return true;
+            }
+        }
+    };
+
+    class A_star : SearchStrategy {
+        public:
+	        A_star();
+	    virtual
+            ~A_star();
 
 	/**
 	 * Run the strategy and return the best found value
@@ -33,7 +48,7 @@ public:
 
 		}
 
-		queue<State*> q;
+		std::priority_queue<State* , Compare> q;
 
 
 
