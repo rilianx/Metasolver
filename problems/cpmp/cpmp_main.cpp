@@ -45,6 +45,7 @@ int main(int argc, char** argv){
 	}
 
 	cpmpState s0(_file.Get());
+	s0.print();
 
 	A_star a_star;
 

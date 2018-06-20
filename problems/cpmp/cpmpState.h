@@ -70,10 +70,10 @@ namespace cpmp {
 class cpmpState : public State {
 public:
 
-	virtual ~cpmpState();
+	virtual ~cpmpState() { };
 
 
-	cpmpState(const cpmpState from){
+	cpmpState(const cpmpState& from){
 	    height = from.height;
 	    width = from.width;
 	    layout = from.layout;
@@ -87,112 +87,7 @@ public:
 	}
 
 
-	cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), bienUbicados(0), malUbicados(0),
-			minimoMalUbicados(0), movimientos(""), lowerBound(0){
-
-	    totalContainers = 0 , width = 0;
-
-	    //Tamano Maximo encontrado
-	    int maxHeight = 0;
-	    int primerNumeroLinea;
-
-	    string line;
-
-	    ifstream myfile;
-
-	    myfile.open(File);
-
-	    /*
-	     *  La Primera lectura del archivo se encargara de encontrar los siguientes valores.
-	     *  - Cantidad de Stacks
-	     *  - Cantidad de Containers
-	     *  - Maxima altura que hay en un Stack
-	     * */
-
-	    if(myfile.is_open()) {
-
-            //Primero se obtiene el ancho de la Matriz
-            getline(myfile, line, ' ');
-
-            width = stoi(line);
-            //Luego se obtiene la cantidad total de Containers
-            getline(myfile, line, ' ');
-
-            totalContainers = stoi(line);
-            //Skip First Line
-            getline(myfile,line);
-
-	        while(getline(myfile,line,' ')){
-	            primerNumeroLinea = stoi(line.substr(0,line.find(' ')));
-	            if(primerNumeroLinea > maxHeight){
-                    maxHeight = primerNumeroLinea;
-                }
-	            cout << line << '\n';
-	        }
-	        myfile.close();
-	    }
-	    else{
-	        cout << "Imposible abrir el archivo";
-	    }
-
-
-		maxHeight = maxHeight+2;
-
-		layout = vector(maxHeight, vector(width,0));
-		height = maxHeight;
-
-		myfile.open(File);
-
-		if(myfile.is_open()){
-		    getline(myfile,line);
-		}
-
-		else{
-		    cout << "No se pudo abrir el archivo";
-		}
-
-		/*
-		try{
-			br = new BufferedReader(new FileReader(File));
-			line = br.readLine();
-			line = br.readLine();
-			int col = 0;
-			while(line != null){
-				int altura = maxHeight-1;
-				Scanner n = new Scanner(line);
-				line = br.readLine();
-				n.nextInt();
-				while(n.hasNext()){
-					if(n.hasNextInt()){
-						//System.out.println("Agregando en " + altura + " " + col);
-						layout[altura][col] = n.nextInt();
-						altura--;
-					}
-				}
-				n.close();
-				col++;
-			}
-		}        catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if(br != null) {
-				try {
-					br.close();
-				}
-				catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
-
-
-        inicializar();
-
-	}
+	cpmpState(string File);
 
     /**
      * 	Constructor que recibe la Ruta del Archivo
@@ -436,18 +331,13 @@ public:
 
 
 
-
 	/**
 	 * The value of the objective function
 	 */
 	virtual double get_value() const{ return (double) cantidadMovimientos;}
 
-	virtual double get_value2() const{
-        return (lowerBound + cantidadMovimientos);
-	}
-
 	virtual void _transition(const Action& action) {
-		cpmpAction *act = dynamic_cast<cpmpAction*>(&action);
+		const cpmpAction *act = dynamic_cast<const cpmpAction*>(&action);
 		int CI=act->CI;
 		int CF=act->CF;
 
