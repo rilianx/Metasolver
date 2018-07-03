@@ -29,17 +29,30 @@ using namespace std;
 
 
 long diff(clpState& s1, clpState& s2){
+	//Obtener suma de volumenes de los bloques de ambos contenedores
+	long int unionVolume = s1.cont->blocks->top().getOccupiedVolume() + s2.cont->blocks->top().getOccupiedVolume();
+
 	const AABB& aabb = s1.cont->blocks->top();
    //s1.cont->blocks->has_next()
    //s1.cont->blocks->next()
 
 	list<const AABB*> inter = s2.cont->blocks->get_intersected_objects(aabb);
 
+	//Obtener suma de volumenes de los bloques intersectados
+	long interVolume = 0;
 	for(const AABB* b:inter){
-
+		interVolume += b->getVolume();
 	}
 
-	return 0;
+	//Obtener conjuntos de bloques
+	//Unir conjunto de bloques
+	//Intersectar conjunto de bloques
+
+	cout << "\nVolumen total de uniones: " << unionVolume << endl;
+	cout << "\nVolumen total de intersecciones: " << interVolume << endl;
+	cout << "\nResta de union e interseccion de volumenes: " << unionVolume - interVolume << endl;
+
+	return unionVolume - interVolume;
 
 }
 
