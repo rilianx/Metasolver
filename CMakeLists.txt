@@ -30,7 +30,7 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
 
 # ADD_DEFINITION(-g -pg)
 
@@ -83,7 +83,7 @@ ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(BSG_BO_CLP problems/clp/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
@@ -95,7 +95,7 @@ target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
 target_link_libraries(NSGA_CLP bsg clp nsga2)
 
-target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(BSG_BO_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
