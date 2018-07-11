@@ -9,6 +9,7 @@
 #include "kdNode.h"
 #include <map>
 #include <queue>
+#include <cmath>
 
 
 using namespace std;

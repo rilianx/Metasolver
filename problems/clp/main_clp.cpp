@@ -115,13 +115,13 @@ int main(int argc, char** argv){
 	cout << "Maxtime:" << maxtime << endl;
 
 	double r=0.0; //0.0
-    bool kdtree= false;
+    //bool kdtree= false;
 
     Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
-    if(kdtree)
-       s0 = new clpState_kd(*s0);
+    //if(kdtree)
+      // s0 = new clpState_kd(*s0);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -130,11 +130,11 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
 
-	if(kdtree){
+	/*if(kdtree){
 		kd_block::set_vcs(*vcs);
 		kd_block::set_alpha(alpha);
 		kd_block::set_alpha(p);
-	}
+	}*/
 
 	//for(int i=0;i<10000; i++)
 	//	exp->best_action(*s0);
