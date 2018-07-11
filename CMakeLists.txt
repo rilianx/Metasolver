@@ -101,9 +101,7 @@ target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
 enable_testing()
 
-add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
-add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
-
+add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
 
 ENDIF()
 
