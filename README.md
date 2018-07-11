@@ -13,7 +13,13 @@ then
      make
 
 ## BSG for CLP
-
+Description
+------
+BSG is a method based on beam search(an adaptation of a branch-and-bound 
+algorithm which expands only the most promising nodes at each level of the search tree).
+BSG explores the space to find a path from an it initial state (i.e., an empty container) 
+to some complete solution or it terminal state
+(i.e., a loading plan in which no more boxes can be loaded).
 ```
 ./BSG_CLP {OPTIONS} [instance-set]
 
