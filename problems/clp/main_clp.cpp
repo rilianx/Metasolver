@@ -161,6 +161,9 @@ int main(int argc, char** argv){
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
 	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
+	
+    cout << eval << endl;
+	
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
