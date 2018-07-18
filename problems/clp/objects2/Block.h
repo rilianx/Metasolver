@@ -99,9 +99,9 @@ public:
                     result[i][j][k] = 0;
 
         // Dimensiones del contenedor
-        long dimX = 101;
-        long dimY = 101;
-        long dimZ = 101;
+        long dimX = getL();
+        long dimY = getW();
+        long dimZ = getH();
         long subDim_l = dimX/div_x;
         long subDim_w = dimY/div_y;
         long subDim_h = dimZ/div_z;
@@ -132,7 +132,7 @@ public:
                                 (min(it->getXmax(), maxBoundX) - max(it->getXmin(), minBoundX)) *
                                 (min(it->getYmax(), maxBoundY) - max(it->getYmin(), minBoundY)) *
                                 (min(it->getZmax(), maxBoundZ) - max(it->getZmin(), minBoundZ));
-                        std::next(it);
+						std::next(it);
                     }
                 }
             }

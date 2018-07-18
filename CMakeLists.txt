@@ -1,6 +1,6 @@
 # HelloWorld is a minimal sample creating, stepping and deleting a Bullet dynamics world
 
-
+cmake_minimum_required(VERSION 3.10)
 set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
@@ -83,7 +83,7 @@ ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(BSG_BO_CLP problems/clp/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_CLPDIV problems/clp/test_diversidad.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
@@ -105,7 +105,6 @@ enable_testing()
 
 add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
 
-ENDIF()
 
 
 
