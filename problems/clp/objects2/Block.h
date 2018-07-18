@@ -88,6 +88,61 @@ public:
 		MatLab_printR();
     }
 
+	/**
+	 * Esta función...
+	 */
+	void get_volumes(long*** result, int div_x, int div_y, int div_z){
+        // Limpiando soluciones
+        for(int i = 0; i < div_x; i++)
+            for(int j = 0; j < div_y; j++)
+                for(int k = 0; k < div_z; k++)
+                    result[i][j][k] = 0;
+
+        // Dimensiones del contenedor
+        long dimX = 101;
+        long dimY = 101;
+        long dimZ = 101;
+        long subDim_l = dimX/div_x;
+        long subDim_w = dimY/div_y;
+        long subDim_h = dimZ/div_z;
+
+        long minBoundX, maxBoundX;
+        long minBoundY, maxBoundY;
+        long minBoundZ, maxBoundZ;
+
+        for(int multiX = 0; multiX < div_x; multiX++){
+            for(int multiY = 0; multiY < div_y; multiY++){
+                for(int multiZ = 0; multiZ < div_z; multiZ++){
+
+                    minBoundX = subDim_l * multiX;
+                    minBoundY = subDim_w * multiY;
+                    minBoundZ = subDim_h * multiZ;
+                    maxBoundX = subDim_l * (multiX + 1);
+                    maxBoundY = subDim_w * (multiY + 1);
+                    maxBoundZ = subDim_h * (multiZ + 1);
+
+                    AABB vol = AABB(minBoundX, minBoundY, minBoundZ,
+                            maxBoundX, maxBoundY, maxBoundZ);
+
+                    list<const AABB*> l = blocks->get_intersected_objects(vol);
+
+                    const AABB* it = l.front();
+                    while(it != NULL) {
+                        result[multiX][multiY][multiZ] +=
+                                (min(it->getXmax(), maxBoundX) - max(it->getXmin(), minBoundX)) *
+                                (min(it->getYmax(), maxBoundY) - max(it->getYmin(), minBoundY)) *
+                                (min(it->getZmax(), maxBoundZ) - max(it->getZmin(), minBoundZ));
+                        std::next(it);
+                    }
+                }
+            }
+        }
+		//AABB vol = volume(dimX/div_x,y1,z1,x2,y2,z2);
+
+		//list<const AABB*>  l = get_intersected_objects(vol);
+	}
+
+
 	map<const BoxShape*, int> nb_boxes;
 	int n_boxes;
 
