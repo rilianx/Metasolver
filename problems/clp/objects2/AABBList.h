@@ -35,19 +35,6 @@ public:
 		}
 	}
 
-	/**
-	 * Esta función...
-	 */
-	vector<long> get_volumes(int div_x, int div_y, int div_z){
-		vector<long> v(div_x*div_y*div_z);
-
-		//AABB volume(x1,y1,z1,x2,y2,z2);
-
-		//list<const AABB*>  l = get_intersected_objects(volume);
-		return v;
-
-	}
-
 	virtual const AABB* _insert(const AABB& object){
 		data.push_back(object);
 		//cout << "insert_box:" <<  data.back() << endl;

@@ -56,6 +56,29 @@ long diff(clpState& s1, clpState& s2){
 
 }
 
+// Braulio
+
+long diff2(clpState& s1, clpState& s2){
+	/*
+	long*** result = new long**[3];
+	for(int i=0;i<3;i++){
+		result[i]=new long*[3];
+		for(int j=0;j<3;j++)
+			result[i][j]=new long[3];
+	}
+
+
+	state1->cont->get_volumes(result, 3, 3, 3);
+	long vol=0;
+	for(int i=0;i<3;i++)
+		for(int j=0;j<3;j++)
+			for(int k=0;k<3;k++)
+				vol+= result[i][j][k] ;
+	cout << vol << endl;
+	cout << state1->cont->getOccupiedVolume() << endl;*/
+}
+
+
 int main(int argc, char** argv){
 
 

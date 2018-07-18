@@ -91,7 +91,7 @@ public:
 	/**
 	 * Esta función...
 	 */
-	void get_volumes(long*** result, int div_x, int div_y, int div_z){
+	void get_volumes(long*** result, int div_x, int div_y, int div_z) const{
         // Limpiando soluciones
         for(int i = 0; i < div_x; i++)
             for(int j = 0; j < div_y; j++)
@@ -126,13 +126,14 @@ public:
 
                     list<const AABB*> l = blocks->get_intersected_objects(vol);
 
-                    const AABB* it = l.front();
-                    while(it != NULL) {
-                        result[multiX][multiY][multiZ] +=
-                                (min(it->getXmax(), maxBoundX) - max(it->getXmin(), minBoundX)) *
-                                (min(it->getYmax(), maxBoundY) - max(it->getYmin(), minBoundY)) *
-                                (min(it->getZmax(), maxBoundZ) - max(it->getZmin(), minBoundZ));
-						std::next(it);
+                    for(const AABB* aabb:l){
+
+                    //const AABB* it = l.front();
+                         result[multiX][multiY][multiZ] +=
+                                (min(aabb->getXmax(), maxBoundX) - max(aabb->getXmin(), minBoundX)) *
+                                (min(aabb->getYmax(), maxBoundY) - max(aabb->getYmin(), minBoundY)) *
+                                (min(aabb->getZmax(), maxBoundZ) - max(aabb->getZmin(), minBoundZ));
+
                     }
                 }
             }
