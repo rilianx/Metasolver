@@ -9,6 +9,7 @@
 #define PLUGINS_MOP_STRATEGIES_NSGA2_H_
 
 #include <list>
+#include <vector>
 #include "Chromosome.h"
 #include "SearchStrategy.h"
 

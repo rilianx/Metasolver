@@ -30,7 +30,7 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
 
 # ADD_DEFINITION(-g -pg)
 
@@ -97,15 +97,13 @@ target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
 target_link_libraries(NSGA_CLP bsg clp nsga2)
 
-target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(BSG_BO_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
 enable_testing()
 
-add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
-add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
-
+add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
 
 ENDIF()
 

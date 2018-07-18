@@ -22,7 +22,7 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-	args::ArgumentParser parser("********* BSG-MOP CLP *********.", "BSG-MOP Solver for CLP.");
+	args::ArgumentParser parser("********* BSG-BO *********.", "BSG-BO Solver for CLP.");
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
@@ -30,14 +30,14 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _maxblocks(parser, "int", "Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
-	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Beta parameter", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
-	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
+	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter in the VCS function", {"alpha"});
+	args::ValueFlag<double> _beta(parser, "double", "Beta parameter in the VCS function", {"beta"});
+	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter in the VCS function", {"gamma"});
+	args::ValueFlag<double> _delta(parser, "double", "Delta parameter in the VCS function", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<double> _c(parser, "double", "ponderation of the density in the VCS function", {'c',"maxtheta"});
 	args::ValueFlag<double> _theta(parser, "double", "Weight of the second objective in the greedy", {"theta"});
-	args::ValueFlag<double> _maxtheta(parser, "double", "ponderation of the weight of a box for maximizing the total weight", {"maxtheta"});
-	args::ValueFlag<string> _srule(parser, "double", "BSGMOP selection rule (NSGA2, MIN1, MIN2)", {"srule"});
+	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2)", {"srule"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 		int maxtime=(_maxtime)? _maxtime.Get():100;
 		int max_blocks=(_maxblocks)? _maxblocks.Get():10000;
 
-		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, theta=0.0, maxtheta=0.0;
+		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, theta=0.0, c=0.0;
 		if(_maxtime) maxtime=_maxtime.Get();
 		if(_alpha) alpha=_alpha.Get();
 		if(_beta) beta=_beta.Get();
@@ -83,7 +83,7 @@ int main(int argc, char** argv){
 		if(_delta) delta=_delta.Get();
 		if(_p) p=_p.Get();
 		if(_theta) theta=_theta.Get();
-		if(_maxtheta) maxtheta=_maxtheta.Get();
+		if(_c) c=_c.Get();
 		if(_srule){
 			if(_srule.Get()=="NSGA2")
 				srule = BSG_MOP::NSGA2;
@@ -93,8 +93,8 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN2;
 		}
 
-		if(maxtheta==-1.0){
-			maxtheta=0.0;
+		if(c==-1.0){
+			c=0.0;
 			if(!_srule) srule = BSG_MOP::MIN1;
 		}
 
@@ -137,20 +137,20 @@ int main(int argc, char** argv){
 
 
 
-    cout << endl << "***** Creating the heuristic function VCS *****" << endl;
+    cout << endl << "***** Creating the heuristic function VCS-W *****" << endl;
     cout << "alpha: " << alpha ;
     cout << ", beta: " << beta;
     cout << ", gamma: " << gamma;
     cout << ", p: " << p;
-    cout << ", delta: " << delta << endl;
-    cout << "maxtheta: " << maxtheta << endl;
+    cout << ", delta: " << delta;
+    cout << ", c: " << c << endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, theta, 0.0, maxtheta);
+    alpha, beta, gamma, p, delta, theta, 0.0, c);
 
     SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (maxtheta>0.0), srule );
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (c>0.0), srule );
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
@@ -182,8 +182,9 @@ int main(int argc, char** argv){
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
     }
-    cout << "best_volume best_weight hypervolume #nondominated_solutions" << endl;
-    cout << 1.001-best_volume <<  " " << 1.001-best_weight<< " " << 1.001-hv <<  " "<<  n <<endl;
+		cout.precision(4);
+    cout << "Vmax\tWmax\tHV\t#sols" << endl;
+    cout << best_volume <<  "\t" << best_weight<< "\t" << hv <<  "\t" <<  n <<endl;
 
 
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();
