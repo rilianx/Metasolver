@@ -27,57 +27,77 @@ using namespace std;
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
+//Utilizado para obtener la medida de uno de los lados del area intersectada
+long place(long maxAABB, long minAABB, long maxInter, long minInter){
+	//cout << "maxAABB: " << maxAABB << "\tminAABB: " << minAABB << "\tminInter: " << minInter << "\tmaxInter: " << maxInter << endl;
+	if(maxAABB <= maxInter && minInter <= minAABB){
+		//cout << "Fuera de bloque original: " << maxAABB - minAABB << endl;
+		return maxAABB - minAABB;
+	}
+	if(maxAABB > maxInter && minInter > minAABB){
+		//cout << "Dentro de bloque original: " << maxAABB - minAABB << endl;
+		return maxInter - minInter;
+	}
+	if(maxAABB <= maxInter){
+		//cout << "maxAABB menor a maxInter: " << maxAABB - minInter << endl;
+		return maxAABB - minInter;
+	}
+	//if(maxAABB > maxInter){
+	//cout << "maxAABB mayor a maxInter: " << maxInter - minAABB << endl;
+	return maxInter - minAABB;
+	//}
+}
 
 long diff(clpState& s1, clpState& s2){
-	//Obtener suma de volumenes de los bloques de ambos contenedores
-	long int unionVolume = s1.cont->blocks->top().getOccupiedVolume() + s2.cont->blocks->top().getOccupiedVolume();
-
-	const AABB& aabb = s1.cont->blocks->top();
-   //s1.cont->blocks->has_next()
-   //s1.cont->blocks->next()
-
-	list<const AABB*> inter = s2.cont->blocks->get_intersected_objects(aabb);
-
 	//Obtener suma de volumenes de los bloques intersectados
 	long interVolume = 0;
-	for(const AABB* b:inter){
-		interVolume += b->getVolume();
+	const AABB* aabb = &s1.cont->blocks->top();
+	list<const AABB*> inter;
+	long volume = 0;
+
+	//cout << "Volumen s1: " << s1.cont->getVolume() << endl;
+	//cout << "Volumen s2: " << s2.cont->getVolume() << endl;
+	//cout << "Volumen total: " << s1.cont->getVolume() + s2.cont->getVolume() << endl;
+	//Suma de volumenes de ambos contenedores
+	while(s1.cont->blocks->has_next()){
+		inter = s2.cont->blocks->get_intersected_objects(*aabb);
+		for(const AABB* b:inter){
+			interVolume += place(aabb->getXmax(), aabb->getXmin(), b->getXmax(), b->getXmin()) * place(aabb->getYmax(), aabb->getYmin(), b->getYmax(), b->getYmin()) * place(aabb->getZmax(), aabb->getZmin(), b->getZmax(), b->getZmin());
+		}
+		aabb = &s1.cont->blocks->next();
 	}
 
-	//Obtener conjuntos de bloques
-	//Unir conjunto de bloques
-	//Intersectar conjunto de bloques
-
-	cout << "\nVolumen total de uniones: " << unionVolume << endl;
-	cout << "\nVolumen total de intersecciones: " << interVolume << endl;
-	cout << "\nResta de union e interseccion de volumenes: " << unionVolume - interVolume << endl;
-
-	return unionVolume - interVolume;
-
-}
-
-// Braulio
-
-long diff2(clpState& s1, clpState& s2){
-	/*
-	long*** result = new long**[3];
-	for(int i=0;i<3;i++){
-		result[i]=new long*[3];
-		for(int j=0;j<3;j++)
-			result[i][j]=new long[3];
+	//Obtener suma de volumenes de los bloques de ambos contenedores
+	long int simetricDifVolume = 0;
+	//Suma de volumenes del primer contenedor
+	aabb = &s1.cont->blocks->top();
+	while(s1.cont->blocks->has_next()){
+		//cout << "\nVolumenes unidos: " << aabb->getVolume() << endl;
+		simetricDifVolume += aabb->getVolume();
+		aabb = &s1.cont->blocks->next();
+		//cout << "L: " << aabb->getL()<< "\tW: " << aabb->getW() << "\tH: " << aabb->getH() << "\tVolume: " << aabb->getVolume() << endl;
 	}
 
+	//Se agregan volumenes del segundo contenedor
+	aabb = &s2.cont->blocks->top();
+	while(s2.cont->blocks->has_next()){
+		//cout << "\nVolumenes unidos: " << aabb->getVolume() << endl;
+		simetricDifVolume += aabb->getVolume();
+		aabb = &s2.cont->blocks->next();
+		//cout << "L: " << aabb->getL()<< "\tW: " << aabb->getW() << "\tH: " << aabb->getH() << "\tVolume: " << aabb->getVolume() << endl;
+	}
 
-	state1->cont->get_volumes(result, 3, 3, 3);
-	long vol=0;
-	for(int i=0;i<3;i++)
-		for(int j=0;j<3;j++)
-			for(int k=0;k<3;k++)
-				vol+= result[i][j][k] ;
-	cout << vol << endl;
-	cout << state1->cont->getOccupiedVolume() << endl;*/
+	cout << "\nVolumen uniones:\t\t" << simetricDifVolume << endl;
+
+	simetricDifVolume -= interVolume;
+
+	cout << "Volumen diferencia simetrica:\t" << simetricDifVolume << endl;
+	cout << "Volumen intersecciones:\t\t" << interVolume << endl;
+	cout << "Resta de volumenes:\t\t" << simetricDifVolume - interVolume << endl;
+
+	return simetricDifVolume - interVolume;
+
 }
-
 
 int main(int argc, char** argv){
 
