@@ -109,6 +109,8 @@ public:
 
 	virtual void print() {  }
 
+	virtual double promise() { return 0.0; }
+
 protected:
 
 	virtual void _transition(const Action& action) = 0;
