@@ -109,7 +109,27 @@ public:
 
 	virtual void print() {  }
 
+	/*
+	 * This method returns a kind of difference between the state and s to be
+	 * used by the a diversity mechanism
+	 */
+	virtual double diff(const State& s) const = 0; // {return 0;}
+
+	double diversity(list<State*>& states){
+		double min_diff=1e10;
+		for(auto s:states){
+			double d=diff(*s);
+			if(d < min_diff)
+				min_diff=d;
+
+		}
+		return min_diff;
+	}
+
+
 protected:
+
+
 
 	virtual void _transition(const Action& action) = 0;
 
@@ -118,6 +138,10 @@ protected:
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
+
+private:
+
+
 
 };
 

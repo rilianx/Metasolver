@@ -27,77 +27,7 @@ using namespace std;
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
-//Utilizado para obtener la medida de uno de los lados del area intersectada
-long place(long maxAABB, long minAABB, long maxInter, long minInter){
-	//cout << "maxAABB: " << maxAABB << "\tminAABB: " << minAABB << "\tminInter: " << minInter << "\tmaxInter: " << maxInter << endl;
-	if(maxAABB <= maxInter && minInter <= minAABB){
-		//cout << "Fuera de bloque original: " << maxAABB - minAABB << endl;
-		return maxAABB - minAABB;
-	}
-	if(maxAABB > maxInter && minInter > minAABB){
-		//cout << "Dentro de bloque original: " << maxAABB - minAABB << endl;
-		return maxInter - minInter;
-	}
-	if(maxAABB <= maxInter){
-		//cout << "maxAABB menor a maxInter: " << maxAABB - minInter << endl;
-		return maxAABB - minInter;
-	}
-	//if(maxAABB > maxInter){
-	//cout << "maxAABB mayor a maxInter: " << maxInter - minAABB << endl;
-	return maxInter - minAABB;
-	//}
-}
 
-long diff(clpState& s1, clpState& s2){
-	//Obtener suma de volumenes de los bloques intersectados
-	long interVolume = 0;
-	const AABB* aabb = &s1.cont->blocks->top();
-	list<const AABB*> inter;
-	long volume = 0;
-
-	//cout << "Volumen s1: " << s1.cont->getVolume() << endl;
-	//cout << "Volumen s2: " << s2.cont->getVolume() << endl;
-	//cout << "Volumen total: " << s1.cont->getVolume() + s2.cont->getVolume() << endl;
-	//Suma de volumenes de ambos contenedores
-	while(s1.cont->blocks->has_next()){
-		inter = s2.cont->blocks->get_intersected_objects(*aabb);
-		for(const AABB* b:inter){
-			interVolume += place(aabb->getXmax(), aabb->getXmin(), b->getXmax(), b->getXmin()) * place(aabb->getYmax(), aabb->getYmin(), b->getYmax(), b->getYmin()) * place(aabb->getZmax(), aabb->getZmin(), b->getZmax(), b->getZmin());
-		}
-		aabb = &s1.cont->blocks->next();
-	}
-
-	//Obtener suma de volumenes de los bloques de ambos contenedores
-	long int simetricDifVolume = 0;
-	//Suma de volumenes del primer contenedor
-	aabb = &s1.cont->blocks->top();
-	while(s1.cont->blocks->has_next()){
-		//cout << "\nVolumenes unidos: " << aabb->getVolume() << endl;
-		simetricDifVolume += aabb->getVolume();
-		aabb = &s1.cont->blocks->next();
-		//cout << "L: " << aabb->getL()<< "\tW: " << aabb->getW() << "\tH: " << aabb->getH() << "\tVolume: " << aabb->getVolume() << endl;
-	}
-
-	//Se agregan volumenes del segundo contenedor
-	aabb = &s2.cont->blocks->top();
-	while(s2.cont->blocks->has_next()){
-		//cout << "\nVolumenes unidos: " << aabb->getVolume() << endl;
-		simetricDifVolume += aabb->getVolume();
-		aabb = &s2.cont->blocks->next();
-		//cout << "L: " << aabb->getL()<< "\tW: " << aabb->getW() << "\tH: " << aabb->getH() << "\tVolume: " << aabb->getVolume() << endl;
-	}
-
-	cout << "\nVolumen uniones:\t\t" << simetricDifVolume << endl;
-
-	simetricDifVolume -= interVolume;
-
-	cout << "Volumen diferencia simetrica:\t" << simetricDifVolume << endl;
-	cout << "Volumen intersecciones:\t\t" << interVolume << endl;
-	cout << "Resta de volumenes:\t\t" << simetricDifVolume - interVolume << endl;
-
-	return simetricDifVolume - interVolume;
-
-}
 
 int main(int argc, char** argv){
 
@@ -216,7 +146,7 @@ int main(int argc, char** argv){
 	cout << eval  << endl;
 	const clpState* state2 = dynamic_cast<const clpState*>(gr->get_best_state());
 
-	cout << diff(*dynamic_cast<clpState*>(state1->clone()), *dynamic_cast<clpState*>(state2->clone())) << endl;
+	cout << state1->diff(*state2) << endl;
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();

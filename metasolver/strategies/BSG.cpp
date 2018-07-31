@@ -55,7 +55,7 @@ list<State*> BSG::next(list<State*>& S){
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
-            	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
+            	 cout << "[BSG] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }
 
@@ -69,18 +69,7 @@ list<State*> BSG::next(list<State*>& S){
      }
 
 
-  	// if(global::TRACE){
-
-  		/* cout << "pre_filtered" << endl;
-  		 for(auto states:state_actions)
-  			 cout << states.first<< endl;
-
-  		 cout << endl;*/
-  	 //}
-
-
   	list<State*> l=get_next_states(state_actions);
-  	//state_actions.clear();
 
 
      //siguiente generacion de estados

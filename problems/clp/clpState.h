@@ -107,6 +107,7 @@ public:
 		cont->MatLab_print();
 	}
 
+	virtual double diff(const State& s) const;
 
 	static double weight_of_allboxes;
 
@@ -117,6 +118,9 @@ protected:
 private:
 
 	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
+
+
+	long place(long maxAABB, long minAABB, long maxInter, long minInter) const;
 
 	/**
 	 * Remove the free spaces in the container that cannot

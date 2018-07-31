@@ -99,7 +99,7 @@ protected:
 		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
-		//cout << "filtered_states" << endl;
+
 		while(state_action!=sorted_states.end()){
 			State* s= state_action->second.first;
 			State* final_state=state_action->second.second;
@@ -109,6 +109,9 @@ protected:
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
+
+				if(nextS.size()>0) cout << "min_diff:" << s->diversity(nextS) << endl;
+
 				nextS.push_back(s);
 
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
