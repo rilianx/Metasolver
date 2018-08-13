@@ -28,6 +28,12 @@ namespace metasolver {
         }
     };
 
+    struct Hash{
+        size_t operator()(const State *state) const {
+            return state->hashCode();
+        }
+    };
+
     class A_star : public SearchStrategy {
         public:
 	        A_star();
@@ -37,15 +43,19 @@ namespace metasolver {
 	/**
 	 * Run the strategy and return the best found value
 	 */
+
 	virtual double run(State& s, double tl=99999.9, clock_t bt=clock()){
 
 		std::priority_queue<State* , vector<State*>, Compare> q;
 		q.push(s.clone());
 
-		while(q.size() > 0){
-			State* s = q.top() ; q.pop();
+		int cont = 0;
 
-			cout << s->get_lower_bound() << endl;
+		while(q.size() > 0){
+			State* s = q.top() ; q.pop(); cont++;
+			cout << s->hashCode() << " " << (s->get_lower_bound()+s->get_value()) << endl;
+
+			//cout << s->get_lower_bound() << endl;
 			if(s->get_lower_bound() == 0){
 				best_state = s->clone();
 				break;
@@ -53,28 +63,28 @@ namespace metasolver {
 			//Se generan todos los vecinos posibles de la Matriz Actual
 			list<Action*> actions;
 			s->get_actions(actions);
-
-
+            cout << "Se han generado " << actions.size() << "vecinos" << endl;
+            int conti = 0;
 			for(auto action:actions){
 				State* copy=s->clone();
 				copy->transition(*action);
-				//copy->print();
-				//exit(0);
 				//TODO: revisar si el nuevo estado ya fue creado anteriormente
-                if(!visited(copy))
-                	q.push(copy);
+                if(!visited(copy)) {
+                    conti++;
+					q.push(copy);
+					visitedd.insert(copy);
+				}
 			}
-
+			cout << "Se han agregado " << conti << " vecinos al mapa" << endl;
 			delete s;
 		}
-
+		//cout << "El cont es " << cont << endl;
 		return best_state->get_value();
 	}
 
-	bool visited(State* s) { return (visited.find(copy) != visited.end()); }
+	bool visited(State* s) { return (visitedd.find(s) != visitedd.end()); }
 
-	std::unordered_set<State*> visited;
-
+	std::unordered_set<State*,Hash> visitedd;
 };
 
 } /* namespace metasolver */

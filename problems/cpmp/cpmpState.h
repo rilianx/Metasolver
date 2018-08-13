@@ -7,7 +7,8 @@
 
 #include "State.h"
 #include <functional>   // std::greater
-#include <algorithm>    // std::sort
+#include <algorithm>// std::sort
+#include <vector>
 #include <fstream>
 #include <set>
 
@@ -15,6 +16,7 @@
 #define CPMPSTATE_H_
 
 using namespace metasolver;
+using std::vector;
 
 //Viendo si funciona profesor
 //Segundo test
@@ -169,7 +171,7 @@ public:
      * 		El valor del container más alto.
      */
 
-    int maxValue() {
+    int maxValue() const {
         int i , j;
         int Max = 0;
         for(i = 0; i < height; i++) {
@@ -181,7 +183,7 @@ public:
     }
 
 
-    int hashCode() {
+    virtual int hashCode() const {
         int h = 0;
         int p = maxValue();
         int i , j;
@@ -242,7 +244,8 @@ public:
       *		Retorna (True/False)
       * */
 
-     bool compareTo(cpmpState &A) {
+     virtual bool compareTo(const State &s) const  {
+         const cpmpState& A = *dynamic_cast<const cpmpState*> (&s);
          if (height != A.height || width != A.width) return false;
          else {
              for(int i = 0; i < height; i++) {
@@ -454,7 +457,7 @@ public:
 
      int calcularLowerBound() {
          containersMalUbicados();
-         lowerBound = minimoMalUbicados + malUbicados + calcularGX();
+         lowerBound = minimoMalUbicados + malUbicados;
          return lowerBound;
      }
 
@@ -482,7 +485,7 @@ public:
 
 private:
 
-	vector<vector<int> > layout;
+	vector<vector<int>> layout;
     int lowerBound;
     int height, width;
     int cantidadMovimientos;

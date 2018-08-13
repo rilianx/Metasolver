@@ -2,23 +2,23 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="Project" targetName="BSG_CLP" />
-      <config projectName="Project" targetName="clp_kdtree" />
+      <config projectName="Project" targetName="cpmp" />
       <config projectName="Project" targetName="bsg" />
       <config projectName="Project" targetName="a_star" />
       <config projectName="Project" targetName="test_BSG_CLP" />
       <config projectName="Project" targetName="bsg_mop" />
       <config projectName="Project" targetName="CLP_gen" />
       <config projectName="Project" targetName="BSG_CLP_ANN" />
+      <config projectName="Project" targetName="nsga2" />
       <config projectName="Project" targetName="CLP_GENSOLV" />
       <config projectName="Project" targetName="A_CPMP" />
       <config projectName="Project" targetName="NSGA_CLP" />
       <config projectName="Project" targetName="clp" />
       <config projectName="Project" targetName="BSGMOP_CLP" />
       <config projectName="Project" targetName="test_BSGMOP_CLP" />
-      <config projectName="Project" targetName="nsga2" />
+      <config projectName="Project" targetName="clp_kdtree" />
       <config projectName="Project" targetName="testEvalMOP" />
-      <config projectName="Project" targetName="cpmp" />
+      <config projectName="Project" targetName="BSG_CLP" />
       <config projectName="Project" targetName="base" />
     </generated>
   </component>
@@ -29,23 +29,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2695fad8-b7e5-4179-b009-0b7d66f3f407" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/bullet-2.80/Extras/AllBulletDemosOSX/AllBulletDemos.xcodeproj/zakariya.perspectivev3" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bullet-2.80/Extras/AllBulletDemosOSX/AllBulletDemos.xcodeproj/zakariya.perspectivev3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/bullet-2.80/configure.ac" beforeDir="false" afterPath="$PROJECT_DIR$/lib/bullet-2.80/configure.ac" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metasolver/SearchStrategy.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/SearchStrategy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libbase.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libbase.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libbsg.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libbsg.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libclp.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libclp.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libclp_kdtree.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libclp_kdtree.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metasolver/State.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/State.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/metasolver/strategies/A_star.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/strategies/A_star.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metasolver/strategies/BSG.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/strategies/BSG.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/clp/plugins/ann/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/problems/clp/plugins/ann/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/clp/plugins/ann/gen_ran_inst_solve.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/problems/clp/plugins/ann/gen_ran_inst_solve.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/clp/plugins/ga/clp_chromosome.h" beforeDir="false" afterPath="$PROJECT_DIR$/problems/clp/plugins/ga/clp_chromosome.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/clp/plugins/kdtree/kdNode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/problems/clp/plugins/kdtree/kdNode.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/clp/plugins/kdtree/kdNode.h" beforeDir="false" afterPath="$PROJECT_DIR$/problems/clp/plugins/kdtree/kdNode.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/GX.java" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/GX.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/Inmovible.java" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/Inmovible.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/Matrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/MatrixComparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/javacpmp/src/MatrixComparator.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,11 +51,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="A_star.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="A_star.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="2" selection-start-column="2" selection-end-column="2" />
+            <state relative-caret-position="294">
+              <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
               <folding>
                 <element signature="e#135#162#0" expanded="true" />
               </folding>
@@ -70,20 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="A_star.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
+      <file leaf-file-name="State.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/metasolver/State.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cpmpState.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="16" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
+            <state relative-caret-position="2360">
+              <caret line="118" column="5" selection-start-line="118" selection-start-column="5" selection-end-line="118" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -91,20 +75,11 @@
       <file leaf-file-name="cpmpState.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6018">
-              <caret line="354" column="61" selection-start-line="354" selection-start-column="61" selection-end-line="354" selection-end-column="61" />
+            <state relative-caret-position="5720">
+              <caret line="355" column="9" selection-start-line="355" selection-start-column="9" selection-end-line="355" selection-end-column="9" />
               <folding>
                 <element signature="e#78#96#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data2.dat" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -113,11 +88,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>vector</find>
-      <find>clone</find>
-      <find>verificarmov</find>
-      <find>get_valu</find>
+      <find>compa</find>
+      <find>hashcod</find>
+      <find>maxva</find>
+      <find>cpmpState</find>
+      <find>lowerbo</find>
+      <find>lowerboun</find>
+      <find>low</find>
+      <find>inicia</find>
+      <find>cout</find>
+      <find>show</find>
+      <find>calcularlowe</find>
+      <find>containe</find>
+      <find>containersmal</find>
+      <find>sho</find>
+      <find>print</find>
+      <find>lower</find>
+      <find>cons</find>
+      <find>compare</find>
+      <find>lowerbound</find>
+      <find>compareto</find>
+      <find>maxv</find>
+      <find>hash</find>
       <find>get_value</find>
+      <find>lowerb</find>
+      <find>hashco</find>
+      <find>hashcode</find>
+      <find>getva</find>
+      <find>get_va</find>
+      <find>get_action</find>
+      <find>neightb</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -127,9 +127,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat" />
+        <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" />
+        <option value="$PROJECT_DIR$/metasolver/State.h" />
         <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.h" />
         <option value="$PROJECT_DIR$/metasolver/strategies/A_star.h" />
-        <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" />
       </list>
     </option>
   </component>
@@ -142,10 +143,10 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="width" value="1295" />
-    <option name="height" value="1049" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="-8" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -171,6 +172,17 @@
               <item name="metasolver" type="462c0819:PsiDirectoryNode" />
               <item name="strategies" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Metasolver" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metasolver" type="462c0819:PsiDirectoryNode" />
+              <item name="problems" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Metasolver" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metasolver" type="462c0819:PsiDirectoryNode" />
+              <item name="problems" type="462c0819:PsiDirectoryNode" />
+              <item name="cpmp" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -182,7 +194,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.deploy.options" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -252,35 +264,46 @@
       <workItem from="1528729611322" duration="3139000" />
       <workItem from="1529440277994" duration="10522000" />
       <workItem from="1529500754074" duration="76000" />
-      <workItem from="1529505326762" duration="17000" />
+      <workItem from="1529505326762" duration="540000" />
+      <workItem from="1529506236736" duration="816000" />
+      <workItem from="1529510831579" duration="16000" />
+      <workItem from="1529510907683" duration="1092000" />
+      <workItem from="1531191361727" duration="25000" />
+      <workItem from="1533571590874" duration="1781000" />
+      <workItem from="1533676652344" duration="7273000" />
+      <workItem from="1533686157315" duration="1508000" />
+      <workItem from="1533740926444" duration="6632000" />
+      <workItem from="1534111315741" duration="1150000" />
+      <workItem from="1534173372376" duration="679000" />
+      <workItem from="1534174301493" duration="1015000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16709000" />
+    <option name="totallyTimeSpent" value="39219000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-6" y="0" width="781" height="830" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12425645" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2580645" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="CMake" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="CMake" order="12" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.32893288" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32763532" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="File Transfer" order="7" weight="0.3278867" />
+      <window_info anchor="bottom" id="File Transfer" order="8" visible="true" weight="0.1994302" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32893288" />
     </layout>
   </component>
@@ -295,16 +318,198 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp</url>
-          <line>12</line>
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="2" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3111">
+          <caret line="183" column="12" selection-start-line="183" selection-start-column="12" selection-end-line="183" selection-end-column="12" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/State.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2074">
+          <caret line="122" column="36" selection-start-line="122" selection-start-column="36" selection-end-line="122" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
+          <folding>
+            <element signature="e#135#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3111">
+          <caret line="183" column="12" selection-start-line="183" selection-start-column="12" selection-end-line="183" selection-end-column="12" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/State.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2074">
+          <caret line="122" column="36" selection-start-line="122" selection-start-column="36" selection-end-line="122" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+          <folding>
+            <element signature="e#135#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+          <folding>
+            <element signature="e#135#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="72" column="25" lean-forward="true" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+          <folding>
+            <element signature="e#135#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2584">
+          <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -458,30 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" selection-start-column="2" selection-end-column="2" />
-          <folding>
-            <element signature="e#135#162#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/problems/cpmp/javacpmp/src/MatrixComparator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -489,20 +670,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/SearchStrategy.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/SearchStrategy.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="104" column="2" selection-start-line="104" selection-start-column="2" selection-end-line="104" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metasolver/State.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2360">
+          <caret line="118" column="5" selection-start-line="118" selection-start-column="5" selection-end-line="118" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6018">
-          <caret line="354" column="61" selection-start-line="354" selection-start-column="61" selection-end-line="354" selection-end-column="61" />
+        <state relative-caret-position="5720">
+          <caret line="355" column="9" selection-start-line="355" selection-start-column="9" selection-end-line="355" selection-end-column="9" />
           <folding>
             <element signature="e#78#96#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.cpp">
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="16" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
+        <state relative-caret-position="294">
+          <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
+          <folding>
+            <element signature="e#135#162#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

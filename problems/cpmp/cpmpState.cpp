@@ -52,7 +52,7 @@ cpmpState::cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), 
             if(primerNumeroLinea > maxHeight){
                 maxHeight = primerNumeroLinea;
             }
-            cout << line << '\n';
+            //cout << line << '\n';
         }
         myfile.close();
     }
@@ -79,10 +79,10 @@ cpmpState::cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), 
 			std::string token;
 			getline(ss,token, ' ');
 			while(getline(ss,token, ' ')){
-				//System.out.println("Agregando en " + altura + " " + col);
 				layout[altura][col] = stoi(token);
 				altura--;
 			}
+
 
 			col++;
 		}
@@ -91,10 +91,7 @@ cpmpState::cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), 
 	}else{
 	    cout << "No se pudo abrir el archivo";
 	}
-
-
     inicializar();
-
 }
 
 } /* namespace cpmp */

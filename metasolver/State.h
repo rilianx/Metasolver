@@ -118,6 +118,14 @@ public:
 		return 0.0;
 	}
 
+	virtual bool compareTo(const State & b) const = 0;
+
+	virtual int hashCode() const { return hashCode();}
+
+	virtual bool operator == (const State & state) const
+	{
+        return compareTo(state);
+	}
 
 
 protected:
