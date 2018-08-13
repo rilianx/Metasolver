@@ -34,6 +34,12 @@ namespace metasolver {
         }
     };
 
+    struct is_equal{
+        size_t operator()(const State *s1, const State *s2) const {
+        	return s1->compareTo(*s2);
+        }
+    };
+
     class A_star : public SearchStrategy {
         public:
 	        A_star();
@@ -48,7 +54,8 @@ namespace metasolver {
 
 		std::priority_queue<State* , vector<State*>, Compare> q;
 		q.push(s.clone());
-
+		visitedd.insert(&s);
+		cout << endl << s.hashCode() << endl;
 		int cont = 0;
 
 		while(q.size() > 0){
@@ -68,11 +75,15 @@ namespace metasolver {
 			for(auto action:actions){
 				State* copy=s->clone();
 				copy->transition(*action);
+				copy->print();
+				cout << endl << copy->hashCode() << endl;
 				//TODO: revisar si el nuevo estado ya fue creado anteriormente
                 if(!visited(copy)) {
                     conti++;
 					q.push(copy);
 					visitedd.insert(copy);
+				}else{
+					cout << "ya visitado" << endl;
 				}
 			}
 			cout << "Se han agregado " << conti << " vecinos al mapa" << endl;
@@ -84,7 +95,7 @@ namespace metasolver {
 
 	bool visited(State* s) { return (visitedd.find(s) != visitedd.end()); }
 
-	std::unordered_set<State*,Hash> visitedd;
+	std::unordered_set<State*,Hash, is_equal> visitedd;
 };
 
 } /* namespace metasolver */

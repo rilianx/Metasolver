@@ -120,7 +120,7 @@ public:
 
 	virtual bool compareTo(const State & b) const = 0;
 
-	virtual int hashCode() const { return hashCode();}
+	virtual int hashCode() const = 0;
 
 	virtual bool operator == (const State & state) const
 	{
