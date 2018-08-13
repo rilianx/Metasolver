@@ -23,4 +23,16 @@ fsb: variante full-supported
 
 kdtree: uso de estructura kdtree
 
+# CPMP
+
+Compilar:
+
+     make A_CPMP
+ 
+Ejemplo de ejecución:
+
+      ./A_CPMP problems/cpmp/benchs/Test/data3-3-1.dat
+      
+
+
 
