@@ -19,7 +19,7 @@ namespace metasolver {
 class Greedy : public SearchStrategy {
 public:
 
-	Greedy(ActionEvaluator* evl) : SearchStrategy(evl) { }
+	Greedy(ActionEvaluator* evl, int maxiter=0) : SearchStrategy(evl, maxiter) { }
 
 	/**
 	 * Performs an iteration of the strategy

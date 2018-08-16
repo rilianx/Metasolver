@@ -21,7 +21,8 @@ namespace metasolver {
 //TODO: refactorizar
 class SearchStrategy {
 public:
-	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL, int maxiter=0) : evl(evl), best_state(NULL), timelimit(0.0), iter(0), maxiter(maxiter),
+	begin_time(clock()) {} ;
 
 	virtual ~SearchStrategy() {
 
@@ -29,6 +30,10 @@ public:
 
 	double get_time(){
 		return (double(clock()-begin_time)/double(CLOCKS_PER_SEC));
+    }
+
+	double get_iter(){
+		return (iter);
     }
 
 
@@ -57,15 +62,17 @@ public:
 	virtual double run(list<State*>& S, double tl=99999.9, clock_t bt=clock()){
 		begin_time=bt;
 		timelimit=tl;
+		iter=0;
 
 		do{
-			if(timelimit != 0.0 && get_time()>timelimit ){
+			if((timelimit != 0.0 && get_time()>timelimit) || (maxiter !=0 && maxiter<iter) ){
 				clean(S);
 				return get_best_value() ;
 			}
 			list<State*> R=next(S);
 			clean(S);
 			S=R;
+			iter++;
 		}while(S.size()>0);
 
 		return get_best_value() ;
@@ -113,6 +120,7 @@ protected:
 
 	double timelimit;
 	State* best_state;
+	int maxiter, iter;
 	clock_t begin_time;
 
 	ActionEvaluator* evl;
