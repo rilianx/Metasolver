@@ -2,24 +2,24 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="Project" targetName="cpmp" />
+      <config projectName="Project" targetName="clp_kdtree" />
       <config projectName="Project" targetName="bsg" />
       <config projectName="Project" targetName="a_star" />
       <config projectName="Project" targetName="test_BSG_CLP" />
       <config projectName="Project" targetName="bsg_mop" />
-      <config projectName="Project" targetName="CLP_gen" />
       <config projectName="Project" targetName="BSG_CLP_ANN" />
-      <config projectName="Project" targetName="nsga2" />
       <config projectName="Project" targetName="CLP_GENSOLV" />
       <config projectName="Project" targetName="A_CPMP" />
       <config projectName="Project" targetName="NSGA_CLP" />
       <config projectName="Project" targetName="clp" />
       <config projectName="Project" targetName="BSGMOP_CLP" />
       <config projectName="Project" targetName="test_BSGMOP_CLP" />
-      <config projectName="Project" targetName="clp_kdtree" />
+      <config projectName="Project" targetName="base" />
+      <config projectName="Project" targetName="CLP_gen" />
+      <config projectName="Project" targetName="nsga2" />
       <config projectName="Project" targetName="testEvalMOP" />
       <config projectName="Project" targetName="BSG_CLP" />
-      <config projectName="Project" targetName="base" />
+      <config projectName="Project" targetName="cpmp" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -29,15 +29,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2695fad8-b7e5-4179-b009-0b7d66f3f407" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libbase.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libbase.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libbsg.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libbsg.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libclp.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libclp.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libclp_kdtree.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libclp_kdtree.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metasolver/State.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/State.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/metasolver/strategies/A_star.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/strategies/A_star.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -54,8 +47,8 @@
       <file leaf-file-name="A_star.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
+            <state relative-caret-position="20">
+              <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
               <folding>
                 <element signature="e#135#162#0" expanded="true" />
               </folding>
@@ -75,8 +68,8 @@
       <file leaf-file-name="cpmpState.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5720">
-              <caret line="355" column="9" selection-start-line="355" selection-start-column="9" selection-end-line="355" selection-end-column="9" />
+            <state relative-caret-position="494">
+              <caret line="493" column="20" lean-forward="true" selection-start-line="493" selection-start-column="20" selection-end-line="493" selection-end-column="20" />
               <folding>
                 <element signature="e#78#96#0" expanded="true" />
               </folding>
@@ -106,7 +99,6 @@
       <find>lower</find>
       <find>cons</find>
       <find>compare</find>
-      <find>lowerbound</find>
       <find>compareto</find>
       <find>maxv</find>
       <find>hash</find>
@@ -118,6 +110,7 @@
       <find>get_va</find>
       <find>get_action</find>
       <find>neightb</find>
+      <find>lowerbound</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -143,10 +136,10 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="-8" />
-    <option name="width" value="977" />
-    <option name="height" value="1038" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-10" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -275,21 +268,25 @@
       <workItem from="1533740926444" duration="6632000" />
       <workItem from="1534111315741" duration="1150000" />
       <workItem from="1534173372376" duration="679000" />
-      <workItem from="1534174301493" duration="1015000" />
+      <workItem from="1534174301493" duration="1616000" />
+      <workItem from="1534184110026" duration="965000" />
+      <workItem from="1534187302528" duration="239000" />
+      <workItem from="1534446465758" duration="112000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39219000" />
+    <option name="totallyTimeSpent" value="41136000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="0" width="781" height="830" extended-state="0" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2580645" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1269002" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="CMake" order="12" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="File Transfer" order="8" visible="true" weight="0.19800569" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -303,7 +300,6 @@
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32763532" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="File Transfer" order="8" visible="true" weight="0.1994302" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32893288" />
     </layout>
   </component>
@@ -714,8 +710,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5720">
-          <caret line="355" column="9" selection-start-line="355" selection-start-column="9" selection-end-line="355" selection-end-column="9" />
+        <state relative-caret-position="494">
+          <caret line="493" column="20" lean-forward="true" selection-start-line="493" selection-start-column="20" selection-end-line="493" selection-end-column="20" />
           <folding>
             <element signature="e#78#96#0" expanded="true" />
           </folding>
@@ -724,8 +720,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
+        <state relative-caret-position="20">
+          <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
           <folding>
             <element signature="e#135#162#0" expanded="true" />
           </folding>

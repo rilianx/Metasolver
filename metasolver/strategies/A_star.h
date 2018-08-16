@@ -70,26 +70,27 @@ namespace metasolver {
 			//Se generan todos los vecinos posibles de la Matriz Actual
 			list<Action*> actions;
 			s->get_actions(actions);
-            cout << "Se han generado " << actions.size() << "vecinos" << endl;
+            //cout << "Se han generado " << actions.size() << "vecinos" << endl;
             int conti = 0;
 			for(auto action:actions){
 				State* copy=s->clone();
 				copy->transition(*action);
-				copy->print();
-				cout << endl << copy->hashCode() << endl;
+				//copy->print();
+				//cout << endl << copy->hashCode() << endl;
 				//TODO: revisar si el nuevo estado ya fue creado anteriormente
                 if(!visited(copy)) {
                     conti++;
 					q.push(copy);
 					visitedd.insert(copy);
 				}else{
-					cout << "ya visitado" << endl;
+					//cout << "ya visitado" << endl;
 				}
 			}
-			cout << "Se han agregado " << conti << " vecinos al mapa" << endl;
+			//cout << "Se han agregado " << conti << " vecinos al mapa" << endl;
+            visitedd.erase(s);
 			delete s;
 		}
-		//cout << "El cont es " << cont << endl;
+		cout << "El cont es " << cont << endl;
 		return best_state->get_value();
 	}
 

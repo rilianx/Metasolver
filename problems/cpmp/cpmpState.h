@@ -457,7 +457,7 @@ public:
 
      int calcularLowerBound() {
          containersMalUbicados();
-         lowerBound = minimoMalUbicados + malUbicados;
+         lowerBound = minimoMalUbicados + malUbicadosm;
          return lowerBound;
      }
 
