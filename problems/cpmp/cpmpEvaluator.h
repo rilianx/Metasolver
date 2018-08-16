@@ -6,6 +6,7 @@
  */
 
 #include "ActionEvaluator.h"
+#include "cpmpState.h"
 
 #ifndef CPMPEVALUATOR_H_
 #define CPMPEVALUATOR_H_
@@ -20,6 +21,8 @@ public:
 	virtual ~cpmpEvaluator() { };
 
 	virtual double eval_action(const State& s, const Action& a){
+		const cpmpAction* action =dynamic_cast<const cpmpAction*>(&a);
+		const cpmpState* state =dynamic_cast<const cpmpState*>(&s);
 		return 1.0;
 	}
 };
