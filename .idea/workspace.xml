@@ -28,11 +28,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2695fad8-b7e5-4179-b009-0b7d66f3f407" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metasolver/strategies/A_star.h" beforeDir="false" afterPath="$PROJECT_DIR$/metasolver/strategies/A_star.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" beforeDir="false" afterPath="$PROJECT_DIR$/problems/cpmp/cpmpState.h" afterDir="false" />
-    </list>
+    <list default="true" id="2695fad8-b7e5-4179-b009-0b7d66f3f407" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,11 +40,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="A_star.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="A_star.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
+            <state relative-caret-position="175">
+              <caret line="62" column="16" selection-start-line="62" selection-start-column="16" selection-end-line="62" selection-end-column="16" />
               <folding>
                 <element signature="e#135#162#0" expanded="true" />
               </folding>
@@ -65,11 +61,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cpmpState.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cpmpState.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="493" column="20" lean-forward="true" selection-start-line="493" selection-start-column="20" selection-end-line="493" selection-end-column="20" />
+            <state relative-caret-position="302">
+              <caret line="459" column="53" lean-forward="true" selection-start-line="459" selection-start-column="53" selection-end-line="459" selection-end-column="53" />
               <folding>
                 <element signature="e#78#96#0" expanded="true" />
               </folding>
@@ -103,7 +99,6 @@
       <find>maxv</find>
       <find>hash</find>
       <find>get_value</find>
-      <find>lowerb</find>
       <find>hashco</find>
       <find>hashcode</find>
       <find>getva</find>
@@ -111,6 +106,7 @@
       <find>get_action</find>
       <find>neightb</find>
       <find>lowerbound</find>
+      <find>lowerb</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -122,8 +118,8 @@
         <option value="$PROJECT_DIR$/problems/cpmp/benchs/Test/data2.dat" />
         <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.cpp" />
         <option value="$PROJECT_DIR$/metasolver/State.h" />
-        <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.h" />
         <option value="$PROJECT_DIR$/metasolver/strategies/A_star.h" />
+        <option value="$PROJECT_DIR$/problems/cpmp/cpmpState.h" />
       </list>
     </option>
   </component>
@@ -271,12 +267,12 @@
       <workItem from="1534174301493" duration="1616000" />
       <workItem from="1534184110026" duration="965000" />
       <workItem from="1534187302528" duration="239000" />
-      <workItem from="1534446465758" duration="112000" />
+      <workItem from="1534446465758" duration="585000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41136000" />
+    <option name="totallyTimeSpent" value="41609000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -708,22 +704,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
+    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="493" column="20" lean-forward="true" selection-start-line="493" selection-start-column="20" selection-end-line="493" selection-end-column="20" />
+        <state relative-caret-position="175">
+          <caret line="62" column="16" selection-start-line="62" selection-start-column="16" selection-end-line="62" selection-end-column="16" />
           <folding>
-            <element signature="e#78#96#0" expanded="true" />
+            <element signature="e#135#162#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/metasolver/strategies/A_star.h">
+    <entry file="file://$PROJECT_DIR$/problems/cpmp/cpmpState.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
+        <state relative-caret-position="302">
+          <caret line="459" column="53" lean-forward="true" selection-start-line="459" selection-start-column="53" selection-end-line="459" selection-end-column="53" />
           <folding>
-            <element signature="e#135#162#0" expanded="true" />
+            <element signature="e#78#96#0" expanded="true" />
           </folding>
         </state>
       </provider>
