@@ -28,10 +28,10 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool div=false) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), div(div) {}
 
 
 	virtual ~BSG();
@@ -110,9 +110,15 @@ protected:
 				state_action->second.first=s;
 				s->transition(*a);
 
-				if(nextS.size()>0) cout << "min_diff:" << s->diversity(nextS) << endl;
+				if(div && nextS.size()>0 && s->diversity(nextS)<0.01) {
+					delete s;
+					state_action->second.first=NULL;
+				}else
+					nextS.push_back(s);
 
-				nextS.push_back(s);
+				//if(nextS.size()>0) cout << "min_diff:" << s->diversity(nextS) << endl;
+
+
 
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
 
@@ -151,6 +157,8 @@ protected:
 	int n_elite;
 
 	bool shuffle_best_path;
+
+	bool div;
 
 };
 

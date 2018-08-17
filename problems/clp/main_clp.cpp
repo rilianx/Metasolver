@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 
-
+	args::Flag _div(parser, "div", "Diversity Discarding", {"div"});
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -143,7 +143,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0, 0, _div);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
@@ -166,8 +166,8 @@ int main(int argc, char** argv){
 	
 
 
-	const clpState* best = dynamic_cast<const clpState*>(de->get_best_state());
-	cout << best->cont->getOccupiedVolume() << "/" << best->cont->getVolume() << endl ;
+	//const clpState* best = dynamic_cast<const clpState*>(de->get_best_state());
+	//cout << best->cont->getOccupiedVolume() << "/" << best->cont->getVolume() << endl ;
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);
