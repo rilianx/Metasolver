@@ -28,7 +28,7 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool div=false) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, double div=0.0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
 		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), div(div) {}
@@ -110,7 +110,7 @@ protected:
 				state_action->second.first=s;
 				s->transition(*a);
 
-				if(div && nextS.size()>0 && s->diversity(nextS)<0.01) {
+				if(div>0.0 && nextS.size()>0 && s->diversity(nextS)<div) {
 					delete s;
 					state_action->second.first=NULL;
 				}else
@@ -158,7 +158,7 @@ protected:
 
 	bool shuffle_best_path;
 
-	bool div;
+	double div;
 
 };
 

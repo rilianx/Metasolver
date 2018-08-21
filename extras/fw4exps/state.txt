@@ -1,7 +1,7 @@
-algos:bsgg bsg-div 
-gains (average relative times):1.000000 1.002182 
-gains (total time)            :1.000000 1.000994 
-compared instances: 77  76 
-runs    : 80  80 
-L:  0   0 
-W:  0   0 
+algos:bsgg bsg-div_X0.1 bsg-div_X0.05 bsg-div_X0.01 bsg-div_X0.001 
+gains (average relative times):1.000000 1.004457 1.003525 1.001809 1.000938 
+gains (total time)            :1.000000 1.003404 1.002471 1.000752 0.999881 
+compared instances:1600 1600 1600 1600 1600 
+runs    :1600 1600 1600 1600 1600 
+L:  0   0   0   0   0 
+W:  0   0   0   0   0 

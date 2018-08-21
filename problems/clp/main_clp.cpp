@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 
-	args::Flag _div(parser, "div", "Diversity Discarding", {"div"});
+	args::ValueFlag<double> _div(parser, "double", "Diversity Discarding", {"div"});
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -78,6 +78,7 @@ int main(int argc, char** argv){
 	int inst=(_inst)? _inst.Get():0;
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
+	double div=(_div)? _div.Get():0.0;
 
 	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
 	if(_maxtime) maxtime=_maxtime.Get();
@@ -143,7 +144,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0, 0, _div);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0, 0, div);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
