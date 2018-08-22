@@ -47,6 +47,11 @@ bsg_mop
  metasolver/plugins/mop/strategies/BSGMOP.cpp
 )
 
+#ADD_LIBRARY(
+#mcts
+# metasolver/plugins/mop/strategies/BSGMOP.cpp
+#)
+
 ADD_LIBRARY(
 nsga2
  metasolver/plugins/mop/strategies/Chromosome.cpp
@@ -78,7 +83,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 
 
-
+ADD_EXECUTABLE(MCTS_CLP problems/clp/main/mcts_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
@@ -89,6 +94,7 @@ ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
+target_link_libraries(MCTS_CLP bsg clp)
 target_link_libraries(BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)

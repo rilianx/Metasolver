@@ -24,7 +24,7 @@ namespace metasolver {
 
     class Compare{
     public:
-        bool operator() (State* a , State* b){
+        bool operator() (const State* a , const State* b){
             if(a->promise() < b->promise() ) return false;
             else if(a->promise() == b->promise()){
                 if(a->promise()  < b->promise()) return false;
@@ -37,7 +37,7 @@ namespace metasolver {
     class MCTS : public SearchStrategy {
         public:
 
-    	MCTS() {}
+    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy) : SearchStrategy(evl), greedy(greedy) {}
 
 	    virtual ~MCTS() {}
 
@@ -46,55 +46,47 @@ namespace metasolver {
 	 */
 	virtual double run(State& s, double tl=99999.9, clock_t bt=clock()){
 
-		std::priority_queue<State* , vector<State*>, Compare> q;
+		std::priority_queue<const State* , vector<const State*>, Compare> q;
 		q.push(s.clone());
 
 		while(q.size() > 0){
-			State* s = q.top() ; q.pop();
-
-			//Lanzar el greedy tantas veces como sea necesario para poder calcular promise
-			//Generar varios hijos como sea
-			/*
-			 * Consiste en que cada vez que se escoja un nodo se generen (al menos) dos o tres
-			 * simulaciones a partir de ese nodo y de su mejor hijo. De esta manera, la
-			 * selección del siguiente nodo se puede realizar directamente con la información
-			 * de los nodos (media y desviación) sin necesidad de tener que estimar el valor de
-			 * la desviación estándar.
-
-	Para comenzar a escoger nodos usando las probabilidades, se deben
-	realizar n simulaciones a partir de cada uno de los n hijos del nodo
-	raíz, con n el mínimo de simulaciones necesarias por nodo para poder
-	calcular las probabilidades (e.g., n=3).
-    En el peor caso, se seleccionará un nodo con n hijos "hoja".
-    Se deberán realizar n-1 simulaciones para cada hijo, y n
-    simulaciones para el nuevo hijo del nodo, i.e., n^2 simulaciones.
-    En el mejor caso se deberán realizar n simulaciones nuevas.
-			 */
-
+			const State* s = q.top();
 			cout << s->promise() << endl;
 
-			//Se generan todos los vecinos posibles de la Matriz Actual
-			list<Action*> actions;
-			s->get_actions(actions);
+			const State* s2 = simulate(s);
 
-
-			for(auto action:actions){
-				State* copy=s->clone();
-				copy->transition(*action);
-
-
-
-               	q.push(copy);
+			if(s2 == NULL){
+				q.pop();
+				delete s;
+			}else if(s->get_children().size() == 3){
+				for(auto ch : s->get_children()){
+					simulate(ch);
+					q.push(ch);
+				}
+			}else if(s->get_children().size() > 3){
+				simulate(s2);
+				q.push(s2);
 			}
 
-			delete s;
 		}
 
 		return best_state->get_value();
 	}
 
+    // performs a simulation and returns the corresponding child
+    State* simulate(const State* s){
+
+    	return NULL;
+    }
+
+    private:
+
+	SearchStrategy& greedy;
+
 
 };
+
+
 
 } /* namespace metasolver */
 

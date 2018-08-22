@@ -109,7 +109,12 @@ public:
 
 	virtual void print() {  }
 
-	virtual double promise() { return 0.0; }
+	/**
+	 *  Probabilidad de generar simulaciones mejores a la mejor encontrada hasta ahora
+	 */
+	virtual double promise() const { return 0.0; }
+
+	const list<const State*>& get_children() const { return children;}
 
 protected:
 
@@ -120,6 +125,8 @@ protected:
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
+
+	list<const State*> children;
 
 };
 
