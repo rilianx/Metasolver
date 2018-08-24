@@ -93,6 +93,7 @@ protected:
 	template<class map_container>
 	list<State*> get_next_states(map_container& sorted_states){
 		list<State*> nextS;
+		list<State*> final_states;
 		typename map_container::iterator state_action=sorted_states.begin();
 
 		//Para cada state->final_state se rescata la accion
@@ -105,16 +106,21 @@ protected:
 			State* final_state=state_action->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
+			bool remove_state=true;
 			if(nextS.size()<beams && a){
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
 
-				if(div>0.0 && nextS.size()>0 && s->diversity(nextS)<div) {
+				if(div>0.0 && nextS.size()>0 && final_state->diversity(final_states)<div) {
 					delete s;
 					state_action->second.first=NULL;
-				}else
+				}else{
 					nextS.push_back(s);
+					final_states.push_back(final_state);
+					remove_state=false;
+
+				}
 
 				//if(nextS.size()>0) cout << "min_diff:" << s->diversity(nextS) << endl;
 
@@ -126,7 +132,7 @@ protected:
 			}else state_action->second.first=NULL;
 
 			//other elements are removed from the state_actions
-			 if(k>=beams){
+			 if(remove_state){
 				delete final_state;
 			   state_action=sorted_states.erase(state_action);
 			 }else state_action++;
