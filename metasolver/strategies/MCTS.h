@@ -61,9 +61,11 @@ namespace metasolver {
 			}else if(s->get_children().size() == 3){
 				for(auto ch : s->get_children()){
 					simulate(ch);
+					simulate(ch);
 					q.push(ch);
 				}
 			}else if(s->get_children().size() > 3){
+				simulate(s2);
 				simulate(s2);
 				q.push(s2);
 			}
@@ -75,8 +77,30 @@ namespace metasolver {
 
     // performs a simulation and returns the corresponding child
     State* simulate(const State* s){
+    	double value;
+    	int size = s->get_children().size();
 
-    	return NULL;
+    	//TODO: optimizar!
+   		State* s2=s->clone();
+   		list< Action* > best_actions;
+   		get_best_actions(*s2, best_actions, size+1);
+   		s2->transition(*best_actions.back());
+   		State* s3=s2->clone();
+   		value=greedy.run(*s3);
+
+
+        //best_state update
+        if(value > get_best_value()){
+          if(best_state) delete best_state;
+          best_state = s3->clone();
+          cout << "[MCTS] new best_solution_found ("<< get_time() <<"): " << value << " "
+        		 << best_state->get_path().size() << " nodes" << endl;
+        }
+
+        s->add_children(s2);
+        s->update_values(value);
+
+        return s2;
     }
 
     private:

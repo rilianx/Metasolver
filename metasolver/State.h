@@ -110,11 +110,25 @@ public:
 	virtual void print() {  }
 
 	/**
-	 *  Probabilidad de generar simulaciones mejores a la mejor encontrada hasta ahora
+	 *  Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	 */
-	virtual double promise() const { return 0.0; }
+	virtual void calculate_promise(double best_value) const {
+
+		return 0.0;
+	}
+
+	// Actualiza los valores mean y sd de acuerdo al nuevo valor
+	virtual void update_values(double new_value){
+		if(children.size()) mean=new_value;
+		else
+			mean = (mean*(children.size()-1)+new_value)/children.size();
+	}
 
 	const list<const State*>& get_children() const { return children;}
+
+	void add_children(State* s){ children.push_back(s);}
+
+
 
 protected:
 
@@ -127,6 +141,10 @@ protected:
 	mutable list<const Action*> path;
 
 	list<const State*> children;
+
+	double mean;
+	double sd;
+	double promise;
 
 };
 
