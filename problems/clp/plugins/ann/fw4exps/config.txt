@@ -10,6 +10,6 @@ algo_names = clp_ann
 
 [clp_ann]
 exec = "/home/ignacio/clp/Metasolver/CLP_GENSOLV" 
-params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/train_03_3200/
+params = _INSTANCE --maxtime=_MAXTIME --solve -f /home/ignacio/clp/Metasolver/problems/clp/plugins/ann/trainset_04_3200/
 outputpos_times = 0
 outputpos_boxes = 0

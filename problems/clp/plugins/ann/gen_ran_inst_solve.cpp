@@ -272,7 +272,9 @@ void solve(string file, string path1, string path2, int _N, double min_fr, int m
 
 		myfile << clp_action->block << " ; ";
 		//cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
-		myfile << clp_action->space.get_location(clp_action->block) << endl;
+		myfile << clp_action->space.get_location(clp_action->block) ;
+
+		myfile << " ; " << clp_action->params << endl;
 
 		for(auto box : clp_action->block.nb_boxes){
 			if(box.second > 0) myfile << box.first->get_id() << "," << box.second << " ";

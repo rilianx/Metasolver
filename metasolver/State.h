@@ -31,6 +31,9 @@ public:
 
 	virtual ~Action(){}
 
+	virtual void set_parameters(string p)  { params=p; }
+
+	string params;
 };
 
 

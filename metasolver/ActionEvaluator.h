@@ -47,6 +47,10 @@ public:
 
 	double get_r() const { return r; }
 
+	virtual string get_parameters() { return ""; }
+
+	virtual void perturbate_params() {}
+
 protected:
 
   //weitght of the second objective (lambda1=1-lambda2)

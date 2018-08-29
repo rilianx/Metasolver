@@ -21,7 +21,7 @@ namespace clp {
 VCS_Function::VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha, double beta,
 		double gamma, double p, double delta, double f, double r, double max_theta):
 		VLossFunction (nb_boxes, dims, beta, delta, f, r, max_theta), alpha(alpha),
-		gamma(gamma), p(p){ }
+		gamma(gamma), p(p),	max_alpha(alpha*2), max_beta(beta*2), max_gamma(gamma*2), max_p(p*2){ }
 
 VCS_Function::~VCS_Function(){
 

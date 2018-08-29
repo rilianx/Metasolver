@@ -8,6 +8,7 @@
 #ifndef VCS_FUNCTION_H_
 #define VCS_FUNCTION_H_
 
+#include <string>
 #include "VLossFunction.h"
 
 using namespace std;
@@ -37,6 +38,17 @@ public:
 
 	virtual void set_p(double pp){ p = pp; }
 
+	virtual string get_parameters() {
+		return "(" + to_string(alpha) + + "," + to_string(beta) + "," + to_string(gamma) + "," + to_string(p) +")";
+	}
+
+	virtual void perturbate_params() {
+		alpha= ((double)rand()/RAND_MAX)*max_alpha;
+		beta= ((double)rand()/RAND_MAX)*max_beta;
+		gamma= ((double)rand()/RAND_MAX)*max_gamma;
+		p= ((double)rand()/RAND_MAX)*max_p;
+	}
+
 protected:
 
 	long _surface_in_contact(const AABB& b, const AABB& bi);
@@ -44,6 +56,7 @@ protected:
 
 	//parameters
   double alpha, gamma, p; //
+  double max_alpha, max_beta, max_gamma, max_p; //
 
 
 };
