@@ -20,7 +20,7 @@ defaultX = 587
 defaultY = 233
 
 batch = 1
-
+print "mostrando por consola"
 '''
 	Valores importantes
 '''
@@ -33,8 +33,8 @@ prediction = np.zeros((1,5,5,5))
 '''
 	Inicializa y compila la ANN a partir de un modelo y pesos entregados
 ''' 
-def initModel(model_yml = "/home/braulio/Metasolver/problems/clp/plugins/ann/model.yaml", weights = "/home/braulio/Metasolver/problems/clp/plugins/ann/model.h5"):
-	# Ruta real: /home/braulio/Metasolver/problems/clp/plugins/ann/model.yaml
+def initModel(model_yml = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.yaml", weights = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.h5"):
+	# Ruta real: /home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.yaml
 	global model
 	if os.path.isfile(model_yml):
 		file = open(model_yml)
@@ -78,6 +78,11 @@ def setInputs(b = 1, x = 1,y = 1):
 print "[Python] Iniciando modelo"
 initModel()
 
+numeroPred = 0 # Numero de veces que se a pedido una prediccion
+path = "/home/braulio/MetasolverAnn/Log/"
+os.system("rm " + path + "*") # Eliminando contenido del directorio
+os.system("mkdir " + path)    # Creando directorio en caso de no existir
+
 '''
 	Recibe la matrices de entrada para la ANN y retorna la lista de respuesta
 	@param 	input1	primer parametro de entrada a la red, contiene la fotografia
@@ -91,13 +96,22 @@ def getPrediction():
 	global input2
 	global prediction
 	global model
+	global numeroPred
+	global path
 
 	#prediction es un array de numpy
+	if np.count_nonzero(np.array(input1)) == 0:
+		print "contenedor vacio, numero ", numeroPred
 
-	prediction = model.predict([np.array(input1), np.array(input2)], batch_size = 1)
+	prediction = model.predict([np.array(input1)/233.0, np.array(input2)], batch_size = 1)
 	prediction = np.reshape(prediction, (batch,5,5,5))
-	
 
+	numeroPred = numeroPred + 1
+	
+	np.save(path + "LogI1_" + str(numeroPred), input1)
+	np.save(path + "LogI2_" + str(numeroPred), input2)
+	np.save(path + "LogPred_" + str(numeroPred), prediction)
+	
 
 #Modifica el valor de una celda del input 1
 def setValueInput1(x, y, value, b = 0):

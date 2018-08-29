@@ -17,6 +17,7 @@
 #include <set>
 #include <algorithm>
 #include <map>
+#include <math.h>
 
 #define DIMENSIONS (3)
 

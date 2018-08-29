@@ -37,7 +37,7 @@ namespace clp {
 
 			// Inicializando red
 			// /home/braulio/Metasolver/problems/clp/plugins/ann/annCom.py
-			const char* pathScript = "/home/braulio/Metasolver/problems/clp/plugins/ann/";
+			const char* pathScript = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/";
 			const char* nameScript = "annCom";
 
 			pyHandler.pModule = glue_initPyHandler(pyHandler, pathScript, nameScript);
@@ -58,10 +58,10 @@ namespace clp {
 			const char *nFuncInput2 = "setValueInput2"; // Nombre de la funcion para actualizar input 2 de la red (En Python)
 
 			const clpState* state = dynamic_cast<const clpState*>(&s);
-			AABB block = state->cont->blocks->top();
-			block.getXmin(); block.getXmax();
-			block.getYmin(); block.getYmax();
-			block.getZmax();
+
+			//block.getXmin(); block.getXmax();
+			//block.getYmin(); block.getYmax();
+			//block.getZmax();
 
 			//cout << "Init matrix" << endl;
 			for(int i=0; i<L; i++)
@@ -69,27 +69,32 @@ namespace clp {
 					matrix[i][j]= 0;
 			//cout << "end" << endl;
 
-			// FIXME: borrar esto
 			if(pyHandler.pModule == NULL)
 				cout << "\033[1;31mERROR: pModule es nulo en la inicializacion\033[0m\n";
 
             // Generando el input 1
 			//cout << "Init input 1" << endl;
-			while(state->cont->blocks->has_next()){
-				//cout << block.getXmin() << endl;
-				//cout << block.getZmax() << endl;
-				//cout << block.getXmax() << endl;
-				//cout << block.getYmax() << endl;
-				for(long i = block.getXmin(); i < block.getXmax(); i++) {
-					for (long j = block.getYmin(); j < block.getYmax(); j++) {
-						//cout << "Input 1" << endl;
-						//cout << block.getZmax() << endl;
-						glue_putInput(pyHandler, nFuncInput1, i, j, block.getZmax()); // matrix[i][j] = block.getZmax();
+
+			if(state->cont->blocks->size()){ //FIXME: dos primeros estados estan vacios
+			    AABB block = state->cont->blocks->top();
+				while(true){
+					//cout << block.getXmin() << endl;
+					//cout << block.getZmax() << endl;
+					//cout << block.getXmax() << endl;
+					//cout << block.getYmax() << endl;
+					for(long i = block.getXmin(); i < block.getXmax(); i++) {
+						for (long j = block.getYmin(); j < block.getYmax(); j++) {
+							//cout << "Input 1" << endl;
+							//cout << block.getZmax() << endl;
+							glue_putInput(pyHandler, nFuncInput1, i, j, block.getZmax()); // matrix[i][j] = block.getZmax();
+						}
 					}
+					if(state->cont->blocks->has_next()){
+						block = state->cont->blocks->next();
+					} else break;
 				}
-				if(state->cont->blocks->has_next())
-					block=state->cont->blocks->next();
 			}
+
 			//cout << "end" << endl;
 
 			list< Action* > actions;

@@ -1,5 +1,6 @@
 # HelloWorld is a minimal sample creating, stepping and deleting a Bullet dynamics world
 
+cmake_minimum_required(VERSION 3.5)
 set (CMAKE_CXX_STANDARD 11)
 
 find_package(PythonLibs 2.7 REQUIRED)
@@ -19,8 +20,8 @@ problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
 problems/clp/plugins/ga
-problems/clp/plugins/ann/evaluators
 metasolver/plugins/mop/strategies/
+problems/clp/plugins/ann/evaluators
 problems/clp/plugins/ann/glue
 ${PYTHON_INCLUDE_DIRS}
 )
@@ -39,7 +40,7 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
 
 # ADD_DEFINITION(-g -pg)
 
@@ -92,14 +93,17 @@ problems/clp/plugins/ann/evaluators/ANNEvaluator.cpp
 problems/clp/plugins/ann/glue/glue.c
 )
 
-ADD_EXECUTABLE(BSG_ANN_CLP 
+ADD_EXECUTABLE(
+  BSG_ANN_CLP 
   problems/clp/plugins/ann/main_BSG_ANN_CLP.cpp
   #problems/clp/plugins/ann/glue/glue.c
 )
+
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSGMOP_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(BSG_BO_CLP problems/clp/clp_bsg-mop.cpp)
+#ADD_EXECUTABLE(test_CLPDIV problems/clp/test_diversidad.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
@@ -107,18 +111,20 @@ ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(BSG_ANN_CLP bsg ann clp ${PYTHON_LIBRARIES})
+#target_link_libraries(test_CLPDIV bsg clp)
+#target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
 target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
 target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
 target_link_libraries(NSGA_CLP bsg clp nsga2)
 
-target_link_libraries(BSGMOP_CLP bsg_mop bsg clp)
+target_link_libraries(BSG_BO_CLP bsg_mop bsg clp)
 target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
 target_link_libraries(testEvalMOP bsg_mop bsg clp )
 
 enable_testing()
 
-add_test( test_BSG_CLP test_BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0 )
-add_test( test_BSGMOP_CLP test_BSGMOP_CLP problems/clp/benchs/BR/BR6.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0 0 )
+add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
+
 
 
 
