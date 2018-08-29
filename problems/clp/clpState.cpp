@@ -55,6 +55,8 @@ double clpState::diff(const State& s) const{
 	//cout << "Volumen total: " << s1.cont->getVolume() + s2.cont->getVolume() << endl;
 	//Suma de volumenes de ambos contenedores
 	do{
+		//hacer para cada reflexion del bloque aabb (8 veces)
+		//AABB reflected_aabb = AABB(x1,y1,...);
 		inter = s2.cont->blocks->get_intersected_objects(*aabb);
 		for(const AABB* b:inter){
 			interVolume += place(aabb->getXmax(), aabb->getXmin(), b->getXmax(), b->getXmin()) * place(aabb->getYmax(), aabb->getYmin(), b->getYmax(), b->getYmin()) * place(aabb->getZmax(), aabb->getZmin(), b->getZmax(), b->getZmin());
