@@ -83,7 +83,7 @@ problems/clp/clpState.cpp
 
 ADD_LIBRARY(
 cpmp
-problems/cpm/cpmpState.cpp
+problems/cpmp/cpmpState.cpp
 )
 
 ADD_LIBRARY(
