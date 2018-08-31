@@ -55,12 +55,12 @@ namespace metasolver {
 		std::priority_queue<State* , vector<State*>, Compare> q;
 		q.push(s.clone());
 		visitedd.insert(&s);
-		cout << endl << s.hashCode() << endl;
+		//cout << endl << s.hashCode() << endl;
 		int cont = 0;
 
 		while(q.size() > 0){
 			State* s = q.top() ; q.pop(); cont++;
-			cout << s->hashCode() << " " << (s->get_lower_bound()+s->get_value()) << endl;
+			//cout << s->hashCode() << " " << (s->get_lower_bound()+s->get_value()) << endl;
 
 			//cout << s->get_lower_bound() << endl;
 			if(s->get_lower_bound() == 0){

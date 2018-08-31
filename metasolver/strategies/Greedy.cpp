@@ -22,6 +22,7 @@ list<State*> Greedy::next(list<State*>& S) {
 		delete action;
 		//cout << "valid_blocks:" << s.valid_blocks.size() << endl;
 		//cout << (double)s.cont.getOccupiedVolume() / (double)s.cont.getVolume()  << endl;
+		cout << s.get_value() << endl;
 		return S;
 	}else{
 		S.clear();

@@ -91,6 +91,7 @@ cpmpState::cpmpState(string File) : cantidadMovimientos(0), totalContainers(0), 
 	}else{
 	    cout << "No se pudo abrir el archivo";
 	}
+	containerMaximo = maxValue();
     inicializar();
 }
 

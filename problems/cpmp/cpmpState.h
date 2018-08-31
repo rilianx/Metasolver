@@ -86,6 +86,7 @@ public:
 	    minimoMalUbicados = from.minimoMalUbicados;
 	    movimientos = from.movimientos;
 	    lowerBound = from.lowerBound;
+	    containerMaximo = from.containerMaximo;
 	}
 
 
@@ -211,15 +212,15 @@ public:
       */
 
     virtual void print() const {
-         cout << "height: " << height << " width: " << width << endl;
-         cout << "Lower Bound: " << lowerBound << endl;
+         //cout << "height: " << height << " width: " << width << endl;
+         //cout << "Lower Bound: " << lowerBound << endl;
          cout << "Cantidad de Movimientos: " << cantidadMovimientos << endl;
-         cout << "Total de Containers: " << totalContainers << endl;
-         cout << "Total Bien Ubicados: " << bienUbicados << endl;
-         cout << "Total Mal Ubicados: " <<  malUbicados << endl;
-         cout << "Minimo de  Mal Ubicados: " << minimoMalUbicados << endl;
-         cout << "Movimientos Realizados: " << movimientos << endl;
-        showOnlyMatrix();
+         //cout << "Total de Containers: " << totalContainers << endl;
+         //cout << "Total Bien Ubicados: " << bienUbicados << endl;
+         //cout << "Total Mal Ubicados: " <<  malUbicados << endl;
+         //cout << "Minimo de  Mal Ubicados: " << minimoMalUbicados << endl;
+         //cout << "Movimientos Realizados: " << movimientos << endl;
+        //showOnlyMatrix();
      }
 
 
@@ -325,19 +326,13 @@ public:
 			cantidadMovimientos(st.cantidadMovimientos), totalContainers(st.totalContainers),
 			bienUbicados(st.bienUbicados), malUbicados(st.malUbicados),
 			minimoMalUbicados(st.minimoMalUbicados), movimientos(st.movimientos),
-			lowerBound(st.lowerBound)  {
+			lowerBound(st.lowerBound),containerMaximo(st.containerMaximo)  {
      }
-
-
-
-
-
-
 
 	/**
 	 * The value of the objective function
 	 */
-	virtual double get_value() const{ return (double) cantidadMovimientos;}
+	virtual double get_value() const{ return  (double) -1*(cantidadMovimientos + lowerBound);}
 
 	virtual void _transition(const Action& action) {
 		const cpmpAction *act = dynamic_cast<const cpmpAction*>(&action);
@@ -374,7 +369,7 @@ public:
      * 		está bien ordenada.
      */
 
-    bool comprobarColumna(int Column) {
+    bool comprobarColumna(int Column) const {
         int j;
         for(j=height-1; j>=1; j--) {
             if(layout[j][Column-1] < layout[j-1][Column-1]) return false;
@@ -471,6 +466,8 @@ public:
      }
 
      virtual void get_actions(list< Action* >& action) const {
+         if(lowerBound == 0)
+             return;
          for(int i = 1; i <= width; i++)
              for(int j=1; j <= width; j++)
                  if(i!=j && verificarMovimiento(i, j))
@@ -481,6 +478,16 @@ public:
      virtual int get_lower_bound() {
          return lowerBound;
      }
+
+     int topColumn(int numeroColumna) const{
+         for(int j=height-1; j>=1; j--){
+             if(layout[j-1][numeroColumna] == 0)
+                 return layout[j][numeroColumna];
+         }
+         return layout[0][numeroColumna];
+     }
+
+
 
 
 private:
@@ -493,6 +500,7 @@ private:
     int bienUbicados;
     int malUbicados;
     int minimoMalUbicados;
+    int containerMaximo;
     string movimientos;
 
 
