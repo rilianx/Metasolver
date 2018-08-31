@@ -26,6 +26,7 @@ list<State*> BSG::next(list<State*>& S){
         // cout << state.get_value() << endl;
 
          if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         cout << "iter" << endl;
 
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
@@ -35,6 +36,7 @@ list<State*> BSG::next(list<State*>& S){
          int w =  (double) max_level_size / (double) S.size() + 0.5;
 
          get_best_actions(state, best_actions, w);
+         cout << best_actions.size() << endl;
 
 
 
@@ -49,7 +51,7 @@ list<State*> BSG::next(list<State*>& S){
         	 delete *it;
 
              double value = greedy.run(state_copy, timelimit, begin_time);
-
+             cout << value << endl;
 
             //best_state update
              if(value > get_best_value()){

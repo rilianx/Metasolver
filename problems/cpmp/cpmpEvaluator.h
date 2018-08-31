@@ -27,12 +27,23 @@ public:
 		int containerA = state->topColumn(action->CI);
 		int containerB = state->topColumn(action->CF);
 
-		if(!state->comprobarColumna(action->CI)&& containerA >= containerB)
-			return 1 - ((containerA - containerB)/max(containerA,containerB));
-		if(state->comprobarColumna(action->CF) && containerA <= containerB)
-			return 1 -((containerB-containerA)/max(containerA,containerB));
+		//cout << action->CI << "," << action->CF << endl;
 
-		return 0;
+		double value = 1;
+
+		double fp;
+		if(!state->comprobarColumna(action->CI))
+			fp=1.0;
+		else
+			fp=1.1-((state->heightColumn(action->CI)/(double)state->getHeight()) * containerA/(double)state->getMaxPriority()  );
+
+		if(containerA >= containerB)
+			value = 1 + (1- ((double)(containerA - containerB)/state->getMaxPriority()))*fp;
+		if(state->comprobarColumna(action->CF) && containerA <= containerB)
+			value = 2 -((double)(containerB-containerA)/state->getMaxPriority());
+
+		//cout << value << endl;
+		return value;
 	}
 };
 

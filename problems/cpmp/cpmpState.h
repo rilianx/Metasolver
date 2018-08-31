@@ -213,14 +213,14 @@ public:
 
     virtual void print() const {
          //cout << "height: " << height << " width: " << width << endl;
-         //cout << "Lower Bound: " << lowerBound << endl;
+         cout << "Lower Bound: " << lowerBound << endl;
          cout << "Cantidad de Movimientos: " << cantidadMovimientos << endl;
          //cout << "Total de Containers: " << totalContainers << endl;
          //cout << "Total Bien Ubicados: " << bienUbicados << endl;
          //cout << "Total Mal Ubicados: " <<  malUbicados << endl;
          //cout << "Minimo de  Mal Ubicados: " << minimoMalUbicados << endl;
          //cout << "Movimientos Realizados: " << movimientos << endl;
-        //showOnlyMatrix();
+        showOnlyMatrix();
      }
 
 
@@ -480,15 +480,30 @@ public:
      }
 
      int topColumn(int numeroColumna) const{
+    	 if(layout[height-1][numeroColumna-1]==0) return containerMaximo;
          for(int j=height-1; j>=1; j--){
-             if(layout[j-1][numeroColumna] == 0)
-                 return layout[j][numeroColumna];
+             if(layout[j-1][numeroColumna-1] == 0)
+                 return layout[j][numeroColumna-1];
          }
-         return layout[0][numeroColumna];
+         return layout[0][numeroColumna-1];
      }
 
+     int heightColumn(int numeroColumna) const{
+    	 if(layout[height-1][numeroColumna-1]==0) return 0;
+         for(int j=height-1; j>=1; j--){
+             if(layout[j-1][numeroColumna-1] == 0)
+                 return height-j;
+         }
+         return height;
+     }
 
+     int getHeight() const{
+    	 return height;
+     }
 
+     int getMaxPriority() const{
+    	 return containerMaximo;
+     }
 
 private:
 

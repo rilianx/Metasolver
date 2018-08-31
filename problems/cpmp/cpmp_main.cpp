@@ -71,9 +71,9 @@ int main(int argc, char** argv){
 
 		SearchStrategy *de = new DoubleEffort(*bsg);
 
-		double eval = de->run(s0,maxtime,begin_time);
+		double eval = gr->run(s0,maxtime,begin_time);
 
-		cout << eval << endl;
+		//cout << eval << endl;
 
 	}
 
