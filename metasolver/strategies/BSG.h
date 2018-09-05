@@ -28,10 +28,10 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool plot=false) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), plot(plot) {}
 
 
 	virtual ~BSG();
@@ -66,7 +66,8 @@ public:
 
 
 	virtual void clean(list<State*>& S){
-		while(!S.empty()){ delete S.front(), S.pop_front(); }
+		if(!plot)
+			while(!S.empty()){ delete S.front(), S.pop_front(); }
 
 	}
 
@@ -106,10 +107,12 @@ protected:
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
 			if(nextS.size()<beams && a){
+				State* p=s;
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
 				nextS.push_back(s);
+				p->add_children(s);
 
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
 
@@ -148,6 +151,8 @@ protected:
 	int n_elite;
 
 	bool shuffle_best_path;
+
+	bool plot;
 
 };
 
