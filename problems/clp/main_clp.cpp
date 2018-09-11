@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include "args.hxx"
 //#include "objects/State.cpp"
 #include "clpState.h"
@@ -28,6 +29,39 @@ using namespace std;
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
 
+
+
+void dfsPrintChild(const State* node, ofstream& file){
+	file << "{ "<<endl;
+	file<<"\t \"name\":\""<<node->get_id()<<"\",";
+	file<<"\t \"parent\":\""<<node->get_parent()->get_id() <<"\",";
+	file<<"\t \"value\":\""<<node->get_value() <<"\",";
+	file<<"\t \"sd\":\"\",";
+	file<<"\t \"mcts_value\":\"\",";
+	file<<"\t \"stimated_sd\":\"\",";
+	file<<"\t \"ponderated_sd\":\"\",";
+	file<<"\t \"depth\":\"\",";
+	file<<"\t \"num_visit\":\"\"";
+	file<< "\t,\"simulations\":[]"<<endl;
+
+
+	if(!node->get_children().empty()){
+		file<< "\t,\"children\":["<<endl;
+		for(auto c:node->get_children()){
+			dfsPrintChild(c,file);
+			if(c!=node->get_children().back())
+			    file<<","<<endl;
+		}
+		file<<"]";
+	}
+	file<<"}"<<endl;
+}
+
+void pointsToTxt(State* root, int it) {
+	ofstream myfile("problems/clp/tree_plot/flare"+std::to_string(it)+".json");
+	dfsPrintChild(root,myfile);
+}
+
 int main(int argc, char** argv){
 
 
@@ -43,6 +77,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::Flag _plot(parser, "double", "plot tree", {"plot"});
+
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -143,7 +179,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
@@ -157,13 +193,21 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = de->run(s_copy, maxtime, begin_time) ;
+
+    if(_plot)
+    	de=bsg;
+
+    double eval=de->run(s_copy, maxtime, begin_time) ;
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
 	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
 	
     cout << eval << endl;
-	
+
+    if(_plot){
+    	pointsToTxt(&s_copy, 0);
+    	system("firefox problems/clp/tree_plot/index.html");
+    }
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();

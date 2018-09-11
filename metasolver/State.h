@@ -47,12 +47,13 @@ public:
 class State {
 public:
 
-	State() : parent (NULL){}
+	State() : parent (NULL), id(count_states++){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), var(0.0), mean(0.0), promise(0.0){
+	State(const State& S) : parent(&S), id(count_states++), var(0.0), mean(0.0), promise(0.0){
+
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -115,14 +116,7 @@ public:
 
 	virtual void get_actions(list< Action* >& actions) const = 0;
 
-	virtual Action* next_action(State& final){
-	    if(get_path().size() >= final.get_path().size() ) return NULL; 
-	    
-	    list< const Action* >::iterator act=final.get_path().begin();
-	    advance(act,get_path().size());
-    	
-    	return (*act)->clone();
-	}
+	virtual Action* next_action(State& final);
 
 	bool is_root(){ return (path.size()==0); }
 
@@ -149,6 +143,12 @@ public:
 	void add_children(State* s) const{ children.push_back(s);}
 
 
+	int get_id() const { return id; }
+
+	const State* get_parent() const{ return parent; }
+
+
+	static int count_states;
 
 protected:
 
@@ -167,6 +167,10 @@ protected:
 
 
 	double delta=0.0001; // 
+
+	int id;
+
+
 
 };
 
