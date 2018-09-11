@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
+lib/boost_1_67_0
 metasolver
 metasolver/strategies/
 problems/clp/containers

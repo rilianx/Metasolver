@@ -25,9 +25,9 @@ namespace metasolver {
     class Compare{
     public:
         bool operator() (const State* a , const State* b){
-            if(a->promise() < b->promise() ) return false;
-            else if(a->promise() == b->promise()){
-                if(a->promise()  < b->promise() ) return false;
+            if(a->get_promise() > b->get_promise() ) return false;
+            else if(a->get_promise() == b->get_promise()){
+                if(a->get_promise()  > b->get_promise() ) return false;
                 else return true;
             }
             return true;
@@ -49,34 +49,53 @@ namespace metasolver {
 		std::priority_queue<const State* , vector<const State*>, Compare> q;
 		q.push(s.clone());
 
-		while(q.size() > 0){
-			const State* s = q.top();
-			cout << s->promise() << endl;
 
-			const State* s2 = simulate(s);
+
+		while(q.size() > 0){
+			bool change_best=false;
+
+			const State* s = q.top(); q.pop();
+			cout << s->get_promise() << endl;
+
+			const State* s2 = simulate(s, change_best);
 
 			if(s2 == NULL){
 				q.pop();
 				delete s;
 			}else if(s->get_children().size() == 3){
 				for(auto ch : s->get_children()){
-					simulate(ch);
-					simulate(ch);
+					simulate(ch, change_best);
+					simulate(ch, change_best);
 					q.push(ch);
 				}
 			}else if(s->get_children().size() > 3){
-				simulate(s2);
-				simulate(s2);
+				simulate(s2, change_best);
+				simulate(s2, change_best);
 				q.push(s2);
 			}
+
+			q.push(s);
+
+			if(change_best) update_queue(q);
 
 		}
 
 		return best_state->get_value();
 	}
 
+	// update to promise list
+	void update_queue(std::priority_queue<const State* , vector<const State*>, Compare>& q)
+	{
+		std::priority_queue<const State* , vector<const State*>, Compare> aux;
+		while(!q.empty()){
+			aux.push(q.top());
+			q.pop();
+		}
+		q=aux;
+	}
+
     // performs a simulation and returns the corresponding child
-    State* simulate(const State* s){
+    State* simulate(const State* s, bool change_best){
     	double value;
     	int size = s->get_children().size();
 
@@ -93,7 +112,7 @@ namespace metasolver {
         if(value > get_best_value()){
           if(best_state) delete best_state;
           best_state = s3->clone();
-		  update_list();
+          change_best=true;
           cout << "[MCTS] new best_solution_found ("<< get_time() <<"): " << value << " "
         		 << best_state->get_path().size() << " nodes" << endl;
         }	
@@ -104,11 +123,7 @@ namespace metasolver {
         return s2;
     }
 
-		// update to promise list
-		void update_list()
-		{
-			
-		}
+
 
     private:
 

@@ -10,7 +10,9 @@
 #include <list>
 #include <iostream>
 #include <functional>
+#include <math.h>
 
+#include "boost/math/distributions/students_t.hpp"
 
 
 
@@ -23,6 +25,8 @@
 
 
 using namespace std;
+using namespace boost::math;
+
 namespace metasolver{
 
 class Action{
@@ -48,7 +52,7 @@ public:
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S){
+	State(const State& S) : parent(&S), var(0.0), mean(0.0), promise(0.0){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -89,22 +93,24 @@ public:
 	   // std::random_shuffle ( path.begin(), path.end() );
 	}
 
+	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
-	double promise(double best_value) 
+	void calculate_promise(double best_value)
 	{
 		double z_value=stadistic_test(best_value);
-		students_t dist( children.size() ) ;
+
+		students_t dist( children.size() );
 		promise= cdf(dist, z_value);
 	}
 
 	double stadistic_test(double best_value)
 	{
-		double z = ( ( mean - best_value) / sd );
-		z = z* sqrt(children.size(),2); //FIXME: SQRT ? POW
+		double z = ( ( mean - best_value) / sqrt(var) );
+		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
 
 		return z;
 	}
-	
+
 
 
 	virtual void get_actions(list< Action* >& actions) const = 0;
@@ -124,27 +130,23 @@ public:
 
 	virtual void print() {  }
 
-	/**
-	 *  Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
-	 */
-	virtual void calculate_promise(double best_value) const {
-
-		return 0.0;
-	}
-
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
-	virtual void update_values(double new_value){
-		if(children.size()) mean=new_value;
-		else
+	virtual void update_values(double new_value) const{
+		if(children.size()==0)
+			mean=new_value;
+		else if(children.size() >= 1)
 			mean = (mean*(children.size()-1)+new_value)/children.size();
-			var=( (var*children.size()-2) + pow( (new_Value-mean),2) ) / ( children_size()-1 ); //actualiza la varianza
+
+		if(children.size()>=2)
+			var=( (var*children.size()-2) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
 	}
 
+	inline double get_promise() const{return promise;}
 
 
 	const list<const State*>& get_children() const { return children;}
 
-	void add_children(State* s){ children.push_back(s);}
+	void add_children(State* s) const{ children.push_back(s);}
 
 
 
@@ -157,13 +159,13 @@ protected:
 
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
+	mutable list<const State*> children;
+	mutable double var; // variance
+	mutable double mean; // mean arithmetics
+	//double sd; // standard deviation
+	mutable double promise; // value can be the best of the best
 
-	list<const State*> children;
 
-	double mean; // mean arithmetics
-	double sd; // standard deviation
-	double promise; // value can be the best of the best
-	double var; // variance
 	double delta=0.0001; // 
 
 };
