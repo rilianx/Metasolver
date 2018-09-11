@@ -27,7 +27,7 @@ namespace metasolver {
         bool operator() (const State* a , const State* b){
             if(a->promise() < b->promise() ) return false;
             else if(a->promise() == b->promise()){
-                if(a->promise()  < b->promise()) return false;
+                if(a->promise()  < b->promise() ) return false;
                 else return true;
             }
             return true;
@@ -93,15 +93,22 @@ namespace metasolver {
         if(value > get_best_value()){
           if(best_state) delete best_state;
           best_state = s3->clone();
+		  update_list();
           cout << "[MCTS] new best_solution_found ("<< get_time() <<"): " << value << " "
         		 << best_state->get_path().size() << " nodes" << endl;
-        }
-
+        }	
+		
         s->add_children(s2);
         s->update_values(value);
 
         return s2;
     }
+
+		// update to promise list
+		void update_list()
+		{
+			
+		}
 
     private:
 

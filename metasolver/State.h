@@ -89,7 +89,22 @@ public:
 	   // std::random_shuffle ( path.begin(), path.end() );
 	}
 
+	//FIXME: THIS CLASS?
+	double promise(double best_value) 
+	{
+		double z_value=stadistic_test(best_value);
+		students_t dist( children.size() ) ;
+		promise= cdf(dist, z_value);
+	}
 
+	double stadistic_test(double best_value)
+	{
+		double z = ( ( mean - best_value) / sd );
+		z = z* sqrt(children.size(),2); //FIXME: SQRT ? POW
+
+		return z;
+	}
+	
 
 
 	virtual void get_actions(list< Action* >& actions) const = 0;
@@ -122,7 +137,10 @@ public:
 		if(children.size()) mean=new_value;
 		else
 			mean = (mean*(children.size()-1)+new_value)/children.size();
+			var=( (var*children.size()-2) + pow( (new_Value-mean),2) ) / ( children_size()-1 ); //actualiza la varianza
 	}
+
+
 
 	const list<const State*>& get_children() const { return children;}
 
@@ -142,9 +160,11 @@ protected:
 
 	list<const State*> children;
 
-	double mean;
-	double sd;
-	double promise;
+	double mean; // mean arithmetics
+	double sd; // standard deviation
+	double promise; // value can be the best of the best
+	double var; // variance
+	double delta=0.0001; // 
 
 };
 
