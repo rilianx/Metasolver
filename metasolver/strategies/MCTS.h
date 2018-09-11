@@ -13,6 +13,7 @@
 #include <State.h>
 #include <queue>
 #include <unordered_set>
+#include <fstream>
 
 //TODO: Al seleccionar un nodo se debe aplicar el mecanismo correspondiente para poder calcular promise
 //TODO: Implementar funcion State::promise que calcula la probabilidad de que si lanzo una nueva
@@ -40,6 +41,38 @@ namespace metasolver {
     	MCTS(ActionEvaluator* evl, SearchStrategy& greedy) : SearchStrategy(evl), greedy(greedy) {}
 
 	    virtual ~MCTS() {}
+
+
+	    void dfsPrintChild(const State* node, ofstream& file){
+	    	file << "{ "<<endl;
+	    	file<<"\t \"name\":\""<<node->get_id()<<"\",";
+	    	file<<"\t \"parent\":\""<<node->get_parent()->get_id() <<"\",";
+	    	file<<"\t \"value\":\""<<node->get_value() <<"\",";
+	    	file<<"\t \"sd\":\"\",";
+	    	file<<"\t \"mcts_value\":\"\",";
+	    	file<<"\t \"stimated_sd\":\"\",";
+	    	file<<"\t \"ponderated_sd\":\"\",";
+	    	file<<"\t \"depth\":\"\",";
+	    	file<<"\t \"num_visit\":\"\"";
+	    	file<< "\t,\"simulations\":[]"<<endl;
+
+
+	    	if(!node->get_children().empty()){
+	    		file<< "\t,\"children\":["<<endl;
+	    		for(auto c:node->get_children()){
+	    			dfsPrintChild(c,file);
+	    			if(c!=node->get_children().back())
+	    			    file<<","<<endl;
+	    		}
+	    		file<<"]";
+	    	}
+	    	file<<"}"<<endl;
+	    }
+
+	    void pointsToTxt(State* root, int it) {
+	    	ofstream myfile("problems/clp/tree_plot/flare"+std::to_string(it)+".json");
+	    	dfsPrintChild(root,myfile);
+	    }
 
 	/**
 	 * Run the strategy and return the best found value
@@ -79,6 +112,9 @@ namespace metasolver {
 			if(change_best) update_queue(q);
 
 		}
+
+		pointsToTxt(&s, 0);
+		system("firefox problems/clp/tree_plot/index.html");
 
 		return best_state->get_value();
 	}
