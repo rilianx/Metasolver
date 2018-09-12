@@ -4,6 +4,7 @@
 Clone the project:
      
      git clone https://github.com/rilianx/Metasolver.git
+     git checkout -t origin/mcts3
 
 Compile the project:
      
