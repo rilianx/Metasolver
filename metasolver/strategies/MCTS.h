@@ -155,6 +155,7 @@ namespace metasolver {
 		
         s->add_children(s2);
         s->update_values(value);
+	s->calculate_promise(get_best_value());
 
         return s2;
     }
