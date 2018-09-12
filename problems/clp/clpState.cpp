@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 #include "objects2/BoxShape.h"
 #include "clpState.h"
@@ -56,9 +57,9 @@ long clpState::place(long maxAABB, long minAABB, long maxInter, long minInter) c
  * Symmetry 7:	eje xy	= (getL - getXmin, getL - getXmax, getW - getYmin, getW - getYmax, getZmin, getZmax)
  * Symmetry 8:	eje xyz	= (getL - getXmin, getL - getXmax, getW - getYmin, getW - getYmax, getH - getZmin, getH - getZmax)
  */
-list<long> symmetryVolume(AABB aabb, list<long> symmetries){
+void clpState::symmetryVolume(AABB aabb, list< vector<long> >& symmetries) const{
 	int binary[3] = {0, 0, 0};
-	long symmetry[6];
+	vector<long> symmetry(6);
 
 	for(int i = 0; i < 6; ++i){
 		if(binary[2] == 0){
@@ -87,10 +88,9 @@ list<long> symmetryVolume(AABB aabb, list<long> symmetries){
 				}
 			}
 		}
-		symmetries.push_back(*symmetry);
+		symmetries.push_back(symmetry);
 	}
 
-	return symmetries;
 }
 
 double clpState::diff(const State& s) const{
@@ -100,8 +100,8 @@ double clpState::diff(const State& s) const{
 	long interVolume = 0;
 	const AABB* aabb = &cont->blocks->top();
 	list<const AABB*> inter;
-	list<long> symmetry;
-	long tempVolume = 0;
+	list< vector<long> > symmetry;
+	long tempVolume;
 
 
 	//cout << "Volumen s1: " << s1.cont->getVolume() << endl;
@@ -111,11 +111,10 @@ double clpState::diff(const State& s) const{
 	do{
 		//hacer para cada reflexion del bloque aabb (8 veces)
 		//AABB reflected_aabb = AABB(x1,y1,...);
+		tempVolume = 0;
+		symmetryVolume(*aabb, symmetry);
 
-		symmetry = symmetryVolume(*aabb, symmetry);
-
-		for (auto s = symmetry.rbegin(); s != symmetry.rend(); ++s){
-		//for(long s:symmetry){
+		for(auto s:symmetry){
 			AABB reflected_aabb = AABB(s[0], s[1], s[2], s[3], s[4], s[5]);
 			inter = s2.cont->blocks->get_intersected_objects(reflected_aabb);
 			for(const AABB* b:inter){
@@ -124,8 +123,9 @@ double clpState::diff(const State& s) const{
 		}
 		//delete(reflected_aabb);
 
-		tempVolume = 0;
-		interVolume += tempVolume;
+		if(tempVolume<interVolume)
+			interVolume = tempVolume;
+
 		if(cont->blocks->has_next())
 			aabb = &cont->blocks->next();
 		else break;
