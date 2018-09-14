@@ -22,7 +22,7 @@ namespace clp {
 
 
 //Utilizado para obtener la medida de uno de los lados del area intersectada
-long clpState::place(long maxAABB, long minAABB, long maxInter, long minInter) const{
+long clpState::place(long minAABB, long maxAABB, long minInter, long maxInter) const{
 	//cout << "maxAABB: " << maxAABB << "\tminAABB: " << minAABB << "\tminInter: " << minInter << "\tmaxInter: " << maxInter << endl;
 	if(maxAABB <= maxInter && minInter <= minAABB){
 		//cout << "Fuera de bloque original: " << maxAABB - minAABB << endl;
@@ -57,11 +57,78 @@ long clpState::place(long maxAABB, long minAABB, long maxInter, long minInter) c
  * Symmetry 7:	eje xy	= (getL - getXmin, getL - getXmax, getW - getYmin, getW - getYmax, getZmin, getZmax)
  * Symmetry 8:	eje xyz	= (getL - getXmin, getL - getXmax, getW - getYmin, getW - getYmax, getH - getZmin, getH - getZmax)
  */
-void clpState::symmetryVolume(AABB aabb, list< vector<long> >& symmetries) const{
-	int binary[3] = {0, 0, 0};
-	vector<long> symmetry(6);
+void clpState::symmetryVolume(AABB aabb, long* symmetry, int index) const{
+	//int binary[3] = {0, 0, 0};
+	//vector<long> symmetry(6);
 
-	for(int i = 0; i < 6; ++i){
+	switch(index){
+		case 0:
+			symmetry[0] = aabb.getXmin();
+			symmetry[1] = aabb.getXmax();
+			symmetry[2] = aabb.getYmin();
+			symmetry[3] = aabb.getYmax();
+			symmetry[4] = aabb.getZmin();
+			symmetry[5] = aabb.getZmax();
+			break;
+		case 1:
+			symmetry[0] = aabb.getXmin();
+			symmetry[1] = aabb.getXmax();
+			symmetry[2] = aabb.getYmin();
+			symmetry[3] = aabb.getYmax();
+			symmetry[4] = aabb.getH() - aabb.getZmin();
+			symmetry[5] = aabb.getH() - aabb.getZmax();
+			break;
+		case 2:
+			symmetry[0] = aabb.getXmin();
+			symmetry[1] = aabb.getXmax();
+			symmetry[2] = aabb.getW() - aabb.getYmin();
+			symmetry[3] = aabb.getW() - aabb.getYmax();
+			symmetry[4] = aabb.getZmin();
+			symmetry[5] = aabb.getZmax();
+			break;
+		case 3:
+			symmetry[0] = aabb.getXmin();
+			symmetry[1] = aabb.getXmax();
+			symmetry[2] = aabb.getW() - aabb.getYmin();
+			symmetry[3] = aabb.getW() - aabb.getYmax();
+			symmetry[4] = aabb.getH() - aabb.getZmin();
+			symmetry[5] = aabb.getH() - aabb.getZmax();
+			break;
+		case 4:
+			symmetry[0] = aabb.getL() - aabb.getXmin();
+			symmetry[1] = aabb.getL() - aabb.getXmax();
+			symmetry[2] = aabb.getYmin();
+			symmetry[3] = aabb.getYmax();
+			symmetry[4] = aabb.getZmin();
+			symmetry[5] = aabb.getZmax();
+			break;
+		case 5:
+			symmetry[0] = aabb.getL() - aabb.getXmin();
+			symmetry[1] = aabb.getL() - aabb.getXmax();
+			symmetry[2] = aabb.getYmin();
+			symmetry[3] = aabb.getYmax();
+			symmetry[4] = aabb.getH() - aabb.getZmin();
+			symmetry[5] = aabb.getH() - aabb.getZmax();
+			break;
+		case 6:
+			symmetry[0] = aabb.getL() - aabb.getXmin();
+			symmetry[1] = aabb.getL() - aabb.getXmax();
+			symmetry[2] = aabb.getW() - aabb.getYmin();
+			symmetry[3] = aabb.getW() - aabb.getYmax();
+			symmetry[4] = aabb.getZmin();
+			symmetry[5] = aabb.getZmax();
+			break;
+		case 7:
+			symmetry[0] = aabb.getL() - aabb.getXmin();
+			symmetry[1] = aabb.getL() - aabb.getXmax();
+			symmetry[2] = aabb.getW() - aabb.getYmin();
+			symmetry[3] = aabb.getW() - aabb.getYmax();
+			symmetry[4] = aabb.getH() - aabb.getZmin();
+			symmetry[5] = aabb.getH() - aabb.getZmax();
+			break;
+	}
+
+	/*for(int i = 0; i < 6; ++i){
 		if(binary[2] == 0){
 			binary[2] = 1;
 			symmetry[0] = aabb.getXmin();
@@ -89,7 +156,7 @@ void clpState::symmetryVolume(AABB aabb, list< vector<long> >& symmetries) const
 			}
 		}
 		symmetries.push_back(symmetry);
-	}
+	}*/
 
 }
 
@@ -100,31 +167,28 @@ double clpState::diff(const State& s) const{
 	long interVolume = 0;
 	const AABB* aabb = &cont->blocks->top();
 	list<const AABB*> inter;
-	list< vector<long> > symmetry;
+	long symmetry[6];
 	long tempVolume;
-
 
 	//cout << "Volumen s1: " << s1.cont->getVolume() << endl;
 	//cout << "Volumen s2: " << s2.cont->getVolume() << endl;
 	//cout << "Volumen total: " << s1.cont->getVolume() + s2.cont->getVolume() << endl;
 	//Suma de volumenes de ambos contenedores
 	do{
-		//hacer para cada reflexion del bloque aabb (8 veces)
-		//AABB reflected_aabb = AABB(x1,y1,...);
-		tempVolume = 0;
-		symmetryVolume(*aabb, symmetry);
+		//se obtiene simetria por contenedor (son máximo 8 simetrias)
+		for(int symmetryIndex = 0; symmetryIndex < 8; symmetryIndex++){
+			tempVolume = 0; //volumen temporal
+			symmetryVolume(*aabb, symmetry, symmetryIndex); //se obtiene la simetría en función a un índice
 
-		for(auto s:symmetry){
-			AABB reflected_aabb = AABB(s[0], s[1], s[2], s[3], s[4], s[5]);
+			AABB reflected_aabb = AABB(symmetry[0], symmetry[1], symmetry[2], symmetry[3], symmetry[4], symmetry[5]);
 			inter = s2.cont->blocks->get_intersected_objects(reflected_aabb);
-			for(const AABB* b:inter){
-				tempVolume = place(aabb->getXmax(), aabb->getXmin(), b->getXmax(), b->getXmin()) * place(aabb->getYmax(), aabb->getYmin(), b->getYmax(), b->getYmin()) * place(aabb->getZmax(), aabb->getZmin(), b->getZmax(), b->getZmin());
-			}
-		}
-		//delete(reflected_aabb);
 
-		if(tempVolume<interVolume)
-			interVolume = tempVolume;
+			for(const AABB* b:inter)
+				tempVolume += place(reflected_aabb.getXmin(), reflected_aabb.getXmax(), b->getXmin(), b->getXmax()) * place(reflected_aabb.getYmin(), reflected_aabb.getYmax(), b->getYmin(), b->getYmax()) * place(reflected_aabb.getZmin(), reflected_aabb.getZmax(), b->getZmin(), b->getZmax());
+
+			if(tempVolume < interVolume)
+				interVolume = tempVolume;
+		}
 
 		if(cont->blocks->has_next())
 			aabb = &cont->blocks->next();

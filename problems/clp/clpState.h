@@ -162,7 +162,7 @@ private:
 	Vector3 mindim;
 
 
-	void symmetryVolume(AABB aabb, list< vector<long> >& symmetries) const;
+	void symmetryVolume(AABB aabb, long* symmetries, int index) const;
 
 };
 
