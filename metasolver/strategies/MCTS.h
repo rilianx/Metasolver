@@ -77,7 +77,7 @@ namespace metasolver {
 	/**
 	 * Run the strategy and return the best found value
 	 */
-	virtual double run(State& s, double tl=99999.9, clock_t bt=clock()){
+	 double run(State& s, double tl=99999.9, clock_t bt=clock()){
 
 		std::priority_queue<const State* , vector<const State*>, Compare> q;
 		q.push(s.clone());

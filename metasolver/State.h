@@ -97,7 +97,7 @@ public:
 	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
 	//TODO:eliminar cout
-	virtual void calculate_promise(double best_value){
+	void calculate_promise(double best_value){
 		
 		double z_value=stadistic_test(best_value);
 		students_t dist( children.size() );
@@ -110,15 +110,15 @@ public:
 	}
 
 	//TODO: eliminar los cout
-	virtual double stadistic_test(double best_value){
+	double stadistic_test(double best_value){
 
 		double z = ( ( mean - best_value) / sqrt(var) );
-		
+
 		cout <<"[STATE] {stadistic_test} 
 		BEST VALUE: ("<<best_balue<<")
 		MEAN: ("<<mean<<") 
 		VAR: ("<<var <<")
-		befor Z: ("<< z <<")";
+		BEFORE Z: ("<< z <<")";
 
 		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
 
