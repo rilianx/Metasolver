@@ -96,18 +96,33 @@ public:
 
 	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
-	void calculate_promise(double best_value)
-	{
+	//TODO:eliminar cout
+	virtual void calculate_promise(double best_value){
+		
 		double z_value=stadistic_test(best_value);
-
 		students_t dist( children.size() );
 		promise= cdf(dist, z_value);
+		cout << "[SATE]{calculate_promise} 
+		BEST_VALUE: ( "<< best_value << ")
+		Z_VALUE: ( "<< z_value << ") 
+		DIST: ( "<< dist <<")
+		PROMISE( " <<promise<<")" ;
 	}
 
-	double stadistic_test(double best_value)
-	{
+	//TODO: eliminar los cout
+	virtual double stadistic_test(double best_value){
+
 		double z = ( ( mean - best_value) / sqrt(var) );
+		
+		cout <<"[STATE] {stadistic_test} 
+		BEST VALUE: ("<<best_balue<<")
+		MEAN: ("<<mean<<") 
+		VAR: ("<<var <<")
+		befor Z: ("<< z <<")";
+
 		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
+
+		cout << "Z afeter: ("<< z <<")";
 
 		return z;
 	}
@@ -125,18 +140,33 @@ public:
 	virtual void print() {  }
 
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
+	//TODO: eliminar cout
 	virtual void update_values(double new_value) const{
 		if(children.size()==0)
+			cout << "[STATE] {update_values}¿children==0? MEAN: " << mean 
+			"NEW_VALUE: " << new_value ;
+
 			mean=new_value;
 		else if(children.size() >= 1)
+
+			cout << "[STATE] {update_values}¿children>=1? MEAN before: " << mean;
+
 			mean = (mean*(children.size()-1)+new_value)/children.size();
 
+			cout << "[STATE] {update_values} MEAN after: " << mean;
+
 		if(children.size()>=2)
+			cout << "[STATE] {update_values} ¿children>=2? VAR before: "<< var;
+
 			var=( (var*children.size()-2) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
+
+			cout << "[STATE] {update_values} ¿children>=2? VAR after: "<< var;
 	}
 
 	inline double get_promise() const{return promise;}
 
+	double get_mean() const {return mean;}
+	double get_var() const {return var;}
 
 	const list<const State*>& get_children() const { return children;}
 
@@ -164,10 +194,7 @@ protected:
 	mutable double mean; // mean arithmetics
 	//double sd; // standard deviation
 	mutable double promise; // value can be the best of the best
-
-
 	double delta=0.0001; // 
-
 	int id;
 
 

@@ -134,7 +134,9 @@ namespace metasolver {
     State* simulate(const State* s, bool change_best){
     	double value;
     	int size = s->get_children().size();
-
+		//TODO: ELIMINAR COUT
+		cout << "[MCTS] {simulate} estado: ("<< s->get_id()<<") mean: ("<< s->get_mean() << ")var: ("<< s->get_var() 
+		<< ") promise:  ("<< s->get_promise()<<")";
     	//TODO: optimizar!
    		State* s2=s->clone();
    		list< Action* > best_actions;
@@ -155,7 +157,7 @@ namespace metasolver {
 		
         s->add_children(s2);
         s->update_values(value);
-	s->calculate_promise(get_best_value());
+		s->calculate_promise(get_best_value());
 
         return s2;
     }
