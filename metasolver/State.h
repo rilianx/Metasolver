@@ -52,7 +52,7 @@ public:
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++), var(0.0), mean(0.0), promise(0.0){
+	State(const State& S) : parent(&S), id(count_states++), var(0.0), mean(0.0), promise(0.0), children_size(0){
 
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
@@ -97,32 +97,28 @@ public:
 	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
 	//TODO:eliminar cout
-	void calculate_promise(double best_value){
+	void calculate_promise(double best_value) const{
 		
-		double z_value=stadistic_test(best_value);
+		if(var==0.0) {promise=0; return;}
+
+		double z_value=stadistic_test(best_value+delta);
 		students_t dist( children.size() );
+
 		promise= cdf(dist, z_value);
-		cout << "[SATE]{calculate_promise} 
-		BEST_VALUE: ( "<< best_value << ")
-		Z_VALUE: ( "<< z_value << ") 
-		DIST: ( "<< dist <<")
-		PROMISE( " <<promise<<")" ;
+		cout << "[SATE]{calculate_promise} BEST_VALUE: ( " << best_value << ") Z_VALUE: ( "<< z_value << ") " <<
+				/*"DIST: ( "<< dist <<")*/ " PROMISE( " <<promise<<")" << endl ;
 	}
 
 	//TODO: eliminar los cout
-	double stadistic_test(double best_value){
+	double stadistic_test(double best_value) const {
 
 		double z = ( ( mean - best_value) / sqrt(var) );
 
-		cout <<"[STATE] {stadistic_test} 
-		BEST VALUE: ("<<best_balue<<")
-		MEAN: ("<<mean<<") 
-		VAR: ("<<var <<")
-		BEFORE Z: ("<< z <<")";
+		cout <<"[STATE] {stadistic_test} ESTADO: " << id << "BEST VALUE: ("<< best_value <<")	MEAN: ("<<mean<<") VAR: ("<<var <<") BEFORE Z: ("<< z <<")" << endl;;
 
 		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
 
-		cout << "Z afeter: ("<< z <<")";
+		cout << "Z afeter: ("<< z <<")"<< endl;
 
 		return z;
 	}
@@ -142,25 +138,27 @@ public:
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
 	//TODO: eliminar cout
 	virtual void update_values(double new_value) const{
-		if(children.size()==0)
-			cout << "[STATE] {update_values}¿children==0? MEAN: " << mean 
-			"NEW_VALUE: " << new_value ;
+		if(children.size()==0){
+			cout << "[STATE] {update_values}¿children==0? MEAN: " << mean << "NEW_VALUE: " << new_value << endl;
 
 			mean=new_value;
-		else if(children.size() >= 1)
+		}else if(children.size() >= 1){
 
-			cout << "[STATE] {update_values}¿children>=1? MEAN before: " << mean;
+			cout << "[STATE] {update_values}¿children>=1? MEAN before: " << mean<< endl;
 
 			mean = (mean*(children.size()-1)+new_value)/children.size();
 
-			cout << "[STATE] {update_values} MEAN after: " << mean;
+			cout << "[STATE] {update_values} MEAN after: " << mean<< endl;
+		}
 
-		if(children.size()>=2)
-			cout << "[STATE] {update_values} ¿children>=2? VAR before: "<< var;
+		if(children.size()>=2){
+			cout << "[STATE] {update_values} ¿children>=2? VAR before: "<< var<< endl;
 
-			var=( (var*children.size()-2) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
+			var=( (var*(children.size()-2)) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
+			if(var<=1e-6) var=1e-6;
 
-			cout << "[STATE] {update_values} ¿children>=2? VAR after: "<< var;
+			cout << "[STATE] {update_values} ¿children>=2? VAR after: "<< var<< endl;
+		}
 	}
 
 	inline double get_promise() const{return promise;}
@@ -170,7 +168,9 @@ public:
 
 	const list<const State*>& get_children() const { return children;}
 
-	void add_children(State* s) const{ children.push_back(s);}
+	const int get_children_size() const { return children_size;}
+
+	void add_children(State* s) const{ children.push_back(s); children_size++;}
 
 
 	int get_id() const { return id; }
@@ -179,6 +179,8 @@ public:
 
 
 	static int count_states;
+
+	mutable int children_size;
 
 protected:
 
@@ -194,6 +196,8 @@ protected:
 	mutable double mean; // mean arithmetics
 	//double sd; // standard deviation
 	mutable double promise; // value can be the best of the best
+
+
 	double delta=0.0001; // 
 	int id;
 

@@ -47,9 +47,9 @@ namespace metasolver {
 	    	file << "{ "<<endl;
 	    	file<<"\t \"name\":\""<<node->get_id()<<"\",";
 	    	file<<"\t \"parent\":\""<<node->get_parent()->get_id() <<"\",";
-	    	file<<"\t \"value\":\""<<node->get_value() <<"\",";
-	    	file<<"\t \"sd\":\"\",";
-	    	file<<"\t \"mcts_value\":\"\",";
+	    	file<<"\t \"value\":\""<<node->get_mean() <<"\",";
+	    	file<<"\t \"sd\":\""<<node->get_var() <<"\",";
+	    	file<<"\t \"mcts_value\":\""<<node->get_promise() <<"\",";
 	    	file<<"\t \"stimated_sd\":\"\",";
 	    	file<<"\t \"ponderated_sd\":\"\",";
 	    	file<<"\t \"depth\":\"\",";
@@ -78,17 +78,19 @@ namespace metasolver {
 	 * Run the strategy and return the best found value
 	 */
 	 double run(State& s, double tl=99999.9, clock_t bt=clock()){
-
+		timelimit=tl;
 		std::priority_queue<const State* , vector<const State*>, Compare> q;
-		q.push(s.clone());
+		State* s0 = s.clone();
+		q.push(s0);
+
+		int i=0;
 
 
-
-		while(q.size() > 0){
+		while(q.size() > 0 &&  get_time()<timelimit){
 			bool change_best=false;
 
 			const State* s = q.top(); q.pop();
-			cout << s->get_promise() << endl;
+			cout << "promise:" << s->get_promise() << endl;
 
 			const State* s2 = simulate(s, change_best);
 
@@ -99,21 +101,28 @@ namespace metasolver {
 				for(auto ch : s->get_children()){
 					simulate(ch, change_best);
 					simulate(ch, change_best);
+					ch->calculate_promise(get_best_value());
 					q.push(ch);
 				}
 			}else if(s->get_children().size() > 3){
 				simulate(s2, change_best);
 				simulate(s2, change_best);
+				s2->calculate_promise(get_best_value());
 				q.push(s2);
 			}
+
+			if(s->get_children().size() >= 2)
+				s->calculate_promise(get_best_value());
 
 			q.push(s);
 
 			if(change_best) update_queue(q);
 
+			i++;
+			cout << "i:" << i << endl;
 		}
 
-		pointsToTxt(&s, 0);
+		pointsToTxt(s0, 0);
 		system("firefox problems/clp/tree_plot/index.html");
 
 		return best_state->get_value();
@@ -132,18 +141,33 @@ namespace metasolver {
 
     // performs a simulation and returns the corresponding child
     State* simulate(const State* s, bool change_best){
+
     	double value;
-    	int size = s->get_children().size();
-		//TODO: ELIMINAR COUT
-		cout << "[MCTS] {simulate} estado: ("<< s->get_id()<<") mean: ("<< s->get_mean() << ")var: ("<< s->get_var() 
-		<< ") promise:  ("<< s->get_promise()<<")";
-    	//TODO: optimizar!
-   		State* s2=s->clone();
-   		list< Action* > best_actions;
-   		get_best_actions(*s2, best_actions, size+1);
-   		s2->transition(*best_actions.back());
-   		State* s3=s2->clone();
-   		value=greedy.run(*s3);
+    	State* s2, *s3;
+        while(true){
+
+			int size = s->get_children_size();
+			//TODO: ELIMINAR COUT
+			cout << "[MCTS] {simulate} estado: ("<< s->get_id()<<") mean: ("<< s->get_mean() << ")var: ("<< s->get_var()
+			<< ") promise:  ("<< s->get_promise()<<")" << endl;
+			//TODO: optimizar!
+			s2=s->clone();
+			list< Action* > best_actions;
+			get_best_actions(*s2, best_actions, size+1);
+			if(best_actions.size()<size+1) return NULL;
+
+			s2->transition(*best_actions.back());
+			s3=s2->clone();
+			value=greedy.run(*s3);
+
+
+			if(evals.find(value)==evals.end()){
+				evals.insert(value);
+				break;
+			}else{
+				s->children_size++;
+			}
+        }
 
 
         //best_state update
@@ -155,9 +179,12 @@ namespace metasolver {
         		 << best_state->get_path().size() << " nodes" << endl;
         }	
 		
+
         s->add_children(s2);
         s->update_values(value);
-		s->calculate_promise(get_best_value());
+
+        cout << "value:" << value << endl;
+
 
         return s2;
     }
@@ -168,6 +195,7 @@ namespace metasolver {
 
 	SearchStrategy& greedy;
 
+	set<double> evals;
 
 };
 
