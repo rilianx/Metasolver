@@ -110,7 +110,7 @@ void glue_resetInput2(PyHandler pyHandler){
     if(PyErr_Occurred())
         PyErr_Print();
     if(!pFunc) 
-        printf("[glue_putInput] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+        printf("[glue_putInput-] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
     if(pFunc && PyCallable_Check(pFunc) && DEB)
         printf("Todo ok\n");
 
@@ -156,6 +156,86 @@ double glue_getSolution(PyHandler pyHandler, long x, long y, long z) {
     double solucion = PyFloat_AsDouble(pRet);
 
     return solucion;
+}
+
+double glue_getAlpha(PyHandler pyHandler){
+    const char* nombreFuncion = "getAlpha";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+
+    // Comprobando errores
+    f(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_getAlpha] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion y obteniendo solucion
+    PyObject *pRet = PyObject_CallObject(pFunc, NULL);
+    
+    double solucion = PyFloat_AsDouble(pRet);
+}
+
+double glue_getBata(PyHandler pyHandler){
+    const char* nombreFuncion = "getBeta";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+
+    // Comprobando errores
+    f(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_getBeta] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion y obteniendo solucion
+    PyObject *pRet = PyObject_CallObject(pFunc, NULL);
+    
+    double solucion = PyFloat_AsDouble(pRet);
+}
+
+double glue_getGamma(PyHandler pyHandler){
+    const char* nombreFuncion = "getGamma";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+
+    // Comprobando errores
+    f(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_getGamma] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion y obteniendo solucion
+    PyObject *pRet = PyObject_CallObject(pFunc, NULL);
+    
+    double solucion = PyFloat_AsDouble(pRet);
+}
+
+double glue_getP(PyHandler pyHandler){
+    const char* nombreFuncion = "getP";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+
+    // Comprobando errores
+    f(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_getP] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion y obteniendo solucion
+    PyObject *pRet = PyObject_CallObject(pFunc, NULL);
+    
+    double solucion = PyFloat_AsDouble(pRet);
 }
 
 

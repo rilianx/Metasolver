@@ -43,7 +43,6 @@ namespace clp {
 			pyHandler.pModule = glue_initPyHandler(pyHandler, pathScript, nameScript);
 			if(pyHandler.pModule == NULL)
 				cout << "\033[1;31mERROR: pModule es nulo en el constructor\033[0m\n";
-			//TODO: Inicializar la red
 		}
 
 		virtual ~ANNEvaluator(){
@@ -53,40 +52,25 @@ namespace clp {
 		}
 
 		virtual void initialize(const State& s){
-			//cout << "initialize init" << endl;
 			const char *nFuncInput1 = "setValueInput1"; // Nombre de la funcion para actualizar input 1 de la red (En Python)
 			const char *nFuncInput2 = "setValueInput2"; // Nombre de la funcion para actualizar input 2 de la red (En Python)
 
 			const clpState* state = dynamic_cast<const clpState*>(&s);
 
-			//block.getXmin(); block.getXmax();
-			//block.getYmin(); block.getYmax();
-			//block.getZmax();
-
-			//cout << "Init matrix" << endl;
 			for(int i=0; i<L; i++)
 				for(int j=0; j<W; j++)
 					matrix[i][j]= 0;
-			//cout << "end" << endl;
 
 			if(pyHandler.pModule == NULL)
 				cout << "\033[1;31mERROR: pModule es nulo en la inicializacion\033[0m\n";
 
-            // Generando el input 1
-			//cout << "Init input 1" << endl;
-
-			if(state->cont->blocks->size()){ //FIXME: dos primeros estados estan vacios
+			// Generando input 1
+			if(state->cont->blocks->size()){
 			    AABB block = state->cont->blocks->top();
 				while(true){
-					//cout << block.getXmin() << endl;
-					//cout << block.getZmax() << endl;
-					//cout << block.getXmax() << endl;
-					//cout << block.getYmax() << endl;
 					for(long i = block.getXmin(); i < block.getXmax(); i++) {
 						for (long j = block.getYmin(); j < block.getYmax(); j++) {
-							//cout << "Input 1" << endl;
-							//cout << block.getZmax() << endl;
-							glue_putInput(pyHandler, nFuncInput1, i, j, block.getZmax()); // matrix[i][j] = block.getZmax();
+							glue_putInput(pyHandler, nFuncInput1, i, j, block.getZmax());
 						}
 					}
 					if(state->cont->blocks->has_next()){
@@ -95,13 +79,10 @@ namespace clp {
 				}
 			}
 
-			//cout << "end" << endl;
-
 			list< Action* > actions;
 			s.get_actions(actions);
 
             // Generando el input 2
-			//cout << "Init input 2" << endl;
 			glue_resetInput2(pyHandler);
 			const Space& sp = state->cont->spaces->top();
 			for(long i = sp.getXmin(); i < sp.getXmax(); i++){
@@ -109,57 +90,22 @@ namespace clp {
 					glue_putInput(pyHandler, nFuncInput2, i, j, 1);
 				}
 			}
-			//cout << "end" << endl;
-			//sp.getXmin()
-			//sp.getXmax()
-			//sp.getYmin()
-			//sp.getYmax()
 
-			/*for(int i=0; i<L; i++){
-                for(int j=0; j<W; j++)
-                    printf("%3d",matrix[i][j]);
-                cout << endl;
-            }
-            cout << endl;*/
-
-			
-			//cout << "operaint" << endl;
+			// Obteniendo prediccion de la red
 			glue_operate(pyHandler);
-			//cout << "end" << endl;
 
-			// Actualizando cubo de soluciones
-			const int xMax = 5;
-			const int yMax = 5;
-			const int zMax = 5;
-			for(long i = 0; i < xMax; i++)
-				for(long j = 0; j < yMax; j++)
-					for(long k = 0; k < zMax; k++)
-						prob[i][j][k] = glue_getSolution(pyHandler, i, j, k);
-			//cout << "initialize end" << endl;
+			// TODO: en esta parte debe setear los parametros del otro evaluator con la salida de la red
+			// VCS_Function en problems/clp/evaluators
+
+			// vcs_f.set_alpha(glue_getAlpha(pyHandler));
+			// vcs_f.set_gamma(glue_getGamma(pyHandler));
+			// vcs_f.set_p(glue_getP(pyHanndler));
+			// vcs_f.set_beta(glue_getBeta(pyHandler));
+
 		}
 
 		virtual double eval_action(const State& s, const Action& a){
-			const Block& b = dynamic_cast<const clpAction*>(&a)->block;
-			const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
-            double eval = 0;
-            double l = b.getL() * (5.0/sp.getL());
-            double w = b.getW() * (5.0/sp.getW());
-            double h = b.getH() * (5.0/sp.getH());
-
-            // Actualizando cubo de soluciones
-            const int xMax = 5;
-            const int yMax = 5;
-            const int zMax = 5;
-            for(long i = 0; i < xMax; i++) {
-                for (long j = 0; j < yMax; j++) {
-                    for (long k = 0; k < zMax; k++) {
-                        eval += prob[i][j][k] *
-                                (1 - sqrt(pow(l - i, 2) + pow(w - j, 2) + pow(h - k, 2)) /
-                                sqrt(pow(xMax, 2) + pow(yMax, 2) + pow(zMax, 2)));
-                    }
-                }
-            }
-			return eval; //(rand()%10000)/10000.0;//eval;
+			return vcs_f.eval_actions(s, a);
 		}
 
 
@@ -169,6 +115,7 @@ namespace clp {
 		int L,W;
 
 		PyHandler pyHandler;
+		VCS_Function vcs_f;
 	};
 
 } /* namespace clp */

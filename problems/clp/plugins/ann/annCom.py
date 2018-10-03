@@ -27,7 +27,7 @@ print "mostrando por consola"
 model = None
 input1 = np.zeros((1,defaultX,defaultY,1))
 input2 = np.zeros((1,defaultX,defaultY,1))
-prediction = np.zeros((1,5,5,5))
+prediction = np.zeros(4)
 
 
 '''
@@ -103,8 +103,12 @@ def getPrediction():
 	if np.count_nonzero(np.array(input1)) == 0:
 		print "contenedor vacio, numero ", numeroPred
 
-	prediction = model.predict([np.array(input1)/233.0, np.array(input2)], batch_size = 1)
-	prediction = np.reshape(prediction, (batch,5,5,5))
+	a,b,g,p = model.predict([np.array(input1)/233.0, np.array(input2)], batch_size = 1)
+	prediction[0] = a[0,0]*8.0
+	prediction[1] = b[0,1]*8.0
+	prediction[2] = g[0,2]
+	prediction[3] = p[0,3]*0.1
+	#prediction = np.reshape(prediction, (batch,5,5,5)) # FIXME: <- Esto hay que cambiarlo si o si
 
 	numeroPred = numeroPred + 1
 	
@@ -134,3 +138,43 @@ def resetInput2():
 def getValue(x,y,z, b = 0):
 	global prediction
 	return prediction.item((b,x,y,z))
+
+def getAlpha():
+	# FIXME: Comprobar si esto esta bien
+	global prediction
+
+	# Esto es asumiendo que:
+	# - La solucion es un arreglo de valores
+	# - Alpha se encuentra en la primera posicion de este arreglo
+
+	return prediction.item(0)
+
+def getBeta():
+	# FIXME: Comprobar si esto esta bien
+	global prediction
+
+	# Esto es asumiendo que:
+	# - La solucion es un arreglo de valores
+	# - Gamma se encuentra en la segunda posicion de este arreglo
+
+	return prediction.item(1)
+
+def getGamma():
+	# FIXME: Comprobar si esto esta bien
+	global prediction
+
+	# Esto es asumiendo que:
+	# - La solucion es un arreglo de valores
+	# - Gamma se encuentra en la segunda posicion de este arreglo
+
+	return prediction.item(2)
+
+def getP():
+	# FIXME: Comprobar si esto esta bien
+	global prediction
+
+	# Esto es asumiendo que:
+	# - La solucion es un arreglo de valores
+	# - P se encuentra en la tercera posicion de este arreglo
+
+	return prediction.item(3)
