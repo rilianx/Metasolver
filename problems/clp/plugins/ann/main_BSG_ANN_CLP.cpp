@@ -113,9 +113,10 @@ int main(int argc, char** argv){
 
     clock_t begin_time=clock();
 
+    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+        4.0, 1.0, 0.2, 0.04, 1.0, f, 0.0);
     ANNEvaluator* ann_eval = new ANNEvaluator(s0->cont->getL(), s0->cont->getW());
-    //VCS_Function* ann_eval = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-       // 4.0, 1.0, 0.2, 0.04, 1.0, f, 0.0);
+
 
 	//for(int i=0;i<10000; i++)
 	//	exp->best_action(*s0);
