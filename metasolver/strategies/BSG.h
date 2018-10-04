@@ -113,6 +113,7 @@ protected:
 				s->transition(*a);
 
 				if(div>0.0 && nextS.size()>0 && final_state->diversity(final_states)<div) {
+
 					delete s;
 					state_action->second.first=NULL;
 				}else{

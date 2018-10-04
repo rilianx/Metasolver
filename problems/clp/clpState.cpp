@@ -174,11 +174,13 @@ double clpState::diff(const State& s) const{
 	//cout << "Volumen s2: " << s2.cont->getVolume() << endl;
 	//cout << "Volumen total: " << s1.cont->getVolume() + s2.cont->getVolume() << endl;
 	//Suma de volumenes de ambos contenedores
-	do{
-		//se obtiene simetria por contenedor (son máximo 8 simetrias)
-		for(int symmetryIndex = 0; symmetryIndex < 8; symmetryIndex++){
-			tempVolume = 0; //volumen temporal
-			symmetryVolume(*aabb, symmetry, symmetryIndex); //se obtiene la simetría en función a un índice
+	//se obtiene simetria por contenedor (son mï¿½ximo 8 simetrias)
+	for(int symmetryIndex = 0; symmetryIndex < 1; symmetryIndex++){
+		tempVolume = 0; //volumen temporal
+
+		do{
+
+			symmetryVolume(*aabb, symmetry, symmetryIndex); //se obtiene la simetrï¿½a en funciï¿½n a un ï¿½ndice
 
 			AABB reflected_aabb = AABB(symmetry[0], symmetry[1], symmetry[2], symmetry[3], symmetry[4], symmetry[5]);
 			inter = s2.cont->blocks->get_intersected_objects(reflected_aabb);
@@ -186,14 +188,15 @@ double clpState::diff(const State& s) const{
 			for(const AABB* b:inter)
 				tempVolume += place(reflected_aabb.getXmin(), reflected_aabb.getXmax(), b->getXmin(), b->getXmax()) * place(reflected_aabb.getYmin(), reflected_aabb.getYmax(), b->getYmin(), b->getYmax()) * place(reflected_aabb.getZmin(), reflected_aabb.getZmax(), b->getZmin(), b->getZmax());
 
-			if(tempVolume < interVolume)
+			if(tempVolume > interVolume)
 				interVolume = tempVolume;
-		}
 
-		if(cont->blocks->has_next())
-			aabb = &cont->blocks->next();
-		else break;
-	}while(true);
+			if(cont->blocks->has_next())
+				aabb = &cont->blocks->next();
+			else break;
+
+		}while(true);
+	}
 
 	//Obtener suma de volumenes de los bloques de ambos contenedores
 	long int simetricDifVolume = 0;
@@ -217,13 +220,14 @@ double clpState::diff(const State& s) const{
 		else break;
 	}while(true);
 
-	//cout << "\nVolumen uniones:\t\t" << simetricDifVolume << endl;
+	cout << "\nVolumen total:\t\t" << s2.cont->getVolume() << endl;
+	cout << "\nVolumen uniones:\t\t" << simetricDifVolume << endl;
 
 	simetricDifVolume -= interVolume;
 
-	//cout << "Volumen diferencia simetrica:\t" << simetricDifVolume << endl;
-	//cout << "Volumen intersecciones:\t\t" << interVolume << endl;
-	//cout << "Resta de volumenes:\t\t" << simetricDifVolume - interVolume << endl;
+	cout << "Volumen diferencia simetrica:\t" << simetricDifVolume << endl;
+	cout << "Volumen intersecciones:\t\t" << interVolume << endl;
+	cout << "Resta de volumenes:\t\t" << simetricDifVolume - interVolume << endl;
 
 
 	return (double) (simetricDifVolume - interVolume)/(double) cont->getVolume();

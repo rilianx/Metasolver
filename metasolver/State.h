@@ -116,9 +116,10 @@ public:
 	virtual double diff(const State& s) const = 0; // {return 0;}
 
 	double diversity(list<State*>& states){
-		double min_diff=1;
+		double min_diff=1.0;
 		for(auto s:states){
 			double d=diff(*s);
+			cout << d << endl;
 			if(d < min_diff)
 				min_diff=d;
 
