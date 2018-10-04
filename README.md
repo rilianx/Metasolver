@@ -28,11 +28,11 @@ Testing
 
 Folder:
 
-  extras/fw4exps
+     extras/fw4exps
 
 Execute command: 
 
-  python fw4xps.py configBSG.txt 1
+     python fw4xps.py configBSG.txt 1
 
 
 ## BSG for CLP
