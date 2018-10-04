@@ -28,7 +28,7 @@ Testing
 
 Folder:
 
-     extras/fw4exps
+     Metasolver/extras/fw4exps
 
 Execute command: 
 
