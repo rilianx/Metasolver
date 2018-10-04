@@ -32,7 +32,7 @@ public:
 
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
-	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
+	virtual Action* clone() const{ return new clpAction(*this); }
 
 	const Block& block;
 	const Space space;
