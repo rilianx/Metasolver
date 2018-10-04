@@ -23,6 +23,17 @@ then
      
      make MCTS_CLP
 
+Testing
+-------
+
+Folder:
+
+  extras/fw4exps
+
+Execute command: 
+
+  python fw4xps.py configBSG.txt 1
+
 
 ## BSG for CLP
 Description

@@ -89,14 +89,14 @@ public:
 	* Rearranges the elements in the path randomly
 	*/
 	virtual int shuffle_path(){
-	    cout << "why!!" << endl;
+	  
 	    return 0;
 	   // std::random_shuffle ( path.begin(), path.end() );
 	}
 
 	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
-	//TODO:eliminar cout
+	
 	void calculate_promise(double best_value) const{
 		
 		if(var==0.0) {promise=0; return;}
@@ -105,20 +105,17 @@ public:
 		students_t dist( children.size() );
 
 		promise= cdf(dist, z_value);
-		cout << "[SATE]{calculate_promise} BEST_VALUE: ( " << best_value << ") Z_VALUE: ( "<< z_value << ") " <<
-				/*"DIST: ( "<< dist <<")*/ " PROMISE( " <<promise<<")" << endl ;
+		
 	}
 
-	//TODO: eliminar los cout
+	
 	double stadistic_test(double best_value) const {
 
 		double z = ( ( mean - best_value) / sqrt(var) );
-
-		cout <<"[STATE] {stadistic_test} ESTADO: " << id << "BEST VALUE: ("<< best_value <<")	MEAN: ("<<mean<<") VAR: ("<<var <<") BEFORE Z: ("<< z <<")" << endl;;
+		
 
 		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
 
-		cout << "Z afeter: ("<< z <<")"<< endl;
 
 		return z;
 	}
@@ -136,28 +133,23 @@ public:
 	virtual void print() {  }
 
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
-	//TODO: eliminar cout
+	
 	virtual void update_values(double new_value) const{
 		if(children.size()==0){
-			cout << "[STATE] {update_values}¿children==0? MEAN: " << mean << "NEW_VALUE: " << new_value << endl;
-
+			
 			mean=new_value;
 		}else if(children.size() >= 1){
-
-			cout << "[STATE] {update_values}¿children>=1? MEAN before: " << mean<< endl;
+			
 
 			mean = (mean*(children.size()-1)+new_value)/children.size();
-
-			cout << "[STATE] {update_values} MEAN after: " << mean<< endl;
+		
 		}
 
-		if(children.size()>=2){
-			cout << "[STATE] {update_values} ¿children>=2? VAR before: "<< var<< endl;
+		if(children.size()>=2){			
 
 			var=( (var*(children.size()-2)) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
 			if(var<=1e-6) var=1e-6;
-
-			cout << "[STATE] {update_values} ¿children>=2? VAR after: "<< var<< endl;
+			
 		}
 	}
 

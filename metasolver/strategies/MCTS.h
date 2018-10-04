@@ -89,8 +89,7 @@ namespace metasolver {
 		while(q.size() > 0 &&  get_time()<timelimit){
 			bool change_best=false;
 
-			const State* s = q.top(); q.pop();
-			cout << "promise:" << s->get_promise() << endl;
+			const State* s = q.top(); q.pop();			
 
 			const State* s2 = simulate(s, change_best);
 
@@ -119,7 +118,7 @@ namespace metasolver {
 			if(change_best) update_queue(q);
 
 			i++;
-			cout << "i:" << i << endl;
+			
 		}
 
 		//pointsToTxt(s0, 0);
@@ -146,10 +145,7 @@ namespace metasolver {
     	State* s2, *s3;
         while(true){
 
-			int size = s->get_children_size();
-			//TODO: ELIMINAR COUT
-			cout << "[MCTS] {simulate} estado: ("<< s->get_id()<<") mean: ("<< s->get_mean() << ")var: ("<< s->get_var()
-			<< ") promise:  ("<< s->get_promise()<<")" << endl;
+			int size = s->get_children_size();			
 			//TODO: optimizar!
 			s2=s->clone();
 			list< Action* > best_actions;
@@ -175,15 +171,13 @@ namespace metasolver {
           if(best_state) delete best_state;
           best_state = s3->clone();
           change_best=true;
-          cout << "[MCTS] new best_solution_found ("<< get_time() <<"): " << value << " "
-        		 << best_state->get_path().size() << " nodes" << endl;
+         
         }	
 		
 
         s->add_children(s2);
         s->update_values(value);
-
-        cout << "value:" << value << endl;
+       
 
 
         return s2;
