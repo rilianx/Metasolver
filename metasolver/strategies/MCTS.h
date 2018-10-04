@@ -38,7 +38,7 @@ namespace metasolver {
     class MCTS : public SearchStrategy {
         public:
 
-    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy) : SearchStrategy(evl), greedy(greedy) {}
+    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps) : SearchStrategy(evl), greedy(greedy), eps(eps) {}
 
 	    virtual ~MCTS() {}
 
@@ -101,18 +101,18 @@ namespace metasolver {
 				for(auto ch : s->get_children()){
 					simulate(ch, change_best);
 					simulate(ch, change_best);
-					ch->calculate_promise(get_best_value());
+					ch->calculate_promise(get_best_value()+eps);
 					q.push(ch);
 				}
 			}else if(s->get_children().size() > 3){
 				simulate(s2, change_best);
 				simulate(s2, change_best);
-				s2->calculate_promise(get_best_value());
+				s2->calculate_promise(get_best_value()+eps);
 				q.push(s2);
 			}
 
 			if(s->get_children().size() >= 2)
-				s->calculate_promise(get_best_value());
+				s->calculate_promise(get_best_value()+eps);
 
 			q.push(s);
 
@@ -122,8 +122,8 @@ namespace metasolver {
 			cout << "i:" << i << endl;
 		}
 
-		pointsToTxt(s0, 0);
-		system("firefox problems/clp/tree_plot/index.html");
+		//pointsToTxt(s0, 0);
+		//system("firefox problems/clp/tree_plot/index.html");
 
 		return best_state->get_value();
 	}
@@ -196,6 +196,8 @@ namespace metasolver {
 	SearchStrategy& greedy;
 
 	set<double> evals;
+
+	double eps;
 
 };
 

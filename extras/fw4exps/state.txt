@@ -1,7 +1,7 @@
-algos:bsg-mop-BRrwtheta0.5 bsg-mop-BRrwtheta_X0.25 bsg-mop-BRrwtheta_X0.5 bsg-mop-BRrwtheta_X0.75 bsg-mop-BRrwtheta_X1.0 
-gains (average relative times):1.000000 1.116063 1.019549 0.918008 0.827344 
-gains (total time)            :1.000000 1.093483 1.000087 0.900451 0.810597 
-compared instances:1600 1600 1600 1600 1600 
-runs    :1600 1600 1600 1600 1600 
-L:  0   9   0 343 894 
-W:  0 270   1   7   7 
+algos:mcts-delta_EPS0.0001 mcts-delta_EPS0.0005 mcts-delta_EPS0.001 mcts-delta_EPS0.005 
+gains (average relative times):1.000000 1.001865 1.001157 1.001573 
+gains (total time)            :1.000000 0.998657 0.997954 0.997846 
+compared instances:  5   5   5   4 
+runs    :  0   0   0   0 
+L:  0   0   0   0 
+W:  0   0   0   0 

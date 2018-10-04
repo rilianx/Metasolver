@@ -1,6 +1,16 @@
 [![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
 # Metasolver
 
+## MCTS
+
+Description
+------
+
+
+
+Installation
+-------- 
+
 Clone the project:
      
      git clone https://github.com/rilianx/Metasolver.git
@@ -11,7 +21,8 @@ Compile the project:
      cmake .
 then
      
-     make
+     make MCTS_CLP
+
 
 ## BSG for CLP
 Description

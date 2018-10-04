@@ -1,17 +1,25 @@
 [base]
 test_instances = instancesBR.txt
 mintime = 0.0001
-maxtime = 30
+maxtime = 10
 factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = bsg-weight
+algo_names = mcts-delta
 
-[bsg-weight]
-tuning_param = X
-tuning_values = -1.0 0.0 0.5
-exec = "/home/iaraya/clp/clp2017/BSGMOP_CLP"
-params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --maxtheta=_X
+[mcts]
+#tuning_param = X
+#tuning_values = -1.0 0.0 0.5
+exec = "/home/iaraya/cpmp/MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04
 outputpos_times = 2
 outputpos_boxes = 2
+
+[mcts-delta]
+tuning_param = EPS
+tuning_values = 0.0001 0.0005 0.001 0.005
+exec = "/home/iaraya/cpmp/MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=_EPS
+outputpos_times = 0
+outputpos_boxes = 0

@@ -101,7 +101,7 @@ public:
 		
 		if(var==0.0) {promise=0; return;}
 
-		double z_value=stadistic_test(best_value+delta);
+		double z_value=stadistic_test(best_value);
 		students_t dist( children.size() );
 
 		promise= cdf(dist, z_value);
@@ -198,7 +198,7 @@ protected:
 	mutable double promise; // value can be the best of the best
 
 
-	double delta=0.0001; // 
+
 	int id;
 
 
