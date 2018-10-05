@@ -84,35 +84,36 @@ public:
 		path.push_back(action.clone());
 		_transition(action);
 	}
-	
+
 	/*
 	* Rearranges the elements in the path randomly
 	*/
 	virtual int shuffle_path(){
-	  
+
 	    return 0;
 	   // std::random_shuffle ( path.begin(), path.end() );
 	}
 
 	// Probabilidad de generar simulaciones mejores a la mejor de acuerdo a mean y sd
 	//FIXME: THIS CLASS?
-	
+
 	void calculate_promise(double best_value) const{
-		
+		//cout << var << ", " << mean << ", " << best_value << "-->";
 		if(var==0.0) {promise=0; return;}
 
 		double z_value=stadistic_test(best_value);
 		students_t dist( children.size() );
 
 		promise= cdf(dist, z_value);
-		
+		//cout << promise << endl;
+
 	}
 
-	
+
 	double stadistic_test(double best_value) const {
 
 		double z = ( ( mean - best_value) / sqrt(var) );
-		
+
 
 		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
 
@@ -133,23 +134,23 @@ public:
 	virtual void print() {  }
 
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
-	
+
 	virtual void update_values(double new_value) const{
 		if(children.size()==0){
-			
+
 			mean=new_value;
 		}else if(children.size() >= 1){
-			
+
 
 			mean = (mean*(children.size()-1)+new_value)/children.size();
-		
+
 		}
 
-		if(children.size()>=2){			
+		if(children.size()>=2){
 
 			var=( (var*(children.size()-2)) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
 			if(var<=1e-6) var=1e-6;
-			
+
 		}
 	}
 
