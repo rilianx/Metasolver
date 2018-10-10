@@ -107,7 +107,7 @@ public:
 		//double z_value=stadistic_test(best_value);
 
 
-		normal dist( mean, sqrt(var) );  // <-- son n-2 df
+		normal dist( mean, sqrt(var) );
 
 
 		promise= 1.0-cdf(dist, best_value);
