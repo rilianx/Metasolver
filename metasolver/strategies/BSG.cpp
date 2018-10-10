@@ -62,7 +62,7 @@ list<State*> BSG::next(list<State*>& S){
 
              if(state_actions.find(-value)==state_actions.end()){
             	// cout << value << endl;
-            	 state_actions[-value]= make_pair(&state, &state_copy);
+            	 state_actions.insert(make_pair(-value, make_pair(&state, &state_copy)));
              }else delete &state_copy;
 
          }

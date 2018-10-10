@@ -146,7 +146,7 @@ protected:
 
 	}
 
-	map<double, pair<State*, State*> > state_actions;
+	multimap<double, pair<State*, State*> > state_actions;
 
 	SearchStrategy& greedy;
 
