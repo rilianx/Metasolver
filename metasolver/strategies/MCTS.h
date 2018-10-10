@@ -13,6 +13,7 @@
 #include <State.h>
 #include <queue>
 #include <unordered_set>
+#include <set>
 #include <fstream>
 
 //TODO: Al seleccionar un nodo se debe aplicar el mecanismo correspondiente para poder calcular promise
@@ -26,12 +27,12 @@ namespace metasolver {
     class Compare{
     public:
         bool operator() (const State* a , const State* b){
-            if(a->get_promise() > b->get_promise() ) return false;
+            if(a->get_promise() > b->get_promise() ) return true;
             else if(a->get_promise() == b->get_promise()){
-                if(a->get_promise()  > b->get_promise() ) return false;
-                else return true;
+                if(a->get_promise()  > b->get_promise() ) return true;
+                else return false;
             }
-            return true;
+            return false;
         }
     };
 
@@ -79,22 +80,26 @@ namespace metasolver {
 	 */
 	 double run(State& s, double tl=99999.9, clock_t bt=clock()){
 		timelimit=tl;
-		std::priority_queue<const State* , vector<const State*>, Compare> q;
+		//std::priority_queue<const State* , vector<const State*>, Compare> q;
+
+		std::set<const State* , Compare> states;
+
 		State* s0 = s.clone();
-		q.push(s0);
+		states.insert(s0);
 
 		int i=0;
 
 
-		while(q.size() > 0 &&  get_time()<timelimit){
+		while(states.size() > 0 &&  get_time()<timelimit){
 			bool change_best=false;
 
-			const State* s = q.top(); q.pop();
+			const State* s = *states.begin(); states.erase(s);
 			//cout << s->get_promise() << "," << s->get_children_size() << "," <<q.size() << endl;
 
 			const State* s2 = simulate(s, change_best);
 			if(s2 == NULL){
-				if(s->get_promise() == 0 && q.size()>1){
+				if(s->get_promise() == 0 && states.size()>1){
+
 					//delete s;
 					continue;
 				}
@@ -106,7 +111,7 @@ namespace metasolver {
 					simulate(ch, change_best);
 					if(ch->get_children_size() >= 2){
 						ch->calculate_promise(get_best_value()+eps);
-						q.push(ch);
+						states.insert(ch);
 					}
 				}
 			}else if(s2 && s->get_children_size() > 3){
@@ -114,20 +119,23 @@ namespace metasolver {
 				simulate(s2, change_best);
 				if(s2->get_children_size() >= 2){
 					s2->calculate_promise(get_best_value()+eps);
-					q.push(s2);
+					states.insert(s2);
 				}
-
 			}
 
-			if(s->get_children_size() >= 2)
+			if(s->get_children_size() >= 2){
 				s->calculate_promise(get_best_value()+eps);
+				//para dejarlo ordenado necesito sacarlo y colocarlo nuevamente al conjunto
+			}
 
-			q.push(s);
+			states.insert(s);
 
-			if(change_best/* || i%500==10*/) update_queue(q);
+
+			if(change_best || i%500==10) update_queue(states);
 
 			i++;
 		}
+		cout << states.size() << endl;
 
 		//pointsToTxt(s0, 0);
 		//system("firefox problems/clp/tree_plot/index.html");
@@ -136,24 +144,31 @@ namespace metasolver {
 	}
 
 	// update to promise list
-	void update_queue(std::priority_queue<const State* , vector<const State*>, Compare>& q)
+	void update_queue(std::set<const State* , Compare>& q)
 	{
-		std::priority_queue<const State* , vector<const State*>, Compare> aux;
+		std::set<const State* , Compare> aux;
+
+		//discard some nodes of the tree (limitar uso de memoria)
+
+		while(q.size() > 100){
+			const State* s = *q.rbegin();
+			for(auto ch:s->get_children()){
+				if(ch->get_children_size()==0) delete ch;
+			}
+
+			//TODO: eliminar referencia al nodo s en el padre de s (s->parent)
+
+			q.erase(s);
+			delete s;
+		}
+
+
 		while(!q.empty()){
-			if(q.top()->get_children_size() >= 2)
-				q.top()->calculate_promise(get_best_value()+eps);
+			if((*q.begin())->get_children_size() >= 2)
+				(*q.begin())->calculate_promise(get_best_value()+eps);
 
-			//discard some nodes of the tree
-			//if(q.top()->get_promise() > 0.001)
-				aux.push(q.top());
-			/*else{
-				for(auto ch:q.top()->get_children())
-					if(ch->get_children_size()==0) delete ch;
-
-				delete q.top();
-			}*/
-
-			q.pop();
+			aux.insert(*q.begin());
+			q.erase(q.begin());
 		}
 		q=aux;
 	}
@@ -206,6 +221,7 @@ namespace metasolver {
 
         s2->set_mean(value);
         s->add_children(s2);
+        cout << "add:" << s2 << endl;
         s->update_values(value);
 
         return s2;
