@@ -40,6 +40,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<double> _r(parser, "double", "random factor", {'r'});
 	args::ValueFlag<double> _eps(parser, "double", "epsilon parameter for MCTS", {"eps"});
 
 
@@ -77,13 +78,14 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.5;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
 	if(_gamma) gamma=_gamma.Get();
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
+	if(_r) r=_r.Get();
 	if(_eps) eps=_eps.Get();
 
 
@@ -103,15 +105,13 @@ int main(int argc, char** argv){
 
 	global::TRACE = trace;
 
-
-
 	cout << "***** Creando el contenedor ****" << endl;
 	cout << "File("<< format <<"): " << file << endl;
 	cout << "Instance:" << inst+1 << endl;
 	cout << "min_fr:" << min_fr << endl;
 	cout << "Maxtime:" << maxtime << endl;
 
-	double r=0.0;
+
 
     Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000, f);
@@ -177,4 +177,3 @@ int main(int argc, char** argv){
 
 
 }
-

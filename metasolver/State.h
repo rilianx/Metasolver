@@ -12,7 +12,7 @@
 #include <functional>
 #include <math.h>
 
-#include "boost/math/distributions/students_t.hpp"
+#include "boost/math/distributions/normal.hpp"
 
 
 
@@ -98,27 +98,35 @@ public:
 	//FIXME: THIS CLASS?
 
 	void calculate_promise(double best_value) const{
-		//cout << var << ", " << mean << ", " << best_value << "-->";
+		//cout << children_size << endl;
 		if(var==0.0) {promise=0; return;}
 
-		double z_value=stadistic_test(best_value);
-		students_t dist( children.size() );
+		//promise = mean + eps* var;
 
-		promise= cdf(dist, z_value);
-		//cout << promise << endl;
+
+		//double z_value=stadistic_test(best_value);
+
+
+		normal dist( mean, sqrt(var) );  // <-- son n-2 df
+
+
+		promise= 1.0-cdf(dist, best_value);
+
+
+		//cout << mean << "," << var <<"," << best_value << ":" << promise << endl;
 
 	}
 
 
 	double stadistic_test(double best_value) const {
 
-		double z = ( ( mean - best_value) / sqrt(var) );
+		double t = ( ( mean - best_value) / sqrt(var) );
 
 
-		z = z* sqrt(children.size()); //FIXME: SQRT ? POW
+	    t = t* sqrt(children_size); //FIXME: SQRT ? POW
 
 
-		return z;
+		return t;
 	}
 
 
@@ -135,26 +143,36 @@ public:
 
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
 
-	virtual void update_values(double new_value) const{
-		if(children.size()==0){
+	virtual void update_values(double new_value, bool first=true) const{
+		/*if(first)*/
+		children_size++;
 
-			mean=new_value;
-		}else if(children.size() >= 1){
+		if(children_size >= 1){
+			//mean = max(mean,new_value);
+			mean = (mean*(children_size-1)+new_value)/children_size;
+		}
+
+		if(children_size>=2){
 
 
-			mean = (mean*(children.size()-1)+new_value)/children.size();
+			var= ((var*(children_size-2)) + pow( (new_value-mean),2) ) / ( children_size-1 ); //actualiza la varianza
+
+			if(var<=parent->var && children_size==2) var=parent->var;
 
 		}
 
-		if(children.size()>=2){
+    //back-propagation (wrong)
+		/*if(parent)
+		   parent->update_values(new_value, false);
+			*/
 
-			var=( (var*(children.size()-2)) + pow( (new_value-mean),2) ) / ( children.size()-1 ); //actualiza la varianza
-			if(var<=1e-6) var=1e-6;
-
-		}
 	}
 
 	inline double get_promise() const{return promise;}
+
+	inline void set_promise(double p) const{promise=p;}
+
+	inline void set_mean(double m) const{mean=m;}
 
 	double get_mean() const {return mean;}
 	double get_var() const {return var;}
@@ -163,7 +181,7 @@ public:
 
 	const int get_children_size() const { return children_size;}
 
-	void add_children(State* s) const{ children.push_back(s); children_size++;}
+	void add_children(State* s) const{ children.push_back(s);}
 
 
 	int get_id() const { return id; }
@@ -173,7 +191,7 @@ public:
 
 	static int count_states;
 
-	mutable int children_size;
+
 
 protected:
 
@@ -190,7 +208,7 @@ protected:
 	//double sd; // standard deviation
 	mutable double promise; // value can be the best of the best
 
-
+	mutable int children_size;
 
 	int id;
 

@@ -47,10 +47,10 @@ namespace metasolver {
 	    	file << "{ "<<endl;
 	    	file<<"\t \"name\":\""<<node->get_id()<<"\",";
 	    	file<<"\t \"parent\":\""<<node->get_parent()->get_id() <<"\",";
-	    	file<<"\t \"value\":\""<<node->get_mean() <<"\",";
+	    	file<<"\t \"mean\":\""<<node->get_mean() <<"("<< node->get_value() <<")\",";
 	    	file<<"\t \"sd\":\""<<node->get_var() <<"\",";
 	    	file<<"\t \"mcts_value\":\""<<node->get_promise() <<"\",";
-	    	file<<"\t \"stimated_sd\":\"\",";
+	    	file<<"\t \"children_size\":\""<<node->get_children_size() <<"\",";
 	    	file<<"\t \"ponderated_sd\":\"\",";
 	    	file<<"\t \"depth\":\"\",";
 	    	file<<"\t \"num_visit\":\"\"";
@@ -90,31 +90,41 @@ namespace metasolver {
 			bool change_best=false;
 
 			const State* s = q.top(); q.pop();
+			//cout << s->get_promise() << "," << s->get_children_size() << "," <<q.size() << endl;
 
 			const State* s2 = simulate(s, change_best);
 			if(s2 == NULL){
-				delete s;
-        continue;
-			}else if(s->get_children().size() == 3){
+				if(s->get_promise() == 0 && q.size()>1){
+					//delete s;
+					continue;
+				}
+			}
+
+			if(s->get_children_size() == 3){
 				for(auto ch : s->get_children()){
 					simulate(ch, change_best);
 					simulate(ch, change_best);
-					ch->calculate_promise(get_best_value()+eps);
-					q.push(ch);
+					if(ch->get_children_size() >= 2){
+						ch->calculate_promise(get_best_value()+eps);
+						q.push(ch);
+					}
 				}
-			}else if(s->get_children().size() > 3){
+			}else if(s2 && s->get_children_size() > 3){
 				simulate(s2, change_best);
 				simulate(s2, change_best);
-				s2->calculate_promise(get_best_value()+eps);
-				q.push(s2);
+				if(s2->get_children_size() >= 2){
+					s2->calculate_promise(get_best_value()+eps);
+					q.push(s2);
+				}
+
 			}
 
-			if(s->get_children().size() >= 2)
+			if(s->get_children_size() >= 2)
 				s->calculate_promise(get_best_value()+eps);
 
 			q.push(s);
 
-			if(change_best) update_queue(q);
+			if(change_best/* || i%500==10*/) update_queue(q);
 
 			i++;
 		}
@@ -130,7 +140,19 @@ namespace metasolver {
 	{
 		std::priority_queue<const State* , vector<const State*>, Compare> aux;
 		while(!q.empty()){
-			aux.push(q.top());
+			if(q.top()->get_children_size() >= 2)
+				q.top()->calculate_promise(get_best_value()+eps);
+
+			//discard some nodes of the tree
+			//if(q.top()->get_promise() > 0.001)
+				aux.push(q.top());
+			/*else{
+				for(auto ch:q.top()->get_children())
+					if(ch->get_children_size()==0) delete ch;
+
+				delete q.top();
+			}*/
+
 			q.pop();
 		}
 		q=aux;
@@ -141,38 +163,48 @@ namespace metasolver {
 
     	double value;
     	State* s2, *s3;
-        while(true){
 
+        while(true){
 			int size = s->get_children_size();
 			//TODO: optimizar!
-			s2=s->clone();
-			list< Action* > best_actions;
-			get_best_actions(*s2, best_actions, size+1);
-			if(best_actions.size()<size+1) return NULL;
 
+			list< Action* > best_actions;
+			get_best_actions(*s, best_actions, size+1);
+			if(best_actions.size()<size+1){
+				s->set_promise(0.0);
+				return NULL;
+			}
+
+			s2=s->clone();
 			s2->transition(*best_actions.back());
 			s3=s2->clone();
 			value=greedy.run(*s3);
 
 
-			if(evals.find(value)==evals.end()){
-				evals.insert(value);
+			if(evals.find( make_pair(value, s3->get_value2()))==evals.end()){
+				evals.insert( make_pair(value,s3->get_value2()) );
 				break;
 			}else{
-				s->children_size++;
+				delete s2;
+				delete s3;
+				s->update_values(value);
+				return NULL;
 			}
         }
+
 
 
         //best_state update
         if(value > get_best_value()){
           if(best_state) delete best_state;
           best_state = s3->clone();
+          cout << "[MCTS] new best_solution_found ("<< get_time() <<"): " << value << " "
+                      			 << best_state->get_path().size() << " nodes" << endl;
           change_best=true;
         }
         delete s3;
 
-
+        s2->set_mean(value);
         s->add_children(s2);
         s->update_values(value);
 
@@ -185,7 +217,7 @@ namespace metasolver {
 
 	SearchStrategy& greedy;
 
-	set<double> evals;
+	set< pair<double,double> > evals;
 
 	double eps;
 

@@ -51,7 +51,7 @@ treeJSON = d3.json(jsonArchive, function(error, treeData) {
 
     // size of the diagram
     var viewerWidth = $(document).width();
-    var viewerHeight = $(document).height()/2;
+    var viewerHeight = $(document).height();
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
 
@@ -265,25 +265,25 @@ treeJSON = d3.json(jsonArchive, function(error, treeData) {
     }
 
     function alertNode(d){
-            $("#node-title").text(""+d.name);
-        $("#node-parent").text("Parent: "+d.parent);
-        $("#node-value").text("Value: "+d.value);
+        $("#node-title").text(""+d.name);
+        //$("#node-parent").text("Parent: "+d.parent);
+        $("#node-mean").text("Mean: "+d.mean);
         $("#node-standart-deviation").text("Standart deviation: "+d.sd);
-        $("#node-mcts-value").text("Mcts Value: "+d.mcts_value);
-        $("#node-stimated-sd").text("Stimated Sd:"+d.stimated_sd);
-        //$("#node_children").text(d.name);
-        $("#node-depth").text("Depth: "+d.depth);
-        $("#node-numvisit").text("Number of visits: "+d.num_visit);
+        $("#node-mcts-value").text("Probability: "+d.mcts_value);
+        //$("#node-stimated-sd").text("Stimated Sd:"+d.stimated_sd);
+        $("#node-children-size").text("Number of children: "+d.children_size);
+        //$("#node-depth").text("Depth: "+d.depth);
+        //$("#node-numvisit").text("Number of visits: "+d.num_visit);
         //$("#node_id").text(""+d.name);
-        
-
-        $("#node-simulations").text("Simulations:");
-        for (var i = d.simulations.length - 1; i >= 0; i--) {
-                    $("#node-simulations").append(" "+d.simulations[i]);
-        }
 
 
-        $("#node-ponderated-sd").text("Ponderated sd "+d.ponderated_sd);
+        //$("#node-simulations").text("Simulations:");
+        //for (var i = d.simulations.length - 1; i >= 0; i--) {
+        //            $("#node-simulations").append(" "+d.simulations[i]);
+        //}
+
+
+        //$("#node-ponderated-sd").text("Ponderated sd "+d.ponderated_sd);
     }
     function update(source) {
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
@@ -302,7 +302,7 @@ treeJSON = d3.json(jsonArchive, function(error, treeData) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 100; // 25 pixels per line  
+        var newHeight = d3.max(levelWidth) * 100; // 25 pixels per line
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
@@ -381,9 +381,9 @@ treeJSON = d3.json(jsonArchive, function(error, treeData) {
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
-            .attr("r", 4.5)
+            .attr("r", 6)
             .style("fill", function(d) {
-                return d._children ? "lightsteelblue" : "#fff";
+                return d._children ? "lightsteelblue" : "#000";
             });
 
         // Transition nodes to their new position.
