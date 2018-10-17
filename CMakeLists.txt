@@ -100,15 +100,15 @@ ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(MCLP mclp_state  clp bsg)
-target_link_libraries(BSG_CLP clp clp_state clp_kdtree bsg)
-target_link_libraries(BSG_CLP_ANN clp clp_state clp_kdtree bsg)
-target_link_libraries(test_BSG_CLP clp clp_state clp_kdtree bsg)
-target_link_libraries(CLP_GENSOLV clp clp_state clp_kdtree bsg)
-target_link_libraries(NSGA_CLP clp clp_state nsga2 bsg)
+target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
+target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
+target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
+target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
+target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
-target_link_libraries(BSG_BO_CLP bsg_mop clp clp_state bsg)
-target_link_libraries(test_BSGMOP_CLP bsg_mop clp clp_state bsg)
-target_link_libraries(testEvalMOP bsg_mop clp clp_state bsg)
+target_link_libraries(BSG_BO_CLP bsg_mop clp_state clp bsg)
+target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
+target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
 
 enable_testing()
 
