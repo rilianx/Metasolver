@@ -117,7 +117,10 @@ void glue_resetInput2(PyHandler pyHandler){
     // Ejecutando funcion
     PyObject_CallObject(pFunc, NULL);
 }
-
+/*
+  FIXME: funcion getValue queda fuera de uso desde acutalizacion pasada.
+  ahora recibe alpha, beta, gamma y P con sus respectivas funciones get()
+*/ 
 double glue_getSolution(PyHandler pyHandler, long x, long y, long z) {
     /*
      * nomreFuncion es el nombre que tiene la funcion dentron del script de ejecucion
@@ -165,7 +168,7 @@ double glue_getAlpha(PyHandler pyHandler){
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
 
     // Comprobando errores
-    f(PyErr_Occurred())
+    if(PyErr_Occurred())
         PyErr_Print();
     if(!pFunc) 
         printf("[glue_getAlpha] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
@@ -178,14 +181,14 @@ double glue_getAlpha(PyHandler pyHandler){
     double solucion = PyFloat_AsDouble(pRet);
 }
 
-double glue_getBata(PyHandler pyHandler){
+double glue_getBeta(PyHandler pyHandler){
     const char* nombreFuncion = "getBeta";
 
     // Preparando funcion
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
 
     // Comprobando errores
-    f(PyErr_Occurred())
+    if(PyErr_Occurred())
         PyErr_Print();
     if(!pFunc) 
         printf("[glue_getBeta] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
@@ -205,7 +208,7 @@ double glue_getGamma(PyHandler pyHandler){
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
 
     // Comprobando errores
-    f(PyErr_Occurred())
+    if(PyErr_Occurred())
         PyErr_Print();
     if(!pFunc) 
         printf("[glue_getGamma] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
@@ -225,7 +228,7 @@ double glue_getP(PyHandler pyHandler){
     PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
 
     // Comprobando errores
-    f(PyErr_Occurred())
+    if(PyErr_Occurred())
         PyErr_Print();
     if(!pFunc) 
         printf("[glue_getP] Error no se pudo encontrar la funcion %s\n", nombreFuncion);

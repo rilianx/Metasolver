@@ -112,10 +112,12 @@ int main(int argc, char** argv){
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
     clock_t begin_time=clock();
+    cout << "VCS_Function"<< endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
         4.0, 1.0, 0.2, 0.04, 1.0, f, 0.0);
-    ANNEvaluator* ann_eval = new ANNEvaluator(s0->cont->getL(), s0->cont->getW());
+    cout << "inicializando ANNEvaluator"<< endl;
+    ANNEvaluator* ann_eval = new ANNEvaluator(s0->cont->getL(), s0->cont->getW(), vcs);
 
 
 	//for(int i=0;i<10000; i++)

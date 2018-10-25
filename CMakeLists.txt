@@ -91,6 +91,7 @@ ADD_LIBRARY(
 ann
 problems/clp/plugins/ann/evaluators/ANNEvaluator.cpp
 problems/clp/plugins/ann/glue/glue.c
+problems/clp/evaluators/VCS_Function.cpp
 )
 
 ADD_EXECUTABLE(

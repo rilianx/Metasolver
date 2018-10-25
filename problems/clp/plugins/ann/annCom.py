@@ -50,8 +50,9 @@ def initModel(model_yml = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/
 		print "[Python] pesos cargados"
 	else:
 		print "[Python] No se pudo cargar los pesos"
-
-	model.compile(loss = [loss], loss_weights = [0.2], optimizer = opt, metrics = met)
+   
+	model.compile(optimizer=opt,loss=['mse','mse','mse','mse'], loss_weights=[0.2,0.2,0.2,0.2])
+	#model.compile(loss = [loss], loss_weights = [0.2], optimizer = opt, metrics = met)
 
 
 #Comprobando si modelo y pesos existen
@@ -105,9 +106,11 @@ def getPrediction():
 
 	a,b,g,p = model.predict([np.array(input1)/233.0, np.array(input2)], batch_size = 1)
 	prediction[0] = a[0,0]*8.0
-	prediction[1] = b[0,1]*8.0
-	prediction[2] = g[0,2]
-	prediction[3] = p[0,3]*0.1
+	prediction[1] = b[0,0]*8.0
+	prediction[2] = g[0,0]
+	prediction[3] = p[0,0]*0.1
+	print prediction
+ 
 	#prediction = np.reshape(prediction, (batch,5,5,5)) # FIXME: <- Esto hay que cambiarlo si o si
 
 	numeroPred = numeroPred + 1
@@ -120,28 +123,35 @@ def getPrediction():
 #Modifica el valor de una celda del input 1
 def setValueInput1(x, y, value, b = 0):
     global input1
+    #print "setValueInput1"
     input1[b][x][y] = value
 
 
 #Modifica el valor de una celda del input 2
 def setValueInput2(x, y, value, b = 0):
     global input2
+    #print "setValueInput2"
     input2 [b][x][y] = value
 
 # Setea a cero (0) los valores de input2 que hayan sido modificados 
 def resetInput2():
     global input2
+    #print "resetInput2"
     np.place(input2, input2!= 0, 0)
 
 
 #obtiene el valor de una respuesta especifica en el cubo de respuestas
 def getValue(x,y,z, b = 0):
 	global prediction
+	#print "getValue"
+	print x, y, z, b
 	return prediction.item((b,x,y,z))
+
 
 def getAlpha():
 	# FIXME: Comprobar si esto esta bien
 	global prediction
+	#print "getAlpha"
 
 	# Esto es asumiendo que:
 	# - La solucion es un arreglo de valores
@@ -152,6 +162,7 @@ def getAlpha():
 def getBeta():
 	# FIXME: Comprobar si esto esta bien
 	global prediction
+	#print "getBeta"
 
 	# Esto es asumiendo que:
 	# - La solucion es un arreglo de valores
@@ -162,6 +173,7 @@ def getBeta():
 def getGamma():
 	# FIXME: Comprobar si esto esta bien
 	global prediction
+	#print "getGamma"
 
 	# Esto es asumiendo que:
 	# - La solucion es un arreglo de valores
@@ -172,6 +184,7 @@ def getGamma():
 def getP():
 	# FIXME: Comprobar si esto esta bien
 	global prediction
+	#print "getP"
 
 	# Esto es asumiendo que:
 	# - La solucion es un arreglo de valores

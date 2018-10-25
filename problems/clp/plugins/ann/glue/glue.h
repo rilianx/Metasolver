@@ -5,8 +5,6 @@
 #ifndef PROJECT_GLUE_H
 #define PROJECT_GLUE_H
 
-#endif //PROJECT_GLUE_H
-
 #include <python2.7/Python.h>
 
 typedef struct{
@@ -57,3 +55,15 @@ void glue_operate(PyHandler pyHandler);
  * @return  retorna la solucion generada por la red en las coordenadas (x,y,z)
  */
 double glue_getSolution(PyHandler pyHandler, long x, long y, long z);
+
+
+double glue_getAlpha(PyHandler pyHandler);
+
+double glue_getBeta(PyHandler pyHandler);
+
+double glue_getGamma(PyHandler pyHandler);
+
+double glue_getP(PyHandler pyHandler);
+
+
+#endif //PROJECT_GLUE_H

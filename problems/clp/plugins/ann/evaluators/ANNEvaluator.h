@@ -9,10 +9,7 @@
 #include "ActionEvaluator.h"
 #include "Block.h"
 #include "clpState.h"
-//#include "glue.h"
-
-
-//#include "glue.c"
+#include "VCS_Function.h"
 
 #ifndef EVALUATORS_ANNEVALUATOR_H_
 #define EVALUATORS_ANNEVALUATOR_H_
@@ -28,12 +25,13 @@ namespace clp {
 	class ANNEvaluator : public ActionEvaluator {
 	public:
 
-		ANNEvaluator(int L, int W) : ActionEvaluator(0.0), L(L), W(W) {
+		ANNEvaluator(int L, int W, VCS_Function* vcs) : ActionEvaluator(0.0), L(L), W(W) {
 
 			matrix = new int*[L];
 			for(int i=0; i<L; i++)
 				matrix[i] = new int[W];
-
+			
+			vcs_f = vcs;
 
 			// Inicializando red
 			// /home/braulio/Metasolver/problems/clp/plugins/ann/annCom.py
@@ -97,15 +95,15 @@ namespace clp {
 			// TODO: en esta parte debe setear los parametros del otro evaluator con la salida de la red
 			// VCS_Function en problems/clp/evaluators
 
-			// vcs_f.set_alpha(glue_getAlpha(pyHandler));
-			// vcs_f.set_gamma(glue_getGamma(pyHandler));
-			// vcs_f.set_p(glue_getP(pyHanndler));
-			// vcs_f.set_beta(glue_getBeta(pyHandler));
+			vcs_f->set_alpha(glue_getAlpha(pyHandler));
+			vcs_f->set_gamma(glue_getGamma(pyHandler));
+			vcs_f->set_p(glue_getP(pyHandler));
+			vcs_f->set_beta(glue_getBeta(pyHandler));
 
 		}
 
 		virtual double eval_action(const State& s, const Action& a){
-			return vcs_f.eval_actions(s, a);
+			return vcs_f->eval_action(s, a);
 		}
 
 
@@ -115,7 +113,7 @@ namespace clp {
 		int L,W;
 
 		PyHandler pyHandler;
-		VCS_Function vcs_f;
+		VCS_Function* vcs_f;
 	};
 
 } /* namespace clp */
