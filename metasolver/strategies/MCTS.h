@@ -147,7 +147,8 @@ namespace metasolver {
 
 		while(q.size() > 100){
 			const State* s = *q.rbegin();
-			for(auto ch:s->get_children()){
+			auto children = s->get_children();
+			for(auto ch:children){
 				if(ch->get_children_size()==0){
 					s->children.remove(ch);
 					delete ch;
