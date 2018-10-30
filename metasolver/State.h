@@ -188,6 +188,9 @@ public:
 
 	const State* get_parent() const{ return parent; }
 
+    void remove_children (const State* ch) {
+		children.remove(ch);
+	}
 
 	static int count_states;
 

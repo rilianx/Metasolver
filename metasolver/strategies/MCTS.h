@@ -147,12 +147,12 @@ namespace metasolver {
 
 		while(q.size() > 100){
 			const State* s = *q.rbegin();
-			auto children = s->get_children();
+			list<const State*> children = s->get_children();
 			for(auto ch:children){
 				if(ch->get_children_size()==0){
-					s->children.remove(ch);
+					s->remove_children(ch);
 					delete ch;
-				} 
+				}
 			}
 				
 			//TODO: eliminar referencia al nodo s en el padre de s (s->parent)
