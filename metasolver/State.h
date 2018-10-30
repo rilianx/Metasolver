@@ -188,7 +188,7 @@ public:
 
 	const State* get_parent() const{ return parent; }
 
-    void remove_children (const State* ch) {
+    void remove_children const (const State* ch) {
 		children.remove(ch);
 	}
 
