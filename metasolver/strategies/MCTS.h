@@ -16,12 +16,7 @@
 #include <set>
 #include <fstream>
 
-//TODO: Al seleccionar un nodo se debe aplicar el mecanismo correspondiente para poder calcular promise
-//TODO: Implementar funcion State::promise que calcula la probabilidad de que si lanzo una nueva
-//simulacion del nodo, la evaluacion sera mayor a la mejor obtenida más un delta pequeño (0.0001).
-//Para calcular el promise se necesita saber el promedio de las simulaciones desde el nodo y
-//la desviacion estandar. Por lo que se requieren a lo menos 2 evaluaciones.
-//Si el nodo tiene solo una evaluacion, le copia la desviacion a su hermano que tenga al menos 2.
+
 namespace metasolver {
 
     class Compare{
@@ -153,9 +148,12 @@ namespace metasolver {
 		while(q.size() > 100){
 			const State* s = *q.rbegin();
 			for(auto ch:s->get_children()){
-				if(ch->get_children_size()==0) delete ch;
+				if(ch->get_children_size()==0){
+					s->children.remove(ch);
+					delete ch;
+				} 
 			}
-
+				
 			//TODO: eliminar referencia al nodo s en el padre de s (s->parent)
 
 			q.erase(s);
