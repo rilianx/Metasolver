@@ -34,7 +34,8 @@ namespace metasolver {
     class MCTS : public SearchStrategy {
         public:
 
-    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps) : SearchStrategy(evl), greedy(greedy), eps(eps), nb_nodes(0) {}
+    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps, int max_nodes=100, bool bp=false) :
+    		SearchStrategy(evl), greedy(greedy), eps(eps), nb_nodes(0), max_nodes(max_nodes), bp(bp) {}
 
 	    virtual ~MCTS() {}
 
@@ -141,7 +142,7 @@ namespace metasolver {
 			states.insert(s);
 
 
-			if(change_best || i%100==10) update_queue(states);
+			if(change_best || i%max_nodes==max_nodes-1) update_queue(states);
 
 
 			i++;
@@ -161,8 +162,8 @@ namespace metasolver {
 	{
 		std::multiset<const State* , Compare> aux;
 
-		//discard some nodes of the tree (limitar uso de memoria)
-		while(!q.empty() && (q.size() > 100 || (*q.rbegin())->get_promise()==0.0)){
+		//discard some nodes of the tree (limita uso de memoria)
+		while(!q.empty() && (q.size() > max_nodes || (*q.rbegin())->get_promise()==0.0)){
 
 			const State* s = *q.rbegin();
 			list<const State*> children = s->get_children();
@@ -193,7 +194,7 @@ namespace metasolver {
 
 
 		while(!q.empty()){
-			if((*q.begin())->get_children_size() >= 2)
+			//if((*q.begin())->get_children_size() >= 2)
 				(*q.begin())->calculate_promise(get_best_value()+eps);
 
 			aux.insert(*q.begin());
@@ -236,7 +237,7 @@ namespace metasolver {
 				//descarte por similitud (similar a una de las ultimas N soluciones)
 				delete s2;
 				delete s3;
-				s->update_values(value);
+				s->update_values(value, bp);
 				return NULL;
 			}
         }
@@ -256,7 +257,7 @@ namespace metasolver {
         s2->set_mean(value);
         s->add_children(s2);
         //cout << "add:" << s2 << endl;
-        s->update_values(value);
+        s->update_values(value, bp);
 
         nb_nodes++;
         return s2;
@@ -271,6 +272,10 @@ namespace metasolver {
 	set< pair<double,double> > evals;
 
 	double eps;
+
+	int max_nodes;
+
+	bool bp;
 
 };
 

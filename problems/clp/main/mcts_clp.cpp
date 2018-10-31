@@ -41,10 +41,16 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::ValueFlag<double> _r(parser, "double", "random factor", {'r'});
-	args::ValueFlag<double> _eps(parser, "double", "epsilon parameter for MCTS", {"eps"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
+
+	args::ValueFlag<double> _eps(parser, "double", "epsilon parameter for MCTS", {"eps"});
+	args::Flag bp(parser, "bp", "backpropagation in MCTS", {"bp"});
+	args::ValueFlag<int> _max_nodes(parser, "int", "maximum number of nodes in the MCTS", {"max_nodes"});
+
+
+
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
 
@@ -78,7 +84,7 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.0;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.0, max_nodes=100;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
@@ -87,6 +93,7 @@ int main(int argc, char** argv){
 	if(_p) p=_p.Get();
 	if(_r) r=_r.Get();
 	if(_eps) eps=_eps.Get();
+	if(_max_nodes) max_nodes=_max_nodes.Get();
 
 
 	string format="BR";
@@ -128,7 +135,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    MCTS *mcts= new MCTS(vcs,*gr,eps);
+    MCTS *mcts= new MCTS(vcs,*gr,eps, max_nodes, bp);
 
 
 	cout << "copying state" << endl;

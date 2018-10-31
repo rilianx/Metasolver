@@ -52,7 +52,7 @@ public:
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++), var(S.var), mean(0.0), promise(0.0), children_size(0){
+	State(const State& S) : parent(&S), id(count_states++), var(S.var), mean(0.0), promise(0.0), children_size(0), nb_simulations(0){
 
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
@@ -143,27 +143,28 @@ public:
 
 	// Actualiza los valores mean y sd de acuerdo al nuevo valor
 
-	virtual void update_values(double new_value, bool first=true) const{
-		/*if(first)*/
-		children_size++;
+	virtual void update_values(double new_value, bool bp, bool first=true) const{
+		if(first)
+		   children_size++;
 
-		if(children_size >= 1){
+		nb_simulations++;
+
+		if(nb_simulations >= 1){
 			//mean = max(mean,new_value);
-			mean = (mean*(children_size-1)+new_value)/children_size;
+			mean = (mean*(nb_simulations-1)+new_value)/nb_simulations;
 		}
 
-		if(children_size>=2){
-			double varr= ((var*(children_size-2)) + pow( (new_value-mean),2) ) / ( children_size-1 ); //actualiza la varianza
+		if(nb_simulations>=2){
+			double varr= ((var*(nb_simulations-2)) + pow( (new_value-mean),2) ) / ( nb_simulations-1 ); //actualiza la varianza
 
 			//si la varianza es menor a la del padre se resetea a la del padre
-			if(children_size==2 && varr<=var)  var=varr;
-			else var=varr;
+			if(nb_simulations==2 && varr>var)  var=varr;
 		}
 
     //back-propagation (wrong)
-		/*if(parent)
-		   parent->update_values(new_value, false);
-			*/
+		if(bp && parent)
+		   parent->update_values(new_value, true, false);
+
 
 	}
 
@@ -225,10 +226,9 @@ protected:
 
 	mutable int children_size;
 
+	mutable int nb_simulations;
+
 	int id;
-
-
-
 };
 
 
