@@ -157,7 +157,9 @@ public:
 
 			var= ((var*(children_size-2)) + pow( (new_value-mean),2) ) / ( children_size-1 ); //actualiza la varianza
 
-			if(var<=parent->var && children_size==2) var=parent->var;
+
+			//TODO: repensar un poco
+			if(parent && var<=parent->var && children_size==2) var=parent->var;
 
 		}
 
@@ -192,6 +194,10 @@ public:
 		children.remove(ch);
 	}
 
+    void remove_parent () const{
+    	parent=NULL;
+	}
+
 	static int count_states;
 
 
@@ -200,7 +206,7 @@ protected:
 
 	virtual void _transition(const Action& action) = 0;
 
-	const State* parent;
+	mutable const State* parent;
 	//bool root;
 
 	//list of actions for reconstructing the state from scratch

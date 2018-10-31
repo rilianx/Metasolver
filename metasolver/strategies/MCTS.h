@@ -94,8 +94,8 @@ namespace metasolver {
 			const State* s2 = simulate(s, change_best);
 			if(s2 == NULL){
 				if(s->get_promise() == 0 && states.size()>1){
-
-					//delete s;
+					states.insert(s); //será descartado por recolector de basura (update_queue)
+					update_queue(states);
 					continue;
 				}
 			}
@@ -126,7 +126,7 @@ namespace metasolver {
 			states.insert(s);
 
 
-			if(change_best || i%500==10) update_queue(states);
+			if(change_best || i%100==10) update_queue(states);
 
 			i++;
 		}
@@ -144,18 +144,19 @@ namespace metasolver {
 		std::set<const State* , Compare> aux;
 
 		//discard some nodes of the tree (limitar uso de memoria)
+		while(q.size() > 100 || (q.size()>1 && (*q.rbegin())->get_promise()==0.0)){
 
-		while(q.size() > 100){
 			const State* s = *q.rbegin();
 			list<const State*> children = s->get_children();
 			for(auto ch:children){
 				if(ch->get_children_size()==0){
-					s->remove_children(ch);
 					delete ch;
-				}
+				}else
+					ch->remove_parent ();
 			}
 				
-			//TODO: eliminar referencia al nodo s en el padre de s (s->parent)
+			if(s->get_parent())
+				s->get_parent()->remove_children(s);
 
 			q.erase(s);
 			delete s;
@@ -172,16 +173,18 @@ namespace metasolver {
 		q=aux;
 	}
 
+
+
     // performs a simulation and returns the corresponding child
-    State* simulate(const State* s, bool change_best){
+    State* simulate(const State* s, bool& change_best){
 
     	double value;
     	State* s2, *s3;
 
         while(true){
 			int size = s->get_children_size();
-			//TODO: optimizar!
 
+			//TODO: optimizar!
 			list< Action* > best_actions;
 			get_best_actions(*s, best_actions, size+1);
 			if(best_actions.size()<size+1){
@@ -194,11 +197,13 @@ namespace metasolver {
 			s3=s2->clone();
 			value=greedy.run(*s3);
 
-
 			if(evals.find( make_pair(value, s3->get_value2()))==evals.end()){
 				evals.insert( make_pair(value,s3->get_value2()) );
+				while(evals.size()>100) evals.erase(evals.begin());
+
 				break;
 			}else{
+				//descarte por similitud (similar a una de las ultimas N soluciones)
 				delete s2;
 				delete s3;
 				s->update_values(value);
@@ -220,7 +225,7 @@ namespace metasolver {
 
         s2->set_mean(value);
         s->add_children(s2);
-        cout << "add:" << s2 << endl;
+        //cout << "add:" << s2 << endl;
         s->update_values(value);
 
         return s2;
