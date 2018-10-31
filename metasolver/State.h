@@ -47,12 +47,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), id(count_states++){}
+	State() : parent (NULL), id(count_states++), var(1e-6), mean(0.0){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++), var(0.0), mean(0.0), promise(0.0), children_size(0){
+	State(const State& S) : parent(&S), id(count_states++), var(S.var), mean(0.0), promise(0.0), children_size(0){
 
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
@@ -153,14 +153,11 @@ public:
 		}
 
 		if(children_size>=2){
+			double varr= ((var*(children_size-2)) + pow( (new_value-mean),2) ) / ( children_size-1 ); //actualiza la varianza
 
-
-			var= ((var*(children_size-2)) + pow( (new_value-mean),2) ) / ( children_size-1 ); //actualiza la varianza
-
-
-			//TODO: repensar un poco
-			if(parent && var<=parent->var && children_size==2) var=parent->var;
-
+			//si la varianza es menor a la del padre se resetea a la del padre
+			if(children_size==2 && varr<=var)  var=varr;
+			else var=varr;
 		}
 
     //back-propagation (wrong)
@@ -192,6 +189,15 @@ public:
 
     void remove_children  (const State* ch) const{
 		children.remove(ch);
+	}
+
+    int remove_children  () const{
+    	int s=children.size();
+    	for(auto ch:children)
+    		delete ch;
+
+		children.clear();
+		return s;
 	}
 
     void remove_parent () const{

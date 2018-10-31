@@ -34,7 +34,7 @@ namespace metasolver {
     class MCTS : public SearchStrategy {
         public:
 
-    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps) : SearchStrategy(evl), greedy(greedy), eps(eps) {}
+    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps) : SearchStrategy(evl), greedy(greedy), eps(eps), nb_nodes(0) {}
 
 	    virtual ~MCTS() {}
 
@@ -77,23 +77,28 @@ namespace metasolver {
 		timelimit=tl;
 		//std::priority_queue<const State* , vector<const State*>, Compare> q;
 
-		std::set<const State* , Compare> states;
+		std::multiset<const State* , Compare> states;
 
+		bool change_best=false;
 		State* s0 = s.clone();
+		simulate(s0, change_best);
+		simulate(s0, change_best);
+
 		states.insert(s0);
 
 		int i=0;
-
-
 		while(states.size() > 0 &&  get_time()<timelimit){
-			bool change_best=false;
+			change_best=false;
 
-			const State* s = *states.begin(); states.erase(s);
-			//cout << s->get_promise() << "," << s->get_children_size() << "," <<q.size() << endl;
+			const State* s = *states.begin();
+			states.erase(states.begin());
+			//states.erase(s);
+
+			//cout << s->get_promise() << "," << s->get_children_size() << "," <<states.size() << endl;
 
 			const State* s2 = simulate(s, change_best);
 			if(s2 == NULL){
-				if(s->get_promise() == 0 && states.size()>1){
+				if(s->get_promise() == 0){
 					states.insert(s); //será descartado por recolector de basura (update_queue)
 					update_queue(states);
 					continue;
@@ -101,12 +106,18 @@ namespace metasolver {
 			}
 
 			if(s->get_children_size() == 3){
-				for(auto ch : s->get_children()){
+				auto children = s->get_children();
+
+				for(auto ch : children){
 					simulate(ch, change_best);
 					simulate(ch, change_best);
 					if(ch->get_children_size() >= 2){
 						ch->calculate_promise(get_best_value()+eps);
 						states.insert(ch);
+					}else{
+						s->remove_children(ch); nb_nodes--;
+						nb_nodes-=ch->remove_children();
+						delete ch;
 					}
 				}
 			}else if(s2 && s->get_children_size() > 3){
@@ -115,6 +126,10 @@ namespace metasolver {
 				if(s2->get_children_size() >= 2){
 					s2->calculate_promise(get_best_value()+eps);
 					states.insert(s2);
+				}else{
+					s->remove_children(s2); nb_nodes--;
+					nb_nodes -= s2->remove_children();
+					delete s2;
 				}
 			}
 
@@ -128,6 +143,7 @@ namespace metasolver {
 
 			if(change_best || i%100==10) update_queue(states);
 
+
 			i++;
 		}
 		cout << states.size() << endl;
@@ -138,29 +154,42 @@ namespace metasolver {
 		return best_state->get_value();
 	}
 
+	 double nb_nodes;
+
 	// update to promise list
-	void update_queue(std::set<const State* , Compare>& q)
+	void update_queue(std::multiset<const State* , Compare>& q)
 	{
-		std::set<const State* , Compare> aux;
+		std::multiset<const State* , Compare> aux;
 
 		//discard some nodes of the tree (limitar uso de memoria)
-		while(q.size() > 100 || (q.size()>1 && (*q.rbegin())->get_promise()==0.0)){
+		while(!q.empty() && (q.size() > 100 || (*q.rbegin())->get_promise()==0.0)){
 
 			const State* s = *q.rbegin();
 			list<const State*> children = s->get_children();
 			for(auto ch:children){
 				if(ch->get_children_size()==0){
+					s->remove_children(ch);
+					nb_nodes--;
 					delete ch;
 				}else
 					ch->remove_parent ();
 			}
-				
+
+			if (!q.empty()) {
+				std::multiset<const State* , Compare>::iterator it = q.end();
+			    --it;
+			    q.erase(it);
+			}
+
 			if(s->get_parent())
 				s->get_parent()->remove_children(s);
 
-			q.erase(s);
+			nb_nodes--;
 			delete s;
+
 		}
+
+		//cout << q.size() << " -- " << nb_nodes << endl;
 
 
 		while(!q.empty()){
@@ -171,6 +200,7 @@ namespace metasolver {
 			q.erase(q.begin());
 		}
 		q=aux;
+
 	}
 
 
@@ -197,10 +227,10 @@ namespace metasolver {
 			s3=s2->clone();
 			value=greedy.run(*s3);
 
+			//while(evals.size()>100) evals.erase(evals.begin());
+
 			if(evals.find( make_pair(value, s3->get_value2()))==evals.end()){
 				evals.insert( make_pair(value,s3->get_value2()) );
-				while(evals.size()>100) evals.erase(evals.begin());
-
 				break;
 			}else{
 				//descarte por similitud (similar a una de las ultimas N soluciones)
@@ -228,6 +258,7 @@ namespace metasolver {
         //cout << "add:" << s2 << endl;
         s->update_values(value);
 
+        nb_nodes++;
         return s2;
     }
 

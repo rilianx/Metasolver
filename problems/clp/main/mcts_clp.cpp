@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.5;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.0;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
