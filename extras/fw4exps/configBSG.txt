@@ -6,7 +6,7 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = mcts-delta
+algo_names = mcts-eps-withoutbp
 
 [mcts]
 #tuning_param = X
@@ -16,10 +16,34 @@ params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04
 outputpos_times = 2
 outputpos_boxes = 2
 
-[mcts-delta]
+[mcts-eps-withoutbp]
 tuning_param = EPS
-tuning_values = 0.0001 0.0005 0.001 0.005
+tuning_values = 0.0001 0.0005 0.001 0.005 0.01 0.05 
 exec = "/home/iaraya/cpmp/MCTS_CLP"
-params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=_EPS
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=_EPS --max_nodes=100 --bp=0
+outputpos_times = 0
+outputpos_boxes = 0
+
+[mcts-maxnodes-withoutbp]
+tuning_param = list 
+tuning_values = 50 100 200 300 400 500
+exec = "/home/iaraya/cpmp/MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=x --max_nodes=list  --bp=0
+outputpos_times = 0
+outputpos_boxes = 0
+
+[mcts-eps-withbp]
+tuning_param = EPS
+tuning_values = 0.0001 0.0005 0.001 0.005 0.01 0.05 
+exec = "/home/iaraya/cpmp/MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=_EPS --max_nodes=100 --bp=1
+outputpos_times = 0
+outputpos_boxes = 0
+
+[mcts-maxnodes-wittbp]
+tuning_param = list 
+tuning_values = 50 100 200 300 400 500
+exec = "/home/iaraya/cpmp/MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --eps=x --max_nodes=list  --bp=1
 outputpos_times = 0
 outputpos_boxes = 0
