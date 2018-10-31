@@ -158,7 +158,7 @@ public:
 			double varr= ((var*(nb_simulations-2)) + pow( (new_value-mean),2) ) / ( nb_simulations-1 ); //actualiza la varianza
 
 			//si la varianza es menor a la del padre se resetea a la del padre
-			if(nb_simulations==2 && varr>var)  var=varr;
+			var=varr;
 		}
 
     //back-propagation (wrong)

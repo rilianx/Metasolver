@@ -34,8 +34,10 @@ namespace metasolver {
     class MCTS : public SearchStrategy {
         public:
 
-    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps, int max_nodes=100, bool bp=false) :
-    		SearchStrategy(evl), greedy(greedy), eps(eps), nb_nodes(0), max_nodes(max_nodes), bp(bp) {}
+    	MCTS(ActionEvaluator* evl, SearchStrategy& greedy, double eps, int max_nodes=100, bool bp=false,
+    			bool discard_equivalent_nodes=false) :
+    		SearchStrategy(evl), greedy(greedy), eps(eps), nb_nodes(0), max_nodes(max_nodes), bp(bp),
+			discard_equivalent_nodes(discard_equivalent_nodes){}
 
 	    virtual ~MCTS() {}
 
@@ -172,8 +174,7 @@ namespace metasolver {
 					s->remove_children(ch);
 					nb_nodes--;
 					delete ch;
-				}else
-					ch->remove_parent ();
+				}else if(!bp) ch->remove_parent ();
 			}
 
 			if (!q.empty()) {
@@ -182,11 +183,14 @@ namespace metasolver {
 			    q.erase(it);
 			}
 
-			if(s->get_parent())
+
+			if(!bp && s->get_parent())
 				s->get_parent()->remove_children(s);
 
 			nb_nodes--;
-			delete s;
+
+			if(!bp || s->get_children().size()>0)
+				delete s;
 
 		}
 
@@ -228,9 +232,10 @@ namespace metasolver {
 			s3=s2->clone();
 			value=greedy.run(*s3);
 
-			//while(evals.size()>100) evals.erase(evals.begin());
 
-			if(evals.find( make_pair(value, s3->get_value2()))==evals.end()){
+			while(evals.size()>20) evals.erase(evals.begin());
+
+			if(!discard_equivalent_nodes || evals.find( make_pair(value, s3->get_value2()))==evals.end()){
 				evals.insert( make_pair(value,s3->get_value2()) );
 				break;
 			}else{
@@ -276,6 +281,8 @@ namespace metasolver {
 	int max_nodes;
 
 	bool bp;
+
+	bool discard_equivalent_nodes;
 
 };
 

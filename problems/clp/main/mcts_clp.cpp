@@ -48,8 +48,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _eps(parser, "double", "epsilon parameter for MCTS", {"eps"});
 	args::Flag bp(parser, "bp", "backpropagation in MCTS", {"bp"});
 	args::ValueFlag<int> _max_nodes(parser, "int", "maximum number of nodes in the MCTS", {"max_nodes"});
-
-
+	args::Flag discard_equivalent_nodes(parser, "bp", "discard equivalent nodes in MCTS", {"den"});
 
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -135,7 +134,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    MCTS *mcts= new MCTS(vcs,*gr,eps, max_nodes, bp);
+    MCTS *mcts= new MCTS(vcs,*gr,eps, max_nodes, bp, discard_equivalent_nodes);
 
 
 	cout << "copying state" << endl;
