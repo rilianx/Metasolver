@@ -233,7 +233,7 @@ namespace metasolver {
 			value=greedy.run(*s3);
 
 
-			while(evals.size()>20) evals.erase(evals.begin());
+			while(evals.size()>200) evals.erase(evals.begin());
 
 			if(!discard_equivalent_nodes || evals.find( make_pair(value, s3->get_value2()))==evals.end()){
 				evals.insert( make_pair(value,s3->get_value2()) );
