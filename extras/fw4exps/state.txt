@@ -1,7 +1,7 @@
-algos:mcts-delta_EPS0.0001 mcts-delta_EPS0.0005 mcts-delta_EPS0.001 mcts-delta_EPS0.005 
-gains (average relative times):1.000000 1.001432 1.001458 1.001539 
-gains (total time)            :1.000000 1.000351 1.000382 1.000476 
-compared instances:1085 909 1058 1084 
-runs    :1085 910 1058 1086 
-L:  0   0   0   0 
-W:  0   0   0   0 
+algos:mcts-random_random0.1 mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
+gains (average relative times):1.000000 1.002346 1.002487 1.003875 1.004114 1.004771 1.006826 1.007240 1.009231 
+gains (total time)            :1.000000 1.001124 1.001285 1.002713 1.002914 1.003594 1.005618 1.006027 1.008012 
+compared instances:1500 1500 1500 1500 1500 1500 1500 1500 1500 
+runs    :1500 1500 1500 1500 1500 1500 1500 1500 1500 
+L:  0   0   0   0   0   1   0   0   0 
+W:  0   1   1   1   0   0   1   1   2 
