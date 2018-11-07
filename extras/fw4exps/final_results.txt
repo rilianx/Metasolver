@@ -1,29 +1,37 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-mcts-random_random0.2   0   0   0   0   0 1042 1068   2   0   0   0   0 
-mcts-random_random0.3   0   0   0   0   0 998 1060   1   0   0   0   0 
-mcts-random_random0.4   0   0   0   0   0 949 1094   2   0   0   0   0 
-mcts-random_random0.5   0   0   0   0   1 958 1101   1   0   0   0   0 
-mcts-random_random0.6   0   0   0   0   1 922 1099   0   0   0   0   0 
-mcts-random_random0.7   0   0   0   0   0 856 1140   1   0   0   0   0 
-mcts-random_random0.8   0   0   0   0   0 880 1150   1   0   0   0   0 
-mcts-random_random0.9   0   0   0   0   0 812 1186   3   0   0   0   0 
-mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
-1.000000 1068/1042 1060/998 1094/949 1101/958 1099/922 1140/856 1150/880 1186/812 
-1.200480 2/0 1/0 2/0 1/1 0/1 1/0 1/0 3/0 
-1.503759 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-2.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-5.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-10.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
+mcts-random_random0.1   0   0   0   0   0  14 1500   4   0   0   0   0 
+mcts-random_random0.2   0   0   0   0   0   2 1500   6   1   0   0   0 
+mcts-random_random0.3   0   0   0   0   0  13 1500   6   0   0   0   0 
+mcts-random_random0.4   0   0   0   0   0   8 1499   2   0   0   0   0 
+mcts-random_random0.5   0   0   0   0   0   6 1498   4   0   0   0   0 
+mcts-random_random0.6   0   0   0   0   0   6 1500   4   0   0   0   0 
+mcts-random_random0.7   0   0   0   0   0   6 1500   5   0   0   0   0 
+mcts-random_random0.8   0   0   0   0   0   5 1499   6   0   0   0   0 
+mcts-random_random0.9   0   0   0   0   0   7 1500   4   0   0   0   0 
+mcts-random_random0.1 mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
+1.000000 1500/14 1500/2 1500/13 1499/8 1498/6 1500/6 1500/6 1499/5 1500/7 
+1.200480 4/0 6/0 6/0 2/0 4/0 4/0 5/0 6/0 4/0 
+1.503759 0/0 1/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
+2.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
+5.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
+10.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BR/BR1.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 91 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 22 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+../../problems/clp/benchs/BR/BR1.txt -i 3 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 71 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 8 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 10 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 43 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 13 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 91 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 52 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 22 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 88 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
+../../problems/clp/benchs/BR/BR1.txt -i 27 --min_fr=1.0 1 1 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 1 nan 
 
 gains
-0.000100 1.000000 1500 1.002346 1500 1.002487 1500 1.003875 1500 1.004114 1500 1.004771 1500 1.006826 1500 1.007240 1500 1.009231 1500 
-total time: 1.000000 1.001124 1.001285 1.002713 1.002914 1.003594 1.005618 1.006027 1.008012 
+0.000100 1.000000 1500 1.073586 1500 1.074882 1500 1.075034 1500 1.076522 1500 1.076779 1500 1.077481 1500 1.079685 1500 1.080129 1500 1.082264 1500 
+total time: 1.000000 1.072062 1.073275 1.073446 1.074976 1.075193 1.075920 1.078092 1.078529 1.080659 
