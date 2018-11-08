@@ -13,6 +13,7 @@ problems/clp/evaluators
 problems/clp
 problems/clp/plugins/kdtree
 problems/clp/plugins/ga
+problems/mclp
 metasolver/plugins/mop/strategies/
 )
 
@@ -40,6 +41,7 @@ metasolver/SearchStrategy.cpp
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp
+metasolver/State.cpp
 )
 
 ADD_LIBRARY(
@@ -66,7 +68,16 @@ problems/clp/objects2/BoxShape.cpp
 problems/clp/objects2/Space.cpp
 problems/clp/objects2/SpaceSet.cpp
 problems/clp/objects2/Block_fsb.cpp
+)
+
+ADD_LIBRARY(
+clp_state
 problems/clp/clpState.cpp
+)
+
+ADD_LIBRARY(
+mclp_state
+problems/mclp/mclp-state.cpp
 )
 
 ADD_LIBRARY(
@@ -77,8 +88,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
 
-
-
+ADD_EXECUTABLE(MCLP problems/mclp/main/mclp-solver.cpp)
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
@@ -89,15 +99,16 @@ ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
-target_link_libraries(BSG_CLP bsg clp clp_kdtree)
-target_link_libraries(BSG_CLP_ANN bsg clp clp_kdtree)
-target_link_libraries(test_BSG_CLP bsg clp clp_kdtree)
-target_link_libraries(CLP_GENSOLV bsg clp clp_kdtree)
-target_link_libraries(NSGA_CLP bsg clp nsga2)
+target_link_libraries(MCLP mclp_state  clp bsg)
+target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
+target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
+target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
+target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
+target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
-target_link_libraries(BSG_BO_CLP bsg_mop bsg clp)
-target_link_libraries(test_BSGMOP_CLP bsg_mop bsg clp)
-target_link_libraries(testEvalMOP bsg_mop bsg clp )
+target_link_libraries(BSG_BO_CLP bsg_mop clp_state clp bsg)
+target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
+target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
 
 enable_testing()
 

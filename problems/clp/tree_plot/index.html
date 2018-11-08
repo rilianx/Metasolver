@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style type="text/css">
+  
+	.node {
+    cursor: pointer;
+  }
+
+  .overlay{
+      background-color:#EEE;
+  }
+   
+  .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+   
+  .node text {
+    font-size:10px; 
+    font-family:sans-serif;
+  }
+   
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+  }
+
+  .templink {
+    fill: none;
+    stroke: red;
+    stroke-width: 3px;
+  }
+
+  .ghostCircle.show{
+      display:block;
+  }
+
+  .ghostCircle, .activeDrag .ghostCircle{
+       display: none;
+  }
+
+</style>
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="dndTree.js"></script>
+<body>
+  <div class="row">
+    <div id="tree-container"></div>
+  </div>
+    <div class="row" style="text-align: center;">
+
+      <div class="col-md-3">
+        <button onclick="prevIteration();" id="prevIteration" type="button" class="btn btn-info">prev iteration</button>
+      </div>
+
+    <div class="col-md-6  " >
+      <div class="panel panel-primary">
+  <!-- Default panel contents -->
+  <div id="node-title" class="panel-heading">Node</div>
+
+  <ul class="list-group">
+    <li id="node-parent" class="list-group-item">Parent:</li>
+    <li id="node-value" class="list-group-item">Value:</li>
+    <li id="node-standart-deviation" class="list-group-item">Standart deviation:</li>
+    <li id="node-mcts-value" class="list-group-item">mcts value:</li>
+    <li id="node-stimated-sd" class="list-group-item">stimated sd:</li>    
+    <li id="node-depth" class="list-group-item">Depth:</li>
+    <li id="node-numvisit" class="list-group-item">N° visits:</li>
+    <li id="node-simulations" class="list-group-item">Simulations:</li>
+    <li id="node-ponderated-sd" class="list-group-item">Ponderated sd:</li>
+  </ul>
+</div>
+    </div>
+
+      <div class="col-md-3">
+        <button  onclick="nextIteration();" id="nextIteration" type="button" class="btn btn-info">next iteration</button>
+      </div>
+  </div>
+
+
+</body>
+</html>
+
+

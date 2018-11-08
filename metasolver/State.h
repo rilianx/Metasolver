@@ -43,12 +43,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL){}
+	State() : parent (NULL), id(count_states++){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S){
+	State(const State& S) : parent(&S), id(count_states++){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -94,20 +94,24 @@ public:
 
 	virtual void get_actions(list< Action* >& actions) const = 0;
 
-	virtual Action* next_action(State& final){
-	    if(get_path().size() >= final.get_path().size() ) return NULL; 
-	    
-	    list< const Action* >::iterator act=final.get_path().begin();
-	    advance(act,get_path().size());
-    	
-    	return (*act)->clone();
-	}
+	virtual Action* next_action(State& final);
 
 	bool is_root(){ return (path.size()==0); }
 
 	list<const Action*>& get_path() const{ return path;}
 
 	virtual void print() {  }
+
+	const list<const State*>& get_children() const { return children;}
+
+	void add_children(State* s){ children.push_back(s); }
+
+	int get_id() const { return id; }
+
+	const State* get_parent() const{ return parent; }
+
+
+	static int count_states;
 
 protected:
 
@@ -116,8 +120,14 @@ protected:
 	const State* parent;
 	//bool root;
 
+	list<const State*> children;
+
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
+
+	int id;
+
+
 
 };
 

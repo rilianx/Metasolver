@@ -9,17 +9,8 @@
 #include <fstream>
 #include "args.hxx"
 //#include "objects/State.cpp"
-#include "clpState.h"
-#include "clpStatekd.h"
+#include "mclp-state.h"
 #include "BlockSet.h"
-#include "BSG_midBSG.h"
-#include "VCS_Function.h"
-#include "VCS_Function.h"
-#include "SpaceSet.h"
-#include "Greedy.h"
-#include "DoubleEffort.h"
-#include "GlobalVariables.h"
-#include "BSG.h"
 
 bool global::TRACE = false;
 
@@ -27,7 +18,6 @@ using namespace std;
 
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
-
 
 
 
@@ -153,91 +143,8 @@ int main(int argc, char** argv){
 	double r=0.0; //0.0
     //bool kdtree= false;
 
-    Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, 10000, f);
+    mclpState* s0 = new_mstate(file,inst, min_fr);
 
-    //if(kdtree)
-      // s0 = new clpState_kd(*s0);
-
-    cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
-
-    clock_t begin_time=clock();
-
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, 0.0, r);
-
-	/*if(kdtree){
-		kd_block::set_vcs(*vcs);
-		kd_block::set_alpha(alpha);
-		kd_block::set_alpha(p);
-	}*/
-
-	//for(int i=0;i<10000; i++)
-	//	exp->best_action(*s0);
-
-	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy (vcs);
-
-	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
-    //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
-
-    //bsg->set_shuffle_best_path(true);
-
-	cout << "double effort" << endl;
-    SearchStrategy *de= new DoubleEffort(*bsg);
-
-	cout << "copying state" << endl;
-	State& s_copy= *s0->clone();
-
-   // cout << s0.valid_blocks.size() << endl;
-
-	cout << "running" << endl;
-
-    if(_plot)
-    	de=bsg;
-
-    double eval=de->run(s_copy, maxtime, begin_time) ;
-
-    cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
-	
-    cout << eval << endl;
-
-    if(_plot){
-    	pointsToTxt(&s_copy, 0);
-    	system("firefox problems/clp/tree_plot/index.html");
-    }
-
-/*
-	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
-    actions.sort(clpState::height_sort);
-
-
-	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
-
-	for(auto action:actions){
-		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
-		s00->transition(*clp_action);
-		//s00->cont
-		//s00->nb_left_boxes;
-
-
-		cout << "block :" << clp_action->block << endl;
-		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
-
-
-	}
-*/
-/*
-	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
-	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
-		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
-	}
-*/
-
-	//s00->cont->MatLab_print();
 
 
 }
