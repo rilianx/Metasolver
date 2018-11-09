@@ -12,14 +12,13 @@
 #include "clpState.h"
 #include "clpStatekd.h"
 #include "BlockSet.h"
-#include "BSG_midBSG.h"
 #include "VCS_Function.h"
 #include "VCS_Function.h"
 #include "SpaceSet.h"
 #include "Greedy.h"
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
-#include "BSG.h"
+#include "BeamACO.h"
 
 bool global::TRACE = false;
 
@@ -78,7 +77,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 
-	args::ValueFlag<double> _nbeta(parser, "double", "Weight of the priori knowledge", {"nbeta"});
+	args::ValueFlag<double> _aco_alpha(parser, "double", "Weight of the priori knowledge", {"aco_alpha"});
+	args::ValueFlag<double> _aco_beta(parser, "double", "Weight of the priori knowledge", {"aco_beta"});
 
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
@@ -118,11 +118,12 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, nbeta=0.0;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, aco_alpha=0.0, aco_beta=0.0;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
-	if(_nbeta) nbeta=_nbeta.Get();
+	if(_aco_alpha) aco_alpha=_aco_alpha.Get();
+	if(_aco_beta) aco_beta=_aco_beta.Get();
 	if(_gamma) gamma=_gamma.Get();
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
@@ -155,13 +156,10 @@ int main(int argc, char** argv){
 	cout << "Maxtime:" << maxtime << endl;
 
 	double r=0.0; //0.0
-    //bool kdtree= false;
 
     Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
-    //if(kdtree)
-      // s0 = new clpState_kd(*s0);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -180,16 +178,16 @@ int main(int argc, char** argv){
 	//	exp->best_action(*s0);
 
 	cout << "greedy" << endl;
-  SearchStrategy *gr = new Greedy (vcs, nbeta);
+  SearchStrategy *gr = new Greedy (vcs, aco_alpha, aco_beta);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot, nbeta);
+	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
 
 	cout << "double effort" << endl;
-    SearchStrategy *de= new DoubleEffort(*bsg);
+    SearchStrategy *de= new DoubleEffort(*beamaco);
 
 	cout << "copying state" << endl;
 	State& s_copy= *s0->clone();
@@ -199,7 +197,7 @@ int main(int argc, char** argv){
 	cout << "running" << endl;
 
     if(_plot)
-    	de=bsg;
+    	de=beamaco;
 
     double eval=de->run(s_copy, maxtime, begin_time) ;
 

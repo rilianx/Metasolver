@@ -13,9 +13,11 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
-#include "../metasolver/State.h"
-#include "objects2/Block.h"
+#include "State.h"
+#include "Block.h"
+
 
 
 using namespace std;
@@ -89,6 +91,56 @@ public:
 	}
 
 	virtual void get_actions(list< Action* >& actions) const;
+
+	long hash(set < vector<long> > s) const {
+		long ret = 0;
+		for(auto vec : s){
+			for(auto i : vec)
+				ret += std::hash<long>()(i);
+		}
+
+	    return ret;
+	}
+
+	long hash(vector<long> vec) const {
+		long ret = 0;
+		for(auto i : vec)
+			ret += std::hash<long>()(i);
+
+	    return ret;
+	}
+
+	virtual pair<long, long> get_code(const Action& action) const{
+		const clpAction& act = *dynamic_cast<const clpAction*> (&action);
+		const Space& s = act.space;
+
+		list<const AABB*> blocks = cont->blocks->get_intersected_objects(s);
+
+		Vector3 anchor = s.get_anchor_vector();
+
+		set < vector<long> > v;
+
+		for(auto b:blocks){
+			std::vector<long> v0 = std::vector<long>(6);
+			v0[0] = min(abs(b->getXmin()-anchor.getX()), abs(b->getXmax()-anchor.getX()));
+			v0[1] = min(abs(b->getYmin()-anchor.getY()), abs(b->getYmax()-anchor.getY()));
+			v0[2] = min(abs(b->getZmin()-anchor.getZ()), abs(b->getZmax()-anchor.getZ()));
+			v0[3] = max(abs(b->getXmin()-anchor.getX()), abs(b->getXmax()-anchor.getX()));
+			v0[4] = max(abs(b->getYmin()-anchor.getY()), abs(b->getYmax()-anchor.getY()));
+			v0[5] = max(abs(b->getZmin()-anchor.getZ()), abs(b->getZmax()-anchor.getZ()));
+			v.insert(v0);
+		}
+
+		long hh = hash(v);
+
+		vector<long> bl = std::vector<long>(3);
+		bl[0]=act.block.getL();
+		bl[1]=act.block.getL();
+		bl[2]=act.block.getL();
+		return make_pair(hh,hash(bl));
+
+
+	}
 
 	/*
 	* Rearranges the elements in the path pseudo-randomly

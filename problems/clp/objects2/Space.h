@@ -40,6 +40,15 @@ public:
 
 	const bool* get_anchor() const {return anchor;}
 
+	Vector3 get_anchor_vector() const {
+		long x,y,z;
+		x= (anchor[0]==0)? getXmin():getXmax();
+		y= (anchor[1]==0)? getYmin():getYmax();
+		z= (anchor[2]==0)? getZmin():getZmax();
+
+		return Vector3(x,y,z);
+	}
+
 
 	static bool bottom_up;
 
