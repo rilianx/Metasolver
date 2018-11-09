@@ -110,6 +110,7 @@ public:
 
 	const State* get_parent() const{ return parent; }
 
+	virtual pair<long, long> get_code(const Action& action) const{ return make_pair(0,0); }
 
 	static int count_states;
 

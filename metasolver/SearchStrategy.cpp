@@ -21,6 +21,7 @@ Action* SearchStrategy::best_action(const State& s){
 }
 
 int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
+	if(aco_beta>0.0) return get_best_actions_aco(s, bactions, n);
 
 	if(!evl) {
 		cout << "The function State::get_best_actions should be implemented or an "
@@ -58,4 +59,59 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 	return bactions.size();
 
 }
+
+int SearchStrategy::get_best_actions_aco(const State& s, list< Action* >& bactions, int n){
+
+	if(!evl) {
+		cout << "The function State::get_best_actions_prob should be implemented or an "
+				<< "ActionEvaluator should be provided" << endl;
+		exit(0);
+	}
+
+	list< pair<double,Action*> > evaluated_actions;
+	//map<double,Action*> ranked_actions;
+
+	list< Action* > actions;
+	s.get_actions(actions);
+
+	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
+
+
+  double sum_eval=0;
+	while(!actions.empty()){
+		Action* a=actions.front(); actions.pop_front();
+		double eval = pow(tauM.get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
+
+		evaluated_actions.push_back(make_pair(eval,a));
+		sum_eval += eval;
+	}
+
+	//se colocan las acciones en la lista en el orden inverso
+	while(evaluated_actions.size()>0 && bactions.size()<n){
+		//cout << "eval:" << ranked_actions.begin()->first << endl;
+		double r = (rand()/(double)RAND_MAX)*sum_eval;
+		if(r>sum_eval) r=sum_eval;
+
+		double roulette=0.0;
+		auto it=evaluated_actions.begin();
+
+		for(; it!=evaluated_actions.end(); it++){
+			roulette += it->first;
+			if(roulette >= r)
+				break;
+		}
+		if(it==evaluated_actions.end()) it--;
+
+		sum_eval-=it->first;
+		bactions.push_front( it->second );
+		evaluated_actions.erase(it);
+	}
+
+	for(auto act:evaluated_actions)
+	   delete act.second;
+
+	return bactions.size();
+
+}
+
 }

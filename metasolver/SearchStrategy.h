@@ -18,10 +18,44 @@ using namespace std;
 
 namespace metasolver {
 
+class tau_matrix{
+
+private:
+	double factor;
+	double default_value;
+	map< pair<long, long>, double > values;
+
+public:
+
+	tau_matrix() : factor(1.0), default_value(1.0) { }
+
+	double get_tau(const State* s, Action* a){
+		pair<long, long> p = s->get_code(*a);
+		if(values.find(p) != values.end()){
+			cout <<factor*default_value << "," << factor*values[p] << endl;
+
+			return factor*values[p];
+		}else
+			return factor*default_value;
+	}
+
+	void update_factor(double decr){
+		factor*=decr;
+	}
+
+	void incr_tau(const State* s, Action* a, double incr){
+		pair<long, long> p = s->get_code(*a);
+		if(values.find(p) != values.end())
+			values[p]+=incr;
+		else
+			values[p]=default_value+incr;
+	}
+};
+
 //TODO: refactorizar
 class SearchStrategy {
 public:
-	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL, double aco_alpha=0.0, double aco_beta=0.0) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()), aco_beta(aco_beta) {} ;
 
 	virtual ~SearchStrategy() {
 
@@ -101,6 +135,8 @@ public:
 	 */
 	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
+  //return the n best actions asigning a fitness proportional probability (fpp) to the actions
+  virtual int get_best_actions_aco(const State& s, list< Action* >& bactions, int n);
 
 protected:
 
@@ -116,6 +152,12 @@ protected:
 	clock_t begin_time;
 
 	ActionEvaluator* evl;
+
+	double aco_alpha;
+	double aco_beta;
+
+
+	tau_matrix tauM;
 
 };
 

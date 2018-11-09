@@ -45,6 +45,11 @@ metasolver/State.cpp
 )
 
 ADD_LIBRARY(
+beam_ACO
+metasolver/strategies/BeamACO.cpp
+)
+
+ADD_LIBRARY(
 bsg_mop
  metasolver/plugins/mop/strategies/BSGMOP.cpp
 )
@@ -90,6 +95,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 ADD_EXECUTABLE(MCLP problems/mclp/main/mclp-solver.cpp)
 ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(BeamACO problems/clp/main/main_beamACO.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
@@ -101,6 +107,7 @@ ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(MCLP mclp_state  clp bsg)
 target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
+target_link_libraries(BeamACO clp_state clp clp_kdtree beam_ACO bsg)
 target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
 target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
 target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
