@@ -80,6 +80,8 @@ int SearchStrategy::get_best_actions_aco(const State& s, list< Action* >& bactio
   double sum_eval=0;
 	while(!actions.empty()){
 		Action* a=actions.front(); actions.pop_front();
+		//cout << tauM.get_tau(&s, a)<< endl;
+
 		double eval = pow(tauM.get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
 
 		evaluated_actions.push_back(make_pair(eval,a));
