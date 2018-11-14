@@ -17,7 +17,7 @@ BeamACO::~BeamACO(){
 
 list<State*> BeamACO::next(list<State*>& S){
     
-	// cout << "next" << endl;
+	 //cout << "next" << endl;
      //no hay mas estados en el arbol
      if(S.size()==0) return S;
 

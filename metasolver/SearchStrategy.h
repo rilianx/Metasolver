@@ -32,7 +32,7 @@ public:
 	double get_tau(const State* s, Action* a){
 		pair<long, long> p = s->get_code(*a);
 		if(values.find(p) != values.end()){
-			cout <<factor*default_value << "," << factor*values[p] << endl;
+			//cout <<factor*default_value << "," << factor*values[p] << endl;
 
 			return factor*values[p];
 		}else
@@ -55,7 +55,8 @@ public:
 //TODO: refactorizar
 class SearchStrategy {
 public:
-	SearchStrategy(ActionEvaluator* evl=NULL, double aco_alpha=0.0, double aco_beta=0.0) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()), aco_beta(aco_beta) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL, double aco_alpha=0.0, double aco_beta=0.0) :
+		evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()), aco_alpha(aco_alpha), aco_beta(aco_beta) {} ;
 
 	virtual ~SearchStrategy() {
 
