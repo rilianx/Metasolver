@@ -77,8 +77,8 @@ namespace clp {
 				}
 			}
 
-			list< Action* > actions;
-			s.get_actions(actions);
+			//list< Action* > actions;
+			//s.get_actions(actions);
 
             // Generando el input 2
 			glue_resetInput2(pyHandler);
