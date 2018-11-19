@@ -117,6 +117,30 @@ void glue_resetInput2(PyHandler pyHandler){
     // Ejecutando funcion
     PyObject_CallObject(pFunc, NULL);
 }
+
+void glue_fillInput2(PyHandler pyHandler){
+    /*
+     * nomreFuncion es el nombre que tiene la funcion dentron del script de ejecucion
+     * de la red (Python) para operar las entradas y generar una salida.
+     */
+    const char* nombreFuncion = "fillInput2";
+
+    // Preparando funcion
+    PyObject *pFunc = PyObject_GetAttrString(pyHandler.pModule, nombreFuncion);
+    
+    // Comprobando errores
+    if(PyErr_Occurred())
+        PyErr_Print();
+    if(!pFunc) 
+        printf("[glue_putInput-] Error no se pudo encontrar la funcion %s\n", nombreFuncion);
+    if(pFunc && PyCallable_Check(pFunc) && DEB)
+        printf("Todo ok\n");
+
+    // Ejecutando funcion
+    PyObject_CallObject(pFunc, NULL);
+}
+
+
 /*
   FIXME: funcion getValue queda fuera de uso desde acutalizacion pasada.
   ahora recibe alpha, beta, gamma y P con sus respectivas funciones get()

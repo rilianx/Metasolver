@@ -127,7 +127,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (ann_eval);
 
 	cout << "create bsg" << endl;
-    BSG *bsg= new BSG(ann_eval,*gr, 4);
+    BSG *bsg= new BSG(ann_eval,*gr, 8);
 
 	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*bsg);
@@ -138,8 +138,8 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-	double eval = gr->run(s_copy, maxtime, begin_time) ;
-    //double eval = de->run(s_copy, maxtime, begin_time) ;
+	//double eval = gr->run(s_copy, maxtime, begin_time) ;
+    double eval = bsg->run(s_copy, maxtime, begin_time) ;
 
     cout << "best_volume:"<< endl;
     cout << eval << endl;

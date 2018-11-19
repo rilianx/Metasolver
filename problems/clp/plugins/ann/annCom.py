@@ -81,8 +81,8 @@ initModel()
 
 numeroPred = 0 # Numero de veces que se a pedido una prediccion
 path = "/home/braulio/MetasolverAnn/Log/"
-os.system("rm " + path + "*") # Eliminando contenido del directorio
-os.system("mkdir " + path)    # Creando directorio en caso de no existir
+#os.system("rm " + path + "*") # Eliminando contenido del directorio
+#os.system("mkdir " + path)    # Creando directorio en caso de no existir
 
 '''
 	Recibe la matrices de entrada para la ANN y retorna la lista de respuesta
@@ -109,15 +109,15 @@ def getPrediction():
 	prediction[1] = b[0,0]*8.0
 	prediction[2] = g[0,0]
 	prediction[3] = p[0,0]*0.1
-	print prediction
+	#print prediction
  
 	#prediction = np.reshape(prediction, (batch,5,5,5)) # FIXME: <- Esto hay que cambiarlo si o si
 
 	numeroPred = numeroPred + 1
 	
-	np.save(path + "LogI1_" + str(numeroPred), input1)
-	np.save(path + "LogI2_" + str(numeroPred), input2)
-	np.save(path + "LogPred_" + str(numeroPred), prediction)
+	#np.save(path + "LogI1_" + str(numeroPred), input1)
+	#np.save(path + "LogI2_" + str(numeroPred), input2)
+	#np.save(path + "LogPred_" + str(numeroPred), prediction)
 	
 
 #Modifica el valor de una celda del input 1
@@ -139,12 +139,18 @@ def resetInput2():
     #print "resetInput2"
     np.place(input2, input2!= 0, 0)
 
+# Setea a uno (1) los valores de input2 que hayan sido modificados 
+def fillInput2():
+    global input2
+    #print "resetInput2"
+    np.place(input2, input2!= 1, 1)
+
 
 #obtiene el valor de una respuesta especifica en el cubo de respuestas
 def getValue(x,y,z, b = 0):
 	global prediction
 	#print "getValue"
-	print x, y, z, b
+	#print x, y, z, b
 	return prediction.item((b,x,y,z))
 
 

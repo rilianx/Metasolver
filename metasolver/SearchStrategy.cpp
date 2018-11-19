@@ -35,8 +35,8 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 	s.get_actions(actions);
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
-
-	evl->initialize(s);
+	if(n>1)
+		evl->initialize(s);
 	while(!actions.empty()){
 		Action* a=actions.front(); actions.pop_front();
 		double eval = evl->eval_action_rand(s,*a);

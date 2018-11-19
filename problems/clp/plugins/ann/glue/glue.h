@@ -39,6 +39,10 @@ int glue_putInput(PyHandler pyHandler, const char *nomrbeFuncion, long x, long y
  */
 void glue_resetInput2(PyHandler pyHandler);
 
+/**
+ *  Rellena todo el input 2 con valores 1
+ */
+void glue_fillInput2(PyHandler pyHandler);
 
 /**
  * Le pide a la red que opere las entradas y prepare una salida

@@ -154,7 +154,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4);
+    BSG *bsg= new BSG(vcs,*gr, 8);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);
@@ -168,10 +168,10 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = de->run(s_copy, maxtime, begin_time) ;
+    double eval = bsg->run(s_copy, maxtime, begin_time) ;
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
+	cout << eval << " " << bsg->get_best_state()->get_value2() << " " << eval*bsg->get_best_state()->get_value2() << endl;
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();

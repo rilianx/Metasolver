@@ -356,9 +356,33 @@ config:
         class_name: VarianceScaling
         config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
       kernel_regularizer: null
+      name: a_dense
+      trainable: true
+      units: 256
+      use_bias: true
+    inbound_nodes:
+    - - - flatten_1
+        - 0
+        - 0
+        - {}
+    name: a_dense
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+      kernel_regularizer: null
       name: b_dense
       trainable: true
-      units: 512
+      units: 256
       use_bias: true
     inbound_nodes:
     - - - flatten_1
@@ -382,7 +406,7 @@ config:
       kernel_regularizer: null
       name: g_dense
       trainable: true
-      units: 512
+      units: 256
       use_bias: true
     inbound_nodes:
     - - - flatten_1
@@ -406,7 +430,7 @@ config:
       kernel_regularizer: null
       name: p_dense
       trainable: true
-      units: 512
+      units: 256
       use_bias: true
     inbound_nodes:
     - - - flatten_1
@@ -414,54 +438,6 @@ config:
         - 0
         - {}
     name: p_dense
-  - class_name: Dense
-    config:
-      activation: relu
-      activity_regularizer: null
-      bias_constraint: null
-      bias_initializer:
-        class_name: Zeros
-        config: {}
-      bias_regularizer: null
-      kernel_constraint: null
-      kernel_initializer:
-        class_name: VarianceScaling
-        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
-      kernel_regularizer: null
-      name: a_dense
-      trainable: true
-      units: 512
-      use_bias: true
-    inbound_nodes:
-    - - - flatten_1
-        - 0
-        - 0
-        - {}
-    name: a_dense
-  - class_name: Dropout
-    config: {name: dropout_2, noise_shape: null, rate: 0.3, seed: null, trainable: true}
-    inbound_nodes:
-    - - - b_dense
-        - 0
-        - 0
-        - {}
-    name: dropout_2
-  - class_name: Dropout
-    config: {name: dropout_3, noise_shape: null, rate: 0.3, seed: null, trainable: true}
-    inbound_nodes:
-    - - - g_dense
-        - 0
-        - 0
-        - {}
-    name: dropout_3
-  - class_name: Dropout
-    config: {name: dropout_4, noise_shape: null, rate: 0.3, seed: null, trainable: true}
-    inbound_nodes:
-    - - - p_dense
-        - 0
-        - 0
-        - {}
-    name: dropout_4
   - class_name: Dense
     config:
       activation: relu
@@ -505,7 +481,7 @@ config:
       units: 64
       use_bias: true
     inbound_nodes:
-    - - - dropout_2
+    - - - b_dense
         - 0
         - 0
         - {}
@@ -529,7 +505,7 @@ config:
       units: 64
       use_bias: true
     inbound_nodes:
-    - - - dropout_3
+    - - - g_dense
         - 0
         - 0
         - {}
@@ -553,11 +529,107 @@ config:
       units: 64
       use_bias: true
     inbound_nodes:
-    - - - dropout_4
+    - - - p_dense
         - 0
         - 0
         - {}
     name: p_dense2
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+      kernel_regularizer: null
+      name: a_dense3
+      trainable: true
+      units: 64
+      use_bias: true
+    inbound_nodes:
+    - - - a_dense2
+        - 0
+        - 0
+        - {}
+    name: a_dense3
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+      kernel_regularizer: null
+      name: b_dense3
+      trainable: true
+      units: 64
+      use_bias: true
+    inbound_nodes:
+    - - - b_dense2
+        - 0
+        - 0
+        - {}
+    name: b_dense3
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+      kernel_regularizer: null
+      name: g_dense3
+      trainable: true
+      units: 64
+      use_bias: true
+    inbound_nodes:
+    - - - g_dense2
+        - 0
+        - 0
+        - {}
+    name: g_dense3
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}
+      kernel_regularizer: null
+      name: p_dense3
+      trainable: true
+      units: 64
+      use_bias: true
+    inbound_nodes:
+    - - - p_dense2
+        - 0
+        - 0
+        - {}
+    name: p_dense3
   - class_name: Dense
     config:
       activation: relu
@@ -577,7 +649,7 @@ config:
       units: 1
       use_bias: true
     inbound_nodes:
-    - - - a_dense2
+    - - - a_dense3
         - 0
         - 0
         - {}
@@ -601,7 +673,7 @@ config:
       units: 1
       use_bias: true
     inbound_nodes:
-    - - - b_dense2
+    - - - b_dense3
         - 0
         - 0
         - {}
@@ -625,7 +697,7 @@ config:
       units: 1
       use_bias: true
     inbound_nodes:
-    - - - g_dense2
+    - - - g_dense3
         - 0
         - 0
         - {}
@@ -649,7 +721,7 @@ config:
       units: 1
       use_bias: true
     inbound_nodes:
-    - - - p_dense2
+    - - - p_dense3
         - 0
         - 0
         - {}

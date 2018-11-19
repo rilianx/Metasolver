@@ -83,9 +83,15 @@ namespace clp {
             // Generando el input 2
 			glue_resetInput2(pyHandler);
 			const Space& sp = state->cont->spaces->top();
-			for(long i = sp.getXmin(); i < sp.getXmax(); i++){
-				for(long j = sp.getYmin(); j < sp.getYmax(); j++){
-					glue_putInput(pyHandler, nFuncInput2, i, j, 1);
+			if(state->cont->spaces->size() < 1){
+				cout << "\033[1;31mWarning: state->cont->spaces->size() < 1\033[0m\n";
+				glue_fillInput2(pyHandler);
+			}
+			else{
+				for(long i = sp.getXmin(); i < sp.getXmax(); i++){ // FIXME: Aqui está el error
+					for(long j = sp.getYmin(); j < sp.getYmax(); j++){
+						glue_putInput(pyHandler, nFuncInput2, i, j, 1);
+					}
 				}
 			}
 
@@ -99,7 +105,6 @@ namespace clp {
 			vcs_f->set_gamma(glue_getGamma(pyHandler));
 			vcs_f->set_p(glue_getP(pyHandler));
 			vcs_f->set_beta(glue_getBeta(pyHandler));
-
 		}
 
 		virtual double eval_action(const State& s, const Action& a){
