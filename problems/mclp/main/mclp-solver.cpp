@@ -11,6 +11,10 @@
 //#include "objects/State.cpp"
 #include "mclp-state.h"
 #include "BlockSet.h"
+#include "Greedy.h"
+#include "DoubleEffort.h"
+#include "GlobalVariables.h"
+#include "BSG.h"
 
 bool global::TRACE = false;
 
@@ -54,11 +58,11 @@ void pointsToTxt(State* root, int it) {
 
 int main(int argc, char** argv){
 
-
 	args::ArgumentParser parser("********* BSG-CLP *********.", "BSG Solver for CLP.");
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
-	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
+	args::Flag _rotate(parser, "rotate", "rotations are allowed?", {"rot"});
+	args::ValueFlag<int> _nboxes(parser, "int", "Number of boxes for each type", {"nboxes"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
@@ -68,10 +72,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
-
-
-
-	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
+	//args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
 
@@ -106,24 +107,14 @@ int main(int argc, char** argv){
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
 	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
+	int nboxes=1;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
 	if(_gamma) gamma=_gamma.Get();
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
-
-
-	string format="BR";
-	if(_format) format=_format.Get();
-
-	clpState::Format f;
-	if(format=="BR")
-		f=clpState::BR;
-	else if(format=="BRw")
-		f=clpState::BRw;
-	else if(format=="1C")
-		f=clpState::_1C;
+	if(_nboxes) nboxes=_nboxes.Get();
 
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
@@ -135,16 +126,45 @@ int main(int argc, char** argv){
 //a las cajas se les inicializan sus pesos en 1
 
 	cout << "***** Creando el contenedor ****" << endl;
-	cout << "File("<< format <<"): " << file << endl;
 	cout << "Instance:" << inst+1 << endl;
 	cout << "min_fr:" << min_fr << endl;
 	cout << "Maxtime:" << maxtime << endl;
 
-	double r=0.0; //0.0
-    //bool kdtree= false;
+    mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
 
-    mclpState* s0 = new_mstate(file,inst, min_fr);
+    cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
+
+    clock_t begin_time=clock();
+
+    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+        alpha, beta, gamma, p, delta, 0.0, 0.0);
+
+	cout << "greedy" << endl;
+    SearchStrategy *gr = new Greedy (vcs);
+
+	cout << "bsg" << endl;
+    BSG *bsg= new BSG(vcs,*gr, 8, 0.0, 0, _plot);
+
+	cout << "copying state" << endl;
+	State& s_copy= *s0->clone();
+
+	double eval=bsg->run(s_copy, maxtime, begin_time) ;
+	while(eval>0){
+		mclpState* s = dynamic_cast<mclpState*>(bsg->get_best_state()->clone());
+		s->new_pallet();
+		bsg->initialize(s);
+		eval=bsg->run(*s, maxtime, begin_time) ;
+		cout << eval << endl;
+	}
 
 
+
+	cout << "best_volume" << endl;
+	cout << eval << endl;
+
+	if(_plot){
+	   pointsToTxt(&s_copy, 0);
+	   system("firefox problems/clp/tree_plot/index.html");
+	}
 
 }

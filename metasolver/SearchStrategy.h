@@ -36,7 +36,7 @@ public:
 	/*
 	 * Initialize the variables of the specific strategy
 	 */
-	virtual void initialize (State* s=NULL) { best_state=s; }
+	virtual void initialize (State* s=NULL) { /*if(best_state) delete best_state; */ best_state=s; }
 
 	virtual void clean(list<State*>& S){ }
 

@@ -13,7 +13,7 @@ BoxShape::BoxShape(int id, long l, long w, long h, bool rot1, bool rot2, bool ro
 	Volume(l,w,h), id(id), weight(weight) {
 
       is_valid_orientation[WLH]=rot3;
-      is_valid_orientation[LWH]=rot3;
+      is_valid_orientation[LWH]=true; //rot3;
 
 	  is_valid_orientation[WHL]=rot1;
 	  is_valid_orientation[HWL]=rot1;

@@ -112,11 +112,17 @@ public:
 
 protected:
 
+	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
+
 	virtual void _transition(const Action& action);
+
+	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
+
+	void update_min_dim();
 
 private:
 
-	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
+
 
 	/**
 	 * Remove the free spaces in the container that cannot
@@ -138,9 +144,7 @@ private:
 
 	};
 
-	void update_min_dim();
 
-	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
 
 	/*
 	 * calculate the number of supported blocks for each block

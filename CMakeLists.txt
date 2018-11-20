@@ -99,7 +99,7 @@ ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
-target_link_libraries(MCLP mclp_state  clp bsg)
+target_link_libraries(MCLP mclp_state clp_state clp bsg)
 target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
 target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
 target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)

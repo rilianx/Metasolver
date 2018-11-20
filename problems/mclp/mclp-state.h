@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 
+#include "clpState.h"
 #include "State.h"
 #include "Block.h"
 
@@ -27,37 +28,24 @@ namespace clp {
 class BlockSet;
 class mclpState;
 
-class mclpAction : public Action{
-public:
-	mclpAction(const int id_pallet, const Block& block, const Space& space) : id_pallet(id_pallet), block(block), space(space) { }
-
-	//mclpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
-
-	virtual Action* clone() const{ return new mclpAction(*this);}
-
-	const int id_pallet;
-	const Block& block;
-	const Space space;
-
-};
-
 bool is_constructible(const mclpState& s, const Block& b);
 
-class mclpState : public State {
+class mclpState : public clpState {
 public:
 
-    static bool left;
+	mclpState(const mclpState& S) : clpState(S) {
 
-	mclpState(const mclpState& S) : State(S),
-	nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks){
-		for(Block* p:S.pallets)
-			pallets.insert(pallets.end(),p->clone());
+		for(Block* p:S.pallets){
+			if(S.cont!=p)
+				pallets.push_back(p->clone());
+		}
+
+		pallets.push_back(cont);
 	}
 
 	virtual ~mclpState(){
 		for(Block* p:pallets)
-			delete p;
+			if(cont!=p) delete p;
 	}
 
 
@@ -66,82 +54,30 @@ public:
 		return st;
 	}
 
-	virtual State* create_neighbor(State* s0);
-
-	friend mclpState* new_mstate(string file, int instance, double min_fr, int max_bl);
-
-	virtual double get_value() const{
-		return pallets.size();
+	void new_pallet(){
+		Block* b = new Block(cont->getL(), cont->getW(), cont->getH());
+		pallets.push_back(b);
+		cont=b;
 	}
 
-	/*virtual double get_value2() const{
-		return 0.0;
-	}*/
 
-	static bool height_sort(const Action* a1, const Action* a2){
-		const mclpAction* ca1 = dynamic_cast<const mclpAction*> (a1);
-		const mclpAction* ca2 = dynamic_cast<const mclpAction*> (a2);
+	friend mclpState* new_mstate(string file, int instance, double min_fr, int max_bl, bool rot, int nboxes);
 
-		if(ca1->space.get_location(ca1->block).getZ() < ca2->space.get_location(ca2->block).getZ())
-			return true;
-		return false;
-	}
-
-	virtual void get_actions(list< Action* >& actions) const;
-
-	/*
-	* Rearranges the elements in the path pseudo-randomly
-	*/
-	virtual int shuffle_path();
-
-
-	int get_n_valid_blocks() {return valid_blocks.size();}
 
 	//member variables
-	vector<Block*> pallets;
-	map<const BoxShape*, int> nb_left_boxes;
-	list<const Block*> valid_blocks;
-
-	virtual void print() {
-		//cont->MatLab_print();
-	}
-
+	list<Block*> pallets;
 
 protected:
-
-	virtual void _transition(const Action& action);
-
-private:
-
-	/**
-	 * Remove the free spaces in the container that cannot
-	 * include any leaving box
-	 */
-	void update_free_spaces() { };
-
-	/**
-	 * Remove blocks from the valid_block list that do not
-	 * fit in any free space or cannot be constructed with the leaving boxes
-	 */
-	void update_valid_blocks() {
-		list<const Block*>::iterator it = valid_blocks.begin();
-		while(it!=valid_blocks.end()){
-			if(!is_constructible(*this,**it))
-				it=valid_blocks.erase(it);
-			else it++;
-		}
-
-	};
-
-	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
-
+	mclpState(Block* p) : clpState(p) {
+		pallets.push_back(p);
+	}
 
 
 };
 
 
 
-mclpState* new_mstate(string file, int instance, double min_fr=0.98, int max_bl=10000);
+mclpState* new_mstate(string file, int instance, double min_fr=0.98, int max_bl=10000, bool rot=true, int nboxes=1);
 
 } /* namespace clp */
 
