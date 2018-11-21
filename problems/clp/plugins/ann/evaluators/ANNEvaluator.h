@@ -35,7 +35,7 @@ namespace clp {
 
 			// Inicializando red
 			// /home/braulio/Metasolver/problems/clp/plugins/ann/annCom.py
-			const char* pathScript = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/";
+			const char* pathScript = "./problems/clp/plugins/ann/";
 			const char* nameScript = "annCom";
 
 			pyHandler.pModule = glue_initPyHandler(pyHandler, pathScript, nameScript);

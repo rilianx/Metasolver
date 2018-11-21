@@ -29,11 +29,12 @@ input1 = np.zeros((1,defaultX,defaultY,1))
 input2 = np.zeros((1,defaultX,defaultY,1))
 prediction = np.zeros(4)
 
+#print os.getcwd()
 
 '''
 	Inicializa y compila la ANN a partir de un modelo y pesos entregados
 ''' 
-def initModel(model_yml = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.yaml", weights = "/home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.h5"):
+def initModel(model_yml = "problems/clp/plugins/ann/model.yaml", weights = "problems/clp/plugins/ann/model.h5"):
 	# Ruta real: /home/braulio/MetasolverAnn/problems/clp/plugins/ann/model.yaml
 	global model
 	if os.path.isfile(model_yml):
