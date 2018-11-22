@@ -49,12 +49,14 @@ public:
     enum Format{BR, _1C, BRw};
 
 	clpState(const clpState& S) : State(S),
-	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim){
+	cont(S.cont->clone()), nb_left_boxes(*new map<const BoxShape*, int>(S.nb_left_boxes)),
+	valid_blocks(*new list<const Block*>(S.valid_blocks)), mindim(S.mindim){
 
 	}
 
 	virtual ~clpState(){
+		delete &nb_left_boxes;
+		delete &valid_blocks;
 		if(cont) delete cont;
 	}
 
@@ -100,8 +102,8 @@ public:
 
 	//member variables
 	Block* cont;
-	map<const BoxShape*, int> nb_left_boxes;
-	list<const Block*> valid_blocks;
+	map<const BoxShape*, int>& nb_left_boxes;
+	list<const Block*>& valid_blocks;
 
 	virtual void print() {
 		cont->MatLab_print();
@@ -116,7 +118,9 @@ protected:
 
 	virtual void _transition(const Action& action);
 
-	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
+	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()),
+			nb_left_boxes(*new map<const BoxShape*, int>), valid_blocks(*new list<const Block*>) {
+	};
 
 	void update_min_dim();
 

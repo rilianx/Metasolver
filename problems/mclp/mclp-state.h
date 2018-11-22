@@ -33,43 +33,25 @@ bool is_constructible(const mclpState& s, const Block& b);
 class mclpState : public clpState {
 public:
 
-	mclpState(const mclpState& S) : clpState(S) {
+	mclpState(const mclpState& S) : clpState(S)/*, nb_left_boxes(S.nb_left_boxes), valid_blocks(S.valid_blocks) */{
 
-		for(Block* p:S.pallets){
-			if(S.cont!=p)
-				pallets.push_back(p->clone());
-		}
 
-		pallets.push_back(cont);
 	}
-
-	virtual ~mclpState(){
-		for(Block* p:pallets)
-			if(cont!=p) delete p;
-	}
-
 
 	virtual State* clone() const{
 		State* st=new mclpState(*this);
 		return st;
 	}
 
-	void new_pallet(){
-		Block* b = new Block(cont->getL(), cont->getW(), cont->getH());
-		pallets.push_back(b);
-		cont=b;
-	}
-
 
 	friend mclpState* new_mstate(string file, int instance, double min_fr, int max_bl, bool rot, int nboxes);
 
-
-	//member variables
-	list<Block*> pallets;
+	//map<const BoxShape*, int>* nb_left_boxes;
+	//list<const Block*>* valid_blocks;
 
 protected:
 	mclpState(Block* p) : clpState(p) {
-		pallets.push_back(p);
+
 	}
 
 

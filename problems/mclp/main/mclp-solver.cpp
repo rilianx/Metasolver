@@ -149,13 +149,14 @@ int main(int argc, char** argv){
 	State& s_copy= *s0->clone();
 
 	double eval=bsg->run(s_copy, maxtime, begin_time) ;
-	while(eval>0){
+
+	/*while(eval>0){
 		mclpState* s = dynamic_cast<mclpState*>(bsg->get_best_state()->clone());
 		s->new_pallet();
 		bsg->initialize(s);
 		eval=bsg->run(*s, maxtime, begin_time) ;
 		cout << eval << endl;
-	}
+	}*/
 
 
 
