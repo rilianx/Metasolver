@@ -1,7 +1,7 @@
-algos:mcts-random_random0.1 mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
-gains (average relative times):1.000000 1.002346 1.002487 1.003875 1.004114 1.004771 1.006826 1.007240 1.009231 
-gains (total time)            :1.000000 1.001124 1.001285 1.002713 1.002914 1.003594 1.005618 1.006027 1.008012 
-compared instances:1500 1500 1500 1500 1500 1500 1500 1500 1500 
-runs    :1500 1500 1500 1500 1500 1500 1500 1500 1500 
-L:  0   0   0   0   0   1   0   0   0 
-W:  0   1   1   1   0   0   1   1   2 
+algos:mcts-maxnodes-withoutbp_list50 mcts-maxnodes-withoutbp_list100 mcts-maxnodes-withoutbp_list200 mcts-maxnodes-withoutbp_list300 mcts-maxnodes-withoutbp_list400 mcts-maxnodes-withoutbp_list500 
+gains (average relative times):1.000000 1.001055 1.001051 1.001046 1.001006 1.001047 
+gains (total time)            :1.000000 0.999857 0.999799 0.999756 0.999733 0.999802 
+compared instances: 80  79  56  46  50  58 
+runs    : 81  81  58  46  52  58 
+L:  0   0   0   0   0   0 
+W:  0   0   0   0   0   0 

@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "boost/math/distributions/normal.hpp"
+#include <boost/math/distributions/students_t.hpp>
 
 
 
@@ -103,14 +104,14 @@ public:
 
 		//promise = mean + eps* var;
 
-
-		//double z_value=stadistic_test(best_value);
-
-
-		normal dist( mean, sqrt(var) );
-
-
-		promise= 1.0-cdf(dist, best_value);
+  //mcts bacan
+		double z_value=stadistic_test(best_value);
+    students_t dist  (children_size);
+    promise= 1.0-cdf(dist, z_value);
+		
+   //mcts profe
+    //normal dist( mean, sqrt(var) );
+		//promise= 1.0-cdf(dist, best_value);
 
 
 		//cout << mean << "," << var <<"," << best_value << ":" << promise << endl;

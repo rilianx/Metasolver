@@ -1,29 +1,22 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-mcts-random_random0.2   0   0   0   0   0 1042 1068   2   0   0   0   0 
-mcts-random_random0.3   0   0   0   0   0 998 1060   1   0   0   0   0 
-mcts-random_random0.4   0   0   0   0   0 949 1094   2   0   0   0   0 
-mcts-random_random0.5   0   0   0   0   1 958 1101   1   0   0   0   0 
-mcts-random_random0.6   0   0   0   0   1 922 1099   0   0   0   0   0 
-mcts-random_random0.7   0   0   0   0   0 856 1140   1   0   0   0   0 
-mcts-random_random0.8   0   0   0   0   0 880 1150   1   0   0   0   0 
-mcts-random_random0.9   0   0   0   0   0 812 1186   3   0   0   0   0 
-mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
-1.000000 1068/1042 1060/998 1094/949 1101/958 1099/922 1140/856 1150/880 1186/812 
-1.200480 2/0 1/0 2/0 1/1 0/1 1/0 1/0 3/0 
-1.503759 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-2.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-5.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
-10.000000 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 
+mcts-maxnodes-withoutbp_list100   0   0   0   0   0 1499 1495   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list200   0   0   0   0   0 1499 1490   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list300   0   0   0   0   0 1500 1488   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list400   0   0   0   0   0 1500 1486   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list500   0   0   0   0   0 1500 1487   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list100 mcts-maxnodes-withoutbp_list200 mcts-maxnodes-withoutbp_list300 mcts-maxnodes-withoutbp_list400 mcts-maxnodes-withoutbp_list500 
+1.000000 1495/1499 1490/1499 1488/1500 1486/1500 1487/1500 
+1.200480 0/0 0/0 0/0 0/0 0/0 
+1.503759 0/0 0/0 0/0 0/0 0/0 
+2.000000 0/0 0/0 0/0 0/0 0/0 
+5.000000 0/0 0/0 0/0 0/0 0/0 
+10.000000 0/0 0/0 0/0 0/0 0/0 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BR/BR1.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 91 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BR/BR1.txt -i 22 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 
 gains
-0.000100 1.000000 1500 1.002346 1500 1.002487 1500 1.003875 1500 1.004114 1500 1.004771 1500 1.006826 1500 1.007240 1500 1.009231 1500 
-total time: 1.000000 1.001124 1.001285 1.002713 1.002914 1.003594 1.005618 1.006027 1.008012 
+0.000100 1.000000 1500 1.000592 1500 1.000307 1500 1.000233 1500 1.000183 1500 1.000164 1500 
+total time: 1.000000 0.999530 0.999245 0.999171 0.999120 0.999102 
