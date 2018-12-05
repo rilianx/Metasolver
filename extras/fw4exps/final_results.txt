@@ -1,13 +1,13 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-mcts-maxnodes-withoutbp_list100   0   0   0   0   0 1499 1495   0   0   0   0   0 
-mcts-maxnodes-withoutbp_list200   0   0   0   0   0 1499 1490   0   0   0   0   0 
-mcts-maxnodes-withoutbp_list300   0   0   0   0   0 1500 1488   0   0   0   0   0 
-mcts-maxnodes-withoutbp_list400   0   0   0   0   0 1500 1486   0   0   0   0   0 
-mcts-maxnodes-withoutbp_list500   0   0   0   0   0 1500 1487   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list100   0   0   0   0   0 1500 1500   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list200   0   0   0   0   0 1500 1500   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list300   0   0   0   0   0 1500 1500   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list400   0   0   0   0   0 1500 1500   0   0   0   0   0 
+mcts-maxnodes-withoutbp_list500   0   0   0   0   0 1500 1500   0   0   0   0   0 
 mcts-maxnodes-withoutbp_list100 mcts-maxnodes-withoutbp_list200 mcts-maxnodes-withoutbp_list300 mcts-maxnodes-withoutbp_list400 mcts-maxnodes-withoutbp_list500 
-1.000000 1495/1499 1490/1499 1488/1500 1486/1500 1487/1500 
+1.000000 1500/1500 1500/1500 1500/1500 1500/1500 1500/1500 
 1.200480 0/0 0/0 0/0 0/0 0/0 
 1.503759 0/0 0/0 0/0 0/0 0/0 
 2.000000 0/0 0/0 0/0 0/0 0/0 
@@ -18,5 +18,5 @@ mcts-maxnodes-withoutbp_list100 mcts-maxnodes-withoutbp_list200 mcts-maxnodes-wi
 instances with significative gains (1.2)
 
 gains
-0.000100 1.000000 1500 1.000592 1500 1.000307 1500 1.000233 1500 1.000183 1500 1.000164 1500 
-total time: 1.000000 0.999530 0.999245 0.999171 0.999120 0.999102 
+0.000100 1.000000 1500 1.001076 1500 1.001034 1500 1.001026 1500 1.001021 1500 1.001009 1500 
+total time: 1.000000 1.000004 0.999963 0.999955 0.999950 0.999938 
