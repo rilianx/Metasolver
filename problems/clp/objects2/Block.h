@@ -104,7 +104,7 @@ protected:
 
 	//only the clone function can use the copy constructor
 	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
-		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
+		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes), nb_boxes(b.nb_boxes),
 	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)), total_weight(b.total_weight) {	}
 
 

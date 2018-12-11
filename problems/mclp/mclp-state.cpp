@@ -19,6 +19,8 @@ using namespace metasolver;
 
 namespace clp {
 
+map<const BoxShape*, double> mclpState::priority_boxes;
+
 mclpState* new_mstate(string file, int i, double min_fr, int max_bl, bool rot, int nboxes){
 
 	mclpState *s = NULL;
@@ -63,12 +65,14 @@ mclpState* new_mstate(string file, int i, double min_fr, int max_bl, bool rot, i
 			vol = l * h * w;
 
 			if(inst==i){
-				cout << l << " " << h << " " << w << endl;
+				//cout << l << " " << h << " " << w << endl;
 				//TODO: esto de aqui genera los bloques unitario (con una caja)
 				BoxShape* boxt = new BoxShape(j, l, w, h, rot1, rot2, rot3, weight);
 				clpState::weight_of_allboxes += weight*(double) nboxes;
 
 				s->nb_left_boxes.insert(make_pair(boxt, nboxes));
+				mclpState::priority_boxes.insert(make_pair(boxt, 1.0));
+
 				for(int o = 0; o < 6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o)){
 						if(!Block::FSB)

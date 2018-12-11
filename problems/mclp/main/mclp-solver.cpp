@@ -56,6 +56,104 @@ void pointsToTxt(State* root, int it) {
 	dfsPrintChild(root,myfile);
 }
 
+int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
+	mclpState::initalize_priorities();
+	int nb_bins=0;
+	multimap<double, map<const BoxShape*, int> > bins;
+
+	while(true){
+		//bsg->initialize();
+		//cout << "copying state" << endl;
+		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
+
+	    s_copy.select_boxes();
+
+		double nb_left_boxes=0;
+		for(auto b:s_copy.nb_left_boxes)
+			nb_left_boxes+=b.second;
+		//cout << "nb_left_boxes:" <<  nb_left_boxes << endl;
+		if(nb_left_boxes==0) break;
+		nb_bins++;
+		double eval=gr->run(s_copy, maxtime, begin_time) ;
+		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.0,s0->nb_left_boxes);
+
+		bins.insert(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
+
+	}
+
+	//cout << nb_bins << endl;
+
+	//Se escogen dos bins y se llenan en secuencia
+	//Si no sobran cajas y la diferencia entre bins se incrementa se acepta el cambio
+	//Si un bin queda sin cajas se elimina
+	for(int j=0; j<500; j++){
+		int r1=rand()%(bins.size());
+		int r2=rand()%(bins.size());
+		while(r2==r1) r2=rand()%(bins.size());
+		multimap<double, map<const BoxShape*, int> >::iterator it1 = bins.begin();
+		advance (it1, r1);
+		multimap<double, map<const BoxShape*, int> >::iterator it2 = bins.begin();
+		advance (it2, r2);
+
+		double diff=abs(it1->first-it2->first);
+
+		map<const BoxShape*, int> boxes1=it1->second;
+		map<const BoxShape*, int> boxes2=it2->second;
+		for(auto b:boxes1)
+			boxes2[b.first]+=b.second;
+
+		bsg->initialize();
+		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
+		s_copy.set_boxes(boxes2);
+
+		double eval1=bsg->run(s_copy, maxtime, begin_time);
+		auto nb_boxes1=dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes;
+
+		for(auto b:nb_boxes1){
+			boxes2[b.first]-=b.second;
+			if(boxes2[b.first]==0) boxes2.erase(b.first);
+		}
+
+
+
+		if(boxes2.empty()){
+			cout << "bin removed!" << endl;
+			bins.erase(it1);
+			bins.erase(it2);
+			bins.insert(make_pair(eval1, nb_boxes1));
+			continue;
+		}
+
+		bsg->initialize();
+		mclpState& s_copyy= *dynamic_cast<mclpState*>(s0->clone());
+		s_copyy.set_boxes(boxes2);
+
+		double eval2=gr->run(s_copyy, maxtime, begin_time);
+		auto nb_boxes2=dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes;
+
+		for(auto b:nb_boxes2){
+			boxes2[b.first]-=b.second;
+			if(boxes2[b.first]==0) boxes2.erase(b.first);
+		}
+
+		if(!boxes2.empty() || abs(eval1-eval2) <= diff)	continue;
+
+		//cout << abs(eval1-eval2) << "," << diff << endl;
+		bins.erase(it1);
+		bins.erase(it2);
+		bins.insert(make_pair(eval1, nb_boxes1));
+		bins.insert(make_pair(eval2, nb_boxes2));
+
+
+	}
+
+
+	return bins.size();
+
+
+
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-CLP *********.", "BSG Solver for CLP.");
@@ -106,7 +204,7 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
+	double alpha=3.0, beta=2.0, gamma=0.5, delta=1.0, p=0.04, maxtheta=0.0;
 	int nboxes=1;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
@@ -136,36 +234,24 @@ int main(int argc, char** argv){
 
     clock_t begin_time=clock();
 
+
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
         alpha, beta, gamma, p, delta, 0.0, 0.0);
 
-	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy (vcs);
+		cout << "greedy" << endl;
+		Greedy *gr = new Greedy (vcs);
 
-	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 8, 0.0, 0, _plot);
-
-	cout << "copying state" << endl;
-	State& s_copy= *s0->clone();
-
-	double eval=bsg->run(s_copy, maxtime, begin_time) ;
-
-	/*while(eval>0){
-		mclpState* s = dynamic_cast<mclpState*>(bsg->get_best_state()->clone());
-		s->new_pallet();
-		bsg->initialize(s);
-		eval=bsg->run(*s, maxtime, begin_time) ;
-		cout << eval << endl;
-	}*/
+		cout << "bsg" << endl;
+		BSG *bsg= new BSG(vcs,*gr, 12, 0.0, 0, _plot);
+		bsg->trace=false;
 
 
+   	int bins=solve(gr, bsg, s0, maxtime, begin_time);
+	cout << bins << endl;
 
-	cout << "best_volume" << endl;
-	cout << eval << endl;
-
-	if(_plot){
-	   pointsToTxt(&s_copy, 0);
-	   system("firefox problems/clp/tree_plot/index.html");
-	}
+	//if(_plot){
+	//   pointsToTxt(&s_copy, 0);
+	//   system("firefox problems/clp/tree_plot/index.html");
+	//}
 
 }

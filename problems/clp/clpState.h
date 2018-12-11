@@ -112,28 +112,6 @@ public:
 
 	static double weight_of_allboxes;
 
-protected:
-
-	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
-
-	virtual void _transition(const Action& action);
-
-	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()),
-			nb_left_boxes(*new map<const BoxShape*, int>), valid_blocks(*new list<const Block*>) {
-	};
-
-	void update_min_dim();
-
-private:
-
-
-
-	/**
-	 * Remove the free spaces in the container that cannot
-	 * include any leaving box
-	 */
-	void update_free_spaces() { };
-
 	/**
 	 * Remove blocks from the valid_block list that do not
 	 * fit in any free space or cannot be constructed with the leaving boxes
@@ -147,6 +125,27 @@ private:
 		}
 
 	};
+
+protected:
+
+	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
+
+	virtual void _transition(const Action& action);
+
+	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()),
+			nb_left_boxes(*new map<const BoxShape*, int>), valid_blocks(*new list<const Block*>) {
+	};
+
+	void update_min_dim();
+
+
+	/**
+	 * Remove the free spaces in the container that cannot
+	 * include any leaving box
+	 */
+	void update_free_spaces() { };
+
+
 
 
 

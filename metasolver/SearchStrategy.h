@@ -21,7 +21,8 @@ namespace metasolver {
 //TODO: refactorizar
 class SearchStrategy {
 public:
-	SearchStrategy(ActionEvaluator* evl=NULL) : evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()) {} ;
+	SearchStrategy(ActionEvaluator* evl=NULL) :
+	evl(evl), best_state(NULL), timelimit(0.0), begin_time(clock()), trace(true) {} ;
 
 	virtual ~SearchStrategy() {
 
@@ -101,7 +102,7 @@ public:
 	 */
 	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
 
-
+  bool trace;
 protected:
 
 	/*

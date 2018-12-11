@@ -16,7 +16,7 @@ BSG::~BSG(){
 }
 
 list<State*> BSG::next(list<State*>& S){
-    
+
 	// cout << "next" << endl;
      //no hay mas estados en el arbol
      if(S.size()==0) return S;
@@ -27,12 +27,12 @@ list<State*> BSG::next(list<State*>& S){
          State& state=**itS;
         // cout << state.get_value() << endl;
 
-         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         if(state.is_root() && trace) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
          list< Action* > best_actions;
-         
+
          //each level of the search tree should explore max_level_size nodes, thus...
          int w =  (double) max_level_size / (double) S.size() + 0.5;
 
@@ -55,9 +55,9 @@ list<State*> BSG::next(list<State*>& S){
 
             //best_state update
              if(value > get_best_value()){
-            	 if(best_state) delete best_state; 
+            	 if(best_state) delete best_state;
             	 best_state = state_copy.clone();
-            	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
+            	 if(trace) cout << "[BSG] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }
 

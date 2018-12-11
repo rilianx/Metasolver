@@ -44,7 +44,7 @@ public:
 	 * Initialize the variables of the specific strategy
 	 */
 	virtual void initialize (State* s=NULL){
-	    if(!s) return;
+	    if(!s) {SearchStrategy::initialize(); return;}
 	    //The states of the first n_elite elements are modified by a first state
 	    map<double, pair<State*, State*> >::iterator state_action=state_actions.begin();
 

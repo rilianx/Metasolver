@@ -346,6 +346,7 @@ void clpState::_transition(const Action& action) {
 	for(;it!=b.nb_boxes.end();it++){
 		nb_left_boxes[it->first] -= it->second;
 		if(nb_left_boxes[it->first]==0) update=true;
+
 	}
 	//if(update) update_min_dim();
 
