@@ -58,25 +58,28 @@ void pointsToTxt(State* root, int it) {
 
 int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 	mclpState::initalize_priorities();
-	int nb_bins=0;
 	multimap<double, map<const BoxShape*, int> > bins;
 
 	while(true){
-		//bsg->initialize();
-		//cout << "copying state" << endl;
+		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
+		//filtrado de cajas
 	    s_copy.select_boxes();
 
+	    //se verifica si quedan cajas por colocar
+	    //if(s_copy.nb_left_boxes()==0)  break;
 		double nb_left_boxes=0;
 		for(auto b:s_copy.nb_left_boxes)
 			nb_left_boxes+=b.second;
-		//cout << "nb_left_boxes:" <<  nb_left_boxes << endl;
 		if(nb_left_boxes==0) break;
-		nb_bins++;
+
+		//usa greedy para llenar contenedor
 		double eval=gr->run(s_copy, maxtime, begin_time) ;
+		//se actualizan las prioridades
 		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.0,s0->nb_left_boxes);
 
+		//se almacena el bin en el mapa
 		bins.insert(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
 
 	}

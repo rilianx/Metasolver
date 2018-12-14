@@ -94,6 +94,7 @@ public:
 	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
 	void update_priorities(double alpha, map<const BoxShape*, int>& nb_boxes) const{
 		for(auto b:cont->nb_boxes)
+			//priority_boxes[b.first] *= alpha*b.second;
 			priority_boxes[b.first] *= (alpha*b.second+(nb_boxes[b.first]-b.second))/nb_boxes[b.first];
 
 	}
