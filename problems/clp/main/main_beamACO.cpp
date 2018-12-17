@@ -168,31 +168,17 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
 
-	/*if(kdtree){
-		kd_block::set_vcs(*vcs);
-		kd_block::set_alpha(alpha);
-		kd_block::set_alpha(p);
-	}*/
-
-	//for(int i=0;i<10000; i++)
-	//	exp->best_action(*s0);
-
 	cout << "greedy" << endl;
-  SearchStrategy *gr = new Greedy (vcs, aco_alpha, aco_beta);
+   SearchStrategy *gr = new Greedy (vcs, aco_alpha, aco_beta);
 
 	cout << "bsg" << endl;
 	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta);
-    //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
-
-    //bsg->set_shuffle_best_path(true);
 
 	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*beamaco);
 
 	cout << "copying state" << endl;
 	State& s_copy= *s0->clone();
-
-   // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
 

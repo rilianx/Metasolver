@@ -78,8 +78,6 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 
-	args::ValueFlag<double> _nbeta(parser, "double", "Weight of the priori knowledge", {"nbeta"});
-
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
@@ -122,7 +120,6 @@ int main(int argc, char** argv){
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
-	if(_nbeta) nbeta=_nbeta.Get();
 	if(_gamma) gamma=_gamma.Get();
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
@@ -180,7 +177,7 @@ int main(int argc, char** argv){
 	//	exp->best_action(*s0);
 
 	cout << "greedy" << endl;
-  SearchStrategy *gr = new Greedy (vcs, nbeta);
+  SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
     BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot, nbeta);
