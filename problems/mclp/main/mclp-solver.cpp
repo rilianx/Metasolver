@@ -58,37 +58,62 @@ void pointsToTxt(State* root, int it) {
 
 int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 	mclpState::initalize_priorities();
-	multimap<double, map<const BoxShape*, int> > bins;
+	//multimap<double, map<const BoxShape*, int> > bins;
+	list < pair <double, map<const BoxShape*, int>> > bins;
+	map<const BoxShape*, int> used_boxes;
 
-	while(true){
+	for(int i=0; i<1000; i++){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//filtrado de cajas
 	    s_copy.select_boxes();
 
-	    //se verifica si quedan cajas por colocar
-	    //if(s_copy.nb_left_boxes()==0)  break;
-		double nb_left_boxes=0;
-		for(auto b:s_copy.nb_left_boxes)
-			nb_left_boxes+=b.second;
-		if(nb_left_boxes==0) break;
-
 		//usa greedy para llenar contenedor
-		double eval=gr->run(s_copy, maxtime, begin_time) ;
+		double eval=gr->run(s_copy, maxtime, begin_time);
+
+		//se seleccionan cajas con mayor prioridad, sin contar las que se hayan colocado en el bin actual
+		s_copy.select_boxes(&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
+		eval=gr->run(s_copy, maxtime, begin_time);
+
+		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes)
+		//todas las cajas: s0->nb_left_boxes
+
+
 		//se actualizan las prioridades
-		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.0,s0->nb_left_boxes);
+		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.98,s0->nb_left_boxes);
 
 		//se almacena el bin en el mapa
-		bins.insert(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
+		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
+
+		cout << eval << ":" ;
+		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
+			cout << box.first->get_id() << ",";
+			used_boxes[box.first]++;
+		}
+		cout << endl;
+
+		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->MatLab_print();
 
 	}
+	cout << "used_boxes" << endl;
+	for(auto box:used_boxes){
+		cout << box.first->get_id() << "(" << box.second << ")," ;
+	}
+	cout << endl;
+
+
+	return bins.size();
+
 
 	//cout << nb_bins << endl;
 
 	//Se escogen dos bins y se llenan en secuencia
 	//Si no sobran cajas y la diferencia entre bins se incrementa se acepta el cambio
+
 	//Si un bin queda sin cajas se elimina
+
+	/*
 	for(int j=0; j<500; j++){
 		int r1=rand()%(bins.size());
 		int r2=rand()%(bins.size());
@@ -149,7 +174,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 
 
 	}
-
+*/
 
 	return bins.size();
 

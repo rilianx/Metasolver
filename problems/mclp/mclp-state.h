@@ -46,7 +46,7 @@ public:
 
 	friend mclpState* new_mstate(string file, int instance, double min_fr, int max_bl, bool rot, int nboxes);
 
-	//map<const BoxShape*, int>* nb_left_boxes;
+	//map<const BoxShape*, int>* nb_left_boxes; //cajas que se pueden colocar en el contenedor
 	//list<const Block*>* valid_blocks;
 	static map<const BoxShape*, double> priority_boxes;
 
@@ -63,8 +63,10 @@ public:
 	}
 
 
+
+
 	//Select a proportion prop of all the boxes considering its priorities
-	void select_boxes(double factor=1.0){
+	void select_boxes(map<const BoxShape*, int>* nb_inserted_boxes=NULL){
 		double mean=0.0; //mean of priorities
 		double total_p=0.0;
 		int total_boxes=0;
@@ -78,12 +80,13 @@ public:
 
 		for(auto p:priority_boxes){
 			//probability of selecting a box of type p.first
-			double p_i=factor*p.second;
+			double p_i=p.second;
 
 			double nb_boxes=0;
 			for(int i=0; i<nb_left_boxes[p.first];i++){
 				if((double)rand()/RAND_MAX < p_i)
-					nb_boxes++;
+					if(nb_inserted_boxes==NULL || nb_inserted_boxes->find(p.first)==nb_inserted_boxes->end())
+							nb_boxes++;
 			}
 			nb_left_boxes[p.first]=nb_boxes;
 		}
@@ -94,14 +97,14 @@ public:
 	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
 	void update_priorities(double alpha, map<const BoxShape*, int>& nb_boxes) const{
 		for(auto b:cont->nb_boxes)
-			//priority_boxes[b.first] *= alpha*b.second;
-			priority_boxes[b.first] *= (alpha*b.second+(nb_boxes[b.first]-b.second))/nb_boxes[b.first];
+			priority_boxes[b.first] *= alpha*b.second;
+			//priority_boxes[b.first] *= (alpha*b.second+(nb_boxes[b.first]-b.second))/nb_boxes[b.first];
 
 	}
 
 	static void initalize_priorities(){
 		for(auto b:priority_boxes)
-			priority_boxes[b.first] = 1.0;
+			priority_boxes[b.first] = 0.5;
 
 	}
 
