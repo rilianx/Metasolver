@@ -29,8 +29,8 @@ public:
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
 	BeamACO(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0,
-			int max_level_size=0, bool plot=false, double aco_alpha=0.0, double aco_beta=0.0) :
-				BSG(evl, greedy, beams, p_elite, max_level_size, plot, aco_alpha, aco_beta) {
+			int max_level_size=0, bool plot=false, double aco_alpha=0.0, double aco_beta=0.0, tau_matrix* tauM=NULL) :
+				BSG(evl, greedy, beams, p_elite, max_level_size, plot, aco_alpha, aco_beta, tauM) {
 
 	}
 

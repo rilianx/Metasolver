@@ -1,5 +1,7 @@
 # HelloWorld is a minimal sample creating, stepping and deleting a Bullet dynamics world
 
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
 set (CMAKE_CXX_STANDARD 11)
 
@@ -47,6 +49,7 @@ metasolver/State.cpp
 ADD_LIBRARY(
 beam_ACO
 metasolver/strategies/BeamACO.cpp
+metasolver/strategies/GreedyACO.cpp
 )
 
 ADD_LIBRARY(
@@ -107,7 +110,7 @@ ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
 target_link_libraries(MCLP mclp_state  clp bsg)
 target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
-target_link_libraries(BeamACO clp_state clp clp_kdtree beam_ACO bsg)
+target_link_libraries(BeamACO clp_state clp beam_ACO bsg)
 target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
 target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
 target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)

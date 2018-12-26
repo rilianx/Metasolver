@@ -20,6 +20,12 @@ Action* SearchStrategy::best_action(const State& s){
 	else return NULL;
 }
 
+Action* SearchStrategy::best_action_ACO(const State& s){
+	list< Action* > actions;
+	if(get_best_actions(s, actions,1)) return *actions.begin();
+	else return NULL;
+}
+
 int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
 	if(aco_beta>0.0) return get_best_actions_aco(s, bactions, n);
 
@@ -81,7 +87,7 @@ int SearchStrategy::get_best_actions_aco(const State& s, list< Action* >& bactio
 	while(!actions.empty()){
 		Action* a=actions.front(); actions.pop_front();
 		//double eval = evl->eval_action_rand(s,*a);  (evaluacion normal)
-		double eval = pow(tauM.get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
+		double eval = pow(tauM->get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
 
 		evaluated_actions.push_back(make_pair(eval,a));
 		sum_eval += eval;

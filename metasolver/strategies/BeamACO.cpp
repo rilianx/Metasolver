@@ -1,4 +1,4 @@
-/*
+/* s
  * BSGpath.cpp
  *
  *  Created on: 12 jul. 2017
@@ -78,10 +78,16 @@ list<State*> BeamACO::next(list<State*>& S){
  		State* final_state=state_action.second.second;
  		Action* a = (s)? s->next_action(*final_state):NULL;
  		if(a)
- 			tauM.incr_tau(s,a,0.1);
+ 			//cout << "///////////" << endl;
+ 			//cout << tauM->get_tau(s,a) << endl;
+ 			tauM->incr_tau(s,a,0.1);
+ 			//tauM->update_factor(0.99);
+ 			//cout << tauM->get_tau(s,a) << endl;
+ 			//cout << "///////////" << endl;
+ 			break;
  		i++;
    	}
-   	tauM.update_factor(0.99);
+   	tauM->update_factor(0.99);
 
   	list<State*> l=get_next_states(state_actions);
 

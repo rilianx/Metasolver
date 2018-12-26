@@ -61,7 +61,7 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta);
 
-    SearchStrategy *gr = new Greedy (vcs);
+    SearchStrategy *gr = new Greedy (vcs,0,0);
 
     for(double theta=0.0; theta<=4.0 ; theta+=0.1){
       State& s_copy= *s0->clone();

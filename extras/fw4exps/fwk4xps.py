@@ -628,7 +628,7 @@ if __name__ == '__main__':
 		i = i+1
 	
 	
-	num_cores = multiprocessing.cpu_count()-1
+	num_cores = int(sys.argv[2]) #multiprocessing.cpu_count()-1
 	pool = multiprocessing.Pool(num_cores)
 
 

@@ -19,6 +19,7 @@ namespace metasolver {
 class Greedy : public SearchStrategy {
 public:
 
+	//agregado alpha y beta para hacer funcionar el BeamACO
 	Greedy(ActionEvaluator* evl) : SearchStrategy(evl) { }
 
 	/**

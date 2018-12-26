@@ -23,9 +23,9 @@ class Vector3 {
 	long getY() const {return y;}
 	long getZ() const {return z;}
 
-	long setX(long xx) {x=xx;}
-	long setY(long yy) {y=yy;}
-	long setZ(long zz) {z=zz;}
+	void setX(long xx) {x=xx;}
+	void setY(long yy) {y=yy;}
+	void setZ(long zz) {z=zz;}
 
 	Vector3& operator-=(const Vector3& b) {
 	   x-=b.x; y-=b.y; z-=b.z;
