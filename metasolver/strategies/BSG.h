@@ -97,7 +97,7 @@ protected:
 		typename map_container::iterator state_action=sorted_states.begin();
 
 		//Para cada state->final_state se rescata la accion
-		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
+		//Si no hay accion posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
 		//cout << "filtered_states" << endl;

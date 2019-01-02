@@ -180,6 +180,7 @@ int main(int argc, char** argv){
 
 	global::TRACE = trace;
 
+
 // cout << "cargando la instancia..." << endl;
 
 //a las cajas se les inicializan sus pesos en 1
