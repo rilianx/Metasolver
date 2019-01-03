@@ -26,6 +26,7 @@ list<State*> GreedyACO::next(list<State*>& S) {
 	}else{
 		S.clear();
 		return S;
+		//get path.length()
 	}
 }
 
