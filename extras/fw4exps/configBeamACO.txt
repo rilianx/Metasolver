@@ -6,10 +6,24 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = beamACO
+algo_names = BSG beamACO beamACO_B
 
-[beamACO]
+[BSG]
+exec = "../../BSG_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04
+outputpos_times = 0
+outputpos_boxes = 0
+
+[beamACO2]
 exec = "../../BeamACO"
-params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --aco_alpha=0.5 --aco_beta=0.5
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --aco_alpha=1 --aco_beta=4 --metodo=3 --mod_factor=0.0
+outputpos_times = 0
+outputpos_boxes = 0
+
+[beamACO_B]
+tuning_param = BETA
+tuning_values = 1 2 4 8
+exec = "../../BeamACO"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --aco_alpha=1 --aco_beta=_BETA --metodo=3 --mod_factor=0.0
 outputpos_times = 0
 outputpos_boxes = 0
