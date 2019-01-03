@@ -14,7 +14,7 @@ params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04
 outputpos_times = 0
 outputpos_boxes = 0
 
-[beamACO]
+[beamACO2]
 exec = "../../BeamACO"
 params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --aco_alpha=1 --aco_beta=4 --metodo=3 --mod_factor=0.0
 outputpos_times = 0
