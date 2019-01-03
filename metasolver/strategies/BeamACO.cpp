@@ -73,7 +73,7 @@ list<State*> BeamACO::next(list<State*>& S){
              if(state_actions.find(-value)==state_actions.end()){
             	 //cout << value << endl;
             	 //marcar estados nuevos
-            	 //state.marked = true;
+            	 state.marked = true;
             	 state_actions[-value]= make_pair(&state, &state_copy);
 
 
@@ -92,46 +92,49 @@ list<State*> BeamACO::next(list<State*>& S){
 			}
 			State* s= state_action.second.first;
 			if(!s) break;
-
 			State& state_copy2 = *s->clone();
 			State* final_state=state_action.second.second;
 
+			if(s->marked == true){
+				while(true){
+					Action* a = (s)? state_copy2.next_action(*final_state):NULL;
+					//pair<long, long> p = s->get_code(*a);
+					//cout << std::get<0>(p) << " and " << std::get<1>(p) << endl;
+					//Action* b = (s)? s->next_action(*final_state):NULL;
+					if(a){
 
-			while(true){
-				Action* a = (s)? state_copy2.next_action(*final_state):NULL;
-				//pair<long, long> p = s->get_code(*a);
-				//cout << std::get<0>(p) << " and " << std::get<1>(p) << endl;
-				//Action* b = (s)? s->next_action(*final_state):NULL;
-				if(a){
+						//cout << "///////////" << endl;
+						//cout << tauM->get_tau(&state_copy2,a) << endl;
 
-					//cout << "///////////" << endl;
-					//cout << tauM->get_tau(&state_copy2,a) << endl;
+						tauM->incr_tau(&state_copy2,a,0.1);
 
-					tauM->incr_tau(&state_copy2,a,0.1);
+						//tauM->update_factor(0.99);
+						//cout << tauM->get_tau(&state_copy2,a) << endl;
+						//cout << "///////////" << endl;
+						state_copy2.transition(*a);
+						delete a;
+						if(metodo == 1){
+							break;
+						}
+					}
 
-					//tauM->update_factor(0.99);
-					//cout << tauM->get_tau(&state_copy2,a) << endl;
-					//cout << "///////////" << endl;
-					state_copy2.transition(*a);
-					delete a;
-					if(metodo == 1){
+					else{
+						//cout << "ARG" << endl;
+
 						break;
 					}
+
+
 				}
-
-				else{
-					//cout << "ARG" << endl;
-
-					break;
-				}
-
-
 			}
 			delete &state_copy2;
 			if(metodo == 2){
 				break;
 			}
+			s->marked = false;
 			i++;
+
+			//
 
 			//delete &state_copy2;
 
