@@ -28,21 +28,24 @@ private:
 
 public:
 
-	tau_matrix() : factor(1.0), default_value(1.0) { }
+	tau_matrix() : factor(0), default_value(1.0) { }
 
 	double get_tau(const State* s, Action* a){
 		pair<long, long> p = s->get_code(*a);
 		//cout << std::get<0>(p) << " and " << std::get<1>(p) << endl;
 		if(values.find(p) != values.end()){
 			//cout <<factor*default_value << "," << factor*values[p] << endl;
-			return factor*values[p];
+			//return factor*values[p];
+			//cout << factor << endl;
+			return values[p]-factor;
 		}else
-			return factor*default_value;
+			//return factor*default_value;
+			return default_value - factor;
 	}
 
 	//evaporacion de feromona
-	void update_factor(double decr){
-		factor*=decr;
+	void update_factor(double mod_factor){
+		factor+=mod_factor;
 	}
 
 	void incr_tau(const State* s, Action* a, double incr){

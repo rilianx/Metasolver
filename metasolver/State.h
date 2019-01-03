@@ -43,12 +43,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), id(count_states++){}
+	State() : parent (NULL), id(count_states++), marked(false){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++){
+	State(const State& S) : parent(&S), id(count_states++), marked(false){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -113,6 +113,8 @@ public:
 	virtual pair<long, long> get_code(const Action& action) const{ return make_pair(0,0); }
 
 	static int count_states;
+
+	bool marked;
 
 protected:
 

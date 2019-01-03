@@ -117,7 +117,10 @@ protected:
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
 
 
-			}else state_action->second.first=NULL;
+			}else {
+				//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
+				state_action->second.first=NULL;
+			}
 
 			//other elements are removed from the state_actions
 			 if(k>=beams){
