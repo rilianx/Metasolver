@@ -116,6 +116,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _aco_beta(parser, "double", "Weight of the priori knowledge", {"aco_beta"});
 	args::ValueFlag<int> _metodo(parser, "int", "pheromone updating method (1 = update pheromone on only one state-action arc)(2 = update pheromone on the best found path)(3 = update pheromone on the best w paths, w being represented by the beams)", {"metodo"});
 	args::ValueFlag<double> _mod_factor(parser, "double", "Value added to the pheromone factor in each iteration (recommend using values between 0.001 and 0.008)", {"mod_factor"});
+	args::ValueFlag<double> _incremento(parser, "double", "Value added to tau", {"incremento"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
@@ -181,13 +182,16 @@ int main(int argc, char** argv){
 
 	global::TRACE = trace;
 
+	static double incremento = 0.1;
+	if(_incremento) incremento = _incremento.Get();
 	static int metodo = 3;
 	if(_metodo) metodo =_metodo.Get();
 	static double mod_factor = 0.004;
 	if(_mod_factor) mod_factor = _mod_factor.Get();
 
-	//cout << "Ingrese el metodo de actualizar feromona (1 = Actualizar solo 1 estado-accion, 2 = Actualizar el mejor camino, 3 = Actualizar los mejores w caminos): ";
-	//cin >> metodo;
+	/*cout << "Ingrese el metodo de actualizar feromona (1 = Actualizar solo 1 estado-accion, 2 = Actualizar el
+	 * mejor camino, 3 = Actualizar los mejores w caminos): ";
+	cin >> metodo;*/
 	if(metodo < 1 || metodo > 3){
 		cout << "Metodo no valido" << endl;
 		cout << "Finalizando programa" << endl;
@@ -223,7 +227,7 @@ int main(int argc, char** argv){
    SearchStrategy *gr = new GreedyACO(vcs, aco_alpha, aco_beta, &tauM);
 
 	cout << "bsg" << endl;
-	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor);
+	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor, incremento);
 
 	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*beamaco);
@@ -275,8 +279,5 @@ int main(int argc, char** argv){
 		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
 	}
 */
-
-	//s00->cont->MatLab_print();
-
-
+    //s00->cont->MatLab_print();
 }

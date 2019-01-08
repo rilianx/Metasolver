@@ -29,8 +29,8 @@ public:
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
 	BeamACO(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0,
-			int max_level_size=0, bool plot=false, double aco_alpha=0.0, double aco_beta=0.0, tau_matrix* tauM=NULL, int metodo=0, double mod_factor=0.0) :
-				BSG(evl, greedy, beams, p_elite, max_level_size, plot, aco_alpha, aco_beta, tauM), metodo(metodo), mod_factor(mod_factor) {
+			int max_level_size=0, bool plot=false, double aco_alpha=0.0, double aco_beta=0.0, tau_matrix* tauM=NULL, int metodo=0, double mod_factor=0.0, double incremento= 0.0) :
+				BSG(evl, greedy, beams, p_elite, max_level_size, plot, aco_alpha, aco_beta, tauM), metodo(metodo), mod_factor(mod_factor), incremento(incremento) {
 
 	}
 
@@ -42,6 +42,7 @@ public:
 	 */
 	virtual list<State*> next(list<State*>& S) ;
 
+	double incremento;
 	int metodo;
 	double mod_factor;
 
