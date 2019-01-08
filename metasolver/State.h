@@ -11,16 +11,11 @@
 #include <iostream>
 #include <functional>
 
-
-
-
 #ifndef STATE_H_
 #define STATE_H_
 
-
 #include "ActionEvaluator.h"
 #include <algorithm>
-
 
 using namespace std;
 namespace metasolver{
@@ -30,10 +25,7 @@ public:
 	virtual Action* clone() const=0;
 
 	virtual ~Action(){}
-
 };
-
-
 
 /**
  * Represent a partial solution of the problem. It consists in
@@ -88,9 +80,6 @@ public:
 	    return 0;
 	   // std::random_shuffle ( path.begin(), path.end() );
 	}
-
-
-
 
 	virtual void get_actions(list< Action* >& actions) const = 0;
 

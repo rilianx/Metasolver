@@ -12,8 +12,6 @@
 
 namespace metasolver {
 
-
-
 /**
  * Variante del beam search que utiliza una lista the best_path
  * para guiarse en la busqueda
@@ -82,12 +80,9 @@ public:
 		max_level_size = w*beams;
 		n_elite = max(1, (int)(p_elite*beams));
 
-
-
 		if(beams > 10000) return false;
 		return true;
 	}
-
 
 protected:
 
