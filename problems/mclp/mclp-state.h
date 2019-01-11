@@ -86,7 +86,7 @@ public:
 			for(int i=0; i<nb_left_boxes[p.first];i++){
 				if((double)rand()/RAND_MAX < p_i)
 					if(nb_inserted_boxes==NULL || nb_inserted_boxes->find(p.first)==nb_inserted_boxes->end())
-							nb_boxes++;
+						nb_boxes++;
 			}
 			nb_left_boxes[p.first]=nb_boxes;
 		}
