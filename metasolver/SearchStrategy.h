@@ -151,7 +151,7 @@ protected:
 	 */
 	virtual Action* best_action(const State& s);
 
-	virtual Action* best_action_ACO(const State& s);
+	//virtual Action* best_action_ACO(const State& s);
 
 
 

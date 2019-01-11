@@ -98,6 +98,7 @@ void pointsToTxt(State* root, int it) {
 
 int main(int argc, char** argv){
 
+/*----------------------------------------INICIACION DE VARIABLES-------------------------------------------*/
 
 	args::ArgumentParser parser("********* BSG-CLP *********.", "BSG Solver for CLP.");
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
@@ -208,10 +209,10 @@ int main(int argc, char** argv){
 	cout << "min_fr:" << min_fr << endl;
 	cout << "Maxtime:" << maxtime << endl;
 
+/*--------------------------------------FIN INICIACION DE VARIABLES-----------------------------------------*/
 
-	double r=0.0; //0.0
+	double r=0.0;
 
-    //AQUI EMPIEZA
 	Block::FSB=fsb;
     clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
@@ -224,7 +225,7 @@ int main(int argc, char** argv){
     alpha, beta, gamma, p, delta, 0.0, r);
 
 	cout << "greedy" << endl;
-   SearchStrategy *gr = new GreedyACO(vcs, aco_alpha, aco_beta, &tauM);
+	SearchStrategy *gr = new GreedyACO(vcs, aco_alpha, aco_beta, &tauM);
 
 	cout << "bsg" << endl;
 	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor, incremento);
