@@ -1,6 +1,6 @@
 # HelloWorld is a minimal sample creating, stepping and deleting a Bullet dynamics world
 
-
+cmake_minimum_required(VERSION 3.10)
 set (CMAKE_CXX_STANDARD 11)
 
 INCLUDE_DIRECTORIES(
@@ -113,8 +113,6 @@ target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
 enable_testing()
 
 add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
-
-ENDIF()
 
 
 
