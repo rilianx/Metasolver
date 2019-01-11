@@ -13,18 +13,20 @@
 
 
 namespace metasolver {
-
+/**
+ * Retorna un puntero al primer elemento de la lista de mejores acciones
+ */
 Action* SearchStrategy::best_action(const State& s){
 	list< Action* > actions;
 	if(get_best_actions(s, actions,1)) return *actions.begin();
 	else return NULL;
 }
 
-Action* SearchStrategy::best_action_ACO(const State& s){
+/*Action* SearchStrategy::best_action_ACO(const State& s){
 	list< Action* > actions;
 	if(get_best_actions(s, actions,1)) return *actions.begin();
 	else return NULL;
-}
+}*/
 
 int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
 	if(aco_beta>0.0) return get_best_actions_aco(s, bactions, n);

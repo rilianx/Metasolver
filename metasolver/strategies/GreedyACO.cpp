@@ -12,7 +12,7 @@ namespace metasolver {
 list<State*> GreedyACO::next(list<State*>& S) {
 	State& s= **S.begin();
 
-	Action* action = best_action_ACO(s);
+	Action* action = best_action(s);
 
 	if(action){
 		//std::cout << "selected box:" << action->block << endl;
