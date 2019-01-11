@@ -114,11 +114,18 @@ public:
 		const clpAction& act = *dynamic_cast<const clpAction*> (&action);
 		const Space& s = act.space;
 
+
 		list<const AABB*> blocks = cont->blocks->get_intersected_objects(s);
 
 		Vector3 anchor = s.get_anchor_vector();
 
 		set < vector<long> > v;
+
+		/*vector<long> vec = std::vector<long>(3);
+
+			vec[0] = s.getL();
+			vec[1] = s.getW();
+			vec[2] = s.getH();*/
 
 		for(auto b:blocks){
 			std::vector<long> v0 = std::vector<long>(6);
@@ -135,8 +142,8 @@ public:
 
 		vector<long> bl = std::vector<long>(3);
 		bl[0]=act.block.getL();
-		bl[1]=act.block.getL();
-		bl[2]=act.block.getL();
+		bl[1]=act.block.getW();
+		bl[2]=act.block.getH();
 		return make_pair(hh,hash(bl));
 
 
