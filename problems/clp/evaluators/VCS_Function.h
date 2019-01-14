@@ -9,6 +9,7 @@
 #define VCS_FUNCTION_H_
 
 #include "VLossFunction.h"
+#include "clpState.h"
 
 using namespace std;
 
@@ -37,6 +38,29 @@ public:
 
 	virtual void set_p(double pp){ p = pp; }
 
+	virtual void update_parameters(const State& s){
+
+			int size = s.get_path().size(); //largo del camino
+			const clpState* state=dynamic_cast<const clpState*>(&s);
+			state->cont->nb_boxes; //numero cajas
+			double fill = state->get_value();//porcentaje de llenado
+			state->cont->getH();//Altura del contenedor
+			const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
+
+
+
+			//cout << "OLD: " << alpha << " " << get_beta() << " " << gamma << " " << p << " " << get_delta() << endl;
+			//alpha *= 0.99;
+			//beta *= 1.05;
+			//set_beta(get_beta()*1.01);
+			//gamma *= 0.99;
+			//p *= 1.01;
+			//set_delta(get_delta()*0.99);
+			//delta *= 0.95;
+			//cout << "NEW: " << alpha << " " << get_beta() << " " << gamma << " " << p << " " << get_delta() << endl;
+
+		}
+
 protected:
 
 	long _surface_in_contact(const AABB& b, const AABB& bi);
@@ -44,6 +68,9 @@ protected:
 
 	//parameters
   double alpha, gamma, p; //
+  double alpha0 = alpha;
+  double gamma0 = gamma;
+  double p0 = p;
 
 
 };

@@ -33,6 +33,7 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 
 	list< Action* > actions;
 	s.get_actions(actions);
+	evl->update_parameters(s);
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
 

@@ -68,7 +68,7 @@ public:
 
     virtual void crop_volume(const AABB& volume, const Vector3& cont, const Vector3& min_dim);
 
-
+	set<Space, by_manhattan_distance> data;
 
 protected:
 	virtual const Space* _insert(const Space& sp);
@@ -77,7 +77,7 @@ protected:
 
 	void remove_nonmaximal_objects(list<Space>& objs);
 
-	set<Space, by_manhattan_distance> data;
+
 	mutable set<Space, by_manhattan_distance>::const_iterator data_it;
 
 
