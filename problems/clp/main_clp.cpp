@@ -79,7 +79,11 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
-
+	args::ValueFlag<double> _alphafactor(parser, "double", "Multiplication factor for alpha", {"alphafactor"});
+	args::ValueFlag<double> _betafactor(parser, "double", "Multiplication factor for beta", {"betafactor"});
+	args::ValueFlag<double> _gammafactor(parser, "double", "Multiplication factor for gamma", {"gammafactor"});
+	args::ValueFlag<double> _deltafactor(parser, "double", "Multiplication factor for delta", {"deltafactor"});
+	args::ValueFlag<double> _pfactor(parser, "double", "Multiplication factor for p", {"pfactor"});
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
@@ -123,6 +127,12 @@ int main(int argc, char** argv){
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
 
+	double alphafactor=1.0, betafactor=1.0, gammafactor=1.0, deltafactor=1.0, pfactor=1.0;
+	if(_alphafactor) alphafactor=_alphafactor.Get();
+	if(_betafactor) betafactor=_betafactor.Get();
+	if(_gammafactor) gammafactor=_gammafactor.Get();
+	if(_deltafactor) deltafactor=_deltafactor.Get();
+	if(_pfactor) pfactor=_pfactor.Get();
 
 	string format="BR";
 	if(_format) format=_format.Get();
@@ -164,7 +174,7 @@ int main(int argc, char** argv){
     clock_t begin_time=clock();
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, 0.0, r);
+    alpha, beta, gamma, p, delta, 0.0, r, 1.5, alphafactor, betafactor, gammafactor, deltafactor, pfactor);
 
 	/*if(kdtree){
 		kd_block::set_vcs(*vcs);

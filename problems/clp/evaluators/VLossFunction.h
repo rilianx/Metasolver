@@ -78,8 +78,7 @@ private:
 	void compute_mX(const std::map<const BoxShape*, int>& nb_boxes, int X, long *mX, std::set<const BoxShape*>* listX,  int dim);
 
 	double beta, delta;
-	double beta0 = beta;
-	double delta0 = delta;
+
 
   // parameter for ponderating the weight of the boxes
 	double theta;

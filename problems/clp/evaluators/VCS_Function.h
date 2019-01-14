@@ -18,7 +18,7 @@ namespace clp {
 class VCS_Function : public VLossFunction{
 public:
 	VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha=4.0, double beta=1.0,
-			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5);
+			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5, double alphafactor =1.0, double betafactor = 1.0, double gammafactor = 1.0, double deltafactor = 1.0, double pfactor = 1.0);
 
 	virtual ~VCS_Function();
 
@@ -48,7 +48,20 @@ public:
 			const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
 
 
-
+			if(size == 0){
+				alpha = alpha0;
+				set_beta(beta0);
+				gamma = gamma0;
+				p = p0;
+				set_delta(delta0);
+			}
+			else{
+				alpha = alpha0*pow(alphafactor,size);
+				set_beta(beta0*pow(betafactor,size));
+				gamma = gamma0*pow(gammafactor,size);
+				p = p0*pow(pfactor,size);
+				set_delta(delta0*pow(deltafactor,size));
+			}
 			//cout << "OLD: " << alpha << " " << get_beta() << " " << gamma << " " << p << " " << get_delta() << endl;
 			//alpha *= 0.99;
 			//beta *= 1.05;
@@ -68,9 +81,12 @@ protected:
 
 	//parameters
   double alpha, gamma, p; //
-  double alpha0 = alpha;
-  double gamma0 = gamma;
-  double p0 = p;
+  double alpha0;
+  double gamma0;
+  double p0;
+  double beta0;
+  double delta0;
+  double alphafactor, betafactor, gammafactor, deltafactor, pfactor;
 
 
 };
