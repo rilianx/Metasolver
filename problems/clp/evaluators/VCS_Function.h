@@ -48,31 +48,67 @@ public:
 			const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
 
 
-			if(size == 0){
-				alpha = alpha0;
-				set_beta(beta0);
-				gamma = gamma0;
-				p = p0;
-				set_delta(delta0);
-			}
-			else{
-				alpha = alpha0*pow(alphafactor,size);
-				set_beta(beta0*pow(betafactor,size));
-				gamma = gamma0*pow(gammafactor,size);
-				p = p0*pow(pfactor,size);
-				set_delta(delta0*pow(deltafactor,size));
-			}
-			//cout << "OLD: " << alpha << " " << get_beta() << " " << gamma << " " << p << " " << get_delta() << endl;
-			//alpha *= 0.99;
-			//beta *= 1.05;
-			//set_beta(get_beta()*1.01);
-			//gamma *= 0.99;
-			//p *= 1.01;
-			//set_delta(get_delta()*0.99);
-			//delta *= 0.95;
-			//cout << "NEW: " << alpha << " " << get_beta() << " " << gamma << " " << p << " " << get_delta() << endl;
+			//cout << state->cont->n_boxes << "//" << size << endl;
 
+			/**
+			* Segregacion por size
+			*/
+			if(size<9)
+			{
+				alpha=alpha0;
+				set_beta(beta0);
+				gamma= gamma0;
+				set_delta(delta0);
+				p=p0;
+				/*alpha = alpha0;
+				set_beta(beta0 * pow(betafactor,size));
+				gamma = gamma0 * pow(1.05,size);
+				set_delta(delta0 * pow(1.05,size));
+				p = p0;*/
+			}else
+			{
+				if(size>=9)
+				{
+					alpha = alpha0 * pow(alphafactor,size);
+					set_beta(beta0 * pow(betafactor,size));
+					gamma = gamma0 * pow(gammafactor,size);
+					set_delta(delta0 * pow(deltafactor,size));
+					p = p0 * pow(pfactor,size);
+				}
+			}
+
+
+
+
+
+
+
+
+
+
+			/**
+			* segregacion por % de llenado
+			*/
+			/*if(fill < 0.85){
+				alpha = alpha0;
+				set_beta(beta0 * pow(betafactor,size));
+				gamma = gamma0 * pow(gammafactor,size);
+				set_delta(delta0 * pow(deltafactor,size));
+				p = p0;
+			}else
+			{
+				if(fill >=0.85)
+				{
+					alpha = alpha0 * pow(alphafactor,size);
+					set_beta(beta0 * pow(betafactor,size));
+					gamma = gamma0 * pow(gammafactor,size);
+					set_delta(delta0 * pow(deltafactor,size));
+					p = p0 * pow(pfactor,size);
+				}
+			}*/
 		}
+
+
 
 protected:
 
