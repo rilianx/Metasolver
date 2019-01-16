@@ -18,7 +18,7 @@ namespace clp {
 class VCS_Function : public VLossFunction{
 public:
 	VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha=4.0, double beta=1.0,
-			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5, double alphafactor =1.0, double betafactor = 1.0, double gammafactor = 1.0, double deltafactor = 1.0, double pfactor = 1.0);
+			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5, double alphafactor =1.0, double betafactor = 1.0, double gammafactor = 1.0, double deltafactor = 1.0, double pfactor = 1.0, int metodo = 1);
 
 	virtual ~VCS_Function();
 
@@ -42,70 +42,82 @@ public:
 
 			int size = s.get_path().size(); //largo del camino
 			const clpState* state=dynamic_cast<const clpState*>(&s);
-			state->cont->nb_boxes; //numero cajas
+			int boxn = state->cont->n_boxes; //numero cajas
 			double fill = state->get_value();//porcentaje de llenado
 			state->cont->getH();//Altura del contenedor
 			const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
 
 
 			//cout << state->cont->n_boxes << "//" << size << endl;
+			if(metodo == 3){
+				if(boxn < 45){
+					alpha=alpha0;
+					set_beta(beta0);
+					set_delta(delta0);
+					p=p0;
+					gamma = gamma0 * pow(gammafactor,-size);
+
+				}
+				else{
+					alpha = alpha0 * pow(alphafactor,size);
+					set_beta(beta0);
+					set_delta(delta0 * pow(deltafactor,size));
+					p = p0 * pow(pfactor,size);
+					gamma = gamma0 * pow(gammafactor,size);
+				}
+			}
 
 			/**
 			* Segregacion por size
 			*/
-			if(size<9)
-			{
-				alpha=alpha0;
-				set_beta(beta0);
-				gamma= gamma0;
-				set_delta(delta0);
-				p=p0;
-				/*alpha = alpha0;
-				set_beta(beta0 * pow(betafactor,size));
-				gamma = gamma0 * pow(1.05,size);
-				set_delta(delta0 * pow(1.05,size));
-				p = p0;*/
-			}else
-			{
-				if(size>=9)
+			if(metodo == 1){
+				if(size<9)
 				{
-					alpha = alpha0 * pow(alphafactor,size);
+					alpha=alpha0;
+					set_beta(beta0);
+					gamma= gamma0;
+					set_delta(delta0);
+					p=p0;
+					/*alpha = alpha0;
 					set_beta(beta0 * pow(betafactor,size));
-					gamma = gamma0 * pow(gammafactor,size);
-					set_delta(delta0 * pow(deltafactor,size));
-					p = p0 * pow(pfactor,size);
+					gamma = gamma0 * pow(1.05,size);
+					set_delta(delta0 * pow(1.05,size));
+					p = p0;*/
+				}else
+				{
+					if(size>=9)
+					{
+						alpha = alpha0 * pow(alphafactor,size);
+						set_beta(beta0 * pow(betafactor,size));
+						gamma = gamma0 * pow(gammafactor,size);
+						set_delta(delta0 * pow(deltafactor,size));
+						p = p0 * pow(pfactor,size);
+					}
 				}
 			}
-
-
-
-
-
-
-
-
-
 
 			/**
 			* segregacion por % de llenado
 			*/
-			/*if(fill < 0.85){
-				alpha = alpha0;
-				set_beta(beta0 * pow(betafactor,size));
-				gamma = gamma0 * pow(gammafactor,size);
-				set_delta(delta0 * pow(deltafactor,size));
-				p = p0;
-			}else
-			{
-				if(fill >=0.85)
+			if(metodo == 2){
+				if(fill < 0.85){
+					alpha = alpha0;
+					set_beta(beta0);
+					gamma= gamma0;
+					set_delta(delta0);
+					p = p0;
+				}else
 				{
-					alpha = alpha0 * pow(alphafactor,size);
-					set_beta(beta0 * pow(betafactor,size));
-					gamma = gamma0 * pow(gammafactor,size);
-					set_delta(delta0 * pow(deltafactor,size));
-					p = p0 * pow(pfactor,size);
+					if(fill >=0.85)
+					{
+						alpha = alpha0 * pow(alphafactor,size);
+						set_beta(beta0 * pow(betafactor,size));
+						gamma = gamma0 * pow(gammafactor,size);
+						set_delta(delta0 * pow(deltafactor,size));
+						p = p0 * pow(pfactor,size);
+					}
 				}
-			}*/
+			}
 		}
 
 
@@ -115,6 +127,8 @@ protected:
 	long _surface_in_contact(const AABB& b, const AABB& bi);
 	long _surface_in_contact(const AABB& bi, const Block& c);
 
+
+  int metodo;
 	//parameters
   double alpha, gamma, p; //
   double alpha0;
