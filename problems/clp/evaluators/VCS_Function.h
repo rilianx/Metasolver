@@ -43,12 +43,14 @@ public:
 			int size = s.get_path().size(); //largo del camino
 			const clpState* state=dynamic_cast<const clpState*>(&s);
 			int boxn = state->cont->n_boxes; //numero cajas
+			int blockn = state->valid_blocks.size();
 			double fill = state->get_value();//porcentaje de llenado
-			state->cont->getH();//Altura del contenedor
-			const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
+			//state->cont->getH();//Altura del contenedor
+			//const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
 
 
 			//cout << state->cont->n_boxes << "//" << size << endl;
+			//cout << blockn << "//" << size << endl;
 			if(metodo == 3){
 				if(boxn < 45){
 					alpha=alpha0;
@@ -87,11 +89,32 @@ public:
 				{
 					if(size>=9)
 					{
-						alpha = alpha0 * pow(alphafactor,size);
-						set_beta(beta0 * pow(betafactor,size));
-						gamma = gamma0 * pow(gammafactor,size);
-						set_delta(delta0 * pow(deltafactor,size));
-						p = p0 * pow(pfactor,size);
+						alpha = alpha0 * pow(alphafactor,size-8);
+						set_beta(beta0 * pow(betafactor,size-8));
+						gamma = gamma0 * pow(gammafactor,size-8);
+						set_delta(delta0 * pow(deltafactor,size-8));
+						p = p0 * pow(pfactor,size-8);
+					}
+				}
+			}
+
+			if(metodo == 4){
+				if(size<9)
+				{
+					alpha = alpha0 * pow(alphafactor,size);
+					set_beta(beta0 * pow(betafactor,size));
+					gamma = gamma0 * pow(gammafactor,size);
+					set_delta(delta0 * pow(deltafactor,size));
+					p = p0 * pow(pfactor,size);
+				}else
+				{
+					if(size>=9)
+					{
+						alpha=alpha0;
+						set_beta(beta0);
+						gamma= gamma0;
+						set_delta(delta0);
+						p=p0;
 					}
 				}
 			}
