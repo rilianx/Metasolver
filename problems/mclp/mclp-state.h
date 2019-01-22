@@ -66,7 +66,7 @@ public:
 
 
 	//Select a proportion prop of all the boxes considering its priorities
-	void select_boxes(map<const BoxShape*, int>* nb_inserted_boxes=NULL){
+	void select_boxes(map<const BoxShape*, int>* nb_inserted_boxes=NULL, bool boolean=true){ //nb_inserted_boxes contiene las cajas que han sido insertadas en el contenedor
 		double mean=0.0; //mean of priorities
 		double total_p=0.0;
 		int total_boxes=0;
@@ -77,18 +77,26 @@ public:
 		}
 
 		mean=total_p/total_boxes;*/
+		if(boolean){
+			for(auto p:priority_boxes){
+				//probability of selecting a box of type p.first
+				double p_i=p.second;
 
-		for(auto p:priority_boxes){
-			//probability of selecting a box of type p.first
-			double p_i=p.second;
-
-			double nb_boxes=0;
-			for(int i=0; i<nb_left_boxes[p.first];i++){
-				if((double)rand()/RAND_MAX < p_i)
-					if(nb_inserted_boxes==NULL || nb_inserted_boxes->find(p.first)==nb_inserted_boxes->end())
-						nb_boxes++;
+				double nb_boxes=0; //cantidad de tipos de cajas a ingresar en el contenedor
+				for(int i=0; i<nb_left_boxes[p.first];i++){  //nb_left_boxes guarda las cajas que pueden ser usadas por el greedy
+					if((double)rand()/RAND_MAX < p_i)
+						if(nb_inserted_boxes==NULL || nb_inserted_boxes->find(p.first)==nb_inserted_boxes->end())
+							nb_boxes++;
+				}
+				nb_left_boxes[p.first]=nb_boxes;
 			}
-			nb_left_boxes[p.first]=nb_boxes;
+		} else {
+			if(nb_inserted_boxes != NULL){
+				double nb_boxes=0;
+				for(auto box:*nb_inserted_boxes){
+					nb_left_boxes[box.first]=box.second;
+				}
+			}
 		}
 
 		update_valid_blocks();

@@ -61,9 +61,9 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 	//multimap<double, map<const BoxShape*, int> > bins;
 	list < pair <double, map<const BoxShape*, int>> > bins;
 	map<const BoxShape*, int> used_boxes;
-	int box_quantity = 1000;
+	int box_quantity = 0;
 
-	for(int i=0; i<box_quantity; i++){
+	for(int i=0; i<1000; i++){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
@@ -102,40 +102,40 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 
 	cout << "used_boxes" << endl;
 	for(auto box: used_boxes){
-		//cout << box.first->get_id() << "(" << box.second << ")," ;
+		cout << box.first->get_id() << "(" << box.second << ")," ;
 		if(box.second > high_quantity) {
 			high_quantity = box.second;
 		}
 	}
 
+	map<const BoxShape*, int> dont_used_boxes;
+
 	for(auto box: used_boxes){
-		if(box.second > high_quantity) {
-			box_quantity += high_quantity - box.second;
-		}
+		dont_used_boxes.insert(pair<const BoxShape*, int>(box.first, high_quantity - box.second));
+		box_quantity += high_quantity - box.second;
+	}
+
+	cout << "\n\ndont_used_boxes" << endl;
+	for(auto box: dont_used_boxes){
+		cout << box.first->get_id() << "(" << box.second << ")," ;
 	}
 
 	cout << endl;
-	//cout << high_quantity << endl;
+	cout << "\nhigh_quantity" << endl;
+	cout << high_quantity << endl;
 
-	map<const BoxShape*, int> dont_used_boxes;
+	cout << "\nbox_quantity" << endl;
+	cout << box_quantity << "\n" << endl;
 
-	for (auto box: used_boxes) {
-		dont_used_boxes.insert(pair<const BoxShape*, int>(box.first, high_quantity - box.second));
-	}
+	used_boxes.clear();
 
-	for(int i=0; i<box_quantity; i++){
+	while(box_quantity > 0){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
-		//filtrado de cajas
-		s_copy.select_boxes();
-
-		//usa greedy para llenar contenedor
-		double eval=gr->run(s_copy, maxtime, begin_time);
-
 		//se seleccionan cajas con mayor prioridad, sin contar las que se hayan colocado en el bin actual
-		s_copy.select_boxes(&dont_used_boxes);//&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
-		eval=gr->run(s_copy, maxtime, begin_time);
+		s_copy.select_boxes(&dont_used_boxes, false);//&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
+		double eval=gr->run(s_copy, maxtime, begin_time);
 
 		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes)
 		//todas las cajas: s0->nb_left_boxes
@@ -143,19 +143,24 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 		//se almacena el bin en el mapa
 		bins.push_back(make_pair(eval, dont_used_boxes));
 
-	}
-
-	cout << endl;
-	cout << endl;
-
-	for (auto block: bins) {
-		for (auto box: block.second) {
+		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
+			//cout << box.first->get_id() << ",";
 			cout << box.first->get_id() << "(" << box.second << ")," ;
+			box_quantity -= box.second;
+			if(dont_used_boxes[box.first] - box.second > 0)
+				dont_used_boxes[box.first] = dont_used_boxes[box.first] - box.second;
+			else
+				dont_used_boxes[box.first] = 0;
 		}
+		cout << endl;
 	}
+
+	cout << "\n\nused_boxes" << endl;
+	for(auto box: dont_used_boxes){
+		cout << box.first->get_id() << "(" << box.second << ")," ;
+	}
+
 	cout << endl;
-
-
 
 	return bins.size();
 
@@ -301,7 +306,7 @@ int main(int argc, char** argv){
 
 	global::TRACE = trace;
 
-// cout << "cargando la instancia..." << endl;
+ cout << "cargando la instancia..." << endl;
 
 //a las cajas se les inicializan sus pesos en 1
 
