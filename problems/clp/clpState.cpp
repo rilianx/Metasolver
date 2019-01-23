@@ -215,8 +215,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 		//se lee el archivo de entrada
 		//Objetos BoxType, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
-		//y restricciones de rotación
-		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
+		//y restricciones de rotaci��n
+		//En el objeto clp se agregan los tipos de cajas y el n��mero de elementos que hay de cada tipo
 
 		//clpState::weight_of_allboxes=0.0;
 
@@ -235,7 +235,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
 
-				cout << l << " " << w << " " << h << endl;
+				//cout << l << " " << w << " " << h << endl;
 				vol=l*h*w;
 			}if(f==clpState::BRw){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
@@ -273,11 +273,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 	}
 
-	cout << "Test" << endl;
 	s->general_block_generator(min_fr, max_bl, *s->cont);
-	cout << "Test2" << endl;
 	s->update_min_dim();
-	cout << "Test3" << endl;
 	return s;
 }
 

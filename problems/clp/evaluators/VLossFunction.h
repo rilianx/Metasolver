@@ -42,6 +42,10 @@ public:
 
 	virtual void set_delta(double d){ delta = d; }
 
+	virtual double get_delta(){ return delta; }
+
+	virtual double get_beta(){ return beta; }
+
 
 protected:
 	double Loss(const std::map<const BoxShape*, int>& nb_boxes, const Block& block, const Space& free_space);
@@ -74,6 +78,7 @@ private:
 	void compute_mX(const std::map<const BoxShape*, int>& nb_boxes, int X, long *mX, std::set<const BoxShape*>* listX,  int dim);
 
 	double beta, delta;
+
 
   // parameter for ponderating the weight of the boxes
 	double theta;

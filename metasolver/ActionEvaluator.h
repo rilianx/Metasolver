@@ -46,6 +46,8 @@ public:
 		return lambda2;
 	}
 
+	virtual void update_parameters(const State& s) =0;
+
 	double get_r() const { return r; }
 
 protected:
