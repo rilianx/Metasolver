@@ -164,7 +164,7 @@ public:
 			/**
 			 * decremento linear a partir de una valor inicial
 			 */
-			if(metodo == 5){
+			if(metodo == 7){
 				if(alphafactor!=1.0){
 					alpha = alpha0 + 0.25;
 				}
