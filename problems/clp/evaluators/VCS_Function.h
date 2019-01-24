@@ -51,13 +51,21 @@ public:
 
 			//cout << state->cont->n_boxes << "//" << size << endl;
 			//cout << blockn << "//" << size << endl;
-			if(metodo == 3){
-				if(boxn < 45){
+			if(metodo == 5){   //exponencial desde el primer movimiento. tiende a 0 e infinito.
+				alpha = alpha0 * pow(alphafactor,size);
+				set_beta(beta0);
+				set_delta(delta0 * pow(deltafactor,size));
+				p = p0 * pow(pfactor,size);
+				gamma = gamma0 * pow(gammafactor,size);
+			}
+
+			if(metodo == 3){ //segregacion por cantidad de cajas en el contenedor
+				if(boxn < 45){ //necesitamos algo que cacule la cant de cajas
 					alpha=alpha0;
 					set_beta(beta0);
 					set_delta(delta0);
 					p=p0;
-					gamma = gamma0 * pow(gammafactor,-size);
+					gamma = gamma0 * pow(gammafactor,size);
 
 				}
 				else{
@@ -98,7 +106,7 @@ public:
 				}
 			}
 
-			if(metodo == 4){
+			if(metodo == 4){ //segregacion por size en reversa
 				if(size<9)
 				{
 					alpha = alpha0 * pow(alphafactor,size);
@@ -117,6 +125,18 @@ public:
 						p=p0;
 					}
 				}
+			}
+
+			if(metodo == 6){ //segregacion por size exponencial al principio y luego constante
+							if(size<9)
+							{
+								alpha = alpha0 * pow(alphafactor,size);
+								set_beta(beta0 * pow(betafactor,size));
+								gamma = gamma0 * pow(gammafactor,size);
+								set_delta(delta0 * pow(deltafactor,size));
+								p = p0 * pow(pfactor,size);
+							}
+
 			}
 
 			/**
