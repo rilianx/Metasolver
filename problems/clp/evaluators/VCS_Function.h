@@ -17,7 +17,7 @@ namespace clp {
 
 class VCS_Function : public VLossFunction{
 public:
-	VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha=4.0, double beta=1.0,
+	VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha= 4.0, double beta=1.0,
 			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5, double alphafactor =1.0, double betafactor = 1.0, double gammafactor = 1.0, double deltafactor = 1.0, double pfactor = 1.0, int metodo = 1);
 
 	virtual ~VCS_Function();
@@ -141,6 +141,28 @@ public:
 					}
 				}
 			}
+			/**
+			 * decremento linear a partir de una valor inicial
+			 */
+			if(metodo == 5){
+				if(alphafactor!=1.0){
+					alpha = alpha0 + 0.25;
+				}
+				if(betafactor!=1.0){
+					set_beta(beta0+0.25);
+				}
+				if(gammafactor!=1.0){
+					gamma= gamma0+0.25;
+				}
+				if(deltafactor!=1.0){
+					set_delta(delta0+0.25);
+				}
+				if(pfactor!=1.0){
+					p = p0+0.25;
+				}
+
+			}
+			//cout << alpha << endl;
 		}
 
 
