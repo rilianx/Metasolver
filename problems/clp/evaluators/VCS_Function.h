@@ -53,19 +53,19 @@ public:
 			//cout << blockn << "//" << size << endl;
 			if(metodo == 5){   //exponencial desde el primer movimiento. tiende a 0 e infinito.
 				alpha = alpha0 * pow(alphafactor,size);
-				set_beta(beta0);
+				set_beta(beta0 * pow(betafactor,size));
 				set_delta(delta0 * pow(deltafactor,size));
 				p = p0 * pow(pfactor,size);
 				gamma = gamma0 * pow(gammafactor,size);
 			}
 
 			if(metodo == 3){ //segregacion por cantidad de cajas en el contenedor
-				if(boxn < 45){ //necesitamos algo que cacule la cant de cajas
+				if(boxn < 45){ //necesitamos algo que cacule la cant de cajas y algo que calcule la cant total del cajas
 					alpha=alpha0;
 					set_beta(beta0);
 					set_delta(delta0);
 					p=p0;
-					gamma = gamma0 * pow(gammafactor,size);
+					gamma = gamma0;
 
 				}
 				else{
@@ -128,17 +128,15 @@ public:
 			}
 
 			if(metodo == 6){ //segregacion por size exponencial al principio y luego constante
-							if(size<9)
-							{
-								alpha = alpha0 * pow(alphafactor,size);
-								set_beta(beta0 * pow(betafactor,size));
-								gamma = gamma0 * pow(gammafactor,size);
-								set_delta(delta0 * pow(deltafactor,size));
-								p = p0 * pow(pfactor,size);
-							}
-
+				if(size<9)
+				{
+					alpha = alpha0 * pow(alphafactor,size);
+					set_beta(beta0 * pow(betafactor,size));
+					gamma = gamma0 * pow(gammafactor,size);
+					set_delta(delta0 * pow(deltafactor,size));
+					p = p0 * pow(pfactor,size);
+				}
 			}
-
 			/**
 			* segregacion por % de llenado
 			*/
@@ -162,7 +160,7 @@ public:
 				}
 			}
 			/**
-			 * decremento linear a partir de una valor inicial
+			 * decremento linear a partir de una valor inicial // descartado
 			 */
 			if(metodo == 7){
 				if(alphafactor!=1.0){
