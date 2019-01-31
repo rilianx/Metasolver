@@ -28,10 +28,10 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool plot=false) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool plot=false, double mean = 5.0, double stdev = 1.0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), plot(plot) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), plot(plot), mean(mean), stdev(stdev) {}
 
 
 	virtual ~BSG();
@@ -97,7 +97,7 @@ protected:
 		typename map_container::iterator state_action=sorted_states.begin();
 
 		//Para cada state->final_state se rescata la accion
-		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
+		//Si no hay acci��n posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
 		//cout << "filtered_states" << endl;
@@ -153,6 +153,15 @@ protected:
 	bool shuffle_best_path;
 
 	bool plot;
+
+	double mean;
+	double stdev;
+
+	list<double> alphas;
+	double gbcont = 0;
+	int gbaux = 0;
+
+
 
 };
 

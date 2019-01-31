@@ -8,6 +8,7 @@
 #ifndef VCS_FUNCTION_H_
 #define VCS_FUNCTION_H_
 
+#include <random>
 #include "VLossFunction.h"
 #include "clpState.h"
 
@@ -38,7 +39,27 @@ public:
 
 	virtual void set_p(double pp){ p = pp; }
 
-	virtual void update_parameters(const State& s){
+	virtual double get_alpha(){ return alpha;}
+
+	virtual void update_level_alpha(double mean, double stdev){
+		//cout << "UFF" << endl;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::normal_distribution<double> distribution(mean,stdev);
+		double sample = distribution(gen);
+		if(sample < 2.0) sample = 2.0;
+		else if (sample > 8.0) sample = 8.0;
+		alpha=sample;
+	}
+
+	virtual void update_parameters(const State& s, double mean, double stdev){
+
+		 	std::random_device rd;
+		 	std::mt19937 gen(rd());
+			std::normal_distribution<double> distribution(mean,stdev);
+			double sample = distribution(gen);
+			if(sample < 2.0) sample = 2.0;
+			else if (sample > 8.0) sample = 8.0;
 
 			int size = s.get_path().size(); //largo del camino
 			const clpState* state=dynamic_cast<const clpState*>(&s);
@@ -49,8 +70,10 @@ public:
 			//const Space& sp= *dynamic_cast<SpaceSet*>(state->cont->spaces)->data.begin();
 
 
+			//cout << fill << endl;
 			//cout << state->cont->n_boxes << "//" << size << endl;
 			//cout << blockn << "//" << size << endl;
+
 			if(metodo == 5){   //exponencial desde el primer movimiento. tiende a 0 e infinito.
 				alpha = alpha0 * pow(alphafactor,size);
 				set_beta(beta0);
@@ -83,25 +106,22 @@ public:
 			if(metodo == 1){
 				if(size<9)
 				{
-					alpha=alpha0;
+					alpha=sample;
 					set_beta(beta0);
 					gamma= gamma0;
 					set_delta(delta0);
 					p=p0;
-					/*alpha = alpha0;
-					set_beta(beta0 * pow(betafactor,size));
-					gamma = gamma0 * pow(1.05,size);
-					set_delta(delta0 * pow(1.05,size));
-					p = p0;*/
 				}else
 				{
 					if(size>=9)
 					{
+						alpha = sample;
+						/*
 						alpha = alpha0 * pow(alphafactor,size-8);
 						set_beta(beta0 * pow(betafactor,size-8));
 						gamma = gamma0 * pow(gammafactor,size-8);
 						set_delta(delta0 * pow(deltafactor,size-8));
-						p = p0 * pow(pfactor,size-8);
+						p = p0 * pow(pfactor,size-8);*/
 					}
 				}
 			}
@@ -161,6 +181,7 @@ public:
 					}
 				}
 			}
+			//cout << alpha << endl;
 		}
 
 

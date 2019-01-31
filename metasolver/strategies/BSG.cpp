@@ -7,6 +7,7 @@
 
 #include "BSG.h"
 
+
 namespace metasolver {
 
 
@@ -22,12 +23,30 @@ list<State*> BSG::next(list<State*>& S){
      if(S.size()==0) return S;
 
      //se expanden los nodos de la lista S
+     //evl->update_level_alpha(mean,stdev);
      int i=0;
      for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
          State& state=**itS;
         // cout << state.get_value() << endl;
 
-         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         if(state.is_root()){
+        	 double cont = 0;
+        	 int aux = alphas.size();
+        	 while (alphas.size()!=0){
+        		 cont += alphas.back();
+        		 alphas.pop_back();
+        	 }
+        	 gbcont += cont;
+        	 gbaux += aux;
+        	 if(cont != 0){
+        		 mean = gbcont / gbaux;
+        		 //mean = cont / aux;
+        		 stdev = stdev / sqrt(aux);
+        	 }
+        	 //double best = alphas.back();
+        	 cout << mean << " and " << stdev << endl;
+        	 cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         }
 
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
@@ -50,6 +69,11 @@ list<State*> BSG::next(list<State*>& S){
         	 //cout << state_copy.get_value() << endl;
         	 delete *it;
 
+
+        	 //cout << state_copy.get_path().size() << endl;
+        	 evl->update_parameters(state_copy,mean,stdev);
+        	 //cout << evl->get_alpha() << endl;
+        	 //cout << "WOW" << endl;
              double value = greedy.run(state_copy, timelimit, begin_time);
 
 
@@ -57,6 +81,8 @@ list<State*> BSG::next(list<State*>& S){
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
+            	 //cout << evl->get_alpha() << endl;
+            	 alphas.push_back(evl->get_alpha());
             	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }
@@ -86,6 +112,7 @@ list<State*> BSG::next(list<State*>& S){
 
 
      //siguiente generacion de estados
+  	//cout << "AYAYA" << endl;
      return l;
 }
 

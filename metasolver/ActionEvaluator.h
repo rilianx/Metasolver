@@ -46,7 +46,11 @@ public:
 		return lambda2;
 	}
 
-	virtual void update_parameters(const State& s) =0;
+	virtual double get_alpha() =0;
+
+	virtual void update_level_alpha(double mean, double stdev) =0;
+
+	virtual void update_parameters(const State& s, double mean, double stdev) =0;
 
 	double get_r() const { return r; }
 

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <random>
 #include "args.hxx"
 //#include "objects/State.cpp"
 #include "clpState.h"
@@ -135,6 +136,9 @@ int main(int argc, char** argv){
 	if(_deltafactor) deltafactor=_deltafactor.Get();
 	if(_pfactor) pfactor=_pfactor.Get();
 
+	double mean = 4.0;
+	double stdev = 1.0;
+
 	int metodo = 1;
 	if(_metodo) metodo = _metodo.Get();
 
@@ -193,7 +197,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot, mean, stdev);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);

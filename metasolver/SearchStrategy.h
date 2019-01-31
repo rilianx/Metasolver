@@ -18,6 +18,41 @@ using namespace std;
 
 namespace metasolver {
 
+/*class tau_matrix{
+
+private:
+	double factor;
+	double default_value;
+	map< const State, double > values;
+
+public:
+
+	tau_matrix() : factor(0), default_value(1.0) { }
+
+	double get_tau(const State* s, double alpha){
+		if(values.find(*s) != values.end()){
+			//cout <<factor*default_value << "," << factor*values[p] << endl;
+			//return factor*values[p];
+			//cout << factor << endl;
+			return values[*s]-factor;
+		}else
+			//return factor*default_value;
+			return default_value - factor;
+	}
+
+	//evaporacion de feromona
+	void update_factor(double mod_factor){
+		factor+=mod_factor;
+	}
+
+	void incr_tau(const State* s, double alpha, double incr){
+		if(values.find(*s) != values.end())
+			values[*s]+=incr;
+		else
+			values[*s]=default_value+incr;
+	}
+};*/
+
 //TODO: refactorizar
 class SearchStrategy {
 public:
@@ -116,6 +151,8 @@ protected:
 	clock_t begin_time;
 
 	ActionEvaluator* evl;
+
+	//tau_matrix* tauM;
 
 };
 
