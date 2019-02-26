@@ -58,8 +58,8 @@ public:
 		 	std::mt19937 gen(rd());
 			std::normal_distribution<double> distribution(mean,stdev);
 			double sample = distribution(gen);
-			if(sample < 2.0) sample = 2.0;
-			else if (sample > 8.0) sample = 8.0;
+			if(sample < 3.0) sample = 3.0;
+			else if (sample > 5.0) sample = 5.0;
 
 			int size = s.get_path().size(); //largo del camino
 			const clpState* state=dynamic_cast<const clpState*>(&s);
