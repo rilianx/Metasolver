@@ -82,7 +82,11 @@ list<State*> BSG::next(list<State*>& S){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
             	 //cout << evl->get_alpha() << endl;
-            	 alphas.push_back(evl->get_alpha());
+            	 if(metodo == 1) alphas.push_back(evl->get_alpha());
+            	 if(metodo == 2) alphas.push_back(evl->get_betaV());
+            	 if(metodo == 3) alphas.push_back(evl->get_gamma());
+            	 if(metodo == 4) alphas.push_back(evl->get_deltaV());
+            	 if(metodo == 5) alphas.push_back(evl->get_p());
             	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }

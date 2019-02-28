@@ -85,6 +85,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gammafactor(parser, "double", "Multiplication factor for gamma", {"gammafactor"});
 	args::ValueFlag<double> _deltafactor(parser, "double", "Multiplication factor for delta", {"deltafactor"});
 	args::ValueFlag<double> _pfactor(parser, "double", "Multiplication factor for p", {"pfactor"});
+	args::ValueFlag<double> _mean(parser, "double", "Mean to be used in the normal distribution number generator", {"mean"});
+	args::ValueFlag<double> _stdev(parser, "double", "Standard deviation to be used in the normal distribution number generator", {"stdev"});
 	args::ValueFlag<int> _metodo(parser, "int", "Method used to modify parameters", {"metodo"});
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -137,7 +139,9 @@ int main(int argc, char** argv){
 	if(_pfactor) pfactor=_pfactor.Get();
 
 	double mean = 4.0;
+	if(_mean) mean=_mean.Get();
 	double stdev = 1.0;
+	if(_stdev) stdev=_stdev.Get();
 
 	int metodo = 1;
 	if(_metodo) metodo = _metodo.Get();
@@ -197,7 +201,7 @@ int main(int argc, char** argv){
     SearchStrategy *gr = new Greedy (vcs);
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot, mean, stdev);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot, mean, stdev, metodo);
     //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
 
     //bsg->set_shuffle_best_path(true);

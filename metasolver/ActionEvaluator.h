@@ -48,6 +48,14 @@ public:
 
 	virtual double get_alpha() =0;
 
+	virtual double get_betaV() =0;
+
+	virtual double get_gamma() =0;
+
+	virtual double get_deltaV() =0;
+
+	virtual double get_p() =0;
+
 	virtual void update_level_alpha(double mean, double stdev) =0;
 
 	virtual void update_parameters(const State& s, double mean, double stdev) =0;

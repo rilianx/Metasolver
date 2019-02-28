@@ -28,10 +28,10 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool plot=false, double mean = 5.0, double stdev = 1.0) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool plot=false, double mean = 4.0, double stdev = 1.0, int metodo = 0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), plot(plot), mean(mean), stdev(stdev) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), plot(plot), mean(mean), stdev(stdev), metodo(metodo) {}
 
 
 	virtual ~BSG();
@@ -156,6 +156,7 @@ protected:
 
 	double mean;
 	double stdev;
+	int metodo;
 
 	list<double> alphas;
 	double gbcont = 0;

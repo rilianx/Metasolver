@@ -41,6 +41,14 @@ public:
 
 	virtual double get_alpha(){ return alpha;}
 
+	virtual double get_betaV() { return get_beta();}
+
+	virtual double get_gamma() { return gamma;}
+
+	virtual double get_deltaV() { return get_delta();}
+
+	virtual double get_p() { return p;}
+
 	virtual void update_level_alpha(double mean, double stdev){
 		//cout << "UFF" << endl;
 		std::random_device rd;
@@ -58,9 +66,6 @@ public:
 		 	std::mt19937 gen(rd());
 			std::normal_distribution<double> distribution(mean,stdev);
 			double sample = distribution(gen);
-			if(sample < 3.0) sample = 3.0;
-			else if (sample > 5.0) sample = 5.0;
-
 			int size = s.get_path().size(); //largo del camino
 			const clpState* state=dynamic_cast<const clpState*>(&s);
 			int boxn = state->cont->n_boxes; //numero cajas
@@ -74,6 +79,42 @@ public:
 			//cout << state->cont->n_boxes << "//" << size << endl;
 			//cout << blockn << "//" << size << endl;
 
+			//La distribucion normal esta basada en el parametro alpha
+			if(metodo == 1){
+				if(sample < 3.0) sample = 3.0;
+				else if (sample > 5.0) sample = 5.0;
+				alpha = sample;
+			}
+
+			//La distribucion normal esta basada en el parametro beta
+			if(metodo == 2){
+				if(sample < 0.5) sample = 0.5;
+				else if (sample > 1.5) sample = 1.5;
+				set_beta(sample);
+			}
+
+			//La distribucion normal esta basada en el parametro gamma
+			if(metodo == 3){
+				if(sample < 0.05) sample = 0.05;
+				else if (sample > 0.4) sample = 0.4;
+				gamma = sample;
+			}
+
+			//La distribucion normal esta basada en el parametro delta
+			if(metodo == 4){
+				if(sample < 0.5) sample = 0.5;
+				else if (sample > 1.5) sample = 1.5;
+				set_delta(sample);
+			}
+
+			//La distribucion normal esta basada en el parametro p
+			if(metodo == 5){
+				if(sample < 0.01) sample = 0.01;
+				else if (sample > 0.08) sample = 0.08;
+				p = sample;
+			}
+
+			/*
 			if(metodo == 5){   //exponencial desde el primer movimiento. tiende a 0 e infinito.
 				alpha = alpha0 * pow(alphafactor,size);
 				set_beta(beta0);
@@ -99,14 +140,15 @@ public:
 					gamma = gamma0 * pow(gammafactor,size);
 				}
 			}
-
+*/
 			/**
 			* Segregacion por size
 			*/
+			/*
 			if(metodo == 1){
 				if(size<9)
 				{
-					alpha=sample;
+					alpha=alpha0;
 					set_beta(beta0);
 					gamma= gamma0;
 					set_delta(delta0);
@@ -115,17 +157,16 @@ public:
 				{
 					if(size>=9)
 					{
-						alpha = sample;
-						/*
+
 						alpha = alpha0 * pow(alphafactor,size-8);
 						set_beta(beta0 * pow(betafactor,size-8));
 						gamma = gamma0 * pow(gammafactor,size-8);
 						set_delta(delta0 * pow(deltafactor,size-8));
-						p = p0 * pow(pfactor,size-8);*/
+						p = p0 * pow(pfactor,size-8);
 					}
 				}
-			}
-
+			}*/
+/*
 			if(metodo == 4){ //segregacion por size en reversa
 				if(size<9)
 				{
@@ -146,7 +187,8 @@ public:
 					}
 				}
 			}
-
+*/
+			/*
 			if(metodo == 6){ //segregacion por size exponencial al principio y luego constante
 							if(size<9)
 							{
@@ -158,10 +200,11 @@ public:
 							}
 
 			}
-
+	*/
 			/**
 			* segregacion por % de llenado
 			*/
+			/*
 			if(metodo == 2){
 				if(fill < 0.85){
 					alpha = alpha0;
@@ -181,6 +224,7 @@ public:
 					}
 				}
 			}
+			*/
 			//cout << alpha << endl;
 		}
 
