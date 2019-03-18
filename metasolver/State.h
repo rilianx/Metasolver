@@ -162,7 +162,7 @@ public:
 			var=varr;
 		}
 
-    //back-propagation (wrong)
+    //TODO: arreglar back-propagation. 
 		if(bp && parent)
 		   parent->update_values(new_value, true, false);
 
