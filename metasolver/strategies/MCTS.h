@@ -93,9 +93,9 @@ namespace metasolver {
 		while(states.size() > 0 &&  get_time()<timelimit){
 			change_best=false;
 
+			//TODO: Modificar selección de nodo (como MCTS original, es decir desde la raiz ir bajando)
 			const State* s = *states.begin();
 			states.erase(states.begin());
-			//states.erase(s);
 
 			//cout << s->get_promise() << "," << s->get_children_size() << "," <<states.size() << endl;
 
