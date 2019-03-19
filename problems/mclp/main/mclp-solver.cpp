@@ -89,10 +89,10 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 
 		//cout << eval << ":" ;
 		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
-			//cout << box.first->get_id() << ",";
+			cout << box.first->get_id() << "(" << box.second << "),";
 			used_boxes[box.first]++;
 		}
-		//cout << endl;
+		cout << endl;
 
 		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->MatLab_print();
 
@@ -108,6 +108,8 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 		}
 	}
 
+
+
 	map<const BoxShape*, int> dont_used_boxes;
 
 	for(auto box: used_boxes){
@@ -119,6 +121,8 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 	for(auto box: dont_used_boxes){
 		cout << box.first->get_id() << "(" << box.second << ")," ;
 	}
+
+	return bins.size();
 
 	cout << endl;
 	cout << "\nhigh_quantity" << endl;
@@ -134,6 +138,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//se seleccionan cajas con mayor prioridad, sin contar las que se hayan colocado en el bin actual
+
 		s_copy.select_boxes(&dont_used_boxes, false);//&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 		double eval=gr->run(s_copy, maxtime, begin_time);
 
@@ -323,7 +328,7 @@ int main(int argc, char** argv){
 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-        alpha, beta, gamma, p, delta, 0.0, 0.0);
+        alpha, beta, gamma, p, delta, 1.0, 0.0);
 
 		cout << "greedy" << endl;
 		Greedy *gr = new Greedy (vcs);

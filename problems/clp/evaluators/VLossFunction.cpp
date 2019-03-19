@@ -70,13 +70,15 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 	double weight_rel = b.getTotalWeight()/clpState::weight_of_allboxes;
 	double density = weight_rel/vol_rel;
 
-//	cout << vol_rel << "," << density << endl;
+	//cout << "weight:" << b.getTotalWeight()/b.n_boxes << endl;
+	//cout << "theta:" << theta << endl;
 
-	//cout << theta << endl;
+	//Variant for MCLP
+	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(b.getTotalWeight()/b.n_boxes, theta ));
 
-	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(density, theta ));
+	//Variant for MOP!!
+	//return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(density, theta ));
 
-//	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()/clpState::weight_of_allboxes) );
 }
 
 double VLossFunction::Loss(const std::map<const BoxShape*, int>& nb_boxes, const Block& block, const Space& free_space){
