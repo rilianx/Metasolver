@@ -148,7 +148,7 @@ int main(int argc, char** argv){
     cout << "best_volume #simulations" << endl;
 	// cout << eval << " " << mcts->get_best_state()->get_value2() << " " << eval*mcts->get_best_state()->get_value2() << endl;
 
-    cout << eval << "," << mcts->nb_simulations << endl;
+    cout << eval << " " << mcts->nb_simulations << endl;
 
 
 /*
