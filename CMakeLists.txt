@@ -31,7 +31,8 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
+# SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -no-pie -Qunused-arguments")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie -Qunused-arguments")
 
 # ADD_DEFINITION(-g -pg)
 
@@ -49,10 +50,11 @@ bsg_mop
  metasolver/plugins/mop/strategies/BSGMOP.cpp
 )
 
-#ADD_LIBRARY(
-#mcts
-# metasolver/plugins/mop/strategies/BSGMOP.cpp
-#)
+ADD_LIBRARY(
+mcts
+metasolver/strategies/MCTS.cpp
+metasolver/mctsNode.cpp
+)
 
 ADD_LIBRARY(
 nsga2
@@ -94,7 +96,7 @@ ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
-target_link_libraries(MCTS_CLP clp bsg)
+target_link_libraries(MCTS_CLP clp bsg mcts)
 target_link_libraries(BSG_CLP clp clp_kdtree bsg)
 target_link_libraries(BSG_CLP_ANN clp clp_kdtree bsg)
 target_link_libraries(test_BSG_CLP clp clp_kdtree bsg)

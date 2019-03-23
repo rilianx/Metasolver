@@ -60,7 +60,7 @@ class AABB {
 
 		inline long getSurface() const {return 2*(getL()*getW()+getL()*getH()+getW()*getH());}
 
-        bool operator==(const AABB& b) const{
+      virtual bool operator==(const AABB& b) const{
             return (volume == b.volume && mins==b.mins && maxs==b.maxs);
         }
 

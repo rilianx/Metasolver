@@ -31,6 +31,8 @@ public:
 			case 1: return getY();
 			case 2: return getZ();
 		}
+
+		return 0;
 	}
 
 	void set_i(long xx, int i){

@@ -12,6 +12,11 @@ namespace metasolver {
 
 int State::count_states=0;
 
+ostream & operator << (ostream &out, const Action &a){
+	a.serialize(out);
+	return out;
+}
+
 Action* State::next_action(State& final){
     if(get_path().size() >= final.get_path().size() ) return NULL;
 

@@ -272,6 +272,7 @@ treeJSON = d3.json(jsonArchive, function(error, treeData) {
         $("#node-mcts-value").text("Probability: "+d.mcts_value);
         //$("#node-stimated-sd").text("Stimated Sd:"+d.stimated_sd);
         $("#node-children-size").text("Number of children: "+d.children_size);
+        $("#node-simulation-size").text("Number of simulations: "+d.simulations);
         //$("#node-depth").text("Depth: "+d.depth);
         //$("#node-numvisit").text("Number of visits: "+d.num_visit);
         //$("#node_id").text(""+d.name);

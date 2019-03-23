@@ -33,11 +33,23 @@ class Action{
 public:
 	virtual Action* clone() const=0;
 
+	virtual bool operator!=(const Action& B) const{
+		return !(*this==B);
+	}
+
+  virtual bool operator==(const Action& B) const{
+		cout << "Error: the operator== is not implemented in the corresponding Action subclass" << endl;
+		exit(0);
+		return false;
+	};
+
+	virtual void serialize(ostream& os) const{  }
+
 	virtual ~Action(){}
 
 };
 
-
+ostream & operator << (ostream &out, const Action &a);
 
 /**
  * Represent a partial solution of the problem. It consists in

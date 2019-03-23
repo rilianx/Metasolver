@@ -12,6 +12,7 @@
 #include "clpStatekd.h"
 #include "BlockSet.h"
 #include "MCTS.h"
+#include "mctsNode.h"
 #include "VCS_Function.h"
 #include "VCS_Function.h"
 #include "SpaceSet.h"
@@ -45,10 +46,8 @@ int main(int argc, char** argv){
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 
-	args::ValueFlag<double> _eps(parser, "double", "epsilon parameter for MCTS", {"eps"});
-	args::Flag bp(parser, "bp", "backpropagation in MCTS", {"bp"});
-	args::ValueFlag<int> _max_nodes(parser, "int", "maximum number of nodes in the MCTS", {"max_nodes"});
-	args::Flag discard_equivalent_nodes(parser, "bp", "discard equivalent nodes in MCTS", {"den"});
+	args::ValueFlag<double> _B(parser, "double", "MCTS: weight of std.dev.", {'B'});
+	args::ValueFlag<double> _C(parser, "double", "MCTS: weight of nb-simulations", {'C'});
 
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -83,7 +82,7 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, eps=0.0001, r=0.0, max_nodes=100;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, r=0.0;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
@@ -91,8 +90,9 @@ int main(int argc, char** argv){
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
 	if(_r) r=_r.Get();
-	if(_eps) eps=_eps.Get();
-	if(_max_nodes) max_nodes=_max_nodes.Get();
+
+	if(_B) mctsNode::B=_B.Get();
+	if(_C) mctsNode::C=_C.Get();
 
 
 	string format="BR";
@@ -133,8 +133,8 @@ int main(int argc, char** argv){
 	cout << "greedy" << endl;
     SearchStrategy *gr = new Greedy (vcs);
 
-	cout << "bsg" << endl;
-    MCTS *mcts= new MCTS(vcs,*gr,eps, max_nodes, bp, discard_equivalent_nodes);
+	cout << "mcts" << endl;
+    MCTS *mcts= new MCTS(vcs,*gr);
 
 
 	cout << "copying state" << endl;
@@ -143,12 +143,12 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-    double eval = mcts->run(s_copy, maxtime, begin_time);
+  double eval = mcts->run(s_copy, maxtime, begin_time);
 
-    cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << mcts->get_best_state()->get_value2() << " " << eval*mcts->get_best_state()->get_value2() << endl;
+    cout << "best_volume #simulations" << endl;
+	// cout << eval << " " << mcts->get_best_state()->get_value2() << " " << eval*mcts->get_best_state()->get_value2() << endl;
 
-   // cout << eval << endl;
+    cout << eval << "," << mcts->nb_simulations << endl;
 
 
 /*

@@ -32,12 +32,24 @@ public:
 
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
+
+  virtual bool operator==(const Action& B) const{
+		const clpAction& act = *dynamic_cast<const clpAction*> (&B);
+		if( &block!= &act.block) return false;
+		if (space==act.space) return true;
+		return false;
+	}
+
 	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
+
+	virtual void serialize(ostream& os) const;
 
 	const Block& block;
 	const Space space;
 
 };
+
+
 
 bool is_constructible(const clpState& s, const Block& b);
 

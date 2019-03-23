@@ -20,6 +20,10 @@ using namespace metasolver;
 namespace clp {
 
 
+	void clpAction::serialize(ostream& os) const {
+			os << block;
+	}
+
 void clpState::get_actions(list< Action* >& actions) const{
 	list<const Block*>::const_iterator it;
 
