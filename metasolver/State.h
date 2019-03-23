@@ -12,8 +12,8 @@
 #include <functional>
 #include <math.h>
 
-#include "boost/math/distributions/normal.hpp"
-#include <boost/math/distributions/students_t.hpp>
+//#include "boost/math/distributions/normal.hpp"
+//#include <boost/math/distributions/students_t.hpp>
 
 
 
@@ -26,7 +26,7 @@
 
 
 using namespace std;
-using namespace boost::math;
+//using namespace boost::math;
 
 namespace metasolver{
 
@@ -52,6 +52,7 @@ public:
 
 ostream & operator << (ostream &out, const Action &a);
 
+//TODO: limpiar restos del nodo
 /**
  * Represent a partial solution of the problem. It consists in
  * the container (block) with the located blocks, a map of the left boxes and
@@ -117,10 +118,10 @@ public:
 		//promise = mean + eps* var;
 
   //mcts bacan
-		double z_value=stadistic_test(best_value);
-    students_t dist  (children_size);
-    promise= 1.0-cdf(dist, z_value);
-		
+		//double z_value=stadistic_test(best_value);
+    //students_t dist  (children_size);
+    //promise= 1.0-cdf(dist, z_value);
+
    //mcts profe
     //normal dist( mean, sqrt(var) );
 		//promise= 1.0-cdf(dist, best_value);
@@ -174,7 +175,7 @@ public:
 			var=varr;
 		}
 
-    //TODO: arreglar back-propagation. 
+    //TODO: arreglar back-propagation.
 		if(bp && parent)
 		   parent->update_values(new_value, true, false);
 
