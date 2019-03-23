@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 algos:mcts-random_random0.0 mcts-random_random0.1 mcts-random_random0.2 mcts-random_random0.3 mcts-random_random0.4 mcts-random_random0.5 mcts-random_random0.6 mcts-random_random0.7 mcts-random_random0.8 mcts-random_random0.9 
 gains (average relative times):1.000000 1.073586 1.074882 1.075034 1.076522 1.076779 1.077481 1.079685 1.080129 1.082264 
 gains (total time)            :1.000000 1.072062 1.073275 1.073446 1.074976 1.075193 1.075920 1.078092 1.078529 1.080659 
@@ -5,3 +6,12 @@ compared instances:1500 1500 1500 1500 1500 1500 1500 1500 1500 1500
 runs    :1500 1500 1500 1500 1500 1500 1500 1500 1500 1500 
 L:  0   0   0   0   0   0   0   0   0   0 
 W:  0   3   3   5   2   3   4   4   2   4 
+=======
+algos:mcts-maxnodes-withoutbp_list50 mcts-maxnodes-withoutbp_list100 mcts-maxnodes-withoutbp_list200 mcts-maxnodes-withoutbp_list300 mcts-maxnodes-withoutbp_list400 mcts-maxnodes-withoutbp_list500 
+gains (average relative times):1.000000 1.001076 1.001034 1.001026 1.001021 1.001009 
+gains (total time)            :1.000000 1.000004 0.999963 0.999955 0.999950 0.999938 
+compared instances:1500 1500 1500 1500 1500 1500 
+runs    :1500 1500 1500 1500 1500 1500 
+L:  0   0   0   0   0   0 
+W:  0   0   0   0   0   0 
+>>>>>>> 824b11c82ea01c188a126b5d4dc20c3caad70e78

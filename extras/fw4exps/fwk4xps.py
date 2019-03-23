@@ -442,7 +442,8 @@ def p_faster(i, j,config):
 	
 	if n<=1: return 1.0
 	
-	return t.cdf((np.mean(x))/(np.std(x)/math.sqrt(n)),n-1)
+	return 1
+  #t.cdf((np.mean(x))/(np.std(x)/math.sqrt(n)),n-1)
 
 
 def mean_error(config, id_algo, id_inst, seeds):
