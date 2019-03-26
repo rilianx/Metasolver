@@ -6,19 +6,28 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = mcts-B2-CX mcts-BX-C0.02
+algo_names = mcts-B5-CX mcts-rand
 
-[mcts-B2-CX]
+[mcts-B5-CX]
 tuning_param = C
-tuning_values = 0.005 0.01 0.02 0.05 0.1
+tuning_values = 0.0 0.001 0.0005 0.0001
 exec = "../../MCTS_CLP"
-params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 -r 0.5 -B 2 -C _C
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 -r 0.5 -B 5 -C _C
 outputpos_times = 0
 outputpos_boxes = 0
 
+[mcts-rand]
+tuning_param = R
+tuning_values = 0.0 0.5 1.0
+exec = "../../MCTS_CLP"
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 -r _R -B 5 -C 0.2
+outputpos_times = 0
+outputpos_boxes = 0
+
+
 [mcts-BX-C0.02]
 tuning_param = B
-tuning_values = 0.0 0.5 1.0 2.0 5.0
+tuning_values = 10.0 20.0 50.0 100.0
 exec = "../../MCTS_CLP"
 params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 -r 0.5 -B _B -C 0.02
 outputpos_times = 0
