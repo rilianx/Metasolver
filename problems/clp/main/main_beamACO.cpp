@@ -187,6 +187,14 @@ int main(int argc, char** argv){
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
+    vector< pair<double, double> > parameter_ranges;
+    parameter_ranges[0]=make_pair(0.0, 8.0);
+    parameter_ranges[1]=make_pair(0.0, 8.0);
+    parameter_ranges[2]=make_pair(0.0, 8.0);
+    parameter_ranges[3]=make_pair(0.0, 1.0);
+    parameter_ranges[4]=make_pair(0.0, 0.1);
+
+    vcs->set_parameter_ranges(parameter_ranges);
 
 	cout << "greedy" << endl;
 	SearchStrategy *gr = new Greedy(vcs, aco_alpha, aco_beta, &tauM);

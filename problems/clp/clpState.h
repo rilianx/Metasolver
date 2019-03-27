@@ -110,6 +110,11 @@ public:
 	    return ret;
 	}
 
+	/*
+	2. Definir estados-hormiga en base a indicadores simples (e.g., llenado del contenedor,
+	tamaño del free-space seleccionado, flexibilidad de bloques factibles). El dominio
+	para los valores de los indicadores debería ser súper acotado, e.g., >80%, [50%-80%], <50%.*/
+
 	virtual pair<long, long> get_code(const Action& action) const{
 		const clpAction& act = *dynamic_cast<const clpAction*> (&action);
 		const Space& s = act.space;

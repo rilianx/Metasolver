@@ -61,6 +61,26 @@ protected:
 	 */
 	void solveKnapsack(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims);
 
+	double beta, delta;
+
+	/*
+	 * Retorna los valores asignados para los parámetros
+	 */
+	virtual vector< double > get_parameter_values() const{
+		vector< double > v(2);
+		v[0]= delta;
+		v[1]= beta;
+		return v;
+	}
+
+	/*
+	 * Asigna los valores a los parámetros
+	 */
+	virtual void set_parameter_values(const vector< double >& v){
+		delta=v[0];
+		beta=v[1];
+	}
+
 private:
 
 	/**
@@ -73,7 +93,6 @@ private:
 	 */
 	void compute_mX(const std::map<const BoxShape*, int>& nb_boxes, int X, long *mX, std::set<const BoxShape*>* listX,  int dim);
 
-	double beta, delta;
 
   // parameter for ponderating the weight of the boxes
 	double theta;
