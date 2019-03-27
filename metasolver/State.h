@@ -35,12 +35,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), id(count_states++), marked(false){}
+	State() : parent (NULL), id(count_states++), sim_value(0){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++), marked(false){
+	State(const State& S) : parent(&S), id(count_states++){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -103,7 +103,7 @@ public:
 
 	static int count_states;
 
-	bool marked;
+	double sim_value;
 
 protected:
 

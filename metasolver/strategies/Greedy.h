@@ -20,7 +20,8 @@ class Greedy : public SearchStrategy {
 public:
 
 	//agregado alpha y beta para hacer funcionar el BeamACO
-	Greedy(ActionEvaluator* evl) : SearchStrategy(evl) { }
+	Greedy(ActionEvaluator* evl,  double aco_alpha=0.0, double aco_beta=0.0, tau_matrix* tauM=NULL) :
+		SearchStrategy(evl, aco_alpha, aco_beta, tauM) { }
 
 	/**
 	 * Performs an iteration of the strategy

@@ -106,6 +106,7 @@ protected:
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
+				s->sim_value=final_state->get_value();
 				nextS.push_back(s);
 				p->add_children(s);
 

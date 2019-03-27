@@ -49,7 +49,6 @@ metasolver/State.cpp
 ADD_LIBRARY(
 beam_ACO
 metasolver/strategies/BeamACO.cpp
-metasolver/strategies/GreedyACO.cpp
 )
 
 ADD_LIBRARY(

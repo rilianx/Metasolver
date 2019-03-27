@@ -38,7 +38,7 @@ list<State*> BeamACO::next(list<State*>& S){
          
          //en cada nivel del arbol de busqueda deberia explorar los nodos max_level_size, entonces..
          w =  (double) max_level_size / (double) S.size() + 0.5;
-         get_best_actions_aco(state, best_actions, w);
+         get_best_actions(state, best_actions, w);
 
          //Las acciones son evaluadas y guardadas en el mapa ordenado
          list< Action* >::iterator it = best_actions.begin();
@@ -61,11 +61,7 @@ list<State*> BeamACO::next(list<State*>& S){
 
 
              if(state_actions.find(-value)==state_actions.end()){
-
-            	 state.marked = true;
             	 state_actions[-value]= make_pair(&state, &state_copy);
-
-
              }else delete &state_copy;
 
          }
@@ -73,55 +69,41 @@ list<State*> BeamACO::next(list<State*>& S){
 
      //actualiza feromona
     i=0;
-    //tauM->update_factor(0.87);
-		for(auto state_action:state_actions){
-			//cout << w << endl;
-			if(i==w) {
-				break;
-			}
-			State* s= state_action.second.first;
-			if(!s) break;
-			State& state_copy2 = *s->clone();
-			State* final_state=state_action.second.second;
+	for(auto state_action:state_actions){
 
-			if(s->marked == true){
-				while(true){
-					Action* a = (s)? state_copy2.next_action(*final_state):NULL;
-					//pair<long, long> p = s->get_code(*a);
-					//cout << std::get<0>(p) << " and " << std::get<1>(p) << endl;
-					//Action* b = (s)? s->next_action(*final_state):NULL;
-					if(a){
+		if(i==beams) {
+			break;
+		}
+		State* s= state_action.second.first;
+		if(!s) break;
+		State& state_copy2 = *s->clone();
+		State* final_state=state_action.second.second;
 
-						//cout << "///////////" << endl;
-						//cout << tauM->get_tau(&state_copy2,a) << endl;
+		//si simulacion del hijo mejora al padre
+		if(-state_action.first > s->sim_value){
+			while(true){
+				Action* a = (s)? state_copy2.next_action(*final_state):NULL;
+				if(a){
+					tauM->incr_tau(&state_copy2,a,incremento);
 
-						tauM->incr_tau(&state_copy2,a,incremento);
-
-						//tauM->update_factor(0.99);
-						//cout << tauM->get_tau(&state_copy2,a) << endl;
-						//cout << "///////////" << endl;
-						state_copy2.transition(*a);
-						delete a;
-						if(metodo == 1){
-							break;
-						}
-					}else
-					{
-						//cout << "ARG" << endl;
+					state_copy2.transition(*a);
+					delete a;
+					if(metodo == ONE_ARC){
 						break;
 					}
+				}else{
+					//cout << "ARG" << endl;
+					break;
 				}
 			}
-			delete &state_copy2;
-			if(metodo == 2){
-				break;
-			}
-			s->marked = false;
-			i++;
-			//delete &state_copy2;
 		}
+		delete &state_copy2;
 
-   	tauM->update_factor(mod_factor);
+		if(metodo == ONE_PATH)	break;
+		i++;
+	}
+
+   	//tauM->update_factor(mod_factor);
   	list<State*> l=get_next_states(state_actions);
 
   	//state_actions.clear();

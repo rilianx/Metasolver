@@ -29,7 +29,7 @@ Action* SearchStrategy::best_action(const State& s){
 }*/
 
 int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
-	if(aco_beta>0.0) return get_best_actions_aco(s, bactions, n);
+	if(aco_alpha>0.0 || aco_beta>0.0) return get_best_actions_aco(s, bactions, n);
 
 	if(!evl) {
 		cout << "The function State::get_best_actions should be implemented or an "
@@ -84,11 +84,12 @@ int SearchStrategy::get_best_actions_aco(const State& s, list< Action* >& bactio
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
 
-
   double sum_eval=0;
 	while(!actions.empty()){
 		Action* a=actions.front(); actions.pop_front();
+
 		//double eval = evl->eval_action_rand(s,*a);  (evaluacion normal)
+		//if(tauM->get_tau(&s, a)>1) cout << tauM->get_tau(&s, a) << endl;
 		double eval = pow(tauM->get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
 
 		evaluated_actions.push_back(make_pair(eval,a));

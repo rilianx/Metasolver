@@ -14,10 +14,10 @@
 #include "BlockSet.h"
 #include "VCS_Function.h"
 #include "SpaceSet.h"
-#include "GreedyACO.h"
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
 #include "BeamACO.h"
+#include "Greedy.h"
 #include "SearchStrategy.h"
 
 bool global::TRACE = false;
@@ -26,42 +26,6 @@ using namespace std;
 
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
-
-/*
-class tau_matrix{
-
-private:
-	double factor;
-	double default_value;
-	map< pair<long, long>, double > values;
-
-public:
-
-	tau_matrix() : factor(1.0), default_value(1.0) { }
-
-	double get_tau(const State* s, Action* a){
-		pair<long, long> p = s->get_code(*a);
-		if(values.find(p) != values.end()){
-			//cout <<factor*default_value << "," << factor*values[p] << endl;
-
-			return factor*values[p];
-		}else
-			return factor*default_value;
-	}
-
-	//evaporacion de feromona
-	void update_factor(double decr){
-		factor*=decr;
-	}
-
-	void incr_tau(const State* s, Action* a, double incr){
-		pair<long, long> p = s->get_code(*a);
-		if(values.find(p) != values.end())
-			values[p]+=incr;
-		else
-			values[p]=default_value+incr;
-	}
-};*/
 
 static tau_matrix tauM;
 
@@ -185,8 +149,8 @@ int main(int argc, char** argv){
 
 	static double incremento = 0.1;
 	if(_incremento) incremento = _incremento.Get();
-	static int metodo = 3;
-	if(_metodo) metodo =_metodo.Get();
+	BeamACO::aco_strategy metodo = BeamACO::ALL_PATHS;
+	if(_metodo) metodo =(BeamACO::aco_strategy)_metodo.Get();
 	static double mod_factor = 0.004;
 	if(_mod_factor) mod_factor = _mod_factor.Get();
 
@@ -225,7 +189,7 @@ int main(int argc, char** argv){
     alpha, beta, gamma, p, delta, 0.0, r);
 
 	cout << "greedy" << endl;
-	SearchStrategy *gr = new GreedyACO(vcs, aco_alpha, aco_beta, &tauM);
+	SearchStrategy *gr = new Greedy(vcs, aco_alpha, aco_beta, &tauM);
 
 	cout << "bsg" << endl;
 	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor, incremento);
