@@ -28,8 +28,53 @@ Action* SearchStrategy::best_action(const State& s){
 	else return NULL;
 }*/
 
+int SearchStrategy::get_best_actions_ACO(const State& s, list< Action* >& bactions, int n){
+
+	if(!evl) {
+		cout << "The function State::get_best_actions should be implemented or an "
+				<< "ActionEvaluator should be provided" << endl;
+		exit(0);
+	}
+
+	list< Action* > actions;
+	s.get_actions(actions);
+
+	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
+
+
+	for(int i=0;i<n && actions.size()>0;i++){
+
+		vector <double> sample_param_vector = tauM->sample_param_vector(&s);
+		evl->set_parameter_values(sample_param_vector);
+		double max_eval=0;
+		list< Action* >::iterator best_action=actions.end();
+		for(auto it=actions.begin(); it!=actions.end(); it++){
+			double eval = evl->eval_action_rand(s,**it);
+			if(eval>max_eval){
+				max_eval=eval;
+				best_action=it;
+			}
+		}
+
+		if(best_action!=actions.end()){
+			(*best_action)->parameter_values=sample_param_vector;
+			(*best_action)->state_code=s.get_code();
+			bactions.push_front( *best_action );
+			actions.erase(best_action);
+		}
+	}
+
+	for(auto a: actions){
+		delete a;
+	}
+
+	return bactions.size();
+
+}
+
 int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
-	if(aco_alpha>0.0 || aco_beta>0.0) return get_best_actions_aco(s, bactions, n);
+
+	if(tauM) return get_best_actions_ACO(s, bactions, n);
 
 	if(!evl) {
 		cout << "The function State::get_best_actions should be implemented or an "
@@ -45,10 +90,16 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
 
+	//escoge solo un set de valores para escoger todos los bloques
+	vector <double> sample_param_vector = tauM->sample_param_vector(&s);
+	if(sample_param_vector.size() > 0) evl->set_parameter_values(sample_param_vector);
+
 	while(!actions.empty()){
 		Action* a=actions.front(); actions.pop_front();
 		double eval = evl->eval_action_rand(s,*a);
 		if(eval>0 && (ranked_actions.size()<n || ranked_actions.begin()->first < eval)){
+			a->parameter_values=sample_param_vector;
+			a->state_code=s.get_code();
 			ranked_actions.insert(make_pair(eval,a));
 			if(ranked_actions.size()==n+1) {
 				delete (ranked_actions.begin()->second);
@@ -68,60 +119,6 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 
 }
 
-int SearchStrategy::get_best_actions_aco(const State& s, list< Action* >& bactions, int n){
 
-	if(!evl) {
-		cout << "The function State::get_best_actions_prob should be implemented or an "
-				<< "ActionEvaluator should be provided" << endl;
-		exit(0);
-	}
-
-	list< pair<double,Action*> > evaluated_actions;
-	//map<double,Action*> ranked_actions;
-
-	list< Action* > actions;
-	s.get_actions(actions);
-
-	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
-
-  double sum_eval=0;
-	while(!actions.empty()){
-		Action* a=actions.front(); actions.pop_front();
-
-		//double eval = evl->eval_action_rand(s,*a);  (evaluacion normal)
-		//if(tauM->get_tau(&s, a)>1) cout << tauM->get_tau(&s, a) << endl;
-		double eval = pow(tauM->get_tau(&s, a),aco_alpha) *  pow(evl->eval_action_rand(s,*a),aco_beta); //formula hormigas?
-
-		evaluated_actions.push_back(make_pair(eval,a));
-		sum_eval += eval;
-	}
-
-	//se colocan las acciones en la lista en el orden inverso
-	while(evaluated_actions.size()>0 && bactions.size()<n){
-		//cout << "eval:" << ranked_actions.begin()->first << endl;
-		double r = (rand()/(double)RAND_MAX)*sum_eval;
-		if(r>sum_eval) r=sum_eval;
-
-		double roulette=0.0;
-		auto it=evaluated_actions.begin();
-
-		for(; it!=evaluated_actions.end(); it++){
-			roulette += it->first;
-			if(roulette >= r)
-				break;
-		}
-		if(it==evaluated_actions.end()) it--;
-
-		sum_eval-=it->first;
-		bactions.push_front( it->second );
-		evaluated_actions.erase(it);
-	}
-
-	for(auto act:evaluated_actions)
-	   delete act.second;
-
-	return bactions.size();
-
-}
 
 }

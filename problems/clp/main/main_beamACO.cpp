@@ -27,7 +27,7 @@ using namespace std;
 // para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 // para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
 
-static tau_matrix tauM;
+
 
 void dfsPrintChild(const State* node, ofstream& file){
 	file << "{ "<<endl;
@@ -187,14 +187,14 @@ int main(int argc, char** argv){
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
-    vector< pair<double, double> > parameter_ranges;
+    vector< pair<double, double> > parameter_ranges(5);
     parameter_ranges[0]=make_pair(0.0, 8.0);
     parameter_ranges[1]=make_pair(0.0, 8.0);
     parameter_ranges[2]=make_pair(0.0, 8.0);
     parameter_ranges[3]=make_pair(0.0, 1.0);
     parameter_ranges[4]=make_pair(0.0, 0.1);
 
-    vcs->set_parameter_ranges(parameter_ranges);
+    tau_matrix tauM(parameter_ranges);
 
 	cout << "greedy" << endl;
 	SearchStrategy *gr = new Greedy(vcs, aco_alpha, aco_beta, &tauM);

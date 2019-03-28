@@ -31,6 +31,7 @@ VCS_Function::~VCS_Function(){
 
 
 double VCS_Function::eval_action(const State& s, const Action &a){
+	//cout << delta <<"," << alpha <<"," << beta << "," << gamma << "," << p << endl;
 	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
 

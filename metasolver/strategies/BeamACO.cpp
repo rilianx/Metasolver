@@ -71,44 +71,33 @@ list<State*> BeamACO::next(list<State*>& S){
     i=0;
 	for(auto state_action:state_actions){
 
-		if(i==beams) {
-			break;
-		}
+		if(i==beams) break;
+
 		State* s= state_action.second.first;
 		if(!s) break;
-		State& state_copy2 = *s->clone();
+
 		State* final_state=state_action.second.second;
+
 
 		//si simulacion del hijo mejora al padre
 		if(-state_action.first > s->sim_value){
-			while(true){
-				Action* a = (s)? state_copy2.next_action(*final_state):NULL;
-				if(a){
-					tauM->incr_tau(&state_copy2,a,incremento);
+			list< const Action* > path= final_state->get_path();
+			list< const Action* >::iterator it=path.begin();
+			advance(it,s->get_path().size());
+			path.erase(path.begin(),it);
 
-					state_copy2.transition(*a);
-					delete a;
-					if(metodo == ONE_ARC){
-						break;
-					}
-				}else{
-					//cout << "ARG" << endl;
-					break;
-				}
-			}
+			for(auto a:path)
+				tauM->add_pheromone(a->state_code,a->parameter_values);
 		}
-		delete &state_copy2;
+
+
 
 		if(metodo == ONE_PATH)	break;
 		i++;
 	}
 
-   	//tauM->update_factor(mod_factor);
   	list<State*> l=get_next_states(state_actions);
 
-  	//state_actions.clear();
-
-    //siguiente generacion de estados
     return l;
 }
 } /* namespace clp */

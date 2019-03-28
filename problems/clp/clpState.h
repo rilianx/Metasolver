@@ -32,12 +32,12 @@ class clpAction : public Action{
 public:
 	clpAction(const Block& block, const Space& space) : block(block), space(space) { }
 
-	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
 	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
 
 	const Block& block;
 	const Space space;
+
 
 };
 
@@ -154,10 +154,6 @@ public:
 
 	}
 
-	/*
-	* Rearranges the elements in the path pseudo-randomly
-	*/
-	virtual int shuffle_path();
 
 
 	int get_n_valid_blocks() {return valid_blocks.size();}

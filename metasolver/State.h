@@ -22,9 +22,16 @@ namespace metasolver{
 
 class Action{
 public:
+
+	Action() : state_code(0) { };
+
 	virtual Action* clone() const=0;
 
 	virtual ~Action(){}
+
+	//codifica estado previo
+	long state_code;
+	vector<double> parameter_values;
 };
 
 /**
@@ -40,7 +47,7 @@ public:
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++){
+	State(const State& S) : parent(&S), id(count_states++), sim_value(S.sim_value){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -100,6 +107,8 @@ public:
 	const State* get_parent() const{ return parent; }
 
 	virtual pair<long, long> get_code(const Action& action) const{ return make_pair(0,0); }
+
+	virtual long get_code() const{ return 0; }
 
 	static int count_states;
 

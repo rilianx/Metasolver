@@ -19,41 +19,74 @@ using namespace std;
 namespace metasolver {
 
 
+
 class tau_matrix{
 
 private:
-	double factor;
-	double default_value;
-	map< pair<long, long>, double > values;
+	//distribucion de feromona
+	//la clave del mapa es el estado codificado
+	//el valor es un vector de pares (media del valor del parámetro, cantidad de veces modificado)
+	map<long, vector<pair <double, int> > > ph_distribution;
+	vector<pair <double, double> > parameter_ranges;
+
+	double fRand(double fMin, double fMax)
+	{
+	    double f = (double)rand() / RAND_MAX;
+	    return fMin + f * (fMax - fMin);
+	}
+
 
 public:
 
-	tau_matrix() : factor(0), default_value(1.0) { }
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p) {
 
-	double get_tau(const State* s, Action* a){
-		pair<long, long> p = s->get_code(*a);
-		//cout << std::get<0>(p) << " and " << std::get<1>(p) << endl;
-		if(values.find(p) != values.end()){
-			//cout <<factor*default_value << "," << factor*values[p] << endl;
-			//return factor*values[p];
-			//cout << factor << endl;
-			return values[p]-factor;
-		}else
-			//return factor*default_value;
-			return default_value - factor;
 	}
 
-	//evaporacion de feromona
-	void update_factor(double mod_factor){
-		factor+=mod_factor;
+	//samplea parametros de acuerdo a distribucion normal asociada al estado
+	vector <double> sample_param_vector(const State* s){
+
+		//TODO: se obtiene el el estado codificado
+		long state_code=0;// = s->get_code();
+		vector <double> values(parameter_ranges.size());
+
+		if(ph_distribution.find(state_code)!=ph_distribution.end()){
+			vector<pair <double, int> >& dist_params = ph_distribution[state_code];
+			for(int i=0; i<dist_params.size();i++ ){
+				//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
+				//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
+				//values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
+				values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
+			}
+
+		}else //random values in the range
+			for(int i=0;i<values.size();i++)
+				values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
+
+		return values;
+
 	}
 
-	void incr_tau(const State* s, Action* a, double incr){
-		pair<long, long> p = s->get_code(*a);
-		if(values.find(p) != values.end())
-			values[p]+=incr;
-		else
-			values[p]=default_value+incr;
+	//actualiza los parametros de distribucion (media y n) asociados al estado de
+	// acuerdo a los valores de los parametros
+	void add_pheromone(const long state_code, const vector<double>& parameter_values){
+
+		if(ph_distribution.find(state_code)!=ph_distribution.end()){
+			vector<pair <double, int> >& dist_params = ph_distribution[state_code];
+			for(int i=0; i<dist_params.size();i++ ){
+				double media = dist_params[i].first;
+				double n = dist_params[i].second;
+				dist_params[i].first = (n*media+parameter_values[i])/(n+1);
+				dist_params[i].second++;
+			}
+		}else{
+			vector<pair <double, int> > dist_params(parameter_values.size());
+			for(int i=0; i<dist_params.size();i++ ){
+				dist_params[i].first = parameter_values[i];
+				dist_params[i].second = 1;
+				ph_distribution[state_code]=dist_params;
+			}
+		}
+
 	}
 };
 
@@ -135,14 +168,12 @@ public:
 	 */
 	virtual bool double_effort() { return false; }
 
+	int get_best_actions_ACO(const State& s, list< Action* >& bactions, int n);
 
 	/**
 	 * \brief return the n best actions according to the ActionEvaluator
 	 */
 	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
-
-  //return the n best actions asigning a fitness proportional probability (fpp) to the actions
-  virtual int get_best_actions_aco(const State& s, list< Action* >& bactions, int n);
 
 protected:
 

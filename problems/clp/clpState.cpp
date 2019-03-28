@@ -98,63 +98,6 @@ State* clpState::create_neighbor(State* s0){
 	return s1;
 }
 
-bool clpState::left=true;
-int clpState::shuffle_path() {
-
-    //number of support blocks for each block
-    map<const AABB*,int> n_supports;
-
-    //set of blocks with no supports
-    set<const AABB*> zero_support_aabb;
-
-    compute_supports(n_supports, zero_support_aabb);
-
-    list<const Action*> new_path;
-
-    const AABB* block = &cont->blocks->top();
-    //se genera el path colocando todos los bloques de la izquierda de cont
-    while(true){
-    	if(((left && block->getXmin() <= cont->getL() - block->getXmax())||
-    			(!left && block->getXmin() > cont->getL() - block->getXmax())) &&
-    			zero_support_aabb.find(block)!=zero_support_aabb.end()){
-
-
-    		 new_path.push_back(new clpAction(*block, *cont));
-
-    		 update_supports(block, n_supports, zero_support_aabb);
-    	}
-
-        if(cont->blocks->has_next()) block = &cont->blocks->next();
-        else break;
-    }
-
-    int i=new_path.size();
-
-    block = &cont->blocks->top();
-     //se coloca el resto de loc bloques en el path
-     while(true){
-     	if(zero_support_aabb.find(block)!=zero_support_aabb.end()){
-
-     		 new_path.push_back(new clpAction(*block, *cont));
-
-     		 update_supports(block, n_supports, zero_support_aabb);
-     	}
-
-         if(cont->blocks->has_next()) block = &cont->blocks->next();
-         else break;
-     }
-
-    while(!path.empty()){
-		delete path.front();
-		path.pop_front();
-	}
-
-    path=new_path;
-
-    left= !left;
-
-    return i;
-}
 
 /* TODO: Creacion aleatoria reproducible de pesos para cajas
 long rand(long seed)
@@ -215,8 +158,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 		//se lee el archivo de entrada
 		//Objetos BoxType, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
-		//y restricciones de rotación
-		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
+		//y restricciones de rotaci��n
+		//En el objeto clp se agregan los tipos de cajas y el n��mero de elementos que hay de cada tipo
 
 		//clpState::weight_of_allboxes=0.0;
 

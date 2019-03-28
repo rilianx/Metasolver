@@ -51,18 +51,6 @@ public:
 	double get_r() const { return r; }
 
 
-	virtual void set_parameter_ranges(const vector< pair<double,double> >& v){
-		parameter_ranges=v;
-	}
-
-	/*
-	 * Retorna los rangos recomendados para los parámetros
-	 * Necesario para BeamACO
-	 */
-	virtual const vector< pair<double,double> >& get_parameter_ranges() const{
-		return parameter_ranges;
-	}
-
 	/*
 	 * Retorna los valores asignados para los parámetros
 	 */
@@ -76,9 +64,6 @@ public:
 
 protected:
 
-
-	//parameter ranges
-	vector< pair<double,double> > parameter_ranges;
 
    //weitght of the second objective (lambda1=1-lambda2)
    double lambda2;
