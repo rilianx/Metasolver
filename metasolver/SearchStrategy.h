@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <list>
+#include <random>
 #include "State.h"
 
 #ifndef SEARCHSTRATEGY_H_
@@ -18,6 +19,21 @@ using namespace std;
 
 namespace metasolver {
 
+class Generator {
+	std::default_random_engine generator;
+	std::normal_distribution<double> distribution;
+	double min;
+	double max;
+	public:
+		Generator(double mean, double stddev, double min, double max):
+	  distribution(mean, stddev), min(min), max(max){}
+		double operator ()() {
+	  	while (true) {
+	    	double number = this->distribution(generator);
+	      if (number >= this->min && number <= this->max)return number;
+	    }
+	  }
+	};
 
 
 class tau_matrix{
