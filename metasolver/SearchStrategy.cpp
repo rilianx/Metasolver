@@ -45,7 +45,8 @@ int SearchStrategy::get_best_actions_ACO(const State& s, list< Action* >& bactio
 	for(int i=0;i<n && actions.size()>0;i++){
 
 		vector <double> sample_param_vector = tauM->sample_param_vector(&s);
-		evl->set_parameter_values(sample_param_vector);
+		if(n>1) evl->set_parameter_values(sample_param_vector);
+
 		double max_eval=0;
 		list< Action* >::iterator best_action=actions.end();
 		for(auto it=actions.begin(); it!=actions.end(); it++){

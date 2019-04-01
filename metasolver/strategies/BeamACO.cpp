@@ -47,7 +47,10 @@ list<State*> BeamACO::next(list<State*>& S){
 
         	 State& state_copy = *state.clone();
         	 state_copy.transition(**it);
+        	 evl->set_parameter_values((*it)->parameter_values);
+
         	 delete *it;
+
 
              double value = greedy.run(state_copy, timelimit, begin_time);
 
@@ -86,8 +89,9 @@ list<State*> BeamACO::next(list<State*>& S){
 			advance(it,s->get_path().size());
 			path.erase(path.begin(),it);
 
-			for(auto a:path)
-				tauM->add_pheromone(a->state_code,a->parameter_values);
+			//for(auto a:path)
+			//solo el primer valor
+			tauM->add_pheromone(path.front()->state_code,path.front()->parameter_values);
 		}
 
 
