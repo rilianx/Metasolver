@@ -119,8 +119,9 @@ protected:
 
 				}
 
-				if(div <= diversity_threshold ) iterators.insert(make_pair(div,it));
-				else iterators.insert(make_pair(-it->first,it));
+				if(div==0) iterators.insert(make_pair(0,it));
+				else iterators.insert(make_pair(diversity_threshold*div  -it->first,it));
+
 
 
 				delete a;
