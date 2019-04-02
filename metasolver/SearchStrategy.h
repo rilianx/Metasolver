@@ -19,19 +19,25 @@ using namespace std;
 
 namespace metasolver {
 
+//srand(seed)
+
 class Generator {
 	std::default_random_engine generator;
 	std::normal_distribution<double> distribution;
 	double min;
 	double max;
+	double media;
 	public:
 		Generator(double mean, double stddev, double min, double max):
-	  distribution(mean, stddev), min(min), max(max){}
-		double operator ()() {
-	  	while (true) {
-	    	double number = this->distribution(generator);
-	      if (number >= this->min && number <= this->max)return number;
+	  distribution(mean, stddev), media(min), min(min), max(max){}
+
+		double operator ()(int r) {
+			generator.seed(r);
+	  	for(int i = 0; i <= 100; i++) {
+	  		double number = this->distribution(generator);
+	    	if (number >= this->min && number <= this->max) return number;
 	    }
+			return media;
 	  }
 	};
 
@@ -50,7 +56,14 @@ private:
 	    double f = (double)rand() / RAND_MAX;
 	    return fMin + f * (fMax - fMin);
 	}
-
+	double truncated_normal(double val, int n, pair<double,double> parameter_range){
+		double min = parameter_range.first;
+		double max = parameter_range.second;
+		double stdDis = (max-min)/(n);
+		double media = val;
+		Generator NormalGenerator(media, stdDis, min,max);
+		return NormalGenerator(rand());
+	}
 
 public:
 
@@ -70,9 +83,11 @@ public:
 			for(int i=0; i<dist_params.size();i++ ){
 				//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
 				//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
-				//values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
-				values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
+				values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
+				cout << values[i] << "("<< dist_params[i].first <<  "," <<dist_params[i].second << ")";
+				//values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
 			}
+			cout << endl;
 
 		}else //random values in the range
 			for(int i=0;i<values.size();i++)
@@ -115,6 +130,7 @@ public:
 	virtual ~SearchStrategy() {
 
 	}
+
 
 	double get_time(){
 		return (double(clock()-begin_time)/double(CLOCKS_PER_SEC));
