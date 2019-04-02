@@ -492,7 +492,6 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 	s->general_block_generator(min_fr, max_bl, *s->cont);
 
 	s->update_min_dim();
-
 	return s;
 }
 

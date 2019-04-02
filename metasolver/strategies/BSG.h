@@ -9,6 +9,10 @@
 #define STRATEGIES_BSG_H_
 
 #include "../SearchStrategy.h"
+#include <map>
+
+
+
 
 namespace metasolver {
 
@@ -28,10 +32,10 @@ public:
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, double div=0.0) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, double diversity_threshold=0.0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), div(div) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), shuffle_best_path(false), diversity_threshold(diversity_threshold) {}
 
 
 	virtual ~BSG();
@@ -90,56 +94,55 @@ public:
 
 protected:
 
-	template<class map_container>
-	list<State*> get_next_states(map_container& sorted_states){
+	double diversity_threshold;
+	list<State*> get_next_states(multimap<double, pair<State*, State*> >& sorted_states){
+
 		list<State*> nextS;
-		list<State*> final_states;
-		typename map_container::iterator state_action=sorted_states.begin();
 
-		//Para cada state->final_state se rescata la accion
-		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
-		//se elimina final_state y el elemento del mapa
-		int k=0;
+		if(sorted_states.size()==0) return nextS;
+		//para asociar los estados con a su diversidad
+		multimap<double, multimap<double, pair<State*, State*> >::iterator> iterators;
 
-		while(state_action!=sorted_states.end()){
-			State* s= state_action->second.first;
-			State* final_state=state_action->second.second;
-			Action* a = (s)? s->next_action(*final_state):NULL;
+		auto it=sorted_states.begin();
+		for(;it!=sorted_states.end();it++){
+			State* s= it->second.first;
+			State* s1=it->second.second;
+			Action* a = (s)? s->next_action(*s1):NULL;
 
-			bool remove_state=true;
-			if(nextS.size()<beams && a){
-				s=s->clone();
-				state_action->second.first=s;
-				s->transition(*a);
-
-				if(div>0.0 && nextS.size()>0 && final_state->diversity(final_states)<div) {
-
-					delete s;
-					state_action->second.first=NULL;
-				}else{
-					nextS.push_back(s);
-					final_states.push_back(final_state);
-					remove_state=false;
+			if(a){
+				double div=1e19;
+				for(auto it2=sorted_states.begin();it2!=it;it2++){
+					State* s2=it2->second.second;
+					double diff=s1->diff(*s2);
+					if(diff<div)
+						div=diff;
 
 				}
 
-				//if(nextS.size()>0) cout << "min_diff:" << s->diversity(nextS) << endl;
+				if(div <= diversity_threshold ) iterators.insert(make_pair(div,it));
+				else iterators.insert(make_pair(-it->first,it));
 
 
+				delete a;
+			}else
+				iterators.insert(make_pair(0,it));
+		}
 
-		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
+		for(auto it:iterators){
+			if(it.first ==0 || sorted_states.size()>beams){
+				it.second->second.first=NULL;
+				delete it.second->second.second;
+			    sorted_states.erase(it.second);
+			}else{
+				State* s= it.second->second.first;
+				State* final_state=it.second->second.second;
+				Action* a = (s)? s->next_action(*final_state):NULL;
+				s=s->clone();
+				it.second->second.first=s;
+				s->transition(*a); delete a;
+				nextS.push_back(s);
 
-
-			}else state_action->second.first=NULL;
-
-			//other elements are removed from the state_actions
-			 if(remove_state){
-				delete final_state;
-			   state_action=sorted_states.erase(state_action);
-			 }else state_action++;
-
-		 if(a) delete a;
-		 k++;
+			}
 		}
 
 		return nextS;
@@ -165,7 +168,6 @@ protected:
 
 	bool shuffle_best_path;
 
-	double div;
 
 };
 

@@ -96,6 +96,7 @@ public:
 
 	virtual Action* next_action(State& final){
 	    if(get_path().size() >= final.get_path().size() ) return NULL; 
+
 	    
 	    list< const Action* >::iterator act=final.get_path().begin();
 	    advance(act,get_path().size());
