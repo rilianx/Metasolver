@@ -76,6 +76,13 @@ public:
 
     virtual double getTotalWeight() const {return total_weight;}
 
+    virtual double getTotalPriority() const{
+    	double priority=0;
+    	for(auto box:nb_boxes)
+    		priority+=box.first->get_priority();
+    	return priority;
+    }
+
 	bool verify_solution();
 
     void MatLab_print(double pause_time=0.0) const {

@@ -20,10 +20,6 @@ bool global::TRACE = false;
 
 using namespace std;
 
-// para ejecutar (menos de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR7.txt 1 1.0 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
-// para ejecutar (mas de 30 tipos de caja): BSG_CLP problems/clp/benchs/BR/BR8.txt 1 0.98 30 4.0 1.0 0.2 0.04 1.0 0.0 0.0 0 0
-
-
 
 void dfsPrintChild(const State* node, ofstream& file){
 	file << "{ "<<endl;
@@ -63,51 +59,39 @@ Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (b
 Reducir peso de las cajas utilizadas en el contenedor
 Volver a 1*/
 
-int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
+int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	mclpState::initalize_priorities();
 	//multimap<double, map<const BoxShape*, int> > bins;
 	list < pair <double, map<const BoxShape*, int>> > bins;
 	map<const BoxShape*, int> used_boxes;
 	int box_quantity = 0;
 
-	for(int i=0; i<1000; i++){
+	for(int i=0; i<nbins; i++){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//usa greedy para llenar contenedor
-		double eval=gr->run(s_copy, maxtime, begin_time);
-
-		//s_copy.select_boxes(&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
-
-		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes)
-		//todas las cajas: s0->nb_left_boxes
+		double eval=gr->run(s_copy);
 
 		//se actualizan las prioridades
-		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.98,s0->nb_left_boxes,&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
+		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(pdec,
+				&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 
 		//se almacena el bin en el mapa
-		for(auto b: bins){
-			if(b.first == eval)
-				for(auto box: b.second)
-					if(dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes.find(box.first) == used_boxes.end())
-						bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
-			else
-				bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
-		}
+		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
 
-		cout << "eval: " << eval << endl;
-		for(auto box:s0->nb_left_boxes){
-			cout << box.first->get_id() << "(" << box.first->get_weight() << "),";
-			//used_boxes[box.first]++;
+
+		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
+			//cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
+			cout << box.first->get_id() << " ";
+			used_boxes[box.first]++;
 		}
 		cout << endl;
-		cout << endl;
 
-		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->MatLab_print();
 
 	}
 
-	return bins.size();
+
 
 	int high_quantity = 0;
 
@@ -118,142 +102,9 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 			high_quantity = box.second;
 		}
 	}
-
-
-
-	map<const BoxShape*, int> dont_used_boxes;
-
-	for(auto box: used_boxes){
-		dont_used_boxes.insert(pair<const BoxShape*, int>(box.first, high_quantity - box.second));
-		box_quantity += high_quantity - box.second;
-	}
-
-	cout << "\n\ndont_used_boxes" << endl;
-	for(auto box: dont_used_boxes){
-		cout << box.first->get_id() << "(" << box.second << ")," ;
-	}
-
-	return bins.size();
-
-	cout << endl;
-	cout << "\nhigh_quantity" << endl;
-	cout << high_quantity << endl;
-
-	cout << "\nbox_quantity" << endl;
-	cout << box_quantity << "\n" << endl;
-
-	used_boxes.clear();
-
-	while(box_quantity > 0){
-		//copia el estado base
-		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
-
-		//se seleccionan cajas con mayor prioridad, sin contar las que se hayan colocado en el bin actual
-
-		s_copy.select_boxes(&dont_used_boxes, false);//&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
-		double eval=gr->run(s_copy, maxtime, begin_time);
-
-		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes)
-		//todas las cajas: s0->nb_left_boxes
-
-		//se almacena el bin en el mapa
-		bins.push_back(make_pair(eval, dont_used_boxes));
-
-		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
-			//cout << box.first->get_id() << ",";
-			cout << box.first->get_id() << "(" << box.second << ")," ;
-			box_quantity -= box.second;
-			if(dont_used_boxes[box.first] - box.second > 0)
-				dont_used_boxes[box.first] = dont_used_boxes[box.first] - box.second;
-			else
-				dont_used_boxes[box.first] = 0;
-		}
-		cout << endl;
-	}
-
-	cout << "\n\nused_boxes" << endl;
-	for(auto box: dont_used_boxes){
-		cout << box.first->get_id() << "(" << box.second << ")," ;
-	}
-
 	cout << endl;
 
 	return bins.size();
-
-
-	//cout << nb_bins << endl;
-
-	//Se escogen dos bins y se llenan en secuencia
-	//Si no sobran cajas y la diferencia entre bins se incrementa se acepta el cambio
-
-	//Si un bin queda sin cajas se elimina
-
-	/*
-	for(int j=0; j<500; j++){
-		int r1=rand()%(bins.size());
-		int r2=rand()%(bins.size());
-		while(r2==r1) r2=rand()%(bins.size());
-		multimap<double, map<const BoxShape*, int> >::iterator it1 = bins.begin();
-		advance (it1, r1);
-		multimap<double, map<const BoxShape*, int> >::iterator it2 = bins.begin();
-		advance (it2, r2);
-
-		double diff=abs(it1->first-it2->first);
-
-		map<const BoxShape*, int> boxes1=it1->second;
-		map<const BoxShape*, int> boxes2=it2->second;
-		for(auto b:boxes1)
-			boxes2[b.first]+=b.second;
-
-		bsg->initialize();
-		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
-		s_copy.set_boxes(boxes2);
-
-		double eval1=bsg->run(s_copy, maxtime, begin_time);
-		auto nb_boxes1=dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes;
-
-		for(auto b:nb_boxes1){
-			boxes2[b.first]-=b.second;
-			if(boxes2[b.first]==0) boxes2.erase(b.first);
-		}
-
-
-
-		if(boxes2.empty()){
-			cout << "bin removed!" << endl;
-			bins.erase(it1);
-			bins.erase(it2);
-			bins.insert(make_pair(eval1, nb_boxes1));
-			continue;
-		}
-
-		bsg->initialize();
-		mclpState& s_copyy= *dynamic_cast<mclpState*>(s0->clone());
-		s_copyy.set_boxes(boxes2);
-
-		double eval2=gr->run(s_copyy, maxtime, begin_time);
-		auto nb_boxes2=dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes;
-
-		for(auto b:nb_boxes2){
-			boxes2[b.first]-=b.second;
-			if(boxes2[b.first]==0) boxes2.erase(b.first);
-		}
-
-		if(!boxes2.empty() || abs(eval1-eval2) <= diff)	continue;
-
-		//cout << abs(eval1-eval2) << "," << diff << endl;
-		bins.erase(it1);
-		bins.erase(it2);
-		bins.insert(make_pair(eval1, nb_boxes1));
-		bins.insert(make_pair(eval2, nb_boxes2));
-
-
-	}
-*/
-
-	return bins.size();
-
-
 
 }
 
@@ -264,6 +115,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::Flag _rotate(parser, "rotate", "rotations are allowed?", {"rot"});
 	args::ValueFlag<int> _nboxes(parser, "int", "Number of boxes for each type", {"nboxes"});
+	args::ValueFlag<int> _nbins(parser, "int", "Number of bins to be generated", {"nbins"});
+	args::ValueFlag<double> _pdec(parser, "int", "Priority decreasing ratio", {"pdec"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
@@ -307,7 +160,8 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=3.0, beta=2.0, gamma=0.5, delta=1.0, p=0.04, maxtheta=0.0;
+	double alpha=3.0, beta=2.0, gamma=0.5, delta=1.0, p=0.04, pdec=0.8;
+	int nbins=1000;
 	int nboxes=1;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
@@ -316,6 +170,8 @@ int main(int argc, char** argv){
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
 	if(_nboxes) nboxes=_nboxes.Get();
+	if(_pdec) pdec=_pdec.Get();
+	if(_nbins) nbins=_nbins.Get();
 
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
@@ -330,6 +186,9 @@ int main(int argc, char** argv){
 	cout << "Instance:" << inst+1 << endl;
 	cout << "min_fr:" << min_fr << endl;
 	cout << "Maxtime:" << maxtime << endl;
+	cout << "Rotations allowed:" << _rotate << endl;
+	cout << "N_bins:" << nbins << endl;
+	cout << "Decreasing ratio (priority):" << pdec << endl;
 
     mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
 
@@ -339,18 +198,18 @@ int main(int argc, char** argv){
 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-        alpha, beta, gamma, p, delta, 0.0, 1.0);
+        alpha, beta, gamma, p, delta, 1.0, 0.0);
 
-		cout << "greedy" << endl;
-		Greedy *gr = new Greedy (vcs);
+	cout << "greedy" << endl;
+	Greedy *gr = new Greedy (vcs);
 
-		cout << "bsg" << endl;
-		BSG *bsg= new BSG(vcs,*gr, 12, 0.0, 0, _plot);
-		bsg->trace=false;
+	/*
+	cout << "bsg" << endl;
+	BSG *bsg= new BSG(vcs,*gr, 12, 0.0, 0, _plot);
+	bsg->trace=false;
+	*/
 
-
-   	int bins=solve(gr, bsg, s0, maxtime, begin_time);
-	cout << bins << endl;
+   	int bins=solve(gr, NULL, s0, nbins, pdec);
 
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);

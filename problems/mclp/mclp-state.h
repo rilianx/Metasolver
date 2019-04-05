@@ -103,14 +103,10 @@ public:
 	}
 
 	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
-	void update_priorities(double alpha, map<const BoxShape*, int>& nb_left_boxes, map<const BoxShape*, int>* nb_inserted_boxes) const{
-		for(auto b:*nb_inserted_boxes){
-			pair<const BoxShape*, int> box;
-			box = make_pair(nb_left_boxes.find(b.first)->first, b.second);
-			box.first->set_weight(box.first->get_weight()*alpha);
-			nb_left_boxes.erase(b.first);
-			nb_left_boxes.insert(box);
-		}
+	void update_priorities(double alpha, map<const BoxShape*, int>* nb_inserted_boxes) const{
+		for(auto b:*nb_inserted_boxes)
+			b.first->set_priority(b.first->get_priority()*alpha);
+
 	}
 
 	static void initalize_priorities(){

@@ -70,11 +70,11 @@ double VLossFunction::eval_action(const State& s,  const Action &a){
 	double weight_rel = b.getTotalWeight()/clpState::weight_of_allboxes;
 	double density = weight_rel/vol_rel;
 
-	//cout << "weight:" << b.getTotalWeight()/b.n_boxes << endl;
+	//cout << "weight:" << b.getTotalPriority()/b.n_boxes << endl;
 	//cout << "theta:" << theta << endl;
 
 	//Variant for MCLP
-	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(b.getTotalWeight()/b.n_boxes, theta ));
+	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(b.getTotalPriority(), theta ));
 
 	//Variant for MOP!!
 	//return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(density, theta ));

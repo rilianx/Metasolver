@@ -24,7 +24,7 @@ map<const BoxShape*, double> mclpState::priority_boxes;
 mclpState* new_mstate(string file, int i, double min_fr, int max_bl, bool rot, int nboxes){
 
 	mclpState *s = NULL;
-	//TODO: Aqui se deber���a leer el archivo y almacenar en el estado
+	//TODO: Aqui se deber���������a leer el archivo y almacenar en el estado
 
 	ifstream in(file.c_str());
 	string line;
@@ -48,8 +48,8 @@ mclpState* new_mstate(string file, int i, double min_fr, int max_bl, bool rot, i
 		}
 		//se lee el archivo de entrada
 		//Objetos BoxType, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
-		//y restricciones de rotaci���n
-		//En el objeto clp se agregan los tipos de cajas y el n���mero de elementos que hay de cada tipo
+		//y restricciones de rotaci���������n
+		//En el objeto clp se agregan los tipos de cajas y el n���������mero de elementos que hay de cada tipo
 		//clpState::weight_of_allboxes=0.0;
 		for(int j = 0; j < nb_types; j++){
 			getline(in, line);
@@ -69,10 +69,11 @@ mclpState* new_mstate(string file, int i, double min_fr, int max_bl, bool rot, i
 				//cout << l << " " << h << " " << w << endl;
 				//TODO: esto de aqui genera los bloques unitario (con una caja)
 				BoxShape* boxt = new BoxShape(j, l, w, h, rot1, rot2, rot3, weight);
+				boxt->set_priority(1.0);
 				clpState::weight_of_allboxes += weight*(double) nboxes;
 
 				s->nb_left_boxes.insert(make_pair(boxt, nboxes));
-				mclpState::priority_boxes.insert(make_pair(boxt, 1.0));
+
 
 				for(int o = 0; o < 6; o++){
 					if(boxt->is_valid((BoxShape::Orientation) o)){
