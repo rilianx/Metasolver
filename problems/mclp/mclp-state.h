@@ -77,7 +77,7 @@ public:
 		}
 
 		mean=total_p/total_boxes;*/
-		if(boolean){
+		/*if(boolean){
 			for(auto p:priority_boxes){
 				//probability of selecting a box of type p.first
 				double p_i=p.second;
@@ -97,17 +97,20 @@ public:
 					nb_left_boxes[box.first]=box.second;
 				}
 			}
-		}
+		}*/
 
 		update_valid_blocks();
 	}
 
 	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
-	void update_priorities(double alpha, map<const BoxShape*, int>& nb_boxes) const{
-		for(auto b:cont->nb_boxes)
-			priority_boxes[b.first] *= alpha*b.second;
-			//priority_boxes[b.first] *= (alpha*b.second+(nb_boxes[b.first]-b.second))/nb_boxes[b.first];
-
+	void update_priorities(double alpha, map<const BoxShape*, int>& nb_left_boxes, map<const BoxShape*, int>* nb_inserted_boxes) const{
+		for(auto b:*nb_inserted_boxes){
+			pair<const BoxShape*, int> box;
+			box = make_pair(nb_left_boxes.find(b.first)->first, b.second);
+			box.first->set_weight(box.first->get_weight()*alpha);
+			nb_left_boxes.erase(b.first);
+			nb_left_boxes.insert(box);
+		}
 	}
 
 	static void initalize_priorities(){

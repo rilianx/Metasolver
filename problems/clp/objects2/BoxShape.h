@@ -40,11 +40,16 @@ public:
 
     double get_weight() const { return weight; }
 
+    //void set_weight(double weight) const { weight = this->weight; }
+    void set_weight(double weight) const { this->weight = weight; }
+    //void set_weight(const double w) const { weight = w; }
+
+
 private:
 	int id;
 	bool is_valid_orientation[6];
 
-	double weight;
+	mutable double weight;
 
 };
 

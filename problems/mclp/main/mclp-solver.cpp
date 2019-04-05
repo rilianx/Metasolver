@@ -56,6 +56,13 @@ void pointsToTxt(State* root, int it) {
 	dfsPrintChild(root,myfile);
 }
 
+
+/*Clonar estado inicial
+Aplicar Greedy y obtener contenedor
+Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (bins)
+Reducir peso de las cajas utilizadas en el contenedor
+Volver a 1*/
+
 int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 	mclpState::initalize_priorities();
 	//multimap<double, map<const BoxShape*, int> > bins;
@@ -67,36 +74,40 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int maxtime, clock_t begin_time){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
-		//filtrado de cajas
-	    s_copy.select_boxes();
-
 		//usa greedy para llenar contenedor
 		double eval=gr->run(s_copy, maxtime, begin_time);
 
-		//se seleccionan cajas con mayor prioridad, sin contar las que se hayan colocado en el bin actual
-		s_copy.select_boxes(&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
-		eval=gr->run(s_copy, maxtime, begin_time);
+		//s_copy.select_boxes(&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 
 		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes)
 		//todas las cajas: s0->nb_left_boxes
 
-
 		//se actualizan las prioridades
-		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.98,s0->nb_left_boxes);
+		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(0.98,s0->nb_left_boxes,&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 
 		//se almacena el bin en el mapa
-		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
-
-		//cout << eval << ":" ;
-		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
-			cout << box.first->get_id() << "(" << box.second << "),";
-			used_boxes[box.first]++;
+		for(auto b: bins){
+			if(b.first == eval)
+				for(auto box: b.second)
+					if(dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes.find(box.first) == used_boxes.end())
+						bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
+			else
+				bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
 		}
+
+		cout << "eval: " << eval << endl;
+		for(auto box:s0->nb_left_boxes){
+			cout << box.first->get_id() << "(" << box.first->get_weight() << "),";
+			//used_boxes[box.first]++;
+		}
+		cout << endl;
 		cout << endl;
 
 		//dynamic_cast<const mclpState*>(gr->get_best_state())->cont->MatLab_print();
 
 	}
+
+	return bins.size();
 
 	int high_quantity = 0;
 
@@ -328,7 +339,7 @@ int main(int argc, char** argv){
 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-        alpha, beta, gamma, p, delta, 1.0, 0.0);
+        alpha, beta, gamma, p, delta, 0.0, 1.0);
 
 		cout << "greedy" << endl;
 		Greedy *gr = new Greedy (vcs);
