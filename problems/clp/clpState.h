@@ -115,41 +115,15 @@ public:
 	tamaño del free-space seleccionado, flexibilidad de bloques factibles). El dominio
 	para los valores de los indicadores debería ser súper acotado, e.g., >80%, [50%-80%], <50%.*/
 
-	virtual pair<long, long> get_code(const Action& action) const{
-		const clpAction& act = *dynamic_cast<const clpAction*> (&action);
-		const Space& s = act.space;
+	virtual long get_code() const{
 
+		//list<const AABB*> blocks = cont->blocks->get_intersected_objects(s);
 
-		list<const AABB*> blocks = cont->blocks->get_intersected_objects(s);
+		double value = get_value();
+		if(value < 0.5) return 0;
+		else if(value < 0.8) return 1;
+		else return 2;
 
-		Vector3 anchor = s.get_anchor_vector();
-
-		set < vector<long> > v;
-
-		/*vector<long> vec = std::vector<long>(3);
-
-			vec[0] = s.getL();
-			vec[1] = s.getW();
-			vec[2] = s.getH();*/
-
-		for(auto b:blocks){
-			std::vector<long> v0 = std::vector<long>(6);
-			v0[0] = min(abs(b->getXmin()-anchor.getX()), abs(b->getXmax()-anchor.getX()));
-			v0[1] = min(abs(b->getYmin()-anchor.getY()), abs(b->getYmax()-anchor.getY()));
-			v0[2] = min(abs(b->getZmin()-anchor.getZ()), abs(b->getZmax()-anchor.getZ()));
-			v0[3] = max(abs(b->getXmin()-anchor.getX()), abs(b->getXmax()-anchor.getX()));
-			v0[4] = max(abs(b->getYmin()-anchor.getY()), abs(b->getYmax()-anchor.getY()));
-			v0[5] = max(abs(b->getZmin()-anchor.getZ()), abs(b->getZmax()-anchor.getZ()));
-			v.insert(v0);
-		}
-
-		long hh = hash(v);
-
-		vector<long> bl = std::vector<long>(3);
-		bl[0]=act.block.getL();
-		bl[1]=act.block.getW();
-		bl[2]=act.block.getH();
-		return make_pair(hh,hash(bl));
 
 
 	}

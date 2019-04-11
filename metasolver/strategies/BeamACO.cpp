@@ -89,9 +89,14 @@ list<State*> BeamACO::next(list<State*>& S){
 			advance(it,s->get_path().size());
 			path.erase(path.begin(),it);
 
-			//for(auto a:path)
-			//solo el primer valor
-			tauM->add_pheromone(path.front()->state_code,path.front()->parameter_values);
+			bool state_changed;
+			long old_state=-1;
+			for(auto a:path){
+				if(a->state_code!=old_state)
+					tauM->add_pheromone(a->state_code,a->parameter_values);
+				old_state=a->state_code;
+
+			}
 		}
 
 

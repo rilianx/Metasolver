@@ -42,12 +42,12 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), id(count_states++), sim_value(0){}
+	State() : parent (NULL), id(count_states++), sim_value(0), state_changed(false){}
 
 	virtual State* clone() const = 0;
 
 
-	State(const State& S) : parent(&S), id(count_states++), sim_value(S.sim_value){
+	State(const State& S) : parent(&S), id(count_states++), sim_value(S.sim_value), state_changed(false){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -75,8 +75,11 @@ public:
 	virtual double get_value2() const { return 0.0; }
 
 	void transition(const Action& action) {
+		long old = get_code();
 		path.push_back(action.clone());
 		_transition(action);
+		if( get_code() != old ) state_changed=true;
+		else state_changed=false;
 	}
 	
 	/*
@@ -106,13 +109,13 @@ public:
 
 	const State* get_parent() const{ return parent; }
 
-	virtual pair<long, long> get_code(const Action& action) const{ return make_pair(0,0); }
-
-	virtual long get_code() const{ return 0; }
+	virtual long get_code() const = 0;
 
 	static int count_states;
 
 	double sim_value;
+
+	bool state_changed;
 
 protected:
 

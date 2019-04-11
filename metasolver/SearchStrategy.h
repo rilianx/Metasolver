@@ -75,19 +75,19 @@ public:
 	vector <double> sample_param_vector(const State* s){
 
 		//TODO: se obtiene el el estado codificado
-		long state_code=0;// = s->get_code();
+		long state_code= s->get_code();
 		vector <double> values(parameter_ranges.size());
-
+		//cout << state_code << " ";
 		if(ph_distribution.find(state_code)!=ph_distribution.end()){
 			vector<pair <double, int> >& dist_params = ph_distribution[state_code];
 			for(int i=0; i<dist_params.size();i++ ){
 				//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
 				//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
 				values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
-				cout << values[i] << "("<< dist_params[i].first <<  "," <<dist_params[i].second << ")";
+				//cout << values[i] << "("<< dist_params[i].first <<  "," <<dist_params[i].second << ")";
 				//values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
 			}
-			cout << endl;
+			//cout << endl;
 
 		}else //random values in the range
 			for(int i=0;i<values.size();i++)
