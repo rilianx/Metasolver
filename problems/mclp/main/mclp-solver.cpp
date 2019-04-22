@@ -55,7 +55,7 @@ void pointsToTxt(State* root, int it) {
 void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
 
-	ofstream scp ("bins_scp.txt");
+	ofstream scp ("../GRASP-SCP/bins_scp.txt");
 
 	if (scp.is_open()){
 		long int total_boxes = 0;
@@ -64,24 +64,17 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		scp << " " << nb_boxes << " ";
 
 		//Boxes quantity
-		/*for(auto bin: *bins){
-			total_boxes += bin.second.size();
-		}
-		scp << total_boxes << "\n";*/
-
 		scp << bins->size() << "\n";
 
 		//Matrix cost by boxes
 		long int cont = 0;
 		for(auto bin: *bins){
-			//for(auto box: bin.second){
-				if(cont >= 12){
-					scp << "\n";
-					cont = 0;
-				}
-				scp << " 1";
-				cont += 1;
-			//}
+			if(cont >= 12){
+				scp << "\n";
+				cont = 0;
+			}
+			scp << " 1";
+			cont += 1;
 		}
 		scp << "\n";
 
@@ -93,16 +86,47 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 			}
 			scp << "\n";
 		}
-/*
-		for(auto bin: *bins){
-			scp << " " << bin.second.size() << "\n";
-			for(auto box: bin.second){
-				scp << " " << box.first->get_id() + 1;
-			}
-			scp << "\n";
-		}*/
+
 		scp.close();
 	} else cout << "Unable to open file";
+}
+
+void run_GRASP_SCP(){
+	const string MAX_TIME = "10";
+	const string SEED = "1";
+	string run = string("../GRASP-SCP/GRASP-SCP ./bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
+
+	FILE *p = popen(run.c_str(), "r");
+
+	if(p != NULL) {
+		cout << endl;
+		cout << run << endl;
+
+		cout << "running GRASP-SCP" << endl;
+		cout << "Time: " << MAX_TIME << endl;
+		cout << "Seed: " << SEED << endl;
+
+		char output[100];
+		string str;
+		vector <string> line;
+
+		while(fgets(output, sizeof(output), p) != NULL) { }
+
+		str = output;
+		string delimiter = " ";
+		size_t pos = 0;
+		string token;
+		while ((pos = str.find(delimiter)) != string::npos) {
+			token = str.substr(0, pos);
+			str.erase(0, pos + delimiter.length());
+			line.push_back(token);
+		}
+		for(int i = 1; i < line.size(); i++)
+			cout << line[i] << " " << str;
+	} else {
+		perror("Unable to open file");
+	}
+	pclose(p);
 }
 
 /*Clonar estado inicial
@@ -149,6 +173,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	cout << endl;
 
 	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
+	run_GRASP_SCP();
 
 	return bins.size();
 
