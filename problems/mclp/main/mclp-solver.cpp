@@ -52,7 +52,8 @@ void pointsToTxt(State* root, int it) {
 	dfsPrintChild(root,scp);
 }
 
-void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins, long int inserted_boxes){
+void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
+		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
 
 	ofstream scp ("bins_scp.txt");
 
@@ -60,7 +61,7 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins, lon
 		long int total_boxes = 0;
 
 		//Bins quantity
-		scp << " " << bins->size() << " ";
+		scp << " " << nb_boxes << " ";
 
 		//Boxes quantity
 		/*for(auto bin: *bins){
@@ -68,30 +69,38 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins, lon
 		}
 		scp << total_boxes << "\n";*/
 
-		scp << inserted_boxes << "\n";
+		scp << bins->size() << "\n";
 
 		//Matrix cost by boxes
 		long int cont = 0;
 		for(auto bin: *bins){
-			for(auto box: bin.second){
+			//for(auto box: bin.second){
 				if(cont >= 12){
 					scp << "\n";
 					cont = 0;
 				}
 				scp << " 1";
 				cont += 1;
-			}
+			//}
 		}
 		scp << "\n";
 
 		//Boxes quantity in a set and then sets boxes
+		for(auto box_el: *used_boxes){
+			scp << " " << box_el.second.size() << "\n";
+			for(auto bin_id: box_el.second){
+				scp << " " << bin_id + 1;
+			}
+			scp << "\n";
+		}
+/*
 		for(auto bin: *bins){
 			scp << " " << bin.second.size() << "\n";
 			for(auto box: bin.second){
 				scp << " " << box.first->get_id() + 1;
 			}
 			scp << "\n";
-		}
+		}*/
 		scp.close();
 	} else cout << "Unable to open file";
 }
@@ -106,7 +115,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	mclpState::initalize_priorities();
 	//multimap<double, map<const BoxShape*, int> > bins;
 	list < pair <double, map<const BoxShape*, int>> > bins;
-	map<const BoxShape*, int> used_boxes;
+	map<const BoxShape*, list<int> > used_boxes;
 	int box_quantity = 0;
 
 	for(int i=0; i<nbins; i++){
@@ -127,7 +136,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
 			//cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
 			cout << box.first->get_id() << " ";
-			used_boxes[box.first]++;
+			used_boxes[box.first].push_back(i);
 		}
 		cout << endl;
 
@@ -136,10 +145,10 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 
 	cout << "used_boxes" << endl;
 	for(auto box: used_boxes)
-		cout << box.first->get_id() << "(" << box.second << ")," ;
+		cout << box.first->get_id() << "(" << box.second.size() << ")," ;
 	cout << endl;
 
-	exportToTxtSCP(&bins, s0->nb_left_boxes.size());
+	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
 
 	return bins.size();
 

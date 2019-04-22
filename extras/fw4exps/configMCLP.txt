@@ -6,12 +6,10 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = simplebsg-MCLP
+algo_names = MCLP-SCP
 
-[simplebsg-MCLP]
-#tuning_param = X
-#tuning_values = -1.0 0.0 0.5
+[MCLP-SCP]
 exec = "../../MCLP"
-params =  _INSTANCE -t _MAXTIME --min_fr=1
+params =  _INSTANCE --nbins=1000
 outputpos_times = 0
 outputpos_boxes = 0
