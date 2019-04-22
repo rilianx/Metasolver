@@ -48,10 +48,53 @@ void dfsPrintChild(const State* node, ofstream& file){
 }
 
 void pointsToTxt(State* root, int it) {
-	ofstream myfile("problems/clp/tree_plot/flare"+std::to_string(it)+".json");
-	dfsPrintChild(root,myfile);
+	ofstream scp("problems/clp/tree_plot/flare"+std::to_string(it)+".json");
+	dfsPrintChild(root,scp);
 }
 
+void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins, long int inserted_boxes){
+
+	ofstream scp ("bins_scp.txt");
+
+	if (scp.is_open()){
+		long int total_boxes = 0;
+
+		//Bins quantity
+		scp << " " << bins->size() << " ";
+
+		//Boxes quantity
+		/*for(auto bin: *bins){
+			total_boxes += bin.second.size();
+		}
+		scp << total_boxes << "\n";*/
+
+		scp << inserted_boxes << "\n";
+
+		//Matrix cost by boxes
+		long int cont = 0;
+		for(auto bin: *bins){
+			for(auto box: bin.second){
+				if(cont >= 12){
+					scp << "\n";
+					cont = 0;
+				}
+				scp << " 1";
+				cont += 1;
+			}
+		}
+		scp << "\n";
+
+		//Boxes quantity in a set and then sets boxes
+		for(auto bin: *bins){
+			scp << " " << bin.second.size() << "\n";
+			for(auto box: bin.second){
+				scp << " " << box.first->get_id() + 1;
+			}
+			scp << "\n";
+		}
+		scp.close();
+	} else cout << "Unable to open file";
+}
 
 /*Clonar estado inicial
 Aplicar Greedy y obtener contenedor
@@ -91,18 +134,12 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 
 	}
 
-
-
-	int high_quantity = 0;
-
 	cout << "used_boxes" << endl;
-	for(auto box: used_boxes){
+	for(auto box: used_boxes)
 		cout << box.first->get_id() << "(" << box.second << ")," ;
-		if(box.second > high_quantity) {
-			high_quantity = box.second;
-		}
-	}
 	cout << endl;
+
+	exportToTxtSCP(&bins, s0->nb_left_boxes.size());
 
 	return bins.size();
 
