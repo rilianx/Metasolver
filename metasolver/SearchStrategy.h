@@ -4,12 +4,12 @@
  *  Created on: 01-06-2017
  *      Author: ignacio
  */
-
 #include <time.h>
 #include <stdio.h>
 #include <iostream>
 #include <list>
 #include <random>
+#include <string>
 #include "State.h"
 
 #ifndef SEARCHSTRATEGY_H_
@@ -28,9 +28,8 @@ class Generator {
 	double max;
 	double media;
 	public:
-		Generator(double mean, double stddev, double min, double max):
-	  distribution(mean, stddev), media(min), min(min), max(max){}
-
+	Generator(double mean, double stddev, double min, double max):
+		distribution(mean, stddev), media(min), min(min), max(max){}
 		double operator ()(int r) {
 			generator.seed(r);
 	  	for(int i = 0; i <= 100; i++) {
@@ -56,39 +55,37 @@ private:
 	    double f = (double)rand() / RAND_MAX;
 	    return fMin + f * (fMax - fMin);
 	}
+
 	double truncated_normal(double val, int n, pair<double,double> parameter_range){
-		double min = parameter_range.first;
-		double max = parameter_range.second;
-		double stdDis = (max-min)/(n);
-		double media = val;
-		Generator NormalGenerator(media, stdDis, min,max);
-		return NormalGenerator(rand());
+			double min = parameter_range.first;
+			double max = parameter_range.second;
+			double stdDis = (max-min)/(n);
+			double media = val;
+			//función que retorna el sampling de la distribucion normal
+			Generator NormalGenerator(media, stdDis, min,max);
+			return NormalGenerator(rand());
 	}
 
 public:
-
-	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p) {
-
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p){
 	}
 
 	//samplea parametros de acuerdo a distribucion normal asociada al estado
 	vector <double> sample_param_vector(const State* s){
-
 		//TODO: se obtiene el el estado codificado
 		long state_code= s->get_code();
 		vector <double> values(parameter_ranges.size());
 		//cout << state_code << " ";
 		if(ph_distribution.find(state_code)!=ph_distribution.end()){
-			vector<pair <double, int> >& dist_params = ph_distribution[state_code];
-			for(int i=0; i<dist_params.size();i++ ){
-				//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
-				//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
-				values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
-				//cout << values[i] << "("<< dist_params[i].first <<  "," <<dist_params[i].second << ")";
-				//values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
-			}
-			//cout << endl;
-
+				vector<pair <double, int> >& dist_params = ph_distribution[state_code];
+				for(int i=0; i<dist_params.size();i++ ){
+						//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
+						//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
+						values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
+						//cout << values[i] << "("<< dist_params[i].first <<  "," <<dist_params[i].second << ")";
+						//values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
+				}
+				//cout << endl;
 		}else //random values in the range
 			for(int i=0;i<values.size();i++)
 				values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
@@ -99,17 +96,48 @@ public:
 
 	//actualiza los parametros de distribucion (media y n) asociados al estado de
 	// acuerdo a los valores de los parametros
+	//Implementar aquí funcion para generar un graficos
 	void add_pheromone(const long state_code, const vector<double>& parameter_values){
-
+		char *direccion;
+		char dir[27] = "Values/StateN/ValuesM.txt";
+		direccion = &dir[0];
 		if(ph_distribution.find(state_code)!=ph_distribution.end()){
 			vector<pair <double, int> >& dist_params = ph_distribution[state_code];
 			for(int i=0; i<dist_params.size();i++ ){
+				FILE *state;
 				double media = dist_params[i].first;
 				double n = dist_params[i].second;
 				dist_params[i].first = (n*media+parameter_values[i])/(n+1);
 				dist_params[i].second++;
+				//Largo de 27 caracteres para cada ruta
+				if(write_report){
+					//dir[12] = state_code+'0';
+					//dir[20] = i+'0';
+					*(direccion+12) = state_code+'0';
+					*(direccion+20) = i+'0';
+					state = fopen(dir,"a");
+					fprintf(state,"%f \n",media);
+					fclose(state);
+				}
 			}
 		}else{
+			if(write_report){
+				remove("Values/State0/Values0.txt");
+				remove("Values/State0/Values1.txt");
+				remove("Values/State0/Values2.txt");
+				remove("Values/State0/Values3.txt");
+				remove("Values/State0/Values4.txt");
+				remove("Values/State0/Values0.txt");
+				remove("Values/State1/Values1.txt");
+				remove("Values/State1/Values2.txt");
+				remove("Values/State1/Values3.txt");
+				remove("Values/State1/Values4.txt");
+				remove("Values/State2/Values0.txt");
+				remove("Values/State2/Values1.txt");
+				remove("Values/State2/Values2.txt");
+				remove("Values/State2/Values3.txt");
+				remove("Values/State2/Values4.txt");
+			}
 			vector<pair <double, int> > dist_params(parameter_values.size());
 			for(int i=0; i<dist_params.size();i++ ){
 				dist_params[i].first = parameter_values[i];
@@ -119,6 +147,7 @@ public:
 		}
 
 	}
+  static bool write_report;
 };
 
 //TODO: refactorizar
