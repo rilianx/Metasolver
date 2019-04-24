@@ -83,7 +83,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _mod_factor(parser, "double", "Value added to the pheromone factor in each iteration (recommend using values between 0.001 and 0.008)", {"mod_factor"});
 	args::ValueFlag<double> _incremento(parser, "double", "Value added to tau", {"incremento"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
-
+	args::Flag _write_report(parser, "double", "...", {"write_report"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -195,6 +195,7 @@ int main(int argc, char** argv){
     parameter_ranges[4]=make_pair(0.0, 0.1);
 
     tau_matrix tauM(parameter_ranges);
+		tau_matrix::write_report=_write_report;
 
 	cout << "greedy" << endl;
 	SearchStrategy *gr = new Greedy(vcs, aco_alpha, aco_beta, &tauM);

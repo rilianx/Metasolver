@@ -13,6 +13,8 @@
 
 
 namespace metasolver {
+bool tau_matrix::write_report=false;
+
 /**
  * Retorna un puntero al primer elemento de la lista de mejores acciones
  */
