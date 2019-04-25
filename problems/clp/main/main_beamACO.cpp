@@ -77,6 +77,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 
+	args::ValueFlag<double> _alpha_media(parser, "double", "Weight of the priori knowledge", {"alpha_media"});
 	args::ValueFlag<double> _aco_alpha(parser, "double", "Weight of the priori knowledge", {"aco_alpha"});
 	args::ValueFlag<double> _aco_beta(parser, "double", "Weight of the priori knowledge", {"aco_beta"});
 	args::ValueFlag<int> _metodo(parser, "int", "pheromone updating method (1 = update pheromone on only one state-action arc)(2 = update pheromone on the best found path)(3 = update pheromone on the best w paths, w being represented by the beams)", {"metodo"});
@@ -129,6 +130,7 @@ int main(int argc, char** argv){
 	if(_gamma) gamma=_gamma.Get();
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
+	if(_alpha_media) tau_matrix::alpha_media=_alpha_media.Get();
 
 
 	string format="BR";
@@ -188,7 +190,7 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
     vector< pair<double, double> > parameter_ranges(5);
-    parameter_ranges[0]=make_pair(0.0, 8.0);
+    parameter_ranges[0]=make_pair(0.95, 1.05);
     parameter_ranges[1]=make_pair(0.0, 8.0);
     parameter_ranges[2]=make_pair(0.0, 8.0);
     parameter_ranges[3]=make_pair(0.0, 1.0);

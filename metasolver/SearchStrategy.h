@@ -29,7 +29,7 @@ class Generator {
 	double media;
 	public:
 	Generator(double mean, double stddev, double min, double max):
-		distribution(mean, stddev), media(min), min(min), max(max){}
+		distribution(mean, stddev), media(mean), min(min), max(max){}
 		double operator ()(int r) {
 			generator.seed(r);
 	  	for(int i = 0; i <= 100; i++) {
@@ -67,7 +67,7 @@ private:
 	}
 
 public:
-	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p){
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0){
 	}
 
 	//samplea parametros de acuerdo a distribucion normal asociada al estado
@@ -98,6 +98,7 @@ public:
 	// acuerdo a los valores de los parametros
 	//Implementar aquí funcion para generar un graficos
 	void add_pheromone(const long state_code, const vector<double>& parameter_values){
+		iter_pheromone++;
 		char *direccion;
 		char dir[27] = "Values/StateN/ValuesM.txt";
 		direccion = &dir[0];
@@ -107,7 +108,7 @@ public:
 				FILE *state;
 				double media = dist_params[i].first;
 				double n = dist_params[i].second;
-				dist_params[i].first = (n*media+parameter_values[i])/(n+1);
+				dist_params[i].first = alpha_media*media + (1.0-alpha_media)*parameter_values[i]; //  (n*media+parameter_values[i])/(n+1);
 				dist_params[i].second++;
 				//Largo de 27 caracteres para cada ruta
 				if(write_report){
@@ -115,8 +116,9 @@ public:
 					//dir[20] = i+'0';
 					*(direccion+12) = state_code+'0';
 					*(direccion+20) = i+'0';
+					cout << dir << endl;
 					state = fopen(dir,"a");
-					fprintf(state,"%f \n",media);
+					fprintf(state,"%f \n",parameter_values[i]);
 					fclose(state);
 				}
 			}
@@ -127,7 +129,7 @@ public:
 				remove("Values/State0/Values2.txt");
 				remove("Values/State0/Values3.txt");
 				remove("Values/State0/Values4.txt");
-				remove("Values/State0/Values0.txt");
+				remove("Values/State1/Values0.txt");
 				remove("Values/State1/Values1.txt");
 				remove("Values/State1/Values2.txt");
 				remove("Values/State1/Values3.txt");
@@ -148,6 +150,8 @@ public:
 
 	}
   static bool write_report;
+  static double alpha_media;
+  double iter_pheromone;
 };
 
 //TODO: refactorizar
@@ -255,6 +259,7 @@ protected:
 
 	double aco_alpha;
 	double aco_beta;
+
 
 
 	tau_matrix* tauM;

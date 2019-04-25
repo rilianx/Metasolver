@@ -9,14 +9,12 @@
 
 namespace metasolver {
 
-
-
 BeamACO::~BeamACO(){
 
 }
 
 list<State*> BeamACO::next(list<State*>& S){
-    
+
 
      //no hay estados en el arbol
 	 if(S.size()==0) return S;

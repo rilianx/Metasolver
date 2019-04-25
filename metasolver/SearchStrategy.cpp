@@ -14,6 +14,7 @@
 
 namespace metasolver {
 bool tau_matrix::write_report=false;
+double tau_matrix::alpha_media=0.0;
 
 /**
  * Retorna un puntero al primer elemento de la lista de mejores acciones
@@ -60,7 +61,7 @@ int SearchStrategy::get_best_actions_ACO(const State& s, list< Action* >& bactio
 		}
 
 		if(best_action!=actions.end()){
-			(*best_action)->parameter_values=sample_param_vector;
+			(*best_action)->parameter_values=evl->get_parameter_values();
 			(*best_action)->state_code=s.get_code();
 			bactions.push_front( *best_action );
 			actions.erase(best_action);
