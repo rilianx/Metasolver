@@ -7,6 +7,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
+
+#include <dirent.h>
+#include <malloc.h>
+
 #include "args.hxx"
 //#include "objects/State.cpp"
 #include "mclp-state.h"
@@ -52,10 +57,60 @@ void pointsToTxt(State* root, int it) {
 	dfsPrintChild(root,scp);
 }
 
+string path(string current_directory, string find_directory){
+	DIR* dir;
+	struct dirent *ent;
+	dir = opendir(current_directory.c_str());
+	if(dir != NULL){
+		if(current_directory.find("..") != string::npos){
+			while((ent = readdir(dir)) != NULL){
+				if(((string)ent->d_name).compare(find_directory) == 0){
+					break;
+					//closedir(dir);
+					//cout << current_directory + find_directory << endl;
+					//return current_directory + find_directory;
+				}
+				if(((string)ent->d_name).find(".") == string::npos){
+					path(current_directory + "/" + ent->d_name, find_directory);
+					cout << ent->d_name << endl;
+					cout << current_directory << endl;
+					cout << endl;
+				}
+			}
+		} else {
+			current_directory = "../";
+			for(int i = 0; i < 5; i++){
+				while((ent = readdir(dir)) != NULL){
+					if(((string)ent->d_name).compare(find_directory) == 0){
+						break;
+						//closedir(dir);
+						//cout << current_directory + find_directory << endl;
+						//return current_directory + find_directory;
+					}
+				}
+				dir = opendir((current_directory + "../").c_str());
+			}
+		}
+	}
+	closedir(dir);
+	//cout << current_directory + find_directory << endl;
+	return current_directory + find_directory + "/";
+}
+
+/*
+//Obtiene la ubicacion actual desde la raiz
+char cwd[2048];
+if (getcwd(cwd, sizeof(cwd)) != NULL) {
+	printf("Current working dir: %s\n", cwd);
+} else {
+	perror("getcwd() error");
+}*/
+
 void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
 
-	ofstream scp ("../GRASP-SCP/bins_scp.txt");
+	string route = path(".", "GRASP-SCP");
+	ofstream scp (route + "bins_scp.txt");
 
 	if (scp.is_open()){
 		long int total_boxes = 0;
@@ -88,13 +143,14 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		}
 
 		scp.close();
-	} else cout << "Unable to open file";
+	} else cout << "Unable to open file" << endl;
 }
 
 void run_GRASP_SCP(){
+	string route = path(".", "GRASP-SCP");
 	const string MAX_TIME = "10";
 	const string SEED = "1";
-	string run = string("../GRASP-SCP/GRASP-SCP ./bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
+	string run = string(route + "GRASP-SCP " + route + "bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
 
 	FILE *p = popen(run.c_str(), "r");
 
