@@ -82,13 +82,16 @@ string path(string current_directory, string find_directory){
 			for(int i = 0; i < 5; i++){
 				while((ent = readdir(dir)) != NULL){
 					if(((string)ent->d_name).compare(find_directory) == 0){
-						break;
-						//closedir(dir);
+						//break;
+
+						closedir(dir);
 						//cout << current_directory + find_directory << endl;
-						//return current_directory + find_directory;
+						return current_directory + find_directory +"/";
 					}
 				}
-				dir = opendir((current_directory + "../").c_str());
+				current_directory += "../";
+				dir = opendir((current_directory).c_str());
+
 			}
 		}
 	}
@@ -110,6 +113,7 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
 
 	string route = path(".", "GRASP-SCP");
+	cout << route << endl;
 	ofstream scp (route + "bins_scp.txt");
 
 	if (scp.is_open()){
