@@ -11,6 +11,7 @@ problems/clp/containers
 problems/clp/objects2
 problems/clp/evaluators
 problems/clp
+problems/clp/main
 problems/clp/plugins/kdtree
 problems/clp/plugins/ga
 problems/mclp
@@ -89,7 +90,7 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 
 ADD_EXECUTABLE(MCLP problems/mclp/main/mclp-solver.cpp)
-ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(BSG_CLP problems/clp/main/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)

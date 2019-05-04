@@ -35,6 +35,7 @@ long BoxShape::get(int i, Orientation o) const{
 
 //get oriented dimensions of the box
 long BoxShape::getL(Orientation o) const{
+	if(!is_valid_orientation[o]) return 0;
   if(o==WLH || o==WHL) return Volume::getW();
   else if(o==LWH || o==LHW || o==OR) return Volume::getL();
   else if(o==HLW || o==HWL) return Volume::getH();
@@ -42,6 +43,7 @@ long BoxShape::getL(Orientation o) const{
 }
 
  long BoxShape::getW(Orientation o) const{
+	if(!is_valid_orientation[o]) return 0;
   if(o==LWH || o==HWL || o==OR) return Volume::getW();
   else if(o==WLH || o==HLW) return Volume::getL();
   else if(o==WHL || o==LHW) return Volume::getH();
@@ -49,6 +51,7 @@ long BoxShape::getL(Orientation o) const{
 }
 
  long BoxShape::getH(Orientation o) const{
+	if(!is_valid_orientation[o]) return 0;
   if(o==HLW || o==LHW) return Volume::getW();
   else if(o==HWL || o==WHL) return Volume::getL();
   else if(o==LWH || o==WLH || o==OR) return Volume::getH();

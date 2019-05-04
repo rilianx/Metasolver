@@ -27,144 +27,11 @@
 #include "GlobalVariables.h"
 #include "BSG.h"
 #include "args.hxx"
+#include "random_instances_generator.hpp"
 
 bool global::TRACE = false;
 
 using namespace std;
-
-/**
- * comparacion para ordenar de menor a mayor altura
- */
-bool compare_aabb(AABB& aabb1, AABB& aabb2){
-	return aabb1.getZmin() < aabb2.getZmin();
-}
-
-void generaInstancia(int l, int w, int h, int n, int a1, int a2, int a3, int b1,int b2, int b3, double L, int s, const char* file){
-
-
-	ofstream myfile;
-	myfile.open(file);
-
-	float t_c= l*h*w;	//-T_c:Cargo target volumen
-	int low_bound[3]={a1,a2,a3};	// limites inferiores  de las dimensiones de las cajas
-	int upper_bound[3]={b1,b2,b3};	//Limites superiores de las dimensiones de las cajas
-
-
-	float dimensiones_caja[n][3];//caja,alto,ancho, largo
-	int cantidad_caja_tipo[n];
-	float volumen_caja_tipo[n];
-	int orientacion_permitida[n][3];//si esta permitida esa dimension de forma vertical
-	float cargo_volumen=0;//volumen de la carga
-	//y descartar primeros 10 numeros generados por este
-	int k=10;
-	while(k-- >0)
-	rand();
-	myfile<<1<<endl;
-	myfile<<1<<" "<<s<<endl;
-	myfile<<l<<" "<<w<<" "<<h<<endl;
-	myfile<<n<<endl;
-		for(int i=0;i<n;i++){
-			int r_j[3]={rand(),rand(),rand()};
-			for(int j=0;j<3;j++){//por cada dimension de la caja
-				dimensiones_caja[i][j]=low_bound[j]+(r_j[j]%(upper_bound[j]-low_bound[j]+1));
-				//inicializo la cantidad de cajas de cada tipo en uno
-			}
-			cantidad_caja_tipo[i]=1;
-			volumen_caja_tipo[i]=dimensiones_caja[i][0]*dimensiones_caja[i][1]*dimensiones_caja[i][2];
-
-			int min_dim=99999;
-			for(int j=0;j<3;j++){
-				if(dimensiones_caja[i][j]<min_dim)min_dim=dimensiones_caja[i][j];
-			}
-			for(int j=0;j<3;j++){
-				if((double)dimensiones_caja[i][j]/(double)min_dim<L)
-					{
-					orientacion_permitida[i][j]=1;
-					}else{
-					orientacion_permitida[i][j]=0;
-					}
-			}
-		}
-
-		//calcular volumen ocupado
-
-		int v_k=0;
-		bool flag=true;
-		 while(flag){
-			cargo_volumen=0;
-			for(int i=0;i<n;i++){
-				cargo_volumen+=cantidad_caja_tipo[i]*volumen_caja_tipo[i];
-			}
-			int aux=rand()%n;
-			v_k= volumen_caja_tipo[aux];
-
-			if(t_c >cargo_volumen+v_k){
-				cantidad_caja_tipo[aux]++;
-			}else{
-
-				break;
-
-			}
-		 }
-
-		 for(int i=0;i<n;i++){
-			 myfile<<i+1;
-			 for(int j=0;j<3;j++){
-					myfile <<" "<< dimensiones_caja[i][j]<<" "<< orientacion_permitida[i][j]<<" ";
-			 }
-			 myfile<<cantidad_caja_tipo[i]<<endl;
-
-		 }
-
-	myfile.close();
-}
-
-void addHeader(string input_path, int tipos, ofstream& output){
-
-	  int inst=0;
-	  string line;
-	  ifstream myfile (input_path);
-
-	  int limsup, liminf;
-
-	  liminf=1+(inst)*(tipos+3);
-	  limsup=liminf+tipos+3;
-
-
-	  if (myfile.is_open()){
-		    for (int lineno = 0; getline (myfile,line) ; lineno++)
-		    	output << line << endl;
-	  }
-
-	  else cout << "Unable to open file";
-
-}
-
-void extract_boxes(AABB aabb, list< AABB >& uni_blocks){
-
-	const Block* block=aabb.getBlock();
-	//cout << block << endl;
-
-	Vector3 pos = aabb.getMins();
-
-	if(block->n_boxes==1){
-		uni_blocks.push_back(aabb);
-		return;
-	}
-
-	const AABB* aux= &block->blocks->top();
-	while(true){
-
-		AABB aabb2 (pos+aux->getMins(), aux->getBlock());
-		extract_boxes(aabb2, uni_blocks);
-
-		if(block->blocks->has_next())
-			aux=&block->blocks->next();
-
-		else break;
-	}
-}
-
 
 void solve(string file, string path1, string path2, int _N, double min_fr, int max_time, double alpha, double beta, double gamma, double p,
 		double delta=1.0, double f=0.0, double r=0.0, bool fsb=false, bool kdtree=false){
@@ -197,7 +64,17 @@ void solve(string file, string path1, string path2, int _N, double min_fr, int m
 
 
 	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy (vcs);
+    Greedy *gr = new Greedy (vcs);
+
+	list<State*> S;
+	S.push_back(s0);
+	for(int i=0;i<0;i++)
+		gr->next(S);
+
+	compactState c(*s0);
+
+
+	exit(0);
 
 	cout << "bsg" << endl;
     BSG *bsg= new BSG(vcs,*gr, 4);
@@ -289,8 +166,6 @@ void solve(string file, string path1, string path2, int _N, double min_fr, int m
 }
 
 int main(int argc, char** argv) {
-
-
 	args::ArgumentParser parser("********* CLP Instance Generator (and solver) *********.", "Generates a random instance and solves it.");
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> L(parser, "int", "Length of the container", {'L'});
@@ -395,7 +270,7 @@ int main(int argc, char** argv) {
 	cout << _N << endl;
 
 	generaInstancia(_L, _W, _H, _N, _min_l, _min_w, _min_h, _max_l, _max_w, _max_h, _bsl, _s, file.c_str());
-
+	cout << f << "/" << file << endl;
 	if(_solve){
 		solve(file, output_file1, output_file2, _N, _min_fr, _maxtime, _alpha, _beta, _gamma, _p);
 		char rm[128];

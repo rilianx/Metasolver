@@ -13,6 +13,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "../metasolver/State.h"
 #include "objects2/Block.h"
@@ -40,6 +41,8 @@ public:
 };
 
 bool is_constructible(const clpState& s, const Block& b);
+
+
 
 class clpState : public State {
 public:
@@ -108,6 +111,8 @@ public:
 	}
 
 
+
+
 	static double weight_of_allboxes;
 
 protected:
@@ -162,9 +167,57 @@ private:
 
 };
 
-
-
 clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR);
+
+//For the ANN
+class compactState {
+public:
+	//distribucion de volumenes en el contenedor
+	vector< vector <double> > volume_distribution[3];
+
+	//cantidad de cajas por rango de dimension (x,y,z)
+	vector< int > size_histogram[3];
+
+	compactState(const clpState& s) {
+		int l=30, w=10, h=10;
+		int histo_ranges = 20;
+		double max_size=120;
+		double range_sizeL = max_size/histo_ranges;
+		double range_sizeW = max_size/histo_ranges;
+		double range_sizeH = max_size/histo_ranges;
+
+		volume_distribution[0].resize(l);
+		for(int i=0; i<l; i++)	volume_distribution[0][i].resize(w);
+
+		volume_distribution[1].resize(l);
+		for(int i=0; i<l; i++)	volume_distribution[1][i].resize(h);
+
+		volume_distribution[2].resize(w);
+		for(int i=0; i<w; i++)	volume_distribution[2][i].resize(h);
+
+		for(int i=0;i<3;i++)
+			size_histogram[i].resize(histo_ranges);
+
+		for(auto box:s.nb_left_boxes){
+			if(box.second > 0){
+				for(int o=0; o<6; o++){
+					if(box.first->getL((BoxShape::Orientation) o)>0)
+					  size_histogram[0][int(box.first->getL((BoxShape::Orientation) o)/range_sizeL+0.5)]+=box.second;
+					if(box.first->getW((BoxShape::Orientation) o)>0)
+					  size_histogram[1][int(box.first->getW((BoxShape::Orientation) o)/range_sizeW+0.5)]+=box.second;
+					if(box.first->getH((BoxShape::Orientation) o)>0)
+					  size_histogram[2][int(box.first->getH((BoxShape::Orientation) o)/range_sizeH+0.5)]+=box.second;
+				}
+			}
+		}
+
+		for(int i=0;i<3;i++){
+		 for(auto histo:size_histogram[i])
+			cout<< histo << " " ;
+		 cout << endl;
+		}
+	}
+};
 
 } /* namespace clp */
 
