@@ -43,13 +43,19 @@ namespace metasolver {
 		// performs a simulation and returns the corresponding child
 		void simulate(mctsNode* n, const State* s0);
 
-    double nb_simulations;
+		double nb_simulations;
 
+
+		//nodos por nivel
+		map<int, int> level2nodes;
+
+		//nodos expandidos por nivel
+		map<int, int> level2selectednodes;
 
 
 		private:
 
-    const State* s0;
+    	const State* s0;
 
 		SearchStrategy& greedy;
 

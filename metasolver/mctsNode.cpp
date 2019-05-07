@@ -15,6 +15,7 @@ int mctsNode::count_nodes=0;
 
 double mctsNode::B=0.0;
 double mctsNode::C=0.0;
+bool mctsNode::bp=false;
 
 mctsNode::mctsNode(mctsNode* N, const Action* a) :
  parent(N), id(count_nodes++), action((a)? a->clone():NULL), var(0.0), mean(0.0),

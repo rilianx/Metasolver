@@ -64,11 +64,11 @@ namespace metasolver {
 
     double MCTS::run(State& s, double tl, clock_t bt){
     		timelimit=tl;
-				cout << "clone state" << endl;
+			cout << "clone state" << endl;
     		s0 = s.clone();
 
 
-				cout << "root creation" << endl;
+			cout << "root creation" << endl;
     		mctsNode* root=new mctsNode(NULL,NULL);
     		//Se realizan dos simulaciones del nodo raiz
 				cout << "Se realizan dos simulaciones del nodo raiz" << endl;
@@ -79,8 +79,7 @@ namespace metasolver {
 				int i=0;
     		while(nodes.size() > 0 &&  get_time()<timelimit){
 					i++;
-    			//Selección del nodo
-					//cout << "Seleccion del nodo" << endl;
+    			//Seleccion del nodo
     			mctsNode* n = next_node();
     			if(n==NULL) break;
 
@@ -91,10 +90,10 @@ namespace metasolver {
 
 
 				if(children.size() >= 3){
-					//hijos no seleccionados se simulan 1 vez más.
+					//hijos no seleccionados se simulan 1 vez mas.
 					for(auto ch : children){
 						if(!ch->selected){
-							simulate(ch,s0);
+							simulate(ch,s0); //incrementa contador del mapa de selected
 							nodes.insert(ch);
 						}
 					}
@@ -103,8 +102,6 @@ namespace metasolver {
     		}
 
     		//pointsToTxt(root, 0);
-
-
     		//system("firefox problems/clp/tree_plot/index.html");
     		return best_state->get_value();
   }
@@ -115,7 +112,7 @@ namespace metasolver {
 		//no hay hijos no simulados
 		if(n->selected && n->get_pre_children().empty()) return;
 
-		//se genera el estado a partir de la raíz
+		//se genera el estado a partir de la ra��z
 		//cout << "get_state" << endl;
 		State* snext=n->get_state(s0);
 		//cout << "success" << endl;
@@ -126,7 +123,7 @@ namespace metasolver {
 			get_best_actions(*snext, best_actions, 999);
 			for(auto a:best_actions){
 				if(n->get_children().empty() || (*a!=*n->get_children().front()->get_action())){
-					mctsNode* nn=new mctsNode(n,a);
+					mctsNode* nn=new mctsNode(n,a); //agregar nivel al nodo //incrementa contador del mapa de nodos por nivel
 					n->add_pre_children(nn);
 				}
 				delete a;
@@ -144,7 +141,7 @@ namespace metasolver {
 		//cout << "current_action:" << *next->get_action() << endl;
 		snext->transition(*next->get_action());
 
-        //se lanza un greedy (simulación)
+        //se lanza un greedy (simulaci��n)
 		double value=greedy.run(*snext);
 		nb_simulations++;
 

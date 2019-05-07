@@ -90,7 +90,7 @@ public:
 		calculate_promise();
 
     //back-propagation
-		if(parent)
+		if(bp && parent)
 		   parent->update_simulations(new_value);
 	}
 
@@ -102,6 +102,7 @@ public:
 
   static double B; //weight of std.dev.
   static double C; //weight of nb-simulations
+  static bool bp; //backpropagation
 
 protected:
 
@@ -115,6 +116,10 @@ protected:
 
 
   //mcts-elements
+	double sym;
+	double best;
+	double depth;
+
 	double var;
 	double mean;
 	double promise;

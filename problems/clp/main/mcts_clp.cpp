@@ -44,6 +44,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _r(parser, "double", "random factor", {'r'});
 
 
+	args::Flag _bp(parser, "bp", "Back-propagation", {"bp"});
+
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 
 	args::ValueFlag<double> _B(parser, "double", "MCTS: weight of std.dev.", {'B'});
@@ -110,6 +112,8 @@ int main(int argc, char** argv){
 	srand(seed);
 
 	global::TRACE = trace;
+
+	mctsNode::bp=_bp;
 
 	cout << "***** Creando el contenedor ****" << endl;
 	cout << "File("<< format <<"): " << file << endl;
