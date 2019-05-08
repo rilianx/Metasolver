@@ -10,8 +10,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stack>
 
-#include "objects2/BoxShape.h"
+#include "BoxShape.h"
 #include "clpState.h"
 
 using namespace std;
@@ -273,12 +274,272 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 	}
 
+	s->update_min_dim();
+	cout << s->mindim << endl;
+	s->generate_optimal_solutions(*s->cont);
+
 	cout << "Test" << endl;
 	s->general_block_generator(min_fr, max_bl, *s->cont);
 	cout << "Test2" << endl;
-	s->update_min_dim();
+
 	cout << "Test3" << endl;
 	return s;
+}
+
+
+lint clpState::solve(solution ***sols, const Vector3& max_dim){
+	lint xyz = (max_dim.getX()+1)*(max_dim.getY()+1)*(max_dim.getZ()+1);
+	solution opt;
+	for(lint j=1; j<=xyz; j++){
+		int z=j%max_dim.getZ();
+		lint jj=j/max_dim.getZ();
+		int y=jj%max_dim.getY();
+		jj/=max_dim.getY();
+		int x=jj;
+		if(sols[x][y][z].value!=-1) continue;
+
+
+	    opt.value = 0;
+	    opt.choice_dim = -1;
+	    opt.choice_cut = -1;
+	    opt.base_box = -1;
+
+
+
+		if(x< mindim.getX() || y< mindim.getY() || z<mindim.getZ()){
+			sols[x][y][z]=opt;
+			continue;
+		}
+
+		long opt_value=-1;
+		bool add=false;
+
+	    for(auto p:sols_x[y][z]){
+	    	int i=p.first;
+	    	auto up = sols_x[y][z].upper_bound(x-i);
+
+	    	long vol2=0;
+	    	if(up != sols_x[y][z].begin() ){
+	    		up--;
+	    		vol2=up->second;
+	    	}
+
+
+	    	lint res = p.second + vol2;
+	    	if(res >= opt_value ){
+	    		if (res == p.second || res == vol2) add=false;
+	    		else if(res>opt_value) add=true;
+	    		opt_value=res;
+	    	}else continue;
+	    }
+
+	    for(auto p:sols_y[x][z]){
+	    	int i=p.first;
+	    	auto up = sols_y[x][z].upper_bound(y-i);
+	    	long vol2=0;
+	    	if(up != sols_y[x][z].begin() ){
+	    		up--;
+	    		vol2=up->second;
+	    	}
+
+	    	lint res = p.second + vol2;
+	    	if(res >= opt_value ){
+	    		if (res == p.second || res == vol2) add=false;
+	    		else if(res>opt_value) add=true;
+	    		opt_value=res;
+	    	}
+	    }
+
+	    for(auto p:sols_z[x][y]){
+	    	int i=p.first;
+	    	auto up = sols_z[x][y].upper_bound(z-i);
+	    	long vol2=0;
+	    	if(up != sols_z[x][y].begin() ){
+	    		up--;
+	    		vol2=up->second;
+	    	}
+
+
+	    	lint res = p.second + vol2;
+	    	if(res >= opt_value ){
+	    		if (res == p.second || res == vol2) add=false;
+	    		else if(res>opt_value) add=true;
+	    		opt_value=res;
+	    	}
+	    }
+
+	    if(add && opt_value>-1){
+			sols[x][y][z].value=opt_value;
+			cout << "(" << x<< "," << y<< "," <<z << "):" << opt_value << endl ;
+            sols_x[y][z].insert(make_pair(x,opt_value));
+            sols_y[x][z].insert(make_pair(y,opt_value));
+            sols_z[x][y].insert(make_pair(z,opt_value));
+	    }
+
+
+
+	}
+	auto up = sols_y[max_dim.getX()][max_dim.getY()].upper_bound(max_dim.getZ());
+	up--;
+	return up->second;
+
+}
+
+lint clpState::solve_cut(solution ***sols, int a, int b, int c){
+    // Check if already solved
+    if(sols[a][b][c].value!=-1) return sols[a][b][c].value;
+    if(a< mindim.getX() || b< mindim.getY() || c<mindim.getZ()) return 0;
+    // Save optimal cut
+    solution opt;
+    opt.value = 0;
+    opt.choice_dim = -1;
+    opt.choice_cut = -1;
+    opt.base_box = -1;
+    // Seek optimal cut
+
+    for(int i=1;i<a/2;i++){
+        lint res = solve_cut(sols,i,b,c)+solve_cut(sols,a-i,b,c);
+        if(opt.value<res){
+            opt.value = res;
+            opt.choice_dim = 0;
+            opt.choice_cut = i;
+        }
+    }
+    for(int j=1;j<b/2;j++){
+        lint res = solve_cut(sols,a,j,c)+solve_cut(sols,a,b-j,c);
+        if(opt.value<res){
+            opt.value = res;
+            opt.choice_dim = 1;
+            opt.choice_cut = j;
+        }
+    }
+    for(int k=1;k<c/2;k++){
+        lint res = solve_cut(sols,a,b,k)+solve_cut(sols,a,b,c-k);
+        if(opt.value<res){
+            opt.value = res;
+            opt.choice_dim = 2;
+            opt.choice_cut = k;
+        }
+    }
+    // Save result and choice before returning
+    //cout << "(" << a<< "," << b<< "," <<c << "):" << opt.value << endl ;
+    sols[a][b][c] = opt;
+    return opt.value;
+}
+
+void clpState::get_boxes(const solution ***sols, int a, int b, int c, int *ids, int *n_ids){
+    solution sol = sols[a][b][c];
+    // This is a base case, a given box
+    if(sol.base_box!=-1){
+        ids[*n_ids] = sol.base_box;
+        *n_ids += 1;
+        return;
+    }
+    // No more cuts:
+    if(sol.choice_dim==-1) return;
+    // Recursive call
+    if(sol.choice_dim==0){
+        get_boxes(sols,sol.choice_cut,b,c,ids,n_ids);
+        get_boxes(sols,a-sol.choice_cut,b,c,ids,n_ids);
+    }
+    else if(sol.choice_dim==1){
+        get_boxes(sols,a,sol.choice_cut,c,ids,n_ids);
+        get_boxes(sols,a,b-sol.choice_cut,c,ids,n_ids);
+    }
+    else if(sol.choice_dim==2){
+        get_boxes(sols,a,b,sol.choice_cut,ids,n_ids);
+        get_boxes(sols,a,b,c-sol.choice_cut,ids,n_ids);
+    }
+}
+
+
+void clpState::generate_optimal_solutions(const Vector3& max_dim){
+    // Scan problem dimensions
+    int s_x=max_dim.getX(),s_y=max_dim.getY(),s_z=max_dim.getZ();
+    // Scan boxes
+    int n_boxes=valid_blocks.size();
+    cout << n_boxes << endl;
+    int *boxes = new int[3*n_boxes];
+    int p=0;
+    for(auto b:valid_blocks){
+        boxes[3*p+0] = b->getL();
+        boxes[3*p+1] = b->getW();
+        boxes[3*p+2] = b->getH();
+        p++;
+    }
+    // Initialize matrix of precomputed problems
+
+    sols = new solution**[s_x+1];
+    for(int i=0;i<=s_x;i++){
+        sols[i] = new solution*[s_y+1];
+        for(int j=0;j<=s_y;j++){
+            sols[i][j] = new solution[s_z+1];
+            for(int k=0;k<=s_z;k++){
+                sols[i][j][k].value = -1;
+                sols[i][j][k].choice_dim = -1;
+                sols[i][j][k].choice_cut = -1;
+                sols[i][j][k].base_box = -1;
+            }
+        }
+    }
+
+    sols_z = new map<int,long>*[s_x+1];
+    for(int i=0;i<=s_x;i++)
+    	sols_z[i] = new map<int,long>[s_y+1];
+
+    sols_x = new map<int,long>*[s_y+1];
+    for(int i=0;i<=s_y;i++)
+    	sols_x[i] = new map<int,long>[s_z+1];
+
+    sols_y = new map<int,long>*[s_x+1];
+    for(int i=0;i<=s_x;i++)
+    	sols_y[i] = new map<int,long>[s_z+1];
+
+
+    // Base cases (NOTE: curiously size 0 is not really used)
+    for(int i=0;i<=s_x;i++) sols[i][0][0].value = 0;
+    for(int j=0;j<=s_y;j++) sols[0][j][0].value = 0;
+    for(int k=0;k<=s_z;k++) sols[0][0][k].value = 0;
+    sols[1][1][1].value = 0;
+    int max_max_boxes = 0; // Limit for the number of possible boxes.
+    for(int p=0;p<n_boxes;p++){
+        int a = boxes[3*p+0];
+        int b = boxes[3*p+1];
+        int c = boxes[3*p+2];
+        long volume = a*b*c;
+        if(a<=s_x && b<=s_y && c<=s_z){
+            sols[a][b][c].value = volume;
+            sols[a][b][c].base_box = p;
+
+            sols_x[b][c].insert(make_pair(a,volume));
+            sols_y[a][c].insert(make_pair(b,volume));
+            sols_z[a][b].insert(make_pair(c,volume));
+        }
+
+        // Check if with this boxes more are possible:
+        int max_boxes = ((lint)s_x*(lint)s_y*(lint)s_z)/volume;
+        if(max_max_boxes<max_boxes) max_max_boxes = max_boxes;
+    }
+    // Free boxes
+    free(boxes);
+    // Get optimal value
+    //lint res = solve_cut(sols,s_x,s_y,s_z);
+    lint res = solve(sols,max_dim);
+
+    printf("value: %lld\n",res);
+    exit(0);
+    // Get the chosen boxes
+    int n_indexes = 0;
+    int *indexes = new int[max_max_boxes];
+    get_boxes((const solution ***)sols,s_x,s_y,s_z,indexes,&n_indexes);
+    printf("indices: ");
+    for(int i=0;i<n_indexes;i++){
+        printf("%d ",indexes[i]);
+    }
+    printf("\n");
+    free(indexes);
+
+
 }
 
 void clpState::general_block_generator(double min_fr, int max_bl, const Vector3& max_dim){

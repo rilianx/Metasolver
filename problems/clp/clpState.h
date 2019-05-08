@@ -10,18 +10,26 @@
 
 #ifndef CLPSTATE_H_
 #define CLPSTATE_H_
+typedef long long int lint;
 
 #include <map>
 #include <string>
 
-#include "../metasolver/State.h"
-#include "objects2/Block.h"
+#include "State.h"
+#include "Block.h"
 
 
 using namespace std;
 using namespace metasolver;
 
 namespace clp {
+
+typedef struct {
+    lint value; // -1 if not yet solved.
+    int choice_dim; // -1 if no cut.
+    int choice_cut;
+    int base_box; // -1 if no base box.
+} solution;
 
 class BlockSet;
 class clpState;
@@ -142,6 +150,8 @@ private:
 
 	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
 
+
+
 	/*
 	 * calculate the number of supported blocks for each block
 	 * @n_supports number of support blocks for each block
@@ -158,7 +168,18 @@ private:
 	Vector3 mindim;
 
 
+	//used for solving the 3D-knapsack problem (F.Casas)
+	void generate_optimal_solutions(const Vector3& max_dim);
+	lint solve_cut(solution ***sols, int a, int b, int c);
+	void get_boxes(const solution ***sols, int a, int b, int c, int *ids, int *n_ids);
+	lint solve(solution ***sols, const Vector3& max_dim);
 
+
+	solution ***sols;
+
+	map<int,long> **sols_x;
+	map<int,long> **sols_y;
+	map<int,long> **sols_z;
 
 };
 
