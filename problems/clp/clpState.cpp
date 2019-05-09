@@ -288,14 +288,14 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 
 lint clpState::solve(solution ***sols, const Vector3& max_dim){
-	lint xyz = (max_dim.getX()+1)*(max_dim.getY()+1)*(max_dim.getZ()+1);
+	lint xyz = (max_dim.getX())*(max_dim.getY())*(max_dim.getZ());
 	solution opt;
-	for(lint j=1; j<=xyz; j++){
-		int z=j%max_dim.getZ();
-		lint jj=j/max_dim.getZ();
-		int y=jj%max_dim.getY();
-		jj/=max_dim.getY();
-		int x=jj;
+	for(lint j=0; j<xyz; j++){
+		int z=j%max_dim.getZ()+1;
+		lint jj=j/(max_dim.getZ());
+		int y=jj%max_dim.getY()+1;
+		jj/=(max_dim.getY());
+		int x=jj+1;
 		if(sols[x][y][z].value!=-1) continue;
 
 
@@ -379,53 +379,11 @@ lint clpState::solve(solution ***sols, const Vector3& max_dim){
 
 
 	}
-	auto up = sols_y[max_dim.getX()][max_dim.getY()].upper_bound(max_dim.getZ());
-	up--;
-	return up->second;
+
+	return 0;
 
 }
 
-lint clpState::solve_cut(solution ***sols, int a, int b, int c){
-    // Check if already solved
-    if(sols[a][b][c].value!=-1) return sols[a][b][c].value;
-    if(a< mindim.getX() || b< mindim.getY() || c<mindim.getZ()) return 0;
-    // Save optimal cut
-    solution opt;
-    opt.value = 0;
-    opt.choice_dim = -1;
-    opt.choice_cut = -1;
-    opt.base_box = -1;
-    // Seek optimal cut
-
-    for(int i=1;i<a/2;i++){
-        lint res = solve_cut(sols,i,b,c)+solve_cut(sols,a-i,b,c);
-        if(opt.value<res){
-            opt.value = res;
-            opt.choice_dim = 0;
-            opt.choice_cut = i;
-        }
-    }
-    for(int j=1;j<b/2;j++){
-        lint res = solve_cut(sols,a,j,c)+solve_cut(sols,a,b-j,c);
-        if(opt.value<res){
-            opt.value = res;
-            opt.choice_dim = 1;
-            opt.choice_cut = j;
-        }
-    }
-    for(int k=1;k<c/2;k++){
-        lint res = solve_cut(sols,a,b,k)+solve_cut(sols,a,b,c-k);
-        if(opt.value<res){
-            opt.value = res;
-            opt.choice_dim = 2;
-            opt.choice_cut = k;
-        }
-    }
-    // Save result and choice before returning
-    //cout << "(" << a<< "," << b<< "," <<c << "):" << opt.value << endl ;
-    sols[a][b][c] = opt;
-    return opt.value;
-}
 
 void clpState::get_boxes(const solution ***sols, int a, int b, int c, int *ids, int *n_ids){
     solution sol = sols[a][b][c];

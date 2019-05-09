@@ -170,12 +170,16 @@ private:
 
 	//used for solving the 3D-knapsack problem (F.Casas)
 	void generate_optimal_solutions(const Vector3& max_dim);
-	lint solve_cut(solution ***sols, int a, int b, int c);
 	void get_boxes(const solution ***sols, int a, int b, int c, int *ids, int *n_ids);
 	lint solve(solution ***sols, const Vector3& max_dim);
 
 
 	solution ***sols;
+
+  //se necesita una estructura sols[x][y][z]
+  //que retorne solucion óptima para subcaja
+  //y que se pueda recorrer en cada dimensión
+  //sols[x](key:volume; value:y,z)
 
 	map<int,long> **sols_x;
 	map<int,long> **sols_y;
