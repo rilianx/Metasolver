@@ -43,6 +43,8 @@ public:
 
     double get_priority() const { return priority; }
 
+    void set_volume(double volume) const { this->volume = volume; }
+
     void set_priority(double priority) const { this->priority = priority; }
     //void set_weight(const double w) const { weight = w; }
 

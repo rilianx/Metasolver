@@ -72,14 +72,22 @@ public:
 
     virtual void insert(const Block& b, const Vector3& p, const Vector3 min_dim=Vector3(0,0,0));
 
-    virtual long getOccupiedVolume() const {return occupied_volume;}
+    virtual long getOccupiedVolume() const {
+    	//if(MCLP){
+    	occupied_volume=0;
+    	for(auto box:nb_boxes)
+    		occupied_volume+= box.first->getVolume()*box.second;
+    	//}
+
+    	return occupied_volume;
+    }
 
     virtual double getTotalWeight() const {return total_weight;}
 
     virtual double getTotalPriority() const{
     	double priority=0;
     	for(auto box:nb_boxes)
-    		priority+=box.first->get_priority();
+    		priority+= box.first->get_priority()*box.second;
     	return priority;
     }
 
@@ -144,7 +152,7 @@ protected:
              << R << " " << G << " " << B << "]," << alpha << ");" << endl;
     }
 
-	double occupied_volume;
+	mutable double occupied_volume;
 
 	double total_weight;
 

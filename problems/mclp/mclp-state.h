@@ -106,7 +106,12 @@ public:
 	void update_priorities(double alpha, map<const BoxShape*, int>* nb_inserted_boxes) const{
 		for(auto b:*nb_inserted_boxes)
 			b.first->set_priority(b.first->get_priority()*alpha);
+	}
 
+	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
+	void update_volumes(double alpha, map<const BoxShape*, int>* nb_inserted_boxes) const{
+		for(auto b:*nb_inserted_boxes)
+			b.first->set_volume(b.first->getVolume()*alpha);
 	}
 
 	static void initalize_priorities(){

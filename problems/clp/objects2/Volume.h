@@ -46,7 +46,7 @@ public:
 	//virtual ~Volume();
 
 protected:
-	long volume;
+	mutable long volume;
 };
 
 } /* namespace clp */

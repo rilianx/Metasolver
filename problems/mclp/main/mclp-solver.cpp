@@ -210,7 +210,10 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 		double eval=gr->run(s_copy);
 
 		//se actualizan las prioridades
-		dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(pdec,
+		//dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(pdec,
+			//	&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
+
+		dynamic_cast<const mclpState*>(gr->get_best_state())->update_volumes(pdec,
 				&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 
 		//se almacena el bin en el mapa
@@ -329,7 +332,7 @@ int main(int argc, char** argv){
 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-        alpha, beta, gamma, p, delta, 1.0, 0.0);
+        alpha, beta, gamma, p, delta, 0.0, 0.0);
 
 	cout << "greedy" << endl;
 	Greedy *gr = new Greedy (vcs);
