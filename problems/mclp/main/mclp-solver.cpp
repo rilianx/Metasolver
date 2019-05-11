@@ -83,7 +83,6 @@ string findInto(string current_directory, string find_directory){
 }
 
 string findOut(string current_directory, string find_directory){
-	cout << "estoy en findOut" << endl;
 	DIR* dir;
 	struct dirent *ent;
 	current_directory += "/../";
