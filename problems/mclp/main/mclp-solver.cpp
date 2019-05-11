@@ -57,47 +57,61 @@ void pointsToTxt(State* root, int it) {
 	dfsPrintChild(root,scp);
 }
 
-string path(string current_directory, string find_directory){
+string findInto(string current_directory, string find_directory){
 	DIR* dir;
 	struct dirent *ent;
 	dir = opendir(current_directory.c_str());
 	if(dir != NULL){
-		if(current_directory.find("..") != string::npos){
-			while((ent = readdir(dir)) != NULL){
-				if(((string)ent->d_name).compare(find_directory) == 0){
-					break;
-					//closedir(dir);
-					//cout << current_directory + find_directory << endl;
-					//return current_directory + find_directory;
-				}
-				if(((string)ent->d_name).find(".") == string::npos){
-					path(current_directory + "/" + ent->d_name, find_directory);
-					cout << ent->d_name << endl;
-					cout << current_directory << endl;
-					cout << endl;
-				}
+		while((ent = readdir(dir)) != NULL){
+			if(((string)ent->d_name).compare(find_directory) == 0){
+				//break;
+				closedir(dir);
+				//cout << current_directory + find_directory << endl;
+				return current_directory + find_directory;
 			}
-		} else {
-			current_directory = "../";
-			for(int i = 0; i < 5; i++){
-				while((ent = readdir(dir)) != NULL){
-					if(((string)ent->d_name).compare(find_directory) == 0){
-						//break;
-
-						closedir(dir);
-						//cout << current_directory + find_directory << endl;
-						return current_directory + find_directory +"/";
-					}
-				}
-				current_directory += "../";
-				dir = opendir((current_directory).c_str());
-
+			if(((string)ent->d_name).find(".") == string::npos){
+				findInto(current_directory + "/" + ent->d_name, find_directory);
+				cout << ent->d_name << endl;
+				cout << current_directory << endl;
+				cout << endl;
 			}
 		}
 	}
 	closedir(dir);
 	//cout << current_directory + find_directory << endl;
-	return current_directory + find_directory + "/";
+	return "";
+}
+
+string findOut(string current_directory, string find_directory){
+	cout << "estoy en findOut" << endl;
+	DIR* dir;
+	struct dirent *ent;
+	current_directory += "/../";
+	dir = opendir(current_directory.c_str());
+	for(int i = 0; i < 5; i++){
+		while((ent = readdir(dir)) != NULL){
+			if(((string)ent->d_name).compare(find_directory) == 0){
+				closedir(dir);
+				//cout << current_directory + find_directory << endl;
+				return current_directory + find_directory +"/";
+			}
+		}
+		current_directory += "../";
+		dir = opendir((current_directory).c_str());
+
+	}
+	closedir(dir);
+	return "";
+}
+
+string findDirectory(string current_directory, string find_directory){
+	string find = findInto(current_directory, find_directory);
+	if(!find.empty()) return find;
+	else {
+		find = findOut(current_directory, find_directory);
+		if(!find.empty()) return find;
+	}
+	return "";
 }
 
 /*
@@ -112,9 +126,13 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
 
-	string route = path(".", "GRASP-SCP");
-	cout << route << endl;
-	ofstream scp (route + "bins_scp.txt");
+	string path = findDirectory(".", "GRASP-SCP");
+	if(path.empty()){
+		cout << "El directorio no existe.\n" << endl;
+		exit(0);
+	}
+	cout << path << endl;
+	ofstream scp (path + "bins_scp.txt");
 
 	if (scp.is_open()){
 		long int total_boxes = 0;
@@ -151,10 +169,14 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 }
 
 void run_GRASP_SCP(){
-	string route = path(".", "GRASP-SCP");
+	string path = findDirectory(".", "GRASP-SCP");
+	if(path.empty()){
+		cout << "El directorio no existe.\n" << endl;
+		exit(0);
+	}
 	const string MAX_TIME = "10";
 	const string SEED = "1";
-	string run = string(route + "GRASP-SCP " + route + "bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
+	string run = string(path + "GRASP-SCP " + path + "bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
 
 	FILE *p = popen(run.c_str(), "r");
 
