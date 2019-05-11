@@ -71,9 +71,9 @@ string findInto(string current_directory, string find_directory){
 			}
 			if(((string)ent->d_name).find(".") == string::npos){
 				findInto(current_directory + "/" + ent->d_name, find_directory);
-				cout << ent->d_name << endl;
+				//cout << ent->d_name << endl;
 				//cout << current_directory << endl;
-				cout << endl;
+				//cout << endl;
 			}
 		}
 	}
