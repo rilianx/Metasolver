@@ -72,7 +72,7 @@ string findInto(string current_directory, string find_directory){
 			if(((string)ent->d_name).find(".") == string::npos){
 				findInto(current_directory + "/" + ent->d_name, find_directory);
 				cout << ent->d_name << endl;
-				cout << current_directory << endl;
+				//cout << current_directory << endl;
 				cout << endl;
 			}
 		}
@@ -243,17 +243,18 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 
 		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
 			//cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
-			cout << box.first->get_id() << " ";
+			//cout << box.first->get_id() << " ";
 			used_boxes[box.first].push_back(i);
 		}
-		cout << endl;
+		//cout << endl;
 
 
 	}
 
-	cout << "used_boxes" << endl;
-	for(auto box: used_boxes)
+	//cout << "used_boxes" << endl;
+	/*for(auto box: used_boxes)
 		cout << box.first->get_id() << "(" << box.second.size() << ")," ;
+	*/
 	cout << endl;
 
 	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
