@@ -112,23 +112,24 @@ public:
 				dist_params[i].second++;
 				//Largo de 27 caracteres para cada ruta
 				if(write_report){
-					//dir[12] = state_code+'0';
-					//dir[20] = i+'0';
 					*(direccion+12) = state_code+'0';
 					*(direccion+20) = i+'0';
-					cout << dir << endl;
+					//cout << dir << endl;
 					state = fopen(dir,"a");
-					fprintf(state,"%f \n",parameter_values[i]);
+					fprintf(state,"%f %f %f \n",alpha_media,iter_pheromone, parameter_values[i]);
 					fclose(state);
 				}
 			}
 		}else{
+			//you can only get here in the first iteration
+			//erasing files for writting
 			if(write_report){
 				remove("Values/State0/Values0.txt");
 				remove("Values/State0/Values1.txt");
 				remove("Values/State0/Values2.txt");
 				remove("Values/State0/Values3.txt");
 				remove("Values/State0/Values4.txt");
+
 				remove("Values/State1/Values0.txt");
 				remove("Values/State1/Values1.txt");
 				remove("Values/State1/Values2.txt");

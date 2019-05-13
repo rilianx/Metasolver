@@ -1,45 +1,56 @@
 # encoding: utf-8
 import matplotlib.pyplot as plt
-#from math import *
-#from numpy import *
+import sys
+import argparse
 
-value = True
-while(value):
-    var = int(input("Variable: "))
-    estados = []
+parser = argparse.ArgumentParser()
+parser.add_argument("-state","--state",type = int, help = "Variable Number to show")
+parser.add_argument("-interval","--interval",type = int, help = "Separation interval of the states" )
+args = parser.parse_args()
+
+var = 0
+interval = -1
+alpha_media = 0
+if args.state:
+    var = args.state
+if args.interval:
+    interval = args.interval
+
+lectura = []
+statesX = [[],[],[]]
+statesY = [[],[],[]]
+
+#reading each file with the number of states
+for i in range(3):
+    lectura.append(open("Values/State"+str(i)+"/Values"+str(var)+".txt",'r'))
+
+#Making a list, that includes all the X values and Y values
+for i in range(3):
+    for linea in (lectura[i]).readlines():
+        valores = linea.strip().split(" ")
+        alpha_media = valores[0]
+        statesX[i].append(float(valores[1]))
+        statesY[i].append(float(valores[2]))
+
+#Graphing the values
+if(interval != -1):
+    newX = [[],[],[]]
+    newY = [[],[],[]]
     for i in range(3):
-        estados.append("Values/State"+str(i)+"/Values"+str(var)+".txt")
+        for j in range(len(statesX[i])):
+            if (j%interval==0):
+                newX[i].append((statesX[i])[j])
+                newY[i].append((statesY[i])[j])
+    plt.plot(newX[0],newY[0],'o-')
+    plt.plot(newX[1],newY[1],'o-')
+    plt.plot(newX[2],newY[2],'o-')
+else:
 
-    state0 = open(estados[0], "r")
-    state1 = open(estados[1], "r")
-    state2 = open(estados[2], "r")
-    y0 = []
-    y1 = []
-    y2 = []
-    maximo = []
-    max0 = 0
-    max1 = 0
-    max2 = 0
-    #filling the variable values
-    for linea in state0.readlines():
-        y0.append(float(linea))
-    maximo.append(len(y0))
-    for linea in state1.readlines():
-        y1.append(float(linea))
-    maximo.append(len(y1))
-    for linea in state2.readlines():
-        y2.append(float(linea))
-    maximo.append(len(y2))
-    #searching the min of the values
-    x = range(0,min(maximo))
+    plt.plot(statesX[0],statesY[0],'o-')
+    plt.plot(statesX[1],statesY[1],'o-')
+    plt.plot(statesX[2],statesY[2],'o-')
 
-    #Graphing the values
-    plt.plot(x,y0[0:min(maximo)],x,y1[0:min(maximo)],x,y2[0:min(maximo)])
-    plt.grid()
-    plt.legend(('State 0', 'State 1', 'State 2'),prop = {'size':10}, loc = 'upper right')
-    plt.show()
-    #plt.show()
-    print("Quieres intentar otro valor?")
-    valor = int(input("Si(1) - No(0): "))
-    if(valor == 0):
-        value = False
+plt.grid()
+plt.legend(('State 0', 'State 1', 'State 2'),prop = {'size':10}, loc = 'upper right')
+plt.title("Variable "+str(var)+" with alpha_media = "+alpha_media)
+plt.show()
