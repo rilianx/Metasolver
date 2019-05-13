@@ -222,7 +222,7 @@ public:
 		else return 0;
 	}
 
-	virtual const State* get_best_state() {
+	virtual  State* get_best_state() {
 		return best_state;
 	}
 
@@ -240,7 +240,7 @@ public:
 	 * \brief return the n best actions according to the ActionEvaluator
 	 */
 	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
-
+	double timelimit;
 protected:
 
 	/*
@@ -252,7 +252,7 @@ protected:
 
 
 
-	double timelimit;
+
 	State* best_state;
 	clock_t begin_time;
 

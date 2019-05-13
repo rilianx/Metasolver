@@ -190,11 +190,11 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
     vector< pair<double, double> > parameter_ranges(5);
-    parameter_ranges[0]=make_pair(0.95, 1.05);
+    parameter_ranges[0]=make_pair(0.98, 1.02);
     parameter_ranges[1]=make_pair(0.0, 8.0);
     parameter_ranges[2]=make_pair(0.0, 8.0);
-    parameter_ranges[3]=make_pair(0.0, 1.0);
-    parameter_ranges[4]=make_pair(0.0, 0.1);
+    parameter_ranges[3]=make_pair(0.18, 0.22);
+    parameter_ranges[4]=make_pair(0.038, 0.042);
 
     tau_matrix tauM(parameter_ranges);
 		tau_matrix::write_report=_write_report;
@@ -203,7 +203,7 @@ int main(int argc, char** argv){
 	SearchStrategy *gr = new Greedy(vcs, aco_alpha, aco_beta, &tauM);
 
 	cout << "bsg" << endl;
-	BeamACO *beamaco= new BeamACO(vcs,*gr, 4, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor, incremento);
+	BeamACO *beamaco= new BeamACO(vcs,*gr, 8, 0.0, 0, _plot, aco_alpha, aco_beta,  &tauM, metodo, mod_factor, incremento);
 
 	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*beamaco);
@@ -211,12 +211,26 @@ int main(int argc, char** argv){
 	cout << "copying state" << endl;
 	State& s_copy= *s0->clone();
 
+	list<State*> S;
+	beamaco->timelimit=1000;
+
+	beamaco->initialize (&s_copy);
+
+	for(int i=0;i<10;i++){
+		S.push_back(s0->clone());
+		beamaco->next(S);
+		beamaco->clean(S);
+
+	}
+
+
 	cout << "running" << endl;
 
     if(_plot)
     	de=beamaco;
 
-    double eval=de->run(s_copy, maxtime, begin_time) ;
+    beamaco->update_ph=false;
+    double eval=de->run(*s0->clone(), maxtime, begin_time) ;
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
 	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;

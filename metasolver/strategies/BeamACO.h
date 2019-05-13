@@ -35,7 +35,7 @@ public:
 			int max_level_size=0, bool plot=false, double aco_alpha=0.0, double aco_beta=0.0,
 			tau_matrix* tauM=NULL, aco_strategy metodo=ONE_ARC, double mod_factor=0.0, double incremento= 0.0) :
 				BSG(evl, greedy, beams, p_elite, max_level_size, plot, aco_alpha, aco_beta, tauM),
-				metodo(metodo), mod_factor(mod_factor), incremento(incremento) {
+				metodo(metodo), mod_factor(mod_factor), incremento(incremento), update_ph(true) {
 
 	}
 
@@ -51,6 +51,7 @@ public:
 	aco_strategy metodo;
 	double mod_factor;
 
+	bool update_ph;
 
 };
 

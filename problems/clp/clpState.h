@@ -116,7 +116,7 @@ public:
 	para los valores de los indicadores debería ser súper acotado, e.g., >80%, [50%-80%], <50%.*/
 
 	virtual long get_code() const{
-
+        return 0;
 		//list<const AABB*> blocks = cont->blocks->get_intersected_objects(s);
 
 		double value = get_value();

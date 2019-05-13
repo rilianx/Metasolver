@@ -81,7 +81,7 @@ list<State*> BeamACO::next(list<State*>& S){
 
 
 		//si simulacion del hijo mejora al padre
-		if(-state_action.first > s->sim_value){
+		if(update_ph && -state_action.first > s->sim_value){
 			list< const Action* > path= final_state->get_path();
 			list< const Action* >::iterator it=path.begin();
 			advance(it,s->get_path().size());
@@ -93,7 +93,6 @@ list<State*> BeamACO::next(list<State*>& S){
 				if(a->state_code!=old_state)
 					tauM->add_pheromone(a->state_code,a->parameter_values);
 				old_state=a->state_code;
-
 			}
 		}
 
