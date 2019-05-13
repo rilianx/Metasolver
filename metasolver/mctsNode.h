@@ -69,14 +69,31 @@ public:
 	inline void set_promise(double p) {promise=p;}
 	inline void set_mean(double m) {mean=m;}
 
+	//GETTERS
 	double get_mean() const {return mean;}
 	double get_promise() const{return promise;}
 	double get_var() const {return var;}
+	double get_depth()const{return depth;}
+	double get_sym()const{return sym;}
+
+
+	// var operations
+	void increase_depth(){ depth++;}
+	void initialize_depth(double val ){depth=val;}
+
+	void increase_sym(){sym++;}
+	void initialize_sym(double val){sym= val;}
 
 	void calculate_promise();
 
 	virtual void update_simulations(double new_value){
 		nb_simulations++;
+		if(nb_simulations<1){
+		    sym = new_value;
+		}
+		if(best<new_value){
+		    best=new_value;
+		}
 
 		if(nb_simulations >= 1)
 			mean = (mean*(nb_simulations-1)+new_value)/nb_simulations;

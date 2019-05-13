@@ -66,15 +66,26 @@ namespace metasolver {
     		timelimit=tl;
 			cout << "clone state" << endl;
     		s0 = s.clone();
-
+            typedef pair<int, int> level;
 
 			cout << "root creation" << endl;
     		mctsNode* root=new mctsNode(NULL,NULL);
-    		//Se realizan dos simulaciones del nodo raiz
-				cout << "Se realizan dos simulaciones del nodo raiz" << endl;
+
+    		cout<< "initializing depth and sym"<< endl;
+    		root->initialize_depth(0);
+
+
+    		cout << "depth: "<< root->get_depth()<< " sym: " <<root->get_sym()<< endl;
+
+    		//Se realizan dos simulaciones del nodo raiz y se aumenta el contador sym
+    		cout << "Se realizan dos simulaciones del nodo raiz" << endl;
     		simulate(root,s0);
+    		root->increase_sym();
     		simulate(root,s0);
+    		root->increase_sym();
+            level2selectednodes[root->get_depth()]++; //incrementa contador del mapa de selected
     		nodes.insert(root);
+
 
 				int i=0;
     		while(nodes.size() > 0 &&  get_time()<timelimit){
@@ -93,7 +104,8 @@ namespace metasolver {
 					//hijos no seleccionados se simulan 1 vez mas.
 					for(auto ch : children){
 						if(!ch->selected){
-							simulate(ch,s0); //incrementa contador del mapa de selected
+							simulate(ch,s0);
+                            level2selectednodes[ch->get_depth()]++; //incrementa contador del mapa de selected
 							nodes.insert(ch);
 						}
 					}
@@ -123,7 +135,8 @@ namespace metasolver {
 			get_best_actions(*snext, best_actions, 999);
 			for(auto a:best_actions){
 				if(n->get_children().empty() || (*a!=*n->get_children().front()->get_action())){
-					mctsNode* nn=new mctsNode(n,a); //agregar nivel al nodo //incrementa contador del mapa de nodos por nivel
+					mctsNode* nn=new mctsNode(n,a); //agregar nivel al nodo
+					level2nodes[nn->get_depth()]++; //incrementa contador del mapa de nodos por nivel
 					n->add_pre_children(nn);
 				}
 				delete a;
@@ -154,6 +167,7 @@ namespace metasolver {
 			if(flag){
 				//cout << *a << endl;
 				next->add_children(new mctsNode(next, a));
+				level2nodes[next->get_depth()+1]++; // aumentaron los nodos al nivel siguiente del next
 				next=next->get_children().front();
 			}
 			if(*a==*next->get_action()) flag=true;
