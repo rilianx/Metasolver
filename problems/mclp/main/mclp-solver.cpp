@@ -228,33 +228,33 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//usa greedy para llenar contenedor
-		double eval=gr->run(s_copy);
+		double eval=bsg->run(s_copy);
 
 		//se actualizan las prioridades
 		//dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(pdec,
 			//	&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
 
-		dynamic_cast<const mclpState*>(gr->get_best_state())->update_volumes(pdec,
-				&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
+		dynamic_cast<const mclpState*>(bsg->get_best_state())->update_volumes(pdec,
+				&dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes);
 
 		//se almacena el bin en el mapa
-		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes));
+		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes));
 
 
-		for(auto box:dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
-			//cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
-			//cout << box.first->get_id() << " ";
+		for(auto box:dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes){
+			cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
+			cout << box.first->get_id() << " ";
 			used_boxes[box.first].push_back(i);
 		}
-		//cout << endl;
+		cout << endl;
 
 
 	}
 
-	//cout << "used_boxes" << endl;
-	/*for(auto box: used_boxes)
+	cout << "used_boxes" << endl;
+	for(auto box: used_boxes)
 		cout << box.first->get_id() << "(" << box.second.size() << ")," ;
-	*/
+	
 	cout << endl;
 
 	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
@@ -359,13 +359,13 @@ int main(int argc, char** argv){
 	cout << "greedy" << endl;
 	Greedy *gr = new Greedy (vcs);
 
-	/*
-	cout << "bsg" << endl;
-	BSG *bsg= new BSG(vcs,*gr, 12, 0.0, 0, _plot);
-	bsg->trace=false;
-	*/
 
-   	int bins=solve(gr, NULL, s0, nbins, pdec);
+	cout << "bsg" << endl;
+	BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
+	bsg->trace=false;
+
+
+   	int bins=solve(gr, bsg, s0, nbins, pdec);
 
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);
