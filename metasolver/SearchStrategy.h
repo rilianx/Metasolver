@@ -145,7 +145,7 @@ public:
 			for(int i=0; i<dist_params.size();i++ ){
 				dist_params[i].first = parameter_values[i];
 				dist_params[i].second = 1;
-				ph_distribution[state_code]=dist_params;
+				//ph_distribution[state_code]=dist_params;
 			}
 		}
 
