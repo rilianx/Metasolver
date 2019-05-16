@@ -83,6 +83,9 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _metodo(parser, "int", "pheromone updating method (1 = update pheromone on only one state-action arc)(2 = update pheromone on the best found path)(3 = update pheromone on the best w paths, w being represented by the beams)", {"metodo"});
 	args::ValueFlag<double> _mod_factor(parser, "double", "Value added to the pheromone factor in each iteration (recommend using values between 0.001 and 0.008)", {"mod_factor"});
 	args::ValueFlag<double> _incremento(parser, "double", "Value added to tau", {"incremento"});
+	args::ValueFlag<double> _std_dev(parser, "double", "Standard deviation of tau_m", {"std_dev"});
+
+
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 	args::Flag _write_report(parser, "double", "...", {"write_report"});
 
@@ -121,7 +124,7 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, aco_alpha=0.0, aco_beta=0.0;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, aco_alpha=0.0, aco_beta=0.0, std_dev=0.0;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
@@ -131,6 +134,7 @@ int main(int argc, char** argv){
 	if(_delta) delta=_delta.Get();
 	if(_p) p=_p.Get();
 	if(_alpha_media) tau_matrix::alpha_media=_alpha_media.Get();
+	if(_std_dev) std_dev=_std_dev.Get();
 
 
 	string format="BR";
@@ -191,10 +195,10 @@ int main(int argc, char** argv){
     alpha, beta, gamma, p, delta, 0.0, r);
     vector< pair<double, double> > parameter_ranges(5);
     parameter_ranges[0]=make_pair(0.98, 1.02);
-    parameter_ranges[1]=make_pair(0.0, 8.0);
-    parameter_ranges[2]=make_pair(0.0, 8.0);
-    parameter_ranges[3]=make_pair(0.18, 0.22);
-    parameter_ranges[4]=make_pair(0.038, 0.042);
+    parameter_ranges[1]=make_pair(0.0, 10.0);
+    parameter_ranges[2]=make_pair(0.0, 10.0);
+    parameter_ranges[3]=make_pair(0.0, 10.0);
+    parameter_ranges[4]=make_pair(0.00, 0.2);
 
     tau_matrix tauM(parameter_ranges);
 		tau_matrix::write_report=_write_report;
@@ -216,7 +220,8 @@ int main(int argc, char** argv){
 
 	beamaco->initialize (&s_copy);
 
-	for(int i=0;i<10;i++){
+	cout << "tunning" << endl;
+	for(int i=0;i<3;i++){
 		S.push_back(s0->clone());
 		beamaco->next(S);
 		beamaco->clean(S);
@@ -225,6 +230,7 @@ int main(int argc, char** argv){
 
 
 	cout << "running" << endl;
+	tauM.std_dev=std_dev;
 
     if(_plot)
     	de=beamaco;

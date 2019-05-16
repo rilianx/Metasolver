@@ -53,11 +53,26 @@ list<State*> BeamACO::next(list<State*>& S){
              double value = greedy.run(state_copy, timelimit, begin_time);
 
             //best_state update
+
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
             	 cout << "[BeamACO] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
+
+         		if(update_ph){
+         			list< const Action* > path= state_copy.get_path();
+         			list< const Action* >::iterator it=path.begin();
+         			advance(it,state.get_path().size());
+         			path.erase(path.begin(),it);
+
+           			long old_state=-1;
+         			for(auto a:path){
+         				if(a->state_code!=old_state)
+         					tauM->add_pheromone(a->state_code,a->parameter_values);
+         				old_state=a->state_code;
+         			}
+         		}
              }
 
 
@@ -81,6 +96,7 @@ list<State*> BeamACO::next(list<State*>& S){
 
 
 		//si simulacion del hijo mejora al padre
+		/*
 		if(update_ph && -state_action.first > s->sim_value){
 			list< const Action* > path= final_state->get_path();
 			list< const Action* >::iterator it=path.begin();
@@ -94,7 +110,7 @@ list<State*> BeamACO::next(list<State*>& S){
 					tauM->add_pheromone(a->state_code,a->parameter_values);
 				old_state=a->state_code;
 			}
-		}
+		}*/
 
 
 

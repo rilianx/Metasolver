@@ -59,7 +59,11 @@ private:
 	double truncated_normal(double val, int n, pair<double,double> parameter_range){
 			double min = parameter_range.first;
 			double max = parameter_range.second;
-			double stdDis = (max-min)/(n);
+			double stdDis=std_dev;
+			if(std_dev ==0.0)
+			   stdDis = (max-min)/(n);
+
+
 			double media = val;
 			//función que retorna el sampling de la distribucion normal
 			Generator NormalGenerator(media, stdDis, min,max);
@@ -67,7 +71,7 @@ private:
 	}
 
 public:
-	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0){
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0), std_dev(0.0){
 	}
 
 	//samplea parametros de acuerdo a distribucion normal asociada al estado
@@ -108,8 +112,10 @@ public:
 				FILE *state;
 				double media = dist_params[i].first;
 				double n = dist_params[i].second;
-				dist_params[i].first = alpha_media*media + (1.0-alpha_media)*parameter_values[i]; //  (n*media+parameter_values[i])/(n+1);
+				dist_params[i].first = //(n*media+parameter_values[i])/(n+1);
+						alpha_media*media + (1.0-alpha_media)*parameter_values[i]; //  (n*media+parameter_values[i])/(n+1);
 				dist_params[i].second++;
+				cout << dist_params[i].first  << ",";
 				//Largo de 27 caracteres para cada ruta
 				if(write_report){
 					*(direccion+12) = state_code+'0';
@@ -120,6 +126,7 @@ public:
 					fclose(state);
 				}
 			}
+			cout << endl;
 		}else{
 			//you can only get here in the first iteration
 			//erasing files for writting
@@ -145,7 +152,7 @@ public:
 			for(int i=0; i<dist_params.size();i++ ){
 				dist_params[i].first = parameter_values[i];
 				dist_params[i].second = 1;
-				//ph_distribution[state_code]=dist_params;
+				ph_distribution[state_code]=dist_params;
 			}
 		}
 
@@ -153,6 +160,7 @@ public:
   static bool write_report;
   static double alpha_media;
   double iter_pheromone;
+  double std_dev;
 };
 
 //TODO: refactorizar
