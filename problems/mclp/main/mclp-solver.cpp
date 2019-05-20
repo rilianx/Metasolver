@@ -11,6 +11,7 @@
 
 #include <dirent.h>
 #include <malloc.h>
+#include <iterator>
 
 #include "args.hxx"
 //#include "objects/State.cpp"
@@ -122,25 +123,26 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 	perror("getcwd() error");
 }*/
 
-void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
-		map<const BoxShape*, list<int> >* used_boxes, long int nb_boxes){
+void exportToTxtSCP(list < pair <double, set<int>> >* bins,
+		set<int>* used_boxes, long int nb_boxes){
 
-	string path = findDirectory(".", "GRASP-SCP");
+	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp.txt";
+
 	if(path.empty()){
 		cout << "El directorio no existe.\n" << endl;
 		exit(0);
 	}
-	cout << path << endl;
-	ofstream scp (path + "bins_scp.txt");
+	cout << "Resultados almacenados en " << path << filename << endl;
+	ofstream scp (path + filename);
 
 	if (scp.is_open()){
 		long int total_boxes = 0;
 
 		//Bins quantity
-		scp << " " << nb_boxes << " ";
+		scp << " " << bins->size() << " ";
 
 		//Boxes quantity
-		scp << bins->size() << "\n";
+		scp << nb_boxes << "\n";
 
 		//Matrix cost by boxes
 		long int cont = 0;
@@ -155,10 +157,10 @@ void exportToTxtSCP(list < pair <double, map<const BoxShape*, int>> >* bins,
 		scp << "\n";
 
 		//Boxes quantity in a set and then sets boxes
-		for(auto box_el: *used_boxes){
-			scp << " " << box_el.second.size() << "\n";
-			for(auto bin_id: box_el.second){
-				scp << " " << bin_id + 1;
+		for(auto bin: *bins){
+			scp << " " << bin.second.size() << "\n";
+			for(auto box: bin.second){
+				scp << " " << box + 1;
 			}
 			scp << "\n";
 		}
@@ -210,6 +212,24 @@ void run_GRASP_SCP(){
 	pclose(p);
 }
 
+/**
+ * Si son iguales retorna true
+ */
+bool compare_sets(set<int> set1, set<int> set2){
+
+	if(set1.size() == set2.size()){
+		set<int>::iterator it1 = set1.begin(), it2 = set2.begin();
+		while(it1 != set1.end() && it2 != set2.end()){
+			if(*it1 == *it2)
+				return true;
+			it1++;
+			it2++;
+		}
+	}
+	return false;
+}
+
+
 /*Clonar estado inicial
 Aplicar Greedy y obtener contenedor
 Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (bins)
@@ -218,44 +238,53 @@ Volver a 1*/
 
 int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	mclpState::initalize_priorities();
-	//multimap<double, map<const BoxShape*, int> > bins;
-	list < pair <double, map<const BoxShape*, int>> > bins;
-	map<const BoxShape*, list<int> > used_boxes;
+	list < pair <double, set<int>> > bins;
+	set<int> used_boxes;
+	set<int> inserted_bins;
 	int box_quantity = 0;
 
-	for(int i=0; i<nbins; i++){
+	for(int i=0; i < nbins || (s0->nb_left_boxes.size() > used_boxes.size()); i++){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//usa greedy para llenar contenedor
 		double eval=bsg->run(s_copy);
 
-		//se actualizan las prioridades
-		//dynamic_cast<const mclpState*>(gr->get_best_state())->update_priorities(pdec,
-			//	&dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes);
-
 		dynamic_cast<const mclpState*>(bsg->get_best_state())->update_volumes(pdec,
 				&dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes);
 
-		//se almacena el bin en el mapa
-		bins.push_back(make_pair(eval, dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes));
-
-
-		for(auto box:dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes){
-			cout << box.first->get_id() << "(" << box.first->get_priority() << "),";
-			cout << box.first->get_id() << " ";
-			used_boxes[box.first].push_back(i);
+		//se almacena el bin en el conjunto
+		for(auto box: dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes){
+			inserted_bins.insert(box.first->get_id());
+			used_boxes.insert(box.first->get_id());
+			//cout << box.first->get_id() + 1 << ", ";
 		}
-		cout << endl;
+		//cout << endl;
 
+		bool insert_bin = true;
+		for(auto bin: bins){
+			//Descomentar si se requiere que eval y bin.first sean iguales para realizar la busqueda de duplicados
+			//if(eval == bin.first){
+				//cout << eval << " = " << bin.first << endl;
+				if(compare_sets(inserted_bins, bin.second) == true){
+					//cout << "set1 = set2" << endl;
+					insert_bin = false;
+				}
+			//}
+		}
+		if(insert_bin && !inserted_bins.empty())
+			bins.push_back(make_pair(eval, inserted_bins));
+		inserted_bins.clear();
 
 	}
 
 	cout << "used_boxes" << endl;
-	for(auto box: used_boxes)
-		cout << box.first->get_id() << "(" << box.second.size() << ")," ;
-	
-	cout << endl;
+	for(auto bin: bins){
+		cout << bin.first << " ";
+		for(auto box: bin.second)
+			cout << box << " ";
+		cout << endl;
+	}
 
 	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
 	run_GRASP_SCP();
