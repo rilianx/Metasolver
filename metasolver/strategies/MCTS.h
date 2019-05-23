@@ -62,7 +62,7 @@ namespace metasolver {
 		set< pair<double,double> > evals;
 
 		//nodos seleccionables del arbol ordenados por promesa
-		std::multiset<mctsNode* , Compare> nodes;
+		list<mctsNode*> nodes;
 
 };
 

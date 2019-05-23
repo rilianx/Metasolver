@@ -50,15 +50,31 @@ namespace metasolver {
 
 
 
-
+    	//TODO:: optimizar esta funcion
 		mctsNode* MCTS::next_node(){
 
+			double max_promise=0.0;
+			mctsNode* best=NULL;
+			for(auto node:nodes){
+
+				if(node->get_pre_children().empty()) continue;
+
+				node->calculate_promise();
+				if(node->get_promise()<max_promise ){
+					max_promise=node->get_promise();
+					best=node;
+				}
+			}
+			return best;
+
+			/*
 			mctsNode* c=NULL;
 			do {
 				c= *nodes.begin();
 				nodes.erase(nodes.begin());
 			} while(c->get_pre_children().empty() && !nodes.empty());
 			return c;
+			*/
 
 		}
 
@@ -80,11 +96,11 @@ namespace metasolver {
     		//Se realizan dos simulaciones del nodo raiz y se aumenta el contador sym
     		cout << "Se realizan dos simulaciones del nodo raiz" << endl;
     		simulate(root,s0);
-    		root->increase_sym();
+    		//root->increase_sym();
     		simulate(root,s0);
-    		root->increase_sym();
+    		//root->increase_sym();
             level2selectednodes[root->get_depth()]++; //incrementa contador del mapa de selected
-    		nodes.insert(root);
+    		nodes.push_back(root);
 
 
 				int i=0;
@@ -106,7 +122,7 @@ namespace metasolver {
 						if(!ch->selected){
 							simulate(ch,s0);
                             level2selectednodes[ch->get_depth()]++; //incrementa contador del mapa de selected
-							nodes.insert(ch);
+							nodes.push_back(ch);
 						}
 					}
     			}
@@ -124,7 +140,7 @@ namespace metasolver {
 		//no hay hijos no simulados
 		if(n->selected && n->get_pre_children().empty()) return;
 
-		//se genera el estado a partir de la ra��z
+		//se genera el estado a partir de la ra������z
 		//cout << "get_state" << endl;
 		State* snext=n->get_state(s0);
 		//cout << "success" << endl;
@@ -136,7 +152,7 @@ namespace metasolver {
 			for(auto a:best_actions){
 				if(n->get_children().empty() || (*a!=*n->get_children().front()->get_action())){
 					mctsNode* nn=new mctsNode(n,a); //agregar nivel al nodo
-					level2nodes[nn->get_depth()]++; //incrementa contador del mapa de nodos por nivel
+
 					n->add_pre_children(nn);
 				}
 				delete a;
@@ -146,15 +162,17 @@ namespace metasolver {
 
     //Se obtiene el siguiente hijo de n y se genera su estado
 		mctsNode* next=n->next_child();
+
 		if(!next){
 			 delete snext;
 			 return;
 		 }
+		level2nodes[next->get_depth()]++; //incrementa contador del mapa de nodos por nivel
 
 		//cout << "current_action:" << *next->get_action() << endl;
 		snext->transition(*next->get_action());
 
-        //se lanza un greedy (simulaci��n)
+        //se lanza un greedy (simulaci������n)
 		double value=greedy.run(*snext);
 		nb_simulations++;
 
@@ -167,14 +185,13 @@ namespace metasolver {
 			if(flag){
 				//cout << *a << endl;
 				next->add_children(new mctsNode(next, a));
-				level2nodes[next->get_depth()+1]++; // aumentaron los nodos al nivel siguiente del next
 				next=next->get_children().front();
 			}
 			if(*a==*next->get_action()) flag=true;
 		}
 		//cout << "value:" << value << endl;
 		//se actualiza el valor en el nodo y en todos sus ancentros
-		next->update_simulations(value);
+		next->update_simulations(value,n->get_depth());
 
 		//best_state update
 		if(value > get_best_value()){

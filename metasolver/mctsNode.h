@@ -81,14 +81,13 @@ public:
 	void increase_depth(){ depth++;}
 	void initialize_depth(double val ){depth=val;}
 
-	void increase_sym(){sym++;}
-	void initialize_sym(double val){sym= val;}
-
 	void calculate_promise();
 
-	virtual void update_simulations(double new_value){
+	virtual void update_simulations(double new_value, int depth_subroot){
+		if(depth<depth_subroot && !bp) return;
+
 		nb_simulations++;
-		if(nb_simulations<1){
+		if(nb_simulations<=1){
 		    sym = new_value;
 		}
 		if(best<new_value){
@@ -107,8 +106,8 @@ public:
 		calculate_promise();
 
     //back-propagation
-		if(bp && parent)
-		   parent->update_simulations(new_value);
+		if(parent)
+		   parent->update_simulations(new_value,depth_subroot);
 	}
 
 	static int count_nodes;
