@@ -126,7 +126,7 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 		set<int>* used_boxes, long int nb_boxes){
 
-	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp.txt";
+	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp" + to_string(getpid()) + ".txt";
 
 	if(path.empty()){
 		cout << "El directorio no existe.\n" << endl;
@@ -170,14 +170,15 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 }
 
 void run_GRASP_SCP(){
-	string path = findDirectory(".", "GRASP-SCP");
+
+	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp" + to_string(getpid()) + ".txt";
 	if(path.empty()){
 		cout << "El directorio no existe.\n" << endl;
 		exit(0);
 	}
 	const string MAX_TIME = "10";
 	const string SEED = "1";
-	string run = string(path + "GRASP-SCP " + path + "bins_scp.txt ") + MAX_TIME + string(" ") + SEED;
+	string run = string(path + "GRASP-SCP " + path + filename + " ") + MAX_TIME + string(" ") + SEED;
 
 	FILE *p = popen(run.c_str(), "r");
 
@@ -210,6 +211,9 @@ void run_GRASP_SCP(){
 		perror("Unable to open file");
 	}
 	pclose(p);
+
+	//FILE * scp = fopen((path + filename).c_str(), "w");
+	remove((path + filename).c_str());
 }
 
 /**
