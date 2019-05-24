@@ -8,6 +8,9 @@
 #include "mctsNode.h"
 #include "State.h"
 #include <stack>
+#include <algorithm> //max
+
+
 
 namespace metasolver {
 
@@ -18,23 +21,25 @@ double mctsNode::C=0.0;
 bool mctsNode::bp=false;
 
 
-mctsNode::mctsNode(mctsNode* N, const Action* a) :
- parent(N), id(count_nodes++), action((a)? a->clone():NULL), var(0.0), mean(0.0),
- promise(0.0), nb_simulations(0), selected(false), sym(0), best(0){
-    if(N==NULL){
-        depth=0;
-    }else{
-        depth = N->depth+1;
-    }
+mctsNode::mctsNode(mctsNode* parent, const Action* a, map<int, int>& level2nodes, map<int, int>& level2selectednodes) :
+ parent(parent), id(count_nodes++), action((a)? a->clone():NULL), var(0.0), mean(0.0),
+ promise(0.0), nb_simulations(0), selectable(false), sym(0), best(0), selected_count(0),
+ depth(parent? (parent->depth+1):0), N(level2nodes[depth]),
+ N_next(level2nodes[depth+1]), SN(level2selectednodes[depth]){
 
  }
 
- void mctsNode::calculate_promise(){
-   if(children.size()<2) return;
+ double mctsNode::calculate_promise(){
+   if(children.size()<2) return 0.0;
+
+   //BSG promise
+   promise = 100000000 - 100000.0*N_next - 10000.0*depth -
+   100.0*(std::max(SN-sqrt(N),0.0)*(selected_count==0)) -
+   10.0*nb_simulations  + best;
 
    // se bonifica nodos con pocas simulaciones
-   promise = mean + mctsNode::B*sqrt(var) + mctsNode::C*(1.0/sqrt(nb_simulations));
-
+   //promise = mean + mctsNode::B*sqrt(var) + mctsNode::C*(1.0/sqrt(nb_simulations));
+   return promise;
  }
 
 State* mctsNode::get_state(const State* s){

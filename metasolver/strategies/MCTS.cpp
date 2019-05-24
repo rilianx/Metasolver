@@ -32,7 +32,7 @@ namespace metasolver {
 			file<< "\t,\"children\":["<<endl;
 
 			for(auto c:node->get_children()){
-				if(c->selected==true){
+				if(c->selectable==true){
 				  dfsPrintChild(c,file);
 				  if(c!=node->get_children().back())
 					  file<<","<<endl;
@@ -56,15 +56,23 @@ namespace metasolver {
 			double max_promise=0.0;
 			mctsNode* best=NULL;
 			for(auto node:nodes){
-
 				if(node->get_pre_children().empty()) continue;
 
 				node->calculate_promise();
-				if(node->get_promise()<max_promise ){
+				if(node->get_promise()>max_promise ){
 					max_promise=node->get_promise();
 					best=node;
 				}
 			}
+
+			if(best){
+				if(best->selected_count==0){
+					 level2nodes[best->get_depth()+1]+=best->get_children().size();
+				   level2selectednodes[best->get_depth()]++; //incrementa contador del mapa de selected
+				}
+				best->selected_count++;
+			}
+
 			return best;
 
 			/*
@@ -85,7 +93,7 @@ namespace metasolver {
             typedef pair<int, int> level;
 
 			cout << "root creation" << endl;
-    		mctsNode* root=new mctsNode(NULL,NULL);
+    		mctsNode* root=new mctsNode(NULL,NULL,level2nodes,level2selectednodes);
 
     		cout<< "initializing depth and sym"<< endl;
     		root->initialize_depth(0);
@@ -99,7 +107,7 @@ namespace metasolver {
     		//root->increase_sym();
     		simulate(root,s0);
     		//root->increase_sym();
-            level2selectednodes[root->get_depth()]++; //incrementa contador del mapa de selected
+
     		nodes.push_back(root);
 
 
@@ -109,25 +117,34 @@ namespace metasolver {
     			//Seleccion del nodo
     			mctsNode* n = next_node();
     			if(n==NULL) break;
+					//cout.precision(13);
+					//cout << 10000000 - n->get_promise() << endl;
 
-				//se simula n
-				simulate(n,s0);
+					//se simula n
+				  simulate(n,s0);
 
-				const list<mctsNode*>& children = n->get_children();
+					//b metasolver/strategies/MCTS.cpp:123
+				  const list<mctsNode*>& children = n->get_children();
 
-
-				if(children.size() >= 3){
-					//hijos no seleccionados se simulan 1 vez mas.
-					for(auto ch : children){
-						if(!ch->selected){
-							simulate(ch,s0);
-                            level2selectednodes[ch->get_depth()]++; //incrementa contador del mapa de selected
-							nodes.push_back(ch);
-						}
-					}
+				  if(children.size() >= 3){
+					  //hijos no seleccionados se simulan 1 vez mas.
+					  for(auto ch : children){
+					  	if(!ch->selectable){
+							  simulate(ch,s0);
+						  	nodes.push_back(ch);
+						  }
+					  }
     			}
 
     		}
+
+				for(auto nod:level2nodes)
+				  cout << nod.first << ":" << nod.second  << " ";
+				cout <<endl;
+
+				for(auto nod:level2selectednodes)
+				  cout << nod.first << ":" << nod.second  << " ";
+				cout <<endl;
 
     		//pointsToTxt(root, 0);
     		//system("firefox problems/clp/tree_plot/index.html");
@@ -138,7 +155,7 @@ namespace metasolver {
 
 
 		//no hay hijos no simulados
-		if(n->selected && n->get_pre_children().empty()) return;
+		if(n->selectable && n->get_pre_children().empty()) return;
 
 		//se genera el estado a partir de la ra������z
 		//cout << "get_state" << endl;
@@ -146,18 +163,18 @@ namespace metasolver {
 		//cout << "success" << endl;
 
 		//se crean todos los hijos de n (pre-children)
-		if(!n->selected){
+		if(!n->selectable){
 			list< Action* > best_actions;
 			get_best_actions(*snext, best_actions, 999);
 			for(auto a:best_actions){
 				if(n->get_children().empty() || (*a!=*n->get_children().front()->get_action())){
-					mctsNode* nn=new mctsNode(n,a); //agregar nivel al nodo
+					mctsNode* nn=new mctsNode(n,a,level2nodes,level2selectednodes); //agregar nivel al nodo
 
 					n->add_pre_children(nn);
 				}
 				delete a;
 			}
-			n->selected=true;
+			n->selectable=true;
 		}
 
     //Se obtiene el siguiente hijo de n y se genera su estado
@@ -167,7 +184,7 @@ namespace metasolver {
 			 delete snext;
 			 return;
 		 }
-		level2nodes[next->get_depth()]++; //incrementa contador del mapa de nodos por nivel
+		if(n->selected_count>0) level2nodes[next->get_depth()]++; //incrementa contador del mapa de nodos por nivel
 
 		//cout << "current_action:" << *next->get_action() << endl;
 		snext->transition(*next->get_action());
@@ -183,8 +200,7 @@ namespace metasolver {
 		for(auto a: actions){
 
 			if(flag){
-				//cout << *a << endl;
-				next->add_children(new mctsNode(next, a));
+				next->add_children(new mctsNode(next, a, level2nodes, level2selectednodes));
 				next=next->get_children().front();
 			}
 			if(*a==*next->get_action()) flag=true;

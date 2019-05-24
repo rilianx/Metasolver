@@ -30,7 +30,7 @@ namespace metasolver{
 class mctsNode {
 public:
 
-  mctsNode(mctsNode* N, const Action* a);
+  mctsNode(mctsNode* parent, const Action* a, map<int, int>& level2nodes, map<int, int>& level2selectednodes);
 
 	virtual ~mctsNode() {
 		if(action) delete action;
@@ -81,7 +81,7 @@ public:
 	void increase_depth(){ depth++;}
 	void initialize_depth(double val ){depth=val;}
 
-	void calculate_promise();
+	double calculate_promise();
 
 	virtual void update_simulations(double new_value, int depth_subroot){
 		if(depth<depth_subroot && !bp) return;
@@ -103,7 +103,7 @@ public:
 			var = ((var*(nb_simulations-2)) +
 			      pow( (new_value-mean),2) ) / ( nb_simulations-1 );
 
-		calculate_promise();
+		//calculate_promise();
 
     //back-propagation
 		if(parent)
@@ -112,7 +112,8 @@ public:
 
 	static int count_nodes;
 
-	bool selected;
+  bool selectable;
+  int selected_count; //number of times the node has been selected
 
   int nb_simulations;
 
@@ -132,9 +133,12 @@ protected:
 
 
   //mcts-elements
-	double sym;
-	double best;
-	double depth;
+	double sym; //evaluacion de la primera simulacion
+	double best; //mejor simulacion de nodos hijos
+	int depth; //profundidad del nodo
+  int& N; //cantidad de nodos en el nivel
+  int& N_next; //cantidad de nodos en el siguiente nivel
+  int& SN; //cantidad de nodos seleccionados en el nivel
 
 	double var;
 	double mean;
