@@ -61,6 +61,18 @@ void SpaceSet::remove_nonmaximal_objects(list<Space>& objs){
   }
 }
 
+
+
+bool SpaceSet::has_next() const { return (data_it != data.end()); }
+
+const Space& SpaceSet::next() const {
+const Space& sp=*data_it; data_it++;
+if(&(*data_it) == marked) data_it++;
+return sp;
+};
+
+void SpaceSet::pop(){ if(marked) erase(*marked); }
+
 const Space* SpaceSet::_insert(const Space& sp){
 	pair<set<Space, by_manhattan_distance>::iterator,bool> p = data.insert(sp);
 	if(global::TRACE) cout << "insert_space:+" <<  (*p.first) << ";" << &(*p.first) << endl;
@@ -94,7 +106,3 @@ void SpaceSet::_erase(const Space& sp){
 
 class SpaceSet ;
 }
-
-
-
-

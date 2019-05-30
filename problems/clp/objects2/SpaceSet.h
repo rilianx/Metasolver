@@ -52,19 +52,15 @@ public:
 
 	virtual const Space& top() const;
 
-    virtual bool has_next() const { return (data_it != data.end()); }
+    virtual bool has_next() const;
 
     /**
      * Removes the marked space (top)
      */
-    virtual void pop(){ if(marked) erase(*marked); }
+    virtual void pop();
 
 
-    virtual const Space& next() const {
-		const Space& sp=*data_it; data_it++;
-		if(&(*data_it) == marked) data_it++;
-		return sp;
-    };
+    virtual const Space& next() const;
 
     virtual void crop_volume(const AABB& volume, const Vector3& cont, const Vector3& min_dim);
 
