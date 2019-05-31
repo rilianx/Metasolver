@@ -48,6 +48,10 @@ int main(int argc, char** argv){
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 
+	args::Flag _discard_equivalent(parser, "discard_equivalent", "Discard equivalent nodes (in greedy-value)", {"discard_equivalent"});
+
+
+
 	args::ValueFlag<double> _B(parser, "double", "MCTS: weight of std.dev.", {'B'});
 	args::ValueFlag<double> _C(parser, "double", "MCTS: weight of nb-simulations", {'C'});
 
@@ -147,7 +151,8 @@ int main(int argc, char** argv){
    // cout << s0.valid_blocks.size() << endl;
 
 	cout << "running" << endl;
-  double eval = mcts->run(s_copy, maxtime, begin_time);
+	MCTS::discard_equivalent=_discard_equivalent;
+    double eval = mcts->run(s_copy, maxtime, begin_time);
 
     cout << "best_volume #simulations" << endl;
 	// cout << eval << " " << mcts->get_best_state()->get_value2() << " " << eval*mcts->get_best_state()->get_value2() << endl;

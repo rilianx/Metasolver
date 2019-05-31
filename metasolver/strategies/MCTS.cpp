@@ -12,6 +12,8 @@
 
 namespace metasolver {
 
+	bool MCTS::discard_equivalent=false;
+
 	void MCTS::dfsPrintChild(const mctsNode* node, ofstream& file){
 
 		file << "{ "<<endl;
@@ -130,21 +132,22 @@ namespace metasolver {
 					  //hijos no seleccionados se simulan 1 vez mas.
 					  for(auto ch : children){
 					  	if(!ch->selectable){
-							  simulate(ch,s0);
+							simulate(ch,s0);
 						  	nodes.push_back(ch);
-						  }
+						}
 					  }
     			}
-
+				//if(i==100) break;
     		}
 
+    		/*
 				for(auto nod:level2nodes)
 				  cout << nod.first << ":" << nod.second  << " ";
 				cout <<endl;
 
 				for(auto nod:level2selectednodes)
 				  cout << nod.first << ":" << nod.second  << " ";
-				cout <<endl;
+				cout <<endl;*/
 
     		//pointsToTxt(root, 0);
     		//system("firefox problems/clp/tree_plot/index.html");
@@ -157,7 +160,7 @@ namespace metasolver {
 		//no hay hijos no simulados
 		if(n->selectable && n->get_pre_children().empty()) return;
 
-		//se genera el estado a partir de la ra������z
+		//se genera el estado a partir de la ra������������������z
 		//cout << "get_state" << endl;
 		State* snext=n->get_state(s0);
 		//cout << "success" << endl;
@@ -184,14 +187,25 @@ namespace metasolver {
 			 delete snext;
 			 return;
 		 }
-		if(n->selected_count>0) level2nodes[next->get_depth()]++; //incrementa contador del mapa de nodos por nivel
 
-		//cout << "current_action:" << *next->get_action() << endl;
 		snext->transition(*next->get_action());
 
-        //se lanza un greedy (simulaci������n)
+        //se lanza un greedy (simulacion)
 		double value=greedy.run(*snext);
 		nb_simulations++;
+
+
+		//se descartan evaluaciones equivalentes
+		if(discard_equivalent && evals.find(value) != evals.end()){
+			delete snext;
+			return;
+		}
+
+		if(discard_equivalent) evals.insert(value);
+
+		if(n->selected_count>0)
+			level2nodes[next->get_depth()]++; //incrementa contador del mapa de nodos por nivel
+
 
 
 		//se reconstruye el camino con nodos

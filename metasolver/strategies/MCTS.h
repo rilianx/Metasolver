@@ -53,13 +53,16 @@ namespace metasolver {
 		map<int, int> level2selectednodes;
 
 
+		//se descartan nodos equivalentes
+		static bool discard_equivalent;
+
 		private:
 
     	const State* s0;
 
 		SearchStrategy& greedy;
 
-		set< pair<double,double> > evals;
+		set< double > evals;
 
 		//nodos seleccionables del arbol ordenados por promesa
 		list<mctsNode*> nodes;
