@@ -221,7 +221,7 @@ int main(int argc, char** argv){
 	beamaco->initialize (&s_copy);
 
 	cout << "tunning" << endl;
-	for(int i=0;i<3;i++){
+	for(int i=0;i<0;i++){
 		S.push_back(s0->clone());
 		beamaco->next(S);
 		beamaco->clean(S);
