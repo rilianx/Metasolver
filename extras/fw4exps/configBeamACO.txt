@@ -6,7 +6,7 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = beamACO-gonzalo150_tuning
+algo_names = beamACO-gonzalo150_tuning_1
 
 [BSG]
 exec = "../../BSG_CLP"
@@ -14,7 +14,7 @@ params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04
 outputpos_times = 0
 outputpos_boxes = 0
 
-[beamACO-gonzalo150_tuning]
+[beamACO-gonzalo150_tuning_1]
 exec = "../../BeamACO"
 params =  _INSTANCE -t 150 -f BR 
 outputpos_times = 0
