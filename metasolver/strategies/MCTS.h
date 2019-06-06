@@ -29,7 +29,7 @@ namespace metasolver {
 
 
 
-	    void dfsPrintChild(const mctsNode* node, ofstream& file);
+	    void dfsPrintChild(mctsNode* node, ofstream& file);
 
 	    void pointsToTxt(mctsNode* root, int it);
 

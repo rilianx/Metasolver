@@ -43,7 +43,7 @@ public:
 
 	bool is_root(){ return parent==NULL; }
 
-	const list<mctsNode*>& get_children() const { return children;}
+	list<mctsNode*>& get_children() { return children;}
 
 	list<mctsNode*>& get_pre_children() { return pre_children;}
 

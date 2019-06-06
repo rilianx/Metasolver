@@ -14,7 +14,7 @@ namespace metasolver {
 
 	bool MCTS::discard_equivalent=false;
 
-	void MCTS::dfsPrintChild(const mctsNode* node, ofstream& file){
+	void MCTS::dfsPrintChild(mctsNode* node, ofstream& file){
 
 		file << "{ "<<endl;
 		file<<"\t \"name\":\""<<node->get_id()<<"\",";
@@ -197,6 +197,7 @@ namespace metasolver {
 
 		//se descartan evaluaciones equivalentes
 		if(discard_equivalent && evals.find(value) != evals.end()){
+			n->get_children().pop_back();
 			delete snext;
 			return;
 		}
