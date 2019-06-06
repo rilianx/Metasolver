@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 set (CMAKE_CXX_STANDARD 11)
-SET (CMAKE_CXX_COMPILER "/usr/bin/g++")
+SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
@@ -32,7 +32,7 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # ADD_DEFINITION(-g -pg)
 
