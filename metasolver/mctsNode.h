@@ -45,7 +45,7 @@ public:
 
 	const list<mctsNode*>& get_children() const { return children;}
 
-	const list<mctsNode*>& get_pre_children() const { return pre_children;}
+	list<mctsNode*>& get_pre_children() { return pre_children;}
 
 	void add_pre_children(mctsNode* n){ pre_children.push_back(n); }
 
