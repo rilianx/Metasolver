@@ -34,7 +34,7 @@ LINK_LIBRARIES(
 
 
  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
-
+ # SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie -g -pg") #debug
 # ADD_DEFINITION(-g -pg)
 
 ADD_LIBRARY(

@@ -84,6 +84,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _mod_factor(parser, "double", "Value added to the pheromone factor in each iteration (recommend using values between 0.001 and 0.008)", {"mod_factor"});
 	args::ValueFlag<double> _incremento(parser, "double", "Value added to tau", {"incremento"});
 	args::ValueFlag<double> _std_dev(parser, "double", "Standard deviation of tau_m", {"std_dev"});
+	args::ValueFlag<double> _tuning_iter(parser, "double", "Tuning iterarions (default=1)", {"tuning_iter"});
 
 
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
@@ -124,7 +125,9 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0, aco_alpha=0.0, aco_beta=0.0, std_dev=0.0;
+	tau_matrix::alpha_media=0.9;
+	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
+	double aco_alpha=0.0, aco_beta=0.0, std_dev=0.0, tuning_iter=1;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
@@ -135,6 +138,7 @@ int main(int argc, char** argv){
 	if(_p) p=_p.Get();
 	if(_alpha_media) tau_matrix::alpha_media=_alpha_media.Get();
 	if(_std_dev) std_dev=_std_dev.Get();
+	if(_tuning_iter) tuning_iter=_tuning_iter.Get();
 
 
 	string format="BR";
@@ -194,10 +198,10 @@ int main(int argc, char** argv){
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
     vector< pair<double, double> > parameter_ranges(5);
-    parameter_ranges[0]=make_pair(0.98, 1.02);
-    parameter_ranges[1]=make_pair(0.0, 10.0);
-    parameter_ranges[2]=make_pair(0.0, 10.0);
-    parameter_ranges[3]=make_pair(0.0, 10.0);
+    parameter_ranges[0]=make_pair(0.0, 1.0);
+    parameter_ranges[1]=make_pair(0.0, 1.0);
+    parameter_ranges[2]=make_pair(0.0, 1.0);
+    parameter_ranges[3]=make_pair(0.0, 1.0);
     parameter_ranges[4]=make_pair(0.00, 0.2);
 
     tau_matrix tauM(parameter_ranges);
@@ -221,7 +225,7 @@ int main(int argc, char** argv){
 	beamaco->initialize (&s_copy);
 
 	cout << "tunning" << endl;
-	for(int i=0;i<1;i++){
+	for(int i=0;i<tuning_iter;i++){
 		S.push_back(s0->clone());
 		beamaco->next(S);
 		beamaco->clean(S);

@@ -59,9 +59,9 @@ private:
 	double truncated_normal(double val, int n, pair<double,double> parameter_range){
 			double min = parameter_range.first;
 			double max = parameter_range.second;
-			double stdDis=std_dev;
+			double stdDis=std_dev*(max-min);
 			if(std_dev ==0.0)
-			   stdDis = (max-min)/(n);
+			   stdDis = (max-min)*(1.0/n)^1.0;
 
 
 			double media = val;
@@ -79,10 +79,12 @@ public:
 		//TODO: se obtiene el el estado codificado
 		long state_code= s->get_code();
 		vector <double> values(parameter_ranges.size());
-		//cout << state_code << " ";
+
 		if(ph_distribution.find(state_code)!=ph_distribution.end()){
 				vector<pair <double, int> >& dist_params = ph_distribution[state_code];
+
 				for(int i=0; i<dist_params.size();i++ ){
+				        //cout << "dist-random["<<i<<"](" << dist_params[i].first << "," << dist_params[i].second <<")" << endl;
 						//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
 						//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
 						values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
@@ -90,9 +92,11 @@ public:
 						//values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
 				}
 				//cout << endl;
-		}else //random values in the range
+		}else{ //random values in the range
+			//cout << "random:" << endl;
 			for(int i=0;i<values.size();i++)
 				values[i]=fRand(parameter_ranges[i].first,parameter_ranges[i].second);
+		}
 
 		return values;
 
