@@ -35,6 +35,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
+	args::ValueFlag<int> _max_greedy(parser, "int", "Max number of greedy evaluations", {'t', "max_greedy"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
 	args::ValueFlag<double> _beta(parser, "double", "Beta parameter", {"beta"});
@@ -140,6 +141,7 @@ int main(int argc, char** argv){
 
 	cout << "greedy" << endl;
     SearchStrategy *gr = new Greedy (vcs);
+    if(_max_greedy) gr->max_runs=_max_greedy.Get();
 
 	cout << "mcts" << endl;
     MCTS *mcts= new MCTS(vcs,*gr);
@@ -152,13 +154,21 @@ int main(int argc, char** argv){
 
 	cout << "running" << endl;
 	MCTS::discard_equivalent=_discard_equivalent;
-    double eval = mcts->run(s_copy, maxtime, begin_time);
+
+	double eval=0.0;
+	try{
+		eval = mcts->run(s_copy, maxtime, begin_time);
+	}catch(char const* c){
+		if(strcmp(c,"max runs surpassed")==0)
+			eval= mcts->get_best_state()->get_value();
+
+	}
 
     cout << "best_volume #simulations" << endl;
 	// cout << eval << " " << mcts->get_best_state()->get_value2() << " " << eval*mcts->get_best_state()->get_value2() << endl;
 
-    cout << eval << " " << mcts->nb_simulations << endl;
-
+    cout << eval  << " " << gr->runs << " " << mcts->get_time() << endl;
+    return 0;
 
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();

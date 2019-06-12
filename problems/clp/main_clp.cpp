@@ -71,6 +71,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
+	args::ValueFlag<int> _max_greedy(parser, "int", "Max number of greedy evaluations", {'t', "max_greedy"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
 	args::ValueFlag<double> _beta(parser, "double", "Beta parameter", {"beta"});
@@ -80,7 +81,7 @@ int main(int argc, char** argv){
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
-
+	args::Flag _bsg_only(parser, "fsb", "BSG only (without double effort)", {"bsg_only"});
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -177,6 +178,7 @@ int main(int argc, char** argv){
 
 	cout << "greedy" << endl;
     SearchStrategy *gr = new Greedy (vcs);
+    if(_max_greedy) gr->max_runs=_max_greedy.Get();
 
 	cout << "bsg" << endl;
     BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
@@ -197,18 +199,27 @@ int main(int argc, char** argv){
     if(_plot)
     	de=bsg;
 
-    double eval=de->run(s_copy, maxtime, begin_time) ;
+	double eval=0.0;
+	try{
+		eval=(_bsg_only)? bsg->run(s_copy, maxtime, begin_time): de->run(s_copy, maxtime, begin_time) ;
+	}catch(char const* c){
+		//if(strcmp(c,"max runs surpassed")==0)
+		eval= (_bsg_only)? bsg->get_best_state()->get_value(): bsg->get_best_state()->get_value() ;
+
+	}
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
 	
-    cout << eval << endl;
+	if (_bsg_only) cout << eval << " " << bsg->get_best_state()->get_value2() << " " << eval*bsg->get_best_state()->get_value2() << endl;
+	else cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
+
+    cout << eval << " " << gr->runs << endl;
 
     if(_plot){
     	pointsToTxt(&s_copy, 0);
     	system("firefox problems/clp/tree_plot/index.html");
     }
-
+    return 0;
 /*
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);

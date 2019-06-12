@@ -9,6 +9,7 @@
 #define mctsNode_H_
 
 #include <map>
+#include <set>
 #include <string>
 #include <list>
 #include <iostream>
@@ -23,19 +24,46 @@
 using namespace std;
 namespace metasolver{
 
+class mctsNode;
+
+struct  node_comp{
+	bool operator()(const mctsNode* n1, const mctsNode* n2);
+};
 
 /**
  * A mctsNode in the search tree
  */
+
+
 class mctsNode {
 public:
 
-  mctsNode(mctsNode* parent, const Action* a, map<int, int>& level2nodes, map<int, int>& level2selectednodes);
+  mctsNode(mctsNode* parent, const Action* a, map<int, int>& level2nodes, map<int, int>& level2selectednodes,
+		  map< int, set<mctsNode*, node_comp> >& level_nodes);
 
 	virtual ~mctsNode() {
 		if(action) delete action;
 	}
 
+
+
+	int rank (){
+		int r=1;
+		for(auto n:level_nodes){
+			if(n==this) return r;
+			r++;
+		}
+		return r;
+	}
+
+	int hindex (){
+		int h=0;
+		for(auto n:level_nodes){
+			if(n->nb_simulations>h || n->get_pre_children().empty()) h++;
+			else break;
+		}
+		return h;
+	}
 
 
 	// Generate the state from the root
@@ -121,8 +149,6 @@ public:
   static double C; //weight of nb-simulations
   static bool bp; //backpropagation
 
-protected:
-
   //treenode-elements
 	mctsNode* parent;
 	//list of simulated children
@@ -136,9 +162,10 @@ protected:
 	double sym; //evaluacion de la primera simulacion
 	double best; //mejor simulacion de nodos hijos
 	int depth; //profundidad del nodo
-  int& N; //cantidad de nodos en el nivel
-  int& N_next; //cantidad de nodos en el siguiente nivel
-  int& SN; //cantidad de nodos seleccionados en el nivel
+    int& N; //cantidad de nodos en el nivel
+    int& N_next; //cantidad de nodos en el siguiente nivel
+    int& SN; //cantidad de nodos seleccionados en el nivel
+    set<mctsNode*, node_comp>& level_nodes;
 
 	double var;
 	double mean;
@@ -152,6 +179,9 @@ protected:
 
 
 };
+
+
+
 
 class Compare{
 public:
