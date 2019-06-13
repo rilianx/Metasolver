@@ -222,11 +222,14 @@ int main(int argc, char** argv){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
 		s00->transition(*clp_action);
 
-		cout << "block :" << clp_action->block << endl;
-		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
+		//cout << "block :" << clp_action->block << endl;
+		//cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
 
 
 	}
+
+	s00->cont->MatLab_print();
+
 }
 
 /*
