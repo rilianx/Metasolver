@@ -2,22 +2,22 @@
 # Metasolver
 
 Clone the project:
-     
+
      git clone https://github.com/rilianx/Metasolver.git
 
 Compile the project:
-     
+
      cmake .
 then
-     
+
      make
 
 ## BSG for CLP
 Description
 ------
-BSG is a method based on beam search(an adaptation of a branch-and-bound 
+BSG is a method based on beam search(an adaptation of a branch-and-bound
 algorithm which expands only the most promising nodes at each level of the search tree).
-BSG explores the space to find a path from an it initial state (i.e., an empty container) 
+BSG explores the space to find a path from an it initial state (i.e., an empty container)
 to some complete solution or it terminal state
 (i.e., a loading plan in which no more boxes can be loaded).
 ```
@@ -39,6 +39,7 @@ to some complete solution or it terminal state
       --gamma=[double]                  Gamma parameter
       --delta=[double]                  Delta parameter
       -p[double]                        p parameter
+      --show_layout                     Show the layout of the boxes
       --fsb                             full-support blocks
       --trace                           Trace
       instance-set                      The name of the instance set
@@ -47,6 +48,11 @@ to some complete solution or it terminal state
 
     BSG Solver for CLP.
 ```
+
+Example
+-----
+     ./BSG_CLP problems/clp/benchs/BR/BR2.txt -i 47 -t 10
+
 
 ## BSG-BO for biobjective CLP
 

@@ -195,7 +195,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			std::stringstream ss(line);
 			long l,w,h;
 			ss >> l >> w >> h;
-			cout << l << " " <<  w << " " << h << endl;
+			//cout << l << " " <<  w << " " << h << endl;
 			if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
@@ -235,7 +235,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
 
-				cout << l << " " << w << " " << h << endl;
+				//cout << l << " " << w << " " << h << endl;
 				vol=l*h*w;
 			}if(f==clpState::BRw){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
@@ -273,11 +273,11 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 	}
 
-	cout << "Test" << endl;
+	//cout << "Test" << endl;
 	s->general_block_generator(min_fr, max_bl, *s->cont);
-	cout << "Test2" << endl;
+	//cout << "Test2" << endl;
 	s->update_min_dim();
-	cout << "Test3" << endl;
+	//cout << "Test3" << endl;
 	return s;
 }
 

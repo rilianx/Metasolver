@@ -77,6 +77,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::Flag _show_layout(parser, "layout", "Show the layout of the boxes in the best found solution", {"show_layout"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
@@ -199,36 +200,35 @@ int main(int argc, char** argv){
 
     double eval=de->run(s_copy, maxtime, begin_time) ;
 
-    cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
-	
-    cout << eval << endl;
+    cout << "% volume utilization" << endl;
+	cout << eval*100 << endl;
+	// << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
+
 
     if(_plot){
     	pointsToTxt(&s_copy, 0);
     	system("firefox problems/clp/tree_plot/index.html");
     }
 
-/*
+  if(_show_layout){
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);
 
 
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
 
+  cout << endl;
 	for(auto action:actions){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
 		s00->transition(*clp_action);
-		//s00->cont
-		//s00->nb_left_boxes;
-
 
 		cout << "block :" << clp_action->block << endl;
 		cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
 
 
 	}
-*/
+}
+
 /*
 	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
 	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
