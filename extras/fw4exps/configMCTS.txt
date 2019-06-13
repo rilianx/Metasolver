@@ -60,6 +60,6 @@ outputpos_boxes = 0
 
 [BSG-1000]
 exec = "../../BSG_CLP"
-params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --bsg_only --max_greedy=1000
+params =  _INSTANCE -t _MAXTIME -f BR --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --max_greedy=1000
 outputpos_times = 0
 outputpos_boxes = 0
