@@ -85,7 +85,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _incremento(parser, "double", "Value added to tau", {"incremento"});
 	args::ValueFlag<double> _std_dev(parser, "double", "Standard deviation of tau_m", {"std_dev"});
 	args::ValueFlag<double> _tuning_iter(parser, "double", "Tuning iterarions (default=1)", {"tuning_iter"});
-
+	args::ValueFlag<double> _std_sampling(parser, "double", "Standar deviation used at Sampling", {"std_sampling"});
 
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 	args::Flag _write_report(parser, "double", "...", {"write_report"});
@@ -124,7 +124,7 @@ int main(int argc, char** argv){
 	int inst=(_inst)? _inst.Get():0;
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
-
+	int std_sampling = 1.0;
 	tau_matrix::alpha_media=0.9;
 	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
 	double aco_alpha=0.0, aco_beta=0.0, std_dev=0.0, tuning_iter=1;
@@ -235,6 +235,7 @@ int main(int argc, char** argv){
 
 	cout << "running" << endl;
 	tauM.std_dev=std_dev;
+	tauM.std_sampling = std_sampling;
 
     if(_plot)
     	de=beamaco;

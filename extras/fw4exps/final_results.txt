@@ -1,17 +1,22 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-
-1.000000 
-1.200480 
-1.503759 
-2.000000 
-5.000000 
-10.000000 
+beamACO-gonzalo150_tuning_std_BETA2   0   0   0   0   0 299 299   0   0   0   0   0 
+beamACO-gonzalo150_tuning_std_BETA5   0   0   0   0   0 299 297   0   0   0   0   0 
+beamACO-gonzalo150_tuning_std_BETA8   0   0   0   0   0 298 300   0   0   0   0   0 
+beamACO-gonzalo150_tuning_std_BETA10   0   0   0   0   0 293 300   1   1   1   1   1 
+beamACO-gonzalo150_tuning_std_BETA2 beamACO-gonzalo150_tuning_std_BETA5 beamACO-gonzalo150_tuning_std_BETA8 beamACO-gonzalo150_tuning_std_BETA10 
+1.000000 299/299 297/299 300/298 300/293 
+1.200480 0/0 0/0 0/0 1/0 
+1.503759 0/0 0/0 0/0 1/0 
+2.000000 0/0 0/0 0/0 1/0 
+5.000000 0/0 0/0 0/0 1/0 
+10.000000 0/0 0/0 0/0 1/0 
 
 
 instances with significative gains (1.2)
+../../problems/clp/benchs/BR/BR13.txt -i 5 --min_fr=0.98 1 1 1 1 1 1 1 1 0 0 
 
 gains
-0.000100 1.000000 300 
-total time: 1.000000 
+0.000100 1.000000 300 1.000650 300 1.000891 300 1.001255 300 1.008343 300 
+total time: 1.000000 0.999571 0.999809 1.000170 1.003878 

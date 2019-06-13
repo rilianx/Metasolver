@@ -59,9 +59,9 @@ private:
 	double truncated_normal(double val, int n, pair<double,double> parameter_range){
 			double min = parameter_range.first;
 			double max = parameter_range.second;
-			double stdDis=std_dev*(max-min);
+			double stdDis = std_dev*(max-min);
 			if(std_dev ==0.0)
-			   stdDis = (max-min)*(1.0/n)^1.0;
+			   stdDis = (max-min)*pow((1.0/n),sd_sampling);
 
 
 			double media = val;
@@ -71,7 +71,7 @@ private:
 	}
 
 public:
-	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0), std_dev(0.0){
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0), std_dev(0.0), sd_sampling(0.0){
 	}
 
 	//samplea parametros de acuerdo a distribucion normal asociada al estado
@@ -84,7 +84,7 @@ public:
 				vector<pair <double, int> >& dist_params = ph_distribution[state_code];
 
 				for(int i=0; i<dist_params.size();i++ ){
-				        //cout << "dist-random["<<i<<"](" << dist_params[i].first << "," << dist_params[i].second <<")" << endl;
+				    //cout << "dist-random["<<i<<"](" << dist_params[i].first << "," << dist_params[i].second <<")" << endl;
 						//TODO: samplear de normal con media dist_params[i].first y desviación M/dist_params[i].second
 						//truncar dentro del rango [parameter_ranges[i].first,parameter_ranges[i].second]
 						values[i]= truncated_normal(dist_params[i].first, dist_params[i].second, parameter_ranges[i]);
@@ -165,6 +165,7 @@ public:
   static double alpha_media;
   double iter_pheromone;
   double std_dev;
+  double sd_sampling;
 };
 
 //TODO: refactorizar
