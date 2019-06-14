@@ -61,7 +61,7 @@ private:
 			double max = parameter_range.second;
 			double stdDis = std_dev*(max-min);
 			if(std_dev ==0.0)
-			   stdDis = (max-min)*pow((1.0/n),sd_sampling);
+			   stdDis = (max-min)*pow((1.0/n),std_sampling);
 
 
 			double media = val;
@@ -71,7 +71,7 @@ private:
 	}
 
 public:
-	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0), std_dev(0.0), sd_sampling(0.0){
+	tau_matrix(vector<pair <double, double> >& p) : parameter_ranges(p), iter_pheromone(0), std_dev(0.0), std_sampling(0.0){
 	}
 
 	//samplea parametros de acuerdo a distribucion normal asociada al estado
@@ -165,7 +165,7 @@ public:
   static double alpha_media;
   double iter_pheromone;
   double std_dev;
-  double sd_sampling;
+  double std_sampling;
 };
 
 //TODO: refactorizar
