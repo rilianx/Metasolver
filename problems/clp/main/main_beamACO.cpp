@@ -124,10 +124,10 @@ int main(int argc, char** argv){
 	int inst=(_inst)? _inst.Get():0;
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
-	int std_sampling = 1.0;
+	double std_sampling = 1.0;
 	tau_matrix::alpha_media=0.9;
 	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, maxtheta=0.0;
-	double aco_alpha=0.0, aco_beta=0.0, std_dev=0.0, tuning_iter=1;
+	double aco_alpha=0.0, aco_beta=0.0, std_dev=0.000001, tuning_iter=1;
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
@@ -139,6 +139,7 @@ int main(int argc, char** argv){
 	if(_alpha_media) tau_matrix::alpha_media=_alpha_media.Get();
 	if(_std_dev) std_dev=_std_dev.Get();
 	if(_tuning_iter) tuning_iter=_tuning_iter.Get();
+  if(_std_sampling) std_sampling = _std_sampling.Get();
 
 
 	string format="BR";
@@ -223,6 +224,7 @@ int main(int argc, char** argv){
 	beamaco->timelimit=1000;
 
 	beamaco->initialize (&s_copy);
+  tauM.std_sampling = std_sampling;
 
 	cout << "tunning" << endl;
 	for(int i=0;i<tuning_iter;i++){
@@ -235,8 +237,7 @@ int main(int argc, char** argv){
 
 	cout << "running" << endl;
 	tauM.std_dev=std_dev;
-	tauM.std_sampling = std_sampling;
-
+	
     if(_plot)
     	de=beamaco;
 
