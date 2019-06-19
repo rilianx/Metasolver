@@ -1,24 +1,21 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-beamACO-gonzalo150_std_sampling2_BETA2   0   0   0   0   0 300 295   0   0   0   0   0 
-beamACO-gonzalo150_std_sampling2_BETA5   0   0   0   0   0 300 290   0   0   0   0   0 
-beamACO-gonzalo150_std_sampling2_BETA6   0   0   0   0   0 300 292   0   0   0   0   0 
-beamACO-gonzalo150_std_sampling2_BETA8   0   0   0   0   0 299 291   0   0   0   0   0 
-beamACO-gonzalo150_std_sampling2_BETA10   0   0   0   0   0 293 287   2   2   2   2   2 
-beamACO-gonzalo150_std_sampling2_BETA2 beamACO-gonzalo150_std_sampling2_BETA5 beamACO-gonzalo150_std_sampling2_BETA6 beamACO-gonzalo150_std_sampling2_BETA8 beamACO-gonzalo150_std_sampling2_BETA10 
-1.000000 295/300 290/300 292/300 291/299 287/293 
-1.200480 0/0 0/0 0/0 0/0 2/0 
-1.503759 0/0 0/0 0/0 0/0 2/0 
-2.000000 0/0 0/0 0/0 0/0 2/0 
-5.000000 0/0 0/0 0/0 0/0 2/0 
-10.000000 0/0 0/0 0/0 0/0 2/0 
+beamACO-gonzalo150_17_06_BETA2   0   0   0   0   0 298 295   0   0   0   0   0 
+beamACO-gonzalo150_17_06_BETA5   0   0   0   0   0 299 298   0   0   0   0   0 
+beamACO-gonzalo150_17_06_BETA8   0   0   0   0   0 296 294   0   0   0   0   0 
+beamACO-gonzalo150_17_06_BETA10   0   0   0   0   0 298 297   0   0   0   0   0 
+beamACO-gonzalo150_17_06_BETA2 beamACO-gonzalo150_17_06_BETA5 beamACO-gonzalo150_17_06_BETA8 beamACO-gonzalo150_17_06_BETA10 
+1.000000 295/298 298/299 294/296 297/298 
+1.200480 0/0 0/0 0/0 0/0 
+1.503759 0/0 0/0 0/0 0/0 
+2.000000 0/0 0/0 0/0 0/0 
+5.000000 0/0 0/0 0/0 0/0 
+10.000000 0/0 0/0 0/0 0/0 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BR/BR14.txt -i 5 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 0 0 
-../../problems/clp/benchs/BR/BR13.txt -i 5 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 0 0 
 
 gains
-0.000100 1.000000 300 0.998936 300 0.998045 300 0.998242 300 0.998443 300 1.012274 300 
-total time: 1.000000 0.997858 0.996971 0.997165 0.997361 1.004400 
+0.000100 1.000000 300 1.000406 300 0.999666 300 0.999500 300 0.999452 300 
+total time: 1.000000 0.999322 0.998588 0.998420 0.998372 
