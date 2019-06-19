@@ -19,9 +19,11 @@ using namespace std;
 namespace clp {
 
 VCS_Function::VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha, double beta,
-		double gamma, double p, double delta, double theta, double r, double max_theta):
-		VLossFunction (nb_boxes, dims, beta, delta, theta, r, max_theta), alpha(alpha),
-		gamma(gamma), p(p){ }
+		double gamma, double p, double delta, double delta2, double delta3, double r):
+		VLossFunction (nb_boxes, dims, r), alpha(alpha),
+		beta(beta), gamma(gamma), p(p), delta(delta), delta2(delta2), delta3(delta3),
+		alpha_2(alpha),beta_2(beta), gamma_2(gamma), p_2(p), delta_2(delta),
+		delta2_2(delta2), delta3_2(delta3){ }
 
 VCS_Function::~VCS_Function(){
 
@@ -33,6 +35,7 @@ VCS_Function::~VCS_Function(){
 double VCS_Function::eval_action(const State& s, const Action &a){
 	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
+	const clpState* ss =dynamic_cast<const clpState*>(&s);
 
     long resL=sp.getL() - b.getL();
     long resW=sp.getW() - b.getW();
@@ -40,18 +43,40 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
 
     if(resL<0 || resW<0 || resH<0) return -1.0;
+    if(clpState::Wmax > 0.0 && ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::Wmax) return -1.0;
 
-	double loss_vol = VLossFunction::eval_action(s, a);
 
-	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
+    double alpha=this->alpha + lambda2*(this->alpha_2 - this->alpha);
+    double beta=this->beta + lambda2*(this->beta_2 - this->beta);
+    double gamma=this->gamma + lambda2*(this->gamma_2 - this->gamma);
+    double p=this->p + lambda2*(this->p_2 - this->p);
+    double delta=this->delta + lambda2*(this->delta_2 - this->delta);
+    double delta2=this->delta2 + lambda2*(this->delta2_2 - this->delta2);
+    double delta3=this->delta3 + lambda2*(this->delta3_2 - this->delta3);
+
+	double loss=(beta>0.0)?
+			Loss(dynamic_cast<const clpState*>(&s)->nb_left_boxes, b, sp) : 0.0;
+
+	double vol=(delta>0.0)? (double) b.getOccupiedVolume(): 1.0;
+
+	double cs=(alpha>0.0)? CS_p(s, b, sp, p) : 1.0;
 
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
-	return (loss_vol * pow(cs,alpha) * pow(n,gamma) );
+
+	if(clpState::Wmax > 0.0){
+		double density = b.getTotalWeight() / (double) b.getVolume();
+		double profit = b.getTotalProfit();
+
+		return ( pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
+				     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3));
+	}
+
+	return (pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
 	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
 }
 
-double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){
+double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp, double p){
 	   long surface=0;
 
 	   Vector3 oo=sp.get_location(b);

@@ -26,6 +26,7 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
+	args::ValueFlag<string> _formatp(parser, "string", "Format Profit: (normal, all_one, weight)", {"fp"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxblocks(parser, "int", "Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
@@ -33,10 +34,21 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter in the VCS function", {"alpha"});
 	args::ValueFlag<double> _beta(parser, "double", "Beta parameter in the VCS function", {"beta"});
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter in the VCS function", {"gamma"});
-	args::ValueFlag<double> _delta(parser, "double", "Delta parameter in the VCS function", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
-	args::ValueFlag<double> _c(parser, "double", "ponderation of the density in the VCS function", {'c',"maxtheta"});
-	args::ValueFlag<double> _theta(parser, "double", "Weight of the second objective in the greedy", {"theta"});
+	args::ValueFlag<double> _delta(parser, "double", "Volume weighting in the VCS function", {"delta"});
+	args::ValueFlag<double> _delta2(parser, "double", "Weight weighting in the VCS function", {"delta2"});
+    //args::ValueFlag<double> _delta3(parser, "double", "Profit weighting in the VCS function", {"delta3"});
+
+	args::Flag oriented_greedy(parser, "double", "Oriented Greedy", {"oriented_greedy"});
+
+	args::ValueFlag<double> _alpha_2(parser, "double", "Alpha parameter for second objective", {"alpha_2"});
+	args::ValueFlag<double> _beta_2(parser, "double", "Beta parameter for second objective", {"beta_2"});
+	args::ValueFlag<double> _gamma_2(parser, "double", "Gamma parameter for second objective", {"gamma_2"});
+	args::ValueFlag<double> _p_2(parser, "double", "p parameter for second objective", {"p_2"});
+	args::ValueFlag<double> _delta_2(parser, "double", "Volume weighting for second objective", {"delta_2"});
+	args::ValueFlag<double> _delta2_2(parser, "double", "Weight weighting for second objective", {"delta2_2"});
+	args::ValueFlag<double> _delta3_2(parser, "double", "Profit weighting for second objective", {"delta3_2"});
+
 	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2)", {"srule"});
 
 
@@ -75,15 +87,27 @@ int main(int argc, char** argv){
 		int maxtime=(_maxtime)? _maxtime.Get():100;
 		int max_blocks=(_maxblocks)? _maxblocks.Get():10000;
 
-		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, theta=0.0, c=0.0;
+		double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04, delta2=0.0, delta3=0.0;
+
+
 		if(_maxtime) maxtime=_maxtime.Get();
 		if(_alpha) alpha=_alpha.Get();
 		if(_beta) beta=_beta.Get();
 		if(_gamma) gamma=_gamma.Get();
 		if(_delta) delta=_delta.Get();
+		if(_delta2) delta2=_delta2.Get();
 		if(_p) p=_p.Get();
-		if(_theta) theta=_theta.Get();
-		if(_c) c=_c.Get();
+
+		double alpha_2=alpha, beta_2=beta, gamma_2=gamma, delta_2=delta, p_2=p, delta2_2=delta2, delta3_2=0.0;
+
+		if(_alpha_2) alpha_2=_alpha_2.Get();
+		if(_beta_2) beta_2=_beta_2.Get();
+		if(_gamma_2) gamma_2=_gamma_2.Get();
+		if(_delta_2) delta_2=_delta_2.Get();
+		if(_delta2_2) delta2_2=_delta2_2.Get();
+		if(_delta3_2) delta3_2=_delta3_2.Get();
+		if(_p) p=_p.Get();
+
 		if(_srule){
 			if(_srule.Get()=="NSGA2")
 				srule = BSG_MOP::NSGA2;
@@ -93,23 +117,35 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN2;
 		}
 
-		if(c==-1.0){
-			c=0.0;
-			if(!_srule) srule = BSG_MOP::MIN1;
-		}
+		if(!oriented_greedy && !_srule) srule = BSG_MOP::MIN1;
+
 
 
 
 		string format="BR";
 		if(_format) format=_format.Get();
 
+		string formatp="NORMAL";
+		if(_formatp) formatp=_formatp.Get();
+
 		clpState::Format f;
+		clpState::FormatP fp;
 		if(format=="BR")
 			f=clpState::BR;
 		else if(format=="BRw")
 			f=clpState::BRw;
 		else if(format=="1C")
 			f=clpState::_1C;
+		else if(format=="BRwp")
+			f=clpState::BRwp;
+
+		if(formatp=="normal")
+			fp=clpState::NORMAL;
+		else if(format=="all_one")
+			fp=clpState::ALL_ONE;
+		else if(format=="weight")
+			fp=clpState::WEIGHT;
+
 
 		int seed=(_seed)? _seed.Get():1;
 		srand(seed);
@@ -130,7 +166,7 @@ int main(int argc, char** argv){
 	clock_t begin_time=clock();
 
 	Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, max_blocks, f);
+    clpState* s0 = new_state(file,inst, min_fr, max_blocks, f, fp);
 	cout << "Dimensions: " << s0->cont->getL() << " x " << s0->cont->getW() << " x " << s0->cont->getH() << endl;
     cout << "Number of generated blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -143,14 +179,16 @@ int main(int argc, char** argv){
     cout << ", gamma: " << gamma;
     cout << ", p: " << p;
     cout << ", delta: " << delta;
-    cout << ", c: " << c << endl;
+    cout << ", oriented_greedy: " << oriented_greedy << endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, theta, 0.0, c);
+    alpha, beta, gamma, p, delta, delta2, 0.0);
+
+    vcs->set_parameters2 (alpha_2, beta_2, gamma_2, p_2, delta_2, delta2_2, delta3_2);
 
     SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (c>0.0), srule );
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, oriented_greedy, srule );
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
@@ -168,9 +206,9 @@ int main(int argc, char** argv){
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
     double x_old=0.0;
     double hv = 0.0;
-    int n=0; double best_volume=0.0, best_weight=0.0;
+    int n=0; double best_volume=0.0, best_profit=0.0;
     for(auto point : pareto){
-    	if(best_weight==0.0 && point.second) best_weight=point.first.second;
+    	if(best_profit==0.0 && point.second) best_profit=point.first.second;
 
     	if(point.second){
     		n++;
@@ -183,8 +221,8 @@ int main(int argc, char** argv){
     	cout << point.first.first << "," << point.first.second << endl;
     }
 		cout.precision(4);
-    cout << "Vmax\tWmax\tHV\t#sols" << endl;
-    cout << best_volume <<  "\t" << best_weight<< "\t" << hv <<  "\t" <<  n <<endl;
+    cout << "Vmax\tPmax\tHV\t#sols" << endl;
+    cout << best_volume <<  "\t" << best_profit << "\t" << hv <<  "\t" <<  n <<endl;
 
 
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();

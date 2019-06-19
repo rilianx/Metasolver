@@ -48,7 +48,7 @@ public:
 	Block(long l, long w, long h);
 
 	Block(long l, long w, long h, bool fake) : Volume(l,w,h), n_boxes(1),
-			spaces(NULL), blocks(NULL), total_weight(0.0)  {
+			spaces(NULL), blocks(NULL), total_weight(0.0), total_profit(0.0) {
 
 		occupied_volume = getVolume();
 	}
@@ -75,6 +75,8 @@ public:
     virtual long getOccupiedVolume() const {return occupied_volume;}
 
     virtual double getTotalWeight() const {return total_weight;}
+
+    virtual double getTotalProfit() const {return total_profit;}
 
 	bool verify_solution();
 
@@ -105,7 +107,8 @@ protected:
 	//only the clone function can use the copy constructor
 	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
 		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
-	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)), total_weight(b.total_weight) {	}
+	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)),
+		total_weight(b.total_weight), total_profit(b.total_profit) {	}
 
 
     void MatLab_printR(int i=1, int j=1, double R=0.0, double G=0.0, double B=0.0, double alpha=1.0, Vector3 mins=Vector3(0,0,0)) const{
@@ -140,6 +143,8 @@ protected:
 	double occupied_volume;
 
 	double total_weight;
+
+	double total_profit;
 
 	static set<const Block*, block_order> all_blocks;
 

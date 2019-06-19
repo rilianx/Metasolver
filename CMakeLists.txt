@@ -96,7 +96,7 @@ ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
 ADD_EXECUTABLE(BSG_BO_CLP problems/clp/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
-ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
+#ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
 ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
@@ -109,7 +109,7 @@ target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
 target_link_libraries(BSG_BO_CLP bsg_mop clp_state clp bsg)
 target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
-target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
+#target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
 
 enable_testing()
 

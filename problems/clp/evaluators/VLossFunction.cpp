@@ -16,9 +16,8 @@ using namespace std;
 
 namespace clp {
 
-VLossFunction::VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double beta,
-		double delta, double theta, double r, double max_theta) :
-				ActionEvaluator (r), beta(beta), delta(delta), theta(theta), max_theta(max_theta){
+VLossFunction::VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double r) :
+				ActionEvaluator (r){
 	// TODO Auto-generated constructor stub
 
 	mL= new long[dims.getX()+1];
@@ -42,42 +41,6 @@ VLossFunction::~VLossFunction() {
 	 delete[] listW;
 }
 
-double VLossFunction::eval_action(const State& s,  const Action &a){
-	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
-	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
-	const clpState* ss =dynamic_cast<const clpState*>(&s);
-
-    long resL=sp.getL() - b.getL();
-    long resW=sp.getW() - b.getW();
-    long resH=sp.getH() - b.getH();
-
-    if(resL<0 || resW<0 || resH<0) return -1.0;
-    if(ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::weight_of_allboxes) 	return -1.0;
-
-
-	double loss=(beta>0.0)?
-			Loss(dynamic_cast<const clpState*>(&s)->nb_left_boxes, b, sp) : 0.0;
-
-	double vol=(delta>0.0)? (double) b.getOccupiedVolume(): 1.0;
-
-/*
-			((double) b.getOccupiedVolume()/
-					double(dynamic_cast<const clpState*>(&s)->cont.getVolume())) : 1.0;*/
-
-
-
-	double vol_rel = (double) b.getVolume()	/ ss->cont->getVolume();
-	double weight_rel = b.getTotalWeight()/clpState::weight_of_allboxes;
-	double density = weight_rel/vol_rel;
-
-//	cout << vol_rel << "," << density << endl;
-
-	//cout << theta << endl;
-
-	return ( pow( vol , delta)  * pow((1.0-loss),beta)* pow(density, theta ));
-
-//	return ( delta * log(vol) + beta * log(1.0-loss) + theta * log(b.getTotalWeight()/clpState::weight_of_allboxes) );
-}
 
 double VLossFunction::Loss(const std::map<const BoxShape*, int>& nb_boxes, const Block& block, const Space& free_space){
    long resL=free_space.getL() - block.getL();

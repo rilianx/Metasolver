@@ -46,7 +46,9 @@ public:
 
     static bool left;
 
-    enum Format{BR, _1C, BRw};
+    enum Format{BR, _1C, BRw, BRwp};
+
+    enum FormatP{NORMAL, ALL_ONE, WEIGHT};
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
@@ -66,7 +68,7 @@ public:
 
 	virtual State* create_neighbor(State* s0);
 
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f, FormatP fp);
 
 	virtual double get_value() const{
 		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
@@ -74,7 +76,7 @@ public:
 
 	virtual double get_value2() const{
 		//return 0.0;
-		return  round((cont->getTotalWeight() / weight_of_allboxes)*10000.0)/10000.0;
+		return  round((cont->getTotalProfit() / profit_of_allboxes)*10000.0)/10000.0;
 	}
 
 	static bool height_sort(const Action* a1, const Action* a2){
@@ -109,6 +111,8 @@ public:
 
 
 	static double weight_of_allboxes;
+	static double profit_of_allboxes;
+	static double Wmax;
 
 protected:
 
@@ -164,7 +168,8 @@ private:
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR,
+		clpState::FormatP fp=clpState::NORMAL);
 
 } /* namespace clp */
 

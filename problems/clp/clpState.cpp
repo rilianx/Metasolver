@@ -168,15 +168,17 @@ long rand(long seed)
 }*/
 
 double clpState::weight_of_allboxes=0.0;
+double clpState::profit_of_allboxes=0.0;
+double clpState::Wmax=0.0;
 
 
-clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f){
+clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f, clpState::FormatP fp){
 
   clpState::weight_of_allboxes=0.0;
 
 	ifstream in(file.c_str());
 	string line;
-	if(f==clpState::BR || f==clpState::BRw){
+	if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp){
 		getline(in,line); //number of instances
 	}
 
@@ -185,8 +187,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 	for(int inst=0;inst<=i; inst++){
 		string line;
 
-		if(f==clpState::BR || f==clpState::BRw){
-			getline(in, line ); //n_inst best_sol?
+		if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp){
+			getline(in, line ); //n_inst random_seed
 		}
 
 		getline(in, line); //L W H
@@ -195,15 +197,15 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			std::stringstream ss(line);
 			long l,w,h;
 			ss >> l >> w >> h;
-			//cout << l << " " <<  w << " " << h << endl;
+			cout << l << " " <<  w << " " << h << endl;
 			if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 
-		if(f==clpState::_1C){
+		if(f==clpState::_1C || f==clpState::BRwp){
 			getline(in, line );
 			std::stringstream ss1(line);
-			ss1 >> clpState::weight_of_allboxes;
+			ss1 >> clpState::Wmax;
 		}
 
 
@@ -227,6 +229,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			int n, id;
 			long l,h,w;
 			double weight = 1.0;
+			double profit = 1.0;
 			double vol;
 			bool rot1, rot2, rot3;
 			std::stringstream ss1(line);
@@ -237,10 +240,16 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				//cout << l << " " << w << " " << h << endl;
 				vol=l*h*w;
-			}if(f==clpState::BRw){
+			}else if(f==clpState::BRw){
 				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
 				vol=l*h*w;
-			}else if(f==clpState::_1C){
+			}else if(f==clpState::BRwp){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> profit;
+				if(fp==clpState::ALL_ONE) profit = 1;
+				else if(fp==clpState::WEIGHT) profit = weight;
+				vol=l*h*w;
+			}
+			else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
 				ll*=10; ww*=10; hh*=10;
@@ -254,9 +263,13 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 			if(inst==i){
 
-				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight);
+				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
 
-				if (f==clpState::BR || f==clpState::BRw) clpState::weight_of_allboxes += weight*(double) n;
+				clpState::weight_of_allboxes += weight*(double) n;
+				clpState::profit_of_allboxes += profit*(double) n;
+
+				if(fp==clpState::WEIGHT)
+					clpState::profit_of_allboxes = clpState::Wmax;
 
 				s->nb_left_boxes.insert(make_pair(boxt,n));
 				for(int o=0; o<6; o++){
