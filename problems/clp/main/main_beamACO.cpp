@@ -224,7 +224,7 @@ int main(int argc, char** argv){
 	beamaco->timelimit=1000;
 
 	beamaco->initialize (&s_copy);
-  tauM.std_sampling = std_sampling;
+        tauM.std_sampling = std_sampling;
 
 	cout << "tunning" << endl;
 	for(int i=0;i<tuning_iter;i++){
