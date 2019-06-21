@@ -16,8 +16,8 @@ output_path = 'problems/clp/benchs/BRwp-'+a+'-'+b ## BR con weight y profit
 a=float(a)
 b=float(b)
 
-Dmax=1.0
-mu = a*Dmax # Densidad maxima
+Dmax=753 # 20' container
+mu = a*Dmax 
 sigma = b*mu # mean and standard deviation
 
 

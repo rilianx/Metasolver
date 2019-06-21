@@ -26,7 +26,7 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
-	args::ValueFlag<string> _formatp(parser, "string", "Format Profit: (normal, all_one, weight)", {"fp"});
+	args::ValueFlag<string> _formatp(parser, "string", "Format Profit: (in_file, all_one, weight)", {"fp"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxblocks(parser, "int", "Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
@@ -125,7 +125,7 @@ int main(int argc, char** argv){
 		string format="BR";
 		if(_format) format=_format.Get();
 
-		string formatp="NORMAL";
+		string formatp="in_file";
 		if(_formatp) formatp=_formatp.Get();
 
 		clpState::Format f;
@@ -139,7 +139,7 @@ int main(int argc, char** argv){
 		else if(format=="BRwp")
 			f=clpState::BRwp;
 
-		if(formatp=="normal")
+		if(formatp=="in_file")
 			fp=clpState::NORMAL;
 		else if(format=="all_one")
 			fp=clpState::ALL_ONE;
