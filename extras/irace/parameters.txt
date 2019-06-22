@@ -1,0 +1,9 @@
+
+# Adjust the range of each parameter
+# name		switch		     type	values			[conditions (using R syntax)]
+alpha		"--alpha="    r		(0.00,10.00)
+beta		"--beta="     r  	(0.00,10.00)
+gamma		"--gamma="     r  (0.00,10.00)
+p				"-p"         r  	(0.00,0.1)
+delta2  "--delta2="  r   (-2.0,2.0)
+

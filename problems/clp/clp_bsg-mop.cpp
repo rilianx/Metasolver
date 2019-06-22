@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::ValueFlag<double> _delta(parser, "double", "Volume weighting in the VCS function", {"delta"});
 	args::ValueFlag<double> _delta2(parser, "double", "Weight weighting in the VCS function", {"delta2"});
-    //args::ValueFlag<double> _delta3(parser, "double", "Profit weighting in the VCS function", {"delta3"});
+    args::ValueFlag<double> _delta3(parser, "double", "Profit weighting in the VCS function", {"delta3"});
 
 	args::Flag oriented_greedy(parser, "double", "Oriented Greedy", {"oriented_greedy"});
 
@@ -96,6 +96,7 @@ int main(int argc, char** argv){
 		if(_gamma) gamma=_gamma.Get();
 		if(_delta) delta=_delta.Get();
 		if(_delta2) delta2=_delta2.Get();
+		if(_delta3) delta3=_delta3.Get();
 		if(_p) p=_p.Get();
 
 		double alpha_2=alpha, beta_2=beta, gamma_2=gamma, delta_2=delta, p_2=p, delta2_2=delta2, delta3_2=0.0;
@@ -182,7 +183,7 @@ int main(int argc, char** argv){
     cout << ", oriented_greedy: " << oriented_greedy << endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, delta2, 0.0);
+    alpha, beta, gamma, p, delta, delta2, delta3);
 
     vcs->set_parameters2 (alpha_2, beta_2, gamma_2, p_2, delta_2, delta2_2, delta3_2);
 
@@ -222,7 +223,7 @@ int main(int argc, char** argv){
     }
 		cout.precision(4);
     cout << "Vmax\tPmax\tHV\t#sols" << endl;
-    cout << best_volume <<  "\t" << best_profit << "\t" << hv <<  "\t" <<  n <<endl;
+    cout << best_volume <<  " " << best_profit << " " << hv <<  " " <<  n <<endl;
 
 
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();

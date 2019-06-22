@@ -1,0 +1,37 @@
+***** Creando el contenedor ****
+File(BRwp): ../../problems/clp/benchs/BRwp-0.8-0.5/BR4.txt
+Instance:48
+min_fr:1
+max_blocks:10000
+Maxtime:60
+587 233 220
+Dimensions: 587 x 233 x 220
+Number of generated blocks:3088
+
+***** Creating the heuristic function VCS-W *****
+alpha: 8.19, beta: 1.41, gamma: 7.35, p: 0.02, delta: 1, oriented_greedy: 0
+***** Running the solver BSGMOP solver *****
+beams/max_level_size:4/16
+[BSGMOP] new non-dominated solution found (0.383186): (0.8678,0.567) 127 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.546221): (0.8728,0.5547) 131 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.797776): (0.8807,0.5602) 129 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (1.149535): (0.8737,0.5644) 127 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (1.240145): (0.8875,0.5526) 130 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (1.3226): (0.8635,0.5864) 121 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.103277): (0.8832,0.5538) 126 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.292801): (0.8643,0.5734) 127 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.478424): (0.8701,0.5854) 126 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.659302): (0.874,0.5679) 128 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.831033): (0.8702,0.5751) 125 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.980672): (0.8732,0.5749) 125 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.247074): (0.8775,0.5855) 124 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.674489): (0.8885,0.5568) 130 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.841556): (0.8781,0.5634) 130 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (6.016902): (0.8972,0.5688) 131 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (6.428588): (0.8812,0.5726) 121 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (6.939179): (0.8818,0.5786) 129 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (7.190151): (0.8771,0.5891) 127 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (7.262086): (0.8949,0.5842) 128 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (8.052678): (0.8727,0.5907) 125 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.763207): (0.8773,0.5904) 125 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.387319): (0.8751,0.5913) 126 nodes, lambda:0
