@@ -180,6 +180,8 @@ int main(int argc, char** argv){
     cout << ", gamma: " << gamma;
     cout << ", p: " << p;
     cout << ", delta: " << delta;
+		cout << ", delta2: " << delta2;
+		cout << ", delta3: " << delta3;
     cout << ", oriented_greedy: " << oriented_greedy << endl;
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,

@@ -58,7 +58,6 @@ tag=$( cat ${STDOUT} | tail -n 1 )
 IFS=' ' # space is set as delimiter
 read -ra ADDR <<< "$tag" # str is read into an array as tokens separated by IFS
 COST="${ADDR[0]}"
-echo "${COST}"
 
 #COST=$(cat ${STDOUT} | grep -o -E 'Result: [-+0-9.e]+' | cut -d ' ' -f2)
 if ! [[ "$COST" =~ ^[-+0-9.e]+$ ]] ; then
