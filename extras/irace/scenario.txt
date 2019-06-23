@@ -14,7 +14,7 @@ execDir = "."
 ## Directory where tuning instances are located, either absolute path or
 ## relative to current directory.
 trainInstancesDir = ""
-trainInstancesFile = "instancesBRwp-0.8-0.5.txt"
+trainInstancesFile = "random_sorted_instances.txt"
 ## Alternativamente puedes poner la ruta completa en instances.txt y poner trainInstancesDir=""
 
 ## The maximum number of runs (invocations of targetRunner) that will performed. It
