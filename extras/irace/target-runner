@@ -66,7 +66,7 @@ fi
 
 # Print it!
 # We do negative because is minimization
-echo "$COST"
+echo "-$COST"
 
 # We are done with our duty. Clean files and exit with 0 (no error).
 rm -f "${STDOUT}" "${STDERR}"

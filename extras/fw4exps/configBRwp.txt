@@ -6,15 +6,19 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = bsgw
+algo_names = bsgw bsg
+
+[bsg]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN1 --delta=1 --alpha=3 --beta=2 --gamma=0.5 -p0.04 --delta2=0.0 --delta3=0.0
+outputpos_times = 0
+outputpos_boxes = 0
 
 [bsgw]
-tuning_param = W
-tuning_values = 0.0 -0.2 -0.5 -1.0 -1.5
 exec = "../../BSG_BO_CLP"
-params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN1 --alpha=3.0 --beta=2.0 --gamma=0.5 -p 0.04 --delta2=_W 
-outputpos_times = 2
-outputpos_boxes = 2
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN1 --delta=1 --alpha=3.85 --beta=6.27 --gamma=0.48 -p0.02 --delta2=-0.13 --delta3=0
+outputpos_times = 0
+outputpos_boxes = 0
 
 [bsga]
 tuning_param = A
