@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta2_2(parser, "double", "Weight weighting for second objective", {"delta2_2"});
 	args::ValueFlag<double> _delta3_2(parser, "double", "Profit weighting for second objective", {"delta3_2"});
 
-	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2)", {"srule"});
+	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2, MIN1MIN2)", {"srule"});
 
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
@@ -116,6 +116,8 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN1;
 			else if(_srule.Get()=="MIN2")
 				srule = BSG_MOP::MIN2;
+			else if(_srule.Get()=="MIN1MIN2")
+				srule = BSG_MOP::MIN1MIN2;
 		}
 
 		if(!oriented_greedy && !_srule) srule = BSG_MOP::MIN1;

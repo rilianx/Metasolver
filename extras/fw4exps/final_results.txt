@@ -1,28 +1,17 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-       bsg   0   0   0   0   0 309 320  10  10  10   7   3 
-bsg 
-1.000000 320/309 
-1.200480 10/0 
-1.503759 10/0 
-2.000000 10/0 
-5.000000 7/0 
-10.000000 3/0 
+
+1.000000 
+1.200480 
+1.503759 
+2.000000 
+5.000000 
+10.000000 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BRwp-0.8-0.5/BR12.txt -i 16 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR11.txt -i 6 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR14.txt -i 11 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR5.txt -i 3 --min_fr=1.0 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR8.txt -i 11 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR13.txt -i 8 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR4.txt -i 3 --min_fr=1.0 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR4.txt -i 10 --min_fr=1.0 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR12.txt -i 12 --min_fr=0.98 1 nan 0 nan 
-../../problems/clp/benchs/BRwp-0.8-0.5/BR15.txt -i 17 --min_fr=0.98 1 nan 0 nan 
 
 gains
-0.000100 1.000000 320 1.051329 320 
-total time: 1.000000 1.029761 
+0.000100 1.000000 320 
+total time: 1.000000 

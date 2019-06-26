@@ -33,7 +33,7 @@ struct sort {
 class BSG_MOP : public BSG {
 public:
 
-   enum sel_rule{NSGA2, MIN1, MIN2};
+   enum sel_rule{NSGA2, MIN1, MIN2, MIN1MIN2};
 
 	/**
 	 * Constructor
