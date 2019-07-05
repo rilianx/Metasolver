@@ -283,6 +283,8 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	}
 
 	cout << "used_boxes" << endl;
+
+
 	for(auto bin: bins){
 		cout << bin.first << " ";
 		for(auto box: bin.second)
