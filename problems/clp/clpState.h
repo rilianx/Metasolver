@@ -112,6 +112,9 @@ public:
 
 	static double weight_of_allboxes;
 	static double profit_of_allboxes;
+ 	static double density_of_allboxes;
+  static double square_density_of_allboxes;
+  static int nb_boxes;
 	static double Wmax;
 
 protected:

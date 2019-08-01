@@ -27,7 +27,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<string> _format(parser, "string", "Format: (BR, BRw, 1C)", {'f'});
 	args::ValueFlag<string> _formatp(parser, "string", "Format Profit: (in_file, all_one, weight)", {"fp"});
-	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
+	args::Flag density(parser, "double", "Show boxes density only", {"density"});
+  args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxblocks(parser, "int", "Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
@@ -144,9 +145,9 @@ int main(int argc, char** argv){
 
 		if(formatp=="in_file")
 			fp=clpState::NORMAL;
-		else if(format=="all_one")
+		else if(formatp=="all_one")
 			fp=clpState::ALL_ONE;
-		else if(format=="weight")
+		else if(formatp=="weight")
 			fp=clpState::WEIGHT;
 
 
@@ -172,7 +173,10 @@ int main(int argc, char** argv){
     clpState* s0 = new_state(file,inst, min_fr, max_blocks, f, fp);
 	cout << "Dimensions: " << s0->cont->getL() << " x " << s0->cont->getW() << " x " << s0->cont->getH() << endl;
     cout << "Number of generated blocks:"<< s0->get_n_valid_blocks() << endl;
-
+    double mean_density = clpState::density_of_allboxes/(double) clpState::nb_boxes;
+    cout <<  mean_density << " " << (sqrt((clpState::square_density_of_allboxes/(double) clpState::nb_boxes)-pow(mean_density,2))/mean_density) << " " << (double) clpState::nb_boxes << endl;
+    
+    if(density) return 0;
 
 
 

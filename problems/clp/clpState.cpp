@@ -169,8 +169,10 @@ long rand(long seed)
 
 double clpState::weight_of_allboxes=0.0;
 double clpState::profit_of_allboxes=0.0;
+double clpState::density_of_allboxes=0.0;
+double clpState::square_density_of_allboxes=0.0;
 double clpState::Wmax=0.0;
-
+int clpState::nb_boxes=0;
 
 clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f, clpState::FormatP fp){
 
@@ -267,6 +269,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				clpState::weight_of_allboxes += weight*(double) n;
 				clpState::profit_of_allboxes += profit*(double) n;
+        clpState::density_of_allboxes += (weight/((l*w*h)/1000000.0))* (double) n;
+        clpState::square_density_of_allboxes += pow((weight/((l*w*h)/1000000.0)),2) * (double) n;
+        clpState::nb_boxes += n;
 
 				if(fp==clpState::WEIGHT)
 					clpState::profit_of_allboxes = clpState::Wmax;

@@ -303,7 +303,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 	  if(rule==MIN1) value.second = 0.0;
 	  else if(rule==MIN2) value.first = 0.0;
 
-		if(rule=MIN1MIN2) {value.first*=value.second; value.second=0.0;}
+		if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
 	  state_actions.insert(make_pair(value,fs));
 	}
@@ -378,7 +378,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	if(rule==MIN1) value.second = 0.0;
         	else if(rule==MIN2) value.first = 0.0;
 
-					if(rule=MIN1MIN2) {value.first*=value.second; value.second=0.0;}
+					if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
         	if(state_actions.find(value) == state_actions.end()){
         	//	cout << value.first << endl;

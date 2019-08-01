@@ -7,6 +7,13 @@ import ntpath
 import numpy as np
 import random
 
+def sample_trunc(mu, sig, bounds=None):
+    sample = np.random.normal(mu, sig)
+    while sample < bounds[0] or sample > bounds[1]:
+      sample = np.random.normal(mu, sig)
+
+    return sample
+
 a = sys.argv[1]
 b = sys.argv[2] 
 
@@ -19,15 +26,6 @@ b=float(b)
 Dmax=753 # 20' container
 mu = a*Dmax 
 sigma = b*mu # mean and standard deviation
-
-
-def sample_trunc(mu, sig, bounds=None):
-    sample = np.random.normal(mu, sig)
-    while sample < bounds[0] or sample > bounds[1]:
-      sample = np.random.normal(mu, sig)
-
-    return sample
-
 
 # Create target Directory if don't exist
 if not os.path.exists(output_path):
