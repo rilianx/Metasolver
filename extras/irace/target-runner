@@ -21,7 +21,7 @@ EXE=../../BSG_BO_CLP
 
 # Fixed parameters that should be always passed to ACOTSP.
 # The time to be used is always 10 seconds, and we want only one run:
-FIXED_PARAMS=" -t 60 -f BRwp --fp=in_file --srule=MIN1 "
+FIXED_PARAMS=" -t 60 -f BRwp --fp=in_file --srule=NSGA2 --delta3=1.0"
 
 CONFIG_ID="$1"
 INSTANCE_ID="$2"
@@ -57,7 +57,7 @@ fi
 tag=$( cat ${STDOUT} | tail -n 1 )
 IFS=' ' # space is set as delimiter
 read -ra ADDR <<< "$tag" # str is read into an array as tokens separated by IFS
-COST="${ADDR[0]}"
+COST="${ADDR[2]}"
 
 #COST=$(cat ${STDOUT} | grep -o -E 'Result: [-+0-9.e]+' | cut -d ' ' -f2)
 if ! [[ "$COST" =~ ^[-+0-9.e]+$ ]] ; then
