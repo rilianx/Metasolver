@@ -44,7 +44,16 @@ public:
 	 * Initialize the variables of the specific strategy
 	 */
 	virtual void initialize (State* s=NULL){
-	    if(!s) return;
+	    if(!s){
+	    	if(best_state) {delete best_state; best_state=NULL;}
+
+	    	map<double, pair<State*, State*> >::iterator state_action=state_actions.begin();
+	    	for(int i=0; state_action!=state_actions.end();i++) {
+	    		delete state_action->second.second;
+	    		state_action=state_actions.erase(state_action);
+	    	}
+	    	return;
+	    }
 	    //The states of the first n_elite elements are modified by a first state
 	    map<double, pair<State*, State*> >::iterator state_action=state_actions.begin();
 
@@ -87,6 +96,8 @@ public:
 		if(beams > 10000) return false;
 		return true;
 	}
+
+	void set_beams(int b){beams=b;}
 
 
 protected:

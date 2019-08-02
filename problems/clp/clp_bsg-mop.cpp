@@ -117,8 +117,10 @@ int main(int argc, char** argv){
 				srule = BSG_MOP::MIN1;
 			else if(_srule.Get()=="MIN2")
 				srule = BSG_MOP::MIN2;
-			else if(_srule.Get()=="MIN1MIN2")
-				srule = BSG_MOP::MIN1MIN2;
+			else if(_srule.Get()=="MIN1MIN2"){
+				srule = BSG_MOP::MIN1;
+				maxtime /=2;
+			}
 		}
 
 		if(!oriented_greedy && !_srule) srule = BSG_MOP::MIN1;
@@ -210,6 +212,16 @@ int main(int argc, char** argv){
 
 	cout << "***** Running the solver BSGMOP solver *****" << endl;
     double eval = 1-de->run(s_copy, maxtime, begin_time) ;
+
+    if(_srule && _srule.Get()=="MIN1MIN2"){
+    	cout << "running with MAXP" << endl;
+    	s_copy= *s0->clone();
+    	srule = BSG_MOP::MIN2;
+        begin_time=clock();
+        vcs->set_parameters (alpha_2, beta_2, gamma_2, p_2, delta_2, delta2_2, delta3_2);
+        bsg->set_beams(4); bsg->initialize();
+        eval = 1-de->run(s_copy, maxtime, begin_time) ;
+    }
 
     cout << "pareto_front" << endl;
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();

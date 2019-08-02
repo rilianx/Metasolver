@@ -27,6 +27,19 @@ public:
 	virtual double eval_action(const State& , const Action& a );
 
 	//sets the parameter values for maximizing the second objective
+	virtual void set_parameters (double alpha, double beta,
+			double gamma, double p, double delta, double delta2, double delta3){
+
+		this->alpha=alpha;
+		this->beta=beta;
+		this->gamma=gamma;
+		this->p=p;
+		this->delta=delta;
+		this->delta2=delta2;
+		this->delta3=delta3;
+	}
+
+	//sets the parameter values for maximizing the second objective
 	virtual void set_parameters2 (double alpha, double beta,
 			double gamma, double p, double delta, double delta2, double delta3){
 

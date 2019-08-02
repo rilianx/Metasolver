@@ -51,6 +51,19 @@ public:
 
     virtual ~BSG_MOP();
 
+    virtual void initialize (State* s=NULL){
+	    if(!s){
+	    	if(best_state) {delete best_state; best_state=NULL;}
+
+	    	map< pair<double, double>, pair<State*, State*> >::iterator state_action=state_actions.begin();
+	    	for(int i=0; state_action!=state_actions.end();i++) {
+	    		delete state_action->second.second;
+	    		state_action=state_actions.erase(state_action);
+	    	}
+	    	return;
+	    }
+    }
+
 	/**
 	 * Performs an iteration of the strategy
 	 * @returns true if the search strategy has not finished yet

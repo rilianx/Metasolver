@@ -259,7 +259,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 			  cout <<  "(" << f.second->get_value() << "," << f.second->get_value2() << ")" << endl;
 		}
 
-		//si los estados filtrados mas el tamaño de las fronteras son menores a n se unen, en caso contrario
+		//si los estados filtrados mas el tama��o de las fronteras son menores a n se unen, en caso contrario
 		//se los estados filtrados se vuelven a filtrar con la funcion crowding distance
 		if((filtered_states.size()+frontera.size())<=n){
 			for(it3=frontera.begin();it3!=frontera.end();it3++){
@@ -316,7 +316,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 //TODO: states should be sorted in decreasing order by objetive 1
 list<State*> BSG_MOP::next(list<State*>& S){
 
-	//cout << "next" << endl;
+
     //no hay mas estados en el arbol
     if(S.size()==0) return S;
 
@@ -378,7 +378,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	if(rule==MIN1) value.second = 0.0;
         	else if(rule==MIN2) value.first = 0.0;
 
-					if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
+
+			if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
         	if(state_actions.find(value) == state_actions.end()){
         	//	cout << value.first << endl;
@@ -419,6 +420,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 		}
 		if(global::TRACE)
 			cout << "--" << endl;
+
 
 
 	return return_states;

@@ -1,0 +1,39 @@
+[base]
+test_instances = instancesBRwp-sd0.5-small.txt
+mintime = 0.0001
+maxtime = 100
+factors = 1 0.833 0.665 0.5 0.2 0.1
+sig_gain = 1.2
+max_seeds = 1
+min_seeds = 1
+algo_names = min1-rand_profit min2-rand_profit min1min2-rand_profit nsga-rand_profit o-search-rand_profit
+
+[min1-rand_profit]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN1 --delta=1 --alpha=3.85 --beta=6.27 --gamma=0.48 -p0.02 --delta2=-0.13 --delta3=0
+outputpos_times = 2
+outputpos_boxes = 2
+
+[min2-rand_profit]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN2 --alpha=1.53 --beta=1.53 --gamma=0.44 -p0.01 --delta2=-0.16 --delta=-0.95 --delta3=1.0
+outputpos_times = 2
+outputpos_boxes = 2
+
+[min1min2-rand_profit]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=MIN1MIN2 --delta=1 --alpha=3.85 --beta=6.27 --gamma=0.48 -p0.02 --delta2=-0.13 --delta3=0 --alpha_2=1.53 --beta_2=1.53 --gamma_2=0.44 --p_2=0.01 --delta2_2=-0.16 --delta_2=-0.95 --delta3_2=1.0
+outputpos_times = 2
+outputpos_boxes = 2
+
+[nsga-rand_profit]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=NSGA2 --alpha=4.31 --beta=2.01 --gamma=0.38 -p0.03 --delta2=-0.11 --delta=-0.51 --delta3=1.0
+outputpos_times = 2
+outputpos_boxes = 2
+
+[o-search-rand_profit]
+exec = "../../BSG_BO_CLP"
+params =  _INSTANCE -t _MAXTIME -f BRwp --fp=in_file --srule=NSGA2 --delta=1 --alpha=3.85 --beta=6.27 --gamma=0.48 -p0.02 --delta2=-0.13 --delta3=0 --alpha_2=1.53 --beta_2=1.53 --gamma_2=0.44 --p_2=0.01 --delta2_2=-0.16 --delta_2=-0.95 --delta3_2=1.0 --oriented_greedy
+outputpos_times = 2
+outputpos_boxes = 2

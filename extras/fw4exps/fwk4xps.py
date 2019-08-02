@@ -427,9 +427,9 @@ def p_faster(i, j,config):
 		n=0; sum0=0; sum1=0; sum2=0
 		for kk in range(config.max_seeds):
 			if shared_times[0,k+kk*len(config.instances)] >=0.0 and shared_times[i,k+kk*len(config.instances)] >=0.0 and shared_times[j,k+kk*len(config.instances)] >=0.0:
-				sum0+=shared_times[0,k+kk*len(config.instances)]
-				sum1+=shared_times[i,k+kk*len(config.instances)]
-				sum2+=shared_times[j,k+kk*len(config.instances)]
+				sum0+=2-shared_times[0,k+kk*len(config.instances)]
+				sum1+=2-shared_times[i,k+kk*len(config.instances)]
+				sum2+=2-shared_times[j,k+kk*len(config.instances)]
 				n+=1
 			
 		if n>0 and (sum0/float(n)>config.mintimes[0] or sum1/float(n)>config.mintimes[0] or sum2/float(n)>config.mintimes[0]) and (sum0/float(n)<config.maxtime or sum1/float(n)<config.maxtime or sum2/float(n)<config.maxtime):
