@@ -33,135 +33,45 @@ bool global::TRACE = false;
 
 using namespace std;
 
-void solve(string file, string path1, string path2, int _N, double min_fr, int max_time, double alpha, double beta, double gamma, double p,
-		double delta=1.0, double f=0.0, double r=0.0, bool fsb=false, bool kdtree=false){
+void generate_data(string file, double min_fr, int max_time, double alpha, double beta, double gamma, double p,
+		double r=0.0, double min_vol=0.0, int l=6, int w=1, int h=2, int histo_ranges=20, int max_size=120){
 
-	Space::bottom_up=true;
+	Space::bottom_up=false;
 	int inst=0;
 
-	cout << file<<endl;
-    cout << "cargando la instancia..." << endl;
+	//cout << file<<endl;
+  //cout << "cargando la instancia..." << endl;
 
-
-    Block::FSB=fsb;
+    Block::FSB=false;
     clpState* s0 = new_state(file,inst, min_fr, 10000);
 
-    if(kdtree)
-       s0 = new clpState_kd(*s0);
-
-    cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
+  //  cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
     clock_t begin_time=clock();
 
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, f, r);
+    VCS_Function* vcs_gr = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+    alpha, beta, gamma, p, 1.0, 0.0, r);
 
-	if(kdtree){
-		kd_block::set_vcs(*vcs);
-		kd_block::set_alpha(alpha);
-		kd_block::set_alpha(p);
-	}
+		VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+		alpha, beta, gamma, p, 1.0, 0.0, 0.0);
 
+    Greedy *gr = new Greedy (vcs_gr);
+		Greedy *gr2 = new Greedy (vcs);
 
-	cout << "greedy" << endl;
-    Greedy *gr = new Greedy (vcs);
+	  list<State*> S;
+	  S.push_back(s0);
+	  while(!S.empty() && s0->get_value()<min_vol)
+		  gr->next(S);
 
-	list<State*> S;
-	S.push_back(s0);
-	for(int i=0;i<0;i++)
-		gr->next(S);
+	  compactState c(*s0,l, w, h, histo_ranges, max_size);
+	  cout << c ;
 
-	compactState c(*s0);
-
-
-	exit(0);
-
-	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4);
-    //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
-
-    //bsg->set_shuffle_best_path(true);
-
-	cout << "double effort" << endl;
-    SearchStrategy *de= new DoubleEffort(*bsg);
-
-	cout << "copying state" << endl;
-	State& s_copy= *s0->clone();
-
-   // cout << s0.valid_blocks.size() << endl;
-
-	cout << "running" << endl;
-    double eval = 1-de->run(s_copy, max_time, begin_time) ;
-	cout << 1-eval << endl;
-
-
-	stringstream ss;
-	ss << inst;
-	string indiceInstancia = ss.str();
-
-	//cout <<"indice instancia"<<indiceInstancia<<endl;
-
-	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
-
-	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
-
-	const AABB* aux= &s00->cont->blocks->top();
-	int width=587,length=233, maxval=220;
-
-	ofstream myfile;
-	ofstream myfile1;
-
-	myfile.open(path1);
-	myfile1.open(path2);
-
-	myfile << eval <<endl;
-
-	myfile1 << eval <<endl;
-
-	int n_tipos = _N;
-
-	addHeader( file,  n_tipos, myfile);
-	addHeader( file,  n_tipos, myfile1);
-
-
-	for(auto action:actions){
-
-		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
-
-		const AABB* aux= &s00->cont->blocks->top();
-
-		s00->transition(*clp_action);
-
-
-		//cout << "block :" << clp_action->block << endl;
-
-		list< AABB > uni_blocks;
-		AABB aabb(clp_action->space.get_location(clp_action->block),&clp_action->block);
-		extract_boxes(aabb, uni_blocks);
-
-		uni_blocks.sort(compare_aabb);
-
-		for(auto aabb:uni_blocks){
-			//cout << aabb << endl;
-			myfile1 << aabb <<endl;
-		}
-
-
-		myfile << clp_action->block << " ; ";
-		//cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
-		myfile << clp_action->space.get_location(clp_action->block) << endl;
-
-		for(auto box : clp_action->block.nb_boxes){
-			if(box.second > 0) myfile << box.first->get_id() << "," << box.second << " ";
-		}
-		myfile << endl;
-
-	}
-	myfile.close();
-	myfile1.close();
-
-	//s00->cont->MatLab_print();
-
+		//cout << "bsg solving" << endl;
+	  BSG *bsg= new BSG(vcs,*gr2, 4);
+		SearchStrategy *de= new DoubleEffort(*bsg);
+		State& s_copy= *s0->clone();
+		double eval = de->run(s_copy, max_time, begin_time) ;
+		cout << (eval)*100.0 << endl;
 
 }
 
@@ -181,11 +91,20 @@ int main(int argc, char** argv) {
 	args::ValueFlag<double> bsl(parser, "int", "Box stability limit", {"bsl"});
 	args::ValueFlag<int> s(parser, "int", "Generator seed", {'s'});
 
+	args::ValueFlag<int> _sl(parser, "int", "(compactState) Slides in length", {"sl"});
+	args::ValueFlag<int> _sw(parser, "int", "(compactState) Slides in width", {"sw"});
+	args::ValueFlag<int> _sh(parser, "int", "(compactState) Slides in height", {"sh"});
+	args::ValueFlag<int> _histo_ranges(parser, "int", "(compactState) Number of ranges for the histograms", {"hist_ranges"});
+	args::ValueFlag<double> _min_vol(parser, "double", "(greedy) Min vol criteria", {"min_vol"});
+	args::ValueFlag<double> _r(parser, "double", "(Greedy) Random weight", {'r'});
+
 	args::ValueFlag<double> min_fr(parser, "double", "Minimum volume of a block", {"min_fr"});
 	args::ValueFlag<double> alpha(parser, "double", "Parameter alpha of VCS", {"alpha"});
 	args::ValueFlag<double> beta(parser, "double", "Parameter beta of VCS", {"beta"});
 	args::ValueFlag<double> gamma(parser, "double", "Parameter gamma of VCS", {"gamma"});
 	args::ValueFlag<double> p(parser, "double", "Parameter p of VCS", {'p'});
+
+
 	args::ValueFlag<int> maxtime(parser, "int", "Max Time", {"maxtime"});
 
 	args::ValueFlag<std::string> folder(parser, "string", "The path of the work folder", {'f'});
@@ -232,6 +151,13 @@ int main(int argc, char** argv) {
 	if(max_w) _max_w=max_w.Get();
 	if(max_h) _max_h=max_h.Get();
 
+  int sl=8, sw=3, sh=3, histo_ranges=20, max_size=_max_l;
+	if(_sl) sl=_sl.Get();
+	if(_sw) sw=_sh.Get();
+	if(_sh) sh=_sh.Get();
+	if(_histo_ranges) histo_ranges=_histo_ranges.Get();
+
+
 
 	double _bsl=2.0;
 	if(bsl) _bsl=bsl.Get();
@@ -240,14 +166,17 @@ int main(int argc, char** argv) {
 	if(s) _s=s.Get();
 	srand(_s);
 
-	double _min_fr=0.98;
+	double _min_fr=(_N>25)? 0.98:1.0;
 	int _maxtime=2;
-	double _alpha=4.0, _beta=1.0, _gamma=0.2, _p=0.04;
+	double _alpha=4.0, _beta=1.0, _gamma=0.2, _p=0.04, r=0.0, min_vol=1.0;
 	if(maxtime) _maxtime=maxtime.Get();
 	if(alpha) _alpha=alpha.Get();
 	if(beta) _beta=beta.Get();
 	if(gamma) _gamma=gamma.Get();
 	if(p) _p=p.Get();
+	if(_r) r=_r.Get();
+	if(min_fr) _min_fr=min_fr.Get();
+	if(_min_vol) min_vol=_min_vol.Get();
 
 
 	string f="";
@@ -257,22 +186,24 @@ int main(int argc, char** argv) {
 	char mkdir[128];
 	strcpy(mkdir,"mkdir ");
 	strcat(mkdir,f.c_str());
-	int i=system(mkdir);
+	//int i=system(mkdir);
 
 	string file = f + "tmp_" + std::to_string(_N) + "_" + std::to_string(_s);
 
 	string output_file1 =f + "tsample_block_" + std::to_string(_N) + "_" + std::to_string(_s);
 	string output_file2 =f + "tsample_box_" + std::to_string(_N) + "_" + std::to_string(_s);
 
-	cout << file << endl;
-	cout << output_file1 << endl;
-	cout << output_file2 << endl;
-	cout << _N << endl;
+	//cout << file << endl;
+	//cout << output_file1 << endl;
+	//cout << output_file2 << endl;
+	//cout << _N << endl;
 
 	generaInstancia(_L, _W, _H, _N, _min_l, _min_w, _min_h, _max_l, _max_w, _max_h, _bsl, _s, file.c_str());
-	cout << f << "/" << file << endl;
+	//cout << f << "/" << file << endl;
 	if(_solve){
-		solve(file, output_file1, output_file2, _N, _min_fr, _maxtime, _alpha, _beta, _gamma, _p);
+
+
+		generate_data(file, _min_fr, _maxtime, _alpha, _beta, _gamma, _p, r, min_vol, sl, sw, sh, histo_ranges, max_size);
 		char rm[128];
 		strcpy(rm,"rm ");
 		strcat(rm,file.c_str());

@@ -26,7 +26,7 @@ public:
 
 		if(get_best_value() < bsg.get_best_value()){
 			best_state=bsg.get_best_state()->clone();
-			cout << "[DoubleEffort] new best_solution_found ("<< get_time() <<"): " << get_best_value() << endl;
+			//cout << "[DoubleEffort] new best_solution_found ("<< get_time() <<"): " << get_best_value() << endl;
 		}
 
 

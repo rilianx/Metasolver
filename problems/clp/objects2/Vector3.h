@@ -19,6 +19,11 @@ class Vector3 {
 
 	Vector3(long x, long y, long z) : x(x),y(y),z(z) { };
 
+	Vector3 min0() const{
+		Vector3 v(std::max(getX(),(long)0),std::max(getY(),(long)0),std::max(getZ(),(long)0));
+		return v;
+	}
+
 	long getX() const {return x;}
 	long getY() const {return y;}
 	long getZ() const {return z;}
@@ -31,7 +36,7 @@ class Vector3 {
 	   x-=b.x; y-=b.y; z-=b.z;
 	   return *this;
 	 }
-	 
+
 	bool operator==(const Vector3& b) const{
        return (x==b.x && y==b.y && z==b.z);
     }

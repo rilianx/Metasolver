@@ -83,6 +83,15 @@ class AABB {
 
 		bool intersects(AABB&) const;
 
+    bool is_valid(){
+			if(mins.getX()<0 || mins.getY()<=0 || mins.getZ()<=0) return false;
+			if(maxs.getX()<0 || maxs.getY()<=0 || maxs.getZ()<=0) return false;
+			return true;
+		}
+
+    //aabb debe ser un AABB sin bloques
+    virtual long volume_intersection (const AABB& aabb) const;
+
 		friend inline std::ostream& operator <<(std::ostream& os, const AABB& v);
 
 

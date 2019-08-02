@@ -22,6 +22,29 @@ AABB::AABB(const Vector3& mins, const Vector3& maxs) : mins(mins), maxs(maxs), b
 
 long AABB::getOccupiedVolume() const {return block->getOccupiedVolume();}
 
+long AABB::volume_intersection (const AABB& aabb) const{
+	 if (aabb.block!=NULL) return -1.0;
+	 long volume_inter=0;
+	 long xmin = max(getXmin(),aabb.getXmin());
+	 long xmax = min(getXmax(),aabb.getXmax());
+	 long ymin = max(getYmin(),aabb.getYmin());
+	 long ymax = min(getYmax(),aabb.getYmax());
+	 long zmin = max(getZmin(),aabb.getZmin());
+	 long zmax = min(getZmax(),aabb.getZmax());
+	 if(xmin>=xmax || ymin>=ymax || zmin>=zmax) return 0;
+
+	 if(block->getOccupiedVolume() != block->getVolume()){
+		 AABB aabb2 ((aabb.getMins() - getMins()).min0(), (aabb.getMaxs() - getMins()).min0());
+		 list<const clp::AABB *> inter_ab = block->blocks->get_intersected_objects(aabb2);
+		 for(auto ab:inter_ab)
+			volume_inter+=ab->volume_intersection(aabb2);
+
+	 }else
+			 volume_inter=(xmax-xmin)*(ymax-ymin)*(zmax-zmin);
+
+	 return volume_inter;
+}
+
 list<AABB> AABB::subtract(const AABB& b) const{
 	const AABB& b1=*this;
 	const AABB& b2=b;
@@ -54,5 +77,3 @@ list<AABB> AABB::subtract(const AABB& b) const{
 
 bool greater_volume(const AABB& a, const AABB& b) { return a.getVolume() > b.getVolume() ; }
 }
-
-

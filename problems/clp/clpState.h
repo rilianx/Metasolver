@@ -99,7 +99,7 @@ public:
 	virtual int shuffle_path();
 
 
-	int get_n_valid_blocks() {return valid_blocks.size();}
+	int get_n_valid_blocks() const {return valid_blocks.size();}
 
 	//member variables
 	Block* cont;
@@ -173,27 +173,44 @@ clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10
 class compactState {
 public:
 	//distribucion de volumenes en el contenedor
-	vector< vector <double> > volume_distribution[3];
+	vector< vector< vector <int> > > volume_distribution;
 
 	//cantidad de cajas por rango de dimension (x,y,z)
 	vector< int > size_histogram[3];
+  double volume;
+	int nb_valid_blocks;
 
-	compactState(const clpState& s) {
-		int l=30, w=10, h=10;
-		int histo_ranges = 20;
-		double max_size=120;
+	friend std::ostream& operator <<(std::ostream& os, const compactState& v);
+
+	compactState(const clpState& s, int l=6, int w=1, int h=2, int histo_ranges=20, int max_size=120) {
+		volume = s.get_value()*100.0;
+		nb_valid_blocks = s.get_n_valid_blocks();
 		double range_sizeL = max_size/histo_ranges;
 		double range_sizeW = max_size/histo_ranges;
 		double range_sizeH = max_size/histo_ranges;
 
-		volume_distribution[0].resize(l);
-		for(int i=0; i<l; i++)	volume_distribution[0][i].resize(w);
 
-		volume_distribution[1].resize(l);
-		for(int i=0; i<l; i++)	volume_distribution[1][i].resize(h);
+    AABB cont(Vector3(0,0,0), s.cont);
+		volume_distribution.resize(l);
+    for(int i=0;i<l;i++){
+			volume_distribution[i].resize(w);
+			for(int j=0;j<w;j++){
+				volume_distribution[i][j].resize(h);
+				for(int k=0;k<h;k++){
+					  int minX=((double)i/l)*s.cont->getL();
+						int minY=((double)j/w)*s.cont->getW();
+						int minZ=((double)k/h)*s.cont->getH();
 
-		volume_distribution[2].resize(w);
-		for(int i=0; i<w; i++)	volume_distribution[2][i].resize(h);
+					  AABB aabb(minX,minY,minZ,
+							int(((i+1.0)/l)*s.cont->getL()),int(((j+1.0)/w)*s.cont->getW()),int(((k+1.0)/h)*s.cont->getH()));
+
+						long v = cont.volume_intersection(aabb);
+						int volume = (int) ((double)v/aabb.getVolume()*100.0+0.5);
+						//cout << aabb << ":" << volume << endl;
+						volume_distribution[i][j][k]=volume;
+				}
+			}
+		}
 
 		for(int i=0;i<3;i++)
 			size_histogram[i].resize(histo_ranges);
@@ -210,14 +227,27 @@ public:
 				}
 			}
 		}
-
-		for(int i=0;i<3;i++){
-		 for(auto histo:size_histogram[i])
-			cout<< histo << " " ;
-		 cout << endl;
-		}
 	}
+
 };
+
+inline std::ostream& operator <<(std::ostream& os, const compactState& v){
+  os << v.volume<< endl;
+	for(int i=0;i<v.volume_distribution.size();i++){
+		for(int j=0;j<v.volume_distribution[i].size();j++)
+			for(int k=0;k<v.volume_distribution[i][j].size();k++)
+					os << v.volume_distribution[i][j][k] << " ";
+  }
+	os << endl;
+
+	for(int i=0;i<3;i++){
+	 for(auto histo:v.size_histogram[i])
+		os<< histo << " " ;
+	 os << endl;
+	}
+	os << v.nb_valid_blocks<< endl;
+	return os;
+}
 
 } /* namespace clp */
 
