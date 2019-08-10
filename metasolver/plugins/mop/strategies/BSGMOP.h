@@ -117,6 +117,8 @@ public:
 	//void BSG_MOP::Non_Dominanted_sort(int N,list< pair<State*,State*> >& sorted_list);
 
 	bool oriented_greedy;
+ 
+  void set_rule(sel_rule r){rule=r;}
 
 private:
 

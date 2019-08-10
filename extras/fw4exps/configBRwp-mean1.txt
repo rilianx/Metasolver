@@ -6,9 +6,9 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = min1min2-p2
+algo_names = mean1-max-vp
 
-[min1-p2]
+[min1-p3]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
@@ -16,7 +16,7 @@ params =  _INSTANCE -t _MAXTIME -f BRwp --fp=_PROFIT --srule=MIN1 --delta=1 --al
 outputpos_times = 2
 outputpos_boxes = 2
 
-[min2-p2]
+[min2-p3]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
@@ -24,7 +24,7 @@ params =  _INSTANCE -t _MAXTIME -f BRwp --fp=_PROFIT --srule=MIN2 --alpha=1.53 -
 outputpos_times = 2
 outputpos_boxes = 2
 
-[min1min2-p2]
+[mean1-max-vp]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
@@ -32,7 +32,7 @@ params =  _INSTANCE -t _MAXTIME -f BRwp --fp=_PROFIT --srule=MIN1MIN2 --delta=1 
 outputpos_times = 2
 outputpos_boxes = 2
 
-[nsga2-p2]
+[nsga2-p3]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
@@ -40,7 +40,7 @@ params =  _INSTANCE -t _MAXTIME -f BRwp --fp=_PROFIT --srule=NSGA2 --alpha=4.31 
 outputpos_times = 2
 outputpos_boxes = 2
 
-[oriented-greedy-p2]
+[oriented-greedy-p3]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
