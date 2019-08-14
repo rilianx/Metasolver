@@ -218,24 +218,6 @@ void run_GRASP_SCP(){
 	remove((path + filename).c_str());
 }
 
-/**
- * Si son iguales retorna true
- */
-bool compare_sets(set<int> set1, set<int> set2){
-
-	if(set1.size() == set2.size()){
-		set<int>::iterator it1 = set1.begin(), it2 = set2.begin();
-		while(it1 != set1.end() && it2 != set2.end()){
-			if(*it1 == *it2)
-				return true;
-			it1++;
-			it2++;
-		}
-	}
-	return false;
-}
-
-
 /*Clonar estado inicial
 Aplicar Greedy y obtener contenedor
 Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (bins)
@@ -243,10 +225,9 @@ Reducir peso de las cajas utilizadas en el contenedor
 Volver a 1*/
 
 int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
-	mclpState::initalize_priorities();
 	list < pair <double, set<int>> > bins;
 	set<int> used_boxes;
-	set<int> inserted_bins;
+	set<int> new_bin;
 	int box_quantity = 0;
 
 	for(int i=0; i < nbins || (s0->nb_left_boxes.size() > used_boxes.size()); i++){
@@ -254,37 +235,44 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
 		//usa greedy para llenar contenedor
-		double eval=bsg->run(s_copy);
+		double eval=gr->run(s_copy);
 
-		dynamic_cast<const mclpState*>(bsg->get_best_state())->update_volumes(pdec,
-				&dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes);
+		const mclpState* best_state=dynamic_cast<const mclpState*>(gr->get_best_state());
+		best_state->update_profits(pdec,
+				&best_state->cont->nb_boxes);
 
 		//se almacena el bin en el conjunto
-		for(auto box: dynamic_cast<const mclpState*>(bsg->get_best_state())->cont->nb_boxes){
-			inserted_bins.insert(box.first->get_id());
+		for(auto box: dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
+			new_bin.insert(box.first->get_id());
 			used_boxes.insert(box.first->get_id());
 			//cout << box.first->get_id() + 1 << ", ";
 		}
 		//cout << endl;
 
+		//se busca el nuevo bin en el conjunto de bins creados
 		bool insert_bin = true;
 		for(auto bin: bins){
-			//Descomentar si se requiere que eval y bin.first sean iguales para realizar la busqueda de duplicados
-			//if(eval == bin.first){
-				//cout << eval << " = " << bin.first << endl;
-				if(compare_sets(inserted_bins, bin.second) == true){
-					//cout << "set1 = set2" << endl;
-					insert_bin = false;
-				}
-			//}
+			if(new_bin == bin.second){
+				insert_bin = false;
+				break;
+			}
+
 		}
-		if(insert_bin && !inserted_bins.empty())
-			bins.push_back(make_pair(eval, inserted_bins));
-		inserted_bins.clear();
+
+		if(insert_bin && !new_bin.empty()){
+			bins.push_back(make_pair(round(((double) best_state->cont->getOccupiedVolume()/(double) best_state->cont->getVolume())*10000.0)/10000.0, new_bin));
+			for(auto box: new_bin)
+				cout << box << " ";
+			cout << endl;
+		}
+
+		new_bin.clear();
 
 	}
 
-	cout << "used_boxes" << endl;
+	cout << "nb_bins:" << bins.size() << endl;
+	cout << "nb boxes:" << s0->nb_left_boxes.size() << endl;
+	cout << "used_boxes:" << used_boxes.size() << endl;
 
 
 	for(auto bin: bins){

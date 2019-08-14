@@ -61,7 +61,7 @@ protected:
 	 */
 	void solveKnapsack(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims);
 
-private:
+protected:
 
 	/**
 	 * This function generates the mX vectors with the solutions of the knapsack problem, and

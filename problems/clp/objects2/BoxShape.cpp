@@ -11,7 +11,7 @@ namespace clp {
 
 BoxShape::BoxShape(int id, long l, long w, long h, bool rot1, bool rot2, bool rot3, double weight) :
 	Volume(l,w,h), id(id), weight(weight) {
-
+      profit = volume ;
       is_valid_orientation[WLH]=rot3;
       is_valid_orientation[LWH]=true; //rot3;
 

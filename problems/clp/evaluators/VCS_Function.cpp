@@ -41,14 +41,20 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
     if(resL<0 || resW<0 || resH<0) return -1.0;
 
-	double loss_vol = VLossFunction::eval_action(s, a);
+	double loss=(beta>0.0)?
+			Loss(dynamic_cast<const clpState*>(&s)->nb_left_boxes, b, sp) : 0.0;
+
+	double vol=(delta>0.0)? (double) b.getOccupiedVolume(): 1.0;
+
+	double profit=(delta>0.0)? (double) b.getTotalProfit(): 1.0;
 
 	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
 
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
-	return (loss_vol * pow(cs,alpha) * pow(n,gamma) );
-	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
+	//return (pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
+	/*(MCLP) */return (pow(profit, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
+
 }
 
 double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp){

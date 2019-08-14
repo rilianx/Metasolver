@@ -71,7 +71,7 @@ public:
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f);
 
 	virtual double get_value() const{
-		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
+		return round(((double) cont->getTotalProfit()/(double) cont->getVolume())*10000.0)/10000.0;
 	}
 
 	virtual double get_value2() const{

@@ -40,10 +40,11 @@ public:
 
     double get_weight() const { return weight; }
 
+    double get_profit() const { return profit; }
+
+    void set_profit(double p) const { profit=p; }
 
     double get_priority() const { return priority; }
-
-    void set_volume(double volume) const { this->volume = volume; }
 
     void set_priority(double priority) const { this->priority = priority; }
     //void set_weight(const double w) const { weight = w; }
@@ -54,6 +55,8 @@ private:
 	bool is_valid_orientation[6];
 
 	double weight;
+
+	mutable double profit;
 
 	mutable double priority;
 
