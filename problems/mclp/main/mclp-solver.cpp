@@ -127,11 +127,13 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 		set<int>* used_boxes, long int nb_boxes){
 
 	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp" + to_string(getpid()) + ".txt";
+ 
+  path = "";
 
-	if(path.empty()){
+	/*if(path.empty()){
 		cout << "El directorio no existe.\n" << endl;
 		exit(0);
-	}
+	}*/
 	cout << "Resultados almacenados en " << path << filename << endl;
 	ofstream scp (path + filename);
 
