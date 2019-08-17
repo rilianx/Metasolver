@@ -38,7 +38,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::ValueFlag<double> _delta(parser, "double", "Volume weighting in the VCS function", {"delta"});
 	args::ValueFlag<double> _delta2(parser, "double", "Weight weighting in the VCS function", {"delta2"});
-    args::ValueFlag<double> _delta3(parser, "double", "Profit weighting in the VCS function", {"delta3"});
+  args::ValueFlag<double> _delta3(parser, "double", "Profit weighting in the VCS function", {"delta3"});
 
 	args::Flag oriented_greedy(parser, "double", "Oriented Greedy", {"oriented_greedy"});
 
@@ -177,7 +177,7 @@ int main(int argc, char** argv){
     cout << "Number of generated blocks:"<< s0->get_n_valid_blocks() << endl;
     double mean_density = clpState::density_of_allboxes/(double) clpState::nb_boxes;
     cout <<  mean_density << " " << (sqrt((clpState::square_density_of_allboxes/(double) clpState::nb_boxes)-pow(mean_density,2))/mean_density) << " " << (double) clpState::nb_boxes << endl;
-    
+
     if(density) return 0;
 
 
@@ -224,26 +224,36 @@ int main(int argc, char** argv){
     }
 
     cout << "pareto_front" << endl;
+		pair<double,double> ref = make_pair(0.45,0.45);
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
-    double x_old=0.0;
+    double x_old=ref.first;
     double hv = 0.0;
-    int n=0; double best_volume=0.0, best_profit=0.0;
+    int n=0;
+		double best_volume=0.0, best_profit=0.0, nadir_volume=0.0, nadir_profit=0.0;
+
     for(auto point : pareto){
-    	if(best_profit==0.0 && point.second) best_profit=point.first.second;
+			//the point does not strict dominate ref
+      if(ref.first >= point.first.first || ref.second >= point.first.second ) continue;
+
+    	if(best_profit==0.0 && point.second) {
+           best_profit=point.first.second;
+           nadir_volume=point.first.first;
+       }
 
     	if(point.second){
     		n++;
     		best_volume=point.first.first;
+        nadir_profit=point.first.second;
     	}
 
 
-    	hv += (point.first.first - x_old) * point.first.second;
+    	hv += (point.first.first - x_old) * (point.first.second-ref.second);
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
     }
 		cout.precision(4);
     cout << "Vmax\tPmax\tHV\t#sols" << endl;
-    cout << best_volume <<  " " << best_profit << " " << hv <<  " " <<  n <<endl;
+    cout << best_volume <<  " " << best_profit << " " << hv <<  " " <<  n << " " << nadir_volume << " " << nadir_profit << endl;
 
 
    /* map< pair<double, double>, State*> ::iterator it = pareto.end();

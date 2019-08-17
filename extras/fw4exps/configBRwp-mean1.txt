@@ -6,9 +6,9 @@ factors = 1 0.833 0.665 0.5 0.2 0.1
 sig_gain = 1.2
 max_seeds = 1
 min_seeds = 1
-algo_names = mean1-max-vp
+algo_names = mean1-max-v mean1-max-p
 
-[min1-p3]
+[mean1-max-v]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
@@ -16,7 +16,7 @@ params =  _INSTANCE -t _MAXTIME -f BRwp --fp=_PROFIT --srule=MIN1 --delta=1 --al
 outputpos_times = 2
 outputpos_boxes = 2
 
-[min2-p3]
+[mean1-max-p]
 tuning_param = PROFIT
 tuning_values = in_file all_one weight
 exec = "../../BSG_BO_CLP"
