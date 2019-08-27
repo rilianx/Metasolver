@@ -63,7 +63,7 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 	  while(!S.empty() && s0->get_value()<min_vol)
 		  gr->next(S);
 
-	  compactState c(*s0,l, w, h, histo_ranges, max_size);
+	  compactState c(*s0);
 	  cout << c ;
 
 		//cout << "bsg solving" << endl;
@@ -71,7 +71,7 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 		SearchStrategy *de= new DoubleEffort(*bsg);
 		State& s_copy= *s0->clone();
 		double eval = de->run(s_copy, max_time, begin_time) ;
-		cout << (eval)*100.0 << endl;
+		cout << eval << endl;
 
 }
 

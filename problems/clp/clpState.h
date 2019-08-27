@@ -172,81 +172,110 @@ clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10
 //For the ANN
 class compactState {
 public:
-	//distribucion de volumenes en el contenedor
-	vector< vector< vector <int> > > volume_distribution;
 
-	//cantidad de cajas por rango de dimension (x,y,z)
-	vector< int > size_histogram[3];
   double volume;
+
 	int nb_valid_blocks;
+
+	vector<double> dataL, dataW, dataH;
+	vector<double> spacesL, spacesW, spacesH;
+
+	vector<double> volumes;
+	vector<double> space_volumes;
 
 	friend std::ostream& operator <<(std::ostream& os, const compactState& v);
 
-	compactState(const clpState& s, int l=6, int w=1, int h=2, int histo_ranges=20, int max_size=120) {
-		volume = s.get_value()*100.0;
+
+
+	compactState(const clpState& s) {
+		volume = s.get_value();
 		nb_valid_blocks = s.get_n_valid_blocks();
-		double range_sizeL = max_size/histo_ranges;
-		double range_sizeW = max_size/histo_ranges;
-		double range_sizeH = max_size/histo_ranges;
 
-
-    AABB cont(Vector3(0,0,0), s.cont);
-		volume_distribution.resize(l);
-    for(int i=0;i<l;i++){
-			volume_distribution[i].resize(w);
-			for(int j=0;j<w;j++){
-				volume_distribution[i][j].resize(h);
-				for(int k=0;k<h;k++){
-					  int minX=((double)i/l)*s.cont->getL();
-						int minY=((double)j/w)*s.cont->getW();
-						int minZ=((double)k/h)*s.cont->getH();
-
-					  AABB aabb(minX,minY,minZ,
-							int(((i+1.0)/l)*s.cont->getL()),int(((j+1.0)/w)*s.cont->getW()),int(((k+1.0)/h)*s.cont->getH()));
-
-						long v = cont.volume_intersection(aabb);
-						int volume = (int) ((double)v/aabb.getVolume()*100.0+0.5);
-						//cout << aabb << ":" << volume << endl;
-						volume_distribution[i][j][k]=volume;
-				}
-			}
-		}
-
-		for(int i=0;i<3;i++)
-			size_histogram[i].resize(histo_ranges);
 
 		for(auto box:s.nb_left_boxes){
 			if(box.second > 0){
+				for(int j=0; j<box.second; j++) volumes.push_back((double)box.first->getVolume()/s.cont->getVolume());
+
 				for(int o=0; o<6; o++){
-					if(box.first->getL((BoxShape::Orientation) o)>0)
-					  size_histogram[0][int(box.first->getL((BoxShape::Orientation) o)/range_sizeL+0.5)]+=box.second;
-					if(box.first->getW((BoxShape::Orientation) o)>0)
-					  size_histogram[1][int(box.first->getW((BoxShape::Orientation) o)/range_sizeW+0.5)]+=box.second;
-					if(box.first->getH((BoxShape::Orientation) o)>0)
-					  size_histogram[2][int(box.first->getH((BoxShape::Orientation) o)/range_sizeH+0.5)]+=box.second;
+
+
+					if(box.first->getL((BoxShape::Orientation) o)>0){
+					  double x=(double)box.first->getL((BoxShape::Orientation) o)/s.cont->getL();
+					  for(int j=0; j<box.second; j++) dataL.push_back(x);
+					}
+
+					if(box.first->getW((BoxShape::Orientation) o)>0){
+						double x=(double)box.first->getW((BoxShape::Orientation) o)/s.cont->getW();
+						for(int j=0; j<box.second; j++) dataW.push_back(x);
+					}
+
+					if(box.first->getH((BoxShape::Orientation) o)>0){
+						double x=(double)box.first->getH((BoxShape::Orientation) o)/s.cont->getH();
+						for(int j=0; j<box.second; j++) dataH.push_back(x);
+					}
 				}
 			}
 		}
+
+		for(int i=0;i<s.cont->spaces->size();i++){
+			const Space sp = (i==0)? s.cont->spaces->top() :  s.cont->spaces->next();
+      spacesL.push_back((double)sp.getL()/s.cont->getL());
+			spacesH.push_back((double)sp.getW()/s.cont->getW());
+			spacesW.push_back((double)sp.getH()/s.cont->getH());
+			space_volumes.push_back((double)sp.getVolume()/s.cont->getVolume());
+		}
+
+
 	}
 
 };
 
 inline std::ostream& operator <<(std::ostream& os, const compactState& v){
   os << v.volume<< endl;
-	for(int i=0;i<v.volume_distribution.size();i++){
-		for(int j=0;j<v.volume_distribution[i].size();j++)
-			for(int k=0;k<v.volume_distribution[i][j].size();k++)
-					os << v.volume_distribution[i][j][k] << " ";
-  }
+	os << v.volumes.size() << endl; // nb_boxes
+	os << v.space_volumes.size() << endl; // nb_spaces
+
+	for(auto vol:v.volumes)
+		 os << vol << " ";
 	os << endl;
 
-	for(int i=0;i<3;i++){
-	 for(auto histo:v.size_histogram[i])
-		os<< histo << " " ;
-	 os << endl;
-	}
-	os << v.nb_valid_blocks<< endl;
-	return os;
+	for(auto data:v.dataL)
+		 os << data << " ";
+
+	os << endl;
+
+	for(auto data:v.dataW)
+		 os << data << " ";
+
+	os << endl;
+
+	for(auto data:v.dataH)
+		 os << data << " ";
+
+	os << endl;
+
+
+	for(auto vol:v.space_volumes)
+		 os << vol << " ";
+	os << endl;
+
+	for(auto data:v.spacesL)
+		 os << data << " ";
+
+	os << endl;
+
+	for(auto data:v.spacesW)
+		 os << data << " ";
+
+	os << endl;
+
+	for(auto data:v.spacesH)
+		 os << data << " ";
+
+	os << endl;
+
+  //os << v.nb_valid_blocks<< endl;
+  return os;
 }
 
 } /* namespace clp */
