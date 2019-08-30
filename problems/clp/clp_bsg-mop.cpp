@@ -51,7 +51,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta3_2(parser, "double", "Profit weighting for second objective", {"delta3_2"});
 
 	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2, MIN1MIN2)", {"srule"});
-
+  args::ValueFlag<string> _ref(parser, "\"double double\"", "Reference point (format: \"y1 y2\")", {"ref"});
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
@@ -152,6 +152,13 @@ int main(int argc, char** argv){
 		else if(formatp=="weight")
 			fp=clpState::WEIGHT;
 
+    pair<double,double> ref = make_pair(0.0,0.0);
+    if(_ref){
+			std::string s = _ref.Get();
+			std::istringstream is( s );
+			is >> ref.first;
+			is >> ref.second;
+		}
 
 		int seed=(_seed)? _seed.Get():1;
 		srand(seed);
@@ -168,6 +175,7 @@ int main(int argc, char** argv){
 	cout << "min_fr:" << min_fr << endl;
 	cout << "max_blocks:" << max_blocks << endl;
 	cout << "Maxtime:" << maxtime << endl;
+	cout << "ref_point: (" << ref.first << "," << ref.second << ")" << endl;
 
 	clock_t begin_time=clock();
 
@@ -224,7 +232,6 @@ int main(int argc, char** argv){
     }
 
     cout << "pareto_front" << endl;
-		pair<double,double> ref = make_pair(0.45,0.45);
     map< pair<double, double>, State*> pareto = bsg->get_pareto_front();
     double x_old=ref.first;
     double hv = 0.0;
@@ -233,7 +240,7 @@ int main(int argc, char** argv){
 
     for(auto point : pareto){
 			//the point does not strict dominate ref
-      if(ref.first >= point.first.first || ref.second >= point.first.second ) continue;
+
 
     	if(best_profit==0.0 && point.second) {
            best_profit=point.first.second;
@@ -246,6 +253,7 @@ int main(int argc, char** argv){
         nadir_profit=point.first.second;
     	}
 
+      if(ref.first >= point.first.first || ref.second >= point.first.second ) continue;
 
     	hv += (point.first.first - x_old) * (point.first.second-ref.second);
     	x_old = point.first.first;

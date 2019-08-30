@@ -1,839 +1,169 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-sd05-max-v_PROFITall_one   0   0   0   0  10 246 789 134   3   0   0   0 
-sd05-max-v_PROFITweight   0   0 191 449 594 730 194  77  18   5   0   0 
-sd05-max-p_PROFITin_file   0   0  18 198 489 848 205   0   0   0   0   0 
-sd05-max-p_PROFITall_one   0   0  11  58 383 638 309  76   3   0   0   0 
-sd05-max-p_PROFITweight   0   0  50 330 657 791 123  49  12   5   0   0 
-sd05-max-v_PROFITall_one sd05-max-v_PROFITweight sd05-max-p_PROFITin_file sd05-max-p_PROFITall_one sd05-max-p_PROFITweight 
-1.000000 789/246 194/730 205/848 309/638 123/791 
-1.200480 134/10 77/594 0/489 76/383 49/657 
-1.503759 3/0 18/449 0/198 3/58 12/330 
-2.000000 0/0 5/191 0/18 0/11 5/50 
-5.000000 0/0 0/0 0/0 0/0 0/0 
-10.000000 0/0 0/0 0/0 0/0 0/0 
+sd05-max-v 328 646 1621 2086 2354 2463 2537 2521 2446 2237 908 451 
+sd05-max-p 315 613 1551 2050 2312 2433 2529 2518 2461 2287 1124 598 
+ sd05-nsga 339 712 2045 2400 2503 2531 2476 2342 1986 1368 496 272 
+sd05-oriented-search 361 736 2126 2453 2529 2545 2406 2251 1882 1291 457 242 
+sd05-max-v sd05-max-p sd05-nsga sd05-oriented-search 
+1.000000 2537/2463 2529/2433 2476/2531 2406/2545 
+1.200480 2521/2354 2518/2312 2342/2503 2251/2529 
+1.503759 2446/2086 2461/2050 1986/2400 1882/2453 
+2.000000 2237/1621 2287/1551 1368/2045 1291/2126 
+5.000000 908/646 1124/613 496/712 457/736 
+10.000000 451/328 598/315 272/339 242/361 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 6 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 13 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 15 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 17 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR1.txt -i 18 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 9 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 12 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR2.txt -i 16 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 1 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 15 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR3.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 9 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR4.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 0 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 4 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 11 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 14 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR7.txt -i 18 --min_fr=1.0 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 0 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 1 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 3 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 4 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 5 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 6 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 7 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 8 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 9 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 10 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 11 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 14 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 15 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 16 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 18 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR8.txt -i 19 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 0 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 1 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 2 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 3 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 4 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 6 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 7 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 8 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 9 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 10 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 11 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 12 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 14 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 15 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 16 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 18 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR9.txt -i 19 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 3 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 4 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 7 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 9 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 10 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 11 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 12 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 14 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 18 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR10.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 0 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 1 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 3 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 6 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 7 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 8 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 10 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 11 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 12 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 16 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 18 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR11.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 0 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 6 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 7 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 8 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 9 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 12 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 13 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 14 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 15 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 16 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 17 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 18 --min_fr=0.98 1 1 1 1 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR12.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 3 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 6 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 11 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 13 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 18 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR13.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 1 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 2 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 3 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 4 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 7 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 12 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 15 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR14.txt -i 19 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 2 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 3 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 4 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 6 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 7 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 8 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 12 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 13 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 14 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 15 --min_fr=0.98 1 1 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 16 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 18 --min_fr=0.98 0 0 0 0 0 0 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-0.5-0.5/BR15.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 2 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 14 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR1.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 14 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 16 --min_fr=1.0 0 0 1 1 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR2.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 16 --min_fr=1.0 0 0 1 1 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR3.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR5.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 0 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 1 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 3 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 4 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 6 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 7 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 9 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 10 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 11 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 13 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 14 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 15 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 16 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 17 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 18 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 0 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 2 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 3 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 4 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 7 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 8 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 9 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 10 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 14 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 15 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 16 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 0 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 1 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 3 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 4 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 9 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 11 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 12 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 16 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 18 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 4 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 6 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 7 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 10 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 12 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 15 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 17 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 18 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR11.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 0 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 2 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 3 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 4 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 6 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 16 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 18 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 6 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 10 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 12 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 17 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 18 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 7 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 0 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 2 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 4 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 6 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 8 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 10 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 11 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 14 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 16 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 18 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR1.txt -i 19 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 1 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 3 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 5 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 7 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 11 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 18 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR2.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 3 --min_fr=1.0 1 1 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 4 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 5 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 8 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 12 --min_fr=1.0 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 14 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 17 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 19 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 0 --min_fr=1.0 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 3 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 11 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 13 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 14 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 16 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 17 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 19 --min_fr=1.0 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 0 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 3 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 5 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 6 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 10 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 11 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 12 --min_fr=1.0 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 16 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 17 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 1 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 3 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 4 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 5 --min_fr=1.0 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 8 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 9 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 10 --min_fr=1.0 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 11 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 13 --min_fr=1.0 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 14 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 15 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 16 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 17 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 0 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 1 --min_fr=1.0 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 2 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 3 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 4 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 5 --min_fr=1.0 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 6 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 7 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 8 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 9 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 10 --min_fr=1.0 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 11 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 12 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 13 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 14 --min_fr=1.0 1 1 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 15 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 16 --min_fr=1.0 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 17 --min_fr=1.0 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 18 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 19 --min_fr=1.0 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 0 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 4 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 5 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 9 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 11 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 14 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 18 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 19 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 1 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 2 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 4 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 10 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 11 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 13 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 15 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 18 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 0 --min_fr=0.98 0 0 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 3 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 18 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 6 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 7 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 8 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 7 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 11 --min_fr=0.98 1 1 1 1 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 0 0 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 0 0 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 0 0 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 5 --min_fr=0.98 1 1 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 0 0 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 0 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 1 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 2 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 3 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 4 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 5 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 6 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 7 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 8 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 9 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 10 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 11 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 12 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 13 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 14 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 15 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 16 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 17 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 18 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
-../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 19 --min_fr=0.98 0 0 0 0 1 1 1 1 1 1 1 1 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 11 --min_fr=0.98 --fp=weight --ref="0.56354 0.95644" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 9 --min_fr=0.98 --fp=all_one --ref="0.7882 0.38204" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 19 --min_fr=0.98 --fp=weight --ref="0.86469 0.7437" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 17 --min_fr=1.0 --fp=all_one --ref="0.47032 0.34371" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-0.5-0.5/BR5.txt -i 2 --min_fr=1.0 --fp=in_file --ref="0.93206 0.30276" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 7 --min_fr=0.98 --fp=all_one --ref="0.86029 0.31699" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 10 --min_fr=0.98 --fp=all_one --ref="0.70758 0.4194" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 15 --min_fr=1.0 --fp=in_file --ref="0.92978 0.35604" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 12 --min_fr=0.98 --fp=all_one --ref="0.69579 0.29538" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-0.5-0.5/BR6.txt -i 17 --min_fr=1.0 --fp=in_file --ref="0.91064 0.46741" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 5 --min_fr=0.98 --fp=weight --ref="0.47728 0.94709" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR3.txt -i 3 --min_fr=1.0 --fp=in_file --ref="0.50173 -0.01943" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR12.txt -i 7 --min_fr=0.98 --fp=weight --ref="0.76166 0.90947" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 6 --min_fr=0.98 --fp=all_one --ref="0.81339 0.27006" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 13 --min_fr=1.0 --fp=in_file --ref="0.53146 0.22807" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR4.txt -i 16 --min_fr=1.0 --fp=in_file --ref="0.49821 0.31338" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 3 --min_fr=0.98 --fp=all_one --ref="0.73099 0.33596" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 4 --min_fr=1.0 --fp=in_file --ref="0.63334 0.4384" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR5.txt -i 5 --min_fr=1.0 --fp=in_file --ref="0.78463 0.33686" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 14 --min_fr=0.98 --fp=all_one --ref="0.84623 0.29568" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 18 --min_fr=0.98 --fp=all_one --ref="0.86446 0.30322" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 11 --min_fr=1.0 --fp=weight --ref="0.70527 0.88307" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 4 --min_fr=0.98 --fp=all_one --ref="0.81064 0.29024" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 6 --min_fr=0.98 --fp=all_one --ref="0.78697 0.29792" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 3 --min_fr=1.0 --fp=in_file --ref="0.59225 0.38953" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 4 --min_fr=1.0 --fp=in_file --ref="0.59589 0.45202" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 6 --min_fr=1.0 --fp=in_file --ref="0.56768 0.41916" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 5 --min_fr=0.98 --fp=weight --ref="0.82771 0.8163" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR6.txt -i 10 --min_fr=1.0 --fp=in_file --ref="0.65203 0.34382" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 8 --min_fr=0.98 --fp=weight --ref="0.78624 0.86305" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 1 --min_fr=1.0 --fp=in_file --ref="0.71589 0.3891" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 4 --min_fr=1.0 --fp=in_file --ref="0.67958 0.42752" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 9 --min_fr=0.98 --fp=all_one --ref="0.86235 0.3604" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 6 --min_fr=1.0 --fp=in_file --ref="0.79756 0.41173" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 7 --min_fr=1.0 --fp=in_file --ref="0.77481 0.43088" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 12 --min_fr=0.98 --fp=all_one --ref="0.87333 0.25037" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 5 --min_fr=0.98 --fp=weight --ref="0.85611 0.72984" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR9.txt -i 8 --min_fr=0.98 --fp=weight --ref="0.74134 0.92124" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 13 --min_fr=1.0 --fp=in_file --ref="0.62158 0.30229" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 17 --min_fr=1.0 --fp=in_file --ref="0.76439 0.4333" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 19 --min_fr=1.0 --fp=in_file --ref="0.85945 0.23634" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.78749 0.41485" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 3 --min_fr=0.98 --fp=in_file --ref="0.82876 0.29997" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 9 --min_fr=0.98 --fp=all_one --ref="0.8955 0.23838" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 3 --min_fr=0.98 --fp=weight --ref="0.83761 0.82433" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.69412 0.32924" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.76494 0.48769" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 12 --min_fr=0.98 --fp=in_file --ref="0.73736 0.31482" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.8045 0.37705" 0 nan 0 0 0 nan 0 nan 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 17 --min_fr=0.98 --fp=in_file --ref="0.61487 0.24475" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 0 --min_fr=0.98 --fp=in_file --ref="0.76063 0.33759" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 8 --min_fr=0.98 --fp=all_one --ref="0.85075 0.38299" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 5 --min_fr=0.98 --fp=in_file --ref="0.81161 0.35692" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 6 --min_fr=0.98 --fp=in_file --ref="0.69336 0.34747" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 7 --min_fr=0.98 --fp=in_file --ref="0.64475 0.35783" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.7773 0.38715" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.74062 0.37464" 0 nan 0 0 0 nan 0 nan 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 11 --min_fr=0.98 --fp=in_file --ref="0.73074 0.53604" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 10 --min_fr=0.98 --fp=all_one --ref="0.80092 0.34833" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 14 --min_fr=0.98 --fp=in_file --ref="0.74078 0.33119" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.82671 0.37282" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 18 --min_fr=0.98 --fp=in_file --ref="0.85426 0.38111" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR9.txt -i 19 --min_fr=0.98 --fp=in_file --ref="0.76214 0.25561" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 1 --min_fr=0.98 --fp=in_file --ref="0.70765 0.37159" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.83651 0.39298" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 5 --min_fr=0.98 --fp=in_file --ref="0.74397 0.40241" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 6 --min_fr=0.98 --fp=in_file --ref="0.7742 0.30261" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 7 --min_fr=0.98 --fp=in_file --ref="0.8443 0.28166" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.78866 0.3902" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 9 --min_fr=0.98 --fp=in_file --ref="0.76385 0.29144" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.80568 0.38661" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 11 --min_fr=0.98 --fp=in_file --ref="0.61046 0.40439" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 12 --min_fr=0.98 --fp=in_file --ref="0.89656 0.39013" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 13 --min_fr=0.98 --fp=in_file --ref="0.86657 0.38338" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 15 --min_fr=0.98 --fp=in_file --ref="0.84082 0.42515" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.77027 0.35983" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR10.txt -i 19 --min_fr=0.98 --fp=in_file --ref="0.77824 0.43283" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.73938 0.41837" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 5 --min_fr=0.98 --fp=in_file --ref="0.75615 0.39611" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 7 --min_fr=0.98 --fp=in_file --ref="0.73565 0.50928" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 11 --min_fr=0.98 --fp=all_one --ref="0.79657 0.36476" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 9 --min_fr=0.98 --fp=in_file --ref="0.74442 0.44047" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.87198 0.36834" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 11 --min_fr=0.98 --fp=in_file --ref="0.77219 0.44777" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 14 --min_fr=0.98 --fp=in_file --ref="0.73021 0.30754" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.75557 0.42458" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 17 --min_fr=0.98 --fp=in_file --ref="0.65353 0.23132" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR11.txt -i 18 --min_fr=0.98 --fp=in_file --ref="0.80308 0.29796" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 0 --min_fr=0.98 --fp=in_file --ref="0.79554 0.35051" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 1 --min_fr=0.98 --fp=in_file --ref="0.85203 0.43335" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.75608 0.26565" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 3 --min_fr=0.98 --fp=in_file --ref="0.68591 0.40798" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 4 --min_fr=0.98 --fp=in_file --ref="0.75773 0.20541" 0 nan 0 0 0 nan 0 nan 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.8383 0.47514" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR14.txt -i 5 --min_fr=0.98 --fp=weight --ref="0.83163 0.80519" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.79084 0.27223" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 12 --min_fr=0.98 --fp=in_file --ref="0.85049 0.30937" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 13 --min_fr=0.98 --fp=in_file --ref="0.64085 0.35734" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 15 --min_fr=0.98 --fp=in_file --ref="0.90361 0.27541" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.85113 0.36385" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR12.txt -i 17 --min_fr=0.98 --fp=in_file --ref="0.86435 0.30208" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 1 --min_fr=0.98 --fp=in_file --ref="0.74193 0.33938" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.75063 0.31359" 0 nan 0 0 0 nan 0 nan 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 3 --min_fr=0.98 --fp=in_file --ref="0.72726 0.29085" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 6 --min_fr=0.98 --fp=in_file --ref="0.83007 0.44247" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 7 --min_fr=0.98 --fp=in_file --ref="0.7876 0.32922" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.80609 0.39594" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 9 --min_fr=0.98 --fp=in_file --ref="0.68734 0.34391" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 11 --min_fr=0.98 --fp=in_file --ref="0.69647 0.32742" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 13 --min_fr=0.98 --fp=in_file --ref="0.84668 0.2835" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 14 --min_fr=0.98 --fp=in_file --ref="0.7992 0.37596" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.80067 0.39548" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR13.txt -i 7 --min_fr=0.98 --fp=weight --ref="0.7421 0.90617" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR13.txt -i 19 --min_fr=0.98 --fp=in_file --ref="0.76826 0.40997" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 2 --min_fr=0.98 --fp=in_file --ref="0.79906 0.30155" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 3 --min_fr=0.98 --fp=in_file --ref="0.82712 0.43976" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 4 --min_fr=0.98 --fp=in_file --ref="0.71734 0.20298" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 6 --min_fr=0.98 --fp=in_file --ref="0.78463 0.36141" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 7 --min_fr=0.98 --fp=in_file --ref="0.82388 0.38346" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.85009 0.36057" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 9 --min_fr=0.98 --fp=in_file --ref="0.83551 0.21964" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.74875 0.32158" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 11 --min_fr=0.98 --fp=in_file --ref="0.8302 0.28845" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 12 --min_fr=0.98 --fp=in_file --ref="0.83214 0.36117" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 13 --min_fr=0.98 --fp=in_file --ref="0.72692 0.36374" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 14 --min_fr=0.98 --fp=in_file --ref="0.89487 0.33577" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 15 --min_fr=0.98 --fp=in_file --ref="0.75527 0.39155" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.73372 0.2458" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR14.txt -i 18 --min_fr=0.98 --fp=in_file --ref="0.84596 0.37482" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 4 --min_fr=0.98 --fp=in_file --ref="0.79421 0.33044" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 6 --min_fr=0.98 --fp=in_file --ref="0.802 0.29216" 0 nan 0 0 0 nan 0 nan 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 8 --min_fr=0.98 --fp=in_file --ref="0.7947 0.39757" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 9 --min_fr=0.98 --fp=in_file --ref="0.84003 0.29813" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 10 --min_fr=0.98 --fp=in_file --ref="0.83484 0.3912" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 19 --min_fr=1.0 --fp=in_file --ref="0.92451 0.21609" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 12 --min_fr=0.98 --fp=in_file --ref="0.79386 0.31639" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 13 --min_fr=0.98 --fp=in_file --ref="0.83016 0.38831" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 16 --min_fr=0.98 --fp=in_file --ref="0.81245 0.18516" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 17 --min_fr=0.98 --fp=in_file --ref="0.79319 0.28259" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 18 --min_fr=0.98 --fp=in_file --ref="0.85528 0.34839" 0 nan 0 0 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR15.txt -i 19 --min_fr=0.98 --fp=in_file --ref="0.81393 0.27942" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR6.txt -i 7 --min_fr=1.0 --fp=in_file --ref="0.86255 0.35727" 0 nan 0 0 0 nan 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR7.txt -i 7 --min_fr=1.0 --fp=in_file --ref="0.8675 0.44179" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 2 --min_fr=1.0 --fp=weight --ref="0.63097 0.93686" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR10.txt -i 3 --min_fr=0.98 --fp=in_file --ref="0.82833 0.38799" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.0-0.5/BR15.txt -i 5 --min_fr=0.98 --fp=weight --ref="0.75851 0.80112" 0 0 0 0 0 0 0 0 0 0 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR7.txt -i 19 --min_fr=1.0 --fp=weight --ref="0.70875 0.90628" 0 nan 0 nan 0 nan 0 nan 0 nan 
+../../problems/clp/benchs/BRwp-1.4-0.5/BR8.txt -i 14 --min_fr=0.98 --fp=weight --ref="0.58002 0.93906" 0 nan 0 0 0 nan 0 0 0 0 
 
 gains
-0.000100 1.000000 900 1.077183 900 0.709342 900 0.806561 900 0.897438 900 0.747614 900 
-total time: 1.000000 1.083435 0.697653 0.816961 0.914640 0.750913 
+0.000100 1.000000 2519 1.709094 2537 2.048394 2532 1.086227 2536 0.994563 2545 
+total time: 1.000000 1.283154 1.433437 0.826946 0.746172 
