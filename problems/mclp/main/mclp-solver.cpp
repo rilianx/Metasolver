@@ -17,6 +17,7 @@
 //#include "objects/State.cpp"
 #include "mclp-state.h"
 #include "BlockSet.h"
+#include "BoxShape.h"
 #include "Greedy.h"
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
@@ -24,7 +25,10 @@
 
 bool global::TRACE = false;
 
+
 using namespace std;
+
+
 
 
 void dfsPrintChild(const State* node, ofstream& file){
@@ -88,17 +92,18 @@ string findOut(string current_directory, string find_directory){
 	struct dirent *ent;
 	current_directory += "/../";
 	dir = opendir(current_directory.c_str());
+	//cout << "Dentro de findOut "<< current_directory + find_directory << endl;
 	for(int i = 0; i < 5; i++){
 		while((ent = readdir(dir)) != NULL){
 			if(((string)ent->d_name).compare(find_directory) == 0){
 				closedir(dir);
 				//cout << current_directory + find_directory << endl;
+
 				return current_directory + find_directory +"/";
 			}
 		}
 		current_directory += "../";
 		dir = opendir((current_directory).c_str());
-
 	}
 	closedir(dir);
 	return "";
@@ -106,9 +111,11 @@ string findOut(string current_directory, string find_directory){
 
 string findDirectory(string current_directory, string find_directory){
 	string find = findInto(current_directory, find_directory);
+	//cout << "Dentro de findDirectory-finInto " << find << endl;
 	if(!find.empty()) return find;
 	else {
 		find = findOut(current_directory, find_directory);
+
 		if(!find.empty()) return find;
 	}
 	return "";
@@ -126,8 +133,10 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 		set<int>* used_boxes, long int nb_boxes){
 
-	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp" + to_string(getpid()) + ".txt";
- 
+	string path = findDirectory(".", "GRASP-SCP");
+	string path2 = findDirectory(".", "gurobi");
+	string filename = "bins_scp" + to_string(getpid()) + ".txt";
+
   path = "";
 
 	/*if(path.empty()){
@@ -147,7 +156,7 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 		scp << nb_boxes << "\n";
 
 		//Matrix cost by boxes
-		long int cont = 0;
+		/*long int cont = 0;
 		for(auto bin: *bins){
 			if(cont >= 12){
 				scp << "\n";
@@ -156,7 +165,7 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 			scp << " 1";
 			cont += 1;
 		}
-		scp << "\n";
+		scp << "\n";*/
 
 		//Boxes quantity in a set and then sets boxes
 		for(auto bin: *bins){
@@ -171,32 +180,34 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 	} else cout << "Unable to open file" << endl;
 }
 
-void run_GRASP_SCP(){
+void run_GRASP_SCP(string gurobi_path, list < pair <double, set<int>> >& bins ){
 
-	string path = findDirectory(".", "GRASP-SCP"), filename = "bins_scp" + to_string(getpid()) + ".txt";
-	if(path.empty()){
-		cout << "El directorio no existe.\n" << endl;
-		exit(0);
-	}
+	string filename = "bins_scp" + to_string(getpid()) + ".txt";
+
 	const string MAX_TIME = "10";
 	const string SEED = "1";
-	string run = string(path + "GRASP-SCP " + path + filename + " ") + MAX_TIME + string(" ") + SEED;
-
-	FILE *p = popen(run.c_str(), "r");
+	string run2 = string("python " + gurobi_path + "/Solver.py " + filename);
+	cout << "python " << gurobi_path << "/Solver.py " << filename << endl;
+	FILE *p = popen(run2.c_str(), "r");
 
 	if(p != NULL) {
 		cout << endl;
-		cout << run << endl;
+		//cout << run2 << endl;
 
 		cout << "running GRASP-SCP" << endl;
 		cout << "Time: " << MAX_TIME << endl;
 		cout << "Seed: " << SEED << endl;
 
-		char output[100];
+		char output[100], last_output[100];
 		string str;
 		vector <string> line;
 
-		while(fgets(output, sizeof(output), p) != NULL) { }
+
+		while(fgets(output, sizeof(output), p) != NULL) {
+			strcpy(last_output, output);
+		}
+		last_output[strlen(last_output)-1]=0;
+		cout << last_output << " ";
 
 		str = output;
 		string delimiter = " ";
@@ -212,10 +223,21 @@ void run_GRASP_SCP(){
 	} else {
 		perror("Unable to open file");
 	}
+
 	pclose(p);
 
-	//FILE * scp = fopen((path + filename).c_str(), "w");
-	remove((path + filename).c_str());
+
+	list < pair <double, set<int>> > bins_gurobi;
+	//en lista bins_gurobi almacenan bins de la solucion entregada por gurobi
+	// ...
+
+	bins=bins_gurobi;
+
+
+	//para obtener una caja usando el id
+	BoxShape* boxt = mclpState::id2box[1];
+	//cout << boxt->getVolume() << endl;
+
 }
 
 /*Clonar estado inicial
@@ -224,7 +246,7 @@ Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (b
 Reducir peso de las cajas utilizadas en el contenedor
 Volver a 1*/
 
-int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
+int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gurobi_path){
 	list < pair <double, set<int>> > bins;
 	set<int> used_boxes;
 	set<int> new_bin;
@@ -247,7 +269,6 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 			used_boxes.insert(box.first->get_id());
 			//cout << box.first->get_id() + 1 << ", ";
 		}
-		//cout << endl;
 
 		//se busca el nuevo bin en el conjunto de bins creados
 		bool insert_bin = true;
@@ -256,7 +277,6 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 				insert_bin = false;
 				break;
 			}
-
 		}
 
 		if(insert_bin && !new_bin.empty()){
@@ -265,9 +285,7 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 				cout << box << " ";
 			cout << endl;
 		}
-
 		new_bin.clear();
-
 	}
 
 	cout << "nb_bins:" << bins.size() << endl;
@@ -283,7 +301,14 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec){
 	}
 
 	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
-	run_GRASP_SCP();
+	//	cout << "AQUI 1" << endl;
+	run_GRASP_SCP(gurobi_path, bins);
+
+	//esta función deberia calcular el volumen exclusivo del bin id
+	//compute_exclusive_volume(bins, id)
+
+	//
+
 
 	return bins.size();
 
@@ -306,10 +331,14 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<string> _gurobi_path(parser, "string", "path of gurobi", {"gurobi_path"});
+
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 	//args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
+
+
 
 
 	cout.precision(8);
@@ -336,6 +365,7 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
+	string gurobi_path = "extras/gurobi";
 	string file=_file.Get();
 	int inst=(_inst)? _inst.Get():0;
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
@@ -353,6 +383,7 @@ int main(int argc, char** argv){
 	if(_nboxes) nboxes=_nboxes.Get();
 	if(_pdec) pdec=_pdec.Get();
 	if(_nbins) nbins=_nbins.Get();
+  if(_gurobi_path) gurobi_path = _gurobi_path.Get();
 
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
@@ -371,11 +402,14 @@ int main(int argc, char** argv){
 	cout << "N_bins:" << nbins << endl;
 	cout << "Decreasing ratio (priority):" << pdec << endl;
 
-    mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
+
+    clock_t begin_time=clock();
+
+	mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
-    clock_t begin_time=clock();
+
 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
@@ -390,7 +424,9 @@ int main(int argc, char** argv){
 	bsg->trace=false;
 
 
-   	int bins=solve(gr, bsg, s0, nbins, pdec);
+  int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path);
+
+  std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
 
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);

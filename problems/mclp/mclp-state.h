@@ -53,6 +53,7 @@ public:
 			b.first->set_profit(b.first->get_profit()*alpha);
 	}
 
+	static map< int, BoxShape* > id2box;
 
 protected:
 	mclpState(Block* p) : clpState(p) {
