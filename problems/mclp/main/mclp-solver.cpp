@@ -130,8 +130,7 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 	perror("getcwd() error");
 }*/
 
-void exportToTxtSCP(list < pair <double, set<int>> >* bins,
-		set<int>* used_boxes, long int nb_boxes){
+void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes){
 
 	string path = findDirectory(".", "GRASP-SCP");
 	string path2 = findDirectory(".", "gurobi");
@@ -169,8 +168,8 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 
 		//Boxes quantity in a set and then sets boxes
 		for(auto bin: *bins){
-			scp << " " << bin.second.size() << "\n";
-			for(auto box: bin.second){
+			scp << " " << bin.size() << "\n";
+			for(auto box: bin){
 				scp << " " << box + 1;
 			}
 			scp << "\n";
@@ -180,8 +179,9 @@ void exportToTxtSCP(list < pair <double, set<int>> >* bins,
 	} else cout << "Unable to open file" << endl;
 }
 
-void run_GRASP_SCP(string gurobi_path, list < pair <double, set<int>> >& bins ){
+void solve_set_covering(string gurobi_path, list < set<int> >& bins , int nb_box_types){
 
+	exportToTxtSCP(&bins, nb_box_types);
 	string filename = "bins_scp" + to_string(getpid()) + ".txt";
 
 	const string MAX_TIME = "10";
@@ -194,7 +194,7 @@ void run_GRASP_SCP(string gurobi_path, list < pair <double, set<int>> >& bins ){
 		cout << endl;
 		//cout << run2 << endl;
 
-		cout << "running GRASP-SCP" << endl;
+		cout << "running Gurobi-Solver" << endl;
 		cout << "Time: " << MAX_TIME << endl;
 		cout << "Seed: " << SEED << endl;
 
@@ -227,9 +227,8 @@ void run_GRASP_SCP(string gurobi_path, list < pair <double, set<int>> >& bins ){
 	pclose(p);
 
 
-	list < pair <double, set<int>> > bins_gurobi;
-	//en lista bins_gurobi almacenan bins de la solucion entregada por gurobi
-	// ...
+	list < set<int> > bins_gurobi;
+	//recorrer lista de bins y copiar los correspondientes a la solucion entregada por gurobi en bins_gurobi
 
 	bins=bins_gurobi;
 
@@ -240,47 +239,56 @@ void run_GRASP_SCP(string gurobi_path, list < pair <double, set<int>> >& bins ){
 
 }
 
-/*Clonar estado inicial
-Aplicar Greedy y obtener contenedor
-Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (bins)
-Reducir peso de las cajas utilizadas en el contenedor
-Volver a 1*/
+double random(double l, double r) {
+	return l + ((double)rand()/RAND_MAX)*(r-l);
+}
 
-int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gurobi_path){
-	list < pair <double, set<int>> > bins;
-	set<int> used_boxes;
+list < set<int> > generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins=1000){
+	list < set<int> > bins;
+
+	map <int, int> used_boxes;
+
+	for(auto box: id_boxes)
+		used_boxes[box] = 100;
+
+	for(auto b : s0->nb_left_boxes){
+		b.first->set_profit(b.first->getVolume()*pow(random(0.8, 1.0),used_boxes[b.first->get_id()]));
+	}
+
 	set<int> new_bin;
-	int box_quantity = 0;
 
 	for(int i=0; i < nbins || (s0->nb_left_boxes.size() > used_boxes.size()); i++){
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
 
-		//usa greedy para llenar contenedor
-		double eval=gr->run(s_copy);
+		//usa clp_solver para llenar contenedor
+		double eval=clp_solver->run(s_copy);
 
-		const mclpState* best_state=dynamic_cast<const mclpState*>(gr->get_best_state());
-		best_state->update_profits(pdec,
-				&best_state->cont->nb_boxes);
+		const mclpState* best_state=dynamic_cast<const mclpState*>(clp_solver->get_best_state());
+		best_state->update_profits(&best_state->cont->nb_boxes, used_boxes);
 
 		//se almacena el bin en el conjunto
-		for(auto box: dynamic_cast<const mclpState*>(gr->get_best_state())->cont->nb_boxes){
+		for(auto box: dynamic_cast<const mclpState*>(clp_solver->get_best_state())->cont->nb_boxes){
 			new_bin.insert(box.first->get_id());
-			used_boxes.insert(box.first->get_id());
+			if(used_boxes.find(box.first->get_id()) == used_boxes.end())
+				used_boxes.insert(make_pair(box.first->get_id(), box.second));
+			else
+				used_boxes[box.first->get_id()]++;
+
 			//cout << box.first->get_id() + 1 << ", ";
 		}
 
 		//se busca el nuevo bin en el conjunto de bins creados
 		bool insert_bin = true;
 		for(auto bin: bins){
-			if(new_bin == bin.second){
+			if(new_bin == bin){
 				insert_bin = false;
 				break;
 			}
 		}
 
 		if(insert_bin && !new_bin.empty()){
-			bins.push_back(make_pair(round(((double) best_state->cont->getOccupiedVolume()/(double) best_state->cont->getVolume())*10000.0)/10000.0, new_bin));
+			bins.push_back(new_bin);
 			for(auto box: new_bin)
 				cout << box << " ";
 			cout << endl;
@@ -288,26 +296,92 @@ int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gu
 		new_bin.clear();
 	}
 
-	cout << "nb_bins:" << bins.size() << endl;
-	cout << "nb boxes:" << s0->nb_left_boxes.size() << endl;
-	cout << "used_boxes:" << used_boxes.size() << endl;
+	return bins;
+}
 
 
-	for(auto bin: bins){
-		cout << bin.first << " ";
-		for(auto box: bin.second)
-			cout << box << " ";
-		cout << endl;
+list < set<int> >  get_break_bins(list < set<int> > best_bins, set <int>& break_boxes){
+
+	list < set <int> > break_bins;
+
+	int n = best_bins.size()/2;
+
+	for(int i=0; i<n; i++){
+		int r=rand()%best_bins.size();
+		list < set<int> >::iterator it = best_bins.begin();
+		std::advance(it,r);
+		break_bins.push_back(*it);
+
+		for (auto box: *it)
+			break_boxes.insert(box);
+
+		best_bins.erase(it);
 	}
 
-	exportToTxtSCP(&bins, &used_boxes, s0->nb_left_boxes.size());
-	//	cout << "AQUI 1" << endl;
-	run_GRASP_SCP(gurobi_path, bins);
+	for (set<int> bin: best_bins){
+		for(int box: bin){
+			if(break_boxes.find(box)!=break_boxes.end()){
+				break_boxes.erase(box);
+			}
+		}
+	}
 
-	//esta función deberia calcular el volumen exclusivo del bin id
-	//compute_exclusive_volume(bins, id)
+	return break_bins;
 
-	//
+
+
+}
+
+/*Clonar estado inicial
+Aplicar Greedy y obtener contenedor
+Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (bins)
+Reducir peso de las cajas utilizadas en el contenedor
+Volver a 1*/
+
+int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gurobi_path){
+	SearchStrategy * clp_solver = gr;
+	set<int> boxes;
+	list < set<int> > best_bins;
+	list < set<int> >  break_bins;
+	list < set<int> > bins;
+	bool first=true;
+	for(int i=0;i<2;i++){
+
+		bins = generate_bins(clp_solver, s0, boxes);
+
+		for(auto bin: bins){
+			for(auto box: bin)
+				cout << box << " ";
+			cout << endl;
+		}
+
+		//resuelve set-covering y deja los bins de la solucion optima
+		solve_set_covering(gurobi_path, bins,  s0->nb_left_boxes.size());
+
+		cout << break_bins.size() << endl;
+		cout << bins.size() << endl;
+		if(best_bins.empty()) best_bins=bins;
+		else if(bins.size() < break_bins.size()){
+			//best_bins <- best_bins - break_bins + bins
+			list < set<int> > v, v2;
+			auto it=std::set_difference(best_bins.begin(), best_bins.end(), break_bins.begin(), break_bins.end(), v.begin());
+			it=std::set_union (v.begin(), v.end(), bins.begin(), bins.end(), v2.begin());
+			best_bins = v2;
+		}
+
+
+
+
+		boxes.clear();
+
+		break_bins = get_break_bins(best_bins, boxes);
+
+	}
+
+
+	//end while
+
+
 
 
 	return bins.size();

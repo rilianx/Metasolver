@@ -45,12 +45,14 @@ public:
 
 	friend mclpState* new_mstate(string file, int instance, double min_fr, int max_bl, bool rot, int nboxes);
 
-
+	double random(double l, double r) const{
+		return l + ((double)rand()/RAND_MAX)*(r-l);
+	}
 
 	//Once a satisfactory solution has been constructed, priorities of used boxed are reduced
-	void update_profits(double alpha, map<const BoxShape*, int>* nb_inserted_boxes) const{
+	void update_profits(map<const BoxShape*, int>* nb_inserted_boxes, map <int, int>& used_boxes) const{
 		for(auto b:*nb_inserted_boxes)
-			b.first->set_profit(b.first->get_profit()*alpha);
+			b.first->set_profit(b.first->getVolume()*pow(random(0.8, 1.0),used_boxes[b.first->get_id()]));
 	}
 
 	static map< int, BoxShape* > id2box;
