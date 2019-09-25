@@ -14,7 +14,7 @@ output_file = sys.argv[3]
 for i in range(1,nb_instances):
     N=random.randint(1,101)
     seed=random.randint(1000,100000)
-    minvol=random.randint(0,101)*0.01;
+    minvol=random.randint(0,80)*0.01;
 
     args = ["./CLP_GENSOLV", "--solve", "--maxtime", maxtime ,"-N", str(N) , "--min_vol", str(minvol) ,"-s", str(seed) ,"-r" , "0.5"]
     proc = subprocess.Popen(args, stdout=subprocess.PIPE)
