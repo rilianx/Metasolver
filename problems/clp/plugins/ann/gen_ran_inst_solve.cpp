@@ -52,11 +52,11 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
     VCS_Function* vcs_gr = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, 1.0, 0.0, r);
 
-		VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
 		alpha, beta, gamma, p, 1.0, 0.0, 0.0);
 
     Greedy *gr = new Greedy (vcs_gr);
-		Greedy *gr2 = new Greedy (vcs);
+	Greedy *gr2 = new Greedy (vcs);
 
 	  list<State*> S;
 	  S.push_back(s0);
@@ -68,10 +68,10 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 
 		//cout << "bsg solving" << endl;
 	  BSG *bsg= new BSG(vcs,*gr2, 4);
-		SearchStrategy *de= new DoubleEffort(*bsg);
-		State& s_copy= *s0->clone();
-		double eval = de->run(s_copy, max_time, begin_time) ;
-		cout << eval << endl;
+	  SearchStrategy *de= new DoubleEffort(*bsg);
+	  State& s_copy= *s0->clone();
+	  double eval = de->run(s_copy, max_time, begin_time) ;
+	  cout << eval << endl;
 
 }
 

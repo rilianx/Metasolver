@@ -110,6 +110,7 @@ public:
 
 	const State* get_parent() const{ return parent; }
 
+	virtual double ann_prediction() { return 0.0; }
 
 	static int count_states;
 

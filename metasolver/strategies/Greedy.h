@@ -5,8 +5,8 @@
  *      Author: ignacio
  */
 
-#include "../ActionEvaluator.h"
-#include "../SearchStrategy.h"
+#include "ActionEvaluator.h"
+#include "SearchStrategy.h"
 
 
 #ifndef GREEDY_H_

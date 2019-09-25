@@ -7,6 +7,7 @@ INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
 metasolver
 metasolver/strategies/
+metasolver/plugins/ann
 problems/clp/containers
 problems/clp/objects2
 problems/clp/evaluators
@@ -36,6 +37,7 @@ LINK_LIBRARIES(
 
 # ADD_DEFINITION(-g -pg)
 
+
 ADD_LIBRARY(
 bsg
 metasolver/SearchStrategy.cpp
@@ -43,6 +45,7 @@ metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp
 metasolver/State.cpp
+metasolver/plugins/ann/GreedyANN.cpp
 )
 
 ADD_LIBRARY(

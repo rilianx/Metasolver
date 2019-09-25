@@ -19,6 +19,14 @@ using namespace metasolver;
 
 namespace clp {
 
+double clpState::ann_prediction() {
+	 //compactState c(*this);
+	 //cout << c ;
+	 //aqui habria que pasar a la red el input (c)
+	 double prediction = (double) rand()/RAND_MAX; //la red debería retornar la prediccion
+	 return prediction;
+
+}
 
 void clpState::get_actions(list< Action* >& actions) const{
 	list<const Block*>::const_iterator it;
@@ -215,8 +223,8 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 		//se lee el archivo de entrada
 		//Objetos BoxType, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
-		//y restricciones de rotación
-		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
+		//y restricciones de rotaci��n
+		//En el objeto clp se agregan los tipos de cajas y el n��mero de elementos que hay de cada tipo
 
 		//clpState::weight_of_allboxes=0.0;
 

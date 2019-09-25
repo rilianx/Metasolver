@@ -17,6 +17,7 @@
 #include "VCS_Function.h"
 #include "SpaceSet.h"
 #include "Greedy.h"
+#include "GreedyANN.h"
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
 #include "BSG.h"
@@ -176,7 +177,7 @@ int main(int argc, char** argv){
 	//	exp->best_action(*s0);
 
 	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy (vcs);
+    SearchStrategy *gr = new GreedyANN (vcs);
 
 	cout << "bsg" << endl;
     BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
@@ -197,10 +198,10 @@ int main(int argc, char** argv){
     if(_plot)
     	de=bsg;
 
-    double eval=de->run(s_copy, maxtime, begin_time) ;
+    double eval=gr->run(s_copy, maxtime, begin_time) ;
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
-	cout << eval << " " << de->get_best_state()->get_value2() << " " << eval*de->get_best_state()->get_value2() << endl;
+	cout << eval << " " << gr->get_best_state()->get_value2() << " " << eval*gr->get_best_state()->get_value2() << endl;
 	
     cout << eval << endl;
 

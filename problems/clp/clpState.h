@@ -15,8 +15,8 @@
 #include <string>
 #include <vector>
 
-#include "../metasolver/State.h"
-#include "objects2/Block.h"
+#include "State.h"
+#include "Block.h"
 
 
 using namespace std;
@@ -109,6 +109,9 @@ public:
 	virtual void print() {
 		cont->MatLab_print();
 	}
+
+	//retorna la prediccion de la red a partir del estado
+	virtual double ann_prediction();
 
 
 
