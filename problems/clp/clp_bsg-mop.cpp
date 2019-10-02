@@ -256,6 +256,7 @@ int main(int argc, char** argv){
       if(ref.first >= point.first.first || ref.second >= point.first.second ) continue;
 
     	hv += (point.first.first - x_old) * (point.first.second-ref.second);
+      cout << x_old << "," << point.first.second << endl;
     	x_old = point.first.first;
     	cout << point.first.first << "," << point.first.second << endl;
     }

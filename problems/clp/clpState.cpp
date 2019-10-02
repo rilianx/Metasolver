@@ -254,6 +254,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			else if(f==clpState::_1C){
 				double ll,hh,ww;
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
+				if(fp==clpState::ALL_ONE) profit = 1;
+				profit = weight;
+
 				ll*=10; ww*=10; hh*=10;
 				l = ceil(ll);
 				w = ceil(ww);
@@ -269,9 +272,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 				clpState::weight_of_allboxes += weight*(double) n;
 				clpState::profit_of_allboxes += profit*(double) n;
-        clpState::density_of_allboxes += (weight/((l*w*h)/1000000.0))* (double) n;
-        clpState::square_density_of_allboxes += pow((weight/((l*w*h)/1000000.0)),2) * (double) n;
-        clpState::nb_boxes += n;
+				clpState::density_of_allboxes += (weight/((l*w*h)/1000000.0))* (double) n;
+				clpState::square_density_of_allboxes += pow((weight/((l*w*h)/1000000.0)),2) * (double) n;
+				clpState::nb_boxes += n;
 
 				if(fp==clpState::WEIGHT)
 					clpState::profit_of_allboxes = clpState::Wmax;
