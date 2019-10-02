@@ -57,7 +57,7 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 }
 
 
-list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const{
+list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim, double wmax) const{
 
 	const Block* b1=this;
 	list<const Block*> blocks;
@@ -80,7 +80,8 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 
 		double vol= ll*ww*hh;
 
-		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
+		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim &&
+				(b1->getTotalWeight() + b1->getTotalWeight () < wmax || wmax ==0.0) ){
 
 			Block* new_block;
 

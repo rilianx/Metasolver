@@ -68,7 +68,7 @@ public:
 	 * Crea una lista de a lo mas 3 bloques juntando los bloques b1 y b2
 	 * Bloques son creados solo si  volumen_ocupado >= min_fr * volumen
 	 */
-	virtual list<const Block* > create_new_blocks(const Block *b2, double min_fr, const Vector3& max_dim) const;
+	virtual list<const Block* > create_new_blocks(const Block *b2, double min_fr, const Vector3& max_dim, double wmax=0.0) const;
 
     virtual void insert(const Block& b, const Vector3& p, const Vector3 min_dim=Vector3(0,0,0));
 
