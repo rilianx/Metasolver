@@ -8,6 +8,7 @@
 #ifndef OBJECTS_VECTOR3_H_
 #define OBJECTS_VECTOR3_H_
 #include <iostream>
+#include <math.h>
 
 namespace clp {
 
@@ -17,18 +18,22 @@ class Vector3 {
 
 	Vector3() : x(0),y(0),z(0) { };
 
-	Vector3(long x, long y, long z) : x(x),y(y),z(z) { };
+	Vector3(double x, double y, double z) : x(x),y(y),z(z) { };
 
-	long getX() const {return x;}
-	long getY() const {return y;}
-	long getZ() const {return z;}
+	long getX() const {return ceil(x);}
+	long getY() const {return ceil(y);}
+	long getZ() const {return ceil(z);}
 
-	void setX(long xx) {x=xx;}
-	void setY(long yy) {y=yy;}
-	void setZ(long zz) {z=zz;}
+	double getX_d() const {return x;}
+	double getY_d() const {return y;}
+	double getZ_d() const {return z;}
+
+	void setX(double xx) {x=xx;}
+	void setY(double yy) {y=yy;}
+	void setZ(double zz) {z=zz;}
 
 	Vector3& operator-=(const Vector3& b) {
-	   x-=b.x; y-=b.y; z-=b.z;
+	   x=getX()-b.getX(); y=getY()-b.getY(); z=getZ()-b.getZ();
 	   return *this;
 	 }
 	 
@@ -37,16 +42,16 @@ class Vector3 {
     }
 
 	Vector3& operator+=(const Vector3& b) {
-	   x+=b.x; y+=b.y; z+=b.z;
+	   x=getX()+b.getX(); y=getY()+b.getY(); z=getZ()+b.getZ();
 	   return *this;
 	 }
 
 	bool operator >=(const Vector3& s2) const{
-        return (x>=s2.x && y>=s2.y && z>=s2.z);
+        return (getX()>=s2.getX() && getY()>=s2.getY() && getZ()>=s2.getZ());
 	}
 
 	bool operator <=(const Vector3& s2) const{
-        return (x<=s2.x && y<=s2.y && z<=s2.z);
+        return (getX()<=s2.getX() && getY()<=s2.getY() && getZ()<=s2.getZ());
 	}
 
 	//only for sorting use
@@ -55,9 +60,9 @@ class Vector3 {
 	}
 
 	bool lex_lower(const Vector3& s2) const{
-    	if(x!= s2.x) return (x < s2.x);
-    	if(y!= s2.y) return (y < s2.y);
-    	if(z!= s2.z) return (z < s2.z);
+    	if(getX()!= s2.getX()) return (getX() < s2.getX());
+    	if(getY()!= s2.getY()) return (y < s2.getY());
+    	if(getZ()!= s2.getZ()) return (z < s2.getZ());
     	return false;
 	}
 
@@ -66,9 +71,9 @@ class Vector3 {
 
 	private:
 
-	long x;
-	long y;
-	long z;
+	double x;
+	double y;
+	double z;
 
 };
 

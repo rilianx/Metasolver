@@ -15,15 +15,19 @@ namespace clp {
 
 class Volume : public Vector3 {
 public:
-	Volume(long l, long w, long h) : Vector3(l,w,h), volume(l*w*h) {}
+	Volume(double l, double w, double h) : Vector3(l,w,h), volume(l*w*h) {}
 
 	long getL() const {return getX();}
 	long getW() const {return getY();}
 	long getH() const {return getZ();}
 
-	void setL(long xx) {volume/=getX(); volume*=xx; setX(xx);}
-	void setW(long yy) {volume/=getY(); volume*=yy; setY(yy);}
-	void setH(long zz) {volume/=getZ(); volume*=zz; setZ(zz);}
+	double getL_d() const {return getX_d();}
+	double getW_d() const {return getY_d();}
+	double getH_d() const {return getZ_d();}
+
+	void setL(double xx) {volume/=getX(); volume*=xx; setX(xx);}
+	void setW(double yy) {volume/=getY(); volume*=yy; setY(yy);}
+	void setH(double zz) {volume/=getZ(); volume*=zz; setZ(zz);}
 
 	long get_i(int i) const{
 		switch(i){
@@ -41,12 +45,12 @@ public:
 		}
 	}
 
-	long getVolume() const {return volume;}
+	double getVolume() const {return volume;}
 
 	//virtual ~Volume();
 
 protected:
-	long volume;
+	double volume;
 };
 
 } /* namespace clp */

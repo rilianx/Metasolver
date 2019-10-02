@@ -23,7 +23,7 @@ Block::Block(long l, long w, long h) : Volume(l,w,h),occupied_volume(0), total_w
 }
 
 Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volume) :
-		Volume(box.getL(o), box.getW(o), box.getH(o)), occupied_volume(occupied_volume),
+		Volume(box.getL_d(o), box.getW_d(o), box.getH_d(o)), occupied_volume(occupied_volume),
 		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	nb_boxes[&box]=1;
@@ -63,22 +63,22 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 	list<const Block*> blocks;
 
 	for(int i=0; i<3; i++){
-		long ll= max(b1->getL(),b2->getL());
-		long ww= max(b1->getW(),b2->getW());
-		long hh= max(b1->getH(),b2->getH());
+		double ll= max(b1->getL_d(),b2->getL_d());
+		double ww= max(b1->getW_d(),b2->getW_d());
+		double hh= max(b1->getH_d(),b2->getH_d());
 
-		long x2=0, y2=0, z2=0;
+		int x2=0, y2=0, z2=0;
 
 		switch(i){
 			case 0:
-			  ll=(b1->getL()+b2->getL()); x2=b1->getL();  break;
+			  ll=(b1->getL_d()+b2->getL_d()); x2=b1->getL();  break;
 			case 1:
-			  ww=(b1->getW()+b2->getW()); y2=b1->getW(); break;
+			  ww=(b1->getW_d()+b2->getW_d()); y2=b1->getW(); break;
 			case 2:
-			  hh=(b1->getH()+b2->getH()); z2=b1->getH();
+			  hh=(b1->getH_d()+b2->getH_d()); z2=b1->getH();
 		}
 
-		long vol= ll*ww*hh;
+		double vol= ll*ww*hh;
 
 		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim  ){
 

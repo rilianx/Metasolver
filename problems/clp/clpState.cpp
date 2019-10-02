@@ -200,7 +200,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			long l,w,h;
 			ss >> l >> w >> h;
 			cout << l << " " <<  w << " " << h << endl;
-			if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
+			//if(f==clpState::_1C) {l*=10; w*=10; h*=10;}
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 
@@ -230,6 +230,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 			int n, id;
 			long l,h,w;
+			double ll,hh,ww;
 			double weight = 1.0;
 			double profit = 1.0;
 			double vol;
@@ -252,15 +253,10 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 				vol=l*h*w;
 			}
 			else if(f==clpState::_1C){
-				double ll,hh,ww;
+
 				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
 				if(fp==clpState::ALL_ONE) profit = 1;
 				profit = weight;
-
-				ll*=10; ww*=10; hh*=10;
-				l = ceil(ll);
-				w = ceil(ww);
-				h = ceil(hh);
 				vol=ll*hh*ww;
 			}
 
@@ -268,7 +264,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 			if(inst==i){
 
-				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
+				BoxShape* boxt;
+				if(f==clpState::_1C) boxt=new BoxShape(id, ll, ww, hh, rot1, rot2, rot3, weight, profit);
+				else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
 
 				clpState::weight_of_allboxes += weight*(double) n;
 				clpState::profit_of_allboxes += profit*(double) n;

@@ -17,13 +17,17 @@ public:
 	enum Orientation{LWH=0, LHW, WLH, WHL, HLW, HWL, OR};
 
 
-	BoxShape(int id, long l, long w, long h, bool rot1=true, bool rot2=true, bool rot3=true, double weight=1.0, double profit=1.0);
+	BoxShape(int id, double l, double w, double h, bool rot1=true, bool rot2=true, bool rot3=true, double weight=1.0, double profit=1.0);
 
 	bool is_valid(Orientation o) const {return is_valid_orientation[o];}
 
 	long getL(Orientation o) const;
 	long getW(Orientation o) const;
 	long getH(Orientation o) const;
+
+	double getL_d(Orientation o) const;
+	double getW_d(Orientation o) const;
+	double getH_d(Orientation o) const;
 
 	/**
 	 * returns the i-th dimension of the box oriented by o
@@ -41,6 +45,7 @@ public:
     double get_weight() const { return weight; }
 
     double get_profit() const { return profit; }
+
 
 private:
 	int id;
