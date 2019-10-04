@@ -21,7 +21,7 @@ EXE=../../BSG_BO_CLP
 
 # Fixed parameters that should be always passed to ACOTSP.
 # The time to be used is always 10 seconds, and we want only one run:
-FIXED_PARAMS=" -t 60 -f BRwp --fp=in_file --srule=NSGA2 --delta3=1.0"
+FIXED_PARAMS=" -t 60 -f BRwp --fp=in_file --srule=NSGA2 --delta3=0.0 --delta3_2=1.0 --oriented_greedy"
 
 CONFIG_ID="$1"
 INSTANCE_ID="$2"
