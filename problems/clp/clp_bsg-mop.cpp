@@ -53,6 +53,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _srule(parser, "double", "BSG-BO selection rule (NSGA2, MIN1, MIN2, MIN1MIN2)", {"srule"});
   args::ValueFlag<string> _ref(parser, "\"double double\"", "Reference point (format: \"y1 y2\")", {"ref"});
 
+  args::Flag _matlab(parser, "double", "Oriented Greedy", {"matlab"});
+
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
@@ -256,22 +258,24 @@ int main(int argc, char** argv){
       if(ref.first >= point.first.first || ref.second >= point.first.second ) continue;
 
     	hv += (point.first.first - x_old) * (point.first.second-ref.second);
-      cout << x_old << "," << point.first.second << endl;
+        //cout << x_old << " " << point.first.second << " - " ;
     	x_old = point.first.first;
-    	cout << point.first.first << "," << point.first.second << endl;
+    	cout << point.first.first << " " << point.first.second << endl;
     }
+    cout << endl;
 		cout.precision(4);
     cout << "Vmax\tPmax\tHV\t#sols" << endl;
     cout << best_volume <<  " " << best_profit << " " << hv <<  " " <<  n << " " << nadir_volume << " " << nadir_profit << endl;
 
+    if(_matlab){
+    	map< pair<double, double>, State*> ::iterator it = pareto.end();
+    	it--;
+    	it--;
+    	dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();
+    }
 
-   /* map< pair<double, double>, State*> ::iterator it = pareto.end();
-    it--;
-    it--;
-    dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();;*/
 
-
-	//dynamic_cast<const clpState*>(de->get_best_state())->cont.MatLab_print();
+	//dynamic_cast<const clpState*>(de->get_best_state())->cont->MatLab_print();
 
 
 }

@@ -71,12 +71,13 @@ public:
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f, FormatP fp);
 
 	virtual double get_value() const{
-		return round(((double) cont->getOccupiedVolume()/(double) cont->getVolume())*10000.0)/10000.0;
+		return cont->getOccupiedVolume()/cont->getVolume();
 	}
 
 	virtual double get_value2() const{
 		//return 0.0;
-		return  round((cont->getTotalProfit() / profit_of_allboxes)*10000.0)/10000.0;
+		//return cont->getTotalProfit();
+		return  cont->getTotalProfit() / profit_of_allboxes;
 	}
 
 	static bool height_sort(const Action* a1, const Action* a2){
