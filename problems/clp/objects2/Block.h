@@ -45,7 +45,7 @@ public:
 	/**
 	 * Constructs a container of dimensions l,w,h
 	 */
-	Block(long l, long w, long h);
+	Block(double l, double w, double h);
 
 	Block(long l, long w, long h, bool fake) : Volume(l,w,h), n_boxes(1),
 			spaces(NULL), blocks(NULL), total_weight(0.0), total_profit(0.0) {
