@@ -61,8 +61,8 @@ class Vector3 {
 
 	bool lex_lower(const Vector3& s2) const{
     	if(getX()!= s2.getX()) return (getX() < s2.getX());
-    	if(getY()!= s2.getY()) return (y < s2.getY());
-    	if(getZ()!= s2.getZ()) return (z < s2.getZ());
+    	if(getY()!= s2.getY()) return (getY() < s2.getY());
+    	if(getZ()!= s2.getZ()) return (getZ() < s2.getZ());
     	return false;
 	}
 
