@@ -1,0 +1,120 @@
+***** Creando el contenedor ****
+File(BRwp): ../../problems/clp/benchs/BRwp-0.8-0.5/BR6.txt
+Instance:68
+min_fr:1
+max_blocks:10000
+Maxtime:60
+587 233 220
+Dimensions: 587 x 233 x 220
+Number of generated blocks:4126
+
+***** Creating the heuristic function VCS-W *****
+alpha: 1.4, beta: 5.95, gamma: 0.54, p: 0.02, delta: 1.67, delta2: -0.47, delta3: 0, oriented_greedy: 0
+***** Running the solver BSGMOP solver *****
+beams/max_level_size:4/16
+[BSGMOP] new non-dominated solution found (0.457392): (0.9412,0.5076) 12 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.464434): (0.9167,0.6273) 9 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.504088): (0.959,0.5034) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.53049): (0.9658,0.5124) 12 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.554287): (0.9401,0.6348) 13 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.603859): (0.9718,0.6071) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.713259): (0.9448,0.6276) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.748241): (0.9398,0.6913) 13 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.750977): (0.944,0.6672) 13 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.774027): (0.9532,0.6659) 15 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.795661): (0.9483,0.7085) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.813094): (0.951,0.6704) 14 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.834748): (0.9506,0.7061) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.83725): (0.9508,0.7034) 15 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.839949): (0.9513,0.7036) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.848934): (0.9524,0.7063) 14 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.856961): (0.9517,0.7079) 16 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.863147): (0.9498,0.7084) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.868463): (0.9477,0.709) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.926903): (0.9475,0.7095) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.931067): (0.9467,0.7096) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.958323): (0.9454,0.7101) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.964529): (0.9496,0.7085) 15 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.973469): (0.9502,0.7092) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.974659): (0.9506,0.7104) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.991641): (0.9495,0.7108) 17 nodes, lambda:0
+beams/max_level_size:6/36
+[BSGMOP] new non-dominated solution found (1.477899): (0.954,0.6076) 19 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (1.580399): (0.9696,0.6348) 14 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (1.590768): (0.9566,0.7002) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.033108): (0.9536,0.7074) 19 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.065582): (0.9528,0.7116) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.38862): (0.9506,0.7124) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.399452): (0.9504,0.7134) 19 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.411872): (0.9529,0.7137) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (2.41737): (0.9517,0.7145) 20 nodes, lambda:0
+beams/max_level_size:8/64
+[BSGMOP] new non-dominated solution found (3.693982): (0.9222,0.716) 17 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.780945): (0.9445,0.7309) 19 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.788115): (0.9394,0.7386) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.796834): (0.9562,0.7387) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.829248): (0.9429,0.7493) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.841047): (0.9564,0.726) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.855761): (0.9568,0.7231) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.866579): (0.9574,0.6854) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.871962): (0.9596,0.7016) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.900382): (0.952,0.7399) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (3.971414): (0.9594,0.7361) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.015241): (0.9545,0.7433) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.021729): (0.9589,0.7479) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.028142): (0.9593,0.745) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.045886): (0.9546,0.7604) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.218193): (0.9602,0.7407) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.234596): (0.9611,0.7221) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.409535): (0.9604,0.7379) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.557258): (0.9394,0.7617) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.796206): (0.9555,0.7648) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (4.819025): (0.9587,0.7679) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.396626): (0.9593,0.7638) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.430955): (0.9613,0.7633) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.457571): (0.9625,0.7669) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.474342): (0.9548,0.769) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.474906): (0.9545,0.7714) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.480802): (0.9587,0.7727) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.481476): (0.9596,0.774) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.483558): (0.953,0.7742) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.500849): (0.9606,0.7674) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (5.503594): (0.9561,0.7773) 22 nodes, lambda:0
+beams/max_level_size:11/121
+[BSGMOP] new non-dominated solution found (8.819465): (0.9496,0.7801) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (8.827545): (0.9473,0.7813) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (8.835261): (0.9308,0.7815) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.193905): (0.9367,0.7887) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.212495): (0.9418,0.7914) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.237396): (0.9342,0.7963) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.306237): (0.9488,0.781) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.435468): (0.9533,0.7863) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.662604): (0.9377,0.7947) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.755087): (0.9499,0.7916) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.763219): (0.948,0.7921) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.76804): (0.9461,0.7926) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.778325): (0.9511,0.7952) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.978639): (0.9501,0.7972) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (9.996094): (0.9481,0.7976) 27 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.074324): (0.9554,0.7892) 18 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.373194): (0.9572,0.7904) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.391904): (0.9579,0.7914) 20 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.439586): (0.9518,0.7937) 28 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.630051): (0.9567,0.7984) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.655499): (0.9583,0.7907) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (10.841622): (0.959,0.7916) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.107304): (0.9593,0.788) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.112736): (0.9597,0.7844) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.116193): (0.96,0.789) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.385976): (0.9569,0.7944) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.433656): (0.9575,0.7926) 22 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (11.464694): (0.9582,0.7935) 23 nodes, lambda:0
+beams/max_level_size:16/256
+[BSGMOP] new non-dominated solution found (15.133194): (0.9728,0.4731) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (22.363771): (0.9631,0.7377) 19 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (25.065377): (0.9606,0.7744) 25 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (26.113112): (0.9606,0.7755) 21 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (26.32524): (0.9601,0.7826) 23 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (26.326587): (0.9602,0.7809) 24 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (26.335132): (0.961,0.7891) 26 nodes, lambda:0
+beams/max_level_size:23/529

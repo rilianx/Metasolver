@@ -1,0 +1,29 @@
+***** Creando el contenedor ****
+File(BRwp): ../../problems/clp/benchs/BRwp-0.8-0.5/BR1.txt
+Instance:85
+min_fr:1
+max_blocks:10000
+Maxtime:60
+587 233 220
+Dimensions: 587 x 233 x 220
+Number of generated blocks:4289
+
+***** Creating the heuristic function VCS-W *****
+alpha: 2.91, beta: 4.44, gamma: 0.44, p: 0.02, delta: 1.72, delta2: -0.41, delta3: 1, oriented_greedy: 0
+***** Running the solver BSGMOP solver *****
+beams/max_level_size:4/16
+[BSGMOP] new non-dominated solution found (0.399767): (0.8011,0.4036) 3 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.400743): (0.8234,0.4752) 3 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.402359): (0.8458,0.5468) 3 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.403969): (0.857,0.5826) 3 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.408972): (0.8906,0.69) 4 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.418397): (0.8958,0.7239) 6 nodes, lambda:0
+[BSGMOP] new non-dominated solution found (0.421662): (0.904,0.7357) 6 nodes, lambda:0
+beams/max_level_size:6/36
+beams/max_level_size:8/64
+beams/max_level_size:11/121
+beams/max_level_size:16/256
+beams/max_level_size:23/529
+beams/max_level_size:33/1089
+beams/max_level_size:47/2209
+beams/max_level_size:66/4356
