@@ -76,7 +76,7 @@ public:
 	 * Performs an iteration of the strategy
 	 * @returns true if the search strategy has not finished yet
 	 */
-	virtual list<State*> next(list<State*>& S) { };
+	virtual list<State*> next(list<State*>& S) {list<State*> void_list; return void_list; };
 
 	virtual double get_best_value() const {
 		if(best_state)
