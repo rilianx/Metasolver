@@ -20,9 +20,9 @@ class Vector3 {
 
 	Vector3(double x, double y, double z) : x(x),y(y),z(z) { };
 
-	long getX() const {return ceil(x);}
-	long getY() const {return ceil(y);}
-	long getZ() const {return ceil(z);}
+	long getX() const {return int(ceil(x-0.001));}
+	long getY() const {return int(ceil(y-0.001));}
+	long getZ() const {return int(ceil(z-0.001));}
 
 	double getX_d() const {return x;}
 	double getY_d() const {return y;}
@@ -36,7 +36,7 @@ class Vector3 {
 	   x=getX()-b.getX(); y=getY()-b.getY(); z=getZ()-b.getZ();
 	   return *this;
 	 }
-	 
+
 	bool operator==(const Vector3& b) const{
        return (x==b.x && y==b.y && z==b.z);
     }

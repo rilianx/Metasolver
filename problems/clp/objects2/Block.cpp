@@ -81,7 +81,7 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 		double vol= ll*ww*hh;
 
 		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim &&
-				(b1->getTotalWeight() + b1->getTotalWeight () < wmax || wmax ==0.0) ){
+				(b1->getTotalWeight() + b1->getTotalWeight () <= wmax || wmax ==0.0) ){
 
 			Block* new_block;
 
@@ -129,4 +129,3 @@ double double_rand(double min, double max){
 }
 
 }
-

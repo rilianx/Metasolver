@@ -377,7 +377,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	//se inserta el estado si no hay uno equivalente en el mapa
         	if(rule==MIN1) value.second = 0.0;
         	else if(rule==MIN2) value.first = 0.0;
-
+					//value.first = round(value.first*10000)/10000;
+					value.second = 0.0; //round(value.second*100)/100;
 
 			if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
