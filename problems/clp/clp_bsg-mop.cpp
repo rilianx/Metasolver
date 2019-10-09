@@ -260,7 +260,7 @@ int main(int argc, char** argv){
     	hv += (point.first.first - x_old) * (point.first.second-ref.second);
         //cout << x_old << " " << point.first.second << " - " ;
     	x_old = point.first.first;
-    	cout << point.first.first << " " << point.first.second << endl;
+    	cout << point.first.first << " " << dynamic_cast<clpState*>(point.second)->cont->getTotalProfit() << endl;
     }
     cout << endl;
 		cout.precision(4);
