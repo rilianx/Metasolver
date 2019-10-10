@@ -19,14 +19,49 @@ using namespace metasolver;
 
 namespace clp {
 
-double clpState::ann_prediction() {
-	 //compactState c(*this);
-	 //cout << c ;
-	 //aqui habria que pasar a la red el input (c)
-	 double prediction = (double) rand()/RAND_MAX; //la red debería retornar la prediccion
-	 return prediction;
-
+string vector_data(vector <double, allocator<double>> vector_data){
+	string data = "";
+	for(auto v: vector_data)
+		data += to_string(v) + " ";
+	data += "\n";
+	return data;
 }
+
+string exec(string command) {
+   char buffer[20];
+   string result = "";
+
+   // Open pipe to file
+   FILE* pipe = popen(command.c_str(), "r");
+   if (!pipe) {
+      return "popen failed!";
+   }
+
+   // read till end of process:
+   while (!feof(pipe)) {
+	   // use buffer to read and add to result
+	   if (fgets(buffer, 20, pipe) != NULL)
+		   result = buffer;
+   }
+   pclose(pipe);
+   return result;
+}
+
+double clpState::ann_prediction() {
+	 compactState c(*this);
+	 ostringstream stream;
+	 stream << c;
+	 string str =  stream.str();
+	 string prediction = exec((string)("python extras/keras_model/dnn_model.py " + str));
+	 prediction = prediction.erase(prediction.length()-1, prediction.length());
+	 //aqui habria que pasar a la red el input (c)
+	 cout << "===========================================" << endl;
+	 cout << "Obtained volume from keras model: " << prediction << endl;
+	 cout << "===========================================" << endl;
+	 return stod(prediction.erase(prediction.length()-1, prediction.length()));
+}
+
+
 
 void clpState::get_actions(list< Action* >& actions) const{
 	list<const Block*>::const_iterator it;

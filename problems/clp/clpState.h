@@ -190,6 +190,7 @@ public:
 
 
 
+
 	compactState(const clpState& s) {
 		volume = s.get_value();
 		nb_valid_blocks = s.get_n_valid_blocks();
@@ -234,47 +235,40 @@ public:
 };
 
 inline std::ostream& operator <<(std::ostream& os, const compactState& v){
-  os << v.volume<< endl;
-	os << v.volumes.size() << endl; // nb_boxes
-	os << v.space_volumes.size() << endl; // nb_spaces
+	os << v.volume << " ";
+	os << v.volumes.size() << " "; // nb_boxes
+	os << v.space_volumes.size() << " "; // nb_spaces
 
 	for(auto vol:v.volumes)
-		 os << vol << " ";
-	os << endl;
+		 os << vol << ",";
+	os << " ";
 
 	for(auto data:v.dataL)
-		 os << data << " ";
-
-	os << endl;
+		 os << data << ",";
+	os << " ";
 
 	for(auto data:v.dataW)
-		 os << data << " ";
-
-	os << endl;
+		 os << data << ",";
+	os << " ";
 
 	for(auto data:v.dataH)
-		 os << data << " ";
-
-	os << endl;
-
+		 os << data << ",";
+	os << " ";
 
 	for(auto vol:v.space_volumes)
-		 os << vol << " ";
-	os << endl;
+		 os << vol << ",";
+	os << " ";
 
 	for(auto data:v.spacesL)
-		 os << data << " ";
-
-	os << endl;
+		 os << data << ",";
+	os << " ";
 
 	for(auto data:v.spacesW)
-		 os << data << " ";
-
-	os << endl;
+		 os << data << ",";
+	os << " ";
 
 	for(auto data:v.spacesH)
-		 os << data << " ";
-
+		 os << data << ",";
 	os << endl;
 
   //os << v.nb_valid_blocks<< endl;
