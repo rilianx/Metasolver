@@ -1,0 +1,39 @@
+[base]
+test_instances = instancesMCLP.txt
+mintime = 0.0001
+maxtime = 1000
+factors = 1 0.833 0.665 0.5 0.2 0.1
+sig_gain = 1.2
+max_seeds = 1
+min_seeds = 1
+algo_names = MCLP-SCP-2500
+
+[MCLP-SCP-5000]
+exec = "../../MCLP"
+params =  _INSTANCE --nbins=5000
+outputpos_times = 0
+outputpos_boxes = 0
+
+[MCLP-SCP-2500]
+exec = "../../MCLP"
+params =  _INSTANCE --nbins=2500
+outputpos_times = 0
+outputpos_boxes = 0
+
+[MCLP-SCP-7500]
+exec = "../../MCLP"
+params =  _INSTANCE --nbins=7500
+outputpos_times = 0
+outputpos_boxes = 0
+
+[MCLP-SCP-10000]
+exec = "../../MCLP"
+params =  _INSTANCE --nbins=10000
+outputpos_times = 0
+outputpos_boxes = 0
+
+[MCLP-SCP-50000]
+exec = "../../MCLP"
+params =  _INSTANCE --nbins=50000
+outputpos_times = 0
+outputpos_boxes = 0

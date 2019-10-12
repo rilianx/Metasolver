@@ -48,17 +48,24 @@ string exec(string command) {
 }
 
 double clpState::ann_prediction() {
-	 compactState c(*this);
-	 ostringstream stream;
-	 stream << c;
-	 string str =  stream.str();
-	 string prediction = exec((string)("python extras/keras_model/dnn_model.py " + str));
-	 prediction = prediction.erase(prediction.length()-1, prediction.length());
-	 //aqui habria que pasar a la red el input (c)
-	 cout << "===========================================" << endl;
-	 cout << "Obtained volume from keras model: " << prediction << endl;
-	 cout << "===========================================" << endl;
-	 return stod(prediction.erase(prediction.length()-1, prediction.length()));
+    compactState c(*this);
+	  if(!c.space_volumes.empty() || !c.spacesH.empty() || !c.spacesL.empty() || !c.spacesW.empty()){
+		    ostringstream stream;
+		    stream << c;
+		    string str =  stream.str();
+		    cout << "Executing keras model script" << endl;
+		    string prediction = exec((string)("python extras/keras_model/dnn_model.py " + str));
+		    prediction = prediction.erase(prediction.length()-1, prediction.length());
+		    //aqui habria que pasar a la red el input (c)
+		    cout << "===========================================" << endl;
+		    cout << "Obtained volume from keras model: " << prediction << endl;
+		    cout << "===========================================" << endl;
+		    return stod(prediction.erase(prediction.length()-1, prediction.length()));
+	  }
+	  cout << "===========================================" << endl;
+	  cout << "There aren't spaces. Obtained volume: " << this->get_value() << endl;
+	  cout << "===========================================" << endl;
+	  return this->get_value();
 }
 
 
