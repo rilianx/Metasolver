@@ -21,7 +21,7 @@ EXE=../../BSG_BO_CLP
 
 # Fixed parameters that should be always passed to ACOTSP.
 # The time to be used is always 10 seconds, and we want only one run:
-FIXED_PARAMS=" -t 60 -f BRwp --fp=in_file --srule=NSGA2 --delta3=0.0 --delta3_2=1.0 --oriented_greedy"
+FIXED_PARAMS=" -t 100 -f 1C --srule=MIN1 --fp=weight --delta=1.0 --delta3=0.0"
 
 CONFIG_ID="$1"
 INSTANCE_ID="$2"
@@ -39,6 +39,7 @@ if [ ! -x "${EXE}" ]; then
 fi
 
 # Now we can call ACOTSP by building a command line with all parameters for it
+# echo $EXE $INSTANCE ${FIXED_PARAMS} ${CONFIG_PARAMS}
 $EXE $INSTANCE ${FIXED_PARAMS} ${CONFIG_PARAMS} 1> $STDOUT 2> $STDERR
 
 # The output of the candidate $CONFIG_ID should be written in the file 
@@ -57,7 +58,7 @@ fi
 tag=$( cat ${STDOUT} | tail -n 1 )
 IFS=' ' # space is set as delimiter
 read -ra ADDR <<< "$tag" # str is read into an array as tokens separated by IFS
-COST="${ADDR[2]}"
+COST="${ADDR[0]}"
 
 #COST=$(cat ${STDOUT} | grep -o -E 'Result: [-+0-9.e]+' | cut -d ' ' -f2)
 if ! [[ "$COST" =~ ^[-+0-9.e]+$ ]] ; then

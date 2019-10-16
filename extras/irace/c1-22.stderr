@@ -1,0 +1,44 @@
+Passed in argument, but no positional arguments were ready to receive it: 0.74612
+  ../../BSG_BO_CLP {OPTIONS} [instance-set]
+
+    ********* BSG-BO *********.
+
+  OPTIONS:
+
+      -h, --help                        Display this help menu
+      -i[int]                           Instance
+      -f[string]                        Format: (BR, BRw, 1C)
+      --fp=[string]                     Format Profit: (in_file, all_one,
+                                        weight)
+      --density                         Show boxes density only
+      --min_fr=[double]                 Minimum volume occupied by a block
+                                        (proportion)
+      --maxb=[int]                      Maximum number ob generated blocks
+      -t[int], --timelimit=[int]        Timelimit
+      --seed=[int]                      Random seed
+      --alpha=[double]                  Alpha parameter in the VCS function
+      --beta=[double]                   Beta parameter in the VCS function
+      --gamma=[double]                  Gamma parameter in the VCS function
+      -p[double]                        p parameter
+      --delta=[double]                  Volume weighting in the VCS function
+      --delta2=[double]                 Weight weighting in the VCS function
+      --delta3=[double]                 Profit weighting in the VCS function
+      --oriented_greedy                 Oriented Greedy
+      --alpha_2=[double]                Alpha parameter for second objective
+      --beta_2=[double]                 Beta parameter for second objective
+      --gamma_2=[double]                Gamma parameter for second objective
+      --p_2=[double]                    p parameter for second objective
+      --delta_2=[double]                Volume weighting for second objective
+      --delta2_2=[double]               Weight weighting for second objective
+      --delta3_2=[double]               Profit weighting for second objective
+      --srule=[double]                  BSG-BO selection rule (NSGA2, MIN1,
+                                        MIN2, MIN1MIN2)
+      --ref=["double double"]           Reference point (format: "y1 y2")
+      --matlab                          Oriented Greedy
+      --fsb                             full-support blocks
+      --trace                           Trace
+      instance-set                      The name of the instance set
+      "--" can be used to terminate flag options and force all following
+      arguments to be treated as positional options
+
+    BSG-BO Solver for CLP.
