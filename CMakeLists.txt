@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 set (CMAKE_CXX_STANDARD 11)
-SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
+# SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
 INCLUDE_DIRECTORIES(
 lib/bullet-2.80/src
