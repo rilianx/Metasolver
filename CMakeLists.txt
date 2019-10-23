@@ -94,7 +94,7 @@ ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSG_BO_CLP problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(BSG_B problems/clp/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 #ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
@@ -107,15 +107,23 @@ target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
 target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
 target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
-target_link_libraries(BSG_BO_CLP bsg_mop clp_state clp bsg)
+target_link_libraries(BSG_B bsg_mop clp_state clp bsg)
 target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
 #target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
 
 enable_testing()
 
-add_test( ./BSG_CLP problems/clp/benchs/BR/BR5.txt -t 5 )
+add_test( NAME o-search
+   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 1 -s o-search --fp=R -f BRwp )
 
+ add_test( NAME bsg
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 1 -s bsg --fp=R -f BRwp )
 
+  add_test( NAME bsg_p
+     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 1 -s bsg_p --fp=R -f BRwp )
+
+ add_test( NAME bsg_vp
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 2 -s bsg_vp --fp=R -f BRwp )
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
 			SET_TARGET_PROPERTIES(AppHelloWorld PROPERTIES  DEBUG_POSTFIX "_Debug")

@@ -1,1 +1,0 @@
-Weight(box): volume * rand(0.8, 1.2)

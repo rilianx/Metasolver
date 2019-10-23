@@ -369,9 +369,10 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         	bool bbb = update(NDS, state_copy, value.first,value.second);
         	if(bbb){
+						cout.precision(4);
         		cout << "[BSGMOP] new non-dominated solution found ("<< get_time() <<"): " << "("
 						<< value.first << "," << value.second << ")" << " "
-						<< state_copy.get_path().size() << " nodes, lambda:"  << evl->get_lambda2()  << endl;
+						<< state_copy.get_path().size() << " nodes" << endl;//, lambda:"  << evl->get_lambda2()  << endl;
         	}
 
         	//se inserta el estado si no hay uno equivalente en el mapa

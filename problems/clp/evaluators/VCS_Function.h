@@ -9,6 +9,7 @@
 #define VCS_FUNCTION_H_
 
 #include "VLossFunction.h"
+#include <vector>
 
 using namespace std;
 
@@ -20,6 +21,8 @@ public:
 			double gamma=0.2, double p=0.04, double delta=1.0, double delta2=0.0, double delta3=0.0, double r=0.0);
 
 
+			VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, vector<double>& theta, double r=0.0) :
+			VCS_Function(nb_boxes, dims, theta[4], theta[5], theta[6], theta[3], theta[0],  theta[2], theta[1], r) {  }
 
 
 	virtual ~VCS_Function();
@@ -27,29 +30,25 @@ public:
 	virtual double eval_action(const State& , const Action& a );
 
 	//sets the parameter values for maximizing the second objective
-	virtual void set_parameters (double alpha, double beta,
-			double gamma, double p, double delta, double delta2, double delta3){
-
-		this->alpha=alpha;
-		this->beta=beta;
-		this->gamma=gamma;
-		this->p=p;
-		this->delta=delta;
-		this->delta2=delta2;
-		this->delta3=delta3;
+	virtual void set_parameters (vector<double>& theta){
+			alpha=theta[4];
+			beta=theta[5];
+			gamma=theta[6];
+			p=theta[3];
+			delta=theta[0];
+			delta2=theta[2];
+			delta3=theta[1];
 	}
 
 	//sets the parameter values for maximizing the second objective
-	virtual void set_parameters2 (double alpha, double beta,
-			double gamma, double p, double delta, double delta2, double delta3){
-
-		alpha_2=alpha;
-		beta_2=beta;
-		gamma_2=gamma;
-		p_2=p;
-		delta_2=delta;
-		delta2_2=delta2;
-		delta3_2=delta3;
+	virtual void set_parameters2 (vector<double>& theta){
+		alpha_2=theta[4];
+		beta_2=theta[5];
+		gamma_2=theta[6];
+		p_2=theta[3];
+		delta_2=theta[0];
+		delta2_2=theta[2];
+		delta3_2=theta[1];
 	}
 
 
