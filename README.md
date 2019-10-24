@@ -1,6 +1,66 @@
-[![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
+# BSG-CLP
+Description
+------
+BSG is a method based on beam search(an adaptation of a branch-and-bound
+algorithm which expands only the most promising nodes at each level of the search tree).
+BSG explores the space to find a path from an it initial state (i.e., an empty container)
+to some complete solution or it terminal state
+(i.e., a loading plan in which no more boxes can be loaded).
 
-# BSG-B for biobjective CLP
+Installation
+-------
+
+Clone the project:
+
+     git clone https://github.com/rilianx/Metasolver.git
+
+Compile the project:
+
+     cmake .
+then
+
+     make
+
+Options
+--------
+
+```
+./BSG_CLP {OPTIONS} [instance-set]
+
+    ********* BSG-CLP *********.
+
+  OPTIONS:
+
+      -h, --help                        Display this help menu
+      -i[int]                           Instance
+      -f[string]                        Format: (BR, BRw, 1C)
+      --min_fr=[double]                 Minimum volume occupied by a block
+                                        (proportion)
+      -t[int], --timelimit=[int]        Timelimit
+      --seed=[int]                      Random seed
+      --alpha=[double]                  Alpha parameter
+      --beta=[double]                   Beta parameter
+      --gamma=[double]                  Gamma parameter
+      --delta=[double]                  Delta parameter
+      -p[double]                        p parameter
+      --show_layout                     Show the layout of the boxes
+      --fsb                             full-support blocks
+      --trace                           Trace
+      instance-set                      The name of the instance set
+      "--" can be used to terminate flag options and force all following
+      arguments to be treated as positional options
+
+    BSG Solver for CLP.
+```
+
+Example
+-----
+     ./BSG_CLP problems/clp/benchs/BR/BR2.txt -i 47 -t 10
+
+----------------
+
+# BSG-B
+[![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
 
 BSG-B is an adaptation of the BSG algorithm for dealing with
 biobjective CLPs. It has two important
@@ -108,63 +168,3 @@ Experiments
 * [Results of experiments on BRwp1.0-0.5 instances.](https://docs.google.com/spreadsheets/d/e/2PACX-1vSk0_iexrd_v7x-I_72Albt21t9iLka3o9CUatUYh0jcxl7O-Lw_dLpJ9FRF0GdlqQ7AyrCFXoCF5wX/pubhtml?gid=1240292960&single=true)
 
 * [Results of experiments on NMFTA instances.](https://docs.google.com/spreadsheets/d/e/2PACX-1vSk0_iexrd_v7x-I_72Albt21t9iLka3o9CUatUYh0jcxl7O-Lw_dLpJ9FRF0GdlqQ7AyrCFXoCF5wX/pubhtml?gid=157777762&single=true)
---------------------
-
-# BSG for CLP
-Description
-------
-BSG is a method based on beam search(an adaptation of a branch-and-bound
-algorithm which expands only the most promising nodes at each level of the search tree).
-BSG explores the space to find a path from an it initial state (i.e., an empty container)
-to some complete solution or it terminal state
-(i.e., a loading plan in which no more boxes can be loaded).
-
-Installation
--------
-
-Clone the project:
-
-     git clone https://github.com/rilianx/Metasolver.git
-
-Compile the project:
-
-     cmake .
-then
-
-     make
-
-Options
---------
-
-```
-./BSG_CLP {OPTIONS} [instance-set]
-
-    ********* BSG-CLP *********.
-
-  OPTIONS:
-
-      -h, --help                        Display this help menu
-      -i[int]                           Instance
-      -f[string]                        Format: (BR, BRw, 1C)
-      --min_fr=[double]                 Minimum volume occupied by a block
-                                        (proportion)
-      -t[int], --timelimit=[int]        Timelimit
-      --seed=[int]                      Random seed
-      --alpha=[double]                  Alpha parameter
-      --beta=[double]                   Beta parameter
-      --gamma=[double]                  Gamma parameter
-      --delta=[double]                  Delta parameter
-      -p[double]                        p parameter
-      --show_layout                     Show the layout of the boxes
-      --fsb                             full-support blocks
-      --trace                           Trace
-      instance-set                      The name of the instance set
-      "--" can be used to terminate flag options and force all following
-      arguments to be treated as positional options
-
-    BSG Solver for CLP.
-```
-
-Example
------
-     ./BSG_CLP problems/clp/benchs/BR/BR2.txt -i 47 -t 10
