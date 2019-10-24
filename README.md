@@ -7,6 +7,12 @@ BSG explores the space to find a path from an it initial state (i.e., an empty c
 to some complete solution or it terminal state
 (i.e., a loading plan in which no more boxes can be loaded).
 
+### Related papers
+
+* I. Araya, M.-C. Riff, [A beam search approach to the container loading problem](https://www.sciencedirect.com/science/article/pii/S0305054813002530), Computers & Operations Research 43 (2014) 100–107.
+
+* I.  Araya,  K.  Guerrero,  E.  Núnez,  VCS:  [A  new  heuristic  function  for selecting boxes in the single container loading problem](https://www.sciencedirect.com/science/article/pii/S0305054817300023),  Computers & Operations Research 82 (2017) 27–35
+
 Installation
 -------
 
