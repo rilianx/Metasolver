@@ -78,6 +78,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::Flag _ann(parser, "double", "select nodes by using the neural network", {"ann"});
+	args::ValueFlag<int> _n(parser, "double", "number of alternatives to be considered by the ann", {'n'});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
@@ -162,28 +164,26 @@ int main(int argc, char** argv){
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
-    clock_t begin_time=clock();
+    clock_t begin_time=clock(); 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
     alpha, beta, gamma, p, delta, 0.0, r);
 
-	/*if(kdtree){
-		kd_block::set_vcs(*vcs);
-		kd_block::set_alpha(alpha);
-		kd_block::set_alpha(p);
-	}*/
+  int n=5;
+	if(_n) n=_n.Get();
 
-	//for(int i=0;i<10000; i++)
-	//	exp->best_action(*s0);
-
-	cout << "greedy" << endl;
-    SearchStrategy *gr = new GreedyANN (vcs);
+  SearchStrategy *gr = NULL;
+	if(!_ann){
+		cout << "greedy" << endl;
+		gr=new Greedy(vcs);
+	}else{
+		cout << "greedyANN" << endl;
+    gr = new GreedyANN (vcs,n);
+	}
 
 	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
-    //BSG_midBSG *bsg= new BSG_midBSG(*gr, *exp, 4);
+  BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
 
-    //bsg->set_shuffle_best_path(true);
 
 	cout << "double effort" << endl;
     SearchStrategy *de= new DoubleEffort(*bsg);
@@ -202,7 +202,7 @@ int main(int argc, char** argv){
 
     cout << "best_volume  best_volume(weight) hypervolume" << endl;
 	cout << eval << " " << gr->get_best_state()->get_value2() << " " << eval*gr->get_best_state()->get_value2() << endl;
-	
+
     cout << eval << endl;
 
     if(_plot){

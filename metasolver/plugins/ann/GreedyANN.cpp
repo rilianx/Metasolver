@@ -15,7 +15,7 @@ list<State*> GreedyANN::next(list<State*>& S) {
 	double max_value = -1.0 ;
 
 	list< Action* > actions;
-	get_best_actions(s, actions, 100);
+	get_best_actions(s, actions, n);
 
 	for(auto action:actions){
 		State* s_copy = s.clone();
@@ -23,6 +23,7 @@ list<State*> GreedyANN::next(list<State*>& S) {
 		delete action;
 
 		double value = s_copy->ann_prediction();
+		cout << value << endl;
 		if(value > max_value){
 			if(best_state && best_state!=&s) delete best_state;
 			max_value=value;
@@ -37,6 +38,7 @@ list<State*> GreedyANN::next(list<State*>& S) {
 		S.clear();
 		if(best_state!=&s) delete &s;
 		S.push_back(best_state);
+		cout << best_state->get_value() << endl;
 	}else{
 		S.clear();
 	}
