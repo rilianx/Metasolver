@@ -20,7 +20,7 @@ namespace metasolver {
 class GreedyANN : public Greedy {
 public:
 
-	GreedyANN(ActionEvaluator* evl, int n=100) : Greedy(evl), n(n) { }
+	GreedyANN(ActionEvaluator* evl, int n=100) : Greedy(evl), n(n), prev_pred(0.0) { }
 
 	/**
 	 * Performs an iteration of the strategy
@@ -28,6 +28,8 @@ public:
 	virtual list<State*> next(list<State*>& S) ;
 
 	int n;
+
+	double prev_pred;
 
 };
 

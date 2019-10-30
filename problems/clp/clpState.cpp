@@ -65,6 +65,8 @@ double clpState::ann_prediction() {
 	  cout << "===========================================" << endl;
 	  cout << "There aren't spaces. Obtained volume: " << this->get_value() << endl;
 	  cout << "===========================================" << endl;
+		
+
 	  return this->get_value();
 }
 
