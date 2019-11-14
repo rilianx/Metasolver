@@ -13,6 +13,7 @@
  problems/clp/plugins/kdtree
  problems/clp/plugins/ga
  problems/mclp
+ problems/methods
  metasolver/plugins/mop/strategies/
  )
 

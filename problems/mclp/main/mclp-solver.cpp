@@ -4,7 +4,6 @@
  *  Created on: 29 jun. 2017
  *      Author: iaraya
  */
-
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -130,7 +129,7 @@ if (getcwd(cwd, sizeof(cwd)) != NULL) {
 	perror("getcwd() error");
 }*/
 
-void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes){
+void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes, set<int> boxes){
 
 	string path = findDirectory(".", "GRASP-SCP");
 	string path2 = findDirectory(".", "gurobi");
@@ -152,7 +151,16 @@ void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes){
 		scp << " " << bins->size() << " ";
 
 		//Boxes quantity
-		scp << nb_boxes << "\n";
+		scp << nb_boxes << " ";
+
+		//Many boxes that we can't use
+		cout << "gurobi input boxes:" <<boxes.size() << endl;
+		for(auto box : boxes){
+			scp << box << " ";
+			//cout << box << endl;
+		}
+
+		scp << "\n";
 
 		//Matrix cost by boxes
 		/*long int cont = 0;
@@ -170,7 +178,7 @@ void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes){
 		for(auto bin: *bins){
 			scp << " " << bin.size() << "\n";
 			for(auto box: bin){
-				scp << " " << box + 1;
+				scp << " " << box;
 			}
 			scp << "\n";
 		}
@@ -179,30 +187,33 @@ void exportToTxtSCP(list < set<int> >* bins, long int nb_boxes){
 	} else cout << "Unable to open file" << endl;
 }
 
-void solve_set_covering(string gurobi_path, list < set<int> >& bins , int nb_box_types){
-	exportToTxtSCP(&bins, nb_box_types);
+void solve_set_covering(string gurobi_path, list < set<int> >& bins, set<int> boxes , int nb_box_types){
+	exportToTxtSCP(&bins, nb_box_types, boxes);
 	string filename = "bins_scp" + to_string(getpid()) + ".txt";
 
 	const string MAX_TIME = "10";
 	const string SEED = "1";
 	string run2 = string("python " + gurobi_path + "/Solver.py " + filename);
-	cout << "python " << gurobi_path << "/Solver.py " << filename << endl;
 	FILE *p = popen(run2.c_str(), "r");
 	list<int> first_bins;
-
+	list<set<int>> bins_gurobi;
 
 	if(p != NULL) {
 		cout << endl;
-		//cout << run2 << endl;
 
 		cout << "running Gurobi-Solver" << endl;
 		cout << "Time: " << MAX_TIME << endl;
 		cout << "Seed: " << SEED << endl;
 
-		char output[150], last_output[150],caracteres[200], containers[200];
+		char output[1000], last_output[1000],caracteres[1000], containers[1000];
 		string str;
 		vector <string> line;
 		string check_container = "";
+		const char *pointer;
+		int buffer;
+		string delimiter = " ";
+		size_t pos = 0;
+		string token;
 
 		/*while(fgets(output, sizeof(output), p) != NULL) {
 			strcpy(last_output, output);
@@ -210,58 +221,48 @@ void solve_set_covering(string gurobi_path, list < set<int> >& bins , int nb_box
 
 		while (feof(p) == 0)
  	  {
- 			fgets(caracteres,200,p);
+ 			fgets(caracteres,1000,p);
 			if(caracteres[0] == '[') strcpy(containers, caracteres);
 			else strcpy(last_output, caracteres);
 		}
 
 	  last_output[strlen(last_output)-1]=0;
 		containers[strlen(containers)-1]=0;
-		//cout << last_output << " " << endl;
-		cout <<containers << endl;
 		str = output;
 
 		//Se recorre la lista entregada por gurobi
 		for(int i = 1; containers[i] != ']' ;i++){
-			if(containers[i] == ',' ){
-				const char *pointer = check_container.c_str();
-				int buffer = std::atoi(pointer);
+			if(containers[i] == ','){
+				pointer = check_container.c_str();
+				buffer = std::atoi(pointer);
 				first_bins.push_back(buffer);
 				check_container = "";
+				//cout << buffer << endl;
 			}else{
 				check_container += containers[i];
 			}
 		}
-		const char *pointer = check_container.c_str();
-		int buffer = std::atoi(pointer);
+		pointer = check_container.c_str();
+		buffer = std::atoi(pointer);
 		first_bins.push_back(buffer);
 
-		string delimiter = " ";
-		size_t pos = 0;
-		string token;
 		while ((pos = str.find(delimiter)) != string::npos) {
 			token = str.substr(0, pos);
 			str.erase(0, pos + delimiter.length());
 			line.push_back(token);
 		}
-		//cout << line.size() << endl;
-		for(int i = 0; i < line.size(); i++) cout << line[i] << " " << str;
+		for(int i = 0; i < line.size(); i++) cout << i << " " << line[i] << " " << str;
 	} else {
 		perror("Unable to open file");
 	}
 
-	pclose(p);
-	list < set<int> > bins_gurobi;
-	//string check_container = "";
-	for(auto id_bin : first_bins){
-		int index_bins = 0;
-		for(auto boxes : bins){
-			if(id_bin == index_bins) bins_gurobi.push_back(boxes);
-			index_bins++;
-		}
+	for(auto id_bin :first_bins){
+		auto it=bins.begin();
+		std::advance (it,id_bin);
+		bins_gurobi.push_back(*it);
 	}
-	//recorrer lista de bins y copiar los correspondientes a la solucion entregada por gurobi en bins_gurobi
-	bins=bins_gurobi;
+	bins=bins_gurobi;																															//recorrer lista de bins y copiar los correspondientes a la solucion entregada por gurobi en bins_gurobi
+	pclose(p);
 }
 
 double random(double l, double r) {
@@ -291,7 +292,7 @@ pair<double,double> computeExclusiveVolumen(list<set<int>>& total_bins, int id_b
 			}
 			j++;
 		}
-		if(exclusive ){
+		if(exclusive){
 			double volu_box = mclpState::id2box[box]->getVolume();
 			if(volu_box > max_vol) max_vol = volu_box;
 			vol += volu_box;
@@ -306,15 +307,18 @@ pair<double,list< set<int> >::iterator > minExclusiveVolume(list<set<int>>& bins
 	int id_bin = 0;
 	int id_actual_min = 0;
 	list< set<int> >::iterator min_bin;
+	//cout << "############################################"<< endl;
 	for(auto bin=bins.begin(); bin!= bins.end(); bin++, id_bin++ ){
 		double exc_vol = computeExclusiveVolumen(bins, id_bin).first;
-
 		if(exc_vol < minvolume){
 			minvolume = exc_vol;
 			min_bin = bin;
 			id_actual_min = id_bin;
+			//cout << minvolume << endl;
 		}
 	}
+
+	//cout << minvolume << endl;
 	/*id_bin = 0;
 	for(auto bin: bins){
 		if(id_bin != id_actual_min){
@@ -356,79 +360,67 @@ pair<double,list< set<int> >::iterator > minLargestExlusiveBox(list<set<int>>& b
 	return minimum;
 }
 
-
-list < set<int> > generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins=1000){
+typedef set<int> Bin;
+list < Bin > generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins=1000){
 	list < set<int> > bins;
-
 	map <int, int> used_boxes;
-
-	for(auto box: id_boxes)
-		used_boxes[box] = 100;
-
-	for(auto b : s0->nb_left_boxes){
-		b.first->set_profit(b.first->getVolume()*pow(random(0.8, 1.0),used_boxes[b.first->get_id()]));
-	}
-
 	set<int> new_bin;
 
-	for(int i=0; i < nbins || (s0->nb_left_boxes.size() > used_boxes.size()); i++){
+	for(auto box: s0->nb_left_boxes){
+		if(id_boxes.find(box.first->get_id())!=id_boxes.end()) used_boxes[box.first->get_id()] = 0;
+		else used_boxes[box.first->get_id()] = 20;
+	}
+
+	for(auto b : s0->nb_left_boxes){
+		b.first->set_profit(b.first->getVolume()*pow(random(0.8, 1.0),used_boxes[b.first->get_id()]+1));
+	}
+
+	int nb_boxes=0;
+	for(int i=0; i < nbins || (id_boxes.size() > nb_boxes); i++){
+		bool insert_bin = true;
 		//copia el estado base
 		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
-
 		//usa clp_solver para llenar contenedor
 		double eval=clp_solver->run(s_copy);
-
 		const mclpState* best_state=dynamic_cast<const mclpState*>(clp_solver->get_best_state());
 		best_state->update_profits(&best_state->cont->nb_boxes, used_boxes);
 
 		//se almacena el bin en el conjunto
 		for(auto box: dynamic_cast<const mclpState*>(clp_solver->get_best_state())->cont->nb_boxes){
 			new_bin.insert(box.first->get_id());
-			if(used_boxes.find(box.first->get_id()) == used_boxes.end())
-				used_boxes.insert(make_pair(box.first->get_id(), box.second));
-			else
-				used_boxes[box.first->get_id()]++;
-
-			//cout << box.first->get_id() + 1 << ", ";
+			if(used_boxes[box.first->get_id()]==0) nb_boxes++;
+			used_boxes[box.first->get_id()]++;
 		}
 
 		//se busca el nuevo bin en el conjunto de bins creados
-		bool insert_bin = true;
 		for(auto bin: bins){
 			if(new_bin == bin){
 				insert_bin = false;
 				break;
 			}
 		}
-
 		if(insert_bin && !new_bin.empty()){
 			bins.push_back(new_bin);
-			for(auto box: new_bin)
-				cout << box << " ";
-			cout << endl;
 		}
 		new_bin.clear();
 	}
 
+	cout << "nb_boxes:" << nb_boxes << endl;
 	return bins;
 }
 
 
-list < set<int> >  get_break_bins(list < set<int> > best_bins, set <int>& break_boxes){
-
+list < set<int> >  get_break_bins(list < set<int> > best_bins, set <int>& break_boxes, double break_value){
 	//para obtener una caja usando el id
 	//BoxShape* boxt = mclpState::id2box[1];
-	//cout << boxt->getVolume() << endl;
-
 	list < set <int> > break_bins;
-	int n = best_bins.size()/2;
+	int n = best_bins.size()*break_value;
 	for(int i=0; i<n; i++){
 		list < set<int> >::iterator it;
 		if(i%2==0)
 		   it = minExclusiveVolume(best_bins).second;
 		else
 		   it = minLargestExlusiveBox(best_bins).second;
-
 		break_bins.push_back(*it);
 
 		for (auto box: *it)
@@ -439,23 +431,20 @@ list < set<int> >  get_break_bins(list < set<int> > best_bins, set <int>& break_
 
 	for (set<int> bin: best_bins){
 		for(int box: bin){
-			if(break_boxes.find(box)!=break_boxes.end()){
-				break_boxes.erase(box);
-			}
+			if(break_boxes.find(box)!=break_boxes.end()) break_boxes.erase(box);
 		}
 	}
-
 	return break_bins;
 }
 
-list < set<int> >  get_break_bins_random(list < set<int> > best_bins, set <int>& break_boxes){
+list < set<int> >  get_break_bins_random(list < set<int> > best_bins, set <int>& break_boxes, double break_value){
 
 	//para obtener una caja usando el id
 	//BoxShape* boxt = mclpState::id2box[1];
 	//cout << boxt->getVolume() << endl;
 
 	list < set <int> > break_bins;
-	int n = best_bins.size()/2;
+	int n = best_bins.size()*break_value;
 	for(int i=0; i<n; i++){
 		int r=rand()%best_bins.size();
 		list < set<int> >::iterator it = best_bins.begin();
@@ -485,46 +474,50 @@ Verificar si el contenedor ya existe, si no agregarlo a lista de contenedores (b
 Reducir peso de las cajas utilizadas en el contenedor
 Volver a 1*/
 
-int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gurobi_path, int solver_iter){
+int first_iter;
+int solve(Greedy* gr, BSG *bsg, mclpState* s0, int nbins, double pdec, string gurobi_path, int solver_iter,double break_value){
 	SearchStrategy * clp_solver = gr;
 	set<int> boxes;
+	for(auto box: s0->nb_left_boxes)
+		boxes.insert(box.first->get_id());
+
 	list < set<int> > best_bins;
 	list < set<int> > break_bins;
 	list < set<int> > bins;
 	bool first=true;
 	for(int i=0;i<solver_iter;i++){
 
-		bins = generate_bins(clp_solver, s0, boxes);
+		bins = generate_bins(clp_solver, s0, boxes /*, (i==0)? 100:1000*/);
+		cout <<"Bins generados por BSG: " <<bins.size() << endl;
+		if(i==0) first_iter=bins.size();
 
-		for(auto bin: bins){
-			for(auto box: bin)
-				cout << box << " ";
-			cout << endl;
+		int cant_boxes = s0->nb_left_boxes.size(); 																	//resuelve set-covering y deja los bins de la solucion optima
+		solve_set_covering(gurobi_path, bins, boxes, cant_boxes);
+		cout <<"Solución Gurobi (subproblema) :" << bins.size() << "/" << break_bins.size() << endl;
+		set <int> aux_boxes;
+		for(auto bin:bins){
+			aux_boxes.insert(bin.begin(),bin.end());
 		}
+		//cout << "boxes in gurobi solution: " << aux_boxes.size() << endl;
 
-		//resuelve set-covering y deja los bins de la solucion optima
-		solve_set_covering(gurobi_path, bins,  s0->nb_left_boxes.size());
-
-		cout << break_bins.size() << endl;
-		cout << bins.size() << endl;
 		if(best_bins.empty()) best_bins=bins;
 		else if(bins.size() < break_bins.size()){
 			//best_bins <- best_bins - break_bins + bins
-			list < set<int> > v, v2;
-			auto it=std::set_difference(best_bins.begin(), best_bins.end(), break_bins.begin(), break_bins.end(), v.begin());
-			it=std::set_union (v.begin(), v.end(), bins.begin(), bins.end(), v2.begin());
-			best_bins = v2;
+			for (auto bin:break_bins)
+				best_bins.remove(bin);
+
+			for (auto bin:bins)
+				best_bins.push_back(bin);
+
 		}
 
 		boxes.clear();
+		break_bins = get_break_bins_random(best_bins, boxes, break_value);
 
-		break_bins = get_break_bins(best_bins, boxes);
-
+		cout <<"Mejor solución: " << best_bins.size() << endl;
 	}
 
-
 	//end while
-
 
 	return bins.size();
 
@@ -542,11 +535,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
-	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Beta parameter", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
-	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
-	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<double> _break_value(parser, "double", "Break Bins Porcent", {"break_value"});
+
 	args::ValueFlag<double> _solver_iter(parser, "int", "number of iterations by the solver", {"solver_iter"});
 	args::ValueFlag<string> _gurobi_path(parser, "string", "path of gurobi", {"gurobi_path"});
 
@@ -554,9 +544,6 @@ int main(int argc, char** argv){
 	//args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
-
-
-
 
 	cout.precision(8);
 	try
@@ -586,6 +573,7 @@ int main(int argc, char** argv){
 	string file=_file.Get();
 	int inst=(_inst)? _inst.Get():0;
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
+	double break_value = 0.5;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 	int solver_iter = 1;
 
@@ -593,14 +581,10 @@ int main(int argc, char** argv){
 	int nbins=1000;
 	int nboxes=1;
 	if(_maxtime) maxtime=_maxtime.Get();
-	if(_alpha) alpha=_alpha.Get();
-	if(_beta) beta=_beta.Get();
-	if(_gamma) gamma=_gamma.Get();
-	if(_delta) delta=_delta.Get();
-	if(_p) p=_p.Get();
 	if(_nboxes) nboxes=_nboxes.Get();
 	if(_pdec) pdec=_pdec.Get();
 	if(_nbins) nbins=_nbins.Get();
+	if(_break_value) break_value=_break_value.Get();
   if(_gurobi_path) gurobi_path = _gurobi_path.Get();
 	if(_solver_iter)	solver_iter = _solver_iter.Get();
 	int seed=(_seed)? _seed.Get():1;
@@ -620,15 +604,10 @@ int main(int argc, char** argv){
 	cout << "N_bins:" << nbins << endl;
 	cout << "Decreasing ratio (priority):" << pdec << endl;
 
-
-    clock_t begin_time=clock();
-
+  clock_t begin_time=clock();
 	mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
-
-
-
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
         alpha, beta, gamma, p, delta, 0.0, 0.0);
@@ -642,13 +621,11 @@ int main(int argc, char** argv){
 	bsg->trace=false;
 
 
-  int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path, solver_iter);
-
+  int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path, solver_iter, break_value);
   std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
-
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);
 	//   system("firefox problems/clp/tree_plot/index.html");
 	//}
-
+	cout << bins << " " << first_iter << endl;
 }
