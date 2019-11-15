@@ -33,6 +33,24 @@ bool global::TRACE = false;
 
 using namespace std;
 
+double greedy_eval(Greedy *g, Greedy *gr, clpState* s0){
+
+	double val=0.0;
+	for (int i=0;i<100;i++){
+		State& s_copy= *s0->clone();
+		list<State*> S;
+		S.push_back(&s_copy);
+
+		g->next(S);
+
+		while(!S.empty())
+			gr->next(S);
+
+		val+=s_copy.get_value();
+	}
+	return val/10.0;
+}
+
 void generate_data(string file, double min_fr, int max_time, double alpha, double beta, double gamma, double p,
 		double r=0.0, double min_vol=0.0, int l=6, int w=1, int h=2, int histo_ranges=20, int max_size=120){
 
@@ -54,9 +72,15 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 
 	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
 		alpha, beta, gamma, p, 1.0, 0.0, 0.0);
+	VCS_Function* vloss = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+		0.0, beta, gamma, 0.0, 1.0, 0.0, 0.0);
+	VCS_Function* cs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+		alpha, 0.0, gamma, p, 1.0, 0.0, 0.0);
 
-    Greedy *gr = new Greedy (vcs_gr);
-	Greedy *gr2 = new Greedy (vcs);
+      Greedy *gr = new Greedy (vcs_gr);
+	  Greedy *gr_vcs = new Greedy (vcs);
+	  Greedy *gr_vloss = new Greedy (vloss);
+	  Greedy *gr_cs = new Greedy (cs);
 
 	  list<State*> S;
 	  S.push_back(s0);
@@ -66,12 +90,19 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 	  compactState c(*s0);
 	  cout << c ;
 
+	  double vcs_eval=greedy_eval(gr_vcs, gr, s0);
+	  double vloss_eval=greedy_eval(gr_vloss, gr, s0);
+	  double cs_eval=greedy_eval(gr_cs, gr, s0);
+	  double mean = (vcs_eval + vloss_eval + cs_eval)/3.0;
+
+	  cout << vcs_eval-mean << "," << vloss_eval-mean << "," << cs_eval-mean << endl;
+
 		//cout << "bsg solving" << endl;
-	  BSG *bsg= new BSG(vcs,*gr2, 4);
+	  /*BSG *bsg= new BSG(vcs,*gr2, 4);
 	  SearchStrategy *de= new DoubleEffort(*bsg);
 	  State& s_copy= *s0->clone();
 	  double eval = de->run(s_copy, max_time, begin_time) ;
-	  cout << eval << endl;
+	  cout << eval << endl;*/
 
 }
 
