@@ -48,9 +48,13 @@ public:
 
 	double get_r() const { return r; }
 
+	void use_configuration(int m){
+		cout << "use_configuration is not implemented by the evaluator" << endl;
+	}
+
 protected:
 
-  //weitght of the second objective (lambda1=1-lambda2)
+  //weight of the second objective (lambda1=1-lambda2)
   double lambda2;
 
 	private:

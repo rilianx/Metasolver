@@ -10,26 +10,27 @@
 #include "Greedy.h"
 
 
-#ifndef GREEDYANN_H_
-#define GREEDYANN_H_
+#ifndef GREEDYANNC_H_
+#define GREEDYANNC_H_
 
 using namespace std;
 
 namespace metasolver {
 
-class GreedyANN : public Greedy {
+/*
+ * Greedy that uses the ANN classifier (vcs, vloss, cs) for selecting
+ * the evaluation function in each iteration
+ */
+
+class GreedyANN_C : public Greedy {
 public:
 
-	GreedyANN(ActionEvaluator* evl, int n=100, bool random=false) : Greedy(evl), n(n), prev_pred(0.0), random(random) { }
+	GreedyANN_C(ActionEvaluator* evl, bool random=false) : Greedy(evl), random(random) { }
 
 	/**
 	 * Performs an iteration of the strategy
 	 */
 	virtual list<State*> next(list<State*>& S) ;
-
-	int n;
-
-	double prev_pred;
 
 	bool random;
 

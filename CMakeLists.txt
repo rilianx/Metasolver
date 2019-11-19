@@ -46,6 +46,7 @@ metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp
 metasolver/State.cpp
 metasolver/plugins/ann/GreedyANN.cpp
+metasolver/plugins/ann/GreedyANN_C.cpp
 )
 
 ADD_LIBRARY(

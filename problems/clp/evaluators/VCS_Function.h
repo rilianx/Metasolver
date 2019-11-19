@@ -9,6 +9,7 @@
 #define VCS_FUNCTION_H_
 
 #include "VLossFunction.h"
+#include <vector>
 
 using namespace std;
 
@@ -18,6 +19,22 @@ class VCS_Function : public VLossFunction{
 public:
 	VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, double alpha=4.0, double beta=1.0,
 			double gamma=0.2, double p=0.04, double delta=1.0, double theta=0.0, double r=0.0, double max_theta=1.5);
+
+	void add_configuration(double alpha, double beta, double gamma, double p, double delta){
+		configurations.push_back(vector<double>({alpha, beta, gamma, p, delta}));
+	}
+
+	virtual void use_configuration(int i){
+		if(i>=configurations.size()){
+			cout << "error: configuration " << i << "is out of range ("<<configurations.size()<< endl;
+			exit(0);
+		}
+		alpha=configurations[i][0];
+		beta=configurations[i][1];
+		gamma=configurations[i][2];
+		p=configurations[i][3];
+		delta=configurations[i][4];
+	}
 
 	virtual ~VCS_Function();
 
@@ -43,7 +60,8 @@ protected:
 	long _surface_in_contact(const AABB& bi, const Block& c);
 
 	//parameters
-  double alpha, gamma, p; //
+  double alpha, beta, gamma, delta, p; //
+  vector < vector<double> > configurations;
 
 
 };

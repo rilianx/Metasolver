@@ -18,6 +18,7 @@
 #include "SpaceSet.h"
 #include "Greedy.h"
 #include "GreedyANN.h"
+#include "GreedyANN_C.h"
 #include "DoubleEffort.h"
 #include "GlobalVariables.h"
 #include "BSG.h"
@@ -78,7 +79,9 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
-	args::Flag _ann(parser, "double", "select nodes by using the neural network", {"ann"});
+	args::Flag _ann(parser, "double", "select nodes by using the regression neural network", {"ann"});
+	args::Flag _annc(parser, "double", "select nodes by using the classification neural network", {"ann_c"});
+	args::Flag _rand(parser, "double", "emulate a random ann prediction", {"rand"});
 	args::ValueFlag<int> _n(parser, "double", "number of alternatives to be considered by the ann", {'n'});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
@@ -167,22 +170,28 @@ int main(int argc, char** argv){
     clock_t begin_time=clock(); 
 
     VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, 0.0, r);
+    alpha, beta, gamma, p, delta, 0.0, r); //vcs
 
-  int n=5;
-	if(_n) n=_n.Get();
+
 
   SearchStrategy *gr = NULL;
-	if(!_ann){
+	if(!_ann && !_annc){
 		cout << "greedy" << endl;
 		gr=new Greedy(vcs);
-	}else{
+	}else if(_ann){
+		int n=5; //number of children processed by the ann
+		if(_n) n=_n.Get();
 		cout << "greedyANN" << endl;
-    gr = new GreedyANN (vcs,n);
+		gr = new GreedyANN (vcs,n, _rand);
+	}else if(_annc){
+		cout << "greedyANN" << endl;
+		gr = new GreedyANN_C (vcs, _rand);
+		vcs->add_configuration(0.0, beta, gamma, 0.0,1.0); //vloss
+		vcs->add_configuration(alpha, 0.0, gamma, p,1.0); //cs
 	}
 
 	cout << "bsg" << endl;
-  BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
+    BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
 
 
 	cout << "double effort" << endl;
