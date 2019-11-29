@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.computeIIS()</TITLE>
+<META NAME="description" CONTENT="Model.computeIIS()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_copy.html">
+<LINK REL="previous" HREF="py_model_chgcoeff.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_copy.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9660"
+  HREF="py_model_copy.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9658"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9652"
+  HREF="py_model_chgcoeff.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9661"
+  HREF="py_model_copy.html">Model.copy()</A>
+<B> Up:</B> <A NAME="tex2html9659"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9653"
+  HREF="py_model_chgcoeff.html">Model.chgCoeff()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001022600000000000000"></A>
+<A NAME="pythonmethod:Model.computeIIS"></A>
+<BR>
+Model.computeIIS()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">computeIIS</SPAN></FONT></BIG> ( void )
+
+<P>
+Compute an Irreducible Inconsistent Subsystem (IIS).
+An IIS is a subset of the constraints and variable bounds with the following properties:
+
+<UL>
+<LI>the subsystem represented by the IIS is infeasible, and
+</LI>
+<LI>if any of the constraints or bounds of the IIS is removed, the subsystem becomes feasible.
+</LI>
+</UL>
+Note that an infeasible model may have multiple IISs. The one returned
+by Gurobi is not necessarily the one with minimum cardinality; there
+may exist others with fewer constraints or bounds.
+
+<P>
+If an IIS computation is interrupted before completion, Gurobi will
+return the smallest IIS found to that point.
+
+<P>
+This method populates the <code>IISCONSTR</code>, <code>IISQCONSTR</code>, and <code>IISGENCONSTR</code>
+constraint attributes, the <code>IISSOS</code> SOS attribute, and the
+<code>IISLB</code>, and <code>IISUB</code> variable attributes.  You can also
+obtain information about the results of the IIS computation by writing
+an <code>.ilp</code> format file (see
+<A HREF="py_model_write.html#pythonmethod:Model.write">Model.write</A>).  This file
+contains only the IIS from the original model.
+
+<P>
+Note that this method can be used to compute IISs for both continuous
+and MIP models.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  model.computeIIS()
+  model.write("model.ilp")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9660"
+  HREF="py_model_copy.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9658"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9652"
+  HREF="py_model_chgcoeff.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9661"
+  HREF="py_model_copy.html">Model.copy()</A>
+<B> Up:</B> <A NAME="tex2html9659"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9653"
+  HREF="py_model_chgcoeff.html">Model.chgCoeff()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

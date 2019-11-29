@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Quality Attributes</TITLE>
+<META NAME="description" CONTENT="Quality Attributes">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="multi_objective_attributes.html">
+<LINK REL="previous" HREF="general_constraint_attribu.html">
+<LINK REL="up" HREF="attributes.html">
+<LINK REL="next" HREF="boundvio.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12880"
+  HREF="boundvio.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12878"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12872"
+  HREF="iisgenconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12881"
+  HREF="boundvio.html">BoundVio</A>
+<B> Up:</B> <A NAME="tex2html12879"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12873"
+  HREF="iisgenconstr.html">IISGenConstr</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000167000000000000000">
+Quality Attributes</A>
+</H2>
+
+<P>
+These are solution quality attributes.  They are associated with
+the overall model.
+You should use one of
+the various <code>get</code> routines to retrieve the value of an
+attribute.  These are described at the beginning of
+<A HREF="attributes.html#sec:Attributes">this section</A>).
+For the object-oriented interfaces, quality attributes
+are retrieved by invoking the <code>get</code> method on a constraint
+object.  For attributes that can be modified directly by the user, you
+can use one of the various <code>set</code> methods.
+
+<P>
+Attempting to query an attribute that is not available will produce an
+error.  In C, the attribute query routine will return a
+<code>GRB_ERROR_DATA_NOT_AVAILABLE</code> error code.  The object-oriented
+interfaces will throw an exception.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12882"
+  HREF="boundvio.html">BoundVio</A>
+<LI><A NAME="tex2html12883"
+  HREF="boundsvio.html">BoundSVio</A>
+<LI><A NAME="tex2html12884"
+  HREF="boundvioindex.html">BoundVioIndex</A>
+<LI><A NAME="tex2html12885"
+  HREF="boundsvioindex.html">BoundSVioIndex</A>
+<LI><A NAME="tex2html12886"
+  HREF="boundviosum.html">BoundVioSum</A>
+<LI><A NAME="tex2html12887"
+  HREF="boundsviosum.html">BoundSVioSum</A>
+<LI><A NAME="tex2html12888"
+  HREF="constrvio.html">ConstrVio</A>
+<LI><A NAME="tex2html12889"
+  HREF="constrsvio.html">ConstrSVio</A>
+<LI><A NAME="tex2html12890"
+  HREF="constrvioindex.html">ConstrVioIndex</A>
+<LI><A NAME="tex2html12891"
+  HREF="constrsvioindex.html">ConstrSVioIndex</A>
+<LI><A NAME="tex2html12892"
+  HREF="constrviosum.html">ConstrVioSum</A>
+<LI><A NAME="tex2html12893"
+  HREF="constrsviosum.html">ConstrSVioSum</A>
+<LI><A NAME="tex2html12894"
+  HREF="constrresidual.html">ConstrResidual</A>
+<LI><A NAME="tex2html12895"
+  HREF="constrsresidual.html">ConstrSResidual</A>
+<LI><A NAME="tex2html12896"
+  HREF="constrresidualindex.html">ConstrResidualIndex</A>
+<LI><A NAME="tex2html12897"
+  HREF="constrsresidualindex.html">ConstrSResidualIndex</A>
+<LI><A NAME="tex2html12898"
+  HREF="constrresidualsum.html">ConstrResidualSum</A>
+<LI><A NAME="tex2html12899"
+  HREF="constrsresidualsum.html">ConstrSResidualSum</A>
+<LI><A NAME="tex2html12900"
+  HREF="dualvio.html">DualVio</A>
+<LI><A NAME="tex2html12901"
+  HREF="dualsvio.html">DualSVio</A>
+<LI><A NAME="tex2html12902"
+  HREF="dualvioindex.html">DualVioIndex</A>
+<LI><A NAME="tex2html12903"
+  HREF="dualsvioindex.html">DualSVioIndex</A>
+<LI><A NAME="tex2html12904"
+  HREF="dualviosum.html">DualVioSum</A>
+<LI><A NAME="tex2html12905"
+  HREF="dualsviosum.html">DualSVioSum</A>
+<LI><A NAME="tex2html12906"
+  HREF="dualresidual.html">DualResidual</A>
+<LI><A NAME="tex2html12907"
+  HREF="dualsresidual.html">DualSResidual</A>
+<LI><A NAME="tex2html12908"
+  HREF="dualresidualindex.html">DualResidualIndex</A>
+<LI><A NAME="tex2html12909"
+  HREF="dualsresidualindex.html">DualSResidualIndex</A>
+<LI><A NAME="tex2html12910"
+  HREF="dualresidualsum.html">DualResidualSum</A>
+<LI><A NAME="tex2html12911"
+  HREF="dualsresidualsum.html">DualSResidualSum</A>
+<LI><A NAME="tex2html12912"
+  HREF="complvio.html">ComplVio</A>
+<LI><A NAME="tex2html12913"
+  HREF="complvioindex.html">ComplVioIndex</A>
+<LI><A NAME="tex2html12914"
+  HREF="complviosum.html">ComplVioSum</A>
+<LI><A NAME="tex2html12915"
+  HREF="intvio.html">IntVio</A>
+<LI><A NAME="tex2html12916"
+  HREF="intvioindex.html">IntVioIndex</A>
+<LI><A NAME="tex2html12917"
+  HREF="intviosum.html">IntVioSum</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12880"
+  HREF="boundvio.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12878"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12872"
+  HREF="iisgenconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12881"
+  HREF="boundvio.html">BoundVio</A>
+<B> Up:</B> <A NAME="tex2html12879"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12873"
+  HREF="iisgenconstr.html">IISGenConstr</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

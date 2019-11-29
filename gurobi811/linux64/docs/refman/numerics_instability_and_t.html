@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Instability and the geometry of optimization problems</TITLE>
+<META NAME="description" CONTENT="Instability and the geometry of optimization problems">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_further_reading.html">
+<LINK REL="previous" HREF="numerics_solver_parameters.html">
+<LINK REL="up" HREF="numerics_gurobi_guidelines.html">
+<LINK REL="next" HREF="numerics_the_case_of_linea.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15931"
+  HREF="numerics_the_case_of_linea.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15929"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15923"
+  HREF="numerics_making_the_algori.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15932"
+  HREF="numerics_the_case_of_linea.html">The case of linear</A>
+<B> Up:</B> <A NAME="tex2html15930"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15924"
+  HREF="numerics_making_the_algori.html">Making the algorithm less</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000306000000000000000"></A>
+<A NAME="sec:conditionnumber"></A>
+<BR>
+Instability and the geometry of optimization problems
+</H2>
+
+<P>
+As we have seen, whenever we solve a problem numerically, we have to
+accept that the input we provide and the output we obtain may differ
+from the <EM>theoretical</EM> or <EM>mathematical</EM>
+solution to the given problem. For example, <SPAN CLASS="MATH"><IMG
+ WIDTH="24" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img221.png"
+ ALT="$0.1$"></SPAN>, in a computer,
+will be represented by a number that differs from <SPAN CLASS="MATH"><IMG
+ WIDTH="24" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img221.png"
+ ALT="$0.1$"></SPAN> by about
+<SPAN CLASS="MATH"><IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img222.png"
+ ALT="$10^{-17}$"></SPAN>. Thus, a natural thing to worry about is if these small
+differences may induce large differences in the computed solution.
+
+<P>
+This is the idea behind the notion of the <EM>Condition Number</EM> for a
+given problem.
+While it is true that for most practical optimization problems,
+small perturbations in the input only induce small perturbations in
+the final answer to the problem, there are some special situations
+where this is not the case. These ill behaving problems are called
+<EM>Ill Conditioned</EM> or <EM>Numerically Unstable</EM>.
+
+<P>
+This sections aims to show, in the context of linear optimization
+problems, the most common sources for this behavior, and also how
+to avoid the behavior altogether.
+We will review first the problem of solving linear systems with unique
+solutions, and then move into the more central issue of linear
+optimization problems, its geometric interpretation, and then describe
+some of the most common bad cases. We then provide two
+thought experiments with interactive material to help illustrate the
+concepts of this section.  We conclude with some further thoughts on
+this topic.
+
+<P>
+Note that although the notion of the <EM>Condition Number</EM> has
+received a lot of attention from the academic community, reviewing
+this literature is beyond the scope of this document. If you want to
+start looking into this topic, a good entry point can be the
+<A NAME="tex2html58"
+  HREF="https://en.wikipedia.org/wiki/Condition_number">Condition
+Number</A>
+page at
+Wikipedia.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html15933"
+  HREF="numerics_the_case_of_linea.html">The case of linear systems:</A>
+<LI><A NAME="tex2html15934"
+  HREF="numerics_the_geometry_of_l.html">The geometry of linear optimization problems</A>
+<LI><A NAME="tex2html15935"
+  HREF="numerics_multiple_optimal_.html">Multiple optimal solutions</A>
+<LI><A NAME="tex2html15936"
+  HREF="numerics_dealing_with_epsi.html">Dealing with epsilon-optimal solutions</A>
+<LI><A NAME="tex2html15937"
+  HREF="numerics_thin_feasible_reg.html">Thin feasible regions</A>
+<LI><A NAME="tex2html15938"
+  HREF="numerics_optimizing_over_t.html">Optimizing over the circle:</A>
+<LI><A NAME="tex2html15939"
+  HREF="numerics_optimizing_over_t2.html">Optimizing over thin regions:</A>
+<LI><A NAME="tex2html15940"
+  HREF="numerics_stability_and_con.html">Stability and convergence</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15931"
+  HREF="numerics_the_case_of_linea.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15929"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15923"
+  HREF="numerics_making_the_algori.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15932"
+  HREF="numerics_the_case_of_linea.html">The case of linear</A>
+<B> Up:</B> <A NAME="tex2html15930"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15924"
+  HREF="numerics_making_the_algori.html">Making the algorithm less</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

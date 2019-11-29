@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Using HTTPS with Self-Signed Certificates</TITLE>
+<META NAME="description" CONTENT="Using HTTPS with Self-Signed Certificates">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="firewalls.html">
+<LINK REL="previous" HREF="using_https.html">
+<LINK REL="up" HREF="communication_options.html">
+<LINK REL="next" HREF="firewalls.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html370"
+  HREF="firewalls.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html368"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html362"
+  HREF="using_https.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html371"
+  HREF="firewalls.html">Firewalls</A>
+<B> Up:</B> <A NAME="tex2html369"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html363"
+  HREF="using_https.html">Using HTTPS</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00023200000000000000"></A>
+<A NAME="sec:RSHTTPSInsecure"></A>
+<BR>
+Using HTTPS with Self-Signed Certificates
+</H3>
+
+<P>
+Using self-signed certificates is not recommended for production
+deployment as it is less secure, but it can be useful when testing a
+deployment.  If you do not specify a key and a certificate in the
+<TT>TLS_KEY</TT> and <TT>TLS_CERT</TT> properties, <TT>grb_rs</TT> will
+generate them for you at startup.  You can also specify your own
+self-signed certificate using <TT>TLS_KEY</TT> and <TT>TLS_CERT</TT>
+properties.
+
+<P>
+To use a self-signed certificate, you'll need to activate insecure
+mode by setting the <TT>TLS_INSECURE</TT> property:
+
+<PRE>
+TLS_INSECURE=true
+</PRE>
+When using this mode, the data will be encrypted over the
+wire, and the default port will be 443, but the certificate will not
+be validated.
+
+<P>
+On the client side, you will also need to activate this mode either by
+using the <TT>--tls-insecure</TT> flag or by setting the
+<TT>GRB_TLS_INSECURE</TT> environment variable:
+
+<PRE>
+&gt; grbcluster --tls-insecure --server=https://server1 --password=pass nodes
+ADDRESS         STATUS TYPE    LICENSE #Q #R JL IDLE   %MEM  %CPU
+https://server1 ALIVE  COMPUTE VALID   0  0  2  46h59m 9.79  0.50
+https://server2 ALIVE  COMPUTE VALID   0  0  2  46h46m 8.75  0.00
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html370"
+  HREF="firewalls.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html368"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html362"
+  HREF="using_https.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html371"
+  HREF="firewalls.html">Firewalls</A>
+<B> Up:</B> <A NAME="tex2html369"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html363"
+  HREF="using_https.html">Using HTTPS</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

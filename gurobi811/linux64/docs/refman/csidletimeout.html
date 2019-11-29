@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>CSIdleTimeout</TITLE>
+<META NAME="description" CONTENT="CSIdleTimeout">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cspriority.html">
+<LINK REL="previous" HREF="csgroup.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="cspriority.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14027"
+  HREF="cspriority.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14025"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14019"
+  HREF="csgroup.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14028"
+  HREF="cspriority.html">CSPriority</A>
+<B> Up:</B> <A NAME="tex2html14026"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14020"
+  HREF="csgroup.html">CSGroup</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001722400000000000000"></A>
+<A NAME="parameter:CSIdleTimeout"></A>
+<BR>
+CSIdleTimeout
+</H3>
+Idle time before Compute Server kills a job
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">MAXINT</TD>
+</TR>
+</TABLE>
+
+<P>
+This parameter allows you to set a limit on how long a Compute Server
+job can sit idle before the server kills the job (in seconds).  A job is considered
+idle if the server is not currently performing an optimization and the
+client has not issued any additional commands.
+
+<P>
+The default value will allow a job to sit idle indefinitely in all but
+a few circumstances.  The first exception is the Gurobi Instant Cloud,
+where the default setting will automatically impose a 30 minute idle
+time limit (1800 seconds). If you are using an Instant Cloud pool,
+the actual value will be the maximum between this parameter value and the
+idle timeout defined by the pool.
+
+<P>
+The second exception is any program that uses the Gurobi
+Python interface (including the Gurobi Interactive Shell).  Such
+programs will also get a 30 minute idle time limit by default.
+
+<P>
+You must set this parameter through either a <code>gurobi.lic</code> file
+(using <code>IDLETIMEOUT=n</code>) or an <A HREF="empty_environment.html#sec:EmptyEnvironment">empty
+environment</A>.  Changing the parameter after
+your environment has been created will have no effect.
+
+<P>
+Refer to the
+<A NAME="tex2html41"
+  HREF="../remoteservices/remoteservices.html">Gurobi Remote Services Reference Manual</A>
+for more information on starting Compute Server jobs.
+
+<P>
+One important note about integer-valued parameters: while the maximum
+value that can be stored in a signed integer is <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img143.png"
+ ALT="$2^{31}-1$"></SPAN>, we use a
+<TT>MAXINT</TT> value of 2,000,000,000.  Attempting to set an integer
+parameter to a value larger than this maximum will produce an error.
+
+<P>
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14027"
+  HREF="cspriority.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14025"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14019"
+  HREF="csgroup.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14028"
+  HREF="cspriority.html">CSPriority</A>
+<B> Up:</B> <A NAME="tex2html14026"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14020"
+  HREF="csgroup.html">CSGroup</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

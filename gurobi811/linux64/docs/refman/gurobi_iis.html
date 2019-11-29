@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>gurobi_iis()</TITLE>
+<META NAME="description" CONTENT="gurobi_iis()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="gurobi_feasrelax.html">
+<LINK REL="previous" HREF="gurobi.html">
+<LINK REL="up" HREF="solving_a_model.html">
+<LINK REL="next" HREF="gurobi_feasrelax.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11407"
+  HREF="gurobi_feasrelax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11405"
+  HREF="solving_a_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11399"
+  HREF="gurobi.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11408"
+  HREF="gurobi_feasrelax.html">gurobi_feasrelax()</A>
+<B> Up:</B> <A NAME="tex2html11406"
+  HREF="solving_a_model.html">Solving a Model</A>
+<B> Previous:</B> <A NAME="tex2html11400"
+  HREF="gurobi.html">gurobi()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000142200000000000000">
+gurobi_iis()</A>
+</H3>
+<A NAME="r:gurobi_iis"></A>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT"><FONT COLOR="#801a1a"> <BIG CLASS="LARGE"><SPAN  CLASS="textbf">gurobi_iis</SPAN> </FONT></BIG></TD>
+<TD ALIGN="LEFT">( model, params=NULL, env=NULL )</TD>
+</TR>
+</TABLE>
+
+
+<P>
+Compute an Irreducible Inconsistent Subsystem (IIS).
+
+<P>
+An IIS is a subset of the constraints and variable bounds with the following properties:
+
+<UL>
+<LI>the subsystem represented by the IIS is infeasible, and
+</LI>
+<LI>if any of the constraints or bounds of the IIS is removed, the subsystem becomes feasible.
+</LI>
+</UL>
+Note that an infeasible model may have multiple IISs. The one returned
+by Gurobi is not necessarily the one with minimum cardinality; there
+may exist others with fewer constraints or bounds.
+
+<P>
+If an IIS computation is interrupted before completion, Gurobi will
+return the smallest IIS found to that point.
+
+<P>
+You can obtain information about the outcome of the IIS
+computation from the returned IIS result (described below).
+Note that this method can be used to compute IISs for both continuous
+and MIP models.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model <TT>list</TT> must contain a valid Gurobi model.
+See the 
+<A HREF="the_model_argument.html#r:model"><TT>model</TT></A> argument section
+for more information.
+
+<P>
+ <SPAN  CLASS="textbf">params</SPAN>: The params <TT>list</TT>, when provided, contains a list of modified Gurobi parameters. See the
+
+<A HREF="the_params_argument.html#r:params"><TT>params</TT></A> argument section
+for more information.
+
+<P>
+ <SPAN  CLASS="textbf">env</SPAN>: The env <TT>list</TT>, when provided, allows you to
+use Gurobi Compute Server or Gurobi Instant Cloud. See the
+
+<A HREF="the_env_argument.html#r:env"><TT>env</TT></A> argument section
+for more information.
+
+<P>
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG>
+<BR><TT>model &lt;- gurobi_read('examples/data/klein1.mps')
+<BR>
+iis &lt;- gurobi_iis(model)
+<BR></TT>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+
+<P>
+The <TT>gurobi_iis()</TT> function returns a <TT>list</TT>,
+with various results stored in its named components. The specific
+results that are available depend on the type of model.
+
+<P>
+The returned <TT>list</TT> will always contain the following
+<TT>named components</TT>:
+<DL>
+<DT><STRONG>minimal</STRONG></DT>
+<DD>A logical scalar that indicates whether the computed
+  IIS is minimal. It will normally be true, but it may be false if the
+  IIS computation was stopped early (due to a time limit or a user
+  interrupt).
+</DD>
+<DT><STRONG>Arows</STRONG></DT>
+<DD>A logical vector that indicates whether a linear constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>lb</STRONG></DT>
+<DD>A logical vector that indicates whether a lower bound appears in the computed IIS.
+</DD>
+<DT><STRONG>ub</STRONG></DT>
+<DD>A logical vector that indicates whether a upper bound appears in the computed IIS.
+</DD>
+</DL>
+
+<P>
+If your model contains general constraints, the returned <TT>list</TT> 
+will also contain the following <TT>named components</TT>:
+<DL>
+<DT><STRONG>genconmax</STRONG></DT>
+<DD>A logical vector that indicates whether a general MAX constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>genconmin</STRONG></DT>
+<DD>A logical vector that indicates whether a general MIN constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>genconand</STRONG></DT>
+<DD>A logical vector that indicates whether a general AND constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>genconor</STRONG></DT>
+<DD>A logical vector that indicates whether a general OR constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>genconabs</STRONG></DT>
+<DD>A logical vector that indicates whether a general ABS constraint appears in the computed IIS.
+</DD>
+<DT><STRONG>genconind</STRONG></DT>
+<DD>A logical vector that indicates whether a general IND constraint appears in the computed IIS.
+</DD>
+</DL>
+
+<P>
+If your model contains SOS constraints, the returned <TT>list</TT> 
+will also contain the following <TT>named component</TT>:
+<DL>
+<DT><STRONG>sos</STRONG></DT>
+<DD>A logical vector that indicates whether an SOS constraint
+  appears in the computed IIS
+</DD>
+</DL>
+
+<P>
+If your model contains quadratic constraints, the returned
+<TT>list</TT> will also contain the following <TT>named component</TT>:
+<DL>
+<DT><STRONG>quadcon</STRONG></DT>
+<DD>A logical vector that indicates whether a quadratic constraint appears in the computed IIS.
+</DD>
+</DL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11407"
+  HREF="gurobi_feasrelax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11405"
+  HREF="solving_a_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11399"
+  HREF="gurobi.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11408"
+  HREF="gurobi_feasrelax.html">gurobi_feasrelax()</A>
+<B> Up:</B> <A NAME="tex2html11406"
+  HREF="solving_a_model.html">Solving a Model</A>
+<B> Previous:</B> <A NAME="tex2html11400"
+  HREF="gurobi.html">gurobi()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

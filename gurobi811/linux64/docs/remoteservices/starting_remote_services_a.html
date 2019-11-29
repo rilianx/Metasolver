@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Starting Remote Services as a Process</TITLE>
+<META NAME="description" CONTENT="Starting Remote Services as a Process">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="starting_remote_services_a2.html">
+<LINK REL="previous" HREF="configuration.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="starting_remote_services_a2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html266"
+  HREF="starting_remote_services_a2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html264"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html258"
+  HREF="configuration.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html267"
+  HREF="starting_remote_services_a2.html">Starting Remote Services as</A>
+<B> Up:</B> <A NAME="tex2html265"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html259"
+  HREF="configuration.html">Configuration</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021500000000000000"></A>
+<A NAME="sec:RSStartProcess"></A>
+<BR>
+Starting Remote Services as a Process
+</H3>
+
+<P>
+Once you've installed the Remote Services package (including retrieving
+and installing your license file and, for Linux users, setting your <TT>PATH</TT> variable),
+starting <TT>grb_rs</TT> as a standard process is quite straightforward.
+From a terminal window with administrator privileges, simply issue the following command:
+
+<PRE>
+&gt; grb_rs
+</PRE>
+This will start Remote Services agent on the default port (port 80).
+
+<P>
+You should see output like the following...
+
+<PRE>
+info  : Reading config file: /home/jones/gurobi_server800/linux64/bin/grb_rs.cnf
+info  : Gurobi Remote Services starting...
+info  : Platform is linux
+info  : Version is 8.0.0 (build 128)
+info  : Node address is server1
+info  : Accepting worker registration on port 41173...
+info  : API server, started (HTTP) on port 80...
+</PRE>
+
+<P>
+If you do not have administrator privileges or if the default port is
+already in use, you will see an error about opening the port.  For
+example, on Linux you might see an error like this:
+
+<PRE>
+fatal : Gurobi Remote Services terminated, listen tcp :80: bind: permission denied
+</PRE>
+or
+
+<PRE>
+fatal : Gurobi Remote Services terminated, listen tcp :80: bind: address already in use
+</PRE>
+Note that <TT>grb_rs</TT> does not have to be run with elevated
+privileges, but it does need elevated privileges to use the default
+port 80.
+
+<P>
+If you'd like to run <TT>grb_rs</TT> on a non-default port, use the
+<TT>--port</TT> flag or set the <TT>PORT</TT> property in the
+configuration file.  For example:
+
+<PRE>
+&gt; grb_rs --port=61000
+</PRE>
+
+<P>
+The Remote Services agent (<TT>grb_rs</TT>) needs a directory to store
+various files, including the runtimes, job metadata, job log files,
+etc. The default location is a directory named <TT>data</TT>, located in
+the same directory as the <TT>grb_rs</TT> executable (<TT>&lt;installdir&gt;/bin/data</TT>).
+If you have a <TT>data</TT> directory in your current directory, it will be taken first.
+
+<P>
+If starting
+<TT>grb_rs</TT> produces an error message that indicates that there was
+a problem creating the storage service (as shown below), a likely
+cause is that another <TT>grb_rs</TT> process is already running.
+
+<PRE>
+fatal : Error creating storage service: Error opening data store: timeout
+</PRE>
+
+<P>
+If you wish to start multiple <TT>grb_rs</TT> processes on the same
+machine for testing purposes (this is not recommended for production
+use), you will need to make sure each instance of <TT>grb_rs</TT> is started on a
+different port and using a different data directory. The command <TT>grb_rs init</TT>
+will help you by copying the default configuration and the data directory into a current
+directory.
+
+<P>
+For example, to start two nodes on the same machine with a hostname of <TT>myserver</TT>:
+
+<OL>
+<LI>In a first terminal window, create a new directory <TT>node1</TT>,
+</LI>
+<LI>Change your current directory to <TT>node1</TT> and run <TT>grb_rs init</TT>
+</LI>
+<LI>Start the first node:
+
+<PRE>
+grb_rs --port=61000
+</PRE>
+
+<P>
+</LI>
+<LI>In a second terminal window, create a new directory <TT>node2</TT>,
+</LI>
+<LI>Change your current directory to <TT>node2</TT> and run <TT>grb_rs init</TT>
+</LI>
+<LI>Start the second node on a different port and join the first node:
+
+<PRE>
+grb_rs --port=61001 --join=myserver:61000
+</PRE>
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html266"
+  HREF="starting_remote_services_a2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html264"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html258"
+  HREF="configuration.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html267"
+  HREF="starting_remote_services_a2.html">Starting Remote Services as</A>
+<B> Up:</B> <A NAME="tex2html265"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html259"
+  HREF="configuration.html">Configuration</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

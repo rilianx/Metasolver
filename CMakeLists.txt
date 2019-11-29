@@ -78,6 +78,10 @@
  ADD_LIBRARY(
  mclp_state
  problems/mclp/mclp-state.cpp
+ problems/mclp/methods/BinGenerator.cpp
+ problems/mclp/methods/BreakerBins.cpp
+ problems/mclp/methods/MCLPSolver.cpp
+ problems/mclp/methods/SetCovSolver.cpp
  )
 
  ADD_LIBRARY(

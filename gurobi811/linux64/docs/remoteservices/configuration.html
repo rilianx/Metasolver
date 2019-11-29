@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Configuration</TITLE>
+<META NAME="description" CONTENT="Configuration">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="starting_remote_services_a.html">
+<LINK REL="previous" HREF="remote_services_agent_grb_.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="starting_remote_services_a.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html256"
+  HREF="starting_remote_services_a.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html254"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html248"
+  HREF="remote_services_agent_grb_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html257"
+  HREF="starting_remote_services_a.html">Starting Remote Services as</A>
+<B> Up:</B> <A NAME="tex2html255"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html249"
+  HREF="remote_services_agent_grb_.html">Remote Services Agent (grb_rs)</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021400000000000000"></A>
+<A NAME="sec:RSConfig"></A>
+<BR>
+Configuration
+</H3>
+
+<P>
+The Remote Services agent has a number of configuration properties
+that affect its behavior.  These can be controlled using a
+<TT>grb_rs.cnf</TT> configuration file.  By default, this file must be
+located in the same directory as the <TT>grb_rs</TT> executable.  The
+installation package includes a predefined configuration file that can
+be used as a starting point (<TT>&lt;installdir&gt;/bin/grb_rs.cnf</TT>).
+
+<P>
+You can edit the default configuraton file or override it as <TT>grb_rs</TT> will
+use the following precedence rules:
+
+<UL>
+<LI>command line flag <TT>--config</TT>
+</LI>
+<LI>current directory
+</LI>
+<LI>shared directory (<TT>C:&#92;gurobi</TT>, <TT>/opt/gurobi</TT>, <TT>/Library/gurobi</TT> depending on windows, linux and mac platforms respectively)
+</LI>
+<LI>directory where <TT>grb_rs</TT> is located
+</LI>
+</UL>
+
+<P>
+The configuration file contains a list of properties of the form
+<TT>PROPERTY=value</TT>.  Lines that begin with the # symbol are
+treated as comments and are ignored.  Here is an example:
+
+<PRE>
+# grb_rs.cnf configuration file
+PASSWORD=abcd1234
+ADMINPASSWORD=1234abcd
+</PRE>
+While you could create this file from scratch, we recommend you start
+with the version of this file that is included with the product and
+modify it instead.
+
+<P>
+Examples of properties that are configured through this file are
+client and administrator passwords, communication options, and job
+processing options.  The command <TT>grb_rs properties</TT> lists all
+the available properties, the default values, and provides
+documentation for each.  Some properties can be overriden on the
+command line of <TT>grb_rs</TT>; the name of the command-line flag you
+would use to do so is provided as well.
+
+<P>
+Some properties are important and must be changed for a production deployment:
+<DL>
+<DT><STRONG>HOSTNAME</STRONG></DT>
+<DD>This must be the DNS name of the node that can be resolved
+from the other nodes or the clients in your network. grb_rs tries to get a reasonable
+default value, but this value may still not be resolved by clients and could
+generate connection errors. It this case, you need to override this name in the configuration
+file with a fully qualified name of your node, for example:
+
+<PRE>
+HOSTNAME=server1
+</PRE>
+If the names cannot be resolved by clients, another option is to use IP addresses directly,
+in this case set this property to the IP address of the node.
+
+<P>
+</DD>
+<DT><STRONG>CLUSTER_TOKEN</STRONG></DT>
+<DD>The token is a private key that enables different
+  nodes to join the same cluster.  All nodes of a cluster must have
+  the same token.  We recommended that you generate a brand new token
+  when you set up your cluster.  The <TT>grb_rs token</TT> command
+  will generate a random token, which you can copy into
+  the configuration file.
+
+<P>
+</DD>
+<DT><STRONG>PASSWORD</STRONG></DT>
+<DD>This is the password that clients must supply in order
+  to access the cluster.  It can be stored in clear text or hashed.
+  We recommended that you create your own password, and that you
+  store it in hashed form.  You can use the <TT>grb_rs hash</TT> command
+  to compute the hashed value for your chosen password.
+
+<PRE>
+grb_rs hash newpass
+$$ppEieKZExlBR-pCSUMlmc4oWlG8nZsUOE2IM0hJbzsmV_Yjj
+</PRE>
+Then copy and paste the value in the configuration file:
+
+<PRE>
+PASSWORD=$$ppEieKZExlBR-pCSUMlmc4oWlG8nZsUOE2IM0hJbzsmV_Yjj
+</PRE>
+
+<P>
+The default password is <TT>pass</TT>.
+
+<P>
+</DD>
+<DT><STRONG>ADMINPASSWORD</STRONG></DT>
+<DD>This is the password that clients must supply in
+  order to run restricted administrative job commands.  It can be
+  stored in clear text or hashed.  We recommended that you create your
+  own password, and that you store it in hashed form.  You can use the
+  <TT>grb_rs hash</TT> command to compute the hashed value for your
+  chosen password.  The default password is <TT>admin</TT>.
+
+<P>
+</DD>
+<DT><STRONG>CLUSTER_ADMINPASSWORD</STRONG></DT>
+<DD>This is the password that clients must
+  supply in order to run restricted administrative cluster commands.
+  It can be stored in clear text or hashed.  We recommended that you
+  create your own password, and that you store it in hashed form.  You
+  can use the <TT>grb_rs hash</TT> command to compute the hashed value
+  for your chosen password.  The default password is <TT>cluster</TT>.
+
+<P>
+</DD>
+<DT><STRONG>JOBLIMIT</STRONG></DT>
+<DD>This property sets the maximum number of jobs that
+  can run concurrently when using Compute Server on a specific node.
+  The limit can be
+  changed on a running cluster using the <TT>grbcluster config</TT>
+  command, in which case the new value will persist and the value in
+  the configuration file will be ignored from that point on (even
+  if you stop and restart the cluster).
+
+<P>
+</DD>
+<DT><STRONG>HARDJOBLIMIT</STRONG></DT>
+<DD>Certain jobs (those with priority 100) are allowed
+to ignore the JOBLIMIT, but they aren't allowed to ignore this limit.
+Client requests beyond this limit are queued. This limit is set to 0
+by default which means that it is disabled.
+
+<P>
+</DD>
+<DT><STRONG>CLIENT_DETAILS_ADMIN</STRONG></DT>
+<DD>When a job is submitted, the client hostname, IP,
+and process ID are recorded. By default, this information is displayed to
+any user running the command line tool <TT>grbcluster</TT> or the REST API.
+If this property is set to <TT>true</TT>, only the administrator will be able
+to access this information.
+
+<P>
+</DD>
+<DT><STRONG>USERNAME_ADMIN</STRONG></DT>
+<DD>When a job is submitted, the client process
+username is recorded. By default, this information is displayed to
+any user running the command line tool <TT>grbcluster</TT> or the REST API.
+If this property is set to <TT>true</TT>, only the administrator will be able
+to access this information.
+
+<P>
+</DD>
+</DL>
+
+<P>
+The configuration file is only read once, when <TT>grb_rs</TT> first
+starts.  Subsequent changes to the file won't affect parameter values
+on a running server.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html256"
+  HREF="starting_remote_services_a.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html254"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html248"
+  HREF="remote_services_agent_grb_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html257"
+  HREF="starting_remote_services_a.html">Starting Remote Services as</A>
+<B> Up:</B> <A NAME="tex2html255"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html249"
+  HREF="remote_services_agent_grb_.html">Remote Services Agent (grb_rs)</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

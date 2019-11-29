@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Recommended ranges for variables and constraints</TITLE>
+<META NAME="description" CONTENT="Recommended ranges for variables and constraints">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_improving_ranges_.html">
+<LINK REL="previous" HREF="numerics_why_scaling_and_g.html">
+<LINK REL="up" HREF="numerics_tolerances_and_us.html">
+<LINK REL="next" HREF="numerics_improving_ranges_.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15832"
+  HREF="numerics_improving_ranges_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15830"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15824"
+  HREF="numerics_why_scaling_and_g.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15833"
+  HREF="numerics_improving_ranges_.html">Improving ranges for variables</A>
+<B> Up:</B> <A NAME="tex2html15831"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15825"
+  HREF="numerics_why_scaling_and_g.html">Why scaling and geometry</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000303300000000000000">
+Recommended ranges for variables and constraints</A>
+</H3>
+
+<P>
+Keeping the lessons of the previous section in mind, we recommended
+that right-hand sides of inequalities representing physical quantities
+(even budgets) should be scaled so that they are on the order of
+<SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img190.png"
+ ALT="$10^4$"></SPAN> or less.  The same applies to variable domains, as variable
+bounds are again linear constraints.
+
+<P>
+In the case of objective functions, we recommend that good solutions
+should have an optimal value that is less than <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img190.png"
+ ALT="$10^4$"></SPAN>, and ideally
+also above one (unless the objective coefficients are all zero).  This is
+because the <TT>OptimalityTol</TT> is used to ensure that <EM>  reduced cost</EM> are <EM>close enough</EM> to zero. If coefficients are too large,
+we again face difficulties in determining whether
+an LP solution truly satisfies the optimality conditions
+or not.  On the other hand, if the coefficients are too
+small, then it may be too easy to satisfy the feasibility
+conditions.
+
+<P>
+The coefficients of the constraint matrix are actually more important
+than the right-hand side values, variable bounds, and objective
+coefficients mentioned here.  We'll discuss those shortly.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15832"
+  HREF="numerics_improving_ranges_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15830"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15824"
+  HREF="numerics_why_scaling_and_g.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15833"
+  HREF="numerics_improving_ranges_.html">Improving ranges for variables</A>
+<B> Up:</B> <A NAME="tex2html15831"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15825"
+  HREF="numerics_why_scaling_and_g.html">Why scaling and geometry</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

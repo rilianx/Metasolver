@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>PoolGap</TITLE>
+<META NAME="description" CONTENT="PoolGap">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="poolsearchmode.html">
+<LINK REL="previous" HREF="perturbvalue.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="poolsearchmode.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14627"
+  HREF="poolsearchmode.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14625"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14619"
+  HREF="perturbvalue.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14628"
+  HREF="poolsearchmode.html">PoolSearchMode</A>
+<B> Up:</B> <A NAME="tex2html14626"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14620"
+  HREF="perturbvalue.html">PerturbValue</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001728400000000000000"></A>
+<A NAME="parameter:PoolGap"></A>
+<BR>
+PoolGap
+</H3>
+Maximum gap for stored solutions
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">Infinity</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">Infinity</TD>
+</TR>
+</TABLE>
+
+<P>
+Determines how large a gap to tolerate in stored solutions.  When this
+parameter is set to a non-default value, solutions whose objective
+values exceed that of the best known solution by more than the
+specified (relative) gap are discarded.  For example, if the MIP
+solver has found a solution at objective 100, then a setting
+of <code>PoolGap=0.2</code> would discard solutions with objective worse
+than 120 (assuming a minimization objective).
+
+<P>
+
+<SPAN  CLASS="textbf">Note:</SPAN> Only affects mixed integer programming (MIP) models 
+<BR>
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14627"
+  HREF="poolsearchmode.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14625"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14619"
+  HREF="perturbvalue.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14628"
+  HREF="poolsearchmode.html">PoolSearchMode</A>
+<B> Up:</B> <A NAME="tex2html14626"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14620"
+  HREF="perturbvalue.html">PerturbValue</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

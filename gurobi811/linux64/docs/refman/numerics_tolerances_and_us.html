@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Tolerances and user-scaling</TITLE>
+<META NAME="description" CONTENT="Tolerances and user-scaling">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_does_my_model_hav.html">
+<LINK REL="previous" HREF="numerics_real_numbers_are_.html">
+<LINK REL="up" HREF="numerics_gurobi_guidelines.html">
+<LINK REL="next" HREF="numerics_gurobi_tolerances.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15795"
+  HREF="numerics_gurobi_tolerances.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15793"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15787"
+  HREF="numerics_real_numbers_are_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15796"
+  HREF="numerics_gurobi_tolerances.html">Gurobi tolerances and the</A>
+<B> Up:</B> <A NAME="tex2html15794"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15788"
+  HREF="numerics_real_numbers_are_.html">Real numbers are not</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000303000000000000000"></A>
+<A NAME="sec:scaling"></A>
+<BR>
+Tolerances and user-scaling
+</H2>
+
+<P>
+Gurobi will solve the model as defined by the user.  However, when
+evaluating a candidate solution for feasibility, in order to account
+for possible round-off errors in the floating-point evaluations, we
+must allow for some <EM>tolerances</EM>.
+
+<P>
+To be more precise, satisfying <EM>Optimality Conditions</EM> requires us
+to test at least the following three criteria:
+<DL>
+<DT><STRONG>IntFeasTol</STRONG></DT>
+<DD>Integrality of solutions, i.e., whether a integer
+  variable <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> takes an integer value or not. More precisely, <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> will
+  be considered <EM>integral</EM> if <TT>abs(x - floor(x + 0.5))
+    <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img173.png"
+ ALT="$\mathtt{\leq}$"></SPAN> IntFeasTol</TT>.
+</DD>
+<DT><STRONG>FeasibilityTol</STRONG></DT>
+<DD>Feasibility of primal constraints, i.e., whether
+<!-- MATH
+ $a \cdot x \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="61" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img174.png"
+ ALT="$a \cdot x \leq b$"></SPAN> holds for the <EM>primal</EM> solution.
+More precisely, <!-- MATH
+ $a \cdot x \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="61" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img174.png"
+ ALT="$a \cdot x \leq b$"></SPAN> will be considered to hold if
+<TT>(a * x) - b <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img173.png"
+ ALT="$\mathtt{\leq}$"></SPAN> FeasibilityTol</TT>.
+</DD>
+<DT><STRONG>OptimalityTol</STRONG></DT>
+<DD>Feasibility of dual constraints, i.e.,
+whether <!-- MATH
+ $a \cdot y \leq c$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="61" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img175.png"
+ ALT="$a \cdot y \leq c$"></SPAN> holds for the <EM>dual</EM>
+solution. More precisely, <!-- MATH
+ $a \cdot y \leq c$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="61" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img175.png"
+ ALT="$a \cdot y \leq c$"></SPAN> will be considered to hold
+if <TT>(a * y) - c <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img173.png"
+ ALT="$\mathtt{\leq}$"></SPAN> OptimalityTol</TT>.
+</DD>
+</DL>
+Note that these tolerances are <B>absolute</B>; they do not
+depend on the scale of the quantities involved in the computation.
+This means that when formulating a problem, these tolerances should
+be taken into account, specially to select the units in which
+variables and constraints will be expressed.
+
+<P>
+It is very important to note that the usage of these <EM>tolerances</EM>
+implicitly defines a <EM>gray zone</EM> in the search space in which
+solutions that are very slightly infeasible can still be accepted as
+feasible.  However, the solver will not explicitly search for such
+solutions.
+
+<P>
+For this reason, it is actually possible (although highly unlikely for
+well-posed problems) for a model to be reported as
+being both <EM>feasible</EM> and <EM>infeasible</EM> (in the sense stated
+above).  This can occur if the model is infeasible in exact
+arithmetic, but there exists a solution that is feasible within the
+solver tolerances. For instance, consider:
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\begin{array}{lll}
+\min&0\\
+s.t.&x \leq&0\\
+&x\geq &10^{-10}\\
+\end{array}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="122" HEIGHT="64" BORDER="0"
+ SRC="img176.png"
+ ALT="\begin{displaymath}\begin{array}{lll}
+\min&amp;0\\
+s.t.&amp;x \leq&amp;0\\
+&amp;x\geq &amp;10^{-10}\\
+\end{array}\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html15797"
+  HREF="numerics_gurobi_tolerances.html">Gurobi tolerances and the limitations of double-precision arithmetic</A>
+<LI><A NAME="tex2html15798"
+  HREF="numerics_why_scaling_and_g.html">Why scaling and geometry is relevant</A>
+<LI><A NAME="tex2html15799"
+  HREF="numerics_recommended_range.html">Recommended ranges for variables and constraints</A>
+<LI><A NAME="tex2html15800"
+  HREF="numerics_improving_ranges_.html">Improving ranges for variables and constraints</A>
+<LI><A NAME="tex2html15801"
+  HREF="numerics_advanced_user_sca.html">Advanced user scaling</A>
+<LI><A NAME="tex2html15802"
+  HREF="numerics_avoid_hiding_larg.html">Avoid hiding large coefficients</A>
+<LI><A NAME="tex2html15803"
+  HREF="numerics_dealing_with_big_.html">Dealing with big-M constraints</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15795"
+  HREF="numerics_gurobi_tolerances.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15793"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15787"
+  HREF="numerics_real_numbers_are_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15796"
+  HREF="numerics_gurobi_tolerances.html">Gurobi tolerances and the</A>
+<B> Up:</B> <A NAME="tex2html15794"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15788"
+  HREF="numerics_real_numbers_are_.html">Real numbers are not</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

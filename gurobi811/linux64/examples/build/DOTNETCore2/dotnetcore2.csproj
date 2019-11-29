@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="gurobi81.netstandard20.dll">
+      <HintPath>../../../lib/gurobi81.netstandard20.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

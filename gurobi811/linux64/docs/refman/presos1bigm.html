@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>PreSOS1BigM</TITLE>
+<META NAME="description" CONTENT="PreSOS1BigM">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="presos2bigm.html">
+<LINK REL="previous" HREF="presolve.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="presos2bigm.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14727"
+  HREF="presos2bigm.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14725"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14719"
+  HREF="presolve.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14728"
+  HREF="presos2bigm.html">PreSOS2BigM</A>
+<B> Up:</B> <A NAME="tex2html14726"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14720"
+  HREF="presolve.html">Presolve</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001729400000000000000"></A>
+<A NAME="parameter:PreSOS1BigM"></A>
+<BR>
+PreSOS1BigM
+</H3>
+Threshold for SOS1-to-binary reformulation
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">1e10</TD>
+</TR>
+</TABLE>
+
+<P>
+Controls the automatic reformulation of SOS1 constraints into binary
+form.  SOS1 constraints are often handled more efficiently using a
+binary representation.  The reformulation often requires
+<code>big-M</code> values to be introduced as coefficients.  This
+parameter specifies the largest <code>big-M</code> that can be introduced by
+presolve when performing this reformulation.  Larger values increase
+the chances that an SOS1 constraint will be reformulated, but very
+large values (e.g., 1e8) can lead to numerical issues.
+
+<P>
+The default value of -1 chooses a threshold automatically.  You should
+set the parameter to 0 to shut off SOS1 reformulation entirely, or
+a large value to force reformulation.
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+Please refer to
+<A HREF="constraints.html#subsubsection:SOSConstraints">this section</A>
+for more information on SOS constraints.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14727"
+  HREF="presos2bigm.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14725"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14719"
+  HREF="presolve.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14728"
+  HREF="presos2bigm.html">PreSOS2BigM</A>
+<B> Up:</B> <A NAME="tex2html14726"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14720"
+  HREF="presolve.html">Presolve</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

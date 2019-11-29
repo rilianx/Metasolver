@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.optimize()</TITLE>
+<META NAME="description" CONTENT="Model.optimize()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_presolve.html">
+<LINK REL="previous" HREF="py_model_message.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_presolve.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9990"
+  HREF="py_model_presolve.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9988"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9982"
+  HREF="py_model_message.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9991"
+  HREF="py_model_presolve.html">Model.presolve()</A>
+<B> Up:</B> <A NAME="tex2html9989"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9983"
+  HREF="py_model_message.html">Model.message()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001025900000000000000"></A>
+<A NAME="pythonmethod:Model.optimize"></A>
+<BR>
+Model.optimize()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">optimize</SPAN></FONT></BIG> ( callback )
+
+<P>
+Optimize the model.  The algorithm used for the optimization depends
+on the model type (simplex or barrier for a continuous model;
+branch-and-cut for a MIP model). Upon successful completion, this
+method will populate the solution related attributes of the model.
+See the <A HREF="attributes.html#sec:Attributes">Attributes</A> section for more
+information on attributes.
+
+<P>
+Please consult <A HREF="variables_and_constraints.html#sec:VarsAndConstraints">this section</A>
+for a discussion of some of the practical issues associated with
+solving a precisely defined mathematical model using finite-precision
+floating-point arithmetic.
+
+<P>
+Note that this method will process all pending model modifications.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">callback</SPAN>: Callback function.  The callback function should
+  take two arguments, <TT>model</TT> and <TT>where</TT>.  During the
+  optimization, the function will be called periodically, with
+  <TT>model</TT> set to the model being optimized, and <TT>where</TT>
+  indicating where in the optimization the callback is called from.
+  See the <A HREF="py_callbacks.html#pythonclass:Callback">Callback</A> class for
+  additional information.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  model.optimize()
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9990"
+  HREF="py_model_presolve.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9988"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9982"
+  HREF="py_model_message.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9991"
+  HREF="py_model_presolve.html">Model.presolve()</A>
+<B> Up:</B> <A NAME="tex2html9989"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9983"
+  HREF="py_model_message.html">Model.message()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

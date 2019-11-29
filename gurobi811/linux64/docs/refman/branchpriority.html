@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>BranchPriority</TITLE>
+<META NAME="description" CONTENT="BranchPriority">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="partition.html">
+<LINK REL="previous" HREF="varhintpri.html">
+<LINK REL="up" HREF="variable_attributes.html">
+<LINK REL="next" HREF="partition.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12468"
+  HREF="partition.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12466"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12460"
+  HREF="varhintpri.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12469"
+  HREF="partition.html">Partition</A>
+<B> Up:</B> <A NAME="tex2html12467"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12461"
+  HREF="varhintpri.html">VarHintPri</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001621300000000000000"></A>
+<A NAME="attr:BranchPriority"></A>
+<BR>
+BranchPriority
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">Yes</TD>
+</TR>
+</TABLE>
+
+<P>
+Variable branching priority.  The value of this attribute is used as
+the primary criteria for selecting a fractional variable for branching
+during the MIP search.  Variables with larger values always take
+priority over those with smaller values.  Ties are broken using the
+standard branch variable selection criteria.  The default variable
+branch priority value is zero.
+
+<P>
+Note that deleting variables from your model will cause several
+attributes to be discarded (variables hints and branch priorities).
+If you'd like them to persist, your program will need to repopulate
+them after deleting the variables and making a subsequent model update
+call.
+
+<P>
+Only affects MIP models.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12468"
+  HREF="partition.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12466"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12460"
+  HREF="varhintpri.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12469"
+  HREF="partition.html">Partition</A>
+<B> Up:</B> <A NAME="tex2html12467"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12461"
+  HREF="varhintpri.html">VarHintPri</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

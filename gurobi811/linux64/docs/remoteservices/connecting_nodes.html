@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Connecting Nodes</TITLE>
+<META NAME="description" CONTENT="Connecting Nodes">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="compute_servers_and_distri.html">
+<LINK REL="previous" HREF="forming_a_cluster.html">
+<LINK REL="up" HREF="forming_a_cluster.html">
+<LINK REL="next" HREF="compute_servers_and_distri.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html308"
+  HREF="compute_servers_and_distri.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html306"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html300"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html309"
+  HREF="compute_servers_and_distri.html">Compute Servers and Distributed</A>
+<B> Up:</B> <A NAME="tex2html307"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html301"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022100000000000000"></A>
+<A NAME="sec:RSConnecting"></A>
+<BR>
+Connecting Nodes
+</H3>
+
+<P>
+Every Remote Services cluster starts with a single node. The steps for
+starting Remote Services on a single node, either as a
+<A HREF="starting_remote_services_a.html#sec:RSStartProcess">standard process</A> or as a
+<A HREF="starting_remote_services_a2.html#sec:RSStartService">service</A>, were covered in earlier
+sections.
+
+<P>
+Before adding nodes into your cluster, you first need to make sure
+that the cluster token (property <TT>CLUSTER_TOKEN</TT> in the
+configuration file) has the same value in each node.  For better
+security, we recommend that you change the predefined value of the
+token by generating a new one and pasting the same value into each
+node configuration file.  You can generate a new token with the
+following command:
+
+<PRE>
+&gt; grb_rs token
+GRBTK-6o4xujs59WJO5508nmaNwc1TtjZJAL1UcwN4vTD4qK4nata8oLr9GnubyXrLTkggc/aw2A==
+</PRE>
+
+<P>
+Similarly, the passwords used for client, administrator and cluster
+administrator must be the same in all nodes.  For better security, it
+is recommended to change the predefined value of the passwords by
+choosing a new password, generating a hash value for that password,
+and then pasting the result into each node configuration file.  You
+can generate a hash of your chosen password (e.g., <TT>mynewpass</TT>)
+with the following command:
+
+<PRE>
+&gt; grb_rs hash mynewpass
+$$v0UBWkM_9kpY_v2RECV2LBGnlr8qzaGHzf0fMJvrMYwPnJap
+</PRE>
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Adding nodes to your cluster</SPAN></BIG>
+
+<P>
+Once you've started a single-node cluster, you can add nodes using the
+<TT>--join</TT> flag to <TT>grb_rs</TT> or the <TT>JOIN</TT> configuration
+property.  For example, if you've already started a cluster on the
+default port of <TT>server1</TT>, you would run the following command on
+the new node (call it <TT>server2</TT>) to create a two-node cluster:
+
+<PRE>
+&gt; grb_rs --join=server1
+</PRE>
+
+<P>
+In the log output for <TT>server2</TT>, you should see the result of the
+handshake between the servers:
+
+<PRE>
+info  : Node server1, transition from JOINING to ALIVE
+</PRE>
+
+<P>
+Similarly, the log output of <TT>server1</TT> will include the line:
+
+<PRE>
+info  : Node server2, added to the cluster
+</PRE>
+
+<P>
+If you are using a non-default port, you can specify the target node port as part of the
+node URL in the <TT>--join</TT> flag and you can specify the port of the current node using the <TT>--port</TT> flag.
+You could use different ports on the different machines, but it is a good practice to use the same one, for example 61000.
+The command would look like this instead:
+
+<PRE>
+&gt; grb_rs --join=server1:61000 --port=61000
+</PRE>
+
+<P>
+The <TT>JOIN</TT> property can also be set through
+the configuration file in the same way:
+
+<PRE>
+JOIN=server1:61000
+PORT=61000
+</PRE>
+When starting <TT>grb_rs</TT> as a service, you won't have
+the opportunity to provide command-line options, so you'll
+need to provide this information through the configuration file.
+
+<P>
+Once you've created a multi-node cluster, you can add additional nodes
+to that cluster by doing a <TT>JOIN</TT> using the name of any member
+node.  Furthermore, the <TT>--join</TT> flag or the <TT>JOIN</TT> property
+can take a comma-separated list of node names, so a node can still
+join a cluster even if one of the member nodes is unavailable.
+Note that when a list of nodes is specified, the joining node
+will try to join all the specified nodes at the same time. Joining nodes is
+an asynchronous process, if some target nodes are not reachable, the
+joining node will retry before giving up on joining. If all the nodes are
+reachable, they will all join and form a single cluster.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Checking the status of your cluster</SPAN></BIG>
+
+<P>
+Using <TT>grbcluster</TT>, you can check the status of the cluster:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass nodes --long
+ADDRESS STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE     %MEM  %CPU  STARTED             RUNTIMES VERSION
+server1 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h59m0s 9.79  0.50  2017-09-27 17:03:24 [8.0.0]  8.0.0
+server2 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h46m0s 8.75  0.00  2017-09-27 17:16:11 [8.0.0]  8.0.0
+</PRE>
+
+<P>
+The nodes of the cluster are constantly sharing information about their status. When using <TT>grbcluster</TT>, you can use
+any of the nodes in the <TT>--server</TT> flag for all global commands.
+
+<P>
+Each node can be in one of the following states:
+<DL>
+<DT><STRONG>ALIVE</STRONG></DT>
+<DD>The node is up and running.
+
+<P>
+</DD>
+<DT><STRONG>DEGRADED</STRONG></DT>
+<DD>The node failed to respond to recent communications.
+  The node could return to the <TT>ALIVE</TT> state if it can be reached
+  again.  The node will stay in this state until a timeout (controlled
+  by the configuration property <TT>DEGRADED_TIMEOUT</TT>), at which
+  point it is considered as <TT>FAILED</TT>
+
+<P>
+</DD>
+<DT><STRONG>FAILED</STRONG></DT>
+<DD>The node has been in <TT>DEGRADED</TT> state for too long,
+  and has been flagged as <TT>FAILED</TT>.
+  A node will remaine in the <TT>FAILED</TT> state for a short time, and it
+  will eventually be removed from the cluster.  If the node comes back
+  online, it will not re-join the cluster automatically.
+
+<P>
+</DD>
+<DT><STRONG>JOINING</STRONG></DT>
+<DD>The node is in the process of joining the cluster.
+
+<P>
+</DD>
+<DT><STRONG>LEAVING</STRONG></DT>
+<DD>The node left the cluster.  It will stay in that state
+  for short time period and then it will be removed from the cluster.
+</DD>
+</DL>
+
+<P>
+You can dynamically add or remove a node from a cluster using the
+<TT>grbcluster join</TT> or <TT>grbcluster leave</TT> commands.  The
+<TT>join</TT> command can be useful when you want a node to rejoin the
+cluster after a network issue without having to restart the node.  For
+example, if <TT>server2</TT> left the cluster after a failure, it could
+rejoin using the following command:
+
+<PRE>
+&gt; grbcluster --server=server2 --password=cluster join server1
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html308"
+  HREF="compute_servers_and_distri.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html306"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html300"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html309"
+  HREF="compute_servers_and_distri.html">Compute Servers and Distributed</A>
+<B> Up:</B> <A NAME="tex2html307"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html301"
+  HREF="forming_a_cluster.html">Forming a Cluster</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

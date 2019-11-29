@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Managing Runtimes</TITLE>
+<META NAME="description" CONTENT="Managing Runtimes">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="upgrading_remote_services.html">
+<LINK REL="previous" HREF="maintaining_a_cluster.html">
+<LINK REL="up" HREF="maintaining_a_cluster.html">
+<LINK REL="next" HREF="upgrading_remote_services.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html408"
+  HREF="upgrading_remote_services.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html406"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html400"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html409"
+  HREF="upgrading_remote_services.html">Upgrading Remote Services</A>
+<B> Up:</B> <A NAME="tex2html407"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html401"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00024100000000000000"></A>
+<A NAME="sec:RSRuntimes"></A>
+<BR>
+Managing Runtimes
+</H3>
+
+<P>
+A runtime is an executable built to run jobs using a given version of
+the Gurobi Optimizer.  Each node in the cluster can handle multiple
+runtimes, so different Gurobi versions can be supported on the same
+node at the same time.  The Gurobi Remote Services agent will
+automatically select the appropriate runtime, depending on the version
+of the Gurobi Optimizer library used by the client program.
+
+<P>
+Runtime executables, named <TT>grb_rsw</TT>, are installed in the
+<TT>data</TT> directory of a node, under the following directory
+structure (the version numbers used in this example are just for
+demonstration purpose):
+
+<PRE>
+grb_rs
+data/
+  runtimes/
+     v8.0.0/
+        grb_rsw
+     v8.0.1/
+        grb_rsw
+</PRE>
+
+<P>
+The Remote Services agent will select the latest technical release
+that matches the major and minor version of the client.  With the
+example above, if the client uses version 8.0.0, runtime version 8.0.1
+will be selected. If later a version 8.0.2 is installed, the same
+client will use it without any modification.
+
+<P>
+Note that the Remote Services agent should be no older than the
+runtimes you deploy for it.  Thus, for example, you can deploy runtime
+version 8.0.0 in an agent version 8.5, but not vice-versa.  Note also
+that the ability to support different versions in a single Compute
+Server only started with version 8.0, so older versions such as 7.0
+or 7.5 are not supported.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Deploying Runtimes</SPAN></BIG>
+
+<P>
+The Remote Services installation package will contain the latest
+supported runtime, which will be ready to use.  You don't need to take
+any action to install a runtime when you first install Remote
+Services.
+
+<P>
+When new versions are released, you have the choice of reinstalling
+Remote Services with the latest runtimes or deploying only the
+runtimes that you need.
+
+<P>
+To deploy a specific runtime to a running node, you first need to stop
+the processing on that node:
+
+<PRE>
+grbcluster --server=server1 --password=cluster stop
+</PRE>
+
+<P>
+Once all running jobs have finished processing and the node processing
+state has changed to <TT>STOPPED</TT>, you can deploy the new runtime
+using the <TT>grbcluster deploy</TT> command:
+
+<PRE>
+&gt;grbcluster --server=server1 --password=cluster deploy gurobi_server801/linux64/bin/data/runtimes/v8.0.1/grb_rsw
+</PRE>
+
+<P>
+You can examine the list of available runtimes using the
+<TT>grbcluster nodes</TT> command.  Available versions are listed in the
+<TT>RUNTIMES</TT> column:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass nodes --long
+ADDRESS STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE   %MEM  %CPU  STARTED             RUNTIMES       VERSION
+server1 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h59m 9.79  0.50  2017-09-27 17:03:24 [8.0.0,8.0.1]  8.0.0
+server2 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h46m 8.75  0.00  2017-09-27 17:16:11 [8.0.0]        8.0.0
+</PRE>
+
+<P>
+You can remove an old runtime using <TT>grbcluster undeploy</TT>:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=cluster undeploy 8.0.0
+
+&gt; grbcluster --server=server1 --password=pass nodes --long
+ADDRESS STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE   %MEM  %CPU  STARTED             RUNTIMES VERSION
+server1 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h59m 9.79  0.50  2017-09-27 17:03:24 [8.0.1]  8.0.0
+server2 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h46m 8.75  0.00  2017-09-27 17:16:11 [8.0.0]  8.0.0
+</PRE>
+
+<P>
+After deploying or undeploying, you can resume the job processing on
+the node, at which point new jobs will use the latest runtimes:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=cluster start
+</PRE>
+
+<P>
+You can use the flag <TT>--all-stopped</TT> with the <TT>deploy</TT> or
+<TT>undeploy</TT> commands to deploy or undeploy to multiple nodes at a
+time.  Note that this flag will only apply to nodes that are already
+<TT>STOPPED</TT>, so you should issue the <TT>stop</TT> command fist
+(typically with the <TT>--all</TT> flag) to stop the nodes.
+
+<P>
+In conclusion, you can incrementally deploy new runtimes on cluster
+nodes as they become available without having to reinstall Remote
+Services.  This works only for technical releases, and if you do not
+need to deploy a fix in the Remote Services stack.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html408"
+  HREF="upgrading_remote_services.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html406"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html400"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html409"
+  HREF="upgrading_remote_services.html">Upgrading Remote Services</A>
+<B> Up:</B> <A NAME="tex2html407"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html401"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

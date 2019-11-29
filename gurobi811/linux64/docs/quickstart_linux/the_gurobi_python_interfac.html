@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>The Gurobi Python Interface for Python Users</TITLE>
+<META NAME="description" CONTENT="The Gurobi Python Interface for Python Users">
+<META NAME="keywords" CONTENT="quickstart_linux">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_linux.css">
+
+<LINK REL="previous" HREF="customization_through_call.html">
+<LINK REL="up" HREF="interactive_shell.html">
+<LINK REL="next" HREF="attributes.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html614"
+  HREF="attributes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html612"
+  HREF="interactive_shell.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html608"
+  HREF="customization_through_call.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html615"
+  HREF="attributes.html">Attributes</A>
+<B> Up:</B> <A NAME="tex2html613"
+  HREF="interactive_shell.html">Interactive Shell</A>
+<B> Previous:</B> <A NAME="tex2html609"
+  HREF="customization_through_call.html">Customization through callbacks</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000512000000000000000"></A>
+<A NAME="subsection:setup.py"></A>
+<BR>
+The Gurobi Python Interface for Python Users
+</H2>
+
+<P>
+While the Gurobi installation includes everything you need to use
+Gurobi from within Python, we understand that some users would prefer
+to use Gurobi from within their own Python environment.  Doing so
+requires you to install the <code>gurobipy</code> module.  The steps for
+doing this depend on your platform.
+On Linux, you will need to open a terminal window, change
+your current directory to the Gurobi <TT>&lt;installdir&gt;</TT> (the directory that contains the
+file <TT>setup.py</TT>), and issue the following command:
+
+<P>
+<TT>  python setup.py install</TT>
+
+<P>
+Unless you are using your own private Python installation, you will
+need to run this command as super-user. Once <TT>gurobipy</TT> is
+successfully installed, you can type <TT>import gurobipy</TT> or
+<TT>from gurobipy import *</TT> from your Python shell and access all of
+the Gurobi classes and methods.
+
+<P>
+Note that Gurobi distributes an Anaconda package, so you don't need to
+perform these steps if you are using Anaconda Python.  Please refer to
+the <A HREF="installing_the_anaconda_py.html#section:Anaconda">instructions for setting up Gurobi for use within the
+  Anaconda distribution</A> for details.
+
+<P>
+Note that for this installation to succeed, your Python environment
+must be compatible with the Gurobi Python module.
+You should only install 64-bit Gurobi libraries into a 64-bit Python shell.
+
+In addition, your Python version must be compatible.  With this
+release, <code>gurobipy</code> can be used with Python 2.7, 3.6, or 3.7 on
+Linux.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html614"
+  HREF="attributes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html612"
+  HREF="interactive_shell.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html608"
+  HREF="customization_through_call.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html615"
+  HREF="attributes.html">Attributes</A>
+<B> Up:</B> <A NAME="tex2html613"
+  HREF="interactive_shell.html">Interactive Shell</A>
+<B> Previous:</B> <A NAME="tex2html609"
+  HREF="customization_through_call.html">Customization through callbacks</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

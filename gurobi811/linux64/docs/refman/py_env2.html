@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Env()</TITLE>
+<META NAME="description" CONTENT="Env()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_env_clientenv.html">
+<LINK REL="previous" HREF="py_env.html">
+<LINK REL="up" HREF="py_env.html">
+<LINK REL="next" HREF="py_env_clientenv.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html10849"
+  HREF="py_env_clientenv.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10847"
+  HREF="py_env.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10841"
+  HREF="py_env.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10850"
+  HREF="py_env_clientenv.html">Env.ClientEnv()</A>
+<B> Up:</B> <A NAME="tex2html10848"
+  HREF="py_env.html">Env</A>
+<B> Previous:</B> <A NAME="tex2html10842"
+  HREF="py_env.html">Env</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001015100000000000000"></A>
+<A NAME="pythonmethod:Env"></A>
+<BR>
+Env()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">Env</SPAN></FONT></BIG> ( logfilename=&rdquo;&rdquo;, empty=False )
+
+
+<P>
+Env constructor.  You will generally want to use the default
+environment in Gurobi Python programs.  The exception is when you want
+explicit control over environment garbage collection.  By creating
+your own environment object and always passing it to methods that take
+an environment as input (<A HREF="py_read.html#pythonmethod:read">read</A> or the
+<A HREF="py_model.html#pythonclass:Model">Model</A> constructor), you will avoid
+creating the default environment.  Once every model created using an
+Env object is garbage collected, and once the Env object itself is no
+longer referenced, the garbage collector will reclaim the environment
+and release all associated resources.
+
+<P>
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter). This method will also populate several
+parameters (<TT>ComputeServer</TT>, <TT>TokenServer</TT>,
+<TT>ServerPassword</TT>, etc.) from your <TT>gurobi.lic</TT> file.
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">logfilename</SPAN>: Name of the log file for this environment.  Pass an
+   an empty string if you don't want a log file.
+
+<P>
+ <SPAN  CLASS="textbf">empty</SPAN>: Indicates whether the environment should be empty.
+You should use <TT>empty=True</TT> if you want to set parameters before actually
+starting the environment.  This can be useful if you want to
+connect to a Compute Server, a token server, or the Gurobi
+Instant Cloud.  See the <A HREF="empty_environment.html#sec:EmptyEnvironment">Empty
+Environment</A>&nbsp;Section for more details.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New environment object.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  env = Env("gurobi.log")
+  m = read("misc07.mps", env)
+  m.optimize()
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10849"
+  HREF="py_env_clientenv.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10847"
+  HREF="py_env.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10841"
+  HREF="py_env.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10850"
+  HREF="py_env_clientenv.html">Env.ClientEnv()</A>
+<B> Up:</B> <A NAME="tex2html10848"
+  HREF="py_env.html">Env</A>
+<B> Previous:</B> <A NAME="tex2html10842"
+  HREF="py_env.html">Env</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

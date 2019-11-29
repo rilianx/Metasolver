@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Limitations</TITLE>
+<META NAME="description" CONTENT="Limitations">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="replay.html">
+<LINK REL="up" HREF="recording_api_calls.html">
+<LINK REL="next" HREF="concurrent_optimizer.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15647"
+  HREF="concurrent_optimizer.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15645"
+  HREF="recording_api_calls.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15641"
+  HREF="replay.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15648"
+  HREF="concurrent_optimizer.html">Concurrent Optimizer</A>
+<B> Up:</B> <A NAME="tex2html15646"
+  HREF="recording_api_calls.html">Recording API Calls</A>
+<B> Previous:</B> <A NAME="tex2html15642"
+  HREF="replay.html">Replay</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000263000000000000000">
+Limitations</A>
+</H2>
+
+<P>
+Recording works with most programs that call Gurobi.  There are a few
+Gurobi features that aren't supported, though:
+
+<UL>
+<LI>Recording won't capture calls to the Gurobi tuning tool.
+</LI>
+<LI>You can't use recording if you are a client of a Gurobi Compute Server.
+</LI>
+<LI>Recording won't capture data passed into control callbacks.  In
+  other words, you can't record a program that adds lazy constraints,
+  user cuts, or solutions through callbacks.
+</LI>
+</UL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15647"
+  HREF="concurrent_optimizer.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15645"
+  HREF="recording_api_calls.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15641"
+  HREF="replay.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15648"
+  HREF="concurrent_optimizer.html">Concurrent Optimizer</A>
+<B> Up:</B> <A NAME="tex2html15646"
+  HREF="recording_api_calls.html">Recording API Calls</A>
+<B> Previous:</B> <A NAME="tex2html15642"
+  HREF="replay.html">Replay</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

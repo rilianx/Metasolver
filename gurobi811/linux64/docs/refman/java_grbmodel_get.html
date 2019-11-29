@@ -1,0 +1,2701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.get()</TITLE>
+<META NAME="description" CONTENT="GRBModel.get()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbmodel_getcoeff.html">
+<LINK REL="previous" HREF="java_grbmodel_fixedmodel.html">
+<LINK REL="up" HREF="java_grbmodel.html">
+<LINK REL="next" HREF="java_grbmodel_getcoeff.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5719"
+  HREF="java_grbmodel_getcoeff.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5717"
+  HREF="java_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5711"
+  HREF="java_grbmodel_fixedmodel.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5720"
+  HREF="java_grbmodel_getcoeff.html">GRBModel.getCoeff()</A>
+<B> Up:</B> <A NAME="tex2html5718"
+  HREF="java_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html5712"
+  HREF="java_grbmodel_fixedmodel.html">GRBModel.fixedModel()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000621900000000000000"></A>
+<A NAME="javamethod:GRBModel.get"></A>
+<BR>
+GRBModel.get()
+</H3>
+
+<P>
+Query the value(s) of a parameter or attribute.  Use this method for
+parameters, for scalar model attributes, and for arrays of constraint
+or variable attributes.
+
+<P>
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleparam.html#javaenum:GRB.DoubleParam">GRB.DoubleParam</A></TD>
+<TD ALIGN="LEFT">param )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of a double-valued parameter.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">param</SPAN>: The parameter being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested parameter.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intparam.html#javaenum:GRB.IntParam">GRB.IntParam</A></TD>
+<TD ALIGN="LEFT">param )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of an int-valued parameter.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">param</SPAN>: The parameter being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested parameter.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringparam.html#javaenum:GRB.StringParam">GRB.StringParam</A></TD>
+<TD ALIGN="LEFT">param )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of a string-valued parameter.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">param</SPAN>: The parameter being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested parameter.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued variable attribute for an array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: The variables whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued variable attribute for a sub-array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A one-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first variable of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of variables.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued variable attribute for a two-dimensional array of
+variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A two-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued variable attribute for a three-dimensional array
+of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A three-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued constraint attribute for an array of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: The constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued constraint attribute for a sub-array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A one-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued constraint attribute for a two-dimensional array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A two-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued constraint attribute for a three-dimensional array
+of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A three-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued quadratic constraint attribute for an array of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: The quadratic constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued quadratic constraint attribute for a sub-array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A one-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first quadratic constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of quadratic constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued quadratic constraint attribute for a two-dimensional array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A two-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">char[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_charattr.html#javaenum:GRB.CharAttr">GRB.CharAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a char-valued quadratic constraint attribute for a three-dimensional array
+of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A three-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of a double-valued model attribute.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested attribute.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued variable attribute for an array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: The variables whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued variable attribute for a sub-array of
+variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A one-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first variable of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of variables.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued variable attribute for a two-dimensional array of
+variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A two-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued variable attribute for a three-dimensional array
+of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A three-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued constraint attribute for an array of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: The constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued constraint attribute for a sub-array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A one-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The first constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued constraint attribute for a two-dimensional array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A two-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued constraint attribute for a three-dimensional array
+of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A three-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued quadratic constraint attribute for an array of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: The quadratic constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued quadratic constraint attribute for a sub-array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A one-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The first quadratic constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of quadratic constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued quadratic constraint attribute for a two-dimensional array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A two-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">double[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_doubleattr.html#javaenum:GRB.DoubleAttr">GRB.DoubleAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a double-valued quadratic constraint attribute for a three-dimensional array
+of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A three-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of an int-valued model attribute.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested attribute.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued variable attribute for an array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: The variables whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued variable attribute for a sub-array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A one-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first variable of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of variables.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued variable attribute for a two-dimensional array of
+variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A two-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued variable attribute for a three-dimensional array
+of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A three-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued constraint attribute for an array of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: The constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued constraint attribute for a sub-array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A one-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued constraint attribute for a two-dimensional array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A two-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued constraint attribute for a three-dimensional array
+of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A three-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued quadratic constraint attribute for an array of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: The quadratic constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued quadratic constraint attribute for a sub-array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A one-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first quadratic constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of quadratic constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued quadratic constraint attribute for a two-dimensional array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A two-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued quadratic constraint attribute for a three-dimensional array
+of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A three-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued general constraint attribute for an array of general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: The general constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[]</TD>
+<TD ALIGN="LEFT">genconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued general constraint attribute for a sub-array of
+general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A one-dimensional array of general constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first general constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of general constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[][]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued general constraint attribute for a two-dimensional array of
+general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A two-dimensional array of general constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_intattr.html#javaenum:GRB.IntAttr">GRB.IntAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[][][]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query an int-valued general constraint attribute for a three-dimensional array
+of general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A three-dimensional array of general constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Query the value of a string-valued model attribute.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current value of the requested attribute.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued variable attribute for an array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: The variables whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued variable attribute for a sub-array of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A one-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first variable of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of variables.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued variable attribute for a two-dimensional array of
+variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A two-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[][][]</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued variable attribute for a three-dimensional array
+of variables.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: A three-dimensional array of variables whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input variable.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for an array of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: The constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[]</TD>
+<TD ALIGN="LEFT">constrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for a sub-array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A one-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for a two-dimensional array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A two-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBConstr[][][]</TD>
+<TD ALIGN="LEFT">constrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for a three-dimensional array
+of constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">constrs</SPAN>: A three-dimensional array of constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued quadratic constraint attribute for an array of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: The quadratic constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[]</TD>
+<TD ALIGN="LEFT">qconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued quadratic constraint attribute for a sub-array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A one-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first quadratic constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of quadratic constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued quadratic constraint attribute for a two-dimensional array of
+quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A two-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBQConstr[][][]</TD>
+<TD ALIGN="LEFT">qconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued quadratic constraint attribute for a three-dimensional array
+of quadratic constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">qconstrs</SPAN>: A three-dimensional array of quadratic constraints whose attribute
+  values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input quadratic constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued general constraint attribute for an array of general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: The general constraints whose attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[]</TD>
+<TD ALIGN="LEFT">genconstrs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">start,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">len )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued general constraint attribute for a sub-array of
+constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A one-dimensional array of general constraints whose attribute
+  values are being queried.
+
+<P>
+ <SPAN  CLASS="textbf">start</SPAN>: The index of the first general constraint of interest in the list.
+
+<P>
+ <SPAN  CLASS="textbf">len</SPAN>: The number of general constraints.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[][]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for a two-dimensional array of
+general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A two-dimensional array of general constraints whose
+  attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">String[][][]</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">get</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT"><A HREF="java_grb_stringattr.html#javaenum:GRB.StringAttr">GRB.StringAttr</A></TD>
+<TD ALIGN="LEFT">attr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBGenConstr[][][]</TD>
+<TD ALIGN="LEFT">genconstrs )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Query a String-valued constraint attribute for a three-dimensional array
+of general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attr</SPAN>: The attribute being queried.
+
+<P>
+ <SPAN  CLASS="textbf">genconstrs</SPAN>: A three-dimensional array of general constraints whose
+  attribute values are being queried.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The current values of the requested attribute for each
+  input general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5719"
+  HREF="java_grbmodel_getcoeff.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5717"
+  HREF="java_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5711"
+  HREF="java_grbmodel_fixedmodel.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5720"
+  HREF="java_grbmodel_getcoeff.html">GRBModel.getCoeff()</A>
+<B> Up:</B> <A NAME="tex2html5718"
+  HREF="java_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html5712"
+  HREF="java_grbmodel_fixedmodel.html">GRBModel.fixedModel()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

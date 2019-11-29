@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Xn</TITLE>
+<META NAME="description" CONTENT="Xn">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="rc.html">
+<LINK REL="previous" HREF="x.html">
+<LINK REL="up" HREF="variable_attributes.html">
+<LINK REL="next" HREF="rc.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12408"
+  HREF="rc.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12406"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12400"
+  HREF="x.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12409"
+  HREF="rc.html">RC</A>
+<B> Up:</B> <A NAME="tex2html12407"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12401"
+  HREF="x.html">X</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000162700000000000000"></A>
+<A NAME="attr:Xn"></A>
+<BR>
+Xn
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">No</TD>
+</TR>
+</TABLE>
+
+<P>
+The variable value in a sub-optimal MIP solution.  Use parameter
+<A HREF="solutionnumber.html#parameter:SolutionNumber">SolutionNumber</A>
+to indicate which alternate solution to retrieve.
+Solutions are sorted in order of worsening objective value.  Thus,
+when <code>SolutionNumber</code> is 1, <code>Xn</code> returns the second-best
+solution found.  When <code>SolutionNumber</code> is equal to its default
+value of 0, querying attribute <code>Xn</code> is equivalent to querying
+attribute <code>X</code>.
+
+<P>
+The number of sub-optimal solutions found during the MIP search will
+depend on the values of a few parameters.  The most important of these
+are
+<A HREF="poolsolutions.html#parameter:PoolSolutions">PoolSolutions</A>,
+<A HREF="poolsearchmode.html#parameter:PoolSearchMode">PoolSearchMode</A>, and
+<A HREF="poolgap.html#parameter:PoolGap">PoolGap</A>.
+Please consult the section on
+<A HREF="solution_pool.html#sec:SolutionPool">Solution Pools</A>
+for a more detailed discussion of this topic.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12408"
+  HREF="rc.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12406"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12400"
+  HREF="x.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12409"
+  HREF="rc.html">RC</A>
+<B> Up:</B> <A NAME="tex2html12407"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12401"
+  HREF="x.html">X</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Presolve</TITLE>
+<META NAME="description" CONTENT="Presolve">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_choosing_the_righ.html">
+<LINK REL="previous" HREF="numerics_solver_parameters.html">
+<LINK REL="up" HREF="numerics_solver_parameters.html">
+<LINK REL="next" HREF="numerics_choosing_the_righ.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15903"
+  HREF="numerics_choosing_the_righ.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15901"
+  HREF="numerics_solver_parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15895"
+  HREF="numerics_solver_parameters.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15904"
+  HREF="numerics_choosing_the_righ.html">Choosing the right algorithm</A>
+<B> Up:</B> <A NAME="tex2html15902"
+  HREF="numerics_solver_parameters.html">Solver parameters to manage</A>
+<B> Previous:</B> <A NAME="tex2html15896"
+  HREF="numerics_solver_parameters.html">Solver parameters to manage</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000305100000000000000">
+Presolve</A>
+</H3>
+
+<P>
+Gurobi presolve algorithms are designed to make a model smaller and
+easier to solve. However, in some cases, presolve can contribute to
+numerical issues. The following Python code can help you determine if
+this is happening. First, read the model file and print summary
+statistics for the presolved model:
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">m = read('gurobi.rew')
+p = m.presolve()
+p.printStats()
+</PRE>
+If the numerical range looks much worse than the original model, try
+the parameter <TT>Aggregate=0</TT>:
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">m.reset()
+m.Params.Aggregate = 0
+p = m.presolve()
+p.printStats()
+</PRE>
+If the resulting model is still numerically problematic, you may need to
+disable
+presolve completely using the parameter <TT>Presolve=0</TT>; try
+the steps above using
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">m.reset()
+m.Params.Presolve = 0
+p = m.presolve()
+p.printStats()
+</PRE>
+
+<P>
+If the statistics look better with <TT>Aggregate=0</TT> or
+<TT>Presolve=0</TT>, you should further test these parameters.
+For a continuous (LP) model, you can test them directly.
+For a MIP, you should compare the LP relaxation with and without these
+parameters. The following Python commands create three LP relaxations:
+the model without presolve, the model with presolve, and the model
+with <TT>Aggregate=0</TT>:
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">m = read('gurobi.rew')
+r = m.relax()
+r.write('gurobi.relax-nopre.rew')
+p = m.presolve()
+r = p.relax()
+r.write('gurobi.relax-pre.rew')
+m.reset()
+m.Params.Aggregate = 0
+p = m.presolve()
+r = p.relax()
+r.write('gurobi.relax-agg0.rew')
+</PRE>
+With these three files, use the techniques mentioned earlier to
+determine if <TT>Presolve=0</TT> or <TT>Aggregate=0</TT>
+improves the numerics of the LP relaxation.
+
+<P>
+Finally, if <TT>Aggregate=0</TT> helps numerics but makes the model
+too slow, try <TT>AggFill=0</TT> instead.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15903"
+  HREF="numerics_choosing_the_righ.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15901"
+  HREF="numerics_solver_parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15895"
+  HREF="numerics_solver_parameters.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15904"
+  HREF="numerics_choosing_the_righ.html">Choosing the right algorithm</A>
+<B> Up:</B> <A NAME="tex2html15902"
+  HREF="numerics_solver_parameters.html">Solver parameters to manage</A>
+<B> Previous:</B> <A NAME="tex2html15896"
+  HREF="numerics_solver_parameters.html">Solver parameters to manage</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

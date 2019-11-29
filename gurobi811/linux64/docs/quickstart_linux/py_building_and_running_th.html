@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Building and running the examples</TITLE>
+<META NAME="description" CONTENT="Building and running the examples">
+<META NAME="keywords" CONTENT="quickstart_linux">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_linux.css">
+
+<LINK REL="previous" HREF="py_python_dictionary_examp.html">
+<LINK REL="up" HREF="py_python_interface.html">
+<LINK REL="next" HREF="matlab_interface.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1451"
+  HREF="matlab_interface.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1449"
+  HREF="py_python_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1445"
+  HREF="py_results.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1452"
+  HREF="matlab_interface.html">MATLAB Interface</A>
+<B> Up:</B> <A NAME="tex2html1450"
+  HREF="py_python_interface.html">Python Interface</A>
+<B> Previous:</B> <A NAME="tex2html1446"
+  HREF="py_results.html">Results</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000114000000000000000"></A>
+<A NAME="subsection:pythonrun"></A>
+<BR>
+Building and running the examples
+</H2>
+
+<P>
+Python is an interpreted language, so no explicit compilation step is
+required to run the examples.  For Linux platforms, you can simply type the following in the Gurobi Python
+example directory (<TT>&lt;installdir&gt;/examples/python</TT>):
+
+<P>
+<TT>  gurobi.sh mip1.py</TT>
+
+<P>
+If you are a Python user and wish to use Gurobi from within your own
+Python environment, we recommend that you use <A HREF="installing_the_anaconda_py.html#section:Anaconda">the Anaconda
+  Python distribution</A>.  Anaconda includes a
+number of very useful packages, and the Gurobi Anaconda package
+simplifies the installation process.
+
+<P>
+You can also install the <code>gurobipy</code> module directly into other
+Python environments.  The steps for doing this depend on your
+platform.
+On Linux, you will need to open a terminal window, change
+your current directory to the Gurobi <TT>&lt;installdir&gt;</TT> (the
+directory that contains the file <TT>setup.py</TT>), and issue the
+following command:
+
+<P>
+<TT>  python setup.py install</TT>
+
+<P>
+Unless you are using your own private Python installation, you will
+need to run this command as super-user.
+
+<P>
+Once <code>gurobipy</code> is successfully installed, you can type
+<code>python mip1.py</code> (more generally, you can type
+<code>from gurobipy import *</code> in your Python environment).
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1451"
+  HREF="matlab_interface.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1449"
+  HREF="py_python_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1445"
+  HREF="py_results.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1452"
+  HREF="matlab_interface.html">MATLAB Interface</A>
+<B> Up:</B> <A NAME="tex2html1450"
+  HREF="py_python_interface.html">Python Interface</A>
+<B> Previous:</B> <A NAME="tex2html1446"
+  HREF="py_results.html">Results</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

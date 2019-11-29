@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>General Constraint Attributes</TITLE>
+<META NAME="description" CONTENT="General Constraint Attributes">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="quality_attributes.html">
+<LINK REL="previous" HREF="quadratic_constraint_attri.html">
+<LINK REL="up" HREF="attributes.html">
+<LINK REL="next" HREF="genconstrtype.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12839"
+  HREF="genconstrtype.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12837"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12831"
+  HREF="iisqconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12840"
+  HREF="genconstrtype.html">GenConstrType</A>
+<B> Up:</B> <A NAME="tex2html12838"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12832"
+  HREF="iisqconstr.html">IISQConstr</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000166000000000000000">
+General Constraint Attributes</A>
+</H2>
+
+<P>
+These are general constraint attributes, meaning that they are
+associated with specific general constraints in the model.  You
+should use one of the various <code>get</code> routines to retrieve the
+value of an attribute.  These are described at the beginning of
+<A HREF="attributes.html#sec:Attributes">this section</A>).
+For the object-oriented interfaces, general constraint attributes
+are retrieved by invoking the <code>get</code> method on a constraint
+object.  For attributes that can be modified directly by the user, you
+can use one of the various <code>set</code> methods.
+
+<P>
+Attempting to query an attribute that is not available will produce an
+error.  In C, the attribute query routine will return a
+<code>GRB_ERROR_DATA_NOT_AVAILABLE</code> error code.  The object-oriented
+interfaces will throw an exception.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12841"
+  HREF="genconstrtype.html">GenConstrType</A>
+<LI><A NAME="tex2html12842"
+  HREF="genconstrname.html">GenConstrName</A>
+<LI><A NAME="tex2html12843"
+  HREF="iisgenconstr.html">IISGenConstr</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12839"
+  HREF="genconstrtype.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12837"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12831"
+  HREF="iisqconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12840"
+  HREF="genconstrtype.html">GenConstrType</A>
+<B> Up:</B> <A NAME="tex2html12838"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12832"
+  HREF="iisqconstr.html">IISQConstr</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

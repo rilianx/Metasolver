@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>License File</TITLE>
+<META NAME="description" CONTENT="License File">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="queueing_load_balancing_an.html">
+<LINK REL="previous" HREF="client_configuration.html">
+<LINK REL="up" HREF="client_configuration.html">
+<LINK REL="next" HREF="queueing_load_balancing_an.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html465"
+  HREF="queueing_load_balancing_an.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html463"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html457"
+  HREF="client_configuration.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html466"
+  HREF="queueing_load_balancing_an.html">Queueing, Load Balancing, and</A>
+<B> Up:</B> <A NAME="tex2html464"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html458"
+  HREF="client_configuration.html">Client Configuration</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00031100000000000000"></A>
+<A NAME="sec:CSLicenseFile"></A>
+<BR>
+License File
+</H3>
+
+<P>
+A client program will always need to be told how to reach the Remote
+Services cluster.  There are generally two ways to do this.  The first
+is through the programming language APIs.  We'll discuss this option
+in a later section on <A HREF="programming_with_remote_se.html#sec:ProgrammingWithRemoteServices">programming with Remote
+  Services</A>.  The second is
+through a license file.  You can create a client license file yourself
+or edit an existing one, using your favorite text editor
+(<TT>Notepad</TT> is a good choice on Windows).  The license file should
+be named <TT>gurobi.lic</TT>.
+
+<P>
+The license file contains a list of properties of the form
+<TT>PROPERTY=value</TT>. Lines that begin with the # symbol are treated
+as comments and are ignored.  The license file must be placed in your
+home directory or in one of the following locations:
+
+<UL>
+<LI><TT>C:&#92;gurobi&#92;</TT> on Windows
+</LI>
+<LI><TT>/opt/gurobi/</TT>  on Linux
+</LI>
+<LI><TT>/Library/gurobi/</TT>  on Mac OS
+</LI>
+</UL>
+You can also set the environment variable <TT>GRB_LICENSE_FILE</TT> to
+point to this file.
+
+<P>
+Here are the properties you can set:
+<DL>
+<DT><STRONG>COMPUTESERVER</STRONG></DT>
+<DD>The fully qualified name of the main node used to
+  access the cluster, plus the protocol scheme and port (if needed).
+  For example, use <TT>server1</TT> to access a cluster using HTTP on
+  the default port, or <TT>https://server1:61000</TT> to
+  access a cluster over HTTPS using port 61000.  You can also specify
+  a comma-separated list of names so that other nodes can be used in
+  case the first node can't be reached.
+
+<P>
+</DD>
+<DT><STRONG>PASSWORD</STRONG></DT>
+<DD>The client password to access the cluster.
+
+<P>
+</DD>
+<DT><STRONG>PRIORITY</STRONG></DT>
+<DD>Job Priority.  Higher priority jobs take precedence
+  over lower priority jobs.  Priorities will be discussed in more
+  detail shortly.
+
+<P>
+</DD>
+<DT><STRONG>GROUP</STRONG></DT>
+<DD>Job group.  If your cluster has been set up with groups,
+  you can specify the group to submit the job to.  The job will only be
+  executed on nodes that are members of this group.
+
+<P>
+</DD>
+<DT><STRONG>QUEUETIMEOUT</STRONG></DT>
+<DD>Queuing timeout (in seconds).  A job that has been sitting in the
+  queue for longer than the specified <TT>QUEUETIMEOUT</TT> value
+  will return with a <TT>JOB_REJECTED</TT> error.
+
+<P>
+</DD>
+<DT><STRONG>IDLETIMEOUT</STRONG></DT>
+<DD>Idle job timeout (in seconds). This property allows you to set a limit
+  on how long a Compute Server job can sit idle before the server kills the job.
+
+<P>
+</DD>
+</DL>
+
+<P>
+Here is a complete example:
+
+<PRE>
+COMPUTESERVER=server1:61000
+PASSWORD=abcd
+PRIORITY=10
+</PRE>
+
+<P>
+The <TT>gurobi_cl</TT> or <TT>grbcluster</TT> tools provide command-line
+flags that allow you to set most of these properties.  These tools
+will read the license file, but values specified via these
+command-line flags will override any values provided in the license
+file.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html465"
+  HREF="queueing_load_balancing_an.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html463"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html457"
+  HREF="client_configuration.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html466"
+  HREF="queueing_load_balancing_an.html">Queueing, Load Balancing, and</A>
+<B> Up:</B> <A NAME="tex2html464"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html458"
+  HREF="client_configuration.html">Client Configuration</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

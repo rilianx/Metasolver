@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBColumn</TITLE>
+<META NAME="description" CONTENT="GRBColumn">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cpp_grbcallback.html">
+<LINK REL="previous" HREF="cpp_grbtempconstr.html">
+<LINK REL="up" HREF="cpp_api_details.html">
+<LINK REL="next" HREF="cpp_grbcolumn2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html4630"
+  HREF="cpp_grbcolumn2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html4628"
+  HREF="cpp_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html4622"
+  HREF="cpp_grbtempconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html4631"
+  HREF="cpp_grbcolumn2.html">GRBColumn()</A>
+<B> Up:</B> <A NAME="tex2html4629"
+  HREF="cpp_api_details.html">C++ API Details</A>
+<B> Previous:</B> <A NAME="tex2html4623"
+  HREF="cpp_grbtempconstr.html">GRBTempConstr</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000412000000000000000"></A>
+<A NAME="cppclass:GRBColumn"></A>
+<BR>
+GRBColumn
+</H2>
+
+<P>
+Gurobi column object.  A column consists of a list of coefficient,
+constraint pairs.  Columns are used to represent the set of
+constraints in which a variable participates, and the associated
+coefficients.  They are temporary objects that typically have short
+lifespans.
+
+<P>
+You generally build columns by starting with an empty column (using
+the <A HREF="cpp_grbcolumn2.html#cppmethod:GRBColumn">GRBColumn</A> constructor), and
+then adding terms.  Terms can be added individually, using
+<A HREF="cpp_grbcolumn_addterm.html#cppmethod:GRBColumn::addTerm">addTerm</A>, or in groups,
+using <A HREF="cpp_grbcolumn_addterms.html#cppmethod:GRBColumn::addTerms">addTerms</A>.  Terms
+can also be removed from a column, using
+<A HREF="cpp_grbcolumn_remove.html#cppmethod:GRBColumn::remove">remove</A>.
+
+<P>
+Individual terms in a column can be queried using the
+<A HREF="cpp_grbcolumn_getconstr.html#cppmethod:GRBColumn::getConstr">getConstr</A>, and
+<A HREF="cpp_grbcolumn_getcoeff.html#cppmethod:GRBColumn::getCoeff">getCoeff</A> methods.  You
+can query the number of terms in the column using the
+<A HREF="cpp_grbcolumn_size.html#cppmethod:GRBColumn::size">size</A> method.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html4632"
+  HREF="cpp_grbcolumn2.html">GRBColumn()</A>
+<LI><A NAME="tex2html4633"
+  HREF="cpp_grbcolumn_addterm.html">GRBColumn::addTerm()</A>
+<LI><A NAME="tex2html4634"
+  HREF="cpp_grbcolumn_addterms.html">GRBColumn::addTerms()</A>
+<LI><A NAME="tex2html4635"
+  HREF="cpp_grbcolumn_clear.html">GRBColumn::clear()</A>
+<LI><A NAME="tex2html4636"
+  HREF="cpp_grbcolumn_getcoeff.html">GRBColumn::getCoeff()</A>
+<LI><A NAME="tex2html4637"
+  HREF="cpp_grbcolumn_getconstr.html">GRBColumn::getConstr()</A>
+<LI><A NAME="tex2html4638"
+  HREF="cpp_grbcolumn_remove.html">GRBColumn::remove()</A>
+<LI><A NAME="tex2html4639"
+  HREF="cpp_grbcolumn_size.html">GRBColumn::size()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html4630"
+  HREF="cpp_grbcolumn2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html4628"
+  HREF="cpp_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html4622"
+  HREF="cpp_grbtempconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html4631"
+  HREF="cpp_grbcolumn2.html">GRBColumn()</A>
+<B> Up:</B> <A NAME="tex2html4629"
+  HREF="cpp_api_details.html">C++ API Details</A>
+<B> Previous:</B> <A NAME="tex2html4623"
+  HREF="cpp_grbtempconstr.html">GRBTempConstr</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

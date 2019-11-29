@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.discardMultiobjEnvs()</TITLE>
+<META NAME="description" CONTENT="Model.discardMultiobjEnvs()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_feasrelaxs.html">
+<LINK REL="previous" HREF="py_model_discardconcurrent.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_feasrelaxs.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9690"
+  HREF="py_model_feasrelaxs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9688"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9682"
+  HREF="py_model_discardconcurrent.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9691"
+  HREF="py_model_feasrelaxs.html">Model.feasRelaxS()</A>
+<B> Up:</B> <A NAME="tex2html9689"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9683"
+  HREF="py_model_discardconcurrent.html">Model.discardConcurrentEnvs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001022900000000000000"></A>
+<A NAME="pythonmethod:Model.discardMultiobjEnvs"></A>
+<BR>
+Model.discardMultiobjEnvs()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">discardMultiobjEnvs</SPAN></FONT></BIG> (  )
+
+<P>
+Discard all multi-objective environments associated with the model,
+thus restoring multi objective optimization to its default behavior.
+
+<P>
+Please refer to the discussion of
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple Objectives</A> for
+information on how to specify multiple objective functions and control
+the trade-off between them.
+
+<P>
+Use
+<A HREF="py_model_getmultiobjenv.html#pythonmethod:Model.getMultiobjEnv">getMultiobjEnv</A>
+to create a multi-objective environment.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  env0 = model.getMultiobjEnv(0)
+  env1 = model.getMultiobjEnv(1)
+
+  env0.setParam('Method', 2)
+  env1.setParam('Method', 1)
+
+  model.optimize()
+
+  model.discardMultiobjEnvs()
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9690"
+  HREF="py_model_feasrelaxs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9688"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9682"
+  HREF="py_model_discardconcurrent.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9691"
+  HREF="py_model_feasrelaxs.html">Model.feasRelaxS()</A>
+<B> Up:</B> <A NAME="tex2html9689"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9683"
+  HREF="py_model_discardconcurrent.html">Model.discardConcurrentEnvs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Compute Servers and Distributed Workers</TITLE>
+<META NAME="description" CONTENT="Compute Servers and Distributed Workers">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="grouping.html">
+<LINK REL="previous" HREF="connecting_nodes.html">
+<LINK REL="up" HREF="forming_a_cluster.html">
+<LINK REL="next" HREF="grouping.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html318"
+  HREF="grouping.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html316"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html310"
+  HREF="connecting_nodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html319"
+  HREF="grouping.html">Grouping</A>
+<B> Up:</B> <A NAME="tex2html317"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html311"
+  HREF="connecting_nodes.html">Connecting Nodes</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022200000000000000"></A>
+<A NAME="sec:RSNodeTypes"></A>
+<BR>
+Compute Servers and Distributed Workers
+</H3>
+
+<P>
+A Remote Services cluster is a collection of nodes of two different
+types:
+<DL>
+<DT><STRONG>COMPUTE</STRONG></DT>
+<DD>A Compute Server node supports the offloading of
+  optimization jobs.  Features include load balancing, queueing and
+  concurrent execution of jobs. A Compute Server license is required
+  on the node.  A Compute Server node can also act as a distributed
+  worker.
+
+<P>
+</DD>
+<DT><STRONG>WORKER</STRONG></DT>
+<DD>A distributed worker node can be used to execute part of
+  a distributed algorithm.  A license is not necessary to run a
+  distributed worker, because it is always used in conjunction with a
+  manager (another node or a client program) that requires a license.
+  A distributed worker node can only be used by one manager at a time
+  (i.e., the job limit is always set to 1).
+
+<P>
+</DD>
+</DL>
+
+<P>
+By default, <TT>grb_rs</TT> will try to start a node in Compute Server mode and
+the node license status will be <TT>INVALID</TT> if no license is found.
+In order to start a distributed
+worker, you need to set the <TT>WORKER</TT> property in the
+<TT>grb_rs.cnf</TT> configuration file (or the <TT>--worker</TT>
+command-line flag):
+
+<PRE>
+WORKER=true
+</PRE>
+
+<P>
+Once you form your cluster, the node type will be displayed in the
+<TT>TYPE</TT> column of the output of <TT>grbcluster nodes</TT>:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass nodes --long
+ADDRESS STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE     %MEM  %CPU  STARTED             RUNTIMES VERSION
+server1 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h59m0s 9.79  0.50  2017-09-27 17:03:24 [8.0.0]  8.0.0
+server2 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  46h46m0s 8.75  0.00  2017-09-27 17:16:11 [8.0.0]  8.0.0
+server3 ALIVE  WORKER  N/A     ACCEPTING  0  0  1  46h46m0s 8.75  0.00  2017-09-27 17:16:11 [8.0.0]  8.0.0
+server4 ALIVE  WORKER  N/A     ACCEPTING  0  0  1  46h46m0s 8.75  0.00  2017-09-27 17:16:11 [8.0.0]  8.0.0
+</PRE>
+
+<P>
+The node type cannot be changed once <TT>grb_rs</TT> has started. If you
+wish to change the node type, you need to stop the node, change the
+configuration, and restart the node. You may have to update your
+license as well.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Distributed Optimization</SPAN></BIG>
+
+<P>
+When using distributed optimization, distributed workers are
+controlled by a manager. There are two ways to set up the manager:
+
+<UL>
+<LI>The manager can be a job running on a Compute Server.  In this
+  case, the manager job is first submitted to the cluster and executes
+  on one of the <TT>COMPUTE</TT> nodes as usual.  When this job starts,
+  it will also request some number of workers (see
+  parameters <TT>DistributedMIPJobs</TT>, <TT>ConcurrentJobs</TT>, or
+  <TT>TuneJobs</TT>).  The first choice will be <TT>WORKER</TT> nodes.  If
+  not enough are available, it will use <TT>COMPUTE</TT> nodes.  The
+  workload associated with managing the distributed algorithm is quite
+  light, so the initial job will act as both the manager and the first
+  worker.
+
+<P>
+</LI>
+<LI>The manager can be the client program itself.  The manager does
+  not participate in the distributed optimization. It simply
+  coordinates the efforts of the distributed workers.  The manager
+  will request distributed workers (using the <TT>WorkerPool</TT>
+  parameter), and the cluster will first
+  select the <TT>WORKER</TT> nodes then, if not enough are available, it
+  will use <TT>COMPUTE</TT> nodes as well.
+</LI>
+</UL>
+In both cases, the machine where the manager runs must be licensed to
+run distributed algorithms (you should see a <TT>DISTRIBUTED=</TT> line
+in your license file).
+
+<P>
+It is typically better to use the Compute Server itself as the
+distributed manager, rather than the client machine. This is
+particularly true if the Compute Server and the workers are physically
+close to each other, but physically distant from the client
+machine. In a typical environment, the client machine will offload the
+Gurobi computations onto the Compute Server, and the Compute Server
+will then act as the manager for the distributed computation.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html318"
+  HREF="grouping.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html316"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html310"
+  HREF="connecting_nodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html319"
+  HREF="grouping.html">Grouping</A>
+<B> Up:</B> <A NAME="tex2html317"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Previous:</B> <A NAME="tex2html311"
+  HREF="connecting_nodes.html">Connecting Nodes</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

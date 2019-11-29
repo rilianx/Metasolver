@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.getObjective()</TITLE>
+<META NAME="description" CONTENT="GRBModel.getObjective()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbmodel_getpwlobj.html">
+<LINK REL="previous" HREF="java_grbmodel_getmultiobje.html">
+<LINK REL="up" HREF="java_grbmodel.html">
+<LINK REL="next" HREF="java_grbmodel_getpwlobj.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5869"
+  HREF="java_grbmodel_getpwlobj.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5867"
+  HREF="java_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5861"
+  HREF="java_grbmodel_getmultiobje.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5870"
+  HREF="java_grbmodel_getpwlobj.html">GRBModel.getPWLObj()</A>
+<B> Up:</B> <A NAME="tex2html5868"
+  HREF="java_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html5862"
+  HREF="java_grbmodel_getmultiobje.html">GRBModel.getMultiobjEnv()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000623400000000000000"></A>
+<A NAME="javamethod:GRBModel.getObjective"></A>
+<BR>
+GRBModel.getObjective()
+</H3>
+
+<P>
+Retrieve the model objective(s).
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBExpr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getObjective</SPAN></FONT></BIG> ( )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Retrieve the optimization objective.
+
+<P>
+Note that the constant and linear portions of the objective can also
+be retrieved using the
+<A HREF="objcon.html#attr:ObjCon">ObjCon</A>
+and
+<A HREF="obj.html#attr:Obj">Obj</A>
+attributes.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The model objective.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBLinExpr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getObjective</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">index )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Retrieve an alternative optimization objective.  Alternative
+objectives will always be linear.  You can also use this routine to
+retrieve the primary objective (using <code>index</code> = 0), but you
+will get an exception if the primary objective contains
+quadratic terms.
+
+<P>
+Please refer to the discussion of
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple Objectives</A> for
+more information on the use of alternative objectives.
+
+<P>
+Note that alterative objectives can also be retrieved using the
+<A HREF="objncon.html#attr:ObjNCon">ObjNCon</A>
+and
+<A HREF="objn.html#attr:ObjN">ObjN</A>
+attributes.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">index</SPAN>: The index for the requested alternative objective.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The requested alternative objective.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5869"
+  HREF="java_grbmodel_getpwlobj.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5867"
+  HREF="java_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5861"
+  HREF="java_grbmodel_getmultiobje.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5870"
+  HREF="java_grbmodel_getpwlobj.html">GRBModel.getPWLObj()</A>
+<B> Up:</B> <A NAME="tex2html5868"
+  HREF="java_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html5862"
+  HREF="java_grbmodel_getmultiobje.html">GRBModel.getMultiobjEnv()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

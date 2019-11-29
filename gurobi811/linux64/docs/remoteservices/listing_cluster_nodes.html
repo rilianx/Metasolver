@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Listing Cluster Nodes</TITLE>
+<META NAME="description" CONTENT="Listing Cluster Nodes">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="troubleshooting_connectivi.html">
+<LINK REL="previous" HREF="accessing_job_parameters.html">
+<LINK REL="up" HREF="client_commands.html">
+<LINK REL="next" HREF="troubleshooting_connectivi.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html548"
+  HREF="troubleshooting_connectivi.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html546"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html540"
+  HREF="accessing_job_parameters.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html549"
+  HREF="troubleshooting_connectivi.html">Troubleshooting Connectivity Issues</A>
+<B> Up:</B> <A NAME="tex2html547"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html541"
+  HREF="accessing_job_parameters.html">Accessing Job Parameters</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00032400000000000000"></A>
+<A NAME="sec:grbclusternodes"></A>
+<BR>
+Listing Cluster Nodes
+</H3>
+
+<P>
+The <TT>nodes</TT> command provides a list of nodes in the cluster,
+along with status information on those nodes.  For example:
+
+<PRE>
+&gt; grbcluster nodes --server=server1 --password=pass
+
+ADDRESS  STATUS TYPE    LICENSE #Q #R JL IDLE   %MEM  %CPU
+server1	 ALIVE  COMPUTE VALID   0  0  2  23h13m 9.77  0.00
+server2	 ALIVE  COMPUTE VALID   0  0  2  23h1m  8.75  0.00
+</PRE>
+The <TT>--server</TT> flag can point to any node in the cluster.
+
+<P>
+You can also get more information using the <TT>--long</TT> flag:
+
+<PRE>
+&gt; grbcluster nodes --server=server1 --password=pass --long
+
+ADDRESS  STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE   %MEM  %CPU  STARTED             RUNTIMES VERSION
+server1	 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  23h13m 9.77  0.00  2017-09-28 00:03:24 [8.0.0]  8.0.0
+server2	 ALIVE  COMPUTE VALID   ACCEPTING  0  0  2  23h1m  8.75  0.00  2017-09-28 00:16:11 [8.0.0]  8.0.0
+</PRE>
+
+<P>
+Add the <TT>--describe</TT> flag to see an explanation of each field:
+
+<PRE>
+&gt; grbcluster nodes --describe
+ADDRESS   - Node address
+STATUS    - Node status (ALIVE, FAILED, JOINING, LEAVING, DEGRADED)
+TYPE      - Node type (COMPUTE: compute server, WORKER: distributed worker)
+GRP       - Group name for job affinity (not displayed if empty or restricted)
+LICENSE   - License status (N/A, VALID, INVALID, EXPIRED)
+PROCESSING- Processing state (ACCEPTING, DRAINING, STOPPED), use --long
+#Q        - Number of jobs in queue
+#R        - Number of jobs running
+JL        - Job Limit (maximum number of running jobs)
+IDLE      - Idle time since the last job execution (in minutes)
+%MEM      - Percentage of memory currently used on the machine
+%CPU      - Percentage of CPU currently used on the machine
+STARTED   - Node start time, use --long
+RUNTIMES  - Deployed runtime versions, use --long
+VERSION   - Remote Services Agent version, use --long
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html548"
+  HREF="troubleshooting_connectivi.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html546"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html540"
+  HREF="accessing_job_parameters.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html549"
+  HREF="troubleshooting_connectivi.html">Troubleshooting Connectivity Issues</A>
+<B> Up:</B> <A NAME="tex2html547"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html541"
+  HREF="accessing_job_parameters.html">Accessing Job Parameters</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

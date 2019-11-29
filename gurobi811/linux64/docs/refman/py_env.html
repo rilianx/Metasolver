@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Env</TITLE>
+<META NAME="description" CONTENT="Env">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_grb.html">
+<LINK REL="previous" HREF="py_gurobierror.html">
+<LINK REL="up" HREF="py_python_api_details.html">
+<LINK REL="next" HREF="py_env2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html10832"
+  HREF="py_env2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10830"
+  HREF="py_python_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10824"
+  HREF="py_gurobierror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10833"
+  HREF="py_env2.html">Env()</A>
+<B> Up:</B> <A NAME="tex2html10831"
+  HREF="py_python_api_details.html">Python API Details</A>
+<B> Previous:</B> <A NAME="tex2html10825"
+  HREF="py_gurobierror.html">GurobiError</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION0001015000000000000000"></A>
+<A NAME="pythonclass:Env"></A>
+<BR>
+Env
+</H2>
+
+<P>
+Gurobi environment object.  Note that environments play a much smaller
+role in the Python interface than they do in other Gurobi language
+APIs, mainly because the Python interface has a default environment.
+Unless you explicitly pass your own environment to routines that
+require an environment, the default environment will be used.
+
+<P>
+The primary situations where you will want to use your own environment
+are:
+
+<UL>
+<LI>When you are using a Gurobi Compute Server and want to choose
+  the server from within your program.
+</LI>
+<LI>When you need control over garbage collection of your
+  environment.  The Gurobi Python interface maintains a reference to
+  the default environment, so by default it will never be garbage
+  collected.  By creating your own environment, you can control
+  exactly when your program releases any licensing tokens or Compute
+  Servers it is using.
+</LI>
+<LI>When you are using
+<A HREF="py_model_getconcurrentenv.html#pythonmethod:Model.getConcurrentEnv">concurrent environments</A>
+in one of the
+<A HREF="concurrent_optimizer.html#sec:Concurrent">concurrent optimizers</A>.
+</LI>
+</UL>
+
+<P>
+Note that you can manually remove the reference to the default
+environment by calling
+<A HREF="py_disposedefaultenv.html#pythonmethod:disposeDefaultEnv">disposeDefaultEnv</A>.
+After calling this, and after all models built within the default
+environment are garbage collected, the default environment will be
+garbage collected as well.  A new default environment will be
+created automatically if you call a routine that needs one.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10834"
+  HREF="py_env2.html">Env()</A>
+<LI><A NAME="tex2html10835"
+  HREF="py_env_clientenv.html">Env.ClientEnv()</A>
+<LI><A NAME="tex2html10836"
+  HREF="py_env_cloudenv.html">Env.CloudEnv()</A>
+<LI><A NAME="tex2html10837"
+  HREF="py_env_resetparams.html">Env.resetParams()</A>
+<LI><A NAME="tex2html10838"
+  HREF="py_env_setparam.html">Env.setParam()</A>
+<LI><A NAME="tex2html10839"
+  HREF="py_env_start.html">Env.start()</A>
+<LI><A NAME="tex2html10840"
+  HREF="py_env_writeparams.html">Env.writeParams()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10832"
+  HREF="py_env2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10830"
+  HREF="py_python_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10824"
+  HREF="py_gurobierror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10833"
+  HREF="py_env2.html">Env()</A>
+<B> Up:</B> <A NAME="tex2html10831"
+  HREF="py_python_api_details.html">Python API Details</A>
+<B> Previous:</B> <A NAME="tex2html10825"
+  HREF="py_gurobierror.html">GurobiError</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

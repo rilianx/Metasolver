@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Source code for the experiment with column scalings</TITLE>
+<META NAME="description" CONTENT="Source code for the experiment with column scalings">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="numerics_source_code_for_t2.html">
+<LINK REL="up" HREF="numerics_source_code_examp.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_g.png"> 
+<A NAME="tex2html16064"
+  HREF="numerics_source_code_examp.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16060"
+  HREF="numerics_source_code_for_t2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Up:</B> <A NAME="tex2html16065"
+  HREF="numerics_source_code_examp.html">Source code examples:</A>
+<B> Previous:</B> <A NAME="tex2html16061"
+  HREF="numerics_source_code_for_t2.html">Source code for the</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000308300000000000000"></A>
+<A NAME="code:rescale"></A>
+<BR>
+Source code for the experiment with column scalings
+</H3>
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">import sys
+import random
+import argparse
+from gurobipy import *
+
+# Use parameters for greater flexibility
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('-f','--infile', help='Problem File',
+                    default=None, required=True)
+parser.add_argument('-s','--scale', help='Scaling Factor',
+                    type=float, default=10000.0)
+parser.add_argument('-w','--outfile', help='Save scaled model',
+                    default=None)
+parser.add_argument('-o','--optimize', help='Optimize scaled problem',
+                    type=int, default=1)
+args = parser.parse_args()
+
+# Load input problem
+m = read(args.infile)
+ 
+# Scale domain of all columns randomly in the given domain
+for var in m.getVars():
+  if var.vtype == GRB.CONTINUOUS:
+    scale = random.uniform(args.scale/2.0, args.scale*2.0)
+    flip = random.randint(0,3)
+    if flip == 0:
+      scale = 1.0
+    elif flip == 1:
+      scale = 1.0/scale
+    col = m.getCol(var)
+    for i in range(col.size()):
+      coeff = col.getCoeff(i)
+      row   = col.getConstr(i)
+      m.chgCoeff(row, var, coeff*scale)
+    var.obj = var.obj*scale
+    if var.lb &gt; -GRB.INFINITY:
+      var.lb  = var.lb/scale
+    if var.ub &lt; GRB.INFINITY:
+      var.ub  = var.ub/scale
+
+if args.outfile != None:
+  m.write(args.outfile)
+
+# Optimize
+if args.optimize:
+  m.optimize()
+  if m.Status == GRB.OPTIMAL:
+    print('Kappa: %e\n' % m.KappaExact)
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_g.png"> 
+<A NAME="tex2html16064"
+  HREF="numerics_source_code_examp.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16060"
+  HREF="numerics_source_code_for_t2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Up:</B> <A NAME="tex2html16065"
+  HREF="numerics_source_code_examp.html">Source code examples:</A>
+<B> Previous:</B> <A NAME="tex2html16061"
+  HREF="numerics_source_code_for_t2.html">Source code for the</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Region Router</TITLE>
+<META NAME="description" CONTENT="Region Router">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="administrative_commands2.html">
+<LINK REL="up" HREF="using_remote_services_with.html">
+<LINK REL="next" HREF="migrating_from_previous_re.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html732"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html730"
+  HREF="using_remote_services_with.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html726"
+  HREF="administrative_commands2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html733"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Up:</B> <A NAME="tex2html731"
+  HREF="using_remote_services_with.html">Using Remote Services with</A>
+<B> Previous:</B> <A NAME="tex2html727"
+  HREF="administrative_commands2.html">Administrative Commands</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00054000000000000000"></A>
+<A NAME="sec:ICRouter"></A>
+<BR>
+Region Router
+</H2>
+
+<P>
+Starting with version 8.0, all communications between clients and the
+Gurobi Instant Cloud use the HTTPS protocol. This means that your
+communications are secured and encrypted using standard internet
+protocols. In addition, Gurobi servers enforce the latest encryption
+policies (TLS v1.2 and above only). For better security, the dedicated
+machines started by Instant Cloud on your behalf cannot be accessed
+directly.  All communications must transit through a secured and
+highly-available region router acting as a reverse proxy. This also
+facilitates the integration with clients, as only the standard HTTPS
+protocol and standard port 443 need to be open if a firewall is in
+place.
+
+<P>
+The region router is automatically detected and used based on the pool
+definition or the machine license file.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html732"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html730"
+  HREF="using_remote_services_with.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html726"
+  HREF="administrative_commands2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html733"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Up:</B> <A NAME="tex2html731"
+  HREF="using_remote_services_with.html">Using Remote Services with</A>
+<B> Previous:</B> <A NAME="tex2html727"
+  HREF="administrative_commands2.html">Administrative Commands</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

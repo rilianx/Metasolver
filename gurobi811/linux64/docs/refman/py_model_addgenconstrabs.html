@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addGenConstrAbs()</TITLE>
+<META NAME="description" CONTENT="Model.addGenConstrAbs()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addgenconstrand.html">
+<LINK REL="previous" HREF="py_model_addgenconstrmin.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addgenconstrand.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9470"
+  HREF="py_model_addgenconstrand.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9468"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9462"
+  HREF="py_model_addgenconstrmin.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9471"
+  HREF="py_model_addgenconstrand.html">Model.addGenConstrAnd()</A>
+<B> Up:</B> <A NAME="tex2html9469"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9463"
+  HREF="py_model_addgenconstrmin.html">Model.addGenConstrMin()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000102700000000000000"></A>
+<A NAME="pythonmethod:Model.addGenConstrAbs"></A>
+<BR>
+Model.addGenConstrAbs()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrAbs</SPAN></FONT></BIG> ( resvar, argvar, name="" )
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_ABS</TT> to a model.
+
+<P>
+An ABS constraint <!-- MATH
+ $r = \mbox{abs}\{x\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="81" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$r = \mbox{abs}\{x\}$"></SPAN> states that the resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the absolute value of the argument variable
+<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>.
+
+<P>
+You can also add an ABS constraint using the
+<A HREF="py_general_constraint_help.html#pythonclass:GCHelper">abs_</A> function.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">resvar (Var)</SPAN>: The variable whose value will be to equal the absolute value of the argument variable.
+
+<P>
+ <SPAN  CLASS="textbf">argvar (Var)</SPAN>: The variable for which the absolute value will be taken.
+
+<P>
+ <SPAN  CLASS="textbf">name (string, optional)</SPAN>: Name for the new general constraint.
+Note that <TT>name</TT> will be stored as an ASCII string. Thus, a name
+like <TT>'A<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>B'</TT> will produce an error, because
+'<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>' can not be represented as an ASCII character. Note
+also that names that contain spaces are strongly discouraged,
+because they can't be written to LP format files.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  # x5 = abs(x1)
+  model.addGenConstrAbs(x5, x1, "absconstr")
+
+  # overloaded form
+  model.addConstr(x5 == abs_(x1), name="absconstr")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9470"
+  HREF="py_model_addgenconstrand.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9468"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9462"
+  HREF="py_model_addgenconstrmin.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9471"
+  HREF="py_model_addgenconstrand.html">Model.addGenConstrAnd()</A>
+<B> Up:</B> <A NAME="tex2html9469"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9463"
+  HREF="py_model_addgenconstrmin.html">Model.addGenConstrMin()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

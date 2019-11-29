@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Multi-Objective Logging</TITLE>
+<META NAME="description" CONTENT="Multi-Objective Logging">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="distributed_mip_logging.html">
+<LINK REL="previous" HREF="mip_logging.html">
+<LINK REL="up" HREF="logging.html">
+<LINK REL="next" HREF="distributed_mip_logging.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15475"
+  HREF="distributed_mip_logging.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15473"
+  HREF="logging.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15467"
+  HREF="mip_logging.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15476"
+  HREF="distributed_mip_logging.html">Distributed MIP Logging</A>
+<B> Up:</B> <A NAME="tex2html15474"
+  HREF="logging.html">Logging</A>
+<B> Previous:</B> <A NAME="tex2html15468"
+  HREF="mip_logging.html">MIP Logging</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000225000000000000000"></A>
+<A NAME="sec:MultiObjectiveLogging"></A>
+<BR>
+Multi-Objective Logging
+</H2>
+
+<P>
+The contents of the log for a multi-objective solve will depend on the
+approach you use to solve the model.  As noted in the section on
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">multi-objective models</A>, you
+have two options.  In a blended approach, where the objectives are
+combined into a single objective, the log will be the same as what
+you'd see for a single-objective model.  When using a hierarchical
+approach, a series of models is solved, one for each objective
+priority level.
+If your model is a pure hierarchical multi-objective problem with three
+objectives, the optimization process log will start with
+<PRE>
+---------------------------------------------------------------------------
+Multi-objectives: starting optimization with 3 objectives ...
+---------------------------------------------------------------------------
+</PRE>
+If your model is a mixed hierarchical-blended multi-objective problem with
+five objectives but only three priorities, the optimization log will start
+with
+<PRE>
+---------------------------------------------------------------------------
+Multi-objectives: starting optimization with 5 objectives (3 combined) ...
+---------------------------------------------------------------------------
+</PRE>
+
+<P>
+You will also see a log for each solve, introduced by a
+small header
+<PRE>
+---------------------------------------------------------------------------
+Multi-objectives: optimize objective 1 Name ...
+---------------------------------------------------------------------------
+</PRE>
+Where <code>Name</code> will be the name of the objective function being
+optimize, or <code>(weighted)</code> if the objective function is the result of
+blending more than one objective function.
+
+<P>
+The logs for the individual solves will again be the same as what
+you'd see for a single-objective model.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15475"
+  HREF="distributed_mip_logging.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15473"
+  HREF="logging.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15467"
+  HREF="mip_logging.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15476"
+  HREF="distributed_mip_logging.html">Distributed MIP Logging</A>
+<B> Up:</B> <A NAME="tex2html15474"
+  HREF="logging.html">Logging</A>
+<B> Previous:</B> <A NAME="tex2html15468"
+  HREF="mip_logging.html">MIP Logging</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

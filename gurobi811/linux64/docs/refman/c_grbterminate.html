@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBterminate</TITLE>
+<META NAME="description" CONTENT="GRBterminate">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="c_grbcbstoponemultiobj.html">
+<LINK REL="up" HREF="c_modifying_solver_behavio.html">
+<LINK REL="next" HREF="c_error_handling.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html2956"
+  HREF="c_error_handling.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2954"
+  HREF="c_modifying_solver_behavio.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2950"
+  HREF="c_grbcbstoponemultiobj.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html2957"
+  HREF="c_error_handling.html">Error Handling</A>
+<B> Up:</B> <A NAME="tex2html2955"
+  HREF="c_modifying_solver_behavio.html">Modifying Solver Behavior -</A>
+<B> Previous:</B> <A NAME="tex2html2951"
+  HREF="c_grbcbstoponemultiobj.html">GRBcbstoponemultiobj</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00029500000000000000"></A>
+<A NAME="routine:GRBterminate"></A>
+<BR>
+GRBterminate
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">void</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBterminate</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBmodel</TD>
+<TD ALIGN="LEFT">*model )</TD>
+</TR>
+</TABLE>
+
+<P>
+Generate a request to terminate the current optimization.  This
+routine can be called at any time during an optimization.  When the
+optimization stops, the
+<A HREF="status.html#attr:Status">Status</A>
+attribute will be equal to <code>GRB_INTERRUPTED</code>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model to terminate.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  if (time_to_quit)
+    GRBterminate(model);
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html2956"
+  HREF="c_error_handling.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2954"
+  HREF="c_modifying_solver_behavio.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2950"
+  HREF="c_grbcbstoponemultiobj.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html2957"
+  HREF="c_error_handling.html">Error Handling</A>
+<B> Up:</B> <A NAME="tex2html2955"
+  HREF="c_modifying_solver_behavio.html">Modifying Solver Behavior -</A>
+<B> Previous:</B> <A NAME="tex2html2951"
+  HREF="c_grbcbstoponemultiobj.html">GRBcbstoponemultiobj</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

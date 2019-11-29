@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Setting up the Gurobi MATLAB interface</TITLE>
+<META NAME="description" CONTENT="Setting up the Gurobi MATLAB interface">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="matlab_using_gurobi_within.html">
+<LINK REL="up" HREF="matlab_api_details.html">
+<LINK REL="next" HREF="r_api_overview.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11299"
+  HREF="r_api_overview.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11297"
+  HREF="matlab_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11293"
+  HREF="matlab_using_gurobi_within.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11300"
+  HREF="r_api_overview.html">R API Overview</A>
+<B> Up:</B> <A NAME="tex2html11298"
+  HREF="matlab_api_details.html">MATLAB API Details</A>
+<B> Previous:</B> <A NAME="tex2html11294"
+  HREF="matlab_using_gurobi_within.html">Using Gurobi within MATLAB's</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000125000000000000000"></A>
+<A NAME="matlab:setup"></A>
+<BR>
+Setting up the Gurobi MATLAB interface
+</H2>
+
+<P>
+In order to use our MATLAB interface, you'll need to use
+the MATLAB function <code>gurobi_setup</code> to tell MATLAB where
+to find the Gurobi <code>mex</code> file.  This file is stored in the
+<code>&lt;installdir&gt;/matlab</code> directory of your Gurobi installation.
+For example, if you installed the 64-bit Windows version of Gurobi
+8.1 in
+the default location, you should run
+
+<P>
+<TT>
+&gt;&gt; cd c:/Users/jones/gurobi810/win64/matlab
+<BR>&gt;&gt; gurobi_setup
+<BR></TT>
+
+<P>
+The <code>gurobi_setup</code> function adjusts your MATLAB path to include
+the <code>&lt;installdir&gt;/matlab</code> directory. If you want to avoid typing
+this command every time you start MATLAB, follow the instructions
+issued by <code>gurobi_setup</code> to permanently adjust your path.
+
+<P>
+The MATLAB examples provided with the Gurobi distribution are
+included in the  <code>&lt;installdir&gt;/examples/matlab</code> directory.
+To run these examples you need to change to this directory.
+For example, if you are running the 64-bit Windows version of Gurobi,
+you would say:
+
+<P>
+<TT>
+&gt;&gt; cd c:/Users/jones/gurobi810/win64/examples/matlab
+<BR>&gt;&gt; mip1
+<BR></TT>
+
+<P>
+If the Gurobi package was successfully installed, you should see the
+following output:
+
+<PRE>
+          status: 'OPTIMAL'
+     versioninfo: [1x1 struct]
+         runtime: 2.9397e-04
+          objval: 3
+               x: [3x1 double]
+           slack: [2x1 double]
+    poolobjbound: 3
+            pool: [1x2 struct]
+          mipgap: 0
+        objbound: 3
+       objboundc: 3
+       itercount: 0
+    baritercount: 0
+       nodecount: 0
+
+x 1
+y 0
+z 1
+Obj: 3.000000e+00
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11299"
+  HREF="r_api_overview.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11297"
+  HREF="matlab_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11293"
+  HREF="matlab_using_gurobi_within.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11300"
+  HREF="r_api_overview.html">R API Overview</A>
+<B> Up:</B> <A NAME="tex2html11298"
+  HREF="matlab_api_details.html">MATLAB API Details</A>
+<B> Previous:</B> <A NAME="tex2html11294"
+  HREF="matlab_using_gurobi_within.html">Using Gurobi within MATLAB's</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

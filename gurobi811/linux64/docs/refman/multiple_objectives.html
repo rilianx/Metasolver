@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Multiple Objectives</TITLE>
+<META NAME="description" CONTENT="Multiple Objectives">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="recording_api_calls.html">
+<LINK REL="previous" HREF="solution_pool.html">
+<LINK REL="up" HREF="refman.html">
+<LINK REL="next" HREF="specifying_multiple_object.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15575"
+  HREF="specifying_multiple_object.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15573"
+  HREF="refman.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15567"
+  HREF="subtleties_and_limitations.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15576"
+  HREF="specifying_multiple_object.html">Specifying Multiple Objectives</A>
+<B> Up:</B> <A NAME="tex2html15574"
+  HREF="refman.html">Gurobi Optimizer Reference Manual</A>
+<B> Previous:</B> <A NAME="tex2html15568"
+  HREF="subtleties_and_limitations.html">Subtleties and Limitations</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION000250000000000000000"></A>
+<A NAME="sec:MultipleObjectives"></A>
+<BR>
+Multiple Objectives
+</H1>
+
+<P>
+While typical optimization models have a single objective function,
+real-world optimization problems often have multiple, competing
+objectives.  For example, in a production planning model, you may want
+to both maximize profits and minimize late orders, or in a workforce
+scheduling application, you may want to minimize the number of
+shifts that are short-staffed while also respecting worker's shift
+preferences.
+
+<P>
+The main challenge you face when working with multiple, competing
+objectives is deciding how to manage the trade-offs between them.
+Gurobi provides tools that simplify the task: Gurobi allows you to
+<SPAN  CLASS="textit">blend</SPAN> multiple objectives, to treat them <SPAN  CLASS="textit">hierarchically</SPAN>,
+or to combine the two approaches.  In a blended approach, you optimize
+a weighted combination of the individual objectives.  In a
+hierarchical or lexicographic approach, you set a priority for each
+objective, and optimize in priority order.  When optimizing for one
+objective, you only consider solutions that would not degrade the
+objective values of higher-priority objectives.  Gurobi allows you to
+enter and manage your objectives, to provide weights for a blended
+approach, or to set priorities for a hierarchical approach.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html15577"
+  HREF="specifying_multiple_object.html">Specifying Multiple Objectives</A>
+<LI><A NAME="tex2html15578"
+  HREF="working_with_multiple_obje.html">Working With Multiple Objective</A>
+<LI><A NAME="tex2html15579"
+  HREF="additional_details.html">Additional Details</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15575"
+  HREF="specifying_multiple_object.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15573"
+  HREF="refman.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15567"
+  HREF="subtleties_and_limitations.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15576"
+  HREF="specifying_multiple_object.html">Specifying Multiple Objectives</A>
+<B> Up:</B> <A NAME="tex2html15574"
+  HREF="refman.html">Gurobi Optimizer Reference Manual</A>
+<B> Previous:</B> <A NAME="tex2html15568"
+  HREF="subtleties_and_limitations.html">Subtleties and Limitations</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

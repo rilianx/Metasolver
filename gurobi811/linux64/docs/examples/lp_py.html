@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>lp.py</TITLE>
+<META NAME="description" CONTENT="lp.py">
+<META NAME="keywords" CONTENT="examples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="examples.css">
+
+<LINK REL="next" HREF="lpmethod_py.html">
+<LINK REL="previous" HREF="genconstr_py.html">
+<LINK REL="up" HREF="python_examples.html">
+<LINK REL="next" HREF="lpmethod_py.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html2384"
+  HREF="lpmethod_py.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2382"
+  HREF="python_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2376"
+  HREF="genconstr_py.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html2385"
+  HREF="lpmethod_py.html">lpmethod.py</A>
+<B> Up:</B> <A NAME="tex2html2383"
+  HREF="python_examples.html">Python Examples</A>
+<B> Previous:</B> <A NAME="tex2html2377"
+  HREF="genconstr_py.html">genconstr.py</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000261300000000000000"></A>
+<A NAME="subsubsection:lp.py"></A>
+<BR>
+lp.py
+</H3>
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">#!/usr/bin/python
+
+# Copyright 2019, Gurobi Optimization, LLC
+
+# This example reads an LP model from a file and solves it.
+# If the model is infeasible or unbounded, the example turns off
+# presolve and solves the model again. If the model is infeasible,
+# the example computes an Irreducible Inconsistent Subsystem (IIS),
+# and writes it to a file
+
+import sys
+from gurobipy import *
+
+if len(sys.argv) &lt; 2:
+    print('Usage: lp.py filename')
+    quit()
+
+# Read and solve model
+
+model = read(sys.argv[1])
+model.optimize()
+
+if model.status == GRB.Status.INF_OR_UNBD:
+    # Turn presolve off to determine whether model is infeasible
+    # or unbounded
+    model.setParam(GRB.Param.Presolve, 0)
+    model.optimize()
+
+if model.status == GRB.Status.OPTIMAL:
+    print('Optimal objective: %g' % model.objVal)
+    model.write('model.sol')
+    exit(0)
+elif model.status != GRB.Status.INFEASIBLE:
+    print('Optimization was stopped with status %d' % model.status)
+    exit(0)
+
+
+# Model is infeasible - compute an Irreducible Inconsistent Subsystem (IIS)
+
+print('')
+print('Model is infeasible')
+model.computeIIS()
+model.write("model.ilp")
+print("IIS written to file 'model.ilp'")
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html2384"
+  HREF="lpmethod_py.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2382"
+  HREF="python_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2376"
+  HREF="genconstr_py.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html2385"
+  HREF="lpmethod_py.html">lpmethod.py</A>
+<B> Up:</B> <A NAME="tex2html2383"
+  HREF="python_examples.html">Python Examples</A>
+<B> Previous:</B> <A NAME="tex2html2377"
+  HREF="genconstr_py.html">genconstr.py</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

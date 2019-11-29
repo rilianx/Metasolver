@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Listing Optimization Jobs</TITLE>
+<META NAME="description" CONTENT="Listing Optimization Jobs">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="accessing_job_logs.html">
+<LINK REL="previous" HREF="client_commands.html">
+<LINK REL="up" HREF="client_commands.html">
+<LINK REL="next" HREF="accessing_job_logs.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html518"
+  HREF="accessing_job_logs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html516"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html510"
+  HREF="client_commands.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html519"
+  HREF="accessing_job_logs.html">Accessing Job Logs</A>
+<B> Up:</B> <A NAME="tex2html517"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html511"
+  HREF="client_commands.html">Client Commands</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00032100000000000000"></A>
+<A NAME="sec:grbclusterjobs"></A>
+<BR>
+Listing Optimization Jobs
+</H3>
+
+<P>
+Optimization jobs running on a Compute Server cluster can be listed by
+using the <TT>jobs</TT> command. For example:
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass jobs
+
+JOBID    ADDRESS  STATUS  #Q  STIME               PRIO
+d2a6c505 server1  RUNNING     2017-10-04 20:43:21 0
+</PRE>
+
+<P>
+Note that you can get more information by using the <TT>--long</TT> flag.
+With this flag, you will also display the complete job ID that is unique instead
+of the short ID.
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass jobs --long
+
+JOBID        ADDRESS  STATUS  #Q  STIME               USER  PRIO RUNTIME PID  HOST     IP
+d2a6c505-... server1  RUNNING     2017-10-04 20:43:21 user1 0    8.0.0   4920 machine1 xxx...
+</PRE>
+
+<P>
+The <TT>jobs</TT> command only shows jobs that are currently running.
+To obtain information on jobs that were processed recently, run the
+<TT>recent</TT> command:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass recent
+
+JOBID    ADDRESS  STATUS    STIME               USER  OPT
+64af5552 server1  COMPLETED 2017-10-06 17:58:30 user1 OPTIMAL
+</PRE>
+
+<P>
+The information displayed by the <TT>jobs</TT> and <TT>recent</TT>
+commands can be changed using the <TT>--view</TT> flag. The default view
+for the two commands is the <TT>status</TT> view.  Alternatives are:
+
+<PRE>
+status   - List all jobs and their statuses
+model    - List all jobs, and include information about the models solved
+simplex  - List jobs that used the SIMPLEX algorithm
+barrier  - List jobs that used the BARRIER algorithm
+mip      - list jobs that used the MIP algorithm
+</PRE>
+
+<P>
+For example, the <TT>model</TT> view gives details about the model,
+including the number of rows, columns and nonzeros in the constraint
+matrix:
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass recent --view=model
+JOBID    STATUS    STIME               SOLVE     ROWS COLS NONZ ALG OBJ           DURATION
+64af5552 COMPLETED 2017-10-06 17:58:30 COMPLETED 396  322  1815 MIP 1.2000126e+09 52.17s
+</PRE>
+
+<P>
+To get an explanation of the meanings of the different fields within a
+view, add the <TT>--describe</TT> flag.  For example:
+
+<PRE>
+&gt; grbcluster recent --view=model --describe
+JOBID     - Unique job ID, use --long to display full ID
+STATUS    - Job status
+STIME     - Job status updated time
+SOLVE     - Solve status
+ROWS      - Number of rows
+COLS      - Number of columns
+NONZ      - Number of non zero
+ALG       - Algorithm MIP, SIMPLEX or BARRIER
+OBJ       - Best objective
+DURATION  - Solve duration
+</PRE>
+
+<P>
+For a Mixed-Integer Program (MIP), the <TT>mip</TT> view provides
+progress information for the branch-and-cut tree. For example:
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass recent --view=mip
+JOBID    STATUS    STIME               OBJBST         OBJBND                NODCNT SOLCNT CUTCNT NODLFT
+64af5552 COMPLETED 2017-10-06 17:58:30 1.2000126e+09  1.200000244173974e+09 178942 10     0      6046
+</PRE>
+
+<P>
+Again, <TT>--describe</TT> explains the meanings of the different fields:
+
+<P>
+
+<PRE>
+&gt; grbcluster  recent --view mip --describe
+JOBID     - Unique job ID, use --long to display full ID
+STATUS    - Job status
+STIME     - Job status updated time
+OBJBST    - Current best objective
+OBJBND    - Current best objective bound
+NODCNT    - Current explored node count
+SOLCNT    - Current count of feasible solutions found
+CUTCNT    - Current count of cutting planes applied
+NODLFT    - Current unexplored node count
+DURATION  - Solve duration
+</PRE>
+
+<P>
+Note that the <TT>jobs</TT> command provides live status information, so
+you will for example see current MIP progress information while the
+solve is in progress.
+
+<P>
+The other views (<TT>simplex</TT> and <TT>barrier</TT>) are similar,
+although of course they provide slightly different information.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html518"
+  HREF="accessing_job_logs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html516"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html510"
+  HREF="client_commands.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html519"
+  HREF="accessing_job_logs.html">Accessing Job Logs</A>
+<B> Up:</B> <A NAME="tex2html517"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html511"
+  HREF="client_commands.html">Client Commands</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

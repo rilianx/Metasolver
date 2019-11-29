@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>gurobi_relax()</TITLE>
+<META NAME="description" CONTENT="gurobi_relax()">
+<META NAME="keywords" CONTENT="matlab_html">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="matlab_html.css">
+
+<LINK REL="previous" HREF="matlab_gurobi_feasrelax.html">
+<LINK REL="up" HREF="matlab_solving_a_model.html">
+<LINK REL="next" HREF="matlab_input_output.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html181"
+  HREF="matlab_input_output.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html179"
+  HREF="matlab_solving_a_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html175"
+  HREF="matlab_gurobi_feasrelax.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html182"
+  HREF="matlab_input_output.html">Input/Output</A>
+<B> Up:</B> <A NAME="tex2html180"
+  HREF="matlab_solving_a_model.html">Solving a Model</A>
+<B> Previous:</B> <A NAME="tex2html176"
+  HREF="matlab_gurobi_feasrelax.html">gurobi_feasrelax()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022400000000000000">
+gurobi_relax()</A>
+</H3>
+<A NAME="matlab:gurobi_relax"></A>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT"><FONT COLOR="#801a1a"> <BIG CLASS="LARGE"><SPAN  CLASS="textbf">gurobi_relax</SPAN> </FONT></BIG></TD>
+<TD ALIGN="LEFT">( model )</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><FONT COLOR="#801a1a"> <BIG CLASS="LARGE"><SPAN  CLASS="textbf">gurobi_relax</SPAN> </FONT></BIG></TD>
+<TD ALIGN="LEFT">( model, env )</TD>
+</TR>
+</TABLE>
+
+
+<P>
+Create the relaxation of a MIP model.  Transforms integer variables
+into continuous variables, and removes SOS and general constraints.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model <TT>struct</TT> must contain a valid Gurobi model.
+See the 
+<A HREF="matlab_the_model_argument.html#matlab:model"><TT>model</TT></A> argument section
+for more information.
+
+<P>
+ <SPAN  CLASS="textbf">env</SPAN>: The env <TT>struct</TT>, when provided, allows you to
+use Gurobi Compute Server or Gurobi Instant Cloud. See the
+
+<A HREF="matlab_the_env_argument.html#matlab:env"><TT>env</TT></A> argument section
+for more information.
+
+<P>
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A <TT>model</TT> struct variable, as described
+in the 
+<A HREF="matlab_the_model_argument.html#matlab:model"><TT>model</TT></A> parameter section.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG>
+<BR><TT>
+model  = gurobi_read('stein9.mps');
+<BR>
+relaxed = gurobi_relax(model);
+<BR></TT>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html181"
+  HREF="matlab_input_output.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html179"
+  HREF="matlab_solving_a_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html175"
+  HREF="matlab_gurobi_feasrelax.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html182"
+  HREF="matlab_input_output.html">Input/Output</A>
+<B> Up:</B> <A NAME="tex2html180"
+  HREF="matlab_solving_a_model.html">Solving a Model</A>
+<B> Previous:</B> <A NAME="tex2html176"
+  HREF="matlab_gurobi_feasrelax.html">gurobi_feasrelax()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

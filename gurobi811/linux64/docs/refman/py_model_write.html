@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.write()</TITLE>
+<META NAME="description" CONTENT="Model.write()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="py_model_update.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_var.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html10168"
+  HREF="py_var.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10166"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10162"
+  HREF="py_model_update.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10169"
+  HREF="py_var.html">Var</A>
+<B> Up:</B> <A NAME="tex2html10167"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html10163"
+  HREF="py_model_update.html">Model.update()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001027700000000000000"></A>
+<A NAME="pythonmethod:Model.write"></A>
+<BR>
+Model.write()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">write</SPAN></FONT></BIG> ( filename )
+
+<P>
+This method&nbsp;is the general entry point for writing optimization data
+to a file.  It can be used to write optimization models, solutions
+vectors, basis vectors, start vectors, or parameter settings.  The
+type of data written is determined by the file suffix.
+File formats are described in the
+<A HREF="model_file_formats.html#sec:FileFormats">File Format</A> section.
+
+<P>
+Note that writing a model to a file will process all pending model
+modifications.  However, writing other model information (solutions,
+bases, etc.)  will not.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">filename</SPAN>: The name of the file to be written.  The file type
+is encoded in the file name suffix.  Valid suffixes are <TT>.mps</TT>,
+<TT>.rew</TT>, <TT>.lp</TT>, or <TT>.rlp</TT> for writing the model itself,
+<TT>.ilp</TT> for writing just the IIS associated with an infeasible
+model (see <A HREF="py_model_computeiis.html#pythonmethod:Model.computeIIS">Model.computeIIS</A> for
+further information), <TT>.sol</TT> for writing the current solution,
+<TT>.mst</TT> for writing a start vector, <TT>.hnt</TT> for writing a hint
+file, <TT>.bas</TT> for writing an LP basis, or <TT>.prm</TT> for writing
+modified parameter settings.  If your system provides compressing
+utilities (e.g., <TT>7z</TT> or <TT>zip</TT> for Windows, and
+<TT>gzip</TT>, <TT>bzip2</TT>, or <TT>unzip</TT> for Linux or
+Mac OS); then the files can be compressed, so additional suffixes of
+<TT>.gz</TT>, <TT>.bz2</TT>, or <TT>.7z</TT> are accepted.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  model.write("out.mst")
+  model.write("out.sol")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10168"
+  HREF="py_var.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10166"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10162"
+  HREF="py_model_update.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10169"
+  HREF="py_var.html">Var</A>
+<B> Up:</B> <A NAME="tex2html10167"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html10163"
+  HREF="py_model_update.html">Model.update()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

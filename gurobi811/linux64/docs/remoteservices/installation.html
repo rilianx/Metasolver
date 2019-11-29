@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Installation</TITLE>
+<META NAME="description" CONTENT="Installation">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="licensing.html">
+<LINK REL="previous" HREF="setting_up_remote_services.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="licensing.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html226"
+  HREF="licensing.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html224"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html218"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html227"
+  HREF="licensing.html">Licensing</A>
+<B> Up:</B> <A NAME="tex2html225"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html219"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021100000000000000"></A>
+<A NAME="sec:InstallRemoteServices"></A>
+<BR>
+Installation
+</H3>
+
+<P>
+The first step in installing Gurobi Remote Services is to download the installer
+from
+<A NAME="tex2html2"
+  HREF="http://www.gurobi.com/downloads/gurobi-optimizer">our download page</A>.
+You'll need to find your platform and
+choose the corresponding file to download.
+
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="1055" HEIGHT="462" ALIGN="BOTTOM" BORDER="0"
+ SRC="./download.png"
+ ALT="Image download">
+
+</DIV>
+Make a note of the name and location of the downloaded file.
+
+<P>
+Your next step will depend on your platform:
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Linux installation</SPAN></BIG>
+
+<P>
+On Linux, your next step is to choose a destination directory.  We
+recommend <TT>/opt</TT> for a shared installation (you may need
+administrator priviledges), but other directories
+will work as well.  Copy the Remote Services distribution to the
+destination directory and extract the contents.  Extraction is done
+with the following command:
+
+<P>
+<TT>  tar xvfz gurobi_server8.1.0_linux64.tar.gz</TT>
+
+<P>
+This command will create a sub-directory
+<TT>gurobi_server810/linux64</TT> that contains the complete
+Linux Remote Services distribution. Assuming that you extracted the Gurobi
+server archive in the <TT>/opt</TT> directory, your <TT>&lt;installdir&gt;</TT> (which we'll
+refer to throughout this document) will be <TT>/opt/gurobi_server810/linux64</TT>.
+
+<P>
+The Gurobi Optimizer makes use of several executable files.  In order
+to allow these files to be found when needed, you will have to modify
+your search path.  Specifically, your <TT>PATH</TT> environment variable
+should be extended to include <TT>&lt;installdir&gt;/bin</TT>.  Users of the
+<TT>bash</TT> shell should add the following line to their
+<TT>.bashrc</TT> file:
+
+<P>
+<TT> export PATH="${PATH}:<TT>/opt/gurobi_server810/linux64</TT>/bin"</TT>
+<BR>
+<P>
+Users of the <TT>csh</TT> shell should add the following line to their
+<TT>.cshrc</TT> file:
+
+<P>
+<TT> setenv PATH "${PATH}:<TT>/opt/gurobi_server810/linux64</TT>/bin</TT>"
+<BR>
+<P>
+You'll need to close your current terminal window and open a new one
+after you have made these changes in order to pick up the new
+settings.
+
+<P>
+In some Linux distributions, applications launched from the Linux
+desktop won't read <TT>.bashrc</TT> (or <TT>.cshrc</TT>).  You may need to
+set the Gurobi environment variables in <TT>.bash_profile</TT> or
+<TT>.profile</TT> instead.  Unfortunately, the details of where to set
+these variables vary widely among different Linux distributions.  We
+suggest that you consult the documentation for your distribution if
+you run into trouble.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Mac OS Installation</SPAN></BIG>
+
+<P>
+On Mac OS, your next step once you've downloaded the Gurobi Remote
+Services package from our website is to double-click on the installer
+(e.g., <TT>gurobi_server8.1.0_mac64.pkg</TT> for Gurobi
+8.1.0) and follow the prompts.  By default, the installer will
+place the Gurobi Remote Services 8.1.0 files in
+<TT>/Library/gurobi_server810/mac64</TT> (note that this is the <EM>system</EM> <TT>/Library</TT>
+directory, not your personal <TT>&nbsp;/Library</TT> directory).  Your
+<TT>&lt;installdir&gt;</TT> (which we'll refer to throughout this document)
+will be <TT>/Library/gurobi_server810/mac64</TT>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Windows Installation</SPAN></BIG>
+
+<P>
+On Windows, your next step
+is to double-click on the Gurobi Remote Services installer
+that you downloaded from our website (e.g., <TT>  GurobiServer-8.1.0-win64.msi</TT> for Gurobi
+8.1.0).
+
+<P>
+Note: if you selected <EM>Run</EM> when downloading you've already run the installer and don't need to do it again.
+
+<P>
+By default, the installer will place the Gurobi 8.1.0 files in
+directory <TT>c:/gurobi_server810/win64</TT>.  The installer gives you the option to change
+the installation target.  We'll refer to the installation directory as
+<TT>&lt;installdir&gt;</TT>.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html226"
+  HREF="licensing.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html224"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html218"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html227"
+  HREF="licensing.html">Licensing</A>
+<B> Up:</B> <A NAME="tex2html225"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html219"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

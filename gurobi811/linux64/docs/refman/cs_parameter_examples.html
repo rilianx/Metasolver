@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>C# Parameter Examples</TITLE>
+<META NAME="description" CONTENT="C# Parameter Examples">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_parameter_examples.html">
+<LINK REL="previous" HREF="cpp_parameter_examples.html">
+<LINK REL="up" HREF="parameter_examples.html">
+<LINK REL="next" HREF="java_parameter_examples.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15183"
+  HREF="java_parameter_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15181"
+  HREF="parameter_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15175"
+  HREF="cpp_parameter_examples.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15184"
+  HREF="java_parameter_examples.html">Java Parameter Examples</A>
+<B> Up:</B> <A NAME="tex2html15182"
+  HREF="parameter_examples.html">Parameter Examples</A>
+<B> Previous:</B> <A NAME="tex2html15176"
+  HREF="cpp_parameter_examples.html">C++ Parameter Examples</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000173300000000000000"></A>
+<A NAME="CSParameterExamples"></A>
+<BR>
+C# Parameter Examples
+</H3>
+
+<P>
+In the C# interface, parameters are grouped by datatype into
+three <code>enums</code>: <code>GRB.DoubleParam</code>, <code>GRB.IntParam</code>, and
+<code>GRB.StringParam</code>.  You would refer to the integer
+<A HREF="threads.html#parameter:Threads">Threads</A>
+parameter as <code>GRB.IntParam.Threads</code>.
+
+<P>
+To modify a parameter, set the corresponding .NET property from
+<code>Model.Parameters</code>.  To set the
+<A HREF="timelimit.html#parameter:TimeLimit">TimeLimit</A> parameter,
+for example:
+<PRE>
+  GRBModel m = ...;
+  m.Parameters.TimeLimit = 100.0;
+</PRE>
+You can also use <A HREF="cs_grbmodel_set.html#dotnetmethod:GRBModel.Set">GRBModel.Set</A>:
+<PRE>
+  m.Set(GRB.DoubleParam.TimeLimit, 100.0);
+</PRE>
+
+<P>
+You can also set the value of a parameter using strings for the
+parameter name and desired value.  For example:
+<PRE>
+  GRBModel m = ...;
+  m.Set("TimeLimit", "100.0");
+</PRE>
+
+<P>
+To query the current value of a parameter, use:
+<PRE>
+  currentlimit = m.Parameters.TimeLimit;
+</PRE>
+You can also use <A HREF="cs_grbmodel_get.html#dotnetmethod:GRBModel.Get">GRBModel.Get</A>:
+<PRE>
+  currentlimit = m.Get(GRB.DoubleParam.TimeLimit);
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15183"
+  HREF="java_parameter_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15181"
+  HREF="parameter_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15175"
+  HREF="cpp_parameter_examples.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15184"
+  HREF="java_parameter_examples.html">Java Parameter Examples</A>
+<B> Up:</B> <A NAME="tex2html15182"
+  HREF="parameter_examples.html">Parameter Examples</A>
+<B> Previous:</B> <A NAME="tex2html15176"
+  HREF="cpp_parameter_examples.html">C++ Parameter Examples</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

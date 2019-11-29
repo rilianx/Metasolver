@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.addGenConstrMax()</TITLE>
+<META NAME="description" CONTENT="GRBModel.addGenConstrMax()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbmodel_addgenconstr3.html">
+<LINK REL="previous" HREF="java_grbmodel_addgenconstr.html">
+<LINK REL="up" HREF="java_grbmodel_addgenconstr.html">
+<LINK REL="next" HREF="java_grbmodel_addgenconstr3.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5521"
+  HREF="java_grbmodel_addgenconstr3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5519"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5513"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5522"
+  HREF="java_grbmodel_addgenconstr3.html">GRBModel.addGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html5520"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html5514"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H4><A NAME="SECTION00062410000000000000"></A>
+<A NAME="javamethod:GRBModel.addGenConstrMax"></A>
+<BR>
+GRBModel.addGenConstrMax()
+</H4>
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_MAX</TT> to a model.
+
+<P>
+A MAX constraint <!-- MATH
+ $r = \max\{x_1,\ldots,x_n,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="162" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="$r = \max\{x_1,\ldots,x_n,c\}$"></SPAN> states that the resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the maximum of the operand variables
+<!-- MATH
+ $x_1,\ldots,x_n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$x_1,\ldots,x_n$"></SPAN> and the constant <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="$c$"></SPAN>.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBGenConstr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrMax</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBVar</TD>
+<TD ALIGN="LEFT">resvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT">constant,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">name )</TD>
+</TR>
+</TABLE>
+
+<UL>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">resvar</SPAN>: The resultant variable of the new constraint.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: Array of variables that are the operands of the new constraint.
+
+<P>
+ <SPAN  CLASS="textbf">constant</SPAN>: The additional constant operand of the new constraint.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<P><P>
+<BR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5521"
+  HREF="java_grbmodel_addgenconstr3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5519"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5513"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5522"
+  HREF="java_grbmodel_addgenconstr3.html">GRBModel.addGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html5520"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html5514"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

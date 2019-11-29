@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Empty Environment</TITLE>
+<META NAME="description" CONTENT="Empty Environment">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="parameter_examples.html">
+<LINK REL="up" HREF="parameters.html">
+<LINK REL="next" HREF="optimization_status_codes.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15239"
+  HREF="optimization_status_codes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15237"
+  HREF="parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15233"
+  HREF="visual_basic_parameter_exa.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15240"
+  HREF="optimization_status_codes.html">Optimization Status Codes</A>
+<B> Up:</B> <A NAME="tex2html15238"
+  HREF="parameters.html">Parameters</A>
+<B> Previous:</B> <A NAME="tex2html15234"
+  HREF="visual_basic_parameter_exa.html">Visual Basic Parameter Examples</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000174000000000000000"></A>
+<A NAME="sec:EmptyEnvironment"></A>
+<BR>
+Empty Environment
+</H2>
+
+<P>
+Some parameters must be set before the Gurobi environment is fully
+configured.  For example, creating a Compute Server environment
+requires you to first indicate the name of the server.  This can be
+done through the Gurobi license file (<code>gurobi.lic</code>), but we also
+provide a means of doing this through the programming language APIs.
+Specifically, you can do this using an <code>empty environment</code>.
+
+<P>
+The first step is to construct the empty environment.  This is done
+using <A HREF="c_grbemptyenv.html#routine:GRBemptyenv">GRBemptyenv</A> in C, or
+through one of the provided <code>GRBEnv</code> constructors in the
+object-oriented interfaces.  You then set parameters on this
+environment using the standard parameter API.  Finally,
+you start the environment, using the
+<A HREF="c_grbstartenv.html#routine:GRBstartenv">GRBstartenv</A> in C, or
+using the <code>env.start()</code> method in the object-oriented
+interfaces.
+
+<P>
+To give a simple example, if you'd like your Python program to offload
+the optimization computation to a Compute Server named <code>server1</code>,
+you could say:
+<PRE>
+  env = Env(empty=True)
+  env.setParam(GRB.Param.ComputeServer, "server1:61000")
+  env.setParam(GRB.Param.ServerPassword, "passwd")
+  env.start()
+  model = read("misc07.mps", env)
+  model.optimize()
+</PRE>
+
+<P>
+An equivalent Java program would look like this:
+<PRE>
+  GRBEnv env = new GRBEnv(true);
+  env.set(GRB.StringParam.ComputeServer, "server1:61000");
+  env.set(GRB.StringParam.ServerPassword, "passwd");
+  env.start();
+  GRBModel model = new GRBModel(env, "misc07.mps");
+  model.optimize();
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15239"
+  HREF="optimization_status_codes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15237"
+  HREF="parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15233"
+  HREF="visual_basic_parameter_exa.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15240"
+  HREF="optimization_status_codes.html">Optimization Status Codes</A>
+<B> Up:</B> <A NAME="tex2html15238"
+  HREF="parameters.html">Parameters</A>
+<B> Previous:</B> <A NAME="tex2html15234"
+  HREF="visual_basic_parameter_exa.html">Visual Basic Parameter Examples</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>SolutionNumber</TITLE>
+<META NAME="description" CONTENT="SolutionNumber">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="startnodelimit.html">
+<LINK REL="previous" HREF="solutionlimit.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="startnodelimit.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14917"
+  HREF="startnodelimit.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14915"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14909"
+  HREF="solutionlimit.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14918"
+  HREF="startnodelimit.html">StartNodeLimit</A>
+<B> Up:</B> <A NAME="tex2html14916"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14910"
+  HREF="solutionlimit.html">SolutionLimit</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00017211300000000000000"></A>
+<A NAME="parameter:SolutionNumber"></A>
+<BR>
+SolutionNumber
+</H3>
+Select a sub-optimal MIP solution
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">MAXINT</TD>
+</TR>
+</TABLE>
+
+<P>
+When querying attribute
+<A HREF="xn.html#attr:Xn">Xn</A>, <A HREF="objnval.html#attr:ObjNVal">ObjNVal</A>, or
+<A HREF="poolobjval.html#attr:PoolObjVal">PoolObjVal</A> to retrieve an alternate MIP
+solution, this parameter determines which alternate solution is
+retrieved.  The value of this parameter should be less than the value
+of the <A HREF="solcount.html#attr:SolCount">SolCount</A>
+attribute.
+
+<P>
+One important note about integer-valued parameters: while the maximum
+value that can be stored in a signed integer is <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img143.png"
+ ALT="$2^{31}-1$"></SPAN>, we use a
+<TT>MAXINT</TT> value of 2,000,000,000.  Attempting to set an integer
+parameter to a value larger than this maximum will produce an error.
+
+<P>
+
+<SPAN  CLASS="textbf">Note:</SPAN> Only affects mixed integer programming (MIP) models 
+<BR>
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14917"
+  HREF="startnodelimit.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14915"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14909"
+  HREF="solutionlimit.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14918"
+  HREF="startnodelimit.html">StartNodeLimit</A>
+<B> Up:</B> <A NAME="tex2html14916"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14910"
+  HREF="solutionlimit.html">SolutionLimit</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

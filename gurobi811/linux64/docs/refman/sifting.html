@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Sifting</TITLE>
+<META NAME="description" CONTENT="Sifting">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="siftmethod.html">
+<LINK REL="previous" HREF="servertimeout.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="siftmethod.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14877"
+  HREF="siftmethod.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14875"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14869"
+  HREF="servertimeout.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14878"
+  HREF="siftmethod.html">SiftMethod</A>
+<B> Up:</B> <A NAME="tex2html14876"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14870"
+  HREF="servertimeout.html">ServerTimeout</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00017210900000000000000"></A>
+<A NAME="parameter:Sifting"></A>
+<BR>
+Sifting
+</H3>
+Controls sifting within dual simplex
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">2</TD>
+</TR>
+</TABLE>
+
+<P>
+Enables or disables sifting within dual simplex.  Sifting can be
+useful for LP models where the number of variables is many times
+larger than the number of constraints (we typically only see
+significant benefits when the ratio is 100 or more).  Options are
+Automatic (-1), Off (0), Moderate (1), and Aggressive (2).  With a
+Moderate setting, sifting will be applied to LP models and to the root
+node for MIP models.  With an Aggressive setting, sifting will be
+applied any time dual simplex is used, including at the nodes of a
+MIP.  Note that this parameter has no effect if you aren't using dual
+simplex.  Note also that Gurobi will ignore this parameter in cases
+where sifting is obviously a worse choice than dual simplex.
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14877"
+  HREF="siftmethod.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14875"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14869"
+  HREF="servertimeout.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14878"
+  HREF="siftmethod.html">SiftMethod</A>
+<B> Up:</B> <A NAME="tex2html14876"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14870"
+  HREF="servertimeout.html">ServerTimeout</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

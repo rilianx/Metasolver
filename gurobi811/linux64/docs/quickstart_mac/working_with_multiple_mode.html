@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Working with multiple models</TITLE>
+<META NAME="description" CONTENT="Working with multiple models">
+<META NAME="keywords" CONTENT="quickstart_mac">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_mac.css">
+
+<LINK REL="next" HREF="help.html">
+<LINK REL="previous" HREF="using_a_gurobi_env_file.html">
+<LINK REL="up" HREF="interactive_shell.html">
+<LINK REL="next" HREF="help.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html566"
+  HREF="help.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html564"
+  HREF="interactive_shell.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html558"
+  HREF="using_a_gurobi_env_file.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html567"
+  HREF="help.html">Help</A>
+<B> Up:</B> <A NAME="tex2html565"
+  HREF="interactive_shell.html">Interactive Shell</A>
+<B> Previous:</B> <A NAME="tex2html559"
+  HREF="using_a_gurobi_env_file.html">Using a gurobi.env file</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00058000000000000000">
+Working with multiple models</A>
+</H2>
+
+<P>
+The Gurobi shell allows you to work with multiple models
+simultaneously.  For example...
+
+<P>
+<TT>gurobi&gt; a = read('<TT>/Library/gurobi810/mac64</TT>/examples/data/p0033')
+<BR>
+Read MPS format model from file <TT>/Library/gurobi810/mac64</TT>/examples/data/p0033.mps
+<BR>
+Reading time = 0.00 seconds
+<BR>
+P0033: 16 Rows, 33 Columns, 98 NonZeros.
+<BR>
+gurobi&gt; b = read('<TT>/Library/gurobi810/mac64</TT>/examples/data/stein9')
+<BR>
+Read MPS format model from file <TT>/Library/gurobi810/mac64</TT>/examples/data/stein9.mps
+<BR>
+Reading time = 0.00 seconds
+<BR>
+STEIN9: 13 Rows, 9 Columns, 45 NonZeros.</TT>
+
+<P>
+The <EM>models()</EM> command gives a list of all active models.
+
+<PRE>
+gurobi&gt; models()
+Currently loaded models:
+a : &lt;gurobi.Model MIP instance P0033: 16 constrs, 33 vars&gt;
+b : &lt;gurobi.Model MIP instance STEIN9: 13 constrs, 9 vars&gt;
+</PRE>
+
+<P>
+Note that parameters can be set for a
+particular model with the <EM>Model.setParam()</EM> method or the
+<code>Model.Params</code> class, or they can be changed for all models in the
+Gurobi shell by using the global <EM>setParam()</EM> method.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html566"
+  HREF="help.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html564"
+  HREF="interactive_shell.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html558"
+  HREF="using_a_gurobi_env_file.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html567"
+  HREF="help.html">Help</A>
+<B> Up:</B> <A NAME="tex2html565"
+  HREF="interactive_shell.html">Interactive Shell</A>
+<B> Previous:</B> <A NAME="tex2html559"
+  HREF="using_a_gurobi_env_file.html">Using a gurobi.env file</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

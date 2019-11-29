@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Setting up Gurobi for MATLAB</TITLE>
+<META NAME="description" CONTENT="Setting up Gurobi for MATLAB">
+<META NAME="keywords" CONTENT="quickstart_linux">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_linux.css">
+
+<LINK REL="next" HREF="matlab_example.html">
+<LINK REL="previous" HREF="matlab_interface.html">
+<LINK REL="up" HREF="matlab_interface.html">
+<LINK REL="next" HREF="matlab_example.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1479"
+  HREF="matlab_example.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1477"
+  HREF="matlab_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1471"
+  HREF="matlab_interface.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1480"
+  HREF="matlab_example.html">Example</A>
+<B> Up:</B> <A NAME="tex2html1478"
+  HREF="matlab_interface.html">MATLAB Interface</A>
+<B> Previous:</B> <A NAME="tex2html1472"
+  HREF="matlab_interface.html">MATLAB Interface</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000121000000000000000">
+Setting up Gurobi for MATLAB</A>
+</H2>
+
+<P>
+To begin, you'll need to tell MATLAB where to find the Gurobi
+routines.  We've provided a script to assist you with this.  The
+Gurobi MATLAB setup script, <code>gurobi_setup.m</code>, can be found in
+the <code>&lt;installdir&gt;/matlab</code> directory of your Gurobi installation
+(the default <code>&lt;installdir&gt;</code> for Gurobi 8.1.0 is <TT>/opt/gurobi810/linux64</TT> for Linux).
+To get started, type the following commands
+within MATLAB to change to the <code>matlab</code> directory and call
+<code>gurobi_setup</code>:
+
+<P>
+<TT>&gt;&gt; cd <TT>/opt/gurobi810/linux64</TT>/matlab
+<BR>&gt;&gt; gurobi_setup
+<BR></TT>
+
+<P>
+You will need to be careful that the MATLAB binary and the Gurobi
+package you install both use the same instruction set.  For example,
+if you are using the 64-bit version of MATLAB, you'll need to install
+the 64-bit version of Gurobi, and you'll need to use the 64-bit Gurobi
+MATLAB libraries (i.e., the ones included with the 64-bit version of
+Gurobi).
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1479"
+  HREF="matlab_example.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1477"
+  HREF="matlab_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1471"
+  HREF="matlab_interface.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1480"
+  HREF="matlab_example.html">Example</A>
+<B> Up:</B> <A NAME="tex2html1478"
+  HREF="matlab_interface.html">MATLAB Interface</A>
+<B> Previous:</B> <A NAME="tex2html1472"
+  HREF="matlab_interface.html">MATLAB Interface</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Recording API Calls</TITLE>
+<META NAME="description" CONTENT="Recording API Calls">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="concurrent_optimizer.html">
+<LINK REL="previous" HREF="multiple_objectives.html">
+<LINK REL="up" HREF="refman.html">
+<LINK REL="next" HREF="recording.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15616"
+  HREF="recording.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15614"
+  HREF="refman.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15608"
+  HREF="additional_details.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15617"
+  HREF="recording.html">Recording</A>
+<B> Up:</B> <A NAME="tex2html15615"
+  HREF="refman.html">Gurobi Optimizer Reference Manual</A>
+<B> Previous:</B> <A NAME="tex2html15609"
+  HREF="additional_details.html">Additional Details</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION000260000000000000000"></A>
+<A NAME="sec:Recording"></A>
+<BR>
+Recording API Calls
+</H1>
+
+<P>
+The Gurobi Optimizer provides the option to record the set of Gurobi
+commands issued by your program and store them to a file.  The
+commands can be played back later using the <A HREF="gurobi_command_line_tool.html#sec:CommandLine">Gurobi
+  Command-Line Tool</A>.  If you replay the commands
+on a machine with the same specs (operating system, core count, and
+instruction set) as the machine where you created the recording, your
+Gurobi calls will take the exact same computational paths that they
+took when you ran your original program.
+
+<P>
+Recording can be useful in a number of situations...
+
+<UL>
+<LI>If you want to understand how much time is being spent in Gurobi
+  routines, the replay will show you the total time spent in Gurobi
+  API routines, and the total time spent in Gurobi algorithms.
+</LI>
+<LI>If you want to check for leaks of Gurobi data, the replay will
+  show you how many Gurobi models and environments were never freed by
+  your program.
+</LI>
+<LI>If you run into a question or an issue and you would like to get
+  help from Gurobi, your recording will allow Gurobi technical support
+  to reproduce the exact results that you are seeing without requiring
+  you to send your entire application.
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html15618"
+  HREF="recording.html">Recording</A>
+<LI><A NAME="tex2html15619"
+  HREF="replay.html">Replay</A>
+<LI><A NAME="tex2html15620"
+  HREF="limitations.html">Limitations</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15616"
+  HREF="recording.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15614"
+  HREF="refman.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15608"
+  HREF="additional_details.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15617"
+  HREF="recording.html">Recording</A>
+<B> Up:</B> <A NAME="tex2html15615"
+  HREF="refman.html">Gurobi Optimizer Reference Manual</A>
+<B> Previous:</B> <A NAME="tex2html15609"
+  HREF="additional_details.html">Additional Details</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

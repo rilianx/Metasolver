@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addGenConstrAnd()</TITLE>
+<META NAME="description" CONTENT="Model.addGenConstrAnd()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addgenconstror.html">
+<LINK REL="previous" HREF="py_model_addgenconstrabs.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addgenconstror.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9480"
+  HREF="py_model_addgenconstror.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9478"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9472"
+  HREF="py_model_addgenconstrabs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9481"
+  HREF="py_model_addgenconstror.html">Model.addGenConstrOr()</A>
+<B> Up:</B> <A NAME="tex2html9479"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9473"
+  HREF="py_model_addgenconstrabs.html">Model.addGenConstrAbs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000102800000000000000"></A>
+<A NAME="pythonmethod:Model.addGenConstrAnd"></A>
+<BR>
+Model.addGenConstrAnd()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrAnd</SPAN></FONT></BIG> ( resvar, vars, name="" )
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_AND</TT> to a model.
+
+<P>
+An AND constraint <!-- MATH
+ $r = \mbox{and}\{x_1,\ldots,x_n\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="144" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img10.png"
+ ALT="$r = \mbox{and}\{x_1,\ldots,x_n\}$"></SPAN> states that the binary resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> if and only if all of the operand variables
+<!-- MATH
+ $x_1,\ldots,x_n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$x_1,\ldots,x_n$"></SPAN> are equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>.
+If any of the operand variables is <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN>, then the resultant should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> as well.
+
+<P>
+Note that all variables participating in such a constraint will be forced
+to be binary, independent of how they were created.
+
+<P>
+You can also add an AND constraint using the
+<A HREF="py_general_constraint_help.html#pythonclass:GCHelper">and_</A> function.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">resvar (Var)</SPAN>: The variable whose value will be equal to the
+  AND concatenation of the other variables.
+
+<P>
+ <SPAN  CLASS="textbf">vars (list of Var)</SPAN>: The variables over which the AND
+  concatenation will be taken.
+
+<P>
+ <SPAN  CLASS="textbf">name (string, optional)</SPAN>: Name for the new general constraint.
+Note that <TT>name</TT> will be stored as an ASCII string. Thus, a name
+like <TT>'A<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>B'</TT> will produce an error, because
+'<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>' can not be represented as an ASCII character. Note
+also that names that contain spaces are strongly discouraged,
+because they can't be written to LP format files.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  # x5 = and(x1, x3, x4)
+  model.addGenConstrAnd(x5, [x1, x3, x4], "andconstr")
+
+  # overloaded forms
+  model.addConstr(x5 == and_([x1, x3, x4]), "andconstr")
+  model.addConstr(x5 == and_(x1, x3, x4), "andconstr")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9480"
+  HREF="py_model_addgenconstror.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9478"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9472"
+  HREF="py_model_addgenconstrabs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9481"
+  HREF="py_model_addgenconstror.html">Model.addGenConstrOr()</A>
+<B> Up:</B> <A NAME="tex2html9479"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9473"
+  HREF="py_model_addgenconstrabs.html">Model.addGenConstrAbs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

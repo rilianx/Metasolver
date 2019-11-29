@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.getGenConstrIndicator()</TITLE>
+<META NAME="description" CONTENT="Model.getGenConstrIndicator()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_getgenconstrs.html">
+<LINK REL="previous" HREF="py_model_getgenconstror.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_getgenconstrs.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9840"
+  HREF="py_model_getgenconstrs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9838"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9832"
+  HREF="py_model_getgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9841"
+  HREF="py_model_getgenconstrs.html">Model.getGenConstrs()</A>
+<B> Up:</B> <A NAME="tex2html9839"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9833"
+  HREF="py_model_getgenconstror.html">Model.getGenConstrOr()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001024400000000000000"></A>
+<A NAME="pythonmethod:Model.getGenConstrIndicator"></A>
+<BR>
+Model.getGenConstrIndicator()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getGenConstrIndicator</SPAN></FONT></BIG> ( genconstr )
+
+<P>
+Retrieve the data of a general constraint of type INDICATOR.
+Calling this function for a general constraint of different type
+leads to an exception.
+You can query the <A HREF="genconstrtype.html#attr:GenConstrType">GenConstrType</A>
+attribute to determine the type of the general constraint.
+
+<P>
+See also <A HREF="java_grbmodel_addgenconstr7.html#javamethod:GRBModel.addGenConstrIndicator">addGenConstrIndicator</A>
+for a description of the semantics of this general constraint type.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">genconstr</SPAN>: The general constraint object of interest.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A tuple (binvar, binval, expr, sense, rhs) that contains the data
+  of the general constraint:
+
+<P>
+ <SPAN  CLASS="textbf">binvar (Var)</SPAN>: Antecedent variable of indicator constraint.
+
+<P>
+ <SPAN  CLASS="textbf">binval (Boolean)</SPAN>: Value of antecedent variable that activates the linear constraint.
+
+<P>
+ <SPAN  CLASS="textbf">expr (LinExpr)</SPAN>: LinExpr object containing the left-hand side of the constraint triggered by the indicator.
+
+<P>
+ <SPAN  CLASS="textbf">sense (char)</SPAN>: Sense of linear constraint triggered by the indicator (e.g., <TT>GRB.LESS_EQUAL</TT>).
+
+<P>
+ <SPAN  CLASS="textbf">rhs (float)</SPAN>: Right-hand side of linear constraint triggered by the indicator.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  (binvar, binval, expr, sense, rhs) =
+      model.getGenConstr(model.getGenConstrIndicator()[3])
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9840"
+  HREF="py_model_getgenconstrs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9838"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9832"
+  HREF="py_model_getgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9841"
+  HREF="py_model_getgenconstrs.html">Model.getGenConstrs()</A>
+<B> Up:</B> <A NAME="tex2html9839"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9833"
+  HREF="py_model_getgenconstror.html">Model.getGenConstrOr()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

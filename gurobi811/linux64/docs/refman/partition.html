@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Partition</TITLE>
+<META NAME="description" CONTENT="Partition">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="vbasis.html">
+<LINK REL="previous" HREF="branchpriority.html">
+<LINK REL="up" HREF="variable_attributes.html">
+<LINK REL="next" HREF="vbasis.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12478"
+  HREF="vbasis.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12476"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12470"
+  HREF="branchpriority.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12479"
+  HREF="vbasis.html">VBasis</A>
+<B> Up:</B> <A NAME="tex2html12477"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12471"
+  HREF="branchpriority.html">BranchPriority</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001621400000000000000"></A>
+<A NAME="attr:Partition"></A>
+<BR>
+Partition
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">Yes</TD>
+</TR>
+</TABLE>
+
+<P>
+Variable partition.  The MIP solver can perform a solution improvement
+heuristic using user-provided partition information.  The provided
+partition number can be positive, which indicates that the variable
+should be included when the correspondingly numbered sub-MIP is
+solved, 0 which indicates that the variable should be included in
+every sub-MIP, or -1 which indicates that the variable should not be
+included in any sub-MIP.  Variables that are not included in the
+sub-MIP are fixed to their values in the current incumbent solution.
+
+<P>
+To give an example, imagine you are solving a model with 400 variables
+and you set the partition attribute to -1 for variables 0-99, 0 for
+variables 100-199, 1 for variables 200-299, and 2 for variables
+300-399.  The heuristic would solve two sub-MIP models: sub-MIP 1
+would fix variables 0-99 and 300-399 to their values in the incumbent
+and solve for the rest, while sub-MIP 2 would fix variables 0-99 and
+200-299.
+
+<P>
+Use the <A HREF="partitionplace.html#parameter:PartitionPlace">PartitionPlace</A> parameter
+to control where the partition heuristic runs.
+
+<P>
+Only affects MIP models.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12478"
+  HREF="vbasis.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12476"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12470"
+  HREF="branchpriority.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12479"
+  HREF="vbasis.html">VBasis</A>
+<B> Up:</B> <A NAME="tex2html12477"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12471"
+  HREF="branchpriority.html">BranchPriority</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

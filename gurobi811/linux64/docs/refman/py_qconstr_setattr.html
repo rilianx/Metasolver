@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>QConstr.setAttr()</TITLE>
+<META NAME="description" CONTENT="QConstr.setAttr()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="py_qconstr_getattr.html">
+<LINK REL="up" HREF="py_qconstr.html">
+<LINK REL="next" HREF="py_sos.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html10280"
+  HREF="py_sos.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10278"
+  HREF="py_qconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10274"
+  HREF="py_qconstr_getattr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10281"
+  HREF="py_sos.html">SOS</A>
+<B> Up:</B> <A NAME="tex2html10279"
+  HREF="py_qconstr.html">QConstr</A>
+<B> Previous:</B> <A NAME="tex2html10275"
+  HREF="py_qconstr_getattr.html">QConstr.getAttr()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000105200000000000000"></A>
+<A NAME="pythonmethod:QConstr.setAttr"></A>
+<BR>
+QConstr.setAttr()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">setAttr</SPAN></FONT></BIG> ( attrname, newvalue )
+
+<P>
+Set the value of a quadratic constraint attribute.
+
+  Note that, due to our lazy update approach, the change won't actually
+  take effect until you update the model
+  (using <A HREF="py_model_update.html#pythonmethod:Model.update">Model.update</A>),
+  optimize the model
+  (using <A HREF="py_model_optimize.html#pythonmethod:Model.optimize">Model.optimize</A>),
+  or write the model to disk
+  (using <A HREF="py_model_write.html#pythonmethod:Model.write">Model.write</A>).
+
+<P>
+The full list of available attributes can be found in the
+<A HREF="attributes.html#sec:Attributes">Attributes</A> section.
+
+<P>
+Raises an <code>AttributeError</code> if the specified attribute doesn't
+exist or can't be set.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">attrname</SPAN>: The attribute being modified.
+
+<P>
+ <SPAN  CLASS="textbf">newvalue</SPAN>: The desired new value of the attribute.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  constr.setAttr(GRB.Attr.QCRHS, 0.0)
+  constr.setAttr("qcrhs", 0.0)
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10280"
+  HREF="py_sos.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10278"
+  HREF="py_qconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10274"
+  HREF="py_qconstr_getattr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html10281"
+  HREF="py_sos.html">SOS</A>
+<B> Up:</B> <A NAME="tex2html10279"
+  HREF="py_qconstr.html">QConstr</A>
+<B> Previous:</B> <A NAME="tex2html10275"
+  HREF="py_qconstr_getattr.html">QConstr.getAttr()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

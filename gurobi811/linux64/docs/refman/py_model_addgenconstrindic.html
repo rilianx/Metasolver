@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addGenConstrIndicator()</TITLE>
+<META NAME="description" CONTENT="Model.addGenConstrIndicator()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addlconstr.html">
+<LINK REL="previous" HREF="py_model_addgenconstror.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addlconstr.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9500"
+  HREF="py_model_addlconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9498"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9492"
+  HREF="py_model_addgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9501"
+  HREF="py_model_addlconstr.html">Model.addLConstr()</A>
+<B> Up:</B> <A NAME="tex2html9499"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9493"
+  HREF="py_model_addgenconstror.html">Model.addGenConstrOr()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001021000000000000000"></A>
+<A NAME="pythonmethod:Model.addGenConstrIndicator"></A>
+<BR>
+Model.addGenConstrIndicator()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrIndicator</SPAN></FONT></BIG> ( binvar, binval, lhs, sense=None, rhs=None, name="" )
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_INDICATOR</TT> to a model.
+
+<P>
+An INDICATOR constraint <!-- MATH
+ $z = f \rightarrow a^Tx \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="123" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.png"
+ ALT="$z = f \rightarrow a^Tx \leq b$"></SPAN> states that if the binary
+indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="72" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$f \in \{0,1\}$"></SPAN>, then the linear constraint
+<SPAN CLASS="MATH"><IMG
+ WIDTH="60" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.png"
+ ALT="$a^Tx \leq b$"></SPAN> should hold.
+On the other hand, if <SPAN CLASS="MATH"><IMG
+ WIDTH="70" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img18.png"
+ ALT="$z = 1-f$"></SPAN>, the linear constraint may be violated.
+The sense of the linear constraint can also be specified to be <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.png"
+ ALT="$=$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$\geq$"></SPAN>.
+
+<P>
+Note that the indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> of a constraint will be forced
+to be binary, independent of how it was created.
+
+<P>
+You can also add an INDICATOR constraint using a special overloaded
+syntax.  See the examples below for details.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">binvar (Var)</SPAN>: The binary indicator variable.
+
+<P>
+ <SPAN  CLASS="textbf">binval (Boolean)</SPAN>: The value for the binary indicator variable that would
+  force the linear constraint to be satisfied.
+
+<P>
+ <SPAN  CLASS="textbf">lhs (float, Var, LinExpr, or TempConstr)</SPAN>: Left-hand side expression for the linear constraint
+  triggered by the indicator. Can be a constant, a <A HREF="py_var.html#pythonclass:Var">Var</A>, or a
+  <A HREF="py_linexpr.html#pythonclass:LinExpr">LinExpr</A>.
+  Alternatively, a temporary constraint object can be used to define the linear constraint that
+  is triggered by the indicator. The temporary constraint object is created using an overloaded
+  comparison operator.  See <A HREF="py_tempconstr.html#pythonclass:TempConstr">TempConstr</A> for more
+  information.  In this case, the &ldquo;sense&rdquo; and &ldquo;rhs&rdquo; parameters must stay at their
+  default values <TT>None</TT>.
+
+<P>
+ <SPAN  CLASS="textbf">sense (char)</SPAN>: Sense for the linear constraint.  Options are
+  <TT>GRB.LESS_EQUAL</TT>, <TT>GRB.EQUAL</TT>, or
+  <TT>GRB.GREATER_EQUAL</TT>.
+
+<P>
+ <SPAN  CLASS="textbf">rhs (float)</SPAN>: Right-hand-side value for the linear constraint.
+
+<P>
+ <SPAN  CLASS="textbf">name (string, optional)</SPAN>: Name for the new general constraint.
+Note that <TT>name</TT> will be stored as an ASCII string. Thus, a name
+like <TT>'A<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>B'</TT> will produce an error, because
+'<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>' can not be represented as an ASCII character. Note
+also that names that contain spaces are strongly discouraged,
+because they can't be written to LP format files.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  # x7 = 1 -&gt; x1 + 2 x3 + x4 = 1
+  model.addGenConstrIndicator(x7, True, x1 + 2*x2 + x4, GRB.EQUAL, 1.0)
+
+  # alternative form
+  model.addGenConstrIndicator(x7, True, x1 + 2*x2 + x4 == 1.0)
+
+  # overloaded form
+  model.addConstr((x7 == 1) &gt;&gt; (x1 + 2*x2 + x4 == 1.0))
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9500"
+  HREF="py_model_addlconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9498"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9492"
+  HREF="py_model_addgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9501"
+  HREF="py_model_addlconstr.html">Model.addLConstr()</A>
+<B> Up:</B> <A NAME="tex2html9499"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9493"
+  HREF="py_model_addgenconstror.html">Model.addGenConstrOr()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

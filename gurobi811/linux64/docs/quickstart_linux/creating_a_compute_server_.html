@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Creating a Compute Server client license</TITLE>
+<META NAME="description" CONTENT="Creating a Compute Server client license">
+<META NAME="keywords" CONTENT="quickstart_linux">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_linux.css">
+
+<LINK REL="previous" HREF="retrieving_a_compute_serve.html">
+<LINK REL="up" HREF="setting_up_and_using_a_com.html">
+<LINK REL="next" HREF="starting_gurobi_remote_ser.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html384"
+  HREF="starting_gurobi_remote_ser.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html382"
+  HREF="setting_up_and_using_a_com.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html378"
+  HREF="retrieving_a_compute_serve.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html385"
+  HREF="starting_gurobi_remote_ser.html">Starting Gurobi Remote Services</A>
+<B> Up:</B> <A NAME="tex2html383"
+  HREF="setting_up_and_using_a_com.html">Setting up and using</A>
+<B> Previous:</B> <A NAME="tex2html379"
+  HREF="retrieving_a_compute_serve.html">Retrieving a Compute Server</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00034200000000000000"></A>
+<A NAME="subsection:clientlicensecompute"></A>
+<BR>
+Creating a Compute Server client license
+</H3>
+
+<P>
+If you are a Compute Server user, we recommend that you read the
+<A NAME="tex2html14"
+  HREF="../remoteservices/remoteservices.html">Gurobi Remote Services Reference Manual</A>
+for information about configuring and using Remote Services.
+We'll provide a few relevant details here, but this other
+document provides a much broader overview.
+
+<P>
+You have two options for indicating that a Gurobi program will act as
+a client of a Compute Server.  If you are writing a program that calls
+the Gurobi C, C++, Java, .NET, or Python APIs, these APIs provide
+routines that allow you to specify the name of a Compute Server node
+(by creating an <code>empty environment</code> and then setting parameters
+related to Compute Server on that environment).  If you use these
+routines, Gurobi licenses aren't required on the client.
+
+<P>
+Alternately, you can set up a <code>gurobi.lic</code> file that points to
+the Compute Server.  This option allows you to use a Compute Server
+with nearly any program that calls Gurobi, without the need to modify
+the calling program.  You can create your client <code>gurobi.lic</code>
+with a text editor like <TT>vim</TT>.
+The file should contain a line that looks like
+this:
+
+<PRE>
+COMPUTESERVER=server.mydomain.com:61000
+</PRE>
+or like this:
+
+<PRE>
+COMPUTESERVER=192.168.1.100:61000
+</PRE>
+This line should provide the name or IP address of any machine in your
+Compute Server cluster, optionally followed by the chosen port number
+on that server (which was chosen when you set up the Compute Server
+on that machine).  If your
+Compute Server uses a password, you should also include a line that
+gives the password:
+
+<PRE>
+PASSWORD=cspwd
+</PRE>
+
+<P>
+Please consult the <EM>Using Remote Services</EM>
+section of the
+<A NAME="tex2html15"
+  HREF="../remoteservices/remoteservices.html">Gurobi Remote Services Reference Manual</A>
+for more information.
+
+<P>
+Note that if your client and server are both running on the same
+machine, you'll need to create a separate <code>gurobi.lic</code> file for
+the client, and set the <code>GRB_LICENSE_FILE</code> environment variable
+to point to this file (following the earlier instructions for
+<A HREF="retrieving_a_compute_serve.html#subsubsection:retrievecomputeserver">using a non-default license
+  location</A>).
+
+<P>
+Once your client license is in place, you can
+<A HREF="testing_your_license.html#subsection:testlicense">test the license</A>.
+If you are unable to connect to the server, you'll need to make sure
+the server is installed and running.
+Please consult the <EM>Cluster Setup and Administration</EM>
+section of the
+<A NAME="tex2html16"
+  HREF="../remoteservices/remoteservices.html">Gurobi Remote Services Reference Manual</A>
+for more information.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html384"
+  HREF="starting_gurobi_remote_ser.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html382"
+  HREF="setting_up_and_using_a_com.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html378"
+  HREF="retrieving_a_compute_serve.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html385"
+  HREF="starting_gurobi_remote_ser.html">Starting Gurobi Remote Services</A>
+<B> Up:</B> <A NAME="tex2html383"
+  HREF="setting_up_and_using_a_com.html">Setting up and using</A>
+<B> Previous:</B> <A NAME="tex2html379"
+  HREF="retrieving_a_compute_serve.html">Retrieving a Compute Server</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

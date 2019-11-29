@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Avoid hiding large coefficients</TITLE>
+<META NAME="description" CONTENT="Avoid hiding large coefficients">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_dealing_with_big_.html">
+<LINK REL="previous" HREF="numerics_advanced_user_sca.html">
+<LINK REL="up" HREF="numerics_tolerances_and_us.html">
+<LINK REL="next" HREF="numerics_dealing_with_big_.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15862"
+  HREF="numerics_dealing_with_big_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15860"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15854"
+  HREF="numerics_advanced_user_sca.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15863"
+  HREF="numerics_dealing_with_big_.html">Dealing with big-M constraints</A>
+<B> Up:</B> <A NAME="tex2html15861"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15855"
+  HREF="numerics_advanced_user_sca.html">Advanced user scaling</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000303600000000000000">
+Avoid hiding large coefficients</A>
+</H3>
+
+<P>
+As we said before, a typical recommendation for improving numerics is to limit the
+range of constraint matrix coefficients. The rationale behind
+this guideline is that terms to be added in a linear expression should
+be of comparable magnitudes so that rounding errors are minimized.
+For example:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 10^{6} y &\geq& 0 \\
+y&\in&[0,10]
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="142" HEIGHT="52" BORDER="0"
+ SRC="img204.png"
+ ALT="\begin{eqnarray*}
+x - 10^{6} y &amp;\geq&amp; 0 \\
+y&amp;\in&amp;[0,10]
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+is usually considered a potential source of numerical instabilities
+due to the wide range of the coefficients in the constraint.
+However, it is easy to implement a simple (but useless) alternative:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 10 y_1 &\geq& 0\\
+y_1 - 10 y_2 &=& 0\\
+y_2 - 10 y_3 &=& 0\\
+y_3 - 10 y_4 &=& 0\\
+y_4 - 10 y_5 &=& 0\\
+y_5 - 10 y &=& 0\\
+y&\in&[0,10]
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="148" HEIGHT="171" BORDER="0"
+ SRC="img205.png"
+ ALT="\begin{eqnarray*}
+x - 10 y_1 &amp;\geq&amp; 0\\
+y_1 - 10 y_2 &amp;=&amp; 0\\
+y_2 - 10 y_3 &amp;=&amp; ...
+... &amp;=&amp; 0\\
+y_4 - 10 y_5 &amp;=&amp; 0\\
+y_5 - 10 y &amp;=&amp; 0\\
+y&amp;\in&amp;[0,10]
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+This form certainly has nicer values in the matrix.  However, the
+solution <!-- MATH
+ $y=-10^{-6},\ x=-1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="142" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img206.png"
+ ALT="$y=-10^{-6}, x=-1$"></SPAN> might still be considered feasible as the
+bounds on variables and constraints might be violated within the
+tolerances. A better alternative is to reformulate
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 10^{6} y &\geq& 0 \\
+y&\in& [0,10]
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="142" HEIGHT="52" BORDER="0"
+ SRC="img204.png"
+ ALT="\begin{eqnarray*}
+x - 10^{6} y &amp;\geq&amp; 0 \\
+y&amp;\in&amp;[0,10]
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+as
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 10^{3} y' &\geq& 0 \\
+y'&\in&[0,10^4]\\
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="154" HEIGHT="72" BORDER="0"
+ SRC="img207.png"
+ ALT="\begin{eqnarray*}
+x - 10^{3} y' &amp;\geq&amp; 0 \\
+y'&amp;\in&amp;[0,10^4]\\
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+where <!-- MATH
+ $10^{-3} y' = y$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="80" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img208.png"
+ ALT="$10^{-3} y' = y$"></SPAN>. In this setting, the most negative values for
+<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> which might be considered feasible would be <SPAN CLASS="MATH"><IMG
+ WIDTH="50" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img209.png"
+ ALT="$-10^{-3}$"></SPAN>, and for
+the original <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> variable it would be <SPAN CLASS="MATH"><IMG
+ WIDTH="50" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img210.png"
+ ALT="$-10^{-9}$"></SPAN>, which is a clear
+improvement over the original situation.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15862"
+  HREF="numerics_dealing_with_big_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15860"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15854"
+  HREF="numerics_advanced_user_sca.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15863"
+  HREF="numerics_dealing_with_big_.html">Dealing with big-M constraints</A>
+<B> Up:</B> <A NAME="tex2html15861"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15855"
+  HREF="numerics_advanced_user_sca.html">Advanced user scaling</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

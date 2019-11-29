@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Simple Example</TITLE>
+<META NAME="description" CONTENT="Simple Example">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="roles.html">
+<LINK REL="up" HREF="gurobi_compute_server_and_.html">
+<LINK REL="next" HREF="cluster_setup_and_administ.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html168"
+  HREF="cluster_setup_and_administ.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html166"
+  HREF="gurobi_compute_server_and_.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html162"
+  HREF="client.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html169"
+  HREF="cluster_setup_and_administ.html">Cluster Setup and Administration</A>
+<B> Up:</B> <A NAME="tex2html167"
+  HREF="gurobi_compute_server_and_.html">Gurobi Compute Server and</A>
+<B> Previous:</B> <A NAME="tex2html163"
+  HREF="client.html">Client</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00014000000000000000"></A>
+<A NAME="sec:CSSimpleExample"></A>
+<BR>
+Simple Example
+</H2>
+
+<P>
+After your cluster has been set up (which will be covered in
+<A HREF="cluster_setup_and_administ.html#sec:ClusterSetup">this section</A>), it
+is generally a simple matter to submit a job to it.  As noted earlier,
+you have several options for indicating that you wish to offload your
+client Gurobi computation to a Compute Server: through command-line
+arguments, a license file, or a programming language API.  The precise
+details will be covered in a
+<A HREF="using_remote_services.html#sec:UsingRemoteServices">later section</A>.
+For now, we'll simply
+demonstrate the use of command-line arguments using <TT>gurobi_cl</TT>.
+
+<P>
+The command <TT>gurobi_cl stein9.mps</TT> would solve the
+model stored in file <TT>stein9.mps</TT> on your local machine.
+By adding a command-line argument,
+<TT>gurobi_cl --server=server1:61000 stein9.mps</TT>,
+we can instead offload the computation to the Gurobi Remote Services
+cluster that is listening on port 61000 of machine <TT>server1</TT>:
+
+<PRE>
+&gt; gurobi_cl --server=server1:61000 stein9.mps
+Compute Server job ID: 1e9c304c-a5f2-4573-affa-ab924d992f7e
+Capacity available on 'server1:61000' - connecting...
+Established HTTP unencrypted connection
+
+Gurobi Optimizer version 8.0.0 build v8.0.0rc0 (linux64)
+Copyright (c) 2018, Gurobi Optimization, LLC
+
+...
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 5.000000000000e+00, best bound 5.000000000000e+00, gap 0.0000%
+
+Compute Server communication statistics:
+  Sent: 0.0 MBytes in 34 msgs and 0.00s (0.00 MB/s)
+  Received: 0.0 MBytes in 141 msgs and 0.00s (0.00 MB/s)
+</PRE>
+
+<P>
+The initial log output indicates that a Compute Server job was
+created, that the Compute Server cluster had capacity available to run
+that job, and that an unencrypted HTTP connection was established with
+a server in that cluster.  The log concludes with statistics about the
+communication performed between the client machine and the Compute
+Server.
+
+<P>
+We'll now move on to discussions of
+<A HREF="cluster_setup_and_administ.html#sec:ClusterSetup">setting up a cluster</A>
+and
+<A HREF="using_remote_services.html#sec:UsingRemoteServices">using a cluster</A>.
+The former is meant for cluster administrators.  If
+you intend to be a client of a Remote Services cluster
+that has already been set up, you can skip this section.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html168"
+  HREF="cluster_setup_and_administ.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html166"
+  HREF="gurobi_compute_server_and_.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html162"
+  HREF="client.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html169"
+  HREF="cluster_setup_and_administ.html">Cluster Setup and Administration</A>
+<B> Up:</B> <A NAME="tex2html167"
+  HREF="gurobi_compute_server_and_.html">Gurobi Compute Server and</A>
+<B> Previous:</B> <A NAME="tex2html163"
+  HREF="client.html">Client</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

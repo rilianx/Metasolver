@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model Attributes</TITLE>
+<META NAME="description" CONTENT="Model Attributes">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="variable_attributes.html">
+<LINK REL="previous" HREF="attributes.html">
+<LINK REL="up" HREF="attributes.html">
+<LINK REL="next" HREF="numconstrs.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11688"
+  HREF="numconstrs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11686"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11680"
+  HREF="attributes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11689"
+  HREF="numconstrs.html">NumConstrs</A>
+<B> Up:</B> <A NAME="tex2html11687"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html11681"
+  HREF="attributes.html">Attributes</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000161000000000000000">
+Model Attributes</A>
+</H2>
+
+<P>
+These are model attributes, meaning that they are associated with the
+overall model (as opposed to being associated with a particular
+variable or constraint of the model).  You should use one of the
+various <code>get</code> routines to retrieve the value of an attribute.
+These are described at the beginning of
+<A HREF="attributes.html#sec:Attributes">this section</A>).
+For the object-oriented interfaces, model attributes are retrieved by
+invoking the <code>get</code> method on the model object itself.  For
+attributes that can be modified directly by the user, you can use one
+of the various <code>set</code> methods.
+
+<P>
+Attempting to query an attribute that is not available will produce an
+error.  In C, the attribute query routine will return a
+<code>GRB_ERROR_DATA_NOT_AVAILABLE</code>
+error code.  The object-oriented
+interfaces will throw an exception.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html11690"
+  HREF="numconstrs.html">NumConstrs</A>
+<LI><A NAME="tex2html11691"
+  HREF="numvars.html">NumVars</A>
+<LI><A NAME="tex2html11692"
+  HREF="numsos.html">NumSOS</A>
+<LI><A NAME="tex2html11693"
+  HREF="numqconstrs.html">NumQConstrs</A>
+<LI><A NAME="tex2html11694"
+  HREF="numgenconstrs.html">NumGenConstrs</A>
+<LI><A NAME="tex2html11695"
+  HREF="numnzs.html">NumNZs</A>
+<LI><A NAME="tex2html11696"
+  HREF="dnumnzs.html">DNumNZs</A>
+<LI><A NAME="tex2html11697"
+  HREF="numqnzs.html">NumQNZs</A>
+<LI><A NAME="tex2html11698"
+  HREF="numqcnzs.html">NumQCNZs</A>
+<LI><A NAME="tex2html11699"
+  HREF="numintvars.html">NumIntVars</A>
+<LI><A NAME="tex2html11700"
+  HREF="numbinvars.html">NumBinVars</A>
+<LI><A NAME="tex2html11701"
+  HREF="numpwlobjvars.html">NumPWLObjVars</A>
+<LI><A NAME="tex2html11702"
+  HREF="modelname.html">ModelName</A>
+<LI><A NAME="tex2html11703"
+  HREF="modelsense.html">ModelSense</A>
+<LI><A NAME="tex2html11704"
+  HREF="objcon.html">ObjCon</A>
+<LI><A NAME="tex2html11705"
+  HREF="objval.html">ObjVal</A>
+<LI><A NAME="tex2html11706"
+  HREF="objbound.html">ObjBound</A>
+<LI><A NAME="tex2html11707"
+  HREF="objboundc.html">ObjBoundC</A>
+<LI><A NAME="tex2html11708"
+  HREF="poolobjbound.html">PoolObjBound</A>
+<LI><A NAME="tex2html11709"
+  HREF="poolobjval.html">PoolObjVal</A>
+<LI><A NAME="tex2html11710"
+  HREF="mipgap.html">MIPGap</A>
+<LI><A NAME="tex2html11711"
+  HREF="runtime.html">Runtime</A>
+<LI><A NAME="tex2html11712"
+  HREF="status.html">Status</A>
+<LI><A NAME="tex2html11713"
+  HREF="solcount.html">SolCount</A>
+<LI><A NAME="tex2html11714"
+  HREF="itercount.html">IterCount</A>
+<LI><A NAME="tex2html11715"
+  HREF="baritercount.html">BarIterCount</A>
+<LI><A NAME="tex2html11716"
+  HREF="nodecount.html">NodeCount</A>
+<LI><A NAME="tex2html11717"
+  HREF="ismip.html">IsMIP</A>
+<LI><A NAME="tex2html11718"
+  HREF="isqp.html">IsQP</A>
+<LI><A NAME="tex2html11719"
+  HREF="isqcp.html">IsQCP</A>
+<LI><A NAME="tex2html11720"
+  HREF="ismultiobj.html">IsMultiObj</A>
+<LI><A NAME="tex2html11721"
+  HREF="iisminimal.html">IISMinimal</A>
+<LI><A NAME="tex2html11722"
+  HREF="maxcoeff.html">MaxCoeff</A>
+<LI><A NAME="tex2html11723"
+  HREF="mincoeff.html">MinCoeff</A>
+<LI><A NAME="tex2html11724"
+  HREF="maxbound.html">MaxBound</A>
+<LI><A NAME="tex2html11725"
+  HREF="minbound.html">MinBound</A>
+<LI><A NAME="tex2html11726"
+  HREF="maxobjcoeff.html">MaxObjCoeff</A>
+<LI><A NAME="tex2html11727"
+  HREF="minobjcoeff.html">MinObjCoeff</A>
+<LI><A NAME="tex2html11728"
+  HREF="maxrhs.html">MaxRHS</A>
+<LI><A NAME="tex2html11729"
+  HREF="minrhs.html">MinRHS</A>
+<LI><A NAME="tex2html11730"
+  HREF="maxqccoeff.html">MaxQCCoeff</A>
+<LI><A NAME="tex2html11731"
+  HREF="minqccoeff.html">MinQCCoeff</A>
+<LI><A NAME="tex2html11732"
+  HREF="maxqclcoeff.html">MaxQCLCoeff</A>
+<LI><A NAME="tex2html11733"
+  HREF="minqclcoeff.html">MinQCLCoeff</A>
+<LI><A NAME="tex2html11734"
+  HREF="maxqcrhs.html">MaxQCRHS</A>
+<LI><A NAME="tex2html11735"
+  HREF="minqcrhs.html">MinQCRHS</A>
+<LI><A NAME="tex2html11736"
+  HREF="maxqobjcoeff.html">MaxQObjCoeff</A>
+<LI><A NAME="tex2html11737"
+  HREF="minqobjcoeff.html">MinQObjCoeff</A>
+<LI><A NAME="tex2html11738"
+  HREF="kappa.html">Kappa</A>
+<LI><A NAME="tex2html11739"
+  HREF="kappaexact.html">KappaExact</A>
+<LI><A NAME="tex2html11740"
+  HREF="farkasproof.html">FarkasProof</A>
+<LI><A NAME="tex2html11741"
+  HREF="tuneresultcount.html">TuneResultCount</A>
+<LI><A NAME="tex2html11742"
+  HREF="numstart.html">NumStart</A>
+<LI><A NAME="tex2html11743"
+  HREF="licenseexpiration.html">LicenseExpiration</A>
+<LI><A NAME="tex2html11744"
+  HREF="jobid.html">JobID</A>
+<LI><A NAME="tex2html11745"
+  HREF="server.html">Server</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11688"
+  HREF="numconstrs.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11686"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11680"
+  HREF="attributes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11689"
+  HREF="numconstrs.html">NumConstrs</A>
+<B> Up:</B> <A NAME="tex2html11687"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html11681"
+  HREF="attributes.html">Attributes</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

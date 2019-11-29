@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Troubleshooting Connectivity Issues</TITLE>
+<META NAME="description" CONTENT="Troubleshooting Connectivity Issues">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="listing_cluster_nodes.html">
+<LINK REL="up" HREF="client_commands.html">
+<LINK REL="next" HREF="administrative_commands.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html556"
+  HREF="administrative_commands.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html554"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html550"
+  HREF="listing_cluster_nodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html557"
+  HREF="administrative_commands.html">Administrative Commands</A>
+<B> Up:</B> <A NAME="tex2html555"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html551"
+  HREF="listing_cluster_nodes.html">Listing Cluster Nodes</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00032500000000000000">
+Troubleshooting Connectivity Issues</A>
+</H3>
+
+<P>
+You can test to see if a Remote Services node is reachable with the
+<TT>ping</TT> command:
+
+<P>
+
+<PRE>
+&gt; grbcluster ping --server=server1 --password=pass
+Node is not reachable
+</PRE>
+
+<P>
+The <TT>latency</TT> command provides additional detail:
+
+<PRE>
+&gt; grbcluster latency --server=server1 --password=pass
+ADDRESS		LATENCY    NBERR
+server1 	1.12813ms  0
+server2 	1.218103ms 0
+</PRE>
+This will display the latency from the client machine to
+each node in the cluster.
+
+<P>
+Add the <TT>--describe</TT> flag to see an explanation of each field:
+
+<PRE>
+&gt; grbcluster latency --describe
+ADDRESS   - Node address
+LATENCY   - latency between the local client and a node
+NBERR     - Number of errors
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html556"
+  HREF="administrative_commands.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html554"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html550"
+  HREF="listing_cluster_nodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html557"
+  HREF="administrative_commands.html">Administrative Commands</A>
+<B> Up:</B> <A NAME="tex2html555"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html551"
+  HREF="listing_cluster_nodes.html">Listing Cluster Nodes</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

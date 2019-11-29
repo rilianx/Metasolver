@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Variable Attributes</TITLE>
+<META NAME="description" CONTENT="Variable Attributes">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="linear_constraint_attribut.html">
+<LINK REL="previous" HREF="model_attributes.html">
+<LINK REL="up" HREF="attributes.html">
+<LINK REL="next" HREF="lb.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12312"
+  HREF="lb.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12310"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12304"
+  HREF="server.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12313"
+  HREF="lb.html">LB</A>
+<B> Up:</B> <A NAME="tex2html12311"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12305"
+  HREF="server.html">Server</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000162000000000000000">
+Variable Attributes</A>
+</H2>
+
+<P>
+These are variable attributes, meaning that they are associated with
+specific variables in the model.  You should use one of the various
+<code>get</code> routines to retrieve the value of an attribute.  These are
+described at the beginning of
+<A HREF="attributes.html#sec:Attributes">this section</A>).
+For the object-oriented interfaces, variable attributes are retrieved
+by invoking the <code>get</code> method on a variable object.  For
+attributes that can be modified directly by the user, you can use one
+of the various <code>set</code> methods.
+
+<P>
+Attempting to query an attribute that is not available will produce an
+error.  In C, the attribute query routine will return a
+<code>GRB_ERROR_DATA_NOT_AVAILABLE</code> error code.  The object-oriented
+interfaces will throw an exception.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12314"
+  HREF="lb.html">LB</A>
+<LI><A NAME="tex2html12315"
+  HREF="ub.html">UB</A>
+<LI><A NAME="tex2html12316"
+  HREF="obj.html">Obj</A>
+<LI><A NAME="tex2html12317"
+  HREF="vtype.html">VType</A>
+<LI><A NAME="tex2html12318"
+  HREF="varname.html">VarName</A>
+<LI><A NAME="tex2html12319"
+  HREF="x.html">X</A>
+<LI><A NAME="tex2html12320"
+  HREF="xn.html">Xn</A>
+<LI><A NAME="tex2html12321"
+  HREF="rc.html">RC</A>
+<LI><A NAME="tex2html12322"
+  HREF="barx.html">BarX</A>
+<LI><A NAME="tex2html12323"
+  HREF="start.html">Start</A>
+<LI><A NAME="tex2html12324"
+  HREF="varhintval.html">VarHintVal</A>
+<LI><A NAME="tex2html12325"
+  HREF="varhintpri.html">VarHintPri</A>
+<LI><A NAME="tex2html12326"
+  HREF="branchpriority.html">BranchPriority</A>
+<LI><A NAME="tex2html12327"
+  HREF="partition.html">Partition</A>
+<LI><A NAME="tex2html12328"
+  HREF="vbasis.html">VBasis</A>
+<LI><A NAME="tex2html12329"
+  HREF="pstart.html">PStart</A>
+<LI><A NAME="tex2html12330"
+  HREF="iislb.html">IISLB</A>
+<LI><A NAME="tex2html12331"
+  HREF="iisub.html">IISUB</A>
+<LI><A NAME="tex2html12332"
+  HREF="pwlobjcvx.html">PWLObjCvx</A>
+<LI><A NAME="tex2html12333"
+  HREF="saobjlow.html">SAObjLow</A>
+<LI><A NAME="tex2html12334"
+  HREF="saobjup.html">SAObjUp</A>
+<LI><A NAME="tex2html12335"
+  HREF="salblow.html">SALBLow</A>
+<LI><A NAME="tex2html12336"
+  HREF="salbup.html">SALBUp</A>
+<LI><A NAME="tex2html12337"
+  HREF="saublow.html">SAUBLow</A>
+<LI><A NAME="tex2html12338"
+  HREF="saubup.html">SAUBUp</A>
+<LI><A NAME="tex2html12339"
+  HREF="unbdray.html">UnbdRay</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12312"
+  HREF="lb.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12310"
+  HREF="attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12304"
+  HREF="server.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12313"
+  HREF="lb.html">LB</A>
+<B> Up:</B> <A NAME="tex2html12311"
+  HREF="attributes.html">Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12305"
+  HREF="server.html">Server</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

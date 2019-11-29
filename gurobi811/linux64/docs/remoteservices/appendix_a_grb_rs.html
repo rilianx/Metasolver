@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Appendix A: grb_rs</TITLE>
+<META NAME="description" CONTENT="Appendix A: grb_rs">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="appendix_b_grb_rs_configur.html">
+<LINK REL="previous" HREF="migrating_from_previous_re.html">
+<LINK REL="up" HREF="remoteservices.html">
+<LINK REL="next" HREF="appendix_b_grb_rs_configur.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html805"
+  HREF="appendix_b_grb_rs_configur.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html803"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html797"
+  HREF="distributed_optimization.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html806"
+  HREF="appendix_b_grb_rs_configur.html">Appendix B: grb_rs -</A>
+<B> Up:</B> <A NAME="tex2html804"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html798"
+  HREF="distributed_optimization.html">Distributed Optimization</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00070000000000000000"></A>
+<A NAME="sec:RSAgentRef"></A>
+<BR>
+Appendix A: grb_rs
+</H1>
+
+<P>
+
+<PRE>
+Usage:
+  grb_rs [flags]           Start the remote services as a standard process
+  grb_rs --help            Display usage
+  grb_rs command [flags]   Execute a specific command
+  grb_rs command --help    Display more information about a command
+
+Flags can be set using --flag=value or the short form -f=value if defined.
+A boolean flag can be enabled using --flag or the short form -f if defined.
+
+Configuration Helper Commands:
+  aws         Display machine information when running on Amazon Web Services
+  azure       Display machine information when running on Microsoft Azure
+  hash        Hash a password
+  init        Clone the default data directory and configuration to current
+                directory
+  token       Generate a cluster token
+  properties  Display help about configuration properties
+
+Service Commands:
+  install     Install the service
+  restart     Start or restart the service (install the service if necessary)
+  start       Start the service (install the service if necessary)
+  stop        Stop the service
+  uninstall   Uninstall the service
+
+With no command, grb_rs will start the remote services as a standard process
+and the following flags are available for quick configuration. The full list
+of properties can be displayed with the 'grb_rs properties' command and the
+properties can be set in the grb_rs.cnf configuration file.
+
+Logging Flags:
+      --console-ts             Add timestamps to console log messages
+      --logfile string         Log to a rotating log file
+      --logfile-max-age int    Limit the rotating log file to a number of days
+      --logfile-max-size int   Limit the size of each file to a size in Mb
+      --no-console             Disable log to console
+      --syslog                 Log to syslog or Windows event log
+  -v, --verbose                Enable verbose logging
+
+Configuration Flags:
+  -c, --config string          Location of the configuration file
+                                 (default: 'grb_rs.cnf')
+      --data string            Location of the data root directory
+                                 (default: 'data')
+      --hostname               Overrides the public name on this name
+      --idle-shutdown int      Shutdown if the server is idle for more than the
+                                 specified time limit (minutes)
+      --join string            Join a cluster using the specified cluster
+                                 representative node address
+      --port int               Start the node on the given port
+      --service                Indicates if it is started by a service manager
+      --worker                 Declare this node as a distributed worker
+
+Security Flags:
+      --tls                    Use TLS for communication encryption
+      --tlscert string         Path to TLS certificate file
+      --tlskey string          Path to TLS key file
+      --tls-insecure           Use TLS but disable verification of certificates
+                                 works with self-signed certificates
+
+General Flags:
+      --version                Display version information
+      --help                   Display usage
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html805"
+  HREF="appendix_b_grb_rs_configur.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html803"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html797"
+  HREF="distributed_optimization.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html806"
+  HREF="appendix_b_grb_rs_configur.html">Appendix B: grb_rs -</A>
+<B> Up:</B> <A NAME="tex2html804"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html798"
+  HREF="distributed_optimization.html">Distributed Optimization</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

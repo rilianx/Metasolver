@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel::reset()</TITLE>
+<META NAME="description" CONTENT="GRBModel::reset()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cpp_grbmodel_setcallback.html">
+<LINK REL="previous" HREF="cpp_grbmodel_remove.html">
+<LINK REL="up" HREF="cpp_grbmodel.html">
+<LINK REL="next" HREF="cpp_grbmodel_setcallback.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html3964"
+  HREF="cpp_grbmodel_setcallback.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3962"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3956"
+  HREF="cpp_grbmodel_remove.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3965"
+  HREF="cpp_grbmodel_setcallback.html">GRBModel::setCallback()</A>
+<B> Up:</B> <A NAME="tex2html3963"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3957"
+  HREF="cpp_grbmodel_remove.html">GRBModel::remove()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000424800000000000000"></A>
+<A NAME="cppmethod:GRBModel::reset"></A>
+<BR>
+GRBModel::reset()
+</H3>
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">void</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">reset</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">clearall=0 )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Reset the model to an unsolved state, discarding any previously
+computed solution information.
+
+  Note that, due to our lazy update approach, the change won't actually
+  take effect until you update the model
+  (using <A HREF="cpp_grbmodel_update.html#cppmethod:GRBModel::update">GRBModel::update</A>),
+  optimize the model
+  (using <A HREF="cpp_grbmodel_optimize.html#cppmethod:GRBModel::optimize">GRBModel::optimize</A>),
+  or write the model to disk
+  (using <A HREF="cpp_grbmodel_write.html#cppmethod:GRBModel::write">GRBModel::write</A>).
+
+<P>
+ <SPAN  CLASS="textbf">clearall (optional)</SPAN>: Should additional information such as MIP
+  starts, variable hints, branching priorities, lazy flags, and
+  partition information be cleared?
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3964"
+  HREF="cpp_grbmodel_setcallback.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3962"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3956"
+  HREF="cpp_grbmodel_remove.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3965"
+  HREF="cpp_grbmodel_setcallback.html">GRBModel::setCallback()</A>
+<B> Up:</B> <A NAME="tex2html3963"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3957"
+  HREF="cpp_grbmodel_remove.html">GRBModel::remove()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Remote Services Agent (grb_rs)</TITLE>
+<META NAME="description" CONTENT="Remote Services Agent (grb_rs)">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="configuration.html">
+<LINK REL="previous" HREF="licensing.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="configuration.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html246"
+  HREF="configuration.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html244"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html238"
+  HREF="licensing.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html247"
+  HREF="configuration.html">Configuration</A>
+<B> Up:</B> <A NAME="tex2html245"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html239"
+  HREF="licensing.html">Licensing</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021300000000000000"></A>
+<A NAME="sec:RSAgent"></A>
+<BR>
+Remote Services Agent (grb_rs)
+</H3>
+
+<P>
+To form a Remote Services cluster, you need to run the <EM>Remote
+  Services agent</EM> (<TT>grb_rs</TT>) on all the nodes that make up the
+cluster.  These agents communicate amongst themselves, and also with
+client programs (e.g. <TT>gurobi_cl</TT>) and tools (e.g.,
+<TT>grbcluster</TT>), to manage jobs, to provide information about the
+state of the cluster, etc.
+
+<P>
+The primary task of the Remote Services agents is to collectively
+manage the queueing and the execution of jobs.  The agents work
+together to balance the load by assigning a new job to the node
+with the fewest running jobs whenever possible.
+If all nodes are at capacity, newly
+submitted jobs will be queued, and the first node with available
+capacity will later execute the job.  If a new node is added to the
+cluster, it will immediately start processing queued jobs.
+
+<P>
+The <TT>grb_rs</TT> executable provides several commands and flags to help
+in the configuration and execution of the agent.  We will review these
+commands step by step in the following sections.  You can get the full
+list of commands in the <A HREF="appendix_a_grb_rs.html#sec:RSAgentRef">reference
+  section</A> or by using the command-line help:
+
+<PRE>
+&gt; grb_rs --help
+</PRE>
+
+<P>
+In the next sections, we will also use <TT>grbcluster</TT> to monitor and administrate the cluster.
+You can get the full list of commands in the <A HREF="appendix_c_grbcluster.html#sec:RSClusterRef">reference section</A> or by using the command-line help:
+
+<PRE>
+&gt; grbcluster --help
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html246"
+  HREF="configuration.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html244"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html238"
+  HREF="licensing.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html247"
+  HREF="configuration.html">Configuration</A>
+<B> Up:</B> <A NAME="tex2html245"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html239"
+  HREF="licensing.html">Licensing</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

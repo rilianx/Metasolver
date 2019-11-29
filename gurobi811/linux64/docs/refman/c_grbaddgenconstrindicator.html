@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBaddgenconstrIndicator</TITLE>
+<META NAME="description" CONTENT="GRBaddgenconstrIndicator">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="c_grbaddqconstr.html">
+<LINK REL="previous" HREF="c_grbaddgenconstror.html">
+<LINK REL="up" HREF="c_model_creation_and_modif.html">
+<LINK REL="next" HREF="c_grbaddqconstr.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1770"
+  HREF="c_grbaddqconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1768"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1762"
+  HREF="c_grbaddgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1771"
+  HREF="c_grbaddqconstr.html">GRBaddqconstr</A>
+<B> Up:</B> <A NAME="tex2html1769"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1763"
+  HREF="c_grbaddgenconstror.html">GRBaddgenconstrOr</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000221200000000000000"></A>
+<A NAME="routine:GRBaddgenconstrIndicator"></A>
+<BR>
+GRBaddgenconstrIndicator
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBaddgenconstrIndicator</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBmodel</TD>
+<TD ALIGN="LEFT">*model,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">const char</TD>
+<TD ALIGN="LEFT">*name,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">binvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">binval,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">nvars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int*</TD>
+<TD ALIGN="LEFT">ind,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double*</TD>
+<TD ALIGN="LEFT">val,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">char</TD>
+<TD ALIGN="LEFT">sense,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT">rhs )</TD>
+</TR>
+</TABLE>
+
+<P>
+Add a new general constraint of type <TT>GRB_GENCONSTR_INDICATOR</TT> to a model.
+
+  Note that, due to our lazy update approach, the new constraint won't actually be added
+  until you update the model
+  (using <A HREF="c_grbupdatemodel.html#routine:GRBupdatemodel">GRBupdatemodel</A>),
+  optimize the model
+  (using <A HREF="c_grboptimize.html#routine:GRBoptimize">GRBoptimize</A>),
+  or write the model to disk
+  (using <A HREF="c_grbwrite.html#routine:GRBwrite">GRBwrite</A>).
+
+<P>
+An INDICATOR constraint <!-- MATH
+ $z = f \rightarrow a^Tx \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="123" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.png"
+ ALT="$z = f \rightarrow a^Tx \leq b$"></SPAN> states that if the binary
+indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="72" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$f \in \{0,1\}$"></SPAN>, then the linear constraint
+<SPAN CLASS="MATH"><IMG
+ WIDTH="60" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.png"
+ ALT="$a^Tx \leq b$"></SPAN> should hold.
+On the other hand, if <SPAN CLASS="MATH"><IMG
+ WIDTH="70" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img18.png"
+ ALT="$z = 1-f$"></SPAN>, the linear constraint may be violated.
+The sense of the linear constraint can also be specified to be &ldquo;<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.png"
+ ALT="$=$"></SPAN>&rdquo; or &ldquo;<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$\geq$"></SPAN>&rdquo;.
+
+<P>
+Note that the indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> of a constraint will be forced
+to be binary; independently of how it was created.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model to which the new general constraint should be added.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.  This
+  argument can be <TT>NULL</TT>, in which case the constraint is
+  given a default name.
+
+<P>
+ <SPAN  CLASS="textbf">int binvar</SPAN>: The index of the binary indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN>.
+
+<P>
+ <SPAN  CLASS="textbf">int binval</SPAN>: The value <SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img21.png"
+ ALT="$f$"></SPAN> for the binary indicator variable that would
+  force the linear constraint to be satisfied (<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>).
+
+<P>
+ <SPAN  CLASS="textbf">int nvars</SPAN>: The number <SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="$n$"></SPAN> of non-zero coefficients in the linear constraint
+  triggered by the indicator.
+
+<P>
+ <SPAN  CLASS="textbf">const int *ind</SPAN>: Indices for the variables <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$x_j$"></SPAN> with non-zero values in
+  the linear constraint.
+
+<P>
+ <SPAN  CLASS="textbf">const double *val</SPAN>: Numerical values for non-zero values <SPAN CLASS="MATH"><IMG
+ WIDTH="19" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img22.png"
+ ALT="$a_j$"></SPAN> in
+  the linear constraint.
+
+<P>
+ <SPAN  CLASS="textbf">char sense</SPAN>: Sense for the linear constraint.  Options are
+<TT>GRB_LESS_EQUAL</TT>, <TT>GRB_EQUAL</TT>, or
+<TT>GRB_GREATER_EQUAL</TT>.
+
+<P>
+ <SPAN  CLASS="textbf">double rhs</SPAN>: Right-hand-side value for the linear constraint.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A non-zero return value indicates that a problem occurred while adding the general constraint.
+Refer to the <A HREF="error_codes.html#sec:ErrorCodes">Error Code</A> table for a
+list of possible return values.  Details on the error can be obtained
+by calling <A HREF="c_grbgeterrormsg.html#routine:GRBgeterrormsg">GRBgeterrormsg</A>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  /* x7 = 1 -&gt; x1 + 2 x3 + x4 = 1 */
+  int    ind[] = {1, 3, 4};
+  double val[] = {1.0, 2.0, 1.0};
+  error = GRBaddgenconstrIndicator(model, NULL, 7, 1,
+                                   3, ind, val, GRB_EQUAL, 1.0);
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1770"
+  HREF="c_grbaddqconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1768"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1762"
+  HREF="c_grbaddgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1771"
+  HREF="c_grbaddqconstr.html">GRBaddqconstr</A>
+<B> Up:</B> <A NAME="tex2html1769"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1763"
+  HREF="c_grbaddgenconstror.html">GRBaddgenconstrOr</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

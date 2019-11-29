@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Queueing, Load Balancing, and Job Priorities</TITLE>
+<META NAME="description" CONTENT="Queueing, Load Balancing, and Job Priorities">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="submitting_jobs_with_gurob.html">
+<LINK REL="previous" HREF="license_file.html">
+<LINK REL="up" HREF="client_configuration.html">
+<LINK REL="next" HREF="submitting_jobs_with_gurob.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html475"
+  HREF="submitting_jobs_with_gurob.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html473"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html467"
+  HREF="license_file.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html476"
+  HREF="submitting_jobs_with_gurob.html">Submitting Jobs with gurobi_cl</A>
+<B> Up:</B> <A NAME="tex2html474"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html468"
+  HREF="license_file.html">License File</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00031200000000000000"></A>
+<A NAME="sec:QueueingEtc"></A>
+<BR>
+Queueing, Load Balancing, and Job Priorities
+</H3>
+
+<P>
+As noted earlier, Gurobi Compute Servers support job priorities.  You
+can assign an integer priority between -100 and 100 to each job (the
+default is 0).  When choosing among queued jobs, the Compute Server
+will run the highest priority job first.  Note that servers will never
+preempt running jobs.
+
+<P>
+We have chosen to give priority 100 a special meaning.  A priority 100
+job will start immediately, even if this means that a server will
+exceed its job limit.  You should be cautious with priority 100 jobs,
+since submitting too many at once could lead to very high server
+loads, which could lead to poor performance and even crashes in extreme
+cases. Note that this feature must be enabled by the cluster administrator
+using the <TT>HARDJOBLIMIT</TT> configuration property.
+
+<P>
+As with most job properties, priorities can be set either through a
+programming language API or through the license file.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html475"
+  HREF="submitting_jobs_with_gurob.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html473"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html467"
+  HREF="license_file.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html476"
+  HREF="submitting_jobs_with_gurob.html">Submitting Jobs with gurobi_cl</A>
+<B> Up:</B> <A NAME="tex2html474"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html468"
+  HREF="license_file.html">License File</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

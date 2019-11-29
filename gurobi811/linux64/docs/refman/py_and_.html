@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>and_()</TITLE>
+<META NAME="description" CONTENT="and_()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_max_.html">
+<LINK REL="previous" HREF="py_abs_.html">
+<LINK REL="up" HREF="py_general_constraint_help.html">
+<LINK REL="next" HREF="py_max_.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11096"
+  HREF="py_max_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11094"
+  HREF="py_general_constraint_help.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11088"
+  HREF="py_abs_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11097"
+  HREF="py_max_.html">max_()</A>
+<B> Up:</B> <A NAME="tex2html11095"
+  HREF="py_general_constraint_help.html">General Constraint Helper Functions</A>
+<B> Previous:</B> <A NAME="tex2html11089"
+  HREF="py_abs_.html">abs_()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001019200000000000000"></A>
+<A NAME="pythonmethod:and_"></A>
+<BR>
+and_()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">and_</SPAN></FONT></BIG> ( variables )
+
+
+<P>
+Used to set a binary decision variable equal to the logical AND of a
+list of other binary decision variables.  You can pass the arguments
+as a Python list or as a comma-separated list.
+
+<P>
+Note that the Gurobi Python interface includes an equivalent
+<code>all_()</code> function.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  m.addConstr(z == and_(x, y))
+  m.addConstr(z == and_([x, y]))
+</PRE>
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+Returns a <A HREF="py_genexpr.html#pythonclass:GenExpr">GenExpr</A>
+  object.
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11096"
+  HREF="py_max_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11094"
+  HREF="py_general_constraint_help.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11088"
+  HREF="py_abs_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11097"
+  HREF="py_max_.html">max_()</A>
+<B> Up:</B> <A NAME="tex2html11095"
+  HREF="py_general_constraint_help.html">General Constraint Helper Functions</A>
+<B> Previous:</B> <A NAME="tex2html11089"
+  HREF="py_abs_.html">abs_()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.getMultiobjEnv()</TITLE>
+<META NAME="description" CONTENT="Model.getMultiobjEnv()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_getobjective.html">
+<LINK REL="previous" HREF="py_model_getgenconstrs.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_getobjective.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9860"
+  HREF="py_model_getobjective.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9858"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9852"
+  HREF="py_model_getgenconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9861"
+  HREF="py_model_getobjective.html">Model.getObjective()</A>
+<B> Up:</B> <A NAME="tex2html9859"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9853"
+  HREF="py_model_getgenconstrs.html">Model.getGenConstrs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001024600000000000000"></A>
+<A NAME="pythonmethod:Model.getMultiobjEnv"></A>
+<BR>
+Model.getMultiobjEnv()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getMultiobjEnv</SPAN></FONT></BIG> ( index )
+
+<P>
+Create/retrieve a multi-objective
+environment for the objective with the given index. This
+environment enables fine-grained control over the multi-objective
+optimization process. Specifically, by changing parameters on this
+environment, you modify the behavior of the optimization that
+occurs during the corresponding pass of the multi-objective
+optimization.
+
+<P>
+Each multi-objective environment starts with a copy of the current
+model environment.
+
+<P>
+Please refer to the discussion of
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple Objectives</A> for
+information on how to specify multiple objective functions and control
+the trade-off between them.
+
+<P>
+Use
+<A HREF="py_model_discardmultiobjen.html#pythonmethod:Model.discardMultiobjEnvs">discardMultiobjEnvs</A>
+to discard multi-objective environments and return to standard behavior.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">index (int)</SPAN>: The objective index.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The multi-objective environment for the model.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  env0 = model.getMultiobjEnv(0)
+  env1 = model.getMultiobjEnv(1)
+
+  env0.setParam('TimeLimit', 100)
+  env1.setParam('TimeLimit', 10)
+
+  model.optimize()
+
+  model.discardMultiobjEnvs()
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9860"
+  HREF="py_model_getobjective.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9858"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9852"
+  HREF="py_model_getgenconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9861"
+  HREF="py_model_getobjective.html">Model.getObjective()</A>
+<B> Up:</B> <A NAME="tex2html9859"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9853"
+  HREF="py_model_getgenconstrs.html">Model.getGenConstrs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

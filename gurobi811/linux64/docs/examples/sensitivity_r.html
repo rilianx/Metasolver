@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>sensitivity.R</TITLE>
+<META NAME="description" CONTENT="sensitivity.R">
+<META NAME="keywords" CONTENT="examples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="examples.css">
+
+<LINK REL="next" HREF="sos_r.html">
+<LINK REL="previous" HREF="qp_r.html">
+<LINK REL="up" HREF="r_examples.html">
+<LINK REL="next" HREF="sos_r.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html3142"
+  HREF="sos_r.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3140"
+  HREF="r_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3134"
+  HREF="qp_r.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3143"
+  HREF="sos_r.html">sos.R</A>
+<B> Up:</B> <A NAME="tex2html3141"
+  HREF="r_examples.html">R Examples</A>
+<B> Previous:</B> <A NAME="tex2html3135"
+  HREF="qp_r.html">qp.R</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000281800000000000000"></A>
+<A NAME="subsubsection:sensitivity.R"></A>
+<BR>
+sensitivity.R
+</H3>
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint"># Copyright 2019, Gurobi Optimization, LLC
+#
+# A simple sensitivity analysis example which reads a MIP model
+# from a file and solves it. Then each binary variable is set
+# to 1-X, where X is its value in the optimal solution, and
+# the impact on the objective function value is reported.
+
+library(Matrix)
+library(gurobi)
+
+args &lt;- commandArgs(trailingOnly = TRUE)
+if (length(args) &lt; 1) {
+  stop('Usage: Rscript sensitivity.R filename\n')
+}
+
+# Read model
+cat('Reading model',args[1],'...')
+model &lt;- gurobi_read(args[1])
+cat('... done\n')
+
+# Detect set of non-continous variables
+numvars    &lt;- ncol(model$A)
+intvars    &lt;- which(model$vtype != 'C')
+numintvars &lt;- length(intvars)
+if (numintvars &lt; 1) {
+  stop('All model\'s variables are continuous, nothing to do\n')
+}
+
+# Optimize
+result &lt;- gurobi(model)
+
+# Capture solution information
+if (result$status != 'OPTIMAL') {
+  cat('Optimization finished with status', result$status, '\n')
+  stop('Stop now\n')
+}
+origx       &lt;- result$x
+origobjval  &lt;- result$objval
+
+# create lb and ub if they do not exists, and set them to default values
+if (!('lb' %in% names(model))) {
+  model$lb &lt;- numeric(numvars)
+}
+if (!('ub' %in% names(model))) {
+  # This line is not needed, as we must have ub defined
+  model$ub &lt;- Inf + numeric(numvars)
+}
+
+# Disable output for subsequent solves
+params            &lt;- list()
+params$OutputFlag &lt;- 0
+
+# Iterate through unfixed binary variables in the model
+for (j in 1:numvars) {
+  if (model$vtype[j] != 'B' &amp;&amp;
+      model$vtype[j] != 'I'   ) next
+  if (model$vtype[j] == 'I') {
+    if (model$lb[j] != 0.0)     next
+    if (model$ub[j] != 1.0)     next
+  } else {
+    if (model$lb[j] &gt; 0.0)      next
+    if (model$ub[j] &lt; 1.0)      next
+  }
+
+  # Update MIP start for all variables
+  model$start &lt;- origx
+
+  # Set variable to 1-X, where X is its value in optimal solution
+  if (origx[j] &lt; 0.5) {
+    model$start[j] &lt;- 1
+    model$lb[j]    &lt;- 1
+  } else {
+    model$start[j] &lt;- 0
+    model$ub[j]    &lt;- 0
+  }
+
+  # Optimize
+  result &lt;- gurobi(model, params)
+
+  # Display result
+  varnames &lt;- ''
+  if ('varnames' %in% names(model)) {
+    varnames &lt;- model$varnames[j]
+  } else {
+    varnames &lt;- sprintf('%s%d', model$vtype[j], j)
+  }
+  gap &lt;- 0
+  if (result$status != 'OPTIMAL') {
+    gap &lt;- Inf
+  } else {
+    gap &lt;- result$objval - origobjval
+  }
+  cat('Objective sensitivity for variable', varnames, 'is', gap, '\n')
+
+  # Restore original bounds
+  model$lb[j] &lt;- 0
+  model$ub[j] &lt;- 1
+}
+
+# Clear space
+rm(model, params, result, origx)
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3142"
+  HREF="sos_r.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3140"
+  HREF="r_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3134"
+  HREF="qp_r.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3143"
+  HREF="sos_r.html">sos.R</A>
+<B> Up:</B> <A NAME="tex2html3141"
+  HREF="r_examples.html">R Examples</A>
+<B> Previous:</B> <A NAME="tex2html3135"
+  HREF="qp_r.html">qp.R</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

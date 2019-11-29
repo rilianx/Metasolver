@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Using HTTPS</TITLE>
+<META NAME="description" CONTENT="Using HTTPS">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="using_https_with_self_sign.html">
+<LINK REL="previous" HREF="communication_options.html">
+<LINK REL="up" HREF="communication_options.html">
+<LINK REL="next" HREF="using_https_with_self_sign.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html360"
+  HREF="using_https_with_self_sign.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html358"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html352"
+  HREF="communication_options.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html361"
+  HREF="using_https_with_self_sign.html">Using HTTPS with Self-Signed</A>
+<B> Up:</B> <A NAME="tex2html359"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html353"
+  HREF="communication_options.html">Communication Options</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00023100000000000000"></A>
+<A NAME="sec:RSHTTPS"></A>
+<BR>
+Using HTTPS
+</H3>
+
+<P>
+Several properties can be used to configure the communication options.
+In order to enable HTTPS with TLS data encryption over the wire, you need to set the <TT>TLS</TT> property.
+
+<PRE>
+TLS=true
+</PRE>
+
+<P>
+You will also need to provide the paths to the private key and the certificate files:
+
+<PRE>
+TLS_CERT=cert.pem
+TLS_KEY=key.pem
+</PRE>
+
+<P>
+When HTTPS is enabled, the standard HTTPS port 443 is then used as the
+default instead of port 80.  As with the port 80, you will need to
+start <TT>grb_rs</TT> with elevated privileges.  Otherwise, you will get
+a permission error.  On Linux, you'd see an error message like the following:
+
+<PRE>
+fatal : Gurobi Remote Services terminated, listen tcp :443: bind: permission denied
+</PRE>
+
+<P>
+As explained in the installation section, you can change the port
+using the <TT>PORT</TT> property.  Note that you cannot mix nodes using
+HTTP and nodes using HTTPS in the same cluster.  If you wish to use HTTPS,
+all the nodes must be configured in the same way.  HTTPS will be used
+for communication between the nodes and also between the clients and
+the nodes.
+
+<P>
+If you enable HTTPS, you will need to specify the prefix <TT>https://</TT> when acccessing any nodes of the cluster:
+
+<PRE>
+&gt; grbcluster --server=https://server1 --password=pass nodes
+ADDRESS         STATUS TYPE    LICENSE #Q #R JL IDLE   %MEM  %CPU
+https://server1 ALIVE  COMPUTE VALID   0  0  2  46h59m 9.79  0.50
+https://server2 ALIVE  COMPUTE VALID   0  0  2  46h46m 8.75  0.00
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html360"
+  HREF="using_https_with_self_sign.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html358"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html352"
+  HREF="communication_options.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html361"
+  HREF="using_https_with_self_sign.html">Using HTTPS with Self-Signed</A>
+<B> Up:</B> <A NAME="tex2html359"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html353"
+  HREF="communication_options.html">Communication Options</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

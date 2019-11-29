@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Building and running the example</TITLE>
+<META NAME="description" CONTENT="Building and running the example">
+<META NAME="keywords" CONTENT="quickstart_windows">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="quickstart_windows.css">
+
+<LINK REL="previous" HREF="cpp_error_handling.html">
+<LINK REL="up" HREF="cpp_interface.html">
+<LINK REL="next" HREF="java_interface.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html864"
+  HREF="java_interface.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html862"
+  HREF="cpp_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html858"
+  HREF="cpp_error_handling.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html865"
+  HREF="java_interface.html">Java Interface</A>
+<B> Up:</B> <A NAME="tex2html863"
+  HREF="cpp_interface.html">C++ Interface</A>
+<B> Previous:</B> <A NAME="tex2html859"
+  HREF="cpp_error_handling.html">Error handling</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000811000000000000000">
+Building and running the example</A>
+</H2>
+
+<P>
+To build and run the example, we refer the user to the files in
+<code>&lt;installdir&gt;/examples/build</code>.
+For Windows platforms, this directory contains <TT>C++_examples_2015.sln</TT> and <TT>C++_examples_2017.sln</TT>
+(Visual Studio 2015 and 2017
+solution files for the C++ examples).  Double-clicking on the solution
+file will bring up Visual Studio.  Clicking on the <TT>mip1_c++</TT> project, and then selecting <EM>Run</EM> from the <EM>Build</EM> menu will compile and run the example.
+
+<P>
+If you want to create your own project or makefile to build a C++
+program that calls Gurobi, the details will depend on your platform
+and development environment, but we'd like to point out a
+few common pitfalls:
+
+<UL>
+<LI>Be sure to choose the Gurobi C++ library that is compatible with
+your Visual Studio version and your choice of runtime library (Gurobi
+supports runtime library options <TT>/MD</TT>, <TT>/MDd</TT>,
+<TT>/MT</TT>, and <TT>/MTd</TT>).  To give an example, use file
+<TT>gurobi_c++md2015.lib</TT> when you choose runtime library
+option /MD in Visual Studio 2015.  Similarly, use file <TT>gurobi_c++mtd2017.lib</TT> when you choose runtime library option /MTd in
+Visual Studio 2017.
+</LI>
+<LI>A C++ program that uses Gurobi must link in both the Gurobi C++
+library <TT>gurobi_c++mt2015.lib</TT> <EM>and</EM> the Gurobi
+C library <TT>gurobi81.lib</TT>.
+</LI>
+</UL>
+
+<P>
+The C++ example directory <code>&lt;installdir&gt;/examples/c++</code> contains a
+number of examples.  We encourage you to browse and modify them in
+order to become more familiar with the Gurobi C++ interface.  We
+also encourage you to read the
+<A NAME="tex2html39"
+  HREF="../examples/examples.html">Gurobi Example Tour</A>
+for more information.
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html864"
+  HREF="java_interface.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html862"
+  HREF="cpp_interface.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html858"
+  HREF="cpp_error_handling.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html865"
+  HREF="java_interface.html">Java Interface</A>
+<B> Up:</B> <A NAME="tex2html863"
+  HREF="cpp_interface.html">C++ Interface</A>
+<B> Previous:</B> <A NAME="tex2html859"
+  HREF="cpp_error_handling.html">Error handling</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

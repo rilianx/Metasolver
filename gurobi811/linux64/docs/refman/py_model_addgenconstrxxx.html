@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addGenConstrXxx()</TITLE>
+<META NAME="description" CONTENT="Model.addGenConstrXxx()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addgenconstrmax.html">
+<LINK REL="previous" HREF="py_model_addconstrs.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addgenconstrmax.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9440"
+  HREF="py_model_addgenconstrmax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9438"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9432"
+  HREF="py_model_addconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9441"
+  HREF="py_model_addgenconstrmax.html">Model.addGenConstrMax()</A>
+<B> Up:</B> <A NAME="tex2html9439"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9433"
+  HREF="py_model_addconstrs.html">Model.addConstrs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000102400000000000000"></A>
+<A NAME="pythonmethod:Model.addGenConstrXxx"></A>
+<BR>
+Model.addGenConstrXxx()
+</H3>
+
+<P>
+Each of the functions described below adds a new <EM>general constraint</EM> to a model.
+
+<P>
+Mathematical programming has traditionally defined a set of
+fundamental constraint types: variable bound constraints, linear
+constraints, quadratic constraints, integrality constraints, and SOS
+constraints.  These are typically treated directly by the underlying
+solver (although not always), and are fundamental to the overall
+algorithm.
+
+<P>
+Gurobi accepts a number of additional constraint types, which we
+collectively refer to as <EM>general constraints</EM>.  These are
+typically <EM>not</EM> treated directly by the solver.  Rather, they
+are transformed by presolve into mathematically equivalent sets of
+constraints (and variables), chosen from among the fundamental types
+listed above.  These general constraints are provided as a convenience
+to users.  If such constraints appear in your model, but if you prefer
+to reformulate them yourself using fundamental constraint types
+instead, you can certainly do so.  However, note that Gurobi can
+sometimes exploit information contained in the other constraints in
+the model to build a more efficient formulation than what you might
+create.
+
+<P>
+The additional constraint types that fall under this <EM>general
+  constraint</EM> umbrella are:
+
+<UL>
+<LI>MAX (<A HREF="py_model_addgenconstrmax.html#pythonmethod:Model.addGenConstrMax">Model.addGenConstrMax</A>):
+  set a decision variable equal to the maximum value from
+  among a set of decision variables
+</LI>
+<LI>MIN (<A HREF="py_model_addgenconstrmin.html#pythonmethod:Model.addGenConstrMin">Model.addGenConstrMin</A>):
+  set a decision variable equal to the minimum value from
+  among a set of decision variables
+</LI>
+<LI>ABS (<A HREF="py_model_addgenconstrabs.html#pythonmethod:Model.addGenConstrAbs">Model.addGenConstrAbs</A>):
+  set a decision variable equal to the absolute value
+  of some other decision variable
+</LI>
+<LI>AND (<A HREF="py_model_addgenconstrand.html#pythonmethod:Model.addGenConstrAnd">Model.addGenConstrAnd</A>):
+  set a binary variable equal to one if and only if all
+  of a set of binary decision variables are equal to one
+</LI>
+<LI>OR (<A HREF="py_model_addgenconstror.html#pythonmethod:Model.addGenConstrOr">Model.addGenConstrOr</A>):
+  set a binary variable equal to one if and only if at least one
+  variable out of a set of binary decision variables is equal to one
+</LI>
+<LI>INDICATOR (<A HREF="py_model_addgenconstrindic.html#pythonmethod:Model.addGenConstrIndicator">Model.addGenConstrIndicator</A>):
+  whenever a given binary variable takes a certain value, then the
+  given linear constraint must be satisfied
+</LI>
+</UL>
+
+<P>
+You can also add general constraints through
+<A HREF="py_model_addconstr.html#pythonmethod:Model.addConstr">addConstr</A> or
+<A HREF="py_model_addconstrs.html#pythonmethod:Model.addConstrs">addConstrs</A>,
+using overloaded operators and a few
+<A HREF="py_general_constraint_help.html#pythonclass:GCHelper">general constraint helper functions</A>.
+The descriptions below will make note of these equivalent, more concise
+alternatives.
+
+<P>
+Please refer to <A HREF="constraints.html#subsubsection:GeneralConstraints">this section</A>
+for additional details on general constraints.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9440"
+  HREF="py_model_addgenconstrmax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9438"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9432"
+  HREF="py_model_addconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9441"
+  HREF="py_model_addgenconstrmax.html">Model.addGenConstrMax()</A>
+<B> Up:</B> <A NAME="tex2html9439"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9433"
+  HREF="py_model_addconstrs.html">Model.addConstrs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

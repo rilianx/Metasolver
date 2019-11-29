@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel::write()</TITLE>
+<META NAME="description" CONTENT="GRBModel::write()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="cpp_grbmodel_update.html">
+<LINK REL="up" HREF="cpp_grbmodel.html">
+<LINK REL="next" HREF="cpp_grbvar.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html4062"
+  HREF="cpp_grbvar.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html4060"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html4056"
+  HREF="cpp_grbmodel_update.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html4063"
+  HREF="cpp_grbvar.html">GRBVar</A>
+<B> Up:</B> <A NAME="tex2html4061"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html4057"
+  HREF="cpp_grbmodel_update.html">GRBModel::update()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000425800000000000000"></A>
+<A NAME="cppmethod:GRBModel::write"></A>
+<BR>
+GRBModel::write()
+</H3>
+
+<P>
+This method&nbsp;is the general entry point for writing optimization data
+to a file.  It can be used to write optimization models, solutions
+vectors, basis vectors, start vectors, or parameter settings.  The
+type of data written is determined by the file suffix.
+File formats are described in the
+<A HREF="model_file_formats.html#sec:FileFormats">File Format</A> section.
+
+<P>
+Note that writing a model to a file will process all pending model
+modifications.  However, writing other model information (solutions,
+bases, etc.)  will not.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">void</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">write</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">const string&amp;</TD>
+<TD ALIGN="LEFT">filename )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">filename</SPAN>: The name of the file to be written.  The file type
+is encoded in the file name suffix.  Valid suffixes are <TT>.mps</TT>,
+<TT>.rew</TT>, <TT>.lp</TT>, or <TT>.rlp</TT> for writing the model itself,
+<TT>.ilp</TT> for writing just the IIS associated with an infeasible
+model (see <A HREF="cpp_grbmodel_computeiis.html#cppmethod:GRBModel::computeIIS">GRBModel::computeIIS</A> for
+further information), <TT>.sol</TT> for writing the current solution,
+<TT>.mst</TT> for writing a start vector, <TT>.hnt</TT> for writing a hint
+file, <TT>.bas</TT> for writing an LP basis, or <TT>.prm</TT> for writing
+modified parameter settings.  If your system provides compressing
+utilities (e.g., <TT>7z</TT> or <TT>zip</TT> for Windows, and
+<TT>gzip</TT>, <TT>bzip2</TT>, or <TT>unzip</TT> for Linux or
+Mac OS); then the files can be compressed, so additional suffixes of
+<TT>.gz</TT>, <TT>.bz2</TT>, or <TT>.7z</TT> are accepted.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html4062"
+  HREF="cpp_grbvar.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html4060"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html4056"
+  HREF="cpp_grbmodel_update.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html4063"
+  HREF="cpp_grbvar.html">GRBVar</A>
+<B> Up:</B> <A NAME="tex2html4061"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html4057"
+  HREF="cpp_grbmodel_update.html">GRBModel::update()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

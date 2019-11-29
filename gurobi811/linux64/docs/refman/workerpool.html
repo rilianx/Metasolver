@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>WorkerPool</TITLE>
+<META NAME="description" CONTENT="WorkerPool">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="zerohalfcuts.html">
+<LINK REL="previous" HREF="workerpassword.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="zerohalfcuts.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15117"
+  HREF="zerohalfcuts.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15115"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15109"
+  HREF="workerpassword.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15118"
+  HREF="zerohalfcuts.html">ZeroHalfCuts</A>
+<B> Up:</B> <A NAME="tex2html15116"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html15110"
+  HREF="workerpassword.html">WorkerPassword</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00017213300000000000000"></A>
+<A NAME="parameter:WorkerPool"></A>
+<BR>
+WorkerPool
+</H3>
+Distributed worker cluster (for distributed algorithms)
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">string</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">""</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<P>
+When using a distributed algorithm (distributed MIP, distributed
+concurrent, or distributed tuning), this parameter allows you to
+specify a Remote Services cluster that will provide distributed
+workers.  You should also specify the access password for that
+cluster, if there is one, in the
+<A HREF="workerpassword.html#parameter:WorkerPassword">WorkerPassword</A> parameter.
+Note that you don't need to set either of these parameters if your job
+is running on a Compute Server node and you want to use the same
+cluster for the distributed workers.
+
+<P>
+You can provide a comma-separated list of machines for added
+robustness.  If the first node in the list is unavailable, the client
+will attempt to contact the second node, etc.
+
+<P>
+To give an example, if you have a Remote Services cluster that uses
+port 61000 on a pair of machines named
+<code>server1</code> and <code>server2</code>,
+you could set
+<code>WorkerPool</code> to 
+<TT>"server1:61000"</TT> or
+<TT>"server1:61000,server2:61000"</TT>.
+
+<P>
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15117"
+  HREF="zerohalfcuts.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15115"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15109"
+  HREF="workerpassword.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15118"
+  HREF="zerohalfcuts.html">ZeroHalfCuts</A>
+<B> Up:</B> <A NAME="tex2html15116"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html15110"
+  HREF="workerpassword.html">WorkerPassword</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

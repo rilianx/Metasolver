@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Verification</TITLE>
+<META NAME="description" CONTENT="Verification">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="starting_remote_services_a2.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="forming_a_cluster.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html284"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html282"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html278"
+  HREF="starting_remote_services_a2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html285"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Up:</B> <A NAME="tex2html283"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html279"
+  HREF="starting_remote_services_a2.html">Starting Remote Services as</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021700000000000000"></A>
+<A NAME="sec:RSVerification"></A>
+<BR>
+Verification
+</H3>
+
+<P>
+Once you have <TT>grb_rs</TT> running, you can check to make sure that
+you will be able to submit jobs to it by issuing the following command
+from any machine that can reach the server on your network:
+
+<P>
+
+<PRE>
+&gt; grbcluster nodes --server=server1 --password=pass --long
+ADDRESS STATUS TYPE    LICENSE PROCESSING #Q #R JL IDLE %MEM  %CPU  STARTED             RUNTIMES VERSION
+server1 ALIVE  COMPUTE VALID   ACCEPTING  0  0  1  43m  42.67 2.53  2017-09-13 20:17:10 [8.0.0]  8.0.0
+</PRE>
+
+<P>
+You are ready to submit jobs if both of the following are true:
+
+<UL>
+<LI>the <TT>STATUS</TT> column indicates that one or more servers are <TT>ALIVE</TT>
+</LI>
+<LI>the <TT>LICENSE</TT> column indicates that the license is <TT>VALID</TT> (or <TT>N/A</TT> for distributed workers).
+</LI>
+</UL>
+
+<P>
+If <TT>grbcluster</TT> is unable to connect or if it does not show any
+live nodes, then check your network and the log of the
+<TT>grb_rs</TT> nodes (the console output or <TT>&lt;installdir&gt;/bin/service.log</TT> if started as a service).
+
+<P>
+If a node has an <TT>INVALID</TT> license, the <TT>ERROR</TT> field
+will provide more information about the error.  For example:
+
+<PRE>
+&gt; grbcluster licenses --server=server1 --password=admin
+ADDRESS STATUS  TYPE KEY EXP ORG USER APP VER CS    DL  ERROR
+server1 INVALID NODE                          false 0   No Gurobi license found...
+</PRE>
+
+<P>
+Optionally, you can also check that submitting a job is successful. To this end, you may want to identify a machine
+from which the users will typically submit jobs and install the gurobi client package. Then, you can submit a job
+running the following command:
+
+<PRE>
+&gt; gurobi_cl --server=server1 --password=pass misc07.mps
+</PRE>
+
+<P>
+For more information on how to install the client and run gurobi_cl
+please refer to the section about
+<A HREF="using_remote_services.html#sec:UsingRemoteServices">using Remote Services</A>.
+
+<P>
+Note that if you started the node with a specific port, you can specify it in the server URL:
+
+<PRE>
+&gt; grbcluster nodes --server=server1:61000 --password=pass
+...
+&gt; gurobi_cl --server=server1:61000 --password=pass misc07.mps
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html284"
+  HREF="forming_a_cluster.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html282"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html278"
+  HREF="starting_remote_services_a2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html285"
+  HREF="forming_a_cluster.html">Forming a Cluster</A>
+<B> Up:</B> <A NAME="tex2html283"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html279"
+  HREF="starting_remote_services_a2.html">Starting Remote Services as</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

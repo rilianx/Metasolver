@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>tupledict</TITLE>
+<META NAME="description" CONTENT="tupledict">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_general_constraint_help.html">
+<LINK REL="previous" HREF="py_tuplelist.html">
+<LINK REL="up" HREF="py_python_api_details.html">
+<LINK REL="next" HREF="py_tupledict2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11010"
+  HREF="py_tupledict2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11008"
+  HREF="py_python_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11002"
+  HREF="py_tuplelist_contains_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11011"
+  HREF="py_tupledict2.html">tupledict()</A>
+<B> Up:</B> <A NAME="tex2html11009"
+  HREF="py_python_api_details.html">Python API Details</A>
+<B> Previous:</B> <A NAME="tex2html11003"
+  HREF="py_tuplelist_contains_.html">tuplelist.__contains__()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION0001018000000000000000"></A>
+<A NAME="pythonclass:tupledict"></A>
+<BR>
+tupledict
+</H2>
+
+<P>
+Gurobi tuple dict.  This is a sub-class of the Python <code>dict</code>
+class that is designed to efficiently support a usage pattern that is
+quite common when building optimization models.  In particular, a
+<code>tupledict</code> is a Python <code>dict</code> where the keys are stored as
+a Gurobi <A HREF="py_tuplelist.html#pythonclass:tuplelist">tuplelist</A>, and where
+the values are typically Gurobi <A HREF="py_var.html#pythonclass:Var">Var</A>
+objects.  Objects of this class make it easier to build linear
+expressions on sets of Gurobi variables, using
+<A HREF="py_tuplelist_select.html#pythonmethod:tuplelist.select">tuplelist.select()</A>
+syntax and semantics.
+
+<P>
+You typically build a <code>tupledict</code> by calling
+<A HREF="py_model_addvars.html#pythonmethod:Model.addVars">Model.addVars</A>.  Once you've
+created a <code>tupledict</code> <code>d</code>, you can use <code>d.sum()</code> to
+create a <A HREF="py_linexpr.html#pythonclass:LinExpr">linear expression</A> that
+captures the sum of the variables in the <code>tupledict</code>.  You can
+also use a command like <code>d.sum(1, '*', 5)</code> to create a sum over a
+subset of the variables in <code>d</code>.  Assuming the keys for the
+<code>tupledict</code> are tuples containing three fields, this statement
+would create a linear expression that captures the sum over all
+variables in <code>d</code> whose keys contain a 1 in the first field of the
+tuple and a 5 in the third field (the <code>'*'</code> character is a
+wildcard that indicates that any value is acceptable in that field).
+You can also use <code>d.prod(coeff)</code> to create a linear expression
+where the coefficients are pulled from the argument <code>dict</code>.  For
+example, if <code>d(1,2,5)</code> contains variable <code>x</code> and
+<code>coeff(1,2,5)</code> is 2.0, then the resulting expression would
+include term <SPAN CLASS="MATH"><IMG
+ WIDTH="49" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img54.png"
+ ALT="$2.0*x$"></SPAN>.
+
+<P>
+To access the members of a <code>tupledict</code>, you can use standard dict
+indexing.  For example, <code>d[1,2]</code> returns the value associated
+with tuple <code>(1,2)</code>.
+
+<P>
+Note that a <code>tupledict</code> key must be a tuple of scalar values
+(<code>int</code>, <code>float</code>, <code>string</code>, ...).  Thus, you can use
+<code>(1, 2.0, 'abc')</code> as a key, but you can't use
+<code>((1, 2.0), 'abc')</code>.
+
+<P>
+Note that <code>tupledict</code> objects build and maintain a set of
+internal data structures to support efficient <code>select</code>
+operations.  If you wish to reclaim the storage associated with these
+data structures, you can call the
+<A HREF="py_tupledict_clean.html#pythonmethod:tupledict.clean">clean</A> function.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html11012"
+  HREF="py_tupledict2.html">tupledict()</A>
+<LI><A NAME="tex2html11013"
+  HREF="py_tupledict_select.html">tupledict.select()</A>
+<LI><A NAME="tex2html11014"
+  HREF="py_tupledict_sum.html">tupledict.sum()</A>
+<LI><A NAME="tex2html11015"
+  HREF="py_tupledict_prod.html">tupledict.prod()</A>
+<LI><A NAME="tex2html11016"
+  HREF="py_tupledict_clean.html">tupledict.clean()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11010"
+  HREF="py_tupledict2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11008"
+  HREF="py_python_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11002"
+  HREF="py_tuplelist_contains_.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11011"
+  HREF="py_tupledict2.html">tupledict()</A>
+<B> Up:</B> <A NAME="tex2html11009"
+  HREF="py_python_api_details.html">Python API Details</A>
+<B> Previous:</B> <A NAME="tex2html11003"
+  HREF="py_tuplelist_contains_.html">tuplelist.__contains__()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

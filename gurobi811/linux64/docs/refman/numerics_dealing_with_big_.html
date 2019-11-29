@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Dealing with big-M constraints</TITLE>
+<META NAME="description" CONTENT="Dealing with big-M constraints">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="numerics_avoid_hiding_larg.html">
+<LINK REL="up" HREF="numerics_tolerances_and_us.html">
+<LINK REL="next" HREF="numerics_does_my_model_hav.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15870"
+  HREF="numerics_does_my_model_hav.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15868"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15864"
+  HREF="numerics_avoid_hiding_larg.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15871"
+  HREF="numerics_does_my_model_hav.html">Does my model have</A>
+<B> Up:</B> <A NAME="tex2html15869"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15865"
+  HREF="numerics_avoid_hiding_larg.html">Avoid hiding large coefficients</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000303700000000000000">
+Dealing with big-M constraints</A>
+</H3>
+
+<P>
+Big-M constraints are a regular source of instability for optimization
+problems.  They are so named because they typically involve a large
+coefficient <SPAN CLASS="MATH"><IMG
+ WIDTH="21" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img80.png"
+ ALT="$M$"></SPAN> that is chosen to be larger than any reasonable value
+that a continuous variable or expression may take.  Here's a simple
+example:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x&\leq&10^6y\\
+x&\geq&0\\
+y&\in& \{0,1\},
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="96" HEIGHT="76" BORDER="0"
+ SRC="img211.png"
+ ALT="\begin{eqnarray*}
+x&amp;\leq&amp;10^6y\\
+x&amp;\geq&amp;0\\
+y&amp;\in&amp; \{0,1\},
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+Big-M constraints are typically used to propagate the implications of
+a binary, on-off decision to a continuous variable.  For example, a
+big-M might be used to enforce the condition that an edge can
+only admit flow if you pay the fixed charge associated with opening
+the edge, or a facility can only produce products if you build it.  In
+our example, note that the <!-- MATH
+ $y = 0.0000099999$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="126" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img212.png"
+ ALT="$y = 0.0000099999$"></SPAN> satisfies the default
+integrality tolerance (<TT>IntFeasTol</TT>=<SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img178.png"
+ ALT="$10^{-5}$"></SPAN>), which allows
+<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> to take a value of <SPAN CLASS="MATH"><IMG
+ WIDTH="41" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img213.png"
+ ALT="$9.999$"></SPAN>.  In other words, <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> can take a
+positive value without incurring an expensive fixed charge on <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN>,
+which subverts the intent of only allowing a non-zero value
+for <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> when the binary variable <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> has the value of 1.  You can reduce
+the effect of this behavior by adjusting the <TT>IntFeasTol</TT>
+parameter, but you can't avoid it entirely.
+
+<P>
+However, if the modeler has additional information that the <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>
+variable will never be larger than <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img179.png"
+ ALT="$10^3$"></SPAN>, then you could reformulate
+the earlier constraint as:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x&\leq&10^3y\\
+x &\geq& 0\\
+y &\in & \{0,1\}
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="91" HEIGHT="76" BORDER="0"
+ SRC="img214.png"
+ ALT="\begin{eqnarray*}
+x&amp;\leq&amp;10^3y\\
+x &amp;\geq&amp; 0\\
+y &amp;\in &amp; \{0,1\}
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+And now, <!-- MATH
+ $y = 0.0000099999$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="126" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img212.png"
+ ALT="$y = 0.0000099999$"></SPAN> would only allow for <SPAN CLASS="MATH"><IMG
+ WIDTH="63" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img215.png"
+ ALT="$x \leq 0.01$"></SPAN>.
+
+<P>
+For cases when it is not possible to either rescale variable <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>
+or tighten its bounds, an SOS constraints or an indicator constraint
+(of the form <!-- MATH
+ $y = 0 \Rightarrow x = 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="105" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img216.png"
+ ALT="$y = 0 \Rightarrow x = 0$"></SPAN>) may produce more accurate
+solutions, but often at the expense of additional processing time.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15870"
+  HREF="numerics_does_my_model_hav.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15868"
+  HREF="numerics_tolerances_and_us.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15864"
+  HREF="numerics_avoid_hiding_larg.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15871"
+  HREF="numerics_does_my_model_hav.html">Does my model have</A>
+<B> Up:</B> <A NAME="tex2html15869"
+  HREF="numerics_tolerances_and_us.html">Tolerances and user-scaling</A>
+<B> Previous:</B> <A NAME="tex2html15865"
+  HREF="numerics_avoid_hiding_larg.html">Avoid hiding large coefficients</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

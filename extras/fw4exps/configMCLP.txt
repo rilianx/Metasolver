@@ -16,6 +16,8 @@ outputpos_boxes = 0
 
 [MCLP-gonzalo]
 exec = "../../MCLP"
-params =  _INSTANCE --nbins=1000 --gurobi_path ../gurobi
+tuning_param = BETA
+tuning_values = 0.2 0.5 0.8
+params =  _INSTANCE --nbins=1000 --gurobi_path ../gurobi --solver_iter 10 --break_value=_BETA
 outputpos_times = 0
 outputpos_boxes = 0

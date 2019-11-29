@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Accessing Job Parameters</TITLE>
+<META NAME="description" CONTENT="Accessing Job Parameters">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="listing_cluster_nodes.html">
+<LINK REL="previous" HREF="accessing_job_logs.html">
+<LINK REL="up" HREF="client_commands.html">
+<LINK REL="next" HREF="listing_cluster_nodes.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html538"
+  HREF="listing_cluster_nodes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html536"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html530"
+  HREF="accessing_job_logs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html539"
+  HREF="listing_cluster_nodes.html">Listing Cluster Nodes</A>
+<B> Up:</B> <A NAME="tex2html537"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html531"
+  HREF="accessing_job_logs.html">Accessing Job Logs</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00032300000000000000">
+Accessing Job Parameters</A>
+</H3>
+
+<P>
+The Gurobi Optimizer provides a number of parameters that can be
+modified by the user.  The <TT>params</TT> command allows you to inspect
+the values of these parameters in a Compute Server job:
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass params e7022667
+
+TimeLimit= 60
+</PRE>
+
+<P>
+The argument to this command is the <TT>JOBID</TT> for the job of
+interest (which can be retrieved using the <TT>jobs</TT> command), you
+can use the full ID or the short ID.
+If you don't specify a <TT>JOBID</TT>, the command with display the changed parameters of
+the last job submitted.
+
+<P>
+The following example illustrates how the <TT>grbcluster params</TT>
+command can be used in practice.  The first step is to start an
+optimization job on a Compute Server cluster with one modified
+parameter:
+
+<P>
+
+<PRE>
+&gt; gurobi_cl --server=server1 --password=pass TimeLimit=120 glass4.mps
+</PRE>
+
+<P>
+Once the job starts, you can use the <TT>grbcluster jobs</TT> command to
+retrieve the associated <TT>JOBID</TT> (or you can read it off from the
+output of <TT>gurobi_cl</TT>). For jobs that have been already processed, you
+would run the <TT>recent</TT> command instead.
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass jobs
+JOBID    ADDRESS STATUS  #Q  STIME               PRIO
+e88a496f server1 RUNNING     2017-10-06 23:09:34 0
+</PRE>
+
+<P>
+Once you obtain the <TT>JOBID</TT>, the <TT>params</TT> command shows
+the modified parameter settings for the job:
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass params e88a496f
+
+TimeLimit= 120
+</PRE>
+
+<P>
+The full list of Gurobi parameters can be found in the
+<EM>Parameters</EM> section of the
+<A NAME="tex2html4"
+  HREF="../refman/refman.html">Gurobi Reference Manual</A>.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html538"
+  HREF="listing_cluster_nodes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html536"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html530"
+  HREF="accessing_job_logs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html539"
+  HREF="listing_cluster_nodes.html">Listing Cluster Nodes</A>
+<B> Up:</B> <A NAME="tex2html537"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html531"
+  HREF="accessing_job_logs.html">Accessing Job Logs</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

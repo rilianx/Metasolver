@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addGenConstrMax()</TITLE>
+<META NAME="description" CONTENT="Model.addGenConstrMax()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addgenconstrmin.html">
+<LINK REL="previous" HREF="py_model_addgenconstrxxx.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addgenconstrmin.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9450"
+  HREF="py_model_addgenconstrmin.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9448"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9442"
+  HREF="py_model_addgenconstrxxx.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9451"
+  HREF="py_model_addgenconstrmin.html">Model.addGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html9449"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9443"
+  HREF="py_model_addgenconstrxxx.html">Model.addGenConstrXxx()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000102500000000000000"></A>
+<A NAME="pythonmethod:Model.addGenConstrMax"></A>
+<BR>
+Model.addGenConstrMax()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrMax</SPAN></FONT></BIG> ( resvar, vars, constant=None, name="" )
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_MAX</TT> to a model.
+
+<P>
+A MAX constraint <!-- MATH
+ $r = \max\{x_1,\ldots,x_n,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="162" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="$r = \max\{x_1,\ldots,x_n,c\}$"></SPAN> states that the resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the maximum of the operand variables
+<!-- MATH
+ $x_1,\ldots,x_n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$x_1,\ldots,x_n$"></SPAN> and the constant <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="$c$"></SPAN>.
+
+<P>
+You can also add a MAX constraint using the
+<A HREF="py_general_constraint_help.html#pythonclass:GCHelper">max_</A> function.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">resvar (Var)</SPAN>: The variable whose value will be equal to the
+  max of the other variables.
+
+<P>
+ <SPAN  CLASS="textbf">vars (list of Var)</SPAN>: The variables over which the max will be
+  taken.  Note that this list may also contain constants (type int, long, or
+  float).
+
+<P>
+ <SPAN  CLASS="textbf">constant (float, optional)</SPAN>: An additional operand that allows you
+  to include a constant among the arguments of the max operation.
+
+<P>
+ <SPAN  CLASS="textbf">name (string, optional)</SPAN>: Name for the new general constraint.
+Note that <TT>name</TT> will be stored as an ASCII string. Thus, a name
+like <TT>'A<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>B'</TT> will produce an error, because
+'<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>' can not be represented as an ASCII character. Note
+also that names that contain spaces are strongly discouraged,
+because they can't be written to LP format files.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  # x5 = max(x1, x3, x4, 2.0)
+  model.addGenConstrMax(x5, [x1, x3, x4], 2.0, "maxconstr")
+
+  # alternative form
+  model.addGenConstrMax(x5, [x1, x3, x4, 2.0], name="maxconstr")
+
+  # overloaded forms
+  model.addConstr(x5 == max_([x1, x3, x4, 2.0]), name="maxconstr")
+  model.addConstr(x5 == max_(x1, x3, x4, 2.0), name="maxconstr")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9450"
+  HREF="py_model_addgenconstrmin.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9448"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9442"
+  HREF="py_model_addgenconstrxxx.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9451"
+  HREF="py_model_addgenconstrmin.html">Model.addGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html9449"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9443"
+  HREF="py_model_addgenconstrxxx.html">Model.addGenConstrXxx()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBaddgenconstrOr</TITLE>
+<META NAME="description" CONTENT="GRBaddgenconstrOr">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="c_grbaddgenconstrindicator.html">
+<LINK REL="previous" HREF="c_grbaddgenconstrand.html">
+<LINK REL="up" HREF="c_model_creation_and_modif.html">
+<LINK REL="next" HREF="c_grbaddgenconstrindicator.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1760"
+  HREF="c_grbaddgenconstrindicator.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1758"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1752"
+  HREF="c_grbaddgenconstrand.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1761"
+  HREF="c_grbaddgenconstrindicator.html">GRBaddgenconstrIndicator</A>
+<B> Up:</B> <A NAME="tex2html1759"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1753"
+  HREF="c_grbaddgenconstrand.html">GRBaddgenconstrAnd</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000221100000000000000"></A>
+<A NAME="routine:GRBaddgenconstrOr"></A>
+<BR>
+GRBaddgenconstrOr
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBaddgenconstrOr</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBmodel</TD>
+<TD ALIGN="LEFT">*model,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">const char</TD>
+<TD ALIGN="LEFT">*name,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">resvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">nvars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int*</TD>
+<TD ALIGN="LEFT">vars )</TD>
+</TR>
+</TABLE>
+
+<P>
+Add a new general constraint of type <TT>GRB_GENCONSTR_OR</TT> to a model.
+
+  Note that, due to our lazy update approach, the new constraint won't actually be added
+  until you update the model
+  (using <A HREF="c_grbupdatemodel.html#routine:GRBupdatemodel">GRBupdatemodel</A>),
+  optimize the model
+  (using <A HREF="c_grboptimize.html#routine:GRBoptimize">GRBoptimize</A>),
+  or write the model to disk
+  (using <A HREF="c_grbwrite.html#routine:GRBwrite">GRBwrite</A>).
+
+<P>
+An OR constraint <!-- MATH
+ $r = \mbox{or}\{x_1,\ldots,x_n\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="133" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$r = \mbox{or}\{x_1,\ldots,x_n\}$"></SPAN> states that the binary resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> if and only if any of the operand variables
+<!-- MATH
+ $x_1,\ldots,x_n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$x_1,\ldots,x_n$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>.
+If all operand variables are <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN>, then the resultant should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> as well.
+
+<P>
+Note that all variables participating in such a constraint will be forced
+to be binary; independently of how they were created.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model to which the new general constraint should be added.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.  This
+  argument can be <TT>NULL</TT>, in which case the constraint is
+  given a default name.
+
+<P>
+ <SPAN  CLASS="textbf">int resvar</SPAN>: The index of the binary resultant variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> whose
+  value will be equal to the OR concatenation of the other variables.
+
+<P>
+ <SPAN  CLASS="textbf">int nvars</SPAN>: The number <SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="$n$"></SPAN> of binary operand  variables over which
+  the OR will be taken.
+
+<P>
+ <SPAN  CLASS="textbf">const int *vars</SPAN>: An array containing the indices of the binary
+  operand variables <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$x_j$"></SPAN> over which the OR concatenation will be taken.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A non-zero return value indicates that a problem occurred while adding the general constraint.
+Refer to the <A HREF="error_codes.html#sec:ErrorCodes">Error Code</A> table for a
+list of possible return values.  Details on the error can be obtained
+by calling <A HREF="c_grbgeterrormsg.html#routine:GRBgeterrormsg">GRBgeterrormsg</A>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  /* x5 = or(x1, x3, x4) */
+  int ind[] = {1, 3, 4};
+  error = GRBaddgenconstrOr(model, "orconstr", 5, 3, ind);
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1760"
+  HREF="c_grbaddgenconstrindicator.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1758"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1752"
+  HREF="c_grbaddgenconstrand.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1761"
+  HREF="c_grbaddgenconstrindicator.html">GRBaddgenconstrIndicator</A>
+<B> Up:</B> <A NAME="tex2html1759"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1753"
+  HREF="c_grbaddgenconstrand.html">GRBaddgenconstrAnd</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

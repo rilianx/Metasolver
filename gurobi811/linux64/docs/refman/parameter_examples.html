@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Parameter Examples</TITLE>
+<META NAME="description" CONTENT="Parameter Examples">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="empty_environment.html">
+<LINK REL="previous" HREF="parameter_descriptions.html">
+<LINK REL="up" HREF="parameters.html">
+<LINK REL="next" HREF="c_parameter_examples.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15145"
+  HREF="c_parameter_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15143"
+  HREF="parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15137"
+  HREF="zeroobjnodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15146"
+  HREF="c_parameter_examples.html">C Parameter Examples</A>
+<B> Up:</B> <A NAME="tex2html15144"
+  HREF="parameters.html">Parameters</A>
+<B> Previous:</B> <A NAME="tex2html15138"
+  HREF="zeroobjnodes.html">ZeroObjNodes</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000173000000000000000"></A>
+<A NAME="sec:ParameterExamples"></A>
+<BR>
+Parameter Examples
+</H2>
+
+<P>
+Gurobi parameter handling is designed to be orthogonal, meaning that
+you only need to use a small number of routines to work with a large
+number parameters.  In particular:
+
+<UL>
+<LI>The names and meanings of the various Gurobi parameters remain
+  constant across the different programming language API's, although
+  some decoration is required in each language.
+</LI>
+<LI>Given the type of a parameter (double, integer, etc.) and the
+  programming language you wish to use it from, you simply need to
+  identify the appropriate routine for that parameter type in that
+  language in order to query or modify that parameter.
+</LI>
+</UL>
+
+<P>
+Please refer to the following sections for detailed examples of how to
+work with parameters from our various API's:
+
+<UL>
+<LI><A HREF="c_parameter_examples.html#CParameterExamples">C</A>
+</LI>
+<LI><A HREF="cpp_parameter_examples.html#C++ParameterExamples">C++</A>
+</LI>
+<LI><A HREF="cs_parameter_examples.html#CSParameterExamples">C#</A>
+</LI>
+<LI><A HREF="java_parameter_examples.html#JavaParameterExamples">Java</A>
+</LI>
+<LI><A HREF="matlab_parameter_examples.html#MATLABParameterExamples">MATLAB</A>
+</LI>
+<LI><A HREF="python_parameter_examples.html#PythonParameterExamples">Python</A>
+</LI>
+<LI><A HREF="r_parameter_examples.html#RParameterExamples">R</A>
+</LI>
+<LI><A HREF="visual_basic_parameter_exa.html#VBParameterExamples">Visual Basic</A>
+</LI>
+</UL>
+You can also browse our
+<A NAME="tex2html49"
+  HREF="../examples/examples.html">Examples</A>
+to get a better sense of how to use our parameter interface.
+
+<P>
+One important note about integer-valued parameters: while the maximum
+value that can be stored in a signed integer is <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img143.png"
+ ALT="$2^{31}-1$"></SPAN>, we use a
+<TT>MAXINT</TT> value of 2,000,000,000.  Attempting to set an integer
+parameter to a value larger than this maximum will produce an error.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html15147"
+  HREF="c_parameter_examples.html">C Parameter Examples</A>
+<LI><A NAME="tex2html15148"
+  HREF="cpp_parameter_examples.html">C++ Parameter Examples</A>
+<LI><A NAME="tex2html15149"
+  HREF="cs_parameter_examples.html">C# Parameter Examples</A>
+<LI><A NAME="tex2html15150"
+  HREF="java_parameter_examples.html">Java Parameter Examples</A>
+<LI><A NAME="tex2html15151"
+  HREF="matlab_parameter_examples.html">MATLAB Parameter Examples</A>
+<LI><A NAME="tex2html15152"
+  HREF="python_parameter_examples.html">Python Parameter Examples</A>
+<LI><A NAME="tex2html15153"
+  HREF="r_parameter_examples.html">R Parameter Examples</A>
+<LI><A NAME="tex2html15154"
+  HREF="visual_basic_parameter_exa.html">Visual Basic Parameter Examples</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15145"
+  HREF="c_parameter_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15143"
+  HREF="parameters.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15137"
+  HREF="zeroobjnodes.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15146"
+  HREF="c_parameter_examples.html">C Parameter Examples</A>
+<B> Up:</B> <A NAME="tex2html15144"
+  HREF="parameters.html">Parameters</A>
+<B> Previous:</B> <A NAME="tex2html15138"
+  HREF="zeroobjnodes.html">ZeroObjNodes</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

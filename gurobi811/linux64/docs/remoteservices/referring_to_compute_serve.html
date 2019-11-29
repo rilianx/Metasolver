@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Referring to Compute Servers</TITLE>
+<META NAME="description" CONTENT="Referring to Compute Servers">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="installation_ports_and_fir.html">
+<LINK REL="previous" HREF="migrating_from_previous_re.html">
+<LINK REL="up" HREF="migrating_from_previous_re.html">
+<LINK REL="next" HREF="installation_ports_and_fir.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html757"
+  HREF="installation_ports_and_fir.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html755"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html749"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html758"
+  HREF="installation_ports_and_fir.html">Installation - Ports and</A>
+<B> Up:</B> <A NAME="tex2html756"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Previous:</B> <A NAME="tex2html750"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00061000000000000000">
+Referring to Compute Servers</A>
+</H2>
+
+<P>
+One important difference between version 8.0 and previous versions
+relates to clustering.  Previous releases supported queueing and load
+balancing among multiple servers, but this clustering was handled on
+the client side.  Your client program would explicitly list the
+Compute Server nodes that your job could run on, and the client would
+negotiate with those servers to determine where and when it ran.  In
+the new Compute Server, you <A HREF="connecting_nodes.html#sec:RSConnecting">form explicit clusters of
+  nodes</A>, and your client simply needs to refer
+to any member of the cluster in order to run a job on any node in the
+cluster.
+
+<P>
+Another important difference is in how you to refer to Compute Server
+nodes.  While it has always been the case that you need to provide
+both the name of the Compute Server node and the port number that
+Remote Services is listening on, those were separated in previous
+releases.  For example, you might say:
+
+<PRE>
+&gt; gurobi_cl --server=server1 --port=61000
+</PRE>
+In version 8.0, communication happens through a REST API, so you
+now use standard HTTP syntax to refer to servers:
+
+<PRE>
+&gt; gurobi_cl --server=server1:61000
+</PRE>
+...or...
+
+<PRE>
+&gt; gurobi_cl --server=http://server1:61000
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html757"
+  HREF="installation_ports_and_fir.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html755"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html749"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html758"
+  HREF="installation_ports_and_fir.html">Installation - Ports and</A>
+<B> Up:</B> <A NAME="tex2html756"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Previous:</B> <A NAME="tex2html750"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

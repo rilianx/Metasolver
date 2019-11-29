@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBEnv</TITLE>
+<META NAME="description" CONTENT="GRBEnv">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cs_grbmodel.html">
+<LINK REL="previous" HREF="cs_net_api_details.html">
+<LINK REL="up" HREF="cs_net_api_details.html">
+<LINK REL="next" HREF="cs_grbenv2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html7167"
+  HREF="cs_grbenv2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7165"
+  HREF="cs_net_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7159"
+  HREF="cs_net_api_details.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7168"
+  HREF="cs_grbenv2.html">GRBEnv()</A>
+<B> Up:</B> <A NAME="tex2html7166"
+  HREF="cs_net_api_details.html">.NET API Details</A>
+<B> Previous:</B> <A NAME="tex2html7160"
+  HREF="cs_net_api_details.html">.NET API Details</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00081000000000000000"></A>
+<A NAME="dotnetclass:GRBEnv"></A>
+<BR>
+GRBEnv
+</H2>
+
+<P>
+Gurobi environment object.  Gurobi models are always associated with
+an environment.  You must create an environment before can you create
+and populate a model.  You will generally only need a single
+environment object in your program.
+
+<P>
+Objects of this class have unmanaged resources associated with them.
+The class implements the <code>IDisposable</code> interface.
+
+<P>
+The methods on environment objects are mainly used to manage
+Gurobi parameters (e.g.,
+<A HREF="cs_grbenv_get.html#dotnetmethod:GRBEnv.Get">Get</A>,
+<A HREF="cs_grbenv_getparaminfo.html#dotnetmethod:GRBEnv.GetParamInfo">GetParamInfo</A>,
+<A HREF="cs_grbenv_set.html#dotnetmethod:GRBEnv.Set">Set</A>).
+
+<P>
+While the .NET garbage collector will eventually collect an unused
+<code>GRBEnv</code> object, an environment will hold onto resources (Gurobi
+licenses, file descriptors, etc.) until that collection occurs.  If
+your program creates multiple <code>GRBEnv</code> objects, we recommend
+that you call <A HREF="cs_grbenv_dispose.html#dotnetmethod:GRBEnv.Dispose">GRBEnv.Dispose</A>
+when you are done using one (or use the .NET <code>using</code> statement).
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html7169"
+  HREF="cs_grbenv2.html">GRBEnv()</A>
+<LI><A NAME="tex2html7170"
+  HREF="cs_grbenv_dispose.html">GRBEnv.Dispose()</A>
+<LI><A NAME="tex2html7171"
+  HREF="cs_grbenv_errormsg.html">GRBEnv.ErrorMsg</A>
+<LI><A NAME="tex2html7172"
+  HREF="cs_grbenv_get.html">GRBEnv.Get()</A>
+<LI><A NAME="tex2html7173"
+  HREF="cs_grbenv_getparaminfo.html">GRBEnv.GetParamInfo()</A>
+<LI><A NAME="tex2html7174"
+  HREF="cs_grbenv_message.html">GRBEnv.Message()</A>
+<LI><A NAME="tex2html7175"
+  HREF="cs_grbenv_readparams.html">GRBEnv.ReadParams()</A>
+<LI><A NAME="tex2html7176"
+  HREF="cs_grbenv_release.html">GRBEnv.Release()</A>
+<LI><A NAME="tex2html7177"
+  HREF="cs_grbenv_resetparams.html">GRBEnv.ResetParams()</A>
+<LI><A NAME="tex2html7178"
+  HREF="cs_grbenv_set.html">GRBEnv.Set()</A>
+<LI><A NAME="tex2html7179"
+  HREF="cs_grbenv_start.html">GRBEnv.Start()</A>
+<LI><A NAME="tex2html7180"
+  HREF="cs_grbenv_writeparams.html">GRBEnv.WriteParams()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7167"
+  HREF="cs_grbenv2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7165"
+  HREF="cs_net_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7159"
+  HREF="cs_net_api_details.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7168"
+  HREF="cs_grbenv2.html">GRBEnv()</A>
+<B> Up:</B> <A NAME="tex2html7166"
+  HREF="cs_net_api_details.html">.NET API Details</A>
+<B> Previous:</B> <A NAME="tex2html7160"
+  HREF="cs_net_api_details.html">.NET API Details</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

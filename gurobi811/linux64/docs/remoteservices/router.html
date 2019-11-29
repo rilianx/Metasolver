@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Router</TITLE>
+<META NAME="description" CONTENT="Router">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="firewalls.html">
+<LINK REL="up" HREF="communication_options.html">
+<LINK REL="next" HREF="maintaining_a_cluster.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html388"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html386"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html382"
+  HREF="firewalls.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html389"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A>
+<B> Up:</B> <A NAME="tex2html387"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html383"
+  HREF="firewalls.html">Firewalls</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00023400000000000000"></A>
+<A NAME="sec:Router"></A>
+<BR>
+Router
+</H3>
+
+<P>
+A Remote Services Router may be used when you need to isolate better the cluster from the clients.
+Without a router, the clients need to have direct access to each node in the cluster and the node
+DNS name and IP address must be accessible from the clients.
+
+<P>
+Instead, a router provides a point of contact for all clients and will route the communication
+to the appropriate node in the cluster. A Remote Services Router acts as a reverse proxy.  Behind a router,
+the cluster nodes can use private DNS names or IP addresses as long as all the nodes and the router can
+communicate together. Only the router must be accessible from the clients.
+
+<P>
+In addition, the router will use HTTP as default and can also use HTTPS so that the data can be encrypted
+from the clients to the router. The router can then route the traffic using HTTPS or HTTP depending on the
+configuration of the cluster. It is a common configuration to enable HTTPS only between the clients and the router
+while having the router and the nodes communicate over unencrypted HTTP in a private network. Using this
+setup you only have to manage certificates on the router.
+
+<P>
+You can get mopre information about the router (<TT>grb_rsr</TT>) by reading the command line help:
+
+<PRE>
+grb_rsr --help
+</PRE>
+
+<P>
+The router uses a configuration file <TT>grb_rsr.cnf</TT> that must be placed in the same directory as
+<TT>grb_rsr</TT> executable. A predefined configuration file with additional comments is provided.
+The following commands lists the available configuration properties:
+
+<PRE>
+grb_rsr properties
+</PRE>
+
+<P>
+In a similar way to <TT>grb_rs</TT>, the router can be started as a service and the log messages will be stored in the
+<TT>grbrsr-service.log</TT> rotating file by default. The log messages will also be sent to the syslog on mac and linux,
+and to the service event log on Windows.
+
+<PRE>
+grb_rsr start
+</PRE>
+
+<P>
+We will refer to the router URL as the full URL to access the router over HTTP or HTTPS and using standard port or
+a custom one. Here are some examples:
+
+<PRE>
+http://router.mycompany.com
+http://router.mycompany.com:61001
+https://router.mycompany.com
+https://router.mycompany.com:61001
+</PRE>
+
+<P>
+When using the command line tools <TT>grbcluster</TT> or <TT>gurobi_cl</TT>, you can specify the router
+URL using the <TT>--router</TT> flag. You can also add the property <TT>ROUTER</TT> to your license
+file. For example, once you have configured and started the router and your cluster, you can display
+the cluster status with the following command:
+
+<PRE>
+&gt; grbcluster --router=http://router.mycompany.com --server=server1 ---password=pass nodes
+ADDRESS STATUS TYPE    LICENSE #Q #R JL IDLE   %MEM  %CPU
+server1 ALIVE  COMPUTE VALID   0  0  2  46h59m 9.79  0.50
+server2 ALIVE  COMPUTE VALID   0  0  2  46h46m 8.75  0.00
+</PRE>
+
+<P>
+For the clients using the Gurobi Optimizer API, you will need to
+either set the <TT>ROUTER</TT> property in the license file or construct
+an empty environment and set the <code>CSRouter</code> parameter before
+starting the environment.
+
+<P>
+For clients using the cluster REST API for monitoring purpose, you will need to use the router URL
+instead of a node address, and you can pass the selected node address in the header <TT>X-GUROBI-SERVER</TT>. This way,
+the client communicates with  the router and the router will use the header value to forward the request to
+the selected node. In case the node address is incorrect or does not exist, the router will return the
+HTTP error code 502.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html388"
+  HREF="maintaining_a_cluster.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html386"
+  HREF="communication_options.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html382"
+  HREF="firewalls.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html389"
+  HREF="maintaining_a_cluster.html">Maintaining a Cluster</A>
+<B> Up:</B> <A NAME="tex2html387"
+  HREF="communication_options.html">Communication Options</A>
+<B> Previous:</B> <A NAME="tex2html383"
+  HREF="firewalls.html">Firewalls</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,582 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Example Source Code</TITLE>
+<META NAME="description" CONTENT="Example Source Code">
+<META NAME="keywords" CONTENT="examples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="examples.css">
+
+<LINK REL="previous" HREF="example_tour.html">
+<LINK REL="up" HREF="examples.html">
+<LINK REL="next" HREF="c_examples.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html392"
+  HREF="c_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html390"
+  HREF="examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html386"
+  HREF="callbacks.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html393"
+  HREF="c_examples.html">C Examples</A>
+<B> Up:</B> <A NAME="tex2html391"
+  HREF="examples.html">Gurobi Optimizer Example Tour</A>
+<B> Previous:</B> <A NAME="tex2html387"
+  HREF="callbacks.html">Callbacks</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00020000000000000000"></A>
+<A NAME="section:Source"></A>
+<BR>
+Example Source Code
+</H1>
+
+<P>
+We have included source code for all of the distributed examples in
+this section.  The identical example source code is included in the
+<code>examples</code> directory in the Gurobi distribution.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html394"
+  HREF="c_examples.html">C Examples</A>
+<UL>
+<LI><A NAME="tex2html395"
+  HREF="callback_c_c.html">callback_c.c</A>
+<LI><A NAME="tex2html396"
+  HREF="dense_c_c.html">dense_c.c</A>
+<LI><A NAME="tex2html397"
+  HREF="diet_c_c.html">diet_c.c</A>
+<LI><A NAME="tex2html398"
+  HREF="facility_c_c.html">facility_c.c</A>
+<LI><A NAME="tex2html399"
+  HREF="feasopt_c_c.html">feasopt_c.c</A>
+<LI><A NAME="tex2html400"
+  HREF="fixanddive_c_c.html">fixanddive_c.c</A>
+<LI><A NAME="tex2html401"
+  HREF="genconstr_c_c.html">genconstr_c.c</A>
+<LI><A NAME="tex2html402"
+  HREF="lp_c_c.html">lp_c.c</A>
+<LI><A NAME="tex2html403"
+  HREF="lpmethod_c_c.html">lpmethod_c.c</A>
+<LI><A NAME="tex2html404"
+  HREF="lpmod_c_c.html">lpmod_c.c</A>
+<LI><A NAME="tex2html405"
+  HREF="mip1_c_c.html">mip1_c.c</A>
+<LI><A NAME="tex2html406"
+  HREF="mip2_c_c.html">mip2_c.c</A>
+<LI><A NAME="tex2html407"
+  HREF="multiobj_c_c.html">multiobj_c.c</A>
+<LI><A NAME="tex2html408"
+  HREF="params_c_c.html">params_c.c</A>
+<LI><A NAME="tex2html409"
+  HREF="piecewise_c_c.html">piecewise_c.c</A>
+<LI><A NAME="tex2html410"
+  HREF="poolsearch_c_c.html">poolsearch_c.c</A>
+<LI><A NAME="tex2html411"
+  HREF="qcp_c_c.html">qcp_c.c</A>
+<LI><A NAME="tex2html412"
+  HREF="qp_c_c.html">qp_c.c</A>
+<LI><A NAME="tex2html413"
+  HREF="sensitivity_c_c.html">sensitivity_c.c</A>
+<LI><A NAME="tex2html414"
+  HREF="sos_c_c.html">sos_c.c</A>
+<LI><A NAME="tex2html415"
+  HREF="sudoku_c_c.html">sudoku_c.c</A>
+<LI><A NAME="tex2html416"
+  HREF="tsp_c_c.html">tsp_c.c</A>
+<LI><A NAME="tex2html417"
+  HREF="tune_c_c.html">tune_c.c</A>
+<LI><A NAME="tex2html418"
+  HREF="workforce1_c_c.html">workforce1_c.c</A>
+<LI><A NAME="tex2html419"
+  HREF="workforce2_c_c.html">workforce2_c.c</A>
+<LI><A NAME="tex2html420"
+  HREF="workforce3_c_c.html">workforce3_c.c</A>
+<LI><A NAME="tex2html421"
+  HREF="workforce4_c_c.html">workforce4_c.c</A>
+<LI><A NAME="tex2html422"
+  HREF="workforce5_c_c.html">workforce5_c.c</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html423"
+  HREF="cpp_examples.html">C++ Examples</A>
+<UL>
+<LI><A NAME="tex2html424"
+  HREF="callback_cpp_cpp.html">callback_c++.cpp</A>
+<LI><A NAME="tex2html425"
+  HREF="dense_cpp_cpp.html">dense_c++.cpp</A>
+<LI><A NAME="tex2html426"
+  HREF="diet_cpp_cpp.html">diet_c++.cpp</A>
+<LI><A NAME="tex2html427"
+  HREF="facility_cpp_cpp.html">facility_c++.cpp</A>
+<LI><A NAME="tex2html428"
+  HREF="feasopt_cpp_cpp.html">feasopt_c++.cpp</A>
+<LI><A NAME="tex2html429"
+  HREF="fixanddive_cpp_cpp.html">fixanddive_c++.cpp</A>
+<LI><A NAME="tex2html430"
+  HREF="genconstr_cpp_cpp.html">genconstr_c++.cpp</A>
+<LI><A NAME="tex2html431"
+  HREF="lp_cpp_cpp.html">lp_c++.cpp</A>
+<LI><A NAME="tex2html432"
+  HREF="lpmethod_cpp_cpp.html">lpmethod_c++.cpp</A>
+<LI><A NAME="tex2html433"
+  HREF="lpmod_cpp_cpp.html">lpmod_c++.cpp</A>
+<LI><A NAME="tex2html434"
+  HREF="mip1_cpp_cpp.html">mip1_c++.cpp</A>
+<LI><A NAME="tex2html435"
+  HREF="mip2_cpp_cpp.html">mip2_c++.cpp</A>
+<LI><A NAME="tex2html436"
+  HREF="multiobj_cpp_cpp.html">multiobj_c++.cpp</A>
+<LI><A NAME="tex2html437"
+  HREF="params_cpp_cpp.html">params_c++.cpp</A>
+<LI><A NAME="tex2html438"
+  HREF="piecewise_cpp_cpp.html">piecewise_c++.cpp</A>
+<LI><A NAME="tex2html439"
+  HREF="poolsearch_cpp_cpp.html">poolsearch_c++.cpp</A>
+<LI><A NAME="tex2html440"
+  HREF="sensitivity_cpp_cpp.html">sensitivity_c++.cpp</A>
+<LI><A NAME="tex2html441"
+  HREF="qcp_cpp_cpp.html">qcp_c++.cpp</A>
+<LI><A NAME="tex2html442"
+  HREF="qp_cpp_cpp.html">qp_c++.cpp</A>
+<LI><A NAME="tex2html443"
+  HREF="sos_cpp_cpp.html">sos_c++.cpp</A>
+<LI><A NAME="tex2html444"
+  HREF="sudoku_cpp_cpp.html">sudoku_c++.cpp</A>
+<LI><A NAME="tex2html445"
+  HREF="tsp_cpp_cpp.html">tsp_c++.cpp</A>
+<LI><A NAME="tex2html446"
+  HREF="tune_cpp_cpp.html">tune_c++.cpp</A>
+<LI><A NAME="tex2html447"
+  HREF="workforce1_cpp_cpp.html">workforce1_c++.cpp</A>
+<LI><A NAME="tex2html448"
+  HREF="workforce2_cpp_cpp.html">workforce2_c++.cpp</A>
+<LI><A NAME="tex2html449"
+  HREF="workforce3_cpp_cpp.html">workforce3_c++.cpp</A>
+<LI><A NAME="tex2html450"
+  HREF="workforce4_cpp_cpp.html">workforce4_c++.cpp</A>
+<LI><A NAME="tex2html451"
+  HREF="workforce5_cpp_cpp.html">workforce5_c++.cpp</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html452"
+  HREF="java_examples.html">Java Examples</A>
+<UL>
+<LI><A NAME="tex2html453"
+  HREF="callback_java.html">Callback.java</A>
+<LI><A NAME="tex2html454"
+  HREF="dense_java.html">Dense.java</A>
+<LI><A NAME="tex2html455"
+  HREF="diet_java.html">Diet.java</A>
+<LI><A NAME="tex2html456"
+  HREF="facility_java.html">Facility.java</A>
+<LI><A NAME="tex2html457"
+  HREF="feasopt_java.html">Feasopt.java</A>
+<LI><A NAME="tex2html458"
+  HREF="fixanddive_java.html">Fixanddive.java</A>
+<LI><A NAME="tex2html459"
+  HREF="genconstr_java.html">Genconstr.java</A>
+<LI><A NAME="tex2html460"
+  HREF="lp_java.html">Lp.java</A>
+<LI><A NAME="tex2html461"
+  HREF="lpmethod_java.html">Lpmethod.java</A>
+<LI><A NAME="tex2html462"
+  HREF="lpmod_java.html">Lpmod.java</A>
+<LI><A NAME="tex2html463"
+  HREF="mip1_java.html">Mip1.java</A>
+<LI><A NAME="tex2html464"
+  HREF="mip2_java.html">Mip2.java</A>
+<LI><A NAME="tex2html465"
+  HREF="multiobj_java.html">Multiobj.java</A>
+<LI><A NAME="tex2html466"
+  HREF="params_java.html">Params.java</A>
+<LI><A NAME="tex2html467"
+  HREF="piecewise_java.html">Piecewise.java</A>
+<LI><A NAME="tex2html468"
+  HREF="poolsearch_java.html">Poolsearch.java</A>
+<LI><A NAME="tex2html469"
+  HREF="qcp_java.html">Qcp.java</A>
+<LI><A NAME="tex2html470"
+  HREF="qp_java.html">Qp.java</A>
+<LI><A NAME="tex2html471"
+  HREF="sensitivity_java.html">Sensitivity.java</A>
+<LI><A NAME="tex2html472"
+  HREF="sos_java.html">Sos.java</A>
+<LI><A NAME="tex2html473"
+  HREF="sudoku_java.html">Sudoku.java</A>
+<LI><A NAME="tex2html474"
+  HREF="tsp_java.html">Tsp.java</A>
+<LI><A NAME="tex2html475"
+  HREF="tune_java.html">Tune.java</A>
+<LI><A NAME="tex2html476"
+  HREF="workforce1_java.html">Workforce1.java</A>
+<LI><A NAME="tex2html477"
+  HREF="workforce2_java.html">Workforce2.java</A>
+<LI><A NAME="tex2html478"
+  HREF="workforce3_java.html">Workforce3.java</A>
+<LI><A NAME="tex2html479"
+  HREF="workforce4_java.html">Workforce4.java</A>
+<LI><A NAME="tex2html480"
+  HREF="workforce5_java.html">Workforce5.java</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html481"
+  HREF="cs_examples.html">C# Examples</A>
+<UL>
+<LI><A NAME="tex2html482"
+  HREF="callback_cs_cs.html">callback_cs.cs</A>
+<LI><A NAME="tex2html483"
+  HREF="dense_cs_cs.html">dense_cs.cs</A>
+<LI><A NAME="tex2html484"
+  HREF="diet_cs_cs.html">diet_cs.cs</A>
+<LI><A NAME="tex2html485"
+  HREF="facility_cs_cs.html">facility_cs.cs</A>
+<LI><A NAME="tex2html486"
+  HREF="feasopt_cs_cs.html">feasopt_cs.cs</A>
+<LI><A NAME="tex2html487"
+  HREF="fixanddive_cs_cs.html">fixanddive_cs.cs</A>
+<LI><A NAME="tex2html488"
+  HREF="genconstr_cs_cs.html">genconstr_cs.cs</A>
+<LI><A NAME="tex2html489"
+  HREF="lp_cs_cs.html">lp_cs.cs</A>
+<LI><A NAME="tex2html490"
+  HREF="lpmethod_cs_cs.html">lpmethod_cs.cs</A>
+<LI><A NAME="tex2html491"
+  HREF="lpmod_cs_cs.html">lpmod_cs.cs</A>
+<LI><A NAME="tex2html492"
+  HREF="mip1_cs_cs.html">mip1_cs.cs</A>
+<LI><A NAME="tex2html493"
+  HREF="mip2_cs_cs.html">mip2_cs.cs</A>
+<LI><A NAME="tex2html494"
+  HREF="multiobj_cs_cs.html">multiobj_cs.cs</A>
+<LI><A NAME="tex2html495"
+  HREF="params_cs_cs.html">params_cs.cs</A>
+<LI><A NAME="tex2html496"
+  HREF="piecewise_cs_cs.html">piecewise_cs.cs</A>
+<LI><A NAME="tex2html497"
+  HREF="poolsearch_cs_cs.html">poolsearch_cs.cs</A>
+<LI><A NAME="tex2html498"
+  HREF="qcp_cs_cs.html">qcp_cs.cs</A>
+<LI><A NAME="tex2html499"
+  HREF="qp_cs_cs.html">qp_cs.cs</A>
+<LI><A NAME="tex2html500"
+  HREF="sensitivity_cs_cs.html">sensitivity_cs.cs</A>
+<LI><A NAME="tex2html501"
+  HREF="sos_cs_cs.html">sos_cs.cs</A>
+<LI><A NAME="tex2html502"
+  HREF="sudoku_cs_cs.html">sudoku_cs.cs</A>
+<LI><A NAME="tex2html503"
+  HREF="tsp_cs_cs.html">tsp_cs.cs</A>
+<LI><A NAME="tex2html504"
+  HREF="tune_cs_cs.html">tune_cs.cs</A>
+<LI><A NAME="tex2html505"
+  HREF="workforce1_cs_cs.html">workforce1_cs.cs</A>
+<LI><A NAME="tex2html506"
+  HREF="workforce2_cs_cs.html">workforce2_cs.cs</A>
+<LI><A NAME="tex2html507"
+  HREF="workforce3_cs_cs.html">workforce3_cs.cs</A>
+<LI><A NAME="tex2html508"
+  HREF="workforce4_cs_cs.html">workforce4_cs.cs</A>
+<LI><A NAME="tex2html509"
+  HREF="workforce5_cs_cs.html">workforce5_cs.cs</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html510"
+  HREF="visual_basic_examples.html">Visual Basic Examples</A>
+<UL>
+<LI><A NAME="tex2html511"
+  HREF="callback_vb_vb.html">callback_vb.vb</A>
+<LI><A NAME="tex2html512"
+  HREF="dense_vb_vb.html">dense_vb.vb</A>
+<LI><A NAME="tex2html513"
+  HREF="diet_vb_vb.html">diet_vb.vb</A>
+<LI><A NAME="tex2html514"
+  HREF="facility_vb_vb.html">facility_vb.vb</A>
+<LI><A NAME="tex2html515"
+  HREF="feasopt_vb_vb.html">feasopt_vb.vb</A>
+<LI><A NAME="tex2html516"
+  HREF="fixanddive_vb_vb.html">fixanddive_vb.vb</A>
+<LI><A NAME="tex2html517"
+  HREF="genconstr_vb_vb.html">genconstr_vb.vb</A>
+<LI><A NAME="tex2html518"
+  HREF="lp_vb_vb.html">lp_vb.vb</A>
+<LI><A NAME="tex2html519"
+  HREF="lpmethod_vb_vb.html">lpmethod_vb.vb</A>
+<LI><A NAME="tex2html520"
+  HREF="lpmod_vb_vb.html">lpmod_vb.vb</A>
+<LI><A NAME="tex2html521"
+  HREF="mip1_vb_vb.html">mip1_vb.vb</A>
+<LI><A NAME="tex2html522"
+  HREF="mip2_vb_vb.html">mip2_vb.vb</A>
+<LI><A NAME="tex2html523"
+  HREF="multiobj_vb_vb.html">multiobj_vb.vb</A>
+<LI><A NAME="tex2html524"
+  HREF="params_vb_vb.html">params_vb.vb</A>
+<LI><A NAME="tex2html525"
+  HREF="piecewise_vb_vb.html">piecewise_vb.vb</A>
+<LI><A NAME="tex2html526"
+  HREF="poolsearch_vb_vb.html">poolsearch_vb.vb</A>
+<LI><A NAME="tex2html527"
+  HREF="qcp_vb_vb.html">qcp_vb.vb</A>
+<LI><A NAME="tex2html528"
+  HREF="qp_vb_vb.html">qp_vb.vb</A>
+<LI><A NAME="tex2html529"
+  HREF="sensitivity_vb_vb.html">sensitivity_vb.vb</A>
+<LI><A NAME="tex2html530"
+  HREF="sos_vb_vb.html">sos_vb.vb</A>
+<LI><A NAME="tex2html531"
+  HREF="sudoku_vb_vb.html">sudoku_vb.vb</A>
+<LI><A NAME="tex2html532"
+  HREF="tsp_vb_vb.html">tsp_vb.vb</A>
+<LI><A NAME="tex2html533"
+  HREF="tune_vb_vb.html">tune_vb.vb</A>
+<LI><A NAME="tex2html534"
+  HREF="workforce1_vb_vb.html">workforce1_vb.vb</A>
+<LI><A NAME="tex2html535"
+  HREF="workforce2_vb_vb.html">workforce2_vb.vb</A>
+<LI><A NAME="tex2html536"
+  HREF="workforce3_vb_vb.html">workforce3_vb.vb</A>
+<LI><A NAME="tex2html537"
+  HREF="workforce4_vb_vb.html">workforce4_vb.vb</A>
+<LI><A NAME="tex2html538"
+  HREF="workforce5_vb_vb.html">workforce5_vb.vb</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html539"
+  HREF="python_examples.html">Python Examples</A>
+<UL>
+<LI><A NAME="tex2html540"
+  HREF="callback_py.html">callback.py</A>
+<LI><A NAME="tex2html541"
+  HREF="custom_py.html">custom.py</A>
+<LI><A NAME="tex2html542"
+  HREF="dense_py.html">dense.py</A>
+<LI><A NAME="tex2html543"
+  HREF="diet_py.html">diet.py</A>
+<LI><A NAME="tex2html544"
+  HREF="diet2_py.html">diet2.py</A>
+<LI><A NAME="tex2html545"
+  HREF="diet3_py.html">diet3.py</A>
+<LI><A NAME="tex2html546"
+  HREF="diet4_py.html">diet4.py</A>
+<LI><A NAME="tex2html547"
+  HREF="dietmodel_py.html">dietmodel.py</A>
+<LI><A NAME="tex2html548"
+  HREF="facility_py.html">facility.py</A>
+<LI><A NAME="tex2html549"
+  HREF="feasopt_py.html">feasopt.py</A>
+<LI><A NAME="tex2html550"
+  HREF="fixanddive_py.html">fixanddive.py</A>
+<LI><A NAME="tex2html551"
+  HREF="genconstr_py.html">genconstr.py</A>
+<LI><A NAME="tex2html552"
+  HREF="lp_py.html">lp.py</A>
+<LI><A NAME="tex2html553"
+  HREF="lpmethod_py.html">lpmethod.py</A>
+<LI><A NAME="tex2html554"
+  HREF="lpmod_py.html">lpmod.py</A>
+<LI><A NAME="tex2html555"
+  HREF="mip1_py.html">mip1.py</A>
+<LI><A NAME="tex2html556"
+  HREF="mip2_py.html">mip2.py</A>
+<LI><A NAME="tex2html557"
+  HREF="multiobj_py.html">multiobj.py</A>
+<LI><A NAME="tex2html558"
+  HREF="netflow_py.html">netflow.py</A>
+<LI><A NAME="tex2html559"
+  HREF="params_py.html">params.py</A>
+<LI><A NAME="tex2html560"
+  HREF="piecewise_py.html">piecewise.py</A>
+<LI><A NAME="tex2html561"
+  HREF="poolsearch_py.html">poolsearch.py</A>
+<LI><A NAME="tex2html562"
+  HREF="portfolio_py.html">portfolio.py</A>
+<LI><A NAME="tex2html563"
+  HREF="qcp_py.html">qcp.py</A>
+<LI><A NAME="tex2html564"
+  HREF="qp_py.html">qp.py</A>
+<LI><A NAME="tex2html565"
+  HREF="sensitivity_py.html">sensitivity.py</A>
+<LI><A NAME="tex2html566"
+  HREF="sos_py.html">sos.py</A>
+<LI><A NAME="tex2html567"
+  HREF="sudoku_py.html">sudoku.py</A>
+<LI><A NAME="tex2html568"
+  HREF="tsp_py.html">tsp.py</A>
+<LI><A NAME="tex2html569"
+  HREF="tune_py.html">tune.py</A>
+<LI><A NAME="tex2html570"
+  HREF="workforce1_py.html">workforce1.py</A>
+<LI><A NAME="tex2html571"
+  HREF="workforce2_py.html">workforce2.py</A>
+<LI><A NAME="tex2html572"
+  HREF="workforce3_py.html">workforce3.py</A>
+<LI><A NAME="tex2html573"
+  HREF="workforce4_py.html">workforce4.py</A>
+<LI><A NAME="tex2html574"
+  HREF="workforce5_py.html">workforce5.py</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html575"
+  HREF="matlab_examples.html">MATLAB Examples</A>
+<UL>
+<LI><A NAME="tex2html576"
+  HREF="diet_m.html">diet.m</A>
+<LI><A NAME="tex2html577"
+  HREF="facility_m.html">facility.m</A>
+<LI><A NAME="tex2html578"
+  HREF="feasopt_m.html">feasopt.m</A>
+<LI><A NAME="tex2html579"
+  HREF="fixanddive_m.html">fixanddive.m</A>
+<LI><A NAME="tex2html580"
+  HREF="genconstr_m.html">genconstr.m</A>
+<LI><A NAME="tex2html581"
+  HREF="intlinprog_m.html">intlinprog.m</A>
+<LI><A NAME="tex2html582"
+  HREF="linprog_m.html">linprog.m</A>
+<LI><A NAME="tex2html583"
+  HREF="lp_m.html">lp.m</A>
+<LI><A NAME="tex2html584"
+  HREF="lp2_m.html">lp2.m</A>
+<LI><A NAME="tex2html585"
+  HREF="lpmethod_m.html">lpmethod.m</A>
+<LI><A NAME="tex2html586"
+  HREF="lpmod_m.html">lpmod.m</A>
+<LI><A NAME="tex2html587"
+  HREF="mip1_m.html">mip1.m</A>
+<LI><A NAME="tex2html588"
+  HREF="mip2_m.html">mip2.m</A>
+<LI><A NAME="tex2html589"
+  HREF="multiobj_m.html">multiobj.m</A>
+<LI><A NAME="tex2html590"
+  HREF="opttoolbox_lp_m.html">opttoolbox_lp.m</A>
+<LI><A NAME="tex2html591"
+  HREF="opttoolbox_mip1_m.html">opttoolbox_mip1.m</A>
+<LI><A NAME="tex2html592"
+  HREF="params_m.html">params.m</A>
+<LI><A NAME="tex2html593"
+  HREF="piecewise_m.html">piecewise.m</A>
+<LI><A NAME="tex2html594"
+  HREF="poolsearch_m.html">poolsearch.m</A>
+<LI><A NAME="tex2html595"
+  HREF="qcp_m.html">qcp.m</A>
+<LI><A NAME="tex2html596"
+  HREF="qp_m.html">qp.m</A>
+<LI><A NAME="tex2html597"
+  HREF="sensitivity_m.html">sensitivity.m</A>
+<LI><A NAME="tex2html598"
+  HREF="sos_m.html">sos.m</A>
+<LI><A NAME="tex2html599"
+  HREF="sudoku_m.html">sudoku.m</A>
+<LI><A NAME="tex2html600"
+  HREF="workforce1_m.html">workforce1.m</A>
+<LI><A NAME="tex2html601"
+  HREF="workforce2_m.html">workforce2.m</A>
+<LI><A NAME="tex2html602"
+  HREF="workforce3_m.html">workforce3.m</A>
+<LI><A NAME="tex2html603"
+  HREF="workforce4_m.html">workforce4.m</A>
+<LI><A NAME="tex2html604"
+  HREF="workforce5_m.html">workforce5.m</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html605"
+  HREF="r_examples.html">R Examples</A>
+<UL>
+<LI><A NAME="tex2html606"
+  HREF="diet_r.html">diet.R</A>
+<LI><A NAME="tex2html607"
+  HREF="facility_r.html">facility.R</A>
+<LI><A NAME="tex2html608"
+  HREF="feasopt_r.html">feasopt.R</A>
+<LI><A NAME="tex2html609"
+  HREF="fixanddive_r.html">fixanddive.R</A>
+<LI><A NAME="tex2html610"
+  HREF="genconstr_r.html">genconstr.R</A>
+<LI><A NAME="tex2html611"
+  HREF="lp_r.html">lp.R</A>
+<LI><A NAME="tex2html612"
+  HREF="lp2_r.html">lp2.R</A>
+<LI><A NAME="tex2html613"
+  HREF="lpmethod_r.html">lpmethod.R</A>
+<LI><A NAME="tex2html614"
+  HREF="lpmod_r.html">lpmod.R</A>
+<LI><A NAME="tex2html615"
+  HREF="mip_r.html">mip.R</A>
+<LI><A NAME="tex2html616"
+  HREF="mip2_r.html">mip2.R</A>
+<LI><A NAME="tex2html617"
+  HREF="multiobj_r.html">multiobj.R</A>
+<LI><A NAME="tex2html618"
+  HREF="params_r.html">params.R</A>
+<LI><A NAME="tex2html619"
+  HREF="piecewise_r.html">piecewise.R</A>
+<LI><A NAME="tex2html620"
+  HREF="poolsearch_r.html">poolsearch.R</A>
+<LI><A NAME="tex2html621"
+  HREF="qcp_r.html">qcp.R</A>
+<LI><A NAME="tex2html622"
+  HREF="qp_r.html">qp.R</A>
+<LI><A NAME="tex2html623"
+  HREF="sensitivity_r.html">sensitivity.R</A>
+<LI><A NAME="tex2html624"
+  HREF="sos_r.html">sos.R</A>
+<LI><A NAME="tex2html625"
+  HREF="sudoku_r.html">sudoku.R</A>
+<LI><A NAME="tex2html626"
+  HREF="workforce1_r.html">workforce1.R</A>
+<LI><A NAME="tex2html627"
+  HREF="workforce2_r.html">workforce2.R</A>
+<LI><A NAME="tex2html628"
+  HREF="workforce3_r.html">workforce3.R</A>
+<LI><A NAME="tex2html629"
+  HREF="workforce4_r.html">workforce4.R</A>
+<LI><A NAME="tex2html630"
+  HREF="workforce5_r.html">workforce5.R</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html392"
+  HREF="c_examples.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html390"
+  HREF="examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html386"
+  HREF="callbacks.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html393"
+  HREF="c_examples.html">C Examples</A>
+<B> Up:</B> <A NAME="tex2html391"
+  HREF="examples.html">Gurobi Optimizer Example Tour</A>
+<B> Previous:</B> <A NAME="tex2html387"
+  HREF="callbacks.html">Callbacks</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

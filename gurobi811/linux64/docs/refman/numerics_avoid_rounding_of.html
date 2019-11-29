@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Avoid rounding of input</TITLE>
+<META NAME="description" CONTENT="Avoid rounding of input">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_real_numbers_are_.html">
+<LINK REL="previous" HREF="numerics_gurobi_guidelines.html">
+<LINK REL="up" HREF="numerics_gurobi_guidelines.html">
+<LINK REL="next" HREF="numerics_real_numbers_are_.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15775"
+  HREF="numerics_real_numbers_are_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15773"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15767"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15776"
+  HREF="numerics_real_numbers_are_.html">Real numbers are not</A>
+<B> Up:</B> <A NAME="tex2html15774"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15768"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000301000000000000000">
+Avoid rounding of input</A>
+</H2>
+
+<P>
+A common source of numerical issues is numerical rounding in the
+numbers that are used to represent constraint matrix coefficients.  To
+illustrate the issue, consider the following example:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 6y &=&1\\
+0.333x - 2y &= & .333
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="153" HEIGHT="51" BORDER="0"
+ SRC="img164.png"
+ ALT="\begin{eqnarray*}
+x - 6y &amp;=&amp;1\\
+0.333x - 2y &amp;= &amp; .333
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+It may be tempting to say that the two equations are equivalent, but
+adding both to a model will lead to an incorrect result.  This is an
+important point for our users: Gurobi will always trust the input
+numbers that they provide, and will never change them unless the
+change can be shown to not affect the solution.
+
+<P>
+So, with this in mind, during presolve Gurobi can use the second
+constraint to determine:
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+y := 0.1665x - 0.1665
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="151" HEIGHT="27" BORDER="0"
+ SRC="img165.png"
+ ALT="\begin{displaymath}
+y := 0.1665x - 0.1665
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+When substituted into the first constraint, this yields
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 6\cdot(0.1665x - 0.1665) &=& 1\\
+\Leftrightarrow  0.001x &=& 0.001
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="257" HEIGHT="48" BORDER="0"
+ SRC="img166.png"
+ ALT="\begin{eqnarray*}
+x - 6\cdot(0.1665x - 0.1665) &amp;=&amp; 1\\
+\Leftrightarrow 0.001x &amp;=&amp; 0.001
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+and thus <SPAN CLASS="MATH"><IMG
+ WIDTH="92" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img167.png"
+ ALT="$x = 1, y = 0$"></SPAN> as the only solution.
+
+<P>
+If user had provided these two equations instead:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 6y&=&1\\
+0.3333333333333333x - 2y&=&0.3333333333333333
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="368" HEIGHT="51" BORDER="0"
+ SRC="img168.png"
+ ALT="\begin{eqnarray*}
+x - 6y&amp;=&amp;1\\
+0.3333333333333333x - 2y&amp;=&amp;0.3333333333333333
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+this would give:
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+y := 0.1666666666666667x - 0.1666666666666667
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="343" HEIGHT="27" BORDER="0"
+ SRC="img169.png"
+ ALT="\begin{displaymath}
+y := 0.1666666666666667x - 0.1666666666666667
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+which yields:
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+x - 6\cdot(0.1666666666666667x - 0.1666666666666667) &=& 1\\
+\Leftrightarrow 2\cdot10^{-16} x + 1 + 2\cdot10^{-16} &\approx& 1
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="419" HEIGHT="49" BORDER="0"
+ SRC="img170.png"
+ ALT="\begin{eqnarray*}
+x - 6\cdot(0.1666666666666667x - 0.1666666666666667) &amp;=&amp; 1\\
+\Leftrightarrow 2\cdot10^{-16} x + 1 + 2\cdot10^{-16} &amp;\approx&amp; 1
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+Even with a very small threshold for treating a coefficient as zero,
+the result here is that the first constraint is truly redundant.  Any
+solution with <SPAN CLASS="MATH"><IMG
+ WIDTH="78" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img171.png"
+ ALT="$x = 6y + 1$"></SPAN> would be accepted as feasible.
+
+<P>
+The main point is that constraints that are exactly parallel, or
+linearly dependant (within double-precision floating-point and small
+tolerances) are harmless, but constraints that are almost parallel to
+each other produce tiny coefficients in the linear system solves and
+in preprocessing, which can wreak havoc on the solution process.  In
+the next section, we expand on the limits
+<EM>double-precision floating-point</EM> numbers, and in particular
+why <!-- MATH
+ $1\approx 1+2\cdot10^{-16}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="119" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img172.png"
+ ALT="$1\approx 1+2\cdot10^{-16}$"></SPAN>.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15775"
+  HREF="numerics_real_numbers_are_.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15773"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15767"
+  HREF="numerics_gurobi_guidelines.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15776"
+  HREF="numerics_real_numbers_are_.html">Real numbers are not</A>
+<B> Up:</B> <A NAME="tex2html15774"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A>
+<B> Previous:</B> <A NAME="tex2html15768"
+  HREF="numerics_gurobi_guidelines.html">Gurobi Guidelines for Numerical</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBCallback.stopOneMultiObj()</TITLE>
+<META NAME="description" CONTENT="GRBCallback.stopOneMultiObj()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbexception.html">
+<LINK REL="previous" HREF="java_grbcallback.html">
+<LINK REL="up" HREF="java_api_details.html">
+<LINK REL="next" HREF="java_grbcallback_usesoluti.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html6834"
+  HREF="java_grbcallback_usesoluti.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6832"
+  HREF="java_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6826"
+  HREF="java_grbcallback_setsoluti.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html6835"
+  HREF="java_grbcallback_usesoluti.html">GRBCallback.useSolution()</A>
+<B> Up:</B> <A NAME="tex2html6833"
+  HREF="java_api_details.html">Java API Details</A>
+<B> Previous:</B> <A NAME="tex2html6827"
+  HREF="java_grbcallback_setsoluti.html">GRBCallback.setSolution()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000613000000000000000"></A>
+<A NAME="javamethod:GRBCallback.stopOneMultiObj"></A>
+<BR>
+GRBCallback.stopOneMultiObj()
+</H2>
+
+<P>
+Interrupt the optimization process of one of the optimization steps in
+a multi-objective MIP problem without stopping the hierarchical
+optimization process.
+Only available for multi-objective MIP models and when the <TT>where</TT> member variable is not equal to <TT>GRB.CB_MULTIOBJ</TT> (see the
+<A HREF="callback_codes.html#sec:CallbackCodes">Callback Codes</A> section for more
+information).
+
+<P>
+You would typically stop a multi-objective optimization step
+by quering the last finished number of multi-objectives steps,
+and using that number to stop the current step and move
+on to the next hierarchical objective (if any) as shown in the
+following example:
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG>
+<PRE>
+import gurobi.*;
+
+public class Callback extends GRBCallback {
+  private int objcnt;
+  private long starttime;
+
+  protected void callback() {
+    try {
+      if (where == GRB.CB_MULTIOBJ) {
+        /* get current objective number */
+        objcnt    = getIntInfo(GRB.CB_MULTIOBJ_OBJCNT);
+
+        /* reset start time to current time */
+        starttime = System.currentTimeMillis();
+
+      } else if (System.currentTimeMillis() - starttime &gt; BIG ||
+                 /* takes too long or good enough */) {
+        /* stop only this optimization step */
+        stopOneMultiObj(objcnt);
+      }
+    }
+  }
+}
+</PRE>
+
+<P>
+You should refer to the section on <A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple
+Objectives</A> for information on how to
+specify multiple objective functions and control the trade-off between
+them.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">void</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">stopOneMultiObj</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">objcnt )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">objnum</SPAN>: The number of the multi-objective optimization step
+to interrupt. For processes running locally, this argument can have the
+special value -1, meaning to stop the current step.
+
+<P>
+</LI>
+</UL>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6836"
+  HREF="java_grbcallback_usesoluti.html">GRBCallback.useSolution()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html6834"
+  HREF="java_grbcallback_usesoluti.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6832"
+  HREF="java_api_details.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6826"
+  HREF="java_grbcallback_setsoluti.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html6835"
+  HREF="java_grbcallback_usesoluti.html">GRBCallback.useSolution()</A>
+<B> Up:</B> <A NAME="tex2html6833"
+  HREF="java_api_details.html">Java API Details</A>
+<B> Previous:</B> <A NAME="tex2html6827"
+  HREF="java_grbcallback_setsoluti.html">GRBCallback.setSolution()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

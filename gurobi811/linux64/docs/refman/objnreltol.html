@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>ObjNRelTol</TITLE>
+<META NAME="description" CONTENT="ObjNRelTol">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="objnabstol.html">
+<LINK REL="previous" HREF="objnweight.html">
+<LINK REL="up" HREF="multi_objective_attributes.html">
+<LINK REL="next" HREF="objnabstol.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html13343"
+  HREF="objnabstol.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13341"
+  HREF="multi_objective_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13335"
+  HREF="objnweight.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html13344"
+  HREF="objnabstol.html">ObjNAbsTol</A>
+<B> Up:</B> <A NAME="tex2html13342"
+  HREF="multi_objective_attributes.html">Multi-objective Attributes</A>
+<B> Previous:</B> <A NAME="tex2html13336"
+  HREF="objnweight.html">ObjNWeight</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000168500000000000000"></A>
+<A NAME="attr:ObjNRelTol"></A>
+<BR>
+ObjNRelTol
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">Yes</TD>
+</TR>
+</TABLE>
+
+<P>
+This attribute is used to set the allowable degradation for objective
+<SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="$n$"></SPAN> when doing hierarchical multi-objective optimization for MIP
+models.  You set <SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="$n$"></SPAN> using
+the <A HREF="objnumber.html#parameter:ObjNumber">ObjNumber</A> parameter.
+
+<P>
+Hierarchical multi-objective MIP optimization will optimize for the
+different objectives in the model one at a time, in priority order.
+If it achieves objective value <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> when it optimizes for this
+objective, then subsequent steps are allowed to degrade this value by
+at most <code>ObjNRelTol</code>*<SPAN CLASS="MATH"><IMG
+ WIDTH="21" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img135.png"
+ ALT="$\vert z\vert$"></SPAN>.
+
+<P>
+Objective degradations are handled differently for multi-objective LP
+models.  The allowable degradation is controlled strictly using
+the <A HREF="objnabstol.html#attr:ObjNAbsTol">ObjNAbsTol</A>.
+
+<P>
+The default relative tolerance for an objective is 0.
+
+<P>
+The number of objectives in the model can be queried (or modified)
+using the <A HREF="numobj.html#attr:NumObj">NumObj</A> attribute.
+
+<P>
+Please refer to the discussion of
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple Objectives</A> for
+more information on the use of alternative objectives.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13343"
+  HREF="objnabstol.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13341"
+  HREF="multi_objective_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13335"
+  HREF="objnweight.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html13344"
+  HREF="objnabstol.html">ObjNAbsTol</A>
+<B> Up:</B> <A NAME="tex2html13342"
+  HREF="multi_objective_attributes.html">Multi-objective Attributes</A>
+<B> Previous:</B> <A NAME="tex2html13336"
+  HREF="objnweight.html">ObjNWeight</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

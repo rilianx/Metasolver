@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Accessing Job Logs</TITLE>
+<META NAME="description" CONTENT="Accessing Job Logs">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="accessing_job_parameters.html">
+<LINK REL="previous" HREF="listing_optimization_jobs.html">
+<LINK REL="up" HREF="client_commands.html">
+<LINK REL="next" HREF="accessing_job_parameters.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html528"
+  HREF="accessing_job_parameters.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html526"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html520"
+  HREF="listing_optimization_jobs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html529"
+  HREF="accessing_job_parameters.html">Accessing Job Parameters</A>
+<B> Up:</B> <A NAME="tex2html527"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html521"
+  HREF="listing_optimization_jobs.html">Listing Optimization Jobs</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00032200000000000000">
+Accessing Job Logs</A>
+</H3>
+
+<P>
+Gurobi Optimizer log output from a previous or currently running job
+can be retrieved by using the <TT>log</TT> command.  For example:
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass log 78400806
+
+  MIR: 3
+  Flow cover: 43
+
+Explored 178942 nodes (1207578 simplex iterations) in 93.24 seconds
+Thread count was 2 (of 2 available processors)
+
+Solution count 10: 1.20001e+09 1.35001e+09 1.50001e+09 ... 1.65835e+09
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.200012600000e+09, best bound 1.200000244174e+09, gap 0.0010%
+</PRE>
+
+<P>
+The argument to this command is the <TT>JOBID</TT> for the job of
+interest (which can be retrieved using the <TT>jobs</TT> command), you
+can use the full ID or the short ID. If
+you don't specify a <TT>JOBID</TT>, the command will display the log for
+the last job submitted.
+
+<P>
+The <TT>log</TT> command accepts the following arguments:
+
+<P>
+
+<PRE>
+Usage:
+  grbcluster log &lt;JOBID&gt; [flags]
+
+Important flags:
+  -b, --begin             Display log from the beginning
+  -f, --continuous        Display log continuously until job completion
+  -n, --lines int         Display only the last n lines (default 10)
+</PRE>
+
+<P>
+For example, to get the entire log, from the beginning of the job, use
+the <TT>-b</TT> (or <TT>--begin</TT>) flag.
+
+<P>
+
+<PRE>
+&gt; grbcluster --server=server1 --password=pass log 78400806 -b
+</PRE>
+
+<P>
+You can get a continuous feed of the log for a running
+optimization job with the <TT>-f</TT> (or <TT>--continuous</TT>) flag.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html528"
+  HREF="accessing_job_parameters.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html526"
+  HREF="client_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html520"
+  HREF="listing_optimization_jobs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html529"
+  HREF="accessing_job_parameters.html">Accessing Job Parameters</A>
+<B> Up:</B> <A NAME="tex2html527"
+  HREF="client_commands.html">Client Commands</A>
+<B> Previous:</B> <A NAME="tex2html521"
+  HREF="listing_optimization_jobs.html">Listing Optimization Jobs</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

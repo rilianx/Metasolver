@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBaddgenconstrXxx</TITLE>
+<META NAME="description" CONTENT="GRBaddgenconstrXxx">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="c_grbaddgenconstrmax.html">
+<LINK REL="previous" HREF="c_grbaddconstrs.html">
+<LINK REL="up" HREF="c_model_creation_and_modif.html">
+<LINK REL="next" HREF="c_grbaddgenconstrmax.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1710"
+  HREF="c_grbaddgenconstrmax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1708"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1702"
+  HREF="c_grbaddconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1711"
+  HREF="c_grbaddgenconstrmax.html">GRBaddgenconstrMax</A>
+<B> Up:</B> <A NAME="tex2html1709"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1703"
+  HREF="c_grbaddconstrs.html">GRBaddconstrs</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022600000000000000"></A>
+<A NAME="routine:GRBaddgenconstrXxx"></A>
+<BR>
+GRBaddgenconstrXxx
+</H3>
+
+<P>
+Each of the functions described below adds a new <EM>general constraint</EM> to a model.
+
+<P>
+Mathematical programming has traditionally defined a set of
+fundamental constraint types: variable bound constraints, linear
+constraints, quadratic constraints, integrality constraints, and SOS
+constraints.  These are typically treated directly by the underlying
+solver (although not always), and are fundamental to the overall
+algorithm.
+
+<P>
+Gurobi accepts a number of additional constraint types, which we
+collectively refer to as <EM>general constraints</EM>.  These are
+typically <EM>not</EM> treated directly by the solver.  Rather, they
+are transformed by presolve into mathematically equivalent sets of
+constraints (and variables), chosen from among the fundamental types
+listed above.  These general constraints are provided as a convenience
+to users.  If such constraints appear in your model, but if you prefer
+to reformulate them yourself using fundamental constraint types
+instead, you can certainly do so.  However, note that Gurobi can
+sometimes exploit information contained in the other constraints in
+the model to build a more efficient formulation than what you might
+create.
+
+<P>
+The additional constraint types that fall under this <EM>general
+  constraint</EM> umbrella are:
+
+<UL>
+<LI>MAX (<A HREF="c_grbaddgenconstrmax.html#routine:GRBaddgenconstrMax">GRBaddgenconstrMax</A>):
+  set a decision variable equal to the maximum value from
+  among a set of decision variables
+</LI>
+<LI>MIN (<A HREF="c_grbaddgenconstrmin.html#routine:GRBaddgenconstrMin">GRBaddgenconstrMin</A>):
+  set a decision variable equal to the minimum value from
+  among a set of decision variables
+</LI>
+<LI>ABS (<A HREF="c_grbaddgenconstrabs.html#routine:GRBaddgenconstrAbs">GRBaddgenconstrAbs</A>):
+  set a decision variable equal to the absolute value
+  of some other decision variable
+</LI>
+<LI>AND (<A HREF="c_grbaddgenconstrand.html#routine:GRBaddgenconstrAnd">GRBaddgenconstrAnd</A>):
+  set a binary variable equal to one if and only if all
+  of a set of binary decision variables are equal to one
+</LI>
+<LI>OR (<A HREF="c_grbaddgenconstror.html#routine:GRBaddgenconstrOr">GRBaddgenconstrOr</A>):
+  set a binary variable equal to one if and only if at least one
+  variable out of a set of binary decision variables is equal to one
+</LI>
+<LI>INDICATOR (<A HREF="c_grbaddgenconstrindicator.html#routine:GRBaddgenconstrIndicator">GRBaddgenconstrIndicator</A>):
+  whenever a given binary variable takes a certain value, then the
+  given linear constraint must be satisfied
+</LI>
+</UL>
+Please refer to <A HREF="constraints.html#subsubsection:GeneralConstraints">this section</A>
+for additional details on general constraints.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1710"
+  HREF="c_grbaddgenconstrmax.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1708"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1702"
+  HREF="c_grbaddconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1711"
+  HREF="c_grbaddgenconstrmax.html">GRBaddgenconstrMax</A>
+<B> Up:</B> <A NAME="tex2html1709"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1703"
+  HREF="c_grbaddconstrs.html">GRBaddconstrs</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

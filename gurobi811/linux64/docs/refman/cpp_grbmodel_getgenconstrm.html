@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel::getGenConstrMax()</TITLE>
+<META NAME="description" CONTENT="GRBModel::getGenConstrMax()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cpp_grbmodel_getgenconstrm2.html">
+<LINK REL="previous" HREF="cpp_grbmodel_getenv.html">
+<LINK REL="up" HREF="cpp_grbmodel.html">
+<LINK REL="next" HREF="cpp_grbmodel_getgenconstrm2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html3734"
+  HREF="cpp_grbmodel_getgenconstrm2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3732"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3726"
+  HREF="cpp_grbmodel_getenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3735"
+  HREF="cpp_grbmodel_getgenconstrm2.html">GRBModel::getGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html3733"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3727"
+  HREF="cpp_grbmodel_getenv.html">GRBModel::getEnv()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000422500000000000000"></A>
+<A NAME="cppmethod:GRBModel::getGenConstrMax"></A>
+<BR>
+GRBModel::getGenConstrMax()
+</H3>
+
+<P>
+Retrieve the data of a general constraint of type MAX.
+Calling this function for a general constraint of different type
+leads to an exception.
+You can query the <A HREF="genconstrtype.html#attr:GenConstrType">GenConstrType</A>
+attribute to determine the type of the general constraint.
+
+<P>
+Typical usage is to call this routine twice.
+In the first call, you specify the requested general constraint,
+with a <code>NULL</code> value for the <code>vars</code> argument.
+The routine returns the total number of operand variables in the
+specified general constraint in <code>lenP</code>.
+That allows you to make certain that the <code>vars</code> array is of
+sufficient size to hold the result of the second call.
+
+<P>
+See also <A HREF="cpp_grbmodel_addgenconstrm.html#cppmethod:GRBModel::addGenConstrMax">addGenConstrMax</A>
+for a description of the semantics of this general constraint type.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">void</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getGenConstrMax</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBGenConstr</TD>
+<TD ALIGN="LEFT">genc,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar*</TD>
+<TD ALIGN="LEFT">resvarP,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar*</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int*</TD>
+<TD ALIGN="LEFT">lenP,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double*</TD>
+<TD ALIGN="LEFT">constantP )</TD>
+</TR>
+</TABLE>
+
+<UL>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">genc</SPAN>: The index of the general constraint.
+
+<P>
+Any combination of the following four arguments can be <TT>NULL</TT>.
+
+<P>
+ <SPAN  CLASS="textbf">resvarP</SPAN>: Pointer to store the resultant variable of the constraint.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: Array to store the operand variables of the constraint.
+
+<P>
+ <SPAN  CLASS="textbf">lenP</SPAN>: Pointer to store the number of operand variables of the constraint.
+
+<P>
+ <SPAN  CLASS="textbf">constantP</SPAN>: Pointer to store the additional constant operand of the constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3734"
+  HREF="cpp_grbmodel_getgenconstrm2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3732"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3726"
+  HREF="cpp_grbmodel_getenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3735"
+  HREF="cpp_grbmodel_getgenconstrm2.html">GRBModel::getGenConstrMin()</A>
+<B> Up:</B> <A NAME="tex2html3733"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3727"
+  HREF="cpp_grbmodel_getenv.html">GRBModel::getEnv()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

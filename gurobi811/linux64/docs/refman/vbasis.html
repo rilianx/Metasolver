@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>VBasis</TITLE>
+<META NAME="description" CONTENT="VBasis">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="pstart.html">
+<LINK REL="previous" HREF="partition.html">
+<LINK REL="up" HREF="variable_attributes.html">
+<LINK REL="next" HREF="pstart.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12488"
+  HREF="pstart.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12486"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12480"
+  HREF="partition.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12489"
+  HREF="pstart.html">PStart</A>
+<B> Up:</B> <A NAME="tex2html12487"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12481"
+  HREF="partition.html">Partition</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001621500000000000000"></A>
+<A NAME="attr:VBasis"></A>
+<BR>
+VBasis
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">Yes</TD>
+</TR>
+</TABLE>
+
+<P>
+The status of a given variable in the current basis.  Possible values
+are 0 (basic), -1 (non-basic at lower bound), -2 (non-basic at upper
+bound), and -3 (super-basic).  Note that, if you wish to specify an
+advanced starting basis, you must set basis status information for all
+constraints and variables in the model. Only available for basic
+solutions.
+
+<P>
+Note that if you provide a valid starting extreme point, either through
+<TT><A HREF="pstart.html#attr:PStart">PStart</A>,
+<A HREF="dstart.html#attr:DStart">DStart</A></TT>, or through <TT><A HREF="#attr:VBasis">VBasis</A>, <A HREF="cbasis.html#attr:CBasis">CBasis</A></TT>,
+then LP presolve will be disabled.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12488"
+  HREF="pstart.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12486"
+  HREF="variable_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12480"
+  HREF="partition.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12489"
+  HREF="pstart.html">PStart</A>
+<B> Up:</B> <A NAME="tex2html12487"
+  HREF="variable_attributes.html">Variable Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12481"
+  HREF="partition.html">Partition</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

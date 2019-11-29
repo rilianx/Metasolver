@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Change parameters</TITLE>
+<META NAME="description" CONTENT="Change parameters">
+<META NAME="keywords" CONTENT="examples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="examples.css">
+
+<LINK REL="next" HREF="automated_parameter_tuning.html">
+<LINK REL="previous" HREF="modify_a_model.html">
+<LINK REL="up" HREF="example_tour.html">
+<LINK REL="next" HREF="automated_parameter_tuning.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html336"
+  HREF="automated_parameter_tuning.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html334"
+  HREF="example_tour.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html328"
+  HREF="modify_a_model.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html337"
+  HREF="automated_parameter_tuning.html">Automated parameter tuning</A>
+<B> Up:</B> <A NAME="tex2html335"
+  HREF="example_tour.html">Example tour</A>
+<B> Previous:</B> <A NAME="tex2html329"
+  HREF="modify_a_model.html">Modify a model</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00016000000000000000"></A>
+<A NAME="subsection:Parameters"></A>
+<BR>
+Change parameters
+</H2>
+<B>Examples:</B> callback, fixanddive, lp, lpmethod, mip2, params, sensitivity
+
+<P>
+This section illustrates the use of Gurobi parameters.  Example
+<code>params</code> reads a MIP model from a file, then solves the model using
+four different values of the <code>MIPFocus</code> parameter, running for
+five seconds per value (<code>MIPFocus</code> chooses the high-level
+strategy that the MIP solver uses to solve the problem).  It then
+chooses the parameter value that produced the smallest MIP gap, and
+continues solving the model until it achieves optimality.
+
+<P>
+The mechanics of setting a parameter are quite simple.  To set
+the <code>MIPFocus</code> parameter in C, do the following:
+<PRE>
+  GRBsetintparam(GRBgetenv(model), GRB_INT_PAR_MIPFOCUS, i);
+</PRE>
+In C++:
+<PRE>
+  model.set(GRB_IntParam_MIPFocus, i);
+</PRE>
+In Java:
+<PRE>
+  model.set(GRB.IntParam.MIPFocus, i);
+</PRE>
+In C#:
+<PRE>
+  model.Parameters.MIPFocus = 1
+</PRE>
+or
+<PRE>
+  model.Set(GRB.IntParam.MIPFocus, i);
+</PRE>
+In Python:
+<PRE>
+  model.Params.MIPFocus = i
+</PRE>
+
+<P>
+We should add a comment on how parameter settings propagate between
+different models.  When we set the <code>TimeLimit</code> parameter on the
+base model, then make a copy of that model, the parameter setting is
+carried over to the copy.  When we set the <code>MIPFocus</code> parameter
+on the copy, that parameter change has no effect on the other copies,
+nor on the original model.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html336"
+  HREF="automated_parameter_tuning.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html334"
+  HREF="example_tour.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html328"
+  HREF="modify_a_model.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html337"
+  HREF="automated_parameter_tuning.html">Automated parameter tuning</A>
+<B> Up:</B> <A NAME="tex2html335"
+  HREF="example_tour.html">Example tour</A>
+<B> Previous:</B> <A NAME="tex2html329"
+  HREF="modify_a_model.html">Modify a model</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

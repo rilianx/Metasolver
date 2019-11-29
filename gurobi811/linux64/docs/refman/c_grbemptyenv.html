@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBemptyenv</TITLE>
+<META NAME="description" CONTENT="GRBemptyenv">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="c_grbstartenv.html">
+<LINK REL="previous" HREF="c_grbloadenv.html">
+<LINK REL="up" HREF="c_environment_creation_and.html">
+<LINK REL="next" HREF="c_grbstartenv.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1527"
+  HREF="c_grbstartenv.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1525"
+  HREF="c_environment_creation_and.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1519"
+  HREF="c_grbloadenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1528"
+  HREF="c_grbstartenv.html">GRBstartenv</A>
+<B> Up:</B> <A NAME="tex2html1526"
+  HREF="c_environment_creation_and.html">Environment Creation and Destruction</A>
+<B> Previous:</B> <A NAME="tex2html1520"
+  HREF="c_grbloadenv.html">GRBloadenv</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021200000000000000"></A>
+<A NAME="routine:GRBemptyenv"></A>
+<BR>
+GRBemptyenv
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBemptyenv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBenv</TD>
+<TD ALIGN="LEFT">**envP )</TD>
+</TR>
+</TABLE>
+
+<P>
+Create an empty environment.  Note that you will need to call
+<A HREF="c_grbstartenv.html#routine:GRBstartenv">GRBstartenv</A> before you
+can use this environment.
+
+<P>
+You should use this routine if you want to set parameters before actually
+starting the environment.  This can be useful if you want to
+connect to a Compute Server, a token server, or the Gurobi
+Instant Cloud.  See the <A HREF="empty_environment.html#sec:EmptyEnvironment">Empty
+Environment</A>&nbsp;Section for more details.
+
+<P>
+This routine will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter). This routine will also populate several
+parameters (<TT>ComputeServer</TT>, <TT>TokenServer</TT>,
+<TT>ServerPassword</TT>, etc.) from your <TT>gurobi.lic</TT> file.
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A non-zero return value indicates that there was a problem creating
+the environment.  Refer to the <A HREF="error_codes.html#sec:ErrorCodes">Error
+  Code</A> table for a list of possible return
+values.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">envP</SPAN>: The location in which the pointer to the newly created
+  environment should be placed.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1527"
+  HREF="c_grbstartenv.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1525"
+  HREF="c_environment_creation_and.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1519"
+  HREF="c_grbloadenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1528"
+  HREF="c_grbstartenv.html">GRBstartenv</A>
+<B> Up:</B> <A NAME="tex2html1526"
+  HREF="c_environment_creation_and.html">Environment Creation and Destruction</A>
+<B> Previous:</B> <A NAME="tex2html1520"
+  HREF="c_grbloadenv.html">GRBloadenv</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

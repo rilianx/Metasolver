@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>FarkasDual</TITLE>
+<META NAME="description" CONTENT="FarkasDual">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="sarhsup.html">
+<LINK REL="up" HREF="linear_constraint_attribut.html">
+<LINK REL="next" HREF="sos_attributes.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12736"
+  HREF="sos_attributes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12734"
+  HREF="linear_constraint_attribut.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12730"
+  HREF="sarhsup.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12737"
+  HREF="sos_attributes.html">SOS Attributes</A>
+<B> Up:</B> <A NAME="tex2html12735"
+  HREF="linear_constraint_attribut.html">Linear Constraint Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12731"
+  HREF="sarhsup.html">SARHSUp</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001631200000000000000"></A>
+<A NAME="attr:FarkasDual"></A>
+<BR>
+FarkasDual
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">No</TD>
+</TR>
+</TABLE>
+
+<P>
+Together, attributes <A HREF="#attr:FarkasDual">FarkasDual</A> and
+<A HREF="farkasproof.html#attr:FarkasProof">FarkasProof</A> provide a certificate of
+infeasibility for the given problem.  Specifically, they can
+be used to form the following inequality from the original
+constraints that is trivially infeasible:
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\bar{a}x = \lambda^tAx \leq \lambda^tb = -\beta + \sum\limits_{j:\bar{a}_j<0}\bar{a}_jU_j + \sum\limits_{j:\bar{a}_j>0}\bar{a}_jL_j,
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="351" HEIGHT="48" BORDER="0"
+ SRC="img111.png"
+ ALT="\begin{displaymath}\bar{a}x = \lambda^tAx \leq \lambda^tb = -\beta + \sum\limits...
+...{a}_j&lt;0}\bar{a}_jU_j + \sum\limits_{j:\bar{a}_j&gt;0}\bar{a}_jL_j,\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+where <SPAN CLASS="MATH"><IMG
+ WIDTH="43" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img112.png"
+ ALT="$\beta&gt;0$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img113.png"
+ ALT="$L_j$"></SPAN> is the lower bound of variable <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$x_j$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img114.png"
+ ALT="$U_j$"></SPAN> is the upper
+bound of variable <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$x_j$"></SPAN>, <!-- MATH
+ $\lambda_i \geq 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="48" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img115.png"
+ ALT="$\lambda_i \geq 0$"></SPAN> if the <SPAN CLASS="MATH"><IMG
+ WIDTH="10" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img49.png"
+ ALT="$i$"></SPAN>-th constraint
+has a <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img72.png"
+ ALT="$\leq$"></SPAN> sense, <!-- MATH
+ $\lambda_i \leq 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="48" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img116.png"
+ ALT="$\lambda_i \leq 0$"></SPAN> if the <SPAN CLASS="MATH"><IMG
+ WIDTH="10" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img49.png"
+ ALT="$i$"></SPAN>-th constraint has a
+<SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$\geq$"></SPAN> sense, <!-- MATH
+ $\bar{a}_j \geq 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="48" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img117.png"
+ ALT="$\bar{a}_j \geq 0$"></SPAN> if <SPAN CLASS="MATH"><IMG
+ WIDTH="59" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img118.png"
+ ALT="$U_j = \infty$"></SPAN>, and <!-- MATH
+ $\bar{a}_j
+\leq 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="48" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img119.png"
+ ALT="$\bar{a}_j
+\leq 0$"></SPAN> if <SPAN CLASS="MATH"><IMG
+ WIDTH="71" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img120.png"
+ ALT="$L_j = -\infty$"></SPAN>.
+This constraint can not be satisfied for any <SPAN CLASS="MATH"><IMG
+ WIDTH="43" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img112.png"
+ ALT="$\beta&gt;0$"></SPAN>.
+The FarkasProof attribute provides <SPAN CLASS="MATH"><IMG
+ WIDTH="14" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img121.png"
+ ALT="$\beta$"></SPAN>, and the FarkasDual attributes
+provide <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img122.png"
+ ALT="$\lambda$"></SPAN> multipliers for the original constraints.
+
+<P>
+This attribute is only available when parameter
+<A HREF="infunbdinfo.html#parameter:InfUnbdInfo">InfUnbdInfo</A> is set to 1.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12736"
+  HREF="sos_attributes.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12734"
+  HREF="linear_constraint_attribut.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12730"
+  HREF="sarhsup.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12737"
+  HREF="sos_attributes.html">SOS Attributes</A>
+<B> Up:</B> <A NAME="tex2html12735"
+  HREF="linear_constraint_attribut.html">Linear Constraint Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12731"
+  HREF="sarhsup.html">SARHSUp</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

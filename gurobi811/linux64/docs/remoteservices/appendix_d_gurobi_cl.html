@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Appendix D: gurobi_cl</TITLE>
+<META NAME="description" CONTENT="Appendix D: gurobi_cl">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="appendix_e_acknowledgement.html">
+<LINK REL="previous" HREF="appendix_c_grbcluster.html">
+<LINK REL="up" HREF="remoteservices.html">
+<LINK REL="next" HREF="appendix_e_acknowledgement.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html835"
+  HREF="appendix_e_acknowledgement.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html833"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html827"
+  HREF="appendix_c_grbcluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html836"
+  HREF="appendix_e_acknowledgement.html">Appendix E: Acknowledgement of</A>
+<B> Up:</B> <A NAME="tex2html834"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html828"
+  HREF="appendix_c_grbcluster.html">Appendix C: grbcluster</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION000100000000000000000"></A>
+<A NAME="sec:gurobi_cl"></A>
+<BR>
+Appendix D: gurobi_cl
+</H1>
+
+<P>
+
+<PRE>
+Usage:
+  gurobi_cl --help                             Display usage
+  gurobi_cl [flags] [param=value]* filename    Optimize a model file
+  gurobi_cl [flags]                            Execute a command
+
+Gurobi parameters are documented in the Gurobi Reference Manual.
+
+Flags can be set using --flag=value or the short form -f=value if defined.
+A boolean flag can be enabled using --flag or the short form -f if defined.
+
+Flags:
+  -h, --help             Display usage
+      --license          Display license information
+  -t, --tokens           List license tokens currently in use
+  -v, --version          Display version information
+
+Compute Server Flags:
+      --group string     Cluster group name, overrides license file GROUP
+  -p, --password string  Password, overrides license file PASSWORD
+                           (default "pass")
+      --priority int     Job priority, overrides license file PRIORITY
+                           (default 0, min -100, max 100)
+  -r, --router string    Router URL, overrides license file property ROUTER
+  -s, --server string    Cluster representative node address,
+                           overrides license file COMPUTESERVER
+      --tls-insecure     Skip TLS certificate verification,
+                           overrides GRB_TLS_INSECURE variable
+
+Instant Cloud Flags:
+      --accessid string  Access ID, overrides license file CLOUDACCESSID
+      --secretkey string Secret Key, overrides license file CLOUDKEY
+      --pool string      Pool name, overrides license file POOL
+
+If a valid Gurobi license file is accessible at the predefined locations or
+using the variable GRB_LICENSE_FILE, the license file will provide default
+values for some connection parameters (server, password, router). If the
+license file references a Gurobi Instant Cloud pool, it will resolve the
+connection parameters of the pool.
+
+The server URL can also specify the protocol and the port:
+   server.company.com                   Use HTTP on standard port 80
+   server.company.com:61000             Use HTTP on port 61000
+   https://server.company.com           Use HTTPS on standard port 443
+   https://server.company.com:61000     Use HTTPS on port 61000
+
+If you wish to get the status of your compute server cluster, list the nodes
+and the jobs, or check the status of your licenses, please use the grbccluster
+command line tool. To learn more about grbcluster, type the following command:
+  grbcluster --help
+
+gurobi_cl is compatible with standard proxy settings using environment
+variables HTTP_PROXY and HTTPS_PROXY. HTTPS_PROXY takes precedence over
+HTTP_PROXY for https requests. The values may be either a complete URL or
+a "host[:port]", in which case the "http" scheme is assumed.
+
+Examples:
+  gurobi_cl misc07.mps
+  gurobi_cl Record=1 Method=2 ResultFile=p0033.sol InputFile=p0033.mst \
+            InputFile=p0033.hnt.gz LogFile=p0033.log p0033.mps
+  gurobi_cl --server=server.company.com --password=pass misc07.mps
+
+Visit www.gurobi.com/documentation/8.0 for further details on how to use
+this program.
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html835"
+  HREF="appendix_e_acknowledgement.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html833"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html827"
+  HREF="appendix_c_grbcluster.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html836"
+  HREF="appendix_e_acknowledgement.html">Appendix E: Acknowledgement of</A>
+<B> Up:</B> <A NAME="tex2html834"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html828"
+  HREF="appendix_c_grbcluster.html">Appendix C: grbcluster</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

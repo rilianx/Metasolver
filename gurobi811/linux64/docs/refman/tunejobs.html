@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>TuneJobs</TITLE>
+<META NAME="description" CONTENT="TuneJobs">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="tuneoutput.html">
+<LINK REL="previous" HREF="tunecriterion.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="tuneoutput.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15037"
+  HREF="tuneoutput.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15035"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15029"
+  HREF="tunecriterion.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15038"
+  HREF="tuneoutput.html">TuneOutput</A>
+<B> Up:</B> <A NAME="tex2html15036"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html15030"
+  HREF="tunecriterion.html">TuneCriterion</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00017212500000000000000"></A>
+<A NAME="parameter:TuneJobs"></A>
+<BR>
+TuneJobs
+</H3>
+Distributed tuning job count
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">MAXINT</TD>
+</TR>
+</TABLE>
+
+<P>
+Enables distributed parallel tuning, which can significantly increase
+the performance of the tuning tool.  A value of <code>n</code> causes the
+tuning tool to distribute tuning work among <code>n</code> parallel jobs.
+These jobs are distributed among a set of machines.  Use the
+<A HREF="workerpool.html#parameter:WorkerPool">WorkerPool</A> parameter to
+provide a distributed worker cluster.
+
+<P>
+Note that distributed tuning is most effective when the worker machines have
+similar performance.  Distributed tuning doesn't attempt to normalize
+performance by server, so it can incorrectly attribute a boost in
+performance to a parameter change when the associated setting is tried
+on a worker that is significantly faster than the others.
+
+<P>
+One important note about integer-valued parameters: while the maximum
+value that can be stored in a signed integer is <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img143.png"
+ ALT="$2^{31}-1$"></SPAN>, we use a
+<TT>MAXINT</TT> value of 2,000,000,000.  Attempting to set an integer
+parameter to a value larger than this maximum will produce an error.
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15037"
+  HREF="tuneoutput.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15035"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15029"
+  HREF="tunecriterion.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15038"
+  HREF="tuneoutput.html">TuneOutput</A>
+<B> Up:</B> <A NAME="tex2html15036"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html15030"
+  HREF="tunecriterion.html">TuneCriterion</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

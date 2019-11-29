@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>PoolObjBound</TITLE>
+<META NAME="description" CONTENT="PoolObjBound">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="poolobjval.html">
+<LINK REL="previous" HREF="objboundc.html">
+<LINK REL="up" HREF="model_attributes.html">
+<LINK REL="next" HREF="poolobjval.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11934"
+  HREF="poolobjval.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11932"
+  HREF="model_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11926"
+  HREF="objboundc.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11935"
+  HREF="poolobjval.html">PoolObjVal</A>
+<B> Up:</B> <A NAME="tex2html11933"
+  HREF="model_attributes.html">Model Attributes</A>
+<B> Previous:</B> <A NAME="tex2html11927"
+  HREF="objboundc.html">ObjBoundC</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001611900000000000000"></A>
+<A NAME="attr:PoolObjBound"></A>
+<BR>
+PoolObjBound
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">double</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">No</TD>
+</TR>
+</TABLE>
+
+<P>
+Bound on the objective of undiscovered MIP solutions.  The MIP solver
+stores solutions that it finds during the MIP search, but it only
+provides quality guarantees for those whose objective is at least as
+good as <code>PoolObjBound</code>.  Specifically, further exploration of the
+MIP search tree will not find solutions whose objective is better
+than <code>PoolObjBound</code>.
+
+<P>
+The difference between <code>PoolObjBound</code> and
+<A HREF="objbound.html#attr:ObjBound">ObjBound</A> is that the former gives an
+objective bound for undiscovered solutions, while the latter gives a
+bound for any solution.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11934"
+  HREF="poolobjval.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11932"
+  HREF="model_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11926"
+  HREF="objboundc.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11935"
+  HREF="poolobjval.html">PoolObjVal</A>
+<B> Up:</B> <A NAME="tex2html11933"
+  HREF="model_attributes.html">Model Attributes</A>
+<B> Previous:</B> <A NAME="tex2html11927"
+  HREF="objboundc.html">ObjBoundC</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

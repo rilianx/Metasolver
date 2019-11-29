@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>The case of linear systems:</TITLE>
+<META NAME="description" CONTENT="The case of linear systems:">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_the_geometry_of_l.html">
+<LINK REL="previous" HREF="numerics_instability_and_t.html">
+<LINK REL="up" HREF="numerics_instability_and_t.html">
+<LINK REL="next" HREF="numerics_the_geometry_of_l.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15949"
+  HREF="numerics_the_geometry_of_l.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15947"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15941"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15950"
+  HREF="numerics_the_geometry_of_l.html">The geometry of linear</A>
+<B> Up:</B> <A NAME="tex2html15948"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A>
+<B> Previous:</B> <A NAME="tex2html15942"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000306100000000000000">
+The case of linear systems:</A>
+</H3>
+
+<P>
+Solving linear systems is a very common sub-routine in any
+MI(QC)P-solver, as we have to solve many linear systems during the
+full execution of the algorithm.
+
+<P>
+So, consider that we have a linear system <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img57.png"
+ ALT="$Ax = b$"></SPAN> with an
+unique solution (i.e. <SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img47.png"
+ ALT="$A$"></SPAN> is a square matrix with full rank), and you
+want to evaluate how the solution to the system might change if we
+perturb the right-hand side <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN>. Since the system has a unique
+solution, we know that given <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN>, the solution will be <SPAN CLASS="MATH"><IMG
+ WIDTH="40" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img223.png"
+ ALT="$A^{-1}b$"></SPAN>, and
+if we perturb <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN> with <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img224.png"
+ ALT="$\varepsilon$"></SPAN>, the solution will be
+<!-- MATH
+ $A^{-1}(b+\varepsilon)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="79" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img225.png"
+ ALT="$A^{-1}(b+\varepsilon)$"></SPAN>. A measure for the <EM>relative</EM> change in
+the solution with respect to the <EM>relative</EM> change in the input
+would be the ratio
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\eta(b,\varepsilon):=\frac{\|A^{-1}b\|}{\|A^{-1}(b+\varepsilon)\|}/\frac{\|b\|}{\|b+\varepsilon\|}.
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="227" HEIGHT="45" BORDER="0"
+ SRC="img226.png"
+ ALT="\begin{displaymath}\eta(b,\varepsilon):=\frac{\Vert A^{-1}b\Vert}{\Vert A^{-1}(b+\varepsilon)\Vert}/\frac{\Vert b\Vert}{\Vert b+\varepsilon\Vert}.\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+Note that the above definition is independent of the magnitudes of <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN>
+and <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img224.png"
+ ALT="$\varepsilon$"></SPAN>.
+From there, the <EM>worst</EM> possible ratio would be the result of
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\kappa(A):=\max_{b,\varepsilon}\eta(b,\varepsilon).
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="136" HEIGHT="38" BORDER="0"
+ SRC="img227.png"
+ ALT="\begin{displaymath}\kappa(A):=\max_{b,\varepsilon}\eta(b,\varepsilon).\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+This quantity is known as the condition number of the matrix
+<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img47.png"
+ ALT="$A$"></SPAN>. It is not hard to prove that
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\kappa(A)=\frac{\lambda_{\max}}{\lambda_{\min}},
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="95" HEIGHT="42" BORDER="0"
+ SRC="img228.png"
+ ALT="\begin{displaymath}\kappa(A)=\frac{\lambda_{\max}}{\lambda_{\min}},\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <!-- MATH
+ $\lambda_{\max}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="38" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img229.png"
+ ALT="$\lambda_{\max}$"></SPAN> and <!-- MATH
+ $\lambda_{\min}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="35" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img230.png"
+ ALT="$\lambda_{\min}$"></SPAN> are the maximum and
+minimum, respectively, eigenvalues of <SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img47.png"
+ ALT="$A$"></SPAN>. Equivalently
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\kappa(A)=\frac{\|A\|}{\|A^{-1}\|}.
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="106" HEIGHT="44" BORDER="0"
+ SRC="img231.png"
+ ALT="\begin{displaymath}\kappa(A)=\frac{\Vert A\Vert}{\Vert A^{-1}\Vert}.\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+A common interpretation of <!-- MATH
+ $\kappa(A)=10^k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="83" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img232.png"
+ ALT="$\kappa(A)=10^k$"></SPAN> is that, when solving the
+system <SPAN CLASS="MATH"><IMG
+ WIDTH="53" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img57.png"
+ ALT="$Ax = b$"></SPAN>, you may lose up to <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img110.png"
+ ALT="$k$"></SPAN> digits of accuracy in <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> from
+the accuracy you have in <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN>.
+
+<P>
+The condition number for the optimal simplex basis in
+an LP is captured in the
+<A HREF="kappaexact.html#attr:KappaExact"><TT>KappaExact</TT></A> attribute.
+A very large <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img233.png"
+ ALT="$\kappa$"></SPAN> value <EM>might</EM> be an indication that
+the result might be unstable.
+
+<P>
+When this is indeed the case, the best advice is to scale the
+constraint matrix coefficients so that the resulting range of
+coefficients is small.
+This transformation will typically reduce the
+<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img233.png"
+ ALT="$\kappa$"></SPAN> value of the final basis; please refer to the
+<A HREF="numerics_tolerances_and_us.html#sec:scaling">Scaling</A> section for a discussion on how to
+perform this rescaling, and also for caveats on scaling in general.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15949"
+  HREF="numerics_the_geometry_of_l.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15947"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15941"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15950"
+  HREF="numerics_the_geometry_of_l.html">The geometry of linear</A>
+<B> Up:</B> <A NAME="tex2html15948"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A>
+<B> Previous:</B> <A NAME="tex2html15942"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

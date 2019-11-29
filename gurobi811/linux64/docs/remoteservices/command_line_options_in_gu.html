@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Command-line options in gurobi_cl</TITLE>
+<META NAME="description" CONTENT="Command-line options in gurobi_cl">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="distributed_optimization.html">
+<LINK REL="previous" HREF="installation_encryption.html">
+<LINK REL="up" HREF="migrating_from_previous_re.html">
+<LINK REL="next" HREF="distributed_optimization.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html787"
+  HREF="distributed_optimization.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html785"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html779"
+  HREF="installation_encryption.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html788"
+  HREF="distributed_optimization.html">Distributed Optimization</A>
+<B> Up:</B> <A NAME="tex2html786"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Previous:</B> <A NAME="tex2html780"
+  HREF="installation_encryption.html">Installation - Encryption</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00064000000000000000">
+Command-line options in gurobi_cl</A>
+</H2>
+
+<P>
+Several options of <code>gurobi_cl</code> have been removed and replaced as the following:
+
+<P>
+<DL>
+<DT><STRONG>--status</STRONG></DT>
+<DD>Listing the jobs and the status of a node is now available using the <code>grbcluster</code> command line tool.
+The <A HREF="listing_cluster_nodes.html#sec:grbclusternodes">command</A> <code>grbcluster nodes</code> lists all the nodes of the cluster with some metrics (CPU and memory usage), number of jobs in queue and running, processing status, license status etc.
+The <A HREF="listing_optimization_jobs.html#sec:grbclusterjobs">command</A> <code>grbcluster jobs</code> lists all the jobs running in the cluster.
+Note that you can also list the license status with the <A HREF="listing_cluster_licenses.html#sec:grbclusterlicenses">command</A> <code>grbcluser licenses</code>.
+
+<P>
+</DD>
+<DT><STRONG>--killjob</STRONG></DT>
+<DD>Killing a job is supported by the <code>grbcluster abort</code> <A HREF="aborting_jobs.html#sec:grbclusterabort">command</A>.
+
+<P>
+</DD>
+<DT><STRONG>--joblimit</STRONG></DT>
+<DD>Changing the job limit of each node is now supported by the <code>grbcluster config</code> <A HREF="changing_the_job_limit.html#sec:grbclusterconfig">command</A>.
+
+<P>
+</DD>
+<DT><STRONG>--newadminpassword</STRONG></DT>
+<DD>It is not possible to change dynamically the password anymore. If you need to change a password,
+you will need to stop the node, edit the <code>grb_rs.cnf</code> configuration file, and finally restart the node
+Also, all the nodes in the cluster should have the same passwords to avoid any inconsistent behavior.
+</DD>
+</DL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html787"
+  HREF="distributed_optimization.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html785"
+  HREF="migrating_from_previous_re.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html779"
+  HREF="installation_encryption.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html788"
+  HREF="distributed_optimization.html">Distributed Optimization</A>
+<B> Up:</B> <A NAME="tex2html786"
+  HREF="migrating_from_previous_re.html">Migrating from Previous Releases</A>
+<B> Previous:</B> <A NAME="tex2html780"
+  HREF="installation_encryption.html">Installation - Encryption</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

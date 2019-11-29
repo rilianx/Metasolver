@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.addGenConstrOr()</TITLE>
+<META NAME="description" CONTENT="GRBModel.addGenConstrOr()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbmodel_addgenconstr7.html">
+<LINK REL="previous" HREF="java_grbmodel_addgenconstr5.html">
+<LINK REL="up" HREF="java_grbmodel_addgenconstr.html">
+<LINK REL="next" HREF="java_grbmodel_addgenconstr7.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5561"
+  HREF="java_grbmodel_addgenconstr7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5559"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5553"
+  HREF="java_grbmodel_addgenconstr5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5562"
+  HREF="java_grbmodel_addgenconstr7.html">GRBModel.addGenConstrIndicator()</A>
+<B> Up:</B> <A NAME="tex2html5560"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html5554"
+  HREF="java_grbmodel_addgenconstr5.html">GRBModel.addGenConstrAnd()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H4><A NAME="SECTION00062450000000000000"></A>
+<A NAME="javamethod:GRBModel.addGenConstrOr"></A>
+<BR>
+GRBModel.addGenConstrOr()
+</H4>
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_OR</TT> to a model.
+
+<P>
+An OR constraint <!-- MATH
+ $r = \mbox{or}\{x_1,\ldots,x_n\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="133" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$r = \mbox{or}\{x_1,\ldots,x_n\}$"></SPAN> states that the binary resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> if and only if any of the operand variables
+<!-- MATH
+ $x_1,\ldots,x_n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$x_1,\ldots,x_n$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>.
+If all operand variables are <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN>, then the resultant should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> as well.
+
+<P>
+Note that all variables participating in such a constraint will be forced
+to be binary; independently of how they were created.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBGenConstr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addGenConstrOr</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBVar</TD>
+<TD ALIGN="LEFT">resvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBVar[]</TD>
+<TD ALIGN="LEFT">vars,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">name )</TD>
+</TR>
+</TABLE>
+
+<UL>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">resvar</SPAN>: The resultant variable of the new constraint.
+
+<P>
+ <SPAN  CLASS="textbf">vars</SPAN>: Array of variables that are the operands of the new
+constraint.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<P><P>
+<BR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5561"
+  HREF="java_grbmodel_addgenconstr7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5559"
+  HREF="java_grbmodel_addgenconstr.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5553"
+  HREF="java_grbmodel_addgenconstr5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5562"
+  HREF="java_grbmodel_addgenconstr7.html">GRBModel.addGenConstrIndicator()</A>
+<B> Up:</B> <A NAME="tex2html5560"
+  HREF="java_grbmodel_addgenconstr.html">GRBModel.addGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html5554"
+  HREF="java_grbmodel_addgenconstr5.html">GRBModel.addGenConstrAnd()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

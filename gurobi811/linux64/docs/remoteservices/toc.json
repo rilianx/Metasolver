@@ -1,0 +1,513 @@
+[
+  {
+    "level": "section",
+    "name": "Gurobi Compute Server and Remote Services Overview",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Compute Server",
+        "children": [],
+        "href": "compute_server.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Distributed Algorithms",
+        "children": [],
+        "href": "distributed_algorithms.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Roles",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Cluster Administrator",
+            "children": [],
+            "href": "cluster_administrator.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Administrator",
+            "children": [],
+            "href": "administrator.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Client",
+            "children": [],
+            "href": "client.html",
+            "lang": null
+          }
+        ],
+        "href": "roles.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Simple Example",
+        "children": [],
+        "href": "simple_example.html",
+        "lang": null
+      }
+    ],
+    "href": "gurobi_compute_server_and_.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Cluster Setup and Administration",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Setting up Remote Services",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Installation",
+            "children": [],
+            "href": "installation.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Licensing",
+            "children": [],
+            "href": "licensing.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Remote Services Agent (grb_rs)",
+            "children": [],
+            "href": "remote_services_agent_grb_.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Configuration",
+            "children": [],
+            "href": "configuration.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Starting Remote Services as a Process",
+            "children": [],
+            "href": "starting_remote_services_a.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Starting Remote Services as a Service",
+            "children": [],
+            "href": "starting_remote_services_a2.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Verification",
+            "children": [],
+            "href": "verification.html",
+            "lang": null
+          }
+        ],
+        "href": "setting_up_remote_services.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Forming a Cluster",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Connecting Nodes",
+            "children": [],
+            "href": "connecting_nodes.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Compute Servers and Distributed Workers",
+            "children": [],
+            "href": "compute_servers_and_distri.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Grouping",
+            "children": [],
+            "href": "grouping.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Processing State and Scaling",
+            "children": [],
+            "href": "processing_state_and_scali.html",
+            "lang": null
+          }
+        ],
+        "href": "forming_a_cluster.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Communication Options",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Using HTTPS",
+            "children": [],
+            "href": "using_https.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Using HTTPS with Self-Signed Certificates",
+            "children": [],
+            "href": "using_https_with_self_sign.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Firewalls",
+            "children": [],
+            "href": "firewalls.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Router",
+            "children": [],
+            "href": "router.html",
+            "lang": null
+          }
+        ],
+        "href": "communication_options.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Maintaining a Cluster",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Managing Runtimes",
+            "children": [],
+            "href": "managing_runtimes.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Upgrading Remote Services",
+            "children": [],
+            "href": "upgrading_remote_services.html",
+            "lang": null
+          }
+        ],
+        "href": "maintaining_a_cluster.html",
+        "lang": null
+      }
+    ],
+    "href": "cluster_setup_and_administ.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Using Remote Services",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Client Configuration",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "License File",
+            "children": [],
+            "href": "license_file.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Queueing, Load Balancing, and Job Priorities",
+            "children": [],
+            "href": "queueing_load_balancing_an.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Submitting Jobs with gurobi_cl",
+            "children": [],
+            "href": "submitting_jobs_with_gurob.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Issuing Cluster Management Commands: Using grbcluster",
+            "children": [],
+            "href": "issuing_cluster_management.html",
+            "lang": null
+          }
+        ],
+        "href": "client_configuration.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Client Commands",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Listing Optimization Jobs",
+            "children": [],
+            "href": "listing_optimization_jobs.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Accessing Job Logs",
+            "children": [],
+            "href": "accessing_job_logs.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Accessing Job Parameters",
+            "children": [],
+            "href": "accessing_job_parameters.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Listing Cluster Nodes",
+            "children": [],
+            "href": "listing_cluster_nodes.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Troubleshooting Connectivity Issues",
+            "children": [],
+            "href": "troubleshooting_connectivi.html",
+            "lang": null
+          }
+        ],
+        "href": "client_commands.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Administrative Commands",
+        "children": [
+          {
+            "level": "subsubsection",
+            "name": "Listing Cluster Licenses",
+            "children": [],
+            "href": "listing_cluster_licenses.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Changing the Job Limit",
+            "children": [],
+            "href": "changing_the_job_limit.html",
+            "lang": null
+          },
+          {
+            "level": "subsubsection",
+            "name": "Aborting Jobs",
+            "children": [],
+            "href": "aborting_jobs.html",
+            "lang": null
+          }
+        ],
+        "href": "administrative_commands.html",
+        "lang": null
+      }
+    ],
+    "href": "using_remote_services.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Programming with Remote Services",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Using an API to Create a Compute Server Job",
+        "children": [],
+        "href": "using_an_api_to_create_a_c.html",
+        "lang": "C"
+      },
+      {
+        "level": "subsection",
+        "name": "Performance Considerations on a Wide-Area Network (WAN)",
+        "children": [],
+        "href": "performance_considerations.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Callbacks",
+        "children": [],
+        "href": "callbacks.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Developing for Compute Server",
+        "children": [],
+        "href": "developing_for_compute_ser.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Distributed Algorithms",
+        "children": [],
+        "href": "distributed_algorithms2.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Distributed Algorithm Considerations",
+        "children": [],
+        "href": "distributed_algorithm_cons.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Cluster REST API",
+        "children": [],
+        "href": "cluster_rest_api.html",
+        "lang": null
+      }
+    ],
+    "href": "programming_with_remote_se.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Using Remote Services with Gurobi Instant Cloud",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Client Setup",
+        "children": [],
+        "href": "client_setup.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Client Commands",
+        "children": [],
+        "href": "client_commands2.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Administrative Commands",
+        "children": [],
+        "href": "administrative_commands2.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Region Router",
+        "children": [],
+        "href": "region_router.html",
+        "lang": null
+      }
+    ],
+    "href": "using_remote_services_with.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Migrating from Previous Releases",
+    "children": [
+      {
+        "level": "subsection",
+        "name": "Referring to Compute Servers",
+        "children": [],
+        "href": "referring_to_compute_serve.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Installation - Ports and Firewalls",
+        "children": [],
+        "href": "installation_ports_and_fir.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Installation - Encryption",
+        "children": [],
+        "href": "installation_encryption.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Command-line options in gurobi_cl",
+        "children": [],
+        "href": "command_line_options_in_gu.html",
+        "lang": null
+      },
+      {
+        "level": "subsection",
+        "name": "Distributed Optimization",
+        "children": [],
+        "href": "distributed_optimization.html",
+        "lang": null
+      }
+    ],
+    "href": "migrating_from_previous_re.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix A: grb_rs",
+    "children": [],
+    "href": "appendix_a_grb_rs.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix B: grb_rs - Configuration Properties",
+    "children": [],
+    "href": "appendix_b_grb_rs_configur.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix C: grbcluster",
+    "children": [],
+    "href": "appendix_c_grbcluster.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix D: gurobi_cl",
+    "children": [],
+    "href": "appendix_d_gurobi_cl.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix E: Acknowledgement of 3rd Party Icons",
+    "children": [],
+    "href": "appendix_e_acknowledgement.html",
+    "lang": null
+  },
+  {
+    "level": "section",
+    "name": "Appendix F: Open Source Component Licenses",
+    "children": [],
+    "href": "appendix_f_open_source_com.html",
+    "lang": null
+  }
+]

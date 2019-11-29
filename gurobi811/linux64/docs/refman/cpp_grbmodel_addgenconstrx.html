@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel::addGenConstrXxx()</TITLE>
+<META NAME="description" CONTENT="GRBModel::addGenConstrXxx()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cpp_grbmodel_addqconstr.html">
+<LINK REL="previous" HREF="cpp_grbmodel_addconstrs.html">
+<LINK REL="up" HREF="cpp_grbmodel.html">
+<LINK REL="next" HREF="cpp_grbmodel_addgenconstrm.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html3460"
+  HREF="cpp_grbmodel_addgenconstrm.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3458"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3452"
+  HREF="cpp_grbmodel_addconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3461"
+  HREF="cpp_grbmodel_addgenconstrm.html">GRBModel::addGenConstrMax()</A>
+<B> Up:</B> <A NAME="tex2html3459"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3453"
+  HREF="cpp_grbmodel_addconstrs.html">GRBModel::addConstrs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00042400000000000000"></A>
+<A NAME="cppmethod:GRBModel::addGenConstrXxx"></A>
+<BR>
+GRBModel::addGenConstrXxx()
+</H3>
+
+<P>
+Each of the functions described below adds a new <EM>general constraint</EM> to a model.
+
+<P>
+Mathematical programming has traditionally defined a set of
+fundamental constraint types: variable bound constraints, linear
+constraints, quadratic constraints, integrality constraints, and SOS
+constraints.  These are typically treated directly by the underlying
+solver (although not always), and are fundamental to the overall
+algorithm.
+
+<P>
+Gurobi accepts a number of additional constraint types, which we
+collectively refer to as <EM>general constraints</EM>.  These are
+typically <EM>not</EM> treated directly by the solver.  Rather, they
+are transformed by presolve into mathematically equivalent sets of
+constraints (and variables), chosen from among the fundamental types
+listed above.  These general constraints are provided as a convenience
+to users.  If such constraints appear in your model, but if you prefer
+to reformulate them yourself using fundamental constraint types
+instead, you can certainly do so.  However, note that Gurobi can
+sometimes exploit information contained in the other constraints in
+the model to build a more efficient formulation than what you might
+create.
+
+<P>
+The additional constraint types that fall under this <EM>general
+  constraint</EM> umbrella are:
+
+<UL>
+<LI>MAX (<A HREF="cpp_grbmodel_addgenconstrm.html#cppmethod:GRBModel::addGenConstrMax">addGenConstrMax</A>):
+  set a decision variable equal to the maximum value from
+  among a set of decision variables
+</LI>
+<LI>MIN (<A HREF="cpp_grbmodel_addgenconstrm2.html#cppmethod:GRBModel::addGenConstrMin">addGenConstrMin</A>):
+  set a decision variable equal to the minimum value from
+  among a set of decision variables
+</LI>
+<LI>ABS (<A HREF="cpp_grbmodel_addgenconstra.html#cppmethod:GRBModel::addGenConstrAbs">addGenConstrAbs</A>):
+  set a decision variable equal to the absolute value
+  of some other decision variable
+</LI>
+<LI>AND (<A HREF="cpp_grbmodel_addgenconstra2.html#cppmethod:GRBModel::addGenConstrAnd">addGenConstrAnd</A>):
+  set a binary variable equal to one if and only if all
+  of a set of binary decision variables are equal to one
+</LI>
+<LI>OR (<A HREF="cpp_grbmodel_addgenconstro.html#cppmethod:GRBModel::addGenConstrOr">addGenConstrOr</A>):
+  set a binary variable equal to one if and only if at least one
+  variable out of a set of binary decision variables is equal to one
+</LI>
+<LI>INDICATOR (<A HREF="cpp_grbmodel_addgenconstri.html#cppmethod:GRBModel::addGenConstrIndicator">addGenConstrIndicator</A>):
+  whenever a given binary variable takes a certain value, then the
+  given linear constraint must be satisfied
+</LI>
+</UL>
+Please refer to <A HREF="constraints.html#subsubsection:GeneralConstraints">this section</A>
+for additional details on general constraints.
+
+<P>
+
+<P><P>
+<BR>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html3462"
+  HREF="cpp_grbmodel_addgenconstrm.html">GRBModel::addGenConstrMax()</A>
+<LI><A NAME="tex2html3463"
+  HREF="cpp_grbmodel_addgenconstrm2.html">GRBModel::addGenConstrMin()</A>
+<LI><A NAME="tex2html3464"
+  HREF="cpp_grbmodel_addgenconstra.html">GRBModel::addGenConstrAbs()</A>
+<LI><A NAME="tex2html3465"
+  HREF="cpp_grbmodel_addgenconstra2.html">GRBModel::addGenConstrAnd()</A>
+<LI><A NAME="tex2html3466"
+  HREF="cpp_grbmodel_addgenconstro.html">GRBModel::addGenConstrOr()</A>
+<LI><A NAME="tex2html3467"
+  HREF="cpp_grbmodel_addgenconstri.html">GRBModel::addGenConstrIndicator()</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3460"
+  HREF="cpp_grbmodel_addgenconstrm.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3458"
+  HREF="cpp_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3452"
+  HREF="cpp_grbmodel_addconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html3461"
+  HREF="cpp_grbmodel_addgenconstrm.html">GRBModel::addGenConstrMax()</A>
+<B> Up:</B> <A NAME="tex2html3459"
+  HREF="cpp_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html3453"
+  HREF="cpp_grbmodel_addconstrs.html">GRBModel::addConstrs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

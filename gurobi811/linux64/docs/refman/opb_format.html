@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>OPB format</TITLE>
+<META NAME="description" CONTENT="OPB format">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="mst_format.html">
+<LINK REL="previous" HREF="ilp_format.html">
+<LINK REL="up" HREF="model_file_formats.html">
+<LINK REL="next" HREF="mst_format.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html15351"
+  HREF="mst_format.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15349"
+  HREF="model_file_formats.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15343"
+  HREF="ilp_format.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15352"
+  HREF="mst_format.html">MST format</A>
+<B> Up:</B> <A NAME="tex2html15350"
+  HREF="model_file_formats.html">Model File Formats</A>
+<B> Previous:</B> <A NAME="tex2html15344"
+  HREF="ilp_format.html">ILP format</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000216000000000000000"></A>
+<A NAME="format:OPB"></A>
+<BR>
+OPB format
+</H2>
+
+<P>
+The OPB file format is used to store pseudo-boolean satisfaction and
+pseudo-boolean optimization models. These models may only contain
+binary variables, but these variables may be complemented and
+multiplied together in constraints and objectives. Pseudo-boolean
+models in OPB files are translated into a MIP representation by
+Gurobi. The syntax of the OPB format is described in detail by
+<A NAME="tex2html50"
+  HREF="http://www.cril.univ-artois.fr/PB12/format.pdf">Roussel and
+  Manquinho</A>.
+However, the OPB format supported by Gurobi is less restrictive, e.g.,
+fractional coefficients are allowed.
+
+<P>
+The following is an example of a pseduo-boolean optimization model
+<BR>
+<DIV ALIGN="RIGHT" CLASS="mathdisplay">
+
+<!-- MATH
+ \begin{equation}
+\begin{array}{ll}
+\mathrm{minimize}    & y - 1.3 x (1-z) + (1-z) \\
+\mathrm{subject\ to} & 2 y - 3 x + 1.7 w = 1.7 \\
+                     & -y + x + x z (1-v) \ge 0 \\
+                     & -y \le 0,\\
+                     & v, w, x, y, z \in \{0, 1\}.
+\end{array}
+\end{equation}
+ -->
+<TABLE WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE"><TD ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="256" HEIGHT="102" BORDER="0"
+ SRC="img148.png"
+ ALT="\begin{displaymath}
+\begin{array}{ll}
+\mathrm{minimize} &amp; y - 1.3 x (1-z) + (1-z...
+... \\
+&amp; -y \le 0,\\
+&amp; v, w, x, y, z \in \{0, 1\}.
+\end{array}\end{displaymath}"></TD>
+<TD CLASS="eqno" WIDTH=10 ALIGN="RIGHT">
+(<SPAN CLASS="arabic">1</SPAN>)</TD></TR>
+</TABLE>
+<BR CLEAR="ALL"></DIV><P></P>
+The corresponding OPB file for this example is given by
+<PRE>
+* This is a dummy pseduo-boolean optimization model
+min: y - 1.3 x ~z + ~z;
+2 y - 3 x + 1.7 w = 1.7;
+-1 y + x + x z ~v &gt;= 0;
+-1 y &lt;= 0;
+</PRE>
+
+<P>
+Lines starting with <TT>*</TT> are treated as comments and
+ignored. Non-comment lines must end with a semicolon
+<TT>;</TT>. Whitespace characters must be used to separate variables.  The
+complement of a variable may be specified with a tilde <code>~</code>.
+
+<P>
+Only minimization models are supported. These models must be specified
+with the <TT>min:</TT> objective keyword. This keyword must appear
+before other constraints. Satisfiability models may be defined by
+omitting the objective.
+
+<P>
+Constraint senses <TT>&gt;=</TT>, <TT>=</TT>, and <TT>&lt;=</TT> are
+supported.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15351"
+  HREF="mst_format.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15349"
+  HREF="model_file_formats.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15343"
+  HREF="ilp_format.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html15352"
+  HREF="mst_format.html">MST format</A>
+<B> Up:</B> <A NAME="tex2html15350"
+  HREF="model_file_formats.html">Model File Formats</A>
+<B> Previous:</B> <A NAME="tex2html15344"
+  HREF="ilp_format.html">ILP format</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

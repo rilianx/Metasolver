@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Listing Cluster Licenses</TITLE>
+<META NAME="description" CONTENT="Listing Cluster Licenses">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="changing_the_job_limit.html">
+<LINK REL="previous" HREF="administrative_commands.html">
+<LINK REL="up" HREF="administrative_commands.html">
+<LINK REL="next" HREF="changing_the_job_limit.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html577"
+  HREF="changing_the_job_limit.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html575"
+  HREF="administrative_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html569"
+  HREF="administrative_commands.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html578"
+  HREF="changing_the_job_limit.html">Changing the Job Limit</A>
+<B> Up:</B> <A NAME="tex2html576"
+  HREF="administrative_commands.html">Administrative Commands</A>
+<B> Previous:</B> <A NAME="tex2html570"
+  HREF="administrative_commands.html">Administrative Commands</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00033100000000000000"></A>
+<A NAME="sec:grbclusterlicenses"></A>
+<BR>
+Listing Cluster Licenses
+</H3>
+
+<P>
+The <TT>licenses</TT> command displays license status information for
+each node in a cluster:
+
+<PRE>
+&gt; grbcluster licenses --server=server1 --password=admin
+
+ADDRESS   STATUS TYPE     KEY   EXP       ORG    USER APP VER CS    DL  ERROR
+server1   VALID  NODE                     gurobi          8   true  0
+server2   VALID  NODE                     gurobi          8   true  0
+</PRE>
+
+<P>
+Add the <TT>--describe</TT> flag to see an explanation of each field:
+
+<PRE>
+&gt; grbcluster licenses --describe
+ADDRESS   - Node address
+STATUS    - license status
+TYPE      - License type
+KEY       - License Cloud Key
+EXP       - License expiration
+ORG       - Assigned organization
+USER      - Assigned username
+APP       - Assigned application name
+VER       - Maximum runtime version supported
+CS        - Indicate if Compute Server features are enabled
+DL        - Maximum number of workers for a distributed job (Distributed Limit)
+ERROR     - License error message
+</PRE>
+
+<P>
+If a node has an <TT>INVALID</TT> license, you can run the following
+command to learn more:
+
+<PRE>
+&gt; grbcluster licenses --server=server1 --password=admin
+ADDRESS STATUS  TYPE KEY EXP        ORG USER APP VER CS    DL  ERROR
+server1 INVALID NODE                                 false 0   No Gurobi license found...
+</PRE>
+Note that the <TT>licenses</TT> command can be used at any time to check
+the validity and attributes of licenses on all the nodes of the
+cluster (expiration date, distributed limit etc).
+
+<P>
+You'll need to supply the adminstrator password to run this command.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html577"
+  HREF="changing_the_job_limit.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html575"
+  HREF="administrative_commands.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html569"
+  HREF="administrative_commands.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html578"
+  HREF="changing_the_job_limit.html">Changing the Job Limit</A>
+<B> Up:</B> <A NAME="tex2html576"
+  HREF="administrative_commands.html">Administrative Commands</A>
+<B> Previous:</B> <A NAME="tex2html570"
+  HREF="administrative_commands.html">Administrative Commands</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.GetMultiobjEnv()</TITLE>
+<META NAME="description" CONTENT="GRBModel.GetMultiobjEnv()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="cs_grbmodel_getobjective.html">
+<LINK REL="previous" HREF="cs_grbmodel_getgenconstrs.html">
+<LINK REL="up" HREF="cs_grbmodel.html">
+<LINK REL="next" HREF="cs_grbmodel_getobjective.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html7766"
+  HREF="cs_grbmodel_getobjective.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7764"
+  HREF="cs_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7758"
+  HREF="cs_grbmodel_getgenconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7767"
+  HREF="cs_grbmodel_getobjective.html">GRBModel.GetObjective()</A>
+<B> Up:</B> <A NAME="tex2html7765"
+  HREF="cs_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html7759"
+  HREF="cs_grbmodel_getgenconstrs.html">GRBModel.GetGenConstrs()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000823300000000000000"></A>
+<A NAME="dotnetmethod:GRBModel.GetMultiobjEnv"></A>
+<BR>
+GRBModel.GetMultiobjEnv()
+</H3>
+
+<P>
+Create/retrieve a multi-objective
+environment for the objective with the given index. This
+environment enables fine-grained control over the multi-objective
+optimization process. Specifically, by changing parameters on this
+environment, you modify the behavior of the optimization that
+occurs during the corresponding pass of the multi-objective
+optimization.
+
+<P>
+Each multi-objective environment starts with a copy of the current
+model environment.
+
+<P>
+Please refer to the discussion of
+<A HREF="multiple_objectives.html#sec:MultipleObjectives">Multiple Objectives</A> for
+information on how to specify multiple objective functions and control
+the trade-off between them.
+
+<P>
+Use
+<A HREF="cs_grbmodel_discardmultiob.html#dotnetmethod:GRBModel.DiscardMultiobjEnvs">DiscardMultiobjEnvs</A>
+to discard multi-objective environments and return to standard behavior.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GetMultiobjEnv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">index )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">index</SPAN>: The objective index.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The multi-objective environment for the model.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7766"
+  HREF="cs_grbmodel_getobjective.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7764"
+  HREF="cs_grbmodel.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7758"
+  HREF="cs_grbmodel_getgenconstrs.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7767"
+  HREF="cs_grbmodel_getobjective.html">GRBModel.GetObjective()</A>
+<B> Up:</B> <A NAME="tex2html7765"
+  HREF="cs_grbmodel.html">GRBModel</A>
+<B> Previous:</B> <A NAME="tex2html7759"
+  HREF="cs_grbmodel_getgenconstrs.html">GRBModel.GetGenConstrs()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

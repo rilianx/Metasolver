@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Starting Remote Services as a Service</TITLE>
+<META NAME="description" CONTENT="Starting Remote Services as a Service">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="verification.html">
+<LINK REL="previous" HREF="starting_remote_services_a.html">
+<LINK REL="up" HREF="setting_up_remote_services.html">
+<LINK REL="next" HREF="verification.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html276"
+  HREF="verification.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html274"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html268"
+  HREF="starting_remote_services_a.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html277"
+  HREF="verification.html">Verification</A>
+<B> Up:</B> <A NAME="tex2html275"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html269"
+  HREF="starting_remote_services_a.html">Starting Remote Services as</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00021600000000000000"></A>
+<A NAME="sec:RSStartService"></A>
+<BR>
+Starting Remote Services as a Service
+</H3>
+
+<P>
+While you always have the option of running <TT>grb_rs</TT> from a
+terminal and leaving the process running in the background, we
+recommended that you start it as a service instead, especially in a
+production deployment.  The advantage of a service is that it will
+automatically restart itself if the computer is restarted or if the
+process terminates unexpectedly.
+
+<P>
+<TT>grb_rs</TT> provides several commands that help you to set it up as
+a service.  These must be executed with administrator privileges:
+<DL>
+<DT><STRONG>grb_rs install</STRONG></DT>
+<DD>Install the service.  The details of exactly what this
+  involves depend on the host operating system type and version: this
+  uses <TT>systemd</TT> or <TT>upstart</TT> on Linux, <TT>launchd</TT> on
+  MacOS, and Windows services on Windows.
+</DD>
+<DT><STRONG>grb_rs start</STRONG></DT>
+<DD>Start the service (and install it if it hasn't already
+  been installed).
+</DD>
+<DT><STRONG>grb_rs stop</STRONG></DT>
+<DD>Stop the service.
+</DD>
+<DT><STRONG>grb_rs restart</STRONG></DT>
+<DD>Stop and then start the service.
+</DD>
+<DT><STRONG>grb_rs uninstall</STRONG></DT>
+<DD>Uninstall the service.
+</DD>
+</DL>
+
+<P>
+Note that the <TT>install</TT> command installs the service using
+default settings.  If you don't need to modify any of these, you can
+use the <TT>start</TT> command to both install and start the service.
+Otherwise, run <TT>install</TT> to register the service, then modify
+the configuration (the details are platform dependent and are touched
+on below), and then run <TT>start</TT> the service.
+
+<P>
+Note that you only need to start the service once; <TT>grb_rs</TT> will
+keep running until you execute the <TT>grb_rs stop</TT> command.  In
+particular, it will start again automatically if you restart the
+machine.
+
+<P>
+Note also that the <TT>start</TT> command does not take any flags or
+additional parameters, and that all the configuration properties must
+be set in the <TT>grb_rs.cnf</TT> configuration file.  If you need to
+make a change to the configuration, use the command <TT>stop</TT> then
+the command <TT>start</TT> in order to restart <TT>grb_rs</TT> with the
+updated configuration.  The one exception is the <TT>JOBLIMIT</TT>
+property, which can be changed on a live server using
+<TT>grbcluster</TT>.  If you change this property and restart the
+server, the new value will persist and the value in the configuration
+file will be ignored.
+
+<P>
+The exact behavior of these commands varies depending on the host
+operating system and version.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Linux</SPAN></BIG>
+
+<P>
+On Linux, <TT>grb_rs</TT> supports two major service managers
+<TT>systemd</TT> and <TT>upstart</TT>.  The <TT>install</TT> command will
+detect the service manager available on your system and will generate
+a service configuration file located in
+<TT>/etc/systemd/system/grb_rs.service</TT> or
+<TT>/etc/init/grb_rs.conf</TT> for <TT>systemd</TT> and <TT>upstart</TT>,
+respectively.  Once the file is generated, you can edit it to set
+advanced properties.  Please refer to the documentation of
+<TT>systemd</TT> or <TT>upstart</TT> to learn more about service
+configuration.
+
+<P>
+Use the <TT>start</TT> and <TT>stop</TT> commands to start and stop the
+service.  When the service is running, the log messages are sent to
+the Linux syslog and to a rotating log file, <TT>service.log</TT>,
+located in the same directory as <TT>grb_rs</TT>.
+
+<P>
+The <TT>uninstall</TT> command will delete the generated file.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Mac OS</SPAN></BIG>
+
+<P>
+On Mac OS, the system manager is called <TT>launchd</TT>, and the
+<TT>install</TT> command will generate a service file in
+<TT>/Library/LaunchDaemons/grb_rs.plist</TT>.  Once the file is
+generated, you can edit it to set advanced properties.  Please refer
+to the <TT>launchd</TT> documentation to learn more about service
+configuration.
+
+<P>
+Use the <TT>start</TT> and <TT>stop</TT> commands to start and stop the
+service.  When the service is running, the log messages are sent to
+the Mac OS syslog and to a rotating log file, <TT>service.log</TT>,
+located in the same directory as <TT>grb_rs</TT>.
+
+<P>
+The <TT>uninstall</TT> command will delete the generated file.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Windows</SPAN></BIG>
+
+<P>
+On Windows, the <TT>install</TT> command will declare the service to the
+operating system.  If you wish to set advanced properties for the
+service configuration, you will need to start the <TT>Services</TT>
+configuration application.  Please refer to the Windows Operating
+System documentation for more details.
+
+<P>
+Use the <TT>start</TT> and <TT>stop</TT> commands to start and stop the
+service.  When the service is running, the log messages are sent to
+the Windows event log and to a rotating log file, <TT>service.log</TT>,
+located in the same directory as <TT>grb_rs</TT>.
+
+<P>
+The <TT>uninstall</TT> command will delete the service from the registery.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html276"
+  HREF="verification.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html274"
+  HREF="setting_up_remote_services.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html268"
+  HREF="starting_remote_services_a.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html277"
+  HREF="verification.html">Verification</A>
+<B> Up:</B> <A NAME="tex2html275"
+  HREF="setting_up_remote_services.html">Setting up Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html269"
+  HREF="starting_remote_services_a.html">Starting Remote Services as</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>MultiObjMethod</TITLE>
+<META NAME="description" CONTENT="MultiObjMethod">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="multiobjpre.html">
+<LINK REL="previous" HREF="modkcuts.html">
+<LINK REL="up" HREF="parameter_descriptions.html">
+<LINK REL="next" HREF="multiobjpre.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html14477"
+  HREF="multiobjpre.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14475"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14469"
+  HREF="modkcuts.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14478"
+  HREF="multiobjpre.html">MultiObjPre</A>
+<B> Up:</B> <A NAME="tex2html14476"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14470"
+  HREF="modkcuts.html">ModKCuts</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001726900000000000000"></A>
+<A NAME="parameter:MultiObjMethod"></A>
+<BR>
+MultiObjMethod
+</H3>
+Method used for multi-objective solves
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Default value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Minimum value:</SPAN></TD>
+<TD ALIGN="LEFT">-1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD ALIGN="LEFT"><SPAN  CLASS="textbf">Maximum value:</SPAN></TD>
+<TD ALIGN="LEFT">2</TD>
+</TR>
+</TABLE>
+
+<P>
+When solving a continuous multi-objective model using a hierarchical
+approach, the model is solved once for each objective.  The algorithm
+used to solve for the highest priority objective is controlled by
+the <A HREF="method.html#parameter:Method">Method</A> parameter.  This parameter
+determines the algorithm used to solve for subsequent objectives.  As
+with the <code>Method</code> parameters, values of 0 and 1 use primal and
+dual simplex, respectively.  A value of 2 indicates that warm-start
+information from previous solves should be discarded, and the model
+should be solved from scratch (using the algorithm indicated by
+the <code>Method</code> parameter).  The default setting of -1 usually
+chooses primal simplex.
+
+<P>
+
+<SPAN  CLASS="textbf">Note:</SPAN> Only affects continuous multi-objective models 
+<BR>
+
+<P>
+For examples of how to query or modify parameter values from
+our different APIs, refer to our
+<A HREF="parameter_examples.html#sec:ParameterExamples">Parameter Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14477"
+  HREF="multiobjpre.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14475"
+  HREF="parameter_descriptions.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14469"
+  HREF="modkcuts.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html14478"
+  HREF="multiobjpre.html">MultiObjPre</A>
+<B> Up:</B> <A NAME="tex2html14476"
+  HREF="parameter_descriptions.html">Parameter Descriptions</A>
+<B> Previous:</B> <A NAME="tex2html14470"
+  HREF="modkcuts.html">ModKCuts</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

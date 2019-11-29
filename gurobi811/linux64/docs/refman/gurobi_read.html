@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>gurobi_read()</TITLE>
+<META NAME="description" CONTENT="gurobi_read()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="gurobi_write.html">
+<LINK REL="previous" HREF="input_output.html">
+<LINK REL="up" HREF="input_output.html">
+<LINK REL="next" HREF="gurobi_write.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11447"
+  HREF="gurobi_write.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11445"
+  HREF="input_output.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11439"
+  HREF="input_output.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11448"
+  HREF="gurobi_write.html">gurobi_write()</A>
+<B> Up:</B> <A NAME="tex2html11446"
+  HREF="input_output.html">Input/Output</A>
+<B> Previous:</B> <A NAME="tex2html11440"
+  HREF="input_output.html">Input/Output</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000143100000000000000">
+gurobi_read()</A>
+</H3>
+<A NAME="r:gurobi_read"></A>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT"><FONT COLOR="#801a1a"> <BIG CLASS="LARGE"><SPAN  CLASS="textbf">gurobi_read</SPAN> </FONT></BIG></TD>
+<TD ALIGN="LEFT">( filename, env=NULL )</TD>
+</TR>
+</TABLE>
+
+
+<P>
+Reads a model from a file.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">filename</SPAN>: Name of the file to read. Note that the type of
+  the file is encoded in the file name suffix. The filename suffix
+  should be one of .mps, .rew, .lp, .rlp, .ilp, or .opb
+  (see the
+  <A HREF="model_file_formats.html#sec:FileFormats">file formats</A> 
+  section for details on Gurobi file
+  formats). The files can be compressed, so additional suffixes of
+  .gz, .bz2, .zip, or .7z are accepted.
+
+<P>
+ <SPAN  CLASS="textbf">env</SPAN>: The env <TT>list</TT>, when provided, allows you to
+use Gurobi Compute Server or Gurobi Instant Cloud. See the
+
+<A HREF="the_env_argument.html#r:env"><TT>env</TT></A> argument section
+for more information.
+
+<P>
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A <TT>model</TT> list variable,
+as described in the 
+<A HREF="the_model_argument.html#r:model"><TT>model</TT></A> section.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG>
+<BR><TT>model  &lt;- gurobi_read('stein9.mps')
+<BR>
+result &lt;- gurobi(model)
+<BR></TT>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11447"
+  HREF="gurobi_write.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11445"
+  HREF="input_output.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11439"
+  HREF="input_output.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11448"
+  HREF="gurobi_write.html">gurobi_write()</A>
+<B> Up:</B> <A NAME="tex2html11446"
+  HREF="input_output.html">Input/Output</A>
+<B> Previous:</B> <A NAME="tex2html11440"
+  HREF="input_output.html">Input/Output</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

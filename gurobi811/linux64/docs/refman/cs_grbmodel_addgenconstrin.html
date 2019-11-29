@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBModel.AddGenConstrIndicator()</TITLE>
+<META NAME="description" CONTENT="GRBModel.AddGenConstrIndicator()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="previous" HREF="cs_grbmodel_addgenconstror.html">
+<LINK REL="up" HREF="cs_grbmodel_addgenconstrxx.html">
+<LINK REL="next" HREF="cs_grbmodel_addqconstr.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html7476"
+  HREF="cs_grbmodel_addqconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7474"
+  HREF="cs_grbmodel_addgenconstrxx.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7470"
+  HREF="cs_grbmodel_addgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7477"
+  HREF="cs_grbmodel_addqconstr.html">GRBModel.AddQConstr()</A>
+<B> Up:</B> <A NAME="tex2html7475"
+  HREF="cs_grbmodel_addgenconstrxx.html">GRBModel.AddGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html7471"
+  HREF="cs_grbmodel_addgenconstror.html">GRBModel.AddGenConstrOr()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H4><A NAME="SECTION00082460000000000000"></A>
+<A NAME="dotnetmethod:GRBModel.AddGenConstrIndicator"></A>
+<BR>
+GRBModel.AddGenConstrIndicator()
+</H4>
+
+<P>
+Add a new general constraint of type <TT>GRB.GENCONSTR_INDICATOR</TT> to a model.
+
+<P>
+An INDICATOR constraint <!-- MATH
+ $z = f \rightarrow a^Tx \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="123" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.png"
+ ALT="$z = f \rightarrow a^Tx \leq b$"></SPAN> states that if the binary
+indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="72" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$f \in \{0,1\}$"></SPAN>, then the linear constraint
+<SPAN CLASS="MATH"><IMG
+ WIDTH="60" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.png"
+ ALT="$a^Tx \leq b$"></SPAN> should hold.
+On the other hand, if <SPAN CLASS="MATH"><IMG
+ WIDTH="70" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img18.png"
+ ALT="$z = 1-f$"></SPAN>, the linear constraint may be violated.
+The sense of the linear constraint can also be specified to be <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.png"
+ ALT="$=$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$\geq$"></SPAN>.
+
+<P>
+Note that the indicator variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> of a constraint will be forced
+to be binary; independently of how it was created.
+
+<P>
+Multiple signatures are available.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBGenConstr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">AddGenConstrIndicator</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBVar</TD>
+<TD ALIGN="LEFT">binvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">binval,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBLinExpr</TD>
+<TD ALIGN="LEFT">expr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">char</TD>
+<TD ALIGN="LEFT">sense,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT">rhs,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">string</TD>
+<TD ALIGN="LEFT">name )</TD>
+</TR>
+</TABLE>
+
+<UL>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">binvar</SPAN>: The binary indicator variable.
+
+<P>
+ <SPAN  CLASS="textbf">binval</SPAN>: The value for the binary indicator variable that would force the
+  linear constraint to be satisfied (<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>).
+
+<P>
+ <SPAN  CLASS="textbf">expr</SPAN>: Left-hand side expression for the linear constraint triggered by the indicator.
+
+<P>
+ <SPAN  CLASS="textbf">sense</SPAN>: Sense for the linear constraint.  Options are
+  <TT>GRB.LESS_EQUAL</TT>, <TT>GRB.EQUAL</TT>, or
+  <TT>GRB.GREATER_EQUAL</TT>.
+
+<P>
+ <SPAN  CLASS="textbf">rhs</SPAN>: Right-hand-side value for the linear constraint.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBGenConstr</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">AddGenConstrIndicator</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBVar</TD>
+<TD ALIGN="LEFT">binvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">binval,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">GRBTempConstr</TD>
+<TD ALIGN="LEFT">constr,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">string</TD>
+<TD ALIGN="LEFT">name )</TD>
+</TR>
+</TABLE>
+
+<UL>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">binvar</SPAN>: The binary indicator variable.
+
+<P>
+ <SPAN  CLASS="textbf">binval</SPAN>: The value for the binary indicator variable that would force the
+  linear constraint to be satisfied (<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>).
+
+<P>
+ <SPAN  CLASS="textbf">constr</SPAN>: Temporary constraint object defining the linear constraint that
+  is triggered by the indicator. The temporary constraint object is created using an overloaded
+  comparison operator.  See
+  <A HREF="cs_grbtempconstr.html#dotnetclass:GRBTempConstr">GRBTempConstr</A> for more
+  information.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New general constraint.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7476"
+  HREF="cs_grbmodel_addqconstr.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7474"
+  HREF="cs_grbmodel_addgenconstrxx.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7470"
+  HREF="cs_grbmodel_addgenconstror.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html7477"
+  HREF="cs_grbmodel_addqconstr.html">GRBModel.AddQConstr()</A>
+<B> Up:</B> <A NAME="tex2html7475"
+  HREF="cs_grbmodel_addgenconstrxx.html">GRBModel.AddGenConstrXxx()</A>
+<B> Previous:</B> <A NAME="tex2html7471"
+  HREF="cs_grbmodel_addgenconstror.html">GRBModel.AddGenConstrOr()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

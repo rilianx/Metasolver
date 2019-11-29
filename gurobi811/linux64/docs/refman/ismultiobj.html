@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>IsMultiObj</TITLE>
+<META NAME="description" CONTENT="IsMultiObj">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="iisminimal.html">
+<LINK REL="previous" HREF="isqcp.html">
+<LINK REL="up" HREF="model_attributes.html">
+<LINK REL="next" HREF="iisminimal.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html12054"
+  HREF="iisminimal.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12052"
+  HREF="model_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12046"
+  HREF="isqcp.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12055"
+  HREF="iisminimal.html">IISMinimal</A>
+<B> Up:</B> <A NAME="tex2html12053"
+  HREF="model_attributes.html">Model Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12047"
+  HREF="isqcp.html">IsQCP</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001613100000000000000"></A>
+<A NAME="attr:IsMultiObj"></A>
+<BR>
+IsMultiObj
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Type:</SPAN></TH>
+<TD ALIGN="LEFT">int</TD>
+</TR>
+<TR><TH ALIGN="LEFT"><SPAN  CLASS="textbf">Modifiable:</SPAN></TH>
+<TD ALIGN="LEFT">No</TD>
+</TR>
+</TABLE>
+
+<P>
+Indicates whether the model has multiple objectives.
+
+<P>
+Note that the case where the model has a single objective
+(<A HREF="numobj.html#attr:NumObj">NumObj</A> = 1) is slightly ambiguous.  If
+you used <code>setObjectiveN</code> to set your objective, or if you set any
+of the multi-objective attributes
+(e.g., <A HREF="objnpriority.html#attr:ObjNPriority">ObjNPriority</A>), then the model
+is considered to be a multi-objective model.  Otherwise, it is not.
+
+<P>
+To reset a multi-objective model back to a single objective model, you
+should set the <code>NumObj</code> attribute to 0, and then set a new single
+objective.
+
+<P>
+
+<P>
+For examples of how to query or modify attributes, refer to
+our <A HREF="attribute_examples.html#sec:AttributeExamples">Attribute Examples</A>.
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12054"
+  HREF="iisminimal.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12052"
+  HREF="model_attributes.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12046"
+  HREF="isqcp.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html12055"
+  HREF="iisminimal.html">IISMinimal</A>
+<B> Up:</B> <A NAME="tex2html12053"
+  HREF="model_attributes.html">Model Attributes</A>
+<B> Previous:</B> <A NAME="tex2html12047"
+  HREF="isqcp.html">IsQCP</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Optimizing over thin regions:</TITLE>
+<META NAME="description" CONTENT="Optimizing over thin regions:">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="numerics_stability_and_con.html">
+<LINK REL="previous" HREF="numerics_optimizing_over_t.html">
+<LINK REL="up" HREF="numerics_instability_and_t.html">
+<LINK REL="next" HREF="numerics_stability_and_con.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html16009"
+  HREF="numerics_stability_and_con.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html16007"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16001"
+  HREF="numerics_optimizing_over_t.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html16010"
+  HREF="numerics_stability_and_con.html">Stability and convergence</A>
+<B> Up:</B> <A NAME="tex2html16008"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A>
+<B> Previous:</B> <A NAME="tex2html16002"
+  HREF="numerics_optimizing_over_t.html">Optimizing over the circle:</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION000306700000000000000">
+Optimizing over thin regions:</A>
+</H3>
+
+<P>
+Now we move to our second thought experiment: Consider a feasible
+region consisting of a triangle in <SPAN CLASS="MATH"><IMG
+ WIDTH="23" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img277.png"
+ ALT="$\mathbb{R}^2$"></SPAN> with a very wide
+base and very short height, as depicted here:
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="502" HEIGHT="86" ALIGN="BOTTOM" BORDER="0"
+ SRC="./codedraw2.png"
+ ALT="Image codedraw2">
+
+</DIV>
+Consider the case where the ratio of the base to the height
+is on the order of <SPAN CLASS="MATH"><IMG
+ WIDTH="27" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img199.png"
+ ALT="$10^5$"></SPAN>, and that we consider a <EM>nominal</EM> objective function <SPAN CLASS="MATH"><IMG
+ WIDTH="18" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="img279.png"
+ ALT="$\vec{c}_1$"></SPAN> as in the figure.
+
+<P>
+In theory, the optimal solution should be the apex of the triangle,
+but assume that we randomly perturb both the right-hand side and the
+objective function with terms in the order of <SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img177.png"
+ ALT="$10^{-6}$"></SPAN>. What will
+happen with the numerical solution?
+
+<P>
+To perform the experiment, we execute the code
+<A HREF="numerics_source_code_for_t2.html#code:thin"><TT>thinOpt.py</TT></A>, where we perform a
+series of re-optimizations with different perturbations as described
+above.
+To be more precise, whenever the new computed solution is further
+from the mathetical solution by more than it has been in previous trials,
+we print:
+
+<UL>
+<LI>The new maximum distance among solutions.
+</LI>
+<LI>The current iteration.
+</LI>
+<LI>The <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img233.png"
+ ALT="$\kappa$"></SPAN> (<A HREF="kappaexact.html#attr:KappaExact"><TT>KappaExact</TT></A> atribute) value for the current
+optimal basis.
+</LI>
+<LI>The bound violation as reported by Gurobi for the current solution.
+</LI>
+<LI>The constraint violation as reported by Gurobi for the current solution.
+</LI>
+<LI>The dual violation as reported by Gurobi for the current solution.
+</LI>
+</UL>
+
+<P>
+Sample output is shown below:
+
+<BR>
+<BR>
+<PRE  CLASS="verbatim">New maxdiff 4e+16 Iter 0 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 1 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 2 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 7 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 83 Kappa 3.31072 Violations: 0 0 2.64698e-23
+New maxdiff 4e+16 Iter 194 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 1073 Kappa 3.31072 Violations: 0 1.13687e-13 0
+New maxdiff 4e+16 Iter 4981 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 19514 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 47117 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 429955 Kappa 3.31072 Violations: 0 0 0
+New maxdiff 4e+16 Iter 852480 Kappa 3.31072 Violations: 0 0 0
+</PRE>
+<P>
+Results look very different from what we saw in our first test. The distance
+between the solution to the unperturbed model and the solution to the
+perturbed one is huge, even from the very first iteration.
+Also, the <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img233.png"
+ ALT="$\kappa$"></SPAN> values are relatively small, and the reported
+primal, dual, and bound violations are almost zero. So, what happened?
+Note that when we choose <!-- MATH
+ $\vec{c}_1=(0,1)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="75" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img280.png"
+ ALT="$\vec{c}_1=(0,1)$"></SPAN>, we are choosing an optimal
+point where a small tilting of the objective function may move us to
+another extreme point very far away, and hence the large norm.
+This is possible because the region is very large and, in principle,
+without any bounds, i.e. this is related to the case of
+<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img224.png"
+ ALT="$\varepsilon$"></SPAN>-optimal solutions and very long sides.
+
+<P>
+Again, we encourage you to play with this example.  For example, what
+would happen if the nominal objective function is <!-- MATH
+ $\vec{c}_2=(1,0)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="75" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img281.png"
+ ALT="$\vec{c}_2=(1,0)$"></SPAN>?
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html16009"
+  HREF="numerics_stability_and_con.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html16007"
+  HREF="numerics_instability_and_t.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16001"
+  HREF="numerics_optimizing_over_t.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html16010"
+  HREF="numerics_stability_and_con.html">Stability and convergence</A>
+<B> Up:</B> <A NAME="tex2html16008"
+  HREF="numerics_instability_and_t.html">Instability and the geometry</A>
+<B> Previous:</B> <A NAME="tex2html16002"
+  HREF="numerics_optimizing_over_t.html">Optimizing over the circle:</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

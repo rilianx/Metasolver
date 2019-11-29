@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>lpmethod_c++.cpp</TITLE>
+<META NAME="description" CONTENT="lpmethod_c++.cpp">
+<META NAME="keywords" CONTENT="examples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="examples.css">
+
+<LINK REL="next" HREF="lpmod_cpp_cpp.html">
+<LINK REL="previous" HREF="lp_cpp_cpp.html">
+<LINK REL="up" HREF="cpp_examples.html">
+<LINK REL="next" HREF="lpmod_cpp_cpp.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1073"
+  HREF="lpmod_cpp_cpp.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1071"
+  HREF="cpp_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1065"
+  HREF="lp_cpp_cpp.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1074"
+  HREF="lpmod_cpp_cpp.html">lpmod_c++.cpp</A>
+<B> Up:</B> <A NAME="tex2html1072"
+  HREF="cpp_examples.html">C++ Examples</A>
+<B> Previous:</B> <A NAME="tex2html1066"
+  HREF="lp_cpp_cpp.html">lp_c++.cpp</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022900000000000000"></A>
+<A NAME="subsubsection:lpmethod_c++.cpp"></A>
+<BR>
+lpmethod_c++.cpp
+</H3>
+<SCRIPT SRC="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></SCRIPT>
+<BR>
+<PRE CLASS="prettyprint">/* Copyright 2019, Gurobi Optimization, LLC */
+
+/* Solve a model with different values of the Method parameter;
+   show which value gives the shortest solve time. */
+
+#include "gurobi_c++.h"
+using namespace std;
+
+int
+main(int   argc,
+     char *argv[])
+{
+
+  if (argc &lt; 2)
+  {
+    cout &lt;&lt; "Usage: lpmethod_c++ filename" &lt;&lt; endl;
+    return 1;
+  }
+
+  try {
+    // Read model
+    GRBEnv env = GRBEnv();
+    GRBModel m = GRBModel(env, argv[1]);
+
+    // Solve the model with different values of Method
+    int    bestMethod = -1;
+    double bestTime = m.get(GRB_DoubleParam_TimeLimit);
+    for (int i = 0; i &lt;= 2; ++i) {
+      m.reset();
+      m.set(GRB_IntParam_Method, i);
+      m.optimize();
+      if (m.get(GRB_IntAttr_Status) == GRB_OPTIMAL) {
+        bestTime = m.get(GRB_DoubleAttr_Runtime);
+        bestMethod = i;
+        // Reduce the TimeLimit parameter to save time
+        // with other methods
+        m.set(GRB_DoubleParam_TimeLimit, bestTime);
+      }
+    }
+
+    // Report which method was fastest
+    if (bestMethod == -1) {
+      cout &lt;&lt; "Unable to solve this model" &lt;&lt; endl;
+    } else {
+      cout &lt;&lt; "Solved in " &lt;&lt; bestTime
+        &lt;&lt; " seconds with Method: " &lt;&lt; bestMethod &lt;&lt; endl;
+    }
+  } catch(GRBException e) {
+    cout &lt;&lt; "Error code = " &lt;&lt; e.getErrorCode() &lt;&lt; endl;
+    cout &lt;&lt; e.getMessage() &lt;&lt; endl;
+  } catch(...) {
+    cout &lt;&lt; "Exception during optimization" &lt;&lt; endl;
+  }
+
+  return 0;
+}
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1073"
+  HREF="lpmod_cpp_cpp.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1071"
+  HREF="cpp_examples.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1065"
+  HREF="lp_cpp_cpp.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1074"
+  HREF="lpmod_cpp_cpp.html">lpmod_c++.cpp</A>
+<B> Up:</B> <A NAME="tex2html1072"
+  HREF="cpp_examples.html">C++ Examples</A>
+<B> Previous:</B> <A NAME="tex2html1066"
+  HREF="lp_cpp_cpp.html">lp_c++.cpp</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

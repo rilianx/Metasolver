@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Appendix C: grbcluster</TITLE>
+<META NAME="description" CONTENT="Appendix C: grbcluster">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="appendix_d_gurobi_cl.html">
+<LINK REL="previous" HREF="appendix_b_grb_rs_configur.html">
+<LINK REL="up" HREF="remoteservices.html">
+<LINK REL="next" HREF="appendix_d_gurobi_cl.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html825"
+  HREF="appendix_d_gurobi_cl.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html823"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html817"
+  HREF="appendix_b_grb_rs_configur.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html826"
+  HREF="appendix_d_gurobi_cl.html">Appendix D: gurobi_cl</A>
+<B> Up:</B> <A NAME="tex2html824"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html818"
+  HREF="appendix_b_grb_rs_configur.html">Appendix B: grb_rs -</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00090000000000000000"></A>
+<A NAME="sec:RSClusterRef"></A>
+<BR>
+Appendix C: grbcluster
+</H1>
+
+<P>
+
+<PRE>
+Usage:
+  grbcluster --help            Display usage
+  grbcluster command [flags]   Execute a specific command
+  grbcluster command --help    Display more information about a command
+
+Flags can be set using --flag=value or the short form -f=value if defined.
+A boolean flag can be enabled using --flag or the short form -f if defined.
+
+Client Commands:
+  jobs        List the active jobs
+  latency     Test node communication latency
+  log         Displays the log of a job
+  nodes       List the cluster nodes
+  params      List the changed parameters of a job
+  ping        Indicates if a node is reachable
+  recent      List the recently executed jobs
+
+Administrator Commands:
+  abort       Abort a submitted job
+  config      Change the job limit property of a node
+  licenses    List the cluster licenses
+
+Cluster Administrator Commands:
+  deploy      Deploy a Gurobi Optimizer runtime on one or several nodes
+  join        Request a node to join another node to form a cluster
+  leave       Request a node to leave the cluster
+  start       Enable job processing on a node
+  stop        Disable job processing on a node
+  undeploy    Undeploy a Gurobi Optimizer runtime from one or several nodes
+
+Global Flags:
+      --console-ts   Add timestamps to console log messages
+      --help         Display usage
+  -v, --verbose      Enable verbose logging
+      --version      Display version information
+
+If a valid Gurobi license file is accessible at the predefined locations or
+using the variable GRB_LICENSE_FILE, the license file will provide default
+values for some connection parameters (server, password, router). If the
+license file references a Gurobi Instant Cloud pool, it will resolve the
+connection parameters of the pool. However, the password of the administrator
+or the cluster administrator must be passed explicitly.
+
+grbcluster is compatible with standard proxy settings using environment
+variables HTTP_PROXY and HTTPS_PROXY. HTTPS_PROXY takes precedence over
+HTTP_PROXY for https requests. The values may be either a complete URL or
+a "host[:port]", in which case the "http" scheme is assumed.
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html825"
+  HREF="appendix_d_gurobi_cl.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html823"
+  HREF="remoteservices.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html817"
+  HREF="appendix_b_grb_rs_configur.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html826"
+  HREF="appendix_d_gurobi_cl.html">Appendix D: gurobi_cl</A>
+<B> Up:</B> <A NAME="tex2html824"
+  HREF="remoteservices.html">Gurobi Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html818"
+  HREF="appendix_b_grb_rs_configur.html">Appendix B: grb_rs -</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

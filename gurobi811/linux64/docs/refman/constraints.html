@@ -1,0 +1,698 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Constraints</TITLE>
+<META NAME="description" CONTENT="Constraints">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="tolerances_and_ill_conditi.html">
+<LINK REL="previous" HREF="variables.html">
+<LINK REL="up" HREF="variables_and_constraints.html">
+<LINK REL="next" HREF="tolerances_and_ill_conditi.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html11496"
+  HREF="tolerances_and_ill_conditi.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11494"
+  HREF="variables_and_constraints.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11488"
+  HREF="variables.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11497"
+  HREF="tolerances_and_ill_conditi.html">Tolerances and Ill Conditioning</A>
+<B> Up:</B> <A NAME="tex2html11495"
+  HREF="variables_and_constraints.html">Variables and Constraints</A>
+<B> Previous:</B> <A NAME="tex2html11489"
+  HREF="variables.html">Variables</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000152000000000000000"></A>
+<A NAME="subsection:Constraints"></A>
+<BR>
+Constraints
+</H2>
+
+<P>
+A constraint in Gurobi captures a restriction on the values that a set
+of variables may take.  The simplest example is a linear constraint,
+which states that a linear expression on a set of variables take a
+value that is either less-than-or-equal, greater-than-or-equal, or
+equal another linear expression.  Recall that Gurobi works in
+finite-precision arithmetic, so constraints are only satisfied <EM>to
+  tolerances</EM>.  Tolerances can be tightened to reduce such
+violations, but there are limits to how small the violations can be -
+errors are inherent in floating-point arithmetic.
+
+<P>
+The available constraint types are
+<A HREF="#subsubsection:LinearConstraints">linear</A>,
+<A HREF="#subsubsection:SOSConstraints">SOS</A>,
+<A HREF="#subsubsection:QuadraticConstraints">quadratic</A>, and
+<A HREF="#subsubsection:GeneralConstraints">general</A>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Linear Constraints</SPAN></BIG>
+<A NAME="subsubsection:LinearConstraints"></A>
+<P>
+A linear constraint allows you to restrict the value of a linear
+expression.  For example, you may require that any feasible solution
+satisfy the constraint <!-- MATH
+ $3 x + 4 y \leq 5z$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="94" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img76.png"
+ ALT="$3 x + 4 y \leq 5z$"></SPAN>.  Note that the
+matrix-oriented Gurobi API's (C, MATLAB, and R) require the right-hand
+side of a linear constraint to be a constant, while the
+object-oriented APIs (C++, Java, .NET, and Python) allow arbitrary
+linear expressions on both sides of the comparator.
+
+<P>
+The computed solution should satisfy the stated constraint to within
+<A HREF="feasibilitytol.html#parameter:FeasibilityTol">FeasibilityTol</A> (although it
+may not in cases of numerical ill-conditioning - we'll discuss this
+shortly).
+
+<P>
+Gurobi supports a limited set of comparators.  Specifically, you can
+constrain an expression to be less-than-or-equal,
+greater-than-or-equal, or equal another.  We do not support strict
+less-than, strict greater-than, or not-equal comparators.  While these
+other comparators may seem appropriate for mathematical programming,
+we exclude them to avoid potential confusion related to numerical
+tolerances.  Consider a simple example of a strict inequality
+constraint on a pair of continuous variables: <SPAN CLASS="MATH"><IMG
+ WIDTH="43" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img77.png"
+ ALT="$x &gt; y$"></SPAN>.  How large
+would <SPAN CLASS="MATH"><IMG
+ WIDTH="41" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img78.png"
+ ALT="$x-y$"></SPAN> need to be in order to satisfy the constraint?  Rather
+than trying to embed a subtle and potentially confusing strategy for
+handling such constraints into the solver, we've chosen not to support
+them instead.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">SOS Constraints</SPAN></BIG>
+<A NAME="subsubsection:SOSConstraints"></A>
+<P>
+An Special-Ordered Set, or SOS constraint, is a highly specialized
+constraint that places restrictions on the values that variables in a
+given list can take.  There are two types of SOS constraints.  In an
+SOS constraint of type 1 (an SOS1 constraint), at most one variable in
+the specified list is allowed to take a non-zero value.  In an SOS
+constraint of type 2 (an SOS2 constraint), at most two variables in
+the specified, ordered list are allowed to take a non-zero value, and
+those non-zero variables must be contiguous in the list.  The
+variables in an SOS constraint can be continuous, integer, or binary.
+
+<P>
+Again, tolerances play an important role in SOS constraints.
+Specifically, variables that take values less than
+<A HREF="intfeastol.html#parameter:IntFeasTol">IntFeasTol</A> (in absolute value)
+are considered to be zero for the purposes of determining whether an
+SOS constraint is satisfied.
+
+<P>
+An SOS constraint is described using a list of variables and a list of
+corresponding weights.  While the weights have historically had
+intuitive meanings associated with them, we simply use them to order
+the list of variables.  The weights should be unique.  This is
+especially important for an SOS2 constraint, which relies on the
+notion of <EM>contiguous</EM> variables.  Since the variables in the
+SOS are ordered by weight, contiguity becomes ambiguous when multiple
+variables have the same weight.
+
+<P>
+It is often more efficient to capture SOS structure using linear
+constraints rather than SOS constraints.  The optimizer will often
+perform this conversion automatically. This is controlled
+with two parameters: <A HREF="presos1bigm.html#parameter:PreSOS1BigM">PreSOS1BigM</A>
+and <A HREF="presos2bigm.html#parameter:PreSOS2BigM">PreSOS2BigM</A>.  The conversion
+is done by
+adding constraints of the form <SPAN CLASS="MATH"><IMG
+ WIDTH="71" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img79.png"
+ ALT="$x &lt;= M b$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> is the
+variable that participates in the SOS constraint, <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$b$"></SPAN> is a binary
+variable, and <SPAN CLASS="MATH"><IMG
+ WIDTH="21" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img80.png"
+ ALT="$M$"></SPAN> is an upper bound on the value of variable <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>.
+Large values of <SPAN CLASS="MATH"><IMG
+ WIDTH="21" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img80.png"
+ ALT="$M$"></SPAN> can lead to numerical issues, so these parameters
+control the maximum value of <SPAN CLASS="MATH"><IMG
+ WIDTH="21" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img80.png"
+ ALT="$M$"></SPAN> that can be introduced by this
+conversion.  SOS constraints that would require a larger value aren't
+converted.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Quadratic Constraints</SPAN></BIG>
+<A NAME="subsubsection:QuadraticConstraints"></A>
+<P>
+A quadratic constraint allows you to restrict the value of a quadratic
+expression.  For example, you may require that any feasible solution
+satisfy the constraint <!-- MATH
+ $3 x^2 + 4 y^2 + 5 z \leq 10$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="144" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img81.png"
+ ALT="$3 x^2 + 4 y^2 + 5 z \leq 10$"></SPAN>.  Note that the
+matrix-oriented Gurobi API's (C, MATLAB, and R) require the right-hand
+side of a quadratic constraint to be a constant, while the
+object-oriented APIs (C++, Java, .NET, and Python) allow arbitrary
+quadratic expressions on both sides of the comparator.
+
+<P>
+The computed solution should satisfy the stated constraint to within
+<A HREF="feasibilitytol.html#parameter:FeasibilityTol">FeasibilityTol</A>.  Quadratic
+constraints are often much more challenging to satisfy than linear
+constraints, so tightening the parameter may increase runtimes
+dramatically.
+
+<P>
+The algorithms that Gurobi uses to solve quadratically constrained
+problems can only handle certain types of quadratic constraints.
+Constraints of the following forms are always accepted:
+
+<UL>
+<LI><!-- MATH
+ $x^TQx + q^Tx \le b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="119" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img23.png"
+ ALT="$x^TQx + q^Tx \le b$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img24.png"
+ ALT="$Q$"></SPAN> is Positive Semi-Definite (PSD)
+</LI>
+<LI><!-- MATH
+ $x^Tx \le y^{2}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="69" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img25.png"
+ ALT="$x^Tx \le y^{2}$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> is a vector of variables, and
+    <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> is a non-negative variable (a Second-Order Cone)
+</LI>
+<LI><SPAN CLASS="MATH"><IMG
+ WIDTH="70" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.png"
+ ALT="$x^Tx \le y z$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> is a vector of variables,
+    and <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> are non-negative variables
+    (a rotated Second-Order Cone)
+</LI>
+</UL>
+If you add a constraint that isn't in one of these forms (and Gurobi
+presolve is unable to transform the constraint into one of these
+forms), you'll get an error when you try to solve the model.
+Constraints where the quadratic terms only involve binary variables
+will always be transformed into one of these forms.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">General Constraints</SPAN></BIG>
+<A NAME="subsubsection:GeneralConstraints"></A>
+<P>
+The previously-described constraints are typically handled directly by
+the underlying optimization algorithms (although not always).  Gurobi
+also includes an additional set of constraints, which we collectively
+refer to as <EM>general constraints</EM>.  General constraints are a
+convenience feature, designed to allow you to capture certain
+relationships between variables without having to immerse yourself in
+the often esoteric details of how to model these relationships in
+terms of the more fundamental constraints of MIP.  Capturing a single
+one of these general constraints can often require a large set of
+linear and SOS constraints, plus a number of auxiliary decision
+variables.  By supporting them directly in the Gurobi API, we simplify
+the modeling process by performing the transformation to a
+corresponding MIP formulation automatically and transparently during
+the solution process.
+
+<P>
+Gurobi supports a number of different types of general constraints,
+each having its own syntax and semantics:
+
+<UL>
+<LI><SPAN  CLASS="textbf">MAX constraint:</SPAN>
+The constraint <!-- MATH
+ $r = \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img82.png"
+ ALT="$r = \max\{x_1,\ldots,x_k,c\}$"></SPAN> states that the
+<SPAN  CLASS="textit">resultant variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the maximum of the
+<SPAN  CLASS="textit">operand variables</SPAN> <!-- MATH
+ $x_1,\ldots,x_k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.png"
+ ALT="$x_1,\ldots,x_k$"></SPAN> and the <SPAN  CLASS="textit">constant</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="$c$"></SPAN>.
+For example, a solution <!-- MATH
+ $(r=3, x_1=2, x_2=3, x_3=0)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="211" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img84.png"
+ ALT="$(r=3, x_1=2, x_2=3, x_3=0)$"></SPAN> would be feasible
+for the constraint <!-- MATH
+ $r = \max\{x_1,x_2,x_3,1.7\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="169" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img85.png"
+ ALT="$r = \max\{x_1,x_2,x_3,1.7\}$"></SPAN> because <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.png"
+ ALT="$3$"></SPAN> is indeed
+the maximum of <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img87.png"
+ ALT="$2$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.png"
+ ALT="$3$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="$0$"></SPAN>, and <SPAN CLASS="MATH"><IMG
+ WIDTH="24" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img88.png"
+ ALT="$1.7$"></SPAN>.
+</LI>
+<LI><SPAN  CLASS="textbf">MIN constraint:</SPAN>
+Similar to a MAX constraint,
+the constraint <!-- MATH
+ $r = \min\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="158" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img89.png"
+ ALT="$r = \min\{x_1,\ldots,x_k,c\}$"></SPAN> states that the
+<SPAN  CLASS="textit">resultant variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the minimum of the
+<SPAN  CLASS="textit">operand variables</SPAN> <!-- MATH
+ $x_1,\ldots,x_k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.png"
+ ALT="$x_1,\ldots,x_k$"></SPAN> and the <SPAN  CLASS="textit">constant</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="$c$"></SPAN>.
+</LI>
+<LI><SPAN  CLASS="textbf">ABS constraint:</SPAN>
+The constraint <!-- MATH
+ $r = \mbox{abs}\{x\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="81" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$r = \mbox{abs}\{x\}$"></SPAN> states that the
+<SPAN  CLASS="textit">resultant variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the absolute value of the
+<SPAN  CLASS="textit">operand variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>.
+For example, a solution <SPAN CLASS="MATH"><IMG
+ WIDTH="111" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img90.png"
+ ALT="$(r=3, x=-3)$"></SPAN> would be feasible
+for the constraint <!-- MATH
+ $r = \mbox{abs}\{x\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="81" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$r = \mbox{abs}\{x\}$"></SPAN>.
+</LI>
+<LI><SPAN  CLASS="textbf">AND constraint:</SPAN>
+The constraint <!-- MATH
+ $r = \mbox{and}\{x_1,\ldots,x_k\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="143" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img91.png"
+ ALT="$r = \mbox{and}\{x_1,\ldots,x_k\}$"></SPAN> states that the binary
+<SPAN  CLASS="textit">resultant variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> if and only if all of the
+binary <SPAN  CLASS="textit">operand variables</SPAN> <!-- MATH
+ $x_1,\ldots,x_k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.png"
+ ALT="$x_1,\ldots,x_k$"></SPAN> are equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>.
+For example, a solution <!-- MATH
+ $(r=1, x_1=1, x_2=1, x_3=1)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="211" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img92.png"
+ ALT="$(r=1, x_1=1, x_2=1, x_3=1)$"></SPAN> would be feasible
+for the constraint <!-- MATH
+ $r = \mbox{and}\{x_1,x_2,x_3\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="137" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img93.png"
+ ALT="$r = \mbox{and}\{x_1,x_2,x_3\}$"></SPAN>.
+Note that declaring an AND constraint implicitly declares all involved
+variables to be of binary type.
+</LI>
+<LI><SPAN  CLASS="textbf">OR constraint:</SPAN>
+Similar to an AND constraint,
+the constraint <!-- MATH
+ $r = \mbox{or}\{x_1,\ldots,x_k\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="132" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img94.png"
+ ALT="$r = \mbox{or}\{x_1,\ldots,x_k\}$"></SPAN> states that the binary
+<SPAN  CLASS="textit">resultant variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> if and only if at least one of the
+binary <SPAN  CLASS="textit">operand variables</SPAN> <!-- MATH
+ $x_1,\ldots,x_k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="73" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.png"
+ ALT="$x_1,\ldots,x_k$"></SPAN> is equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN>.
+Note that declaring an OR constraint implicitly declares all involved
+variables to be of binary type.
+</LI>
+<LI><SPAN  CLASS="textbf">INDICATOR constraints:</SPAN>
+An indicator constraint <!-- MATH
+ $y = f \rightarrow a^Tx \leq b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="123" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img95.png"
+ ALT="$y = f \rightarrow a^Tx \leq b$"></SPAN> states that if
+the binary <SPAN  CLASS="textit">indicator variable</SPAN> <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> has the value <SPAN CLASS="MATH"><IMG
+ WIDTH="72" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$f \in \{0,1\}$"></SPAN>
+in a given solution, then the linear constraint <SPAN CLASS="MATH"><IMG
+ WIDTH="60" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.png"
+ ALT="$a^Tx \leq b$"></SPAN> has
+to be satisfied.  On the other hand, if <SPAN CLASS="MATH"><IMG
+ WIDTH="43" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img96.png"
+ ALT="$y \neq f$"></SPAN> (i.e., <SPAN CLASS="MATH"><IMG
+ WIDTH="71" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img97.png"
+ ALT="$y = 1-f$"></SPAN>)
+then the linear constraint may be violated.  Note that the sense of
+the linear constraint can also be <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.png"
+ ALT="$=$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$\geq$"></SPAN>;
+refer to <A HREF="#subsubsection:LinearConstraints">this earlier section</A>
+for a more detailed description of linear constraints.
+Note also that declaring an INDICATOR constraint implicitly declares the
+indicator variable to be of binary type.
+</LI>
+</UL>
+
+<P>
+As stated above, each general constraint has an equivalent MIP
+formulation that consists of linear and SOS constraints, and possibly
+auxiliary variables.  Thus, you could always model such constraints
+yourself without using a Gurobi general constraint.  For example,
+the MAX constraint <!-- MATH
+ $r = \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img82.png"
+ ALT="$r = \max\{x_1,\ldots,x_k,c\}$"></SPAN> can be
+modeled as follows:
+<BR><P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+\begin{array}{rcll}
+r                      &   =  & x_j + s_j   & \mbox{ for all } j = 1,\ldots,k \\
+r                      &   =  & c + s_{k+1} & \\
+z_1 + \ldots + z_{k+1} &   =  & 1           & \\
+SOS1(s_j, z_j)         &      &             & \mbox{ for all } j = 1,\ldots,k+1 \\
+s_j                    & \geq & 0           & \mbox{ for all } j = 1,\ldots,k+1 \\
+z_j                    & \in  & \{0,1\}     & \mbox{ for all } j = 1,\ldots,k+1
+\end{array}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="379" HEIGHT="121" BORDER="0"
+ SRC="img98.png"
+ ALT="\begin{displaymath}
+\begin{array}{rcll}
+r &amp; = &amp; x_j + s_j &amp; \mbox{ for all } j =...
+...&amp; \in &amp; \{0,1\} &amp; \mbox{ for all } j = 1,\ldots,k+1
+\end{array}\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+The first two constraints state that <!-- MATH
+ $r \geq \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img99.png"
+ ALT="$r \geq \max\{x_1,\ldots,x_k,c\}$"></SPAN>,
+i.e., that the resultant variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> has to be at least as large as each
+of the operand variables <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$x_j$"></SPAN> and the constant <SPAN CLASS="MATH"><IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="$c$"></SPAN>.
+This can be modeled using inequalities, but we turned them into equations
+by introducing explicit continuous slack variables <SPAN CLASS="MATH"><IMG
+ WIDTH="48" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img100.png"
+ ALT="$s_j \geq 0$"></SPAN>, which we
+will reuse below.
+
+<P>
+Those slack variables and the remaining constraints model
+<!-- MATH
+ $r \leq \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img101.png"
+ ALT="$r \leq \max\{x_1,\ldots,x_k,c\}$"></SPAN>, which is more complicated.
+In addition to the explicit slacks, this requires the introduction of
+binary auxiliary variables <!-- MATH
+ $z_j \in \{0,1\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="77" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img102.png"
+ ALT="$z_j \in \{0,1\}$"></SPAN>.
+The SOS1 constraints state that at most one of the two variables <SPAN CLASS="MATH"><IMG
+ WIDTH="18" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img103.png"
+ ALT="$s_j$"></SPAN> and
+<SPAN CLASS="MATH"><IMG
+ WIDTH="18" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img104.png"
+ ALT="$z_j$"></SPAN> can be non-zero, which models the implication
+<!-- MATH
+ $z_j = 1 \rightarrow s_j = 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="115" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img105.png"
+ ALT="$z_j = 1 \rightarrow s_j = 0$"></SPAN>.
+Due to the third constraint, one <SPAN CLASS="MATH"><IMG
+ WIDTH="18" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img104.png"
+ ALT="$z_j$"></SPAN> will be equal to <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="$1$"></SPAN> and thus at
+least one <SPAN CLASS="MATH"><IMG
+ WIDTH="18" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img103.png"
+ ALT="$s_j$"></SPAN> will be zero.
+Hence, <SPAN CLASS="MATH"><IMG
+ WIDTH="49" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img106.png"
+ ALT="$r = x_j$"></SPAN> for at least one <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img48.png"
+ ALT="$j$"></SPAN> due to the first constraint,
+or <SPAN CLASS="MATH"><IMG
+ WIDTH="40" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img107.png"
+ ALT="$r = c$"></SPAN> due to the second constraint.
+
+<P>
+Tolerances play a role in general constraints, although as you might
+expect, the exact role depends on the constraint type.  Generally,
+violations in the resultant will be smaller than the
+<A HREF="feasibilitytol.html#parameter:FeasibilityTol">feasibility tolerance</A>, and
+integrality violations in integer resultants will also satisfy the
+<A HREF="intfeastol.html#parameter:IntFeasTol">integrality tolerance</A>.
+
+<P>
+If a model contains general constraints, then Gurobi adds the
+respective MIP formulations for those constraints during the solution
+process.  In this respect, general constraints are just a means of
+concisely capturing these relationships between variables while
+removing the burden of creating an equivalent MIP formulation.
+However, general constraints have another potential advantage: Gurobi
+might be able to simplify parts of the MIP formulation if it can prove
+during presolve that the simplified version suffices for the correctness of the
+model.  For this reason, Gurobi might be able to produce a smaller or
+tighter representation of the general constraint than you would get
+from the most general formulation.  For example, it might be the case
+that <!-- MATH
+ $r \leq \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img101.png"
+ ALT="$r \leq \max\{x_1,\ldots,x_k,c\}$"></SPAN> is already implied by the other
+constraints in the model, so that a simple set of inequalities
+<P></P>
+<DIV ALIGN="CENTER" CLASS="mathdisplay">
+<!-- MATH
+ \begin{eqnarray*}
+r  & \geq & x_j \;\;\mbox{ for all } j = 1,\ldots,k \\
+r  & \geq & c
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="208" HEIGHT="50" BORDER="0"
+ SRC="img108.png"
+ ALT="\begin{eqnarray*}
+r &amp; \geq &amp; x_j \;\;\mbox{ for all } j = 1,\ldots,k \\
+r &amp; \geq &amp; c
+\end{eqnarray*}"></DIV>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+to describe <!-- MATH
+ $r \geq \max\{x_1,\ldots,x_k,c\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="161" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img99.png"
+ ALT="$r \geq \max\{x_1,\ldots,x_k,c\}$"></SPAN> suffices to model
+the relevant part of the MAX constraint.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11496"
+  HREF="tolerances_and_ill_conditi.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11494"
+  HREF="variables_and_constraints.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11488"
+  HREF="variables.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html11497"
+  HREF="tolerances_and_ill_conditi.html">Tolerances and Ill Conditioning</A>
+<B> Up:</B> <A NAME="tex2html11495"
+  HREF="variables_and_constraints.html">Variables and Constraints</A>
+<B> Previous:</B> <A NAME="tex2html11489"
+  HREF="variables.html">Variables</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

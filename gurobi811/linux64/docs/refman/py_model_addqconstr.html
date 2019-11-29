@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.addQConstr()</TITLE>
+<META NAME="description" CONTENT="Model.addQConstr()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_addrange.html">
+<LINK REL="previous" HREF="py_model_addlconstr.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_addrange.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9520"
+  HREF="py_model_addrange.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9518"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9512"
+  HREF="py_model_addlconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9521"
+  HREF="py_model_addrange.html">Model.addRange()</A>
+<B> Up:</B> <A NAME="tex2html9519"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9513"
+  HREF="py_model_addlconstr.html">Model.addLConstr()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001021200000000000000"></A>
+<A NAME="pythonmethod:Model.addQConstr"></A>
+<BR>
+Model.addQConstr()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">addQConstr</SPAN></FONT></BIG> ( lhs, sense=None, rhs=None, name="" )
+
+<P>
+Add a quadratic constraint to a model.
+
+<P>
+Important note: the algorithms that Gurobi uses to solve
+quadratically constrained problems can only handle certain
+types of quadratic constraints.  Constraints of the following
+forms are always accepted:
+
+<UL>
+<LI><!-- MATH
+ $x^TQx + q^Tx \le b$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="119" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img23.png"
+ ALT="$x^TQx + q^Tx \le b$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img24.png"
+ ALT="$Q$"></SPAN> is Positive Semi-Definite (PSD)
+</LI>
+<LI><!-- MATH
+ $x^Tx \le y^{2}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="69" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img25.png"
+ ALT="$x^Tx \le y^{2}$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> is a vector of variables, and
+    <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> is a non-negative variable (a Second-Order Cone)
+</LI>
+<LI><SPAN CLASS="MATH"><IMG
+ WIDTH="70" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.png"
+ ALT="$x^Tx \le y z$"></SPAN>, where <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> is a vector of variables,
+    and <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$y$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="$z$"></SPAN> are non-negative variables
+    (a rotated Second-Order Cone)
+</LI>
+</UL>
+If you add a constraint that isn't in one of these forms (and Gurobi
+presolve is unable to transform the constraint into one of these
+forms), you'll get an error when you try to solve the model.
+Constraints where the quadratic terms only involve binary variables
+will always be transformed into one of these forms.
+
+<P>
+Note that this method also accepts a
+<A HREF="py_tempconstr.html#pythonclass:TempConstr">TempConstr</A> as its first
+argument (with the name as its second argument).  This allows you
+to use operator overloading to create constraints.
+See <A HREF="py_tempconstr.html#pythonclass:TempConstr">TempConstr</A> for more
+information.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">lhs</SPAN>: Left-hand side for new quadratic constraint.  Can be a
+  constant, a <A HREF="py_var.html#pythonclass:Var">Var</A>, a
+  <A HREF="py_linexpr.html#pythonclass:LinExpr">LinExpr</A>, or a
+  <A HREF="py_quadexpr.html#pythonclass:QuadExpr">QuadExpr</A>.
+
+<P>
+ <SPAN  CLASS="textbf">sense</SPAN>: Sense for new quadratic constraint
+(<TT>GRB.LESS_EQUAL</TT> or <TT>GRB.GREATER_EQUAL</TT>).
+
+<P>
+ <SPAN  CLASS="textbf">rhs</SPAN>: Right-hand side for new quadratic constraint.  Can be a
+  constant, a <A HREF="py_var.html#pythonclass:Var">Var</A>, a
+  <A HREF="py_linexpr.html#pythonclass:LinExpr">LinExpr</A>, or a
+  <A HREF="py_quadexpr.html#pythonclass:QuadExpr">QuadExpr</A>.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for new constraint.
+Note that <TT>name</TT> will be stored as an ASCII string. Thus, a name
+like <TT>'A<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>B'</TT> will produce an error, because
+'<SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.png"
+ ALT="${\rightarrow}$"></SPAN>' can not be represented as an ASCII character. Note
+also that names that contain spaces are strongly discouraged,
+because they can't be written to LP format files.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+New quadratic constraint object.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  model.addQConstr(x*x + y*y, GRB.LESS_EQUAL, z*z, "c0")
+  model.addQConstr(x*x + y*y &lt;= 2.0, "c1")
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9520"
+  HREF="py_model_addrange.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9518"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9512"
+  HREF="py_model_addlconstr.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9521"
+  HREF="py_model_addrange.html">Model.addRange()</A>
+<B> Up:</B> <A NAME="tex2html9519"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9513"
+  HREF="py_model_addlconstr.html">Model.addLConstr()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

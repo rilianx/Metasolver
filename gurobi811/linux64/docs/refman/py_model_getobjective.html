@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.getObjective()</TITLE>
+<META NAME="description" CONTENT="Model.getObjective()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_getparaminfo.html">
+<LINK REL="previous" HREF="py_model_getmultiobjenv.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_getparaminfo.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9870"
+  HREF="py_model_getparaminfo.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9868"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9862"
+  HREF="py_model_getmultiobjenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9871"
+  HREF="py_model_getparaminfo.html">Model.getParamInfo()</A>
+<B> Up:</B> <A NAME="tex2html9869"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9863"
+  HREF="py_model_getmultiobjenv.html">Model.getMultiobjEnv()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001024700000000000000"></A>
+<A NAME="pythonmethod:Model.getObjective"></A>
+<BR>
+Model.getObjective()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getObjective</SPAN></FONT></BIG> ( index=None )
+
+<P>
+Retrieve the model objective(s).
+
+<P>
+Call this with no argument to retrieve the primary objective, or with
+an integer argument to retrieve the corresponding alternative
+objective.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">index (int, optional)</SPAN>: The index for the requested alternative
+  objective.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The model objective.  A
+<A HREF="py_linexpr.html#pythonclass:LinExpr">LinExpr</A> object for a linear
+objective, or a <A HREF="py_quadexpr.html#pythonclass:QuadExpr">QuadExpr</A> object for a
+quadratic objective.  Note that alternative objectives are always linear.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  obj = model.getObjective()
+  print(obj.getValue())
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9870"
+  HREF="py_model_getparaminfo.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9868"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9862"
+  HREF="py_model_getmultiobjenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9871"
+  HREF="py_model_getparaminfo.html">Model.getParamInfo()</A>
+<B> Up:</B> <A NAME="tex2html9869"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9863"
+  HREF="py_model_getmultiobjenv.html">Model.getMultiobjEnv()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

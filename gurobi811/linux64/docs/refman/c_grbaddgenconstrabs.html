@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBaddgenconstrAbs</TITLE>
+<META NAME="description" CONTENT="GRBaddgenconstrAbs">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="c_grbaddgenconstrand.html">
+<LINK REL="previous" HREF="c_grbaddgenconstrmin.html">
+<LINK REL="up" HREF="c_model_creation_and_modif.html">
+<LINK REL="next" HREF="c_grbaddgenconstrand.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html1740"
+  HREF="c_grbaddgenconstrand.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1738"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1732"
+  HREF="c_grbaddgenconstrmin.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1741"
+  HREF="c_grbaddgenconstrand.html">GRBaddgenconstrAnd</A>
+<B> Up:</B> <A NAME="tex2html1739"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1733"
+  HREF="c_grbaddgenconstrmin.html">GRBaddgenconstrMin</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00022900000000000000"></A>
+<A NAME="routine:GRBaddgenconstrAbs"></A>
+<BR>
+GRBaddgenconstrAbs
+</H3>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBaddgenconstrAbs</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">GRBmodel</TD>
+<TD ALIGN="LEFT">*model,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">const char</TD>
+<TD ALIGN="LEFT">*name,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">resvar,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">argvar )</TD>
+</TR>
+</TABLE>
+
+<P>
+Add a new general constraint of type <TT>GRB_GENCONSTR_ABS</TT> to a model.
+
+  Note that, due to our lazy update approach, the new constraint won't actually be added
+  until you update the model
+  (using <A HREF="c_grbupdatemodel.html#routine:GRBupdatemodel">GRBupdatemodel</A>),
+  optimize the model
+  (using <A HREF="c_grboptimize.html#routine:GRBoptimize">GRBoptimize</A>),
+  or write the model to disk
+  (using <A HREF="c_grbwrite.html#routine:GRBwrite">GRBwrite</A>).
+
+<P>
+An ABS constraint <!-- MATH
+ $r = \mbox{abs}\{x\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="81" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$r = \mbox{abs}\{x\}$"></SPAN> states that the resultant
+variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> should be equal to the absolute value of the argument variable
+<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN>.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A non-zero return value indicates that a problem occurred while adding the general constraint.
+Refer to the <A HREF="error_codes.html#sec:ErrorCodes">Error Code</A> table for a
+list of possible return values.  Details on the error can be obtained
+by calling <A HREF="c_grbgeterrormsg.html#routine:GRBgeterrormsg">GRBgeterrormsg</A>.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">model</SPAN>: The model to which the new general constraint should be added.
+
+<P>
+ <SPAN  CLASS="textbf">name</SPAN>: Name for the new general constraint.  This
+  argument can be <TT>NULL</TT>, in which case the constraint is
+  given a default name.
+
+<P>
+ <SPAN  CLASS="textbf">int resvar</SPAN>: The index of the resultant variable <SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$r$"></SPAN> whose value will
+  be to equal the absolute value of the argument variable.
+
+<P>
+ <SPAN  CLASS="textbf">int argvar</SPAN>: The index of the argument variable <SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="$x$"></SPAN> for which the
+  absolute value will be taken.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  /* x5 = abs(x1) */
+  error = GRBaddgenconstrAbs(model, "absconstr", 5, 1);
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1740"
+  HREF="c_grbaddgenconstrand.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1738"
+  HREF="c_model_creation_and_modif.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1732"
+  HREF="c_grbaddgenconstrmin.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html1741"
+  HREF="c_grbaddgenconstrand.html">GRBaddgenconstrAnd</A>
+<B> Up:</B> <A NAME="tex2html1739"
+  HREF="c_model_creation_and_modif.html">Model Creation and Modification</A>
+<B> Previous:</B> <A NAME="tex2html1733"
+  HREF="c_grbaddgenconstrmin.html">GRBaddgenconstrMin</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

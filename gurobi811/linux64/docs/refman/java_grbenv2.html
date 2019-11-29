@@ -1,0 +1,435 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>GRBEnv()</TITLE>
+<META NAME="description" CONTENT="GRBEnv()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="java_grbenv_dispose.html">
+<LINK REL="previous" HREF="java_grbenv.html">
+<LINK REL="up" HREF="java_grbenv.html">
+<LINK REL="next" HREF="java_grbenv_dispose.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5282"
+  HREF="java_grbenv_dispose.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5280"
+  HREF="java_grbenv.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5274"
+  HREF="java_grbenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5283"
+  HREF="java_grbenv_dispose.html">GRBEnv.dispose()</A>
+<B> Up:</B> <A NAME="tex2html5281"
+  HREF="java_grbenv.html">GRBEnv</A>
+<B> Previous:</B> <A NAME="tex2html5275"
+  HREF="java_grbenv.html">GRBEnv</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00061100000000000000"></A>
+<A NAME="javamethod:GRBEnv"></A>
+<BR>
+GRBEnv()
+</H3>
+
+<P>
+Constructor for <code>GRBEnv</code> object.
+You have the option of constructing either a local environment, which
+solves Gurobi models on the local machine, or a client environment for
+a Gurobi compute server, which will solve Gurobi models on a server
+machine.  For the latter, choose the signature that allows you to
+specify the names of the Gurobi compute servers and the priority of the
+associated job.
+
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBEnv</SPAN></FONT></BIG> ( )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Create a Gurobi environment (with logging disabled).
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter). This method will also populate several
+parameters (<TT>ComputeServer</TT>, <TT>TokenServer</TT>,
+<TT>ServerPassword</TT>, etc.) from your <TT>gurobi.lic</TT> file.
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+An environment object (with no associated log file).
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBEnv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">bool</TD>
+<TD ALIGN="LEFT">empty )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Create an empty Gurobi environment.  Use
+<A HREF="java_grbenv_start.html#javamethod:GRBEnv.start">start</A> to
+start the environment.
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter). This method will also populate several
+parameters (<TT>ComputeServer</TT>, <TT>TokenServer</TT>,
+<TT>ServerPassword</TT>, etc.) from your <TT>gurobi.lic</TT> file.
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">empty</SPAN>: Indicates whether the environment should be empty.
+You should use <TT>empty=true</TT> if you want to set parameters before actually
+starting the environment.  This can be useful if you want to
+connect to a Compute Server, a token server, or the Gurobi
+Instant Cloud.  See the <A HREF="empty_environment.html#sec:EmptyEnvironment">Empty
+Environment</A>&nbsp;Section for more details.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+An environment object.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBEnv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">logFileName )</TD>
+</TR>
+</TABLE>
+
+<UL>
+
+<P>
+Create a Gurobi environment (with logging enabled).
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter). This method will also populate several
+parameters (<TT>ComputeServer</TT>, <TT>TokenServer</TT>,
+<TT>ServerPassword</TT>, etc.) from your <TT>gurobi.lic</TT> file.
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">logFileName</SPAN>: The desired log file name.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+An environment object.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBEnv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">logFileName,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">computeServer,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">router,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">password,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">group,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">tlsInsecure,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">priority,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">double</TD>
+<TD ALIGN="LEFT">timeout )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Create a client Gurobi environment on a compute server.
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter).
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">logFileName</SPAN>: The name of the log file for this environment.
+  Pass an empty string for no log file.
+
+<P>
+ <SPAN  CLASS="textbf">computeServer</SPAN>: A Compute Server.  You can refer to the server using its name or
+its IP address.  If you are using a non-default port, the server
+name should be followed by the port number (e.g.,
+<TT>server1:61000</TT>)
+
+<P>
+ <SPAN  CLASS="textbf">router</SPAN>: The router for a Compute Server cluster.  A router can be used to
+improve the robustness of a Compute Server deployment.  You
+should refer to the router using either its name or its IP
+address.  If no router is used (which is the typical case), pass
+an empty string.
+
+<P>
+ <SPAN  CLASS="textbf">password</SPAN>: The password for gaining access to the specified Compute Server
+cluster.  Pass an empty string if no password is required.
+
+<P>
+ <SPAN  CLASS="textbf">group</SPAN>: The name of the Compute Server group.
+
+<P>
+ <SPAN  CLASS="textbf">tlsInsecure</SPAN>: Indicates whether to use insecure mode in the TLS (Transport
+Layer Security).  Set this to 0 unless your server administrator
+tells you otherwise.
+
+<P>
+ <SPAN  CLASS="textbf">priority</SPAN>: The priority of the job.  Priorities must be between -100 and
+100, with a default value of 0 (by convention).  Higher priority
+jobs are chosen from the server job queue before lower priority
+jobs. Depending on the configuration of the
+server, a job with priority 100 runs immediately, bypassing the
+job queue and ignoring the job limit on the server. You should
+exercise caution with priority 100 jobs, since they can severely
+overload a server, which can cause jobs to fail, and in extreme
+cases can cause the server to crash.  This behavior is managed by
+the <TT>HARDJOBLIMIT</TT>, and is dissabled by default. Refer
+to the <A NAME="tex2html13"
+  HREF="../remoteservices/remoteservices.html">Gurobi Remote Services Reference
+Manual</A>
+for more
+information on starting Compute Server options.
+
+<P>
+ <SPAN  CLASS="textbf">timeout</SPAN>: Queue timeout (in seconds).  If the job doesn't reach the front of
+the queue before the specified timeout, the call will exit with a
+<TT>JOB_REJECTED</TT> error.  Use -1 to indicate
+that the call should never timeout.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+An environment object.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">GRBEnv</TD>
+<TD ALIGN="LEFT"><BIG CLASS="LARGE"><FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">GRBEnv</SPAN></FONT></BIG> (</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">logfilename,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">accessID,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">secretKey,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">String</TD>
+<TD ALIGN="LEFT">pool,</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">int</TD>
+<TD ALIGN="LEFT">priority )</TD>
+</TR>
+</TABLE>
+
+<UL>
+Create a Gurobi environment on Gurobi Instant Cloud.
+This method will also check the current working directory for a file
+named <TT>gurobi.env</TT>, and it will attempt to read
+parameter settings from this file if it exists.  The file should
+be in <A HREF="prm_format.html#format:PRM">PRM</A> format (briefly, each line
+should contain a parameter name, followed by the desired value
+for that parameter).
+
+<P>
+In general, you should aim to create a single Gurobi environment
+in your program, even if you plan to work with multiple models.
+Reusing one environment is much more efficient than creating and
+destroying multiple environments.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">logfilename</SPAN>: The name of the log file for this environment.
+  May be <TT>NULL</TT> (or an empty string), in which case no log file is
+  created.
+
+<P>
+ <SPAN  CLASS="textbf">accessID</SPAN>: The access ID for your Gurobi Instant Cloud license.  This can be
+retrieved from the Gurobi Instant Cloud website.  When used in
+combination with your <TT>secretKey</TT>, this allows you to launch
+Instant Cloud instances and submit jobs to them.
+
+<P>
+ <SPAN  CLASS="textbf">secretKey</SPAN>: The secret key for your Gurobi Instant Cloud license.  This can
+be retrieved from the Gurobi Instant Cloud website.  When used in
+combination with your <TT>accessID</TT>, this allows you to launch
+Instant Cloud instances and submit jobs to them.  Note that you
+should keep your secret key private.
+
+<P>
+ <SPAN  CLASS="textbf">pool</SPAN>: The machine pool.  Machine pools allow you to create fixed
+configurations on the Instant Cloud website (capturing things
+like type of machine, geographic region, etc.), and then launch
+and share machines from client programs without having to
+restarte the configuration information each time you launch a
+machine.  May be <TT>NULL</TT> (or an empty string), in which case
+your job will be launched in the default pool associated with
+your cloud license.
+
+<P>
+ <SPAN  CLASS="textbf">priority</SPAN>: The priority of the job.  Priorities must be between -100 and
+100, with a default value of 0 (by convention).  Higher priority
+jobs are chosen from the server job queue before lower priority
+jobs.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+An environment object.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5282"
+  HREF="java_grbenv_dispose.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5280"
+  HREF="java_grbenv.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5274"
+  HREF="java_grbenv.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html5283"
+  HREF="java_grbenv_dispose.html">GRBEnv.dispose()</A>
+<B> Up:</B> <A NAME="tex2html5281"
+  HREF="java_grbenv.html">GRBEnv</A>
+<B> Previous:</B> <A NAME="tex2html5275"
+  HREF="java_grbenv.html">GRBEnv</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

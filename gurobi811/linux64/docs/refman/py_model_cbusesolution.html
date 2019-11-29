@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.cbUseSolution()</TITLE>
+<META NAME="description" CONTENT="Model.cbUseSolution()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_chgcoeff.html">
+<LINK REL="previous" HREF="py_model_cbstoponemultiobj.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_chgcoeff.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9640"
+  HREF="py_model_chgcoeff.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9638"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9632"
+  HREF="py_model_cbstoponemultiobj.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9641"
+  HREF="py_model_chgcoeff.html">Model.chgCoeff()</A>
+<B> Up:</B> <A NAME="tex2html9639"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9633"
+  HREF="py_model_cbstoponemultiobj.html">Model.cbStopOneMultiObj()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001022400000000000000"></A>
+<A NAME="pythonmethod:Model.cbUseSolution"></A>
+<BR>
+Model.cbUseSolution()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">cbUseSolution</SPAN></FONT></BIG> (  )
+
+<P>
+Once you have imported solution values using
+<A HREF="py_model_cbsetsolution.html#pythonmethod:Model.cbSetSolution">cbSetSolution</A>,
+you can optionally call <code>cbUseSolution</code> to immediately use
+these values to try to compute a heuristic solution.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+The objective value for the solution obtained from
+  your solution values (or GRB.INFINITY if no improved solution is found).
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  def mycallback(model, where):
+    if where == GRB.Callback.MIPNODE:
+      model.cbSetSolution(vars, newsolution)
+      objval = model.cbUseSolution()
+
+  model.optimize(mycallback)
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9640"
+  HREF="py_model_chgcoeff.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9638"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9632"
+  HREF="py_model_cbstoponemultiobj.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9641"
+  HREF="py_model_chgcoeff.html">Model.chgCoeff()</A>
+<B> Up:</B> <A NAME="tex2html9639"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9633"
+  HREF="py_model_cbstoponemultiobj.html">Model.cbStopOneMultiObj()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

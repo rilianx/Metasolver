@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Submitting Jobs with gurobi_cl</TITLE>
+<META NAME="description" CONTENT="Submitting Jobs with gurobi_cl">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="next" HREF="issuing_cluster_management.html">
+<LINK REL="previous" HREF="queueing_load_balancing_an.html">
+<LINK REL="up" HREF="client_configuration.html">
+<LINK REL="next" HREF="issuing_cluster_management.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html485"
+  HREF="issuing_cluster_management.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html483"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html477"
+  HREF="queueing_load_balancing_an.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html486"
+  HREF="issuing_cluster_management.html">Issuing Cluster Management Commands:</A>
+<B> Up:</B> <A NAME="tex2html484"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html478"
+  HREF="queueing_load_balancing_an.html">Queueing, Load Balancing, and</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00031300000000000000">
+Submitting Jobs with gurobi_cl</A>
+</H3>
+
+<P>
+The Gurobi command-line tool can be used to submit optimization jobs
+to a Compute Server.  The following gives a simple example:
+
+<P>
+
+<PRE>
+&gt; gurobi_cl --server=server1 --password=password1 misc07.mps
+</PRE>
+
+<P>
+Note that we've included connection information for the Compute
+Server (in this case, the server name is <TT>server1</TT>, we're
+using the default port 80, and the password is <TT>password1</TT>).
+You could also provide connection information in a license
+file:
+
+<PRE>
+COMPUTESERVER=server1
+PASSWORD=password1
+</PRE>
+
+<P>
+Assuming the license file is found by <TT>gurobi_cl</TT>, you would then
+be able to omit the connection information:
+
+<PRE>
+&gt; gurobi_cl misc07.mps
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html485"
+  HREF="issuing_cluster_management.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html483"
+  HREF="client_configuration.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html477"
+  HREF="queueing_load_balancing_an.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html486"
+  HREF="issuing_cluster_management.html">Issuing Cluster Management Commands:</A>
+<B> Up:</B> <A NAME="tex2html484"
+  HREF="client_configuration.html">Client Configuration</A>
+<B> Previous:</B> <A NAME="tex2html478"
+  HREF="queueing_load_balancing_an.html">Queueing, Load Balancing, and</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

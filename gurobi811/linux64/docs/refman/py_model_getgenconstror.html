@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Model.getGenConstrOr()</TITLE>
+<META NAME="description" CONTENT="Model.getGenConstrOr()">
+<META NAME="keywords" CONTENT="refman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="refman.css">
+
+<LINK REL="next" HREF="py_model_getgenconstrindic.html">
+<LINK REL="previous" HREF="py_model_getgenconstrand.html">
+<LINK REL="up" HREF="py_model.html">
+<LINK REL="next" HREF="py_model_getgenconstrindic.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html9830"
+  HREF="py_model_getgenconstrindic.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9828"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9822"
+  HREF="py_model_getgenconstrand.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9831"
+  HREF="py_model_getgenconstrindic.html">Model.getGenConstrIndicator()</A>
+<B> Up:</B> <A NAME="tex2html9829"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9823"
+  HREF="py_model_getgenconstrand.html">Model.getGenConstrAnd()</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION0001024300000000000000"></A>
+<A NAME="pythonmethod:Model.getGenConstrOr"></A>
+<BR>
+Model.getGenConstrOr()
+</H3>
+<BIG CLASS="LARGE">
+<FONT COLOR="#801a1a"> <SPAN  CLASS="textbf">getGenConstrOr</SPAN></FONT></BIG> ( genconstr )
+
+<P>
+Retrieve the data of a general constraint of type OR.
+Calling this function for a general constraint of different type
+leads to an exception.
+You can query the <A HREF="genconstrtype.html#attr:GenConstrType">GenConstrType</A>
+attribute to determine the type of the general constraint.
+
+<P>
+See also <A HREF="java_grbmodel_addgenconstr6.html#javamethod:GRBModel.addGenConstrOr">addGenConstrOr</A>
+for a description of the semantics of this general constraint type.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Arguments:</SPAN></BIG>
+
+<P>
+ <SPAN  CLASS="textbf">genconstr</SPAN>: The general constraint object of interest.
+
+<P>
+
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Return value:</SPAN></BIG>
+
+<P>
+A tuple (resvar, vars) that contains the data
+  of the general constraint:
+
+<P>
+ <SPAN  CLASS="textbf">resvar (Var)</SPAN>: Resultant variable of OR constraint.
+
+<P>
+ <SPAN  CLASS="textbf">vars (list of Var)</SPAN>: Operand variables of OR constraint.
+
+<P>
+<BIG CLASS="LARGE"><SPAN  CLASS="textbf">Example usage:</SPAN></BIG><PRE>
+  (resvar, vars) = model.getGenConstrOr(model.getGenConstrs()[0])
+</PRE>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9830"
+  HREF="py_model_getgenconstrindic.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9828"
+  HREF="py_model.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9822"
+  HREF="py_model_getgenconstrand.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html9831"
+  HREF="py_model_getgenconstrindic.html">Model.getGenConstrIndicator()</A>
+<B> Up:</B> <A NAME="tex2html9829"
+  HREF="py_model.html">Model</A>
+<B> Previous:</B> <A NAME="tex2html9823"
+  HREF="py_model_getgenconstrand.html">Model.getGenConstrAnd()</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

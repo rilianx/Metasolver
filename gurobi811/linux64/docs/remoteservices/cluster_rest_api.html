@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2017.2 (Released Jan 23, 2017) -->
+<HTML>
+<HEAD>
+<TITLE>Cluster REST API</TITLE>
+<META NAME="description" CONTENT="Cluster REST API">
+<META NAME="keywords" CONTENT="remoteservices">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2017.2">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="remoteservices.css">
+
+<LINK REL="previous" HREF="distributed_algorithm_cons.html">
+<LINK REL="up" HREF="programming_with_remote_se.html">
+<LINK REL="next" HREF="using_remote_services_with.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html680"
+  HREF="using_remote_services_with.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html678"
+  HREF="programming_with_remote_se.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html674"
+  HREF="distributed_algorithm_cons.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html681"
+  HREF="using_remote_services_with.html">Using Remote Services with</A>
+<B> Up:</B> <A NAME="tex2html679"
+  HREF="programming_with_remote_se.html">Programming with Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html675"
+  HREF="distributed_algorithm_cons.html">Distributed Algorithm Considerations</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00047000000000000000">
+Cluster REST API</A>
+</H2>
+
+<P>
+Each node in the cluster also exposes a REST API in order to support advanced integration.
+The API follows standard REST principles and can be used in various languages and tools (Java, Python, Node, curl...).
+
+<P>
+The base URL of the API is the node address followed by the API prefix <TT>/api/v1</TT>.
+For example, if a node is runnning on <TT>server1</TT> using HTTP on the default port, the base URL will be:
+
+<PRE>
+http://server1/api/v1
+</PRE>
+If it is using HTTPS on a custom port 61000, the base URL will be
+
+<PRE>
+https://server1:61000/api/v1
+</PRE>
+
+<P>
+The API is composed of several endpoints.
+In order to access an API endpoint, you will also need to provide a the password in the header <TT>X-GUROBI-CSPASSWORD</TT>.
+The password can be the client or administrator password depending on the endpoint.
+
+<P>
+We distinguish between the cluster and the node endpoints. Cluster endpoints provide cluster-wide APIs and any of the nodes from the same cluster can be used. On the other hand, node endpoints provide node specific APIs, for example to manage the configuration of a node or access a running or recently completed job on a specific node.
+Here is a summary of the cluster endpoints:
+<DL>
+<DT><STRONG>GET /cluster/licenses</STRONG></DT>
+<DD>Lists the licenses
+</DD>
+<DT><STRONG>GET /cluster/nodes</STRONG></DT>
+<DD>Lists the nodes
+</DD>
+<DT><STRONG>GET /cluster/jobs</STRONG></DT>
+<DD>Lists the jobs
+</DD>
+<DT><STRONG>GET /cluster/jobs/id</STRONG></DT>
+<DD>Returns a job description
+</DD>
+<DT><STRONG>DELETE /cluster/jobs/id/processing</STRONG></DT>
+<DD>Aborts a job - Administrator password is required.
+</DD>
+</DL>
+
+<P>
+Here is a summary of the node endpoints:
+<DL>
+<DT><STRONG>GET /ping</STRONG></DT>
+<DD>Pings a node
+</DD>
+<DT><STRONG>GET /config</STRONG></DT>
+<DD>Gets current configuration
+</DD>
+<DT><STRONG>POST /config</STRONG></DT>
+<DD>Updates the configuration - Administrator password is required.
+</DD>
+<DT><STRONG>GET /jobs/id/log</STRONG></DT>
+<DD>Returns the log of an active job
+</DD>
+<DT><STRONG>GET /jobs/id/metrics</STRONG></DT>
+<DD>Returns the metrics of an active job
+</DD>
+<DT><STRONG>GET /jobs/id/parameters</STRONG></DT>
+<DD>Returns the parameters of an active job
+</DD>
+</DL>
+
+<P>
+The detailed and interactive documentation is also provided using the Swagger format and available directly on a node, for example:
+
+<PRE>
+http://server1/swagger.html
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html680"
+  HREF="using_remote_services_with.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html678"
+  HREF="programming_with_remote_se.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html674"
+  HREF="distributed_algorithm_cons.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html681"
+  HREF="using_remote_services_with.html">Using Remote Services with</A>
+<B> Up:</B> <A NAME="tex2html679"
+  HREF="programming_with_remote_se.html">Programming with Remote Services</A>
+<B> Previous:</B> <A NAME="tex2html675"
+  HREF="distributed_algorithm_cons.html">Distributed Algorithm Considerations</A></DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>
