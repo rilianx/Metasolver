@@ -129,7 +129,7 @@ add_test( NAME o-search
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 2 -s bsg_vp --fp=R -f BRwp )
 
   add_test( NAME simulator
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_SIMULATOR problems/clp/benchs/BR/BR10.txt -i 1 --min_fr=0.98 -t 10 -f BR --actions="(10,3,5,3);(10,2)" )
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_SIMULATOR problems/clp/benchs/BR/BR10.txt -i 1 --min_fr=0.98 -t 10 -f BR --actions=\(10,3,5,3\)\;\(10,2\) )
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
 			SET_TARGET_PROPERTIES(AppHelloWorld PROPERTIES  DEBUG_POSTFIX "_Debug")
