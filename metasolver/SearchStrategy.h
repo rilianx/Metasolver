@@ -99,7 +99,7 @@ public:
 	/**
 	 * \brief return the n best actions according to the ActionEvaluator
 	 */
-	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n);
+	virtual int get_best_actions(const State& s, list< Action* >& bactions, int n, int* tot_act=NULL);
 
 
 protected:

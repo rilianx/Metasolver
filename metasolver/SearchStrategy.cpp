@@ -20,7 +20,7 @@ Action* SearchStrategy::best_action(const State& s){
 	else return NULL;
 }
 
-int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n){
+int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, int n, int* tot_act){
 
 	if(!evl) {
 		cout << "The function State::get_best_actions should be implemented or an "
@@ -33,6 +33,7 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 
 	list< Action* > actions;
 	s.get_actions(actions);
+	if(tot_act) *tot_act=actions.size();
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}
 

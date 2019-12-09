@@ -42,6 +42,7 @@ metasolver/SearchStrategy.cpp
 metasolver/GlobalVariables.cpp
 metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp
+metasolver/strategies/Simulation.cpp
 metasolver/State.cpp
 )
 
@@ -90,11 +91,12 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 
 
 ADD_EXECUTABLE(MCLP problems/mclp/main/mclp-solver.cpp)
-ADD_EXECUTABLE(BSG_CLP problems/clp/main_clp.cpp)
+ADD_EXECUTABLE(BSG_CLP problems/clp/main/main_clp.cpp)
 ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
 ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
 ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSG_B problems/clp/clp_bsg-mop.cpp)
+ADD_EXECUTABLE(BSG_SIMULATOR problems/clp/main/bsg-simulator.cpp)
+ADD_EXECUTABLE(BSG_B problems/clp/main/clp_bsg-mop.cpp)
 ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
 #ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
 ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
@@ -107,6 +109,7 @@ target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
 target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
 target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
+target_link_libraries(BSG_SIMULATOR bsg_mop clp_state clp bsg)
 target_link_libraries(BSG_B bsg_mop clp_state clp bsg)
 target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
 #target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
@@ -124,6 +127,9 @@ add_test( NAME o-search
 
  add_test( NAME bsg_vp
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR4.txt -i 1 --min_fr=0.98 -t 2 -s bsg_vp --fp=R -f BRwp )
+
+  add_test( NAME simulator
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/BSG_SIMULATOR problems/clp/benchs/BR/BR10.txt -i 1 --min_fr=0.98 -t 10 -f BR --actions="(10,3,5,3);(10,2)" )
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
 			SET_TARGET_PROPERTIES(AppHelloWorld PROPERTIES  DEBUG_POSTFIX "_Debug")
