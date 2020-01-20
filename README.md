@@ -65,7 +65,7 @@ Example
 
 ----------------
 
-# BSG-B
+# BO-BSG
 [![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
 
 BSG-B is an adaptation of the BSG algorithm for dealing with
