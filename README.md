@@ -68,13 +68,13 @@ Example
 # BO-BSG
 [![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
 
-BSG-B is an adaptation of the BSG algorithm for dealing with
+BO-BSG is an adaptation of the BSG algorithm for dealing with
 biobjective CLPs. It has two important
 differences w.r.t. BSG:
 
-* BSG-B uses a dynamic mechanism for orienting the search to one objective or the other by changing the configuration of the heuristic function; and
+* BO-BSG uses a dynamic mechanism for orienting the search to one objective or the other by changing the configuration of the heuristic function; and
 
-*  BSG-B selects the states for the next level by using well-known multi-objective criteria, i.e., non-dominated sort (nds) and crowding distance.
+*  BO-BSG selects the states for the next level by using well-known multi-objective criteria, i.e., non-dominated sort (nds) and crowding distance.
 
 ![flowchart](https://i.ibb.co/TcWD4G2/BSG-BO-flowchart.png)
 
