@@ -6,7 +6,7 @@ namespace mclp{
     gurobi_path = gurobi_dir;
   }
 
-  void SetCovSolver::solve_set_covering(list < set<int> >& bins, set<int> boxes , int nb_box_types){
+  void SetCovSolver::solve_set_covering(set < set<int> >& bins, set<int> boxes , int nb_box_types){
     exportToTxtSCP(&bins, nb_box_types, boxes);
     string filename = "bins_scp" + to_string(getpid()) + ".txt";
 
@@ -15,27 +15,22 @@ namespace mclp{
     string run2 = string("python " + gurobi_path + "/Solver.py " + filename);
     FILE *p = popen(run2.c_str(), "r");
     list<int> first_bins;
-    list<set<int>> bins_gurobi;
+    set<set<int>> bins_gurobi;
 
     if(p != NULL) {
       cout << endl;
       cout << "running Gurobi-Solver" << endl;
-        cout << "Time: " << MAX_TIME << endl;
-        cout << "Seed: " << SEED << endl;
-
-        char output[1000], last_output[1000],caracteres[1000], containers[1000];
-        string str;
-        vector <string> line;
-        string check_container = "";
-        const char *pointer;
-        int buffer;
-        string delimiter = " ";
+      cout << "Time: " << MAX_TIME << endl;
+      cout << "Seed: " << SEED << endl;
+      char output[1000], last_output[1000],caracteres[1000], containers[1000];
+      string str;
+      vector <string> line;
+      string check_container = "";
+      const char *pointer;
+      int buffer;
+      string delimiter = " ";
       size_t pos = 0;
       string token;
-
-      /*while(fgets(output, sizeof(output), p) != NULL) {
-        strcpy(last_output, output);
-      }*/
 
       while (feof(p) == 0)
       {
@@ -69,7 +64,7 @@ namespace mclp{
         str.erase(0, pos + delimiter.length());
         line.push_back(token);
       }
-      for(int i = 0; i < line.size(); i++) cout << i << " " << line[i] << " " << str;
+      //for(int i = 0; i < line.size(); i++) cout << i << " " << line[i] << " " << str;
     } else {
       perror("Unable to open file");
     }
@@ -77,7 +72,7 @@ namespace mclp{
     for(auto id_bin :first_bins){
       auto it=bins.begin();
       std::advance (it,id_bin);
-      bins_gurobi.push_back(*it);
+      bins_gurobi.insert(*it);
     }
     bins=bins_gurobi;																															//recorrer lista de bins y copiar los correspondientes a la solucion entregada por gurobi en bins_gurobi
     pclose(p);
@@ -141,7 +136,7 @@ namespace mclp{
   	return "";
   }
 
-  void SetCovSolver::exportToTxtSCP(list < set<int> >* bins, long int nb_boxes, set<int> boxes){
+  void SetCovSolver::exportToTxtSCP(set < set<int> >* bins, long int nb_boxes, set<int> boxes){
   	string path = findDirectory(".", "GRASP-SCP");
   	string path2 = findDirectory(".", "gurobi");
   	string filename = "bins_scp" + to_string(getpid()) + ".txt";

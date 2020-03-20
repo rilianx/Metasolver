@@ -17,7 +17,7 @@ namespace mclp{
 
     public:
       BreakerBins();
-      list < set<int> > get_break_bins(list < set<int> > best_bins, set <int>& break_boxes, double break_value);
+      list < set<int> > get_break_bins(list < set<int> > best_bins, set <int>& break_boxes, double break_value,double prob = 0.5);
       list < set<int> > get_break_bins_random(list < set<int> > best_bins, set <int>& break_boxes, double break_value);
     };
 }

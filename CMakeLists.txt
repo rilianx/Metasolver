@@ -31,7 +31,7 @@
      endif(COMMAND cmake_policy)
 
 
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -no-pie")
 
  # ADD_DEFINITION(-g -pg)
 

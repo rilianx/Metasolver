@@ -21,7 +21,7 @@ namespace mclp{
 
     public:
       BinGenerator();
-      list<set<int>> generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins=1000);
+      set<set<int>> generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins, pair<double, double> limits);
 
   };
 }

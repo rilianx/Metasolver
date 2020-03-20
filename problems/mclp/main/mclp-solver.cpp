@@ -71,9 +71,13 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _nbins(parser, "int", "Number of bins to be generated", {"nbins"});
 	args::ValueFlag<double> _pdec(parser, "int", "Priority decreasing ratio", {"pdec"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
+	args::ValueFlag<double> _first_val(parser, "double", "first restriction for pow at profit", {"first_val"});
+	args::ValueFlag<double> _second_val(parser, "double", "second restriction for pow at profit", {"second_val"});
+
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::ValueFlag<double> _break_value(parser, "double", "Break Bins Porcent", {"break_value"});
+  args::ValueFlag<double> _prob(parser, "double", "Technic to use to break bins", {"prob_tec"});
 
 	args::ValueFlag<double> _solver_iter(parser, "int", "number of iterations by the solver", {"solver_iter"});
 	args::ValueFlag<string> _gurobi_path(parser, "string", "path of gurobi", {"gurobi_path"});
@@ -114,6 +118,9 @@ int main(int argc, char** argv){
 	double break_value = 0.5;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 	int solver_iter = 1;
+  double prob = 0.5;
+	double first_val = 0.8;
+	double second_val = 1.0;
 
 	double alpha=3.0, beta=2.0, gamma=0.5, delta=1.0, p=0.04, pdec=0.8;
 	int nbins=1000;
@@ -125,8 +132,15 @@ int main(int argc, char** argv){
 	if(_break_value) break_value=_break_value.Get();
   if(_gurobi_path) gurobi_path = _gurobi_path.Get();
 	if(_solver_iter)	solver_iter = _solver_iter.Get();
+  if(_prob)	prob = _prob.Get();
+	if(_first_val) first_val = _first_val.Get();
+	if(_second_val) second_val = _second_val.Get();
+
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
+	pair<double,double> limits;
+	limits.first = first_val;
+	limits.second = second_val;
 
 	global::TRACE = trace;
 
@@ -159,13 +173,16 @@ int main(int argc, char** argv){
 	bsg->trace=false;
 
 	MCLPSolver *solver;
-	solver = new MCLPSolver(gurobi_path,solver_iter,break_value);
-	int bins = solver->solve(gr, bsg, s0, pdec);
+	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,s0);
+	int bins = solver->solver(gr, pdec, prob, limits);
+	//int bins = solver->solve(bsg, s0, pdec, prob, limits);
+
   //int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path, solver_iter, break_value);
-  std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
+  //std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);
 	//   system("firefox problems/clp/tree_plot/index.html");
 	//}
-	cout << bins << " " <<solver->getfirstbins() <<endl;
+	cout << bins << " " << solver->getlastUpdate()
+			/*<< " " <<float( clock () - begin_time ) /  CLOCKS_PER_SEC*/ <<endl;
 }

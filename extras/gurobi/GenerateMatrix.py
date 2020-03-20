@@ -3,7 +3,6 @@ def CountNullBoxes(matrix):
     val = False
     boxes_null = list()
     for box in range(matrix.shape[1]): boxes_null.append(0)
-    #print(matrix.shape[1])
     for bin in range(matrix.shape[0]):
         for box in range(matrix.shape[1]):
             if(matrix[bin][box]==1):
@@ -42,8 +41,6 @@ def MatrixGenerator(NombreArchivo):                                             
         linea_actual=linea_actual+1
 
     Matrix_numpy = np.zeros((num_container, num_cajas))                         #Matrix donde se cargara la cantidad de cajas por contenedor
-    #print(Matrix_numpy.shape)
-    
     for box in range(num_cajas): boxes_availables.append(0)
 
     for bin in range(num_container):                                            #Las cajas y contenedores estan enumeradas desde 1 hasta num_container
@@ -52,26 +49,36 @@ def MatrixGenerator(NombreArchivo):                                             
             pivote = str(box)                                                   #Solo nos interesa saber si existe la caja (j+1) dentro de la lectura
             if(actual_len.count(pivote)!=0):
                 Matrix_numpy[bin,box] = 1
-                #boxes_availables[box] = 1
+                boxes_availables[box] = 1
 
     dist = 0                                                                    #Valor dist que nos indica la cantidad de posicion a mover
-    for box in all_boxes:
-        index = int(box)
-        boxes_availables[index] = 1
-    #print(num_cajas, len(all_boxes),len(boxes_availables))
-                                                                                #Eliminamos Las cajas que no convenientes como las cajas que no se encuentran en la matrix
-    interpretate_matrix = np.zeros((num_container, len(all_boxes)))       #Matrix donde se hara un parsing de todos los elementos que no tengan determinadas cajas
+    total_null = 0                                                              #total de cajas no consideradas y no presentes
+    for id in boxes_availables:
+        if (id==1): total_null = total_null+1
 
-    
+    #for box in all_boxes:
+    #    index = int(box)
+    #    boxes_availables[index] = 1
+    #print(all_boxes)
+    #print(len(all_boxes),len(boxes_availables))
+                                                                                #Eliminamos Las cajas que no convenientes como las cajas que no se encuentran en la matrix
+    interpretate_matrix = np.zeros((num_container, total_null))       #Matrix donde se hara un parsing de todos los elementos que no tengan determinadas cajas
+    for index in range(num_cajas):
+        pair_add = []
+        if(boxes_availables[index] == 0):
+            dist = dist+1
+            pair_add=[index,-1]
+        else:
+            pair_add = [index,index-dist]
+        maping_boxes.append(pair_add)
+
     for bin in range(num_container):
-        j=0
+        #print(interpretate_matrix[bin])
         for box in range(num_cajas):
             if(boxes_availables[box] == 1):
-                #y = (maping_boxes[box])[1]
-                #print(j)
-                interpretate_matrix[bin,j]= Matrix_numpy[bin,box]
-                j += 1
+                y = (maping_boxes[box])[1]
+                interpretate_matrix[bin,y]= Matrix_numpy[bin,box]
 
     #print(boxes_availables)
-    #print(CountNullBoxes(interpretate_matrix))
+    #print(interpretate_matrix)
     return interpretate_matrix, maping_boxes

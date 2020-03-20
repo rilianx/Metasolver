@@ -4,9 +4,9 @@
 namespace mclp{
   BinGenerator::BinGenerator(){};
 
-  list<set<int>> BinGenerator::generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins ){
+  set<set<int>> BinGenerator::generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins, pair<double,double> limits){
     typedef set<int> Bin;
-    list < Bin > bins;
+    set < Bin > bins;
   	map <int, int> used_boxes;
   	Bin new_bin;
 
@@ -16,7 +16,7 @@ namespace mclp{
   	}
 
   	for(auto b : s0->nb_left_boxes){
-  		b.first->set_profit(b.first->getVolume()*pow(random(0.8, 1.0),used_boxes[b.first->get_id()]+1));
+  		b.first->set_profit(b.first->getVolume()*pow(random(limits.first, limits.second),used_boxes[b.first->get_id()]+1));
   	}
 
   	int nb_boxes=0;
@@ -25,7 +25,7 @@ namespace mclp{
   		//copia el estado base
   		mclpState& s_copy= *dynamic_cast<mclpState*>(s0->clone());
   		//usa clp_solver para llenar contenedor
-  		double eval=clp_solver->run(s_copy);
+  		double eval = clp_solver->run(s_copy);
   		const mclpState* best_state=dynamic_cast<const mclpState*>(clp_solver->get_best_state());
   		best_state->update_profits(&best_state->cont->nb_boxes, used_boxes);
 
@@ -44,12 +44,13 @@ namespace mclp{
   			}
   		}
   		if(insert_bin && !new_bin.empty()){
-  			bins.push_back(new_bin);
+  			bins.insert(new_bin);
   		}
   		new_bin.clear();
+  		//delete &s_copy;
   	}
 
-  	cout << "nb_boxes:" << nb_boxes << endl;
+  	//cout << "nb_boxes:" << nb_boxes << endl;
   	return bins;
   }
 }
