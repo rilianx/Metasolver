@@ -25,7 +25,9 @@ lib/bullet-2.80/src/LinearMath
 )
 
 LINK_LIBRARIES(
- BulletDynamics BulletCollision LinearMath
+ BulletDynamics
+ BulletCollision 
+ LinearMath
 )
     if(COMMAND cmake_policy)
       cmake_policy(SET CMP0003 NEW)
