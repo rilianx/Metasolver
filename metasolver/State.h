@@ -43,12 +43,20 @@ public:
 class State {
 public:
 
-	State() : parent (NULL), id(count_states++){}
+	State() : parent (NULL), id(0){}
+
+
 
 	virtual State* clone() const = 0;
 
+	virtual State* child_clone() {
+		State* s=clone();
+		s->set_id(count_states++);
+    return s;
+	}
 
-	State(const State& S) : parent(&S), id(count_states++){
+
+	State(const State& S) : parent(&S), id(0){
 		list<const Action*>::iterator it=S.get_path().begin();
 		for(;it!=S.path.end();it++)
 			path.push_back((*it)->clone());
@@ -79,7 +87,7 @@ public:
 		path.push_back(action.clone());
 		_transition(action);
 	}
-	
+
 	/*
 	* Rearranges the elements in the path randomly
 	*/
@@ -107,6 +115,8 @@ public:
 	void add_children(State* s){ children.push_back(s); }
 
 	int get_id() const { return id; }
+
+	void set_id(int id) { this->id=id; }
 
 	const State* get_parent() const{ return parent; }
 

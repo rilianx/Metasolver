@@ -271,6 +271,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				s->transition(*a);
 				it3->first=s;
 				filtered_states.push_back((*it3));
+				s->set_id(final_state->get_id());
 			}
 		}
 		else{
@@ -285,6 +286,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				s->transition(*a);
 				it3->first=s;
 				filtered_states.push_back((*it3));
+				s->set_id(final_state->get_id());
 			}
 
 		}
@@ -355,7 +357,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         //Actions are evaluated using the greedy algorithm
         for(auto action : best_actions){
-        	State& state_copy = *state.clone();
+        	State& state_copy = *state.child_clone();
         	state_copy.transition(*action);
         	delete action;
 
@@ -363,6 +365,12 @@ list<State*> BSG_MOP::next(list<State*>& S){
         	greedy.run(state_copy, timelimit, begin_time);
 
         	pair<double, double> value = make_pair(state_copy.get_value(), state_copy.get_value2());
+
+					if(generate_tree_search_output){
+						cout.clear();
+						cout << state_copy.get_id() <<"," << state.get_id()  << "," <<  state_copy.get_value() << endl;
+						cout.setstate(std::ios_base::failbit);
+					}
 
 
         	//si state_copy es solucion no dominada se agrega a NDS

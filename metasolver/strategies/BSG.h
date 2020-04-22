@@ -100,6 +100,8 @@ public:
 	void set_beams(int b){beams=b;}
 
 
+	bool generate_tree_search_output=false;
+
 protected:
 
 	template<class map_container>
@@ -125,6 +127,7 @@ protected:
 				nextS.push_back(s);
 				p->add_children(s);
 
+				s->set_id(final_state->get_id());
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
 
 
@@ -164,6 +167,7 @@ protected:
 	bool shuffle_best_path;
 
 	bool plot;
+
 
 };
 

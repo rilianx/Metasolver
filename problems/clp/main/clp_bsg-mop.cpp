@@ -35,6 +35,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _strategy(parser, "double", "Strategy (bsg, bsg_p, bsg_vp, ns+cd, o-search)", {'s'});
   args::ValueFlag<string> _theta_v(parser, "double", "VPD's parameter vector (max vol)", {"theta_v"});
   args::ValueFlag<string> _theta_p(parser, "double", "VPD's parameter vector (max profit)", {"theta_p"});
+	args::ValueFlag<int> _write_tree_search(parser, "double", "Write a tree search steps (nb_of_beams)", {"wts"});
 
   args::ValueFlag<string> _ref(parser, "\"double double\"", "Reference point. (format: \"y1 y2\")", {"ref"});
 
@@ -191,7 +192,12 @@ int main(int argc, char** argv){
 
     SearchStrategy *gr = new Greedy (vcs);
 
-    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, 4, 0.0, 0, (strategy=="o-search"), srule );
+    int beams=4;
+    if(_write_tree_search)
+		   beams=_write_tree_search.Get();
+
+    BSG_MOP *bsg= new BSG_MOP(vcs,*gr, beams, 0.0, 0, (strategy=="o-search"), srule );
+		bsg->generate_tree_search_output=_write_tree_search;
 
     SearchStrategy *de= new DoubleEffort(*bsg);
 
@@ -203,7 +209,11 @@ int main(int argc, char** argv){
 	 //return 0;
 
 	cout << "***** Running the solver BSGMOP solver *****" << endl;
-    double eval = 1-de->run(s_copy, maxtime, begin_time) ;
+	double eval;
+	if(!_write_tree_search)
+     eval=1-de->run(s_copy, maxtime, begin_time) ;
+	else
+		 eval=1-bsg->run(s_copy, maxtime, begin_time) ;
 
     if(strategy=="bsg_vp"){
     	cout << "running with bsg_p" << endl;
