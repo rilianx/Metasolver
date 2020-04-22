@@ -142,8 +142,8 @@ Examples
      #Biobjective BSG
      ./BSG_B problems/clp/benchs/BRwp-1.0-0.5/BR8.txt -i 1 --min_fr=0.98 -t 10 --theta_v="1 0 -0.13 0.02 3.85 6.27 0.48" --theta_p="-0.95 1.0 -0.16 0.02 1.53 1.53 0.44" -s o-search --fp=R -f BRwp
      
-     #BSG monobjective
-     ./BSG_B problems/clp/benchs/BR/BR8.txt -i 1 --min_fr=0.98 -t 10 -s bsg -f BR
+     #BSG monobjective with the parameters of the paper
+     ./BSG_B problems/clp/benchs/BR/BR8.txt -i 1 --min_fr=0.98 -t 10 --theta_v="1.0 0 0 0.04 4.0 1.0 0.2" -s bsg -f BR
 
 Instance sets
 -----
