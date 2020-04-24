@@ -18,8 +18,8 @@ namespace mclp{
   	}
 
   	for(auto b : s0->nb_left_boxes){
-  		b.first->set_profit(b.first->getVolume()*pow(random(limits.first, limits.second),used_boxes[b.first->get_id()]+1));
-  	}
+		b.first->set_profit(b.first->getVolume()*random(limits.first, limits.second));
+	}
 
   	int nb_boxes=0;
   	for(int i=0; i < nbins || (id_boxes.size() > nb_boxes); i++){
@@ -29,13 +29,13 @@ namespace mclp{
   		//usa clp_solver para llenar contenedor
   		double eval = clp_solver->run(s_copy);
   		const mclpState* best_state=dynamic_cast<const mclpState*>(clp_solver->get_best_state());
-  		best_state->update_profits(&best_state->cont->nb_boxes, used_boxes);
-
-  		//se almacena el bin en el conjunto
-  		for(auto box: dynamic_cast<const mclpState*>(clp_solver->get_best_state())->cont->nb_boxes){
+		
+		for(auto box: dynamic_cast<const mclpState*>(clp_solver->get_best_state())->cont->nb_boxes){
   			new_bin.insert(box.first->get_id());
   			if(used_boxes[box.first->get_id()]==0) nb_boxes++;
   			used_boxes[box.first->get_id()]++;
+			//Verificar get_profit
+			box.first->set_profit(box.first->get_profit()*random(limits.first, limits.second));
   		}
 
   		//se busca el nuevo bin en el conjunto de bins creados

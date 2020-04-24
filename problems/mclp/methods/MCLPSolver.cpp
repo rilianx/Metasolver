@@ -130,6 +130,8 @@ namespace mclp{
     }
 
     NombrateID();
+
+    
     setpair_bin_value();
 
     /*Aqui se debe aplicar la metrica*/
