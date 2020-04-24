@@ -82,6 +82,8 @@
  problems/mclp/methods/BreakerBins.cpp
  problems/mclp/methods/MCLPSolver.cpp
  problems/mclp/methods/SetCovSolver.cpp
+ problems/mclp/methods/Group_bin.cpp
+ 
  )
 
  ADD_LIBRARY(

@@ -13,7 +13,6 @@
 #include <iterator>
 
 #include "args.hxx"
-//#include "objects/State.cpp"
 #include "mclp-state.h"
 #include "BlockSet.h"
 #include "BoxShape.h"
@@ -73,17 +72,17 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<double> _first_val(parser, "double", "first restriction for pow at profit", {"first_val"});
 	args::ValueFlag<double> _second_val(parser, "double", "second restriction for pow at profit", {"second_val"});
+	args::ValueFlag<double> _lim_metric(parser, "double", "Value of a metric to compare a pair of bin", {"lim_metric"});
 
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
 	args::ValueFlag<double> _break_value(parser, "double", "Break Bins Porcent", {"break_value"});
-  args::ValueFlag<double> _prob(parser, "double", "Technic to use to break bins", {"prob_tec"});
-
-	args::ValueFlag<double> _solver_iter(parser, "int", "number of iterations by the solver", {"solver_iter"});
+  	args::ValueFlag<double> _prob(parser, "double", "Technic to use to break bins", {"prob_tec"});
+	args::ValueFlag<int> _n_groups(parser, "int", "number of groups to divide the set of bins", {"n_groups"});
+	args::ValueFlag<int> _solver_iter(parser, "double", "number of iterations by the solver", {"solver_iter"});
 	args::ValueFlag<string> _gurobi_path(parser, "string", "path of gurobi", {"gurobi_path"});
 
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
-	//args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
 
@@ -118,23 +117,28 @@ int main(int argc, char** argv){
 	double break_value = 0.5;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 	int solver_iter = 1;
-  double prob = 0.5;
+  	double prob = 0.5;
 	double first_val = 0.8;
 	double second_val = 1.0;
-
+	
 	double alpha=3.0, beta=2.0, gamma=0.5, delta=1.0, p=0.04, pdec=0.8;
 	int nbins=1000;
 	int nboxes=1;
+	int n_groups = 8;
+	double lim_metric = 0;
+
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_nboxes) nboxes=_nboxes.Get();
 	if(_pdec) pdec=_pdec.Get();
 	if(_nbins) nbins=_nbins.Get();
 	if(_break_value) break_value=_break_value.Get();
-  if(_gurobi_path) gurobi_path = _gurobi_path.Get();
+  	if(_gurobi_path) gurobi_path = _gurobi_path.Get();
 	if(_solver_iter)	solver_iter = _solver_iter.Get();
-  if(_prob)	prob = _prob.Get();
+  	if(_prob)	prob = _prob.Get();
 	if(_first_val) first_val = _first_val.Get();
 	if(_second_val) second_val = _second_val.Get();
+	if(_n_groups) n_groups = _n_groups.Get();
+	if(_lim_metric) lim_metric = _lim_metric.Get();
 
 	int seed=(_seed)? _seed.Get():1;
 	srand(seed);
@@ -161,7 +165,7 @@ int main(int argc, char** argv){
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+  VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
         alpha, beta, gamma, p, delta, 0.0, 0.0);
 
 	cout << "greedy" << endl;
@@ -173,12 +177,13 @@ int main(int argc, char** argv){
 	bsg->trace=false;
 
 	MCLPSolver *solver;
-	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,s0);
-	int bins = solver->solver(gr, pdec, prob, limits);
+	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,n_groups,s0,lim_metric);
+	
+	int bins = solver->solver(gr, pdec, limits);
 	//int bins = solver->solve(bsg, s0, pdec, prob, limits);
 
-  //int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path, solver_iter, break_value);
-  //std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
+  	//int bins=solve(gr, bsg, s0, nbins, pdec, gurobi_path, solver_iter, break_value);
+  	//std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);
 	//   system("firefox problems/clp/tree_plot/index.html");

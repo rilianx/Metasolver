@@ -2,7 +2,9 @@
 
 
 namespace mclp{
-  BinGenerator::BinGenerator(){};
+  BinGenerator::BinGenerator(){
+	  cout << "Generando conjunto de bins" << endl;
+  };
 
   set<set<int>> BinGenerator::generate_bins(SearchStrategy* clp_solver, mclpState* s0, set<int>& id_boxes, int nbins, pair<double,double> limits){
     typedef set<int> Bin;
