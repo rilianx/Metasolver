@@ -20,7 +20,7 @@ namespace mclp{
   }
 
   bool Group_bin::compare_group(int id_to_com, list<Group_bin> universe){
-      //FALSE -> NO TIENES CAJAS UNICAS
+      //FALSE -> NO TIENE CAJAS UNICAS
       //TRUE -> TIENE CAJAS UNICAS
       bool exclusive = false;
       for(auto group: universe){

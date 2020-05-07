@@ -20,7 +20,7 @@ namespace mclp{
       int n_groups;
       int first_iter;
       int first_sol;
-      int lastupdate;
+      int lastupdate = 0;
       int lastbestsize;
       double limit_metric;
 
@@ -44,11 +44,16 @@ namespace mclp{
       int solve(SearchStrategy *solver, double pdec, double prob, pair<double,double> limits);
       
       //Solver para generar grupos de bins
-      int solver(SearchStrategy *solver, double pdec, pair<double,double> limits);
+      int solver(SearchStrategy *solver, double pdec, double prob, pair<double,double> limits);
+
+      bool combin_touniver(set<int> e_bin);
       
       //Se entrega el valor de SET< < id_global_1,id_global_2 > ,percent >
       void setpair_bin_value();
       
+      //Corrobora que si el grupo de bins creado tiene una caja única
+      bool find_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin);
+
       //Exportar txt con valores de pair_bin_value
       void exportToTxtSCP(int nt_bins);      
 

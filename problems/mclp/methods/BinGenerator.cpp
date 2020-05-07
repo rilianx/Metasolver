@@ -11,6 +11,10 @@ namespace mclp{
     set < Bin > bins;
   	map <int, int> used_boxes;
   	Bin new_bin;
+	double min = limits.first;
+	double max = min + limits.second;
+	if(max > 1) max = 1.0;
+	cout << max << endl;
 
   	for(auto box: s0->nb_left_boxes){
   		if(id_boxes.find(box.first->get_id())!=id_boxes.end()) used_boxes[box.first->get_id()] = 0;
@@ -18,7 +22,7 @@ namespace mclp{
   	}
 
   	for(auto b : s0->nb_left_boxes){
-		b.first->set_profit(b.first->getVolume()*random(limits.first, limits.second));
+		b.first->set_profit(b.first->getVolume()*random(min, max));
 	}
 
   	int nb_boxes=0;
@@ -34,8 +38,8 @@ namespace mclp{
   			new_bin.insert(box.first->get_id());
   			if(used_boxes[box.first->get_id()]==0) nb_boxes++;
   			used_boxes[box.first->get_id()]++;
-			//Verificar get_profit
-			box.first->set_profit(box.first->get_profit()*random(limits.first, limits.second));
+			
+			box.first->set_profit(box.first->get_profit()*random(min, max));
   		}
 
   		//se busca el nuevo bin en el conjunto de bins creados

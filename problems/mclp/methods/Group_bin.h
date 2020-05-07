@@ -29,6 +29,8 @@ namespace mclp{
       bool compare_with_bin(int id_bin, set<set<int>> set_bin);
 
       bool compare_group(int id_to_com, list<Group_bin> universe);
+
+      bool compare_group(set<set<int>> e_bin);
       
       void remove_bin(set<int>* id_bin);  
 
@@ -39,6 +41,7 @@ namespace mclp{
       int get_totalBins();
 
       int get_group();
+      
 
   };
 }
