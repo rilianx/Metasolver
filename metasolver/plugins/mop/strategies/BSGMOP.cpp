@@ -359,6 +359,14 @@ list<State*> BSG_MOP::next(list<State*>& S){
         for(auto action : best_actions){
         	State& state_copy = *state.child_clone();
         	state_copy.transition(*action);
+
+          int nb_actions=0;
+					if(generate_tree_search_output){
+						list< Action* > actions;
+						state_copy.get_actions(actions);
+						nb_actions=actions.size();
+					}
+
         	delete action;
 
         	//dynamic_cast<MO_ActionEvaluator*>(evl)->set_alpha(a_a.second);
@@ -368,7 +376,7 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 					if(generate_tree_search_output){
 						cout.clear();
-						cout << state_copy.get_id() <<"," << state.get_id()  << "," <<  state_copy.get_value() << endl;
+						cout << state_copy.get_id() <<"," << state.get_id()  << "," <<  state_copy.get_value() << "," << nb_actions << endl;
 						cout.setstate(std::ios_base::failbit);
 					}
 
