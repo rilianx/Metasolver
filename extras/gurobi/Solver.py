@@ -18,6 +18,7 @@ if(os.path.exists(NombreArchivo)):
         #create and setting model
         model= Model("Container Covering")
         model.setParam('OutputFlag', False)
+        model.setParam(GRB.Param.Threads,1)
         #set variables
         c={}
         solution2 = []

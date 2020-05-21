@@ -26,6 +26,7 @@ namespace mclp{
 	}
 
   	int nb_boxes=0;
+
   	for(int i=0; i < nbins || (id_boxes.size() > nb_boxes); i++){
   		bool insert_bin = true;
   		//copia el estado base
@@ -33,12 +34,12 @@ namespace mclp{
   		//usa clp_solver para llenar contenedor
   		double eval = clp_solver->run(s_copy);
   		const mclpState* best_state=dynamic_cast<const mclpState*>(clp_solver->get_best_state());
-		
+
 		for(auto box: dynamic_cast<const mclpState*>(clp_solver->get_best_state())->cont->nb_boxes){
   			new_bin.insert(box.first->get_id());
   			if(used_boxes[box.first->get_id()]==0) nb_boxes++;
   			used_boxes[box.first->get_id()]++;
-			
+
 			box.first->set_profit(box.first->get_profit()*random(min, max));
   		}
 

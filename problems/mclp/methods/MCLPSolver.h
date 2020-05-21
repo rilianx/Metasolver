@@ -52,8 +52,10 @@ namespace mclp{
       void setpair_bin_value();
       
       //Corrobora que si el grupo de bins creado tiene una caja única
-      bool find_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin);
+      bool is_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin);
 
+      void filter_bins(set<set<int>>* actual_group);
+      
       //Exportar txt con valores de pair_bin_value
       void exportToTxtSCP(int nt_bins);      
 

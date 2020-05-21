@@ -7,6 +7,7 @@ namespace mclp{
   }
 
   void SetCovSolver::solve_set_covering(set < set<int> >& bins, set<int> boxes , int nb_box_types){
+    
     exportToTxtSCP(&bins, nb_box_types, boxes);
     string filename = "bins_scp" + to_string(getpid()) + ".txt";
 
@@ -118,21 +119,15 @@ namespace mclp{
   	if(dir != NULL){
   		while((ent = readdir(dir)) != NULL){
   			if(((string)ent->d_name).compare(find_directory) == 0){
-  				//break;
   				closedir(dir);
-  				//cout << current_directory + find_directory << endl;
   				return current_directory + find_directory;
   			}
   			if(((string)ent->d_name).find(".") == string::npos){
   				findInto(current_directory + "/" + ent->d_name, find_directory);
-  				//cout << ent->d_name << endl;
-  				//cout << current_directory << endl;
-  				//cout << endl;
   			}
   		}
   	}
   	closedir(dir);
-  	//cout << current_directory + find_directory << endl;
   	return "";
   }
 
@@ -143,10 +138,6 @@ namespace mclp{
 
     path = "";
 
-  	/*if(path.empty()){
-  		cout << "El directorio no existe.\n" << endl;
-  		exit(0);
-  	}*/
   	cout << "Resultados almacenados en " << path << filename << endl;
   	ofstream scp (path + filename);
   	if (scp.is_open()){
@@ -166,18 +157,6 @@ namespace mclp{
   		}
 
   		scp << "\n";
-
-  		//Matrix cost by boxes
-  		/*long int cont = 0;
-  		for(auto bin: *bins){
-  			if(cont >= 12){
-  				scp << "\n";
-  				cont = 0;
-  			}
-  			scp << " 1";
-  			cont += 1;
-  		}
-  		scp << "\n";*/
 
   		//Boxes quantity in a set and then sets boxes
   		for(auto bin: *bins){

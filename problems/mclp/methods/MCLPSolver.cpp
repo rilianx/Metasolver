@@ -30,16 +30,17 @@ namespace mclp{
   		boxes.insert( box.first->get_id() );
   	
     set < set<int> > best_bins;
-  	//set < set<int> > break_bins;
   	set < set<int> > bins;
   	bool first = true;
     
   	for(int i=0;i<solver_iter;i++){
+
+      cout << "ON SET_COVE_SOL " << boxes.size() << endl; 
+      
       BinGenerator *generador;
       generador = new BinGenerator();
       bins = generador->generate_bins(clp_solver, s0, boxes, nbins, limits);
-  	  
-      if( i==0 ) {
+  	  if( i==0 ) {
         first_iter=bins.size();
         lastbestsize=best_bins.size();
        }
@@ -47,6 +48,7 @@ namespace mclp{
       //resuelve set-covering y deja los bins de la solucion optima
       SetCovSolver *CovSolver;
       CovSolver = new SetCovSolver(gurobi_path);
+      
       CovSolver->solve_set_covering(bins, boxes, cant_boxes);
 
       if(i == 0) 
@@ -65,26 +67,13 @@ namespace mclp{
       }else if(bins.size() < best_bins.size())
         best_bins=bins;
       
-      
-      
-      /*else //if(bins.size() < break_bins.size()){
-  			//best_bins <- best_bins - break_bins + bins
-  			//for (auto bin:break_bins)
-  			//	best_bins.erase(bin);
-
-  			for (auto bin:bins)
-  				best_bins.insert(bin);
-  		}*/
-  		boxes.clear();
-      //BreakerBins *destroyer;
-      //destroyer = new BreakerBins();
-      //break_bins = destroyer->get_break_bins_random(best_bins, boxes, break_value);
-  		//break_bins = destroyer->get_break_bins(best_bins, boxes, break_value, prob);
       if(best_bins.size()<lastbestsize) 
         lastupdate = i;
   		cout <<"Mejor solucion: " << best_bins.size() << endl;
       lastbestsize=best_bins.size();
   	}
+    boxes.clear();
+      
   	return best_bins.size();
   }
 
@@ -111,30 +100,9 @@ namespace mclp{
       *aux_bins = generador->generate_bins(clp_solver, s0, boxes, nbins_iter, limits);
       cout << "BINS GENERADOS " << aux_bins->size() << endl;
          
-      //Aplicar filtro de bins
-      set<int> to_erase;
-      int counter = 0;
-      for(auto bin: *aux_bins){
-        if(combin_touniver(bin)){
-          to_erase.insert(counter);
-        } 
-        counter++;
-      }
-
-      
-      int i = 0;
-      set<set<int>> aux_group;
-      for(auto bin: *aux_bins){
-        if(to_erase.count(i) == 0)
-          aux_group.insert(bin);   
-        else
-          if(find_unique(*aux_bins,i,bin)) 
-            aux_group.insert(bin);
-        i++;
-      }
-
-      *aux_bins = aux_group;
-      cout << "BINS CON REDUCCIÓN " << aux_bins->size() << endl;
+      //Aplicacion del filtro para bins de acuerdo a su parecido
+      filter_bins(aux_bins);
+      //cout << "BINS CON REDUCCIÓN " << aux_bins->size() << endl;
       
       //Aplicacion de SetCovSolver (Greedy)        
       SetCovSolver *CovSolver; 
@@ -146,12 +114,11 @@ namespace mclp{
       new_group = new Group_bin( j, aux_bins );
       bin_by_group.push_back( *new_group );
       
-      
       //Cajas totales a darle a gurobi
       //Todos los bins se agregan a un universo de bins optimos
       boxes_to_gur += aux_bins->size();
-      delete aux_bins;
       delete new_group;
+      delete aux_bins;
     }
 
     NombrateID();
@@ -161,9 +128,6 @@ namespace mclp{
 
     /*Aqui se debe aplicar la metrica*/
     double valor_metrica = calculateMetric(boxes_to_gur);
-
-    NombrateID();
-
     exportToTxtSCP(boxes_to_gur); 
 
     for(auto group: bin_by_group){
@@ -338,7 +302,6 @@ namespace mclp{
       set<set<int>> aux_group = a_group.get_set_bins();
       for(auto bin: aux_group){
         double val_metric = percent_from_b2b(&e_bin, &bin);
-        //cout << "VALOR METRICA " << val_metric << endl;
         if(val_metric > limit_metric){          
           return true;
         } 
@@ -346,8 +309,6 @@ namespace mclp{
     }
     return false;
   }
-
-
 
   double MCLPSolver::percent_from_b2b(set<int>* first_set, set<int>* second_set){
     double total_percent = 0.0;
@@ -369,24 +330,78 @@ namespace mclp{
     return total_percent;
   }
 
-  bool MCLPSolver::find_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin){
+  void MCLPSolver::filter_bins(set<set<int>>* actual_group){
+    //Aplicar filtro de bins
+    int counter = 0;
+    set<set<int>> aux_group;
+    set<int> to_erase;
+    
+    for(auto bin: *actual_group){
+      if(combin_touniver(bin)){
+        if(is_unique(*actual_group,counter,bin)){
+          to_erase.insert(counter);
+        }
+      } 
+      counter++;
+    }
+    
+    cout<< "REVISANDO "<<to_erase.size() << endl;     
+    
+    counter = 0;
+    for(auto bin: *actual_group){
+      if(to_erase.count(counter) == 0){
+        aux_group.insert(bin);    
+      }
+      counter++;
+    }
+    cout << "BINS CON REDUCCIÓN " << aux_group.size() << endl;
+    *actual_group = aux_group;
+  }
+
+  //False -> id_bin tiene una caja unica (NO PUEDO ELIMINARLO)
+  //True -> id_bin no tiene una caja unica (PUEDO ELIMINARLO)
+  bool MCLPSolver::is_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin){
+    //Tiene una caja unica
+    bool unique_box = true;
     for(auto box: e_bin){
       int index = 0;
-      bool unique_box = true;
       for(auto bin: actual_group){
         if(index != id_bin){
-          if(bin.count(box) > 0) unique_box = false;  
+          //Si encuentra la caja box en bin --->  
+          if(bin.count(box) != 0){
+            //No tiene una caja unica
+            unique_box = false;
+          }   
         }
         index++;
-      
       }
-      if(unique_box) return true;
+      if(!unique_box) break;
     }
-    return false;
+    return unique_box;
   } 
-
-
-  
+  /*
+  //False -> id_bin tiene una caja unica (NO PUEDO ELIMINARLO)
+  //True -> id_bin no tiene una caja unica (PUEDO ELIMINARLO)
+  bool MCLPSolver::is_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin){
+    //Tiene una caja unica
+    bool unique_box = true;
+    for(auto box: e_bin){
+      int index = 0;
+      for(auto bin: actual_group){
+        if(index != id_bin){
+          //Si encuentra la caja box en bin --->  
+          if(bin.count(box) != 0){
+            //No tiene una caja unica
+            unique_box = false;
+          }   
+        }
+        index++;
+      }
+      if(!unique_box) break;
+    }
+    return unique_box;
+  }
+  */
   int MCLPSolver::getGlobalId( int id_local, int group ){
     for (auto value : id_bin){
       if( value.first == group ){
@@ -399,8 +414,6 @@ namespace mclp{
     return 0;
   };
 
-
-
   pair<int,int> MCLPSolver::getlocalId( int id_global ){
     for (auto value : id_bin){
       for (auto key: value.second){
@@ -411,17 +424,12 @@ namespace mclp{
     return make_pair(0,0);
   };
 
-
-
   void MCLPSolver::setfillpairbin(int f_bin, int s_bin, double val_comp){
     pair<int,int> bins_to_comp;
     bins_to_comp = make_pair(f_bin,s_bin);
     pair<pair<int,int>, double> comp_val (bins_to_comp,val_comp); 
     pair_bin_value.insert(comp_val);
   };
-
-
-  
 
   int MCLPSolver::getfirstSol(){
     return first_sol;
@@ -434,5 +442,5 @@ namespace mclp{
   int MCLPSolver::getfirstbins(){
     return first_iter;
   };
- 
+
 }

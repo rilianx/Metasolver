@@ -125,7 +125,7 @@ int main(int argc, char** argv){
 	int nbins=1000;
 	int nboxes=1;
 	int n_groups = 8;
-	double lim_metric = 0;
+	double lim_metric = 0.75;
 
 	if(_maxtime) maxtime=_maxtime.Get();
 	if(_nboxes) nboxes=_nboxes.Get();
@@ -179,7 +179,8 @@ int main(int argc, char** argv){
 	MCLPSolver *solver;
 	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,n_groups,s0,lim_metric);
 	
-	int bins = solver->solver(gr, pdec, prob ,limits);
+	//int bins = solver->solver(gr, pdec, prob ,limits);
+	int bins = solver->solve(gr, pdec, prob ,limits);
 	//int bins = solver->solve(bsg, pdec, prob, limits);
 
   	//std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
