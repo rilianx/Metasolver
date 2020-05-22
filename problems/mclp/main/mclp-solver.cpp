@@ -148,9 +148,9 @@ int main(int argc, char** argv){
 
 	global::TRACE = trace;
 
- cout << "cargando la instancia..." << endl;
+ 	cout << "cargando la instancia..." << endl;
 
-//a las cajas se les inicializan sus pesos en 1
+	//a las cajas se les inicializan sus pesos en 1
 
 	cout << "***** Creando el contenedor ****" << endl;
 	cout << "Instance:" << inst+1 << endl;
@@ -160,34 +160,32 @@ int main(int argc, char** argv){
 	cout << "N_bins:" << nbins << endl;
 	cout << "Decreasing ratio (priority):" << pdec << endl;
 
-  clock_t begin_time=clock();
+ 	clock_t begin_time=clock();
 	mclpState* s0 = new_mstate(file,inst, min_fr, 10000, _rotate, nboxes);
 
     cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
-  VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-        alpha, beta, gamma, p, delta, 0.0, 0.0);
+  	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont, alpha, beta, gamma, p, delta, 0.0, 0.0);
 
-	cout << "greedy" << endl;
+	//SE INICIALIZA GREED
 	Greedy *gr = new Greedy (vcs);
 
-
-	cout << "bsg" << endl;
+	//SE INICIALIZA CON BSG
 	BSG *bsg= new BSG(vcs,*gr, 4, 0.0, 0, _plot);
 	bsg->trace=false;
 
+	cout << endl;	
 	MCLPSolver *solver;
 	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,n_groups,s0,lim_metric);
 	
-	//int bins = solver->solver(gr, pdec, prob ,limits);
-	int bins = solver->solve(gr, pdec, prob ,limits);
-	//int bins = solver->solve(bsg, pdec, prob, limits);
-
+	int bins = solver->solver(gr, pdec, prob ,limits);
+	//int bins = solver->solve(gr, pdec, prob ,limits);
+	
   	//std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
 	//if(_plot){
 	//   pointsToTxt(&s_copy, 0);
 	//   system("firefox problems/clp/tree_plot/index.html");
 	//}
-	cout << bins << " " << solver->getlastUpdate()
-			/*<< " " <<float( clock () - begin_time ) /  CLOCKS_PER_SEC*/ <<endl;
+
+	cout << bins /*<< " " <<float( clock () - begin_time ) /  CLOCKS_PER_SEC*/ << endl;
 }

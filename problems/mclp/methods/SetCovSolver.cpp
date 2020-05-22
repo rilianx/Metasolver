@@ -13,6 +13,7 @@ namespace mclp{
 
     const string MAX_TIME = "10";
     const string SEED = "1";
+    
     string run2 = string("python " + gurobi_path + "/Solver.py " + filename);
     FILE *p = popen(run2.c_str(), "r");
     list<int> first_bins;
@@ -20,7 +21,7 @@ namespace mclp{
 
     if(p != NULL) {
       cout << endl;
-      cout << "running Gurobi-Solver" << endl;
+      cout << "Running Gurobi-Solver" << endl;
       cout << "Time: " << MAX_TIME << endl;
       cout << "Seed: " << SEED << endl;
       char output[1000], last_output[1000],caracteres[1000], containers[1000];

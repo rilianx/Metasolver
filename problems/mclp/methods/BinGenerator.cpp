@@ -14,8 +14,7 @@ namespace mclp{
 	double min = limits.first;
 	double max = min + limits.second;
 	if(max > 1) max = 1.0;
-	cout << max << endl;
-
+	
   	for(auto box: s0->nb_left_boxes){
   		if(id_boxes.find(box.first->get_id())!=id_boxes.end()) used_boxes[box.first->get_id()] = 0;
   		else used_boxes[box.first->get_id()] = 20;

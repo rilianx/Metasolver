@@ -18,7 +18,8 @@ if(os.path.exists(NombreArchivo)):
         #create and setting model
         model= Model("Container Covering")
         model.setParam('OutputFlag', False)
-        model.setParam(GRB.Param.Threads,1)
+        model.setParam(GRB.Param.Threads, 1)
+        
         #set variables
         c={}
         solution2 = []
@@ -28,7 +29,6 @@ if(os.path.exists(NombreArchivo)):
 
         #set objective
         model.setObjective(quicksum(c[a]*1 for a in range(numberOfContainer)),GRB.MINIMIZE)
-
         #set constraints
         for i in range(numberOfBox):
                 model.addConstr(quicksum(covertureMatrix[j,i]*c[j] for j in range(numberOfContainer)) >= 1)
