@@ -20,9 +20,10 @@ namespace mclp{
       int n_groups;
       int first_iter;
       int first_sol;
-      int lastupdate = 0;
+      int lastupdate;
       int lastbestsize;
       double limit_metric;
+      double value_metric;
 
       //Mapa con llave el id del grupo y entrega una lista con todos los bins con su <id_local, id_global>
       map<int, list< pair<int,int>>> id_bin;
@@ -82,6 +83,8 @@ namespace mclp{
       int getfirstSol();
       
       int getlastUpdate();
+
+      double getMetric();
       
   };
 }

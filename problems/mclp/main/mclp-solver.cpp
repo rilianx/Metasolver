@@ -177,9 +177,15 @@ int main(int argc, char** argv){
 	cout << endl;	
 	MCLPSolver *solver;
 	solver = new MCLPSolver(gurobi_path,solver_iter,break_value,nbins,n_groups,s0,lim_metric);
+	/*METODO A
+    int bins = solver->solve(gr, pdec, prob ,limits);
+    */
+
+    /*METODO C - Con filtrado
+    */
+   	int bins = solver->solver(gr, pdec, prob ,limits);
+    double metric = solver->getMetric();
 	
-	int bins = solver->solver(gr, pdec, prob ,limits);
-	//int bins = solver->solve(gr, pdec, prob ,limits);
 	
   	//std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
 	//if(_plot){
@@ -187,5 +193,5 @@ int main(int argc, char** argv){
 	//   system("firefox problems/clp/tree_plot/index.html");
 	//}
 
-	cout << bins /*<< " " <<float( clock () - begin_time ) /  CLOCKS_PER_SEC*/ << endl;
+	cout << bins << " " <<metric /*<< " " <<float( clock () - begin_time ) /  CLOCKS_PER_SEC*/ << endl;
 }

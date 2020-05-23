@@ -12,9 +12,11 @@ namespace mclp{
     gurobi_path = gurobi_dir;
     solver_iter = iter;
     break_value = break_val;
+    value_metric = 0.0;
     nbins = n_bins;
     first_sol = 0;
     lastbestsize = 0;
+    lastupdate = 0;
     s0 = s_0;
     n_groups = ngroups;
     limit_metric = lim;
@@ -108,7 +110,7 @@ namespace mclp{
     NombrateID();
     setpair_bin_value();
 
-    /*Aqui se debe aplicar la metrica*/
+    /*Aqui se debe calcula la metrica*/
     double valor_metrica = calculateMetric(bins_to_gur);
     exportToTxtSCP(bins_to_gur);
 
@@ -220,7 +222,6 @@ namespace mclp{
   //set<pair<pair<int,int>,double>> pair_bin_value;
   double MCLPSolver::calculateMetric(int n_bins){
     double similar_bins = 0.0;
-    double value_metric = 0.0;
     set<int> *to_erase;
     to_erase = new(set<int>);
 
@@ -251,28 +252,6 @@ namespace mclp{
             }
         }
     }
-
-    //Se realiza la eliminacion de un set de bins mediante su id_local por cada grupo
-    /*list<Group_bin>* new_group;
-    new_group = new(list<Group_bin>);
-    for(auto group: bin_by_group){
-      set<int>* erase_by_group;
-      erase_by_group = new(set<int>);
-      for(auto bin_to_erase : *to_erase){
-        pair<int,int> bin_eliminate = getlocalId(bin_to_erase);
-          if(group.get_group() == bin_eliminate.first){
-            erase_by_group->insert(bin_eliminate.second);
-          }
-      }
-      group.remove_bin(erase_by_group);
-      new_group->push_back(group);
-      delete(erase_by_group);
-    }
-
-    bin_by_group = *new_group;
-    delete(to_erase);
-    delete(new_group);
-    */
     value_metric = similar_bins/n_bins;
 
     return value_metric;
@@ -353,29 +332,6 @@ namespace mclp{
     return false;
   }
 
-  /*
-  //False -> id_bin tiene una caja unica (NO PUEDO ELIMINARLO)
-  //True -> id_bin no tiene una caja unica (PUEDO ELIMINARLO)
-  bool MCLPSolver::is_unique(set<set<int>> actual_group, int id_bin, set<int> e_bin){
-    //Tiene una caja unica
-    bool unique_box = true;
-    for(auto box: e_bin){
-      int index = 0;
-      for(auto bin: actual_group){
-        if(index != id_bin){
-          //Si encuentra la caja box en bin --->
-          if(bin.count(box) != 0){
-            //No tiene una caja unica
-            unique_box = false;
-          }
-        }
-        index++;
-      }
-      if(!unique_box) break;
-    }
-    return unique_box;
-  }
-  */
 
   int MCLPSolver::getGlobalId( int id_local, int group ){
     for (auto value : id_bin){
@@ -409,5 +365,9 @@ namespace mclp{
   int MCLPSolver::getfirstSol(){
     return first_sol;
   };
+
+  double MCLPSolver::getMetric(){
+    return value_metric;
+  }
 
 }
