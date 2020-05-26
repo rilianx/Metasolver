@@ -40,6 +40,12 @@ public:
 
 	virtual double eval_action(const State& , const Action& a );
 
+	double get_alpha() const{return alpha;}
+	double get_beta() const{return beta;}
+	double get_gamma() const{return gamma;}
+	double get_delta() const{return delta;}
+	double get_p() const{return p;}
+
 
 	long cs[6];
 

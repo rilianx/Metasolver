@@ -93,6 +93,25 @@ public:
 
 	virtual void get_actions(list< Action* >& actions) const;
 
+	const Space* get_next_space() const{
+		list<const Block*>::const_iterator it;
+
+	    const Space* sp=NULL;
+
+	    //cout << valid_blocks.size() << endl;
+
+		while(cont->spaces->size()>0 && !sp){
+
+		    sp=&cont->spaces->top();
+
+			for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
+				if(**it <= sp->getDimensions()) return sp;
+
+			cont->spaces->pop();
+		}
+		return NULL;
+	}
+
 	/*
 	* Rearranges the elements in the path pseudo-randomly
 	*/
@@ -179,12 +198,15 @@ public:
   double volume;
 
 	int nb_valid_blocks;
+	int N;
 
-	vector<double> dataL, dataW, dataH;
+	vector<int> dataL, dataW, dataH;
 	vector<double> spacesL, spacesW, spacesH;
 
 	vector<double> volumes;
 	vector<double> space_volumes;
+
+	const Space* next_space;
 
 	friend std::ostream& operator <<(std::ostream& os, const compactState& v);
 
@@ -194,6 +216,8 @@ public:
 	compactState(const clpState& s) {
 		volume = s.get_value();
 		nb_valid_blocks = s.get_n_valid_blocks();
+		next_space = s.get_next_space();
+		N = s.nb_left_boxes.size();
 
 
 		for(auto box:s.nb_left_boxes){
@@ -204,22 +228,27 @@ public:
 
 
 					if(box.first->getL((BoxShape::Orientation) o)>0){
-					  double x=(double)box.first->getL((BoxShape::Orientation) o)/s.cont->getL();
+					  double x=(double)box.first->getL((BoxShape::Orientation) o);
 					  for(int j=0; j<box.second; j++) dataL.push_back(x);
 					}
 
 					if(box.first->getW((BoxShape::Orientation) o)>0){
-						double x=(double)box.first->getW((BoxShape::Orientation) o)/s.cont->getW();
+						double x=(double)box.first->getW((BoxShape::Orientation) o);
 						for(int j=0; j<box.second; j++) dataW.push_back(x);
 					}
 
 					if(box.first->getH((BoxShape::Orientation) o)>0){
-						double x=(double)box.first->getH((BoxShape::Orientation) o)/s.cont->getH();
+						double x=(double)box.first->getH((BoxShape::Orientation) o);
 						for(int j=0; j<box.second; j++) dataH.push_back(x);
 					}
 				}
 			}
 		}
+		sort(volumes.begin(), volumes.end());
+		sort(dataL.begin(), dataL.end());
+		sort(dataW.begin(), dataW.end());
+		sort(dataH.begin(), dataH.end());
+
 
 		for(int i=0;i<s.cont->spaces->size();i++){
 			const Space sp = (i==0)? s.cont->spaces->top() :  s.cont->spaces->next();
@@ -230,14 +259,37 @@ public:
 		}
 
 
+
+
 	}
 
 };
 
 inline std::ostream& operator <<(std::ostream& os, const compactState& v){
-	os << v.volume << " ";
+	//os << v.volume << " ";
+	os << v.N << " "; // nb of box types
 	os << v.volumes.size() << " "; // nb_boxes
-	os << v.space_volumes.size() << " "; // nb_spaces
+
+  //percentiles 10% and 90%
+	os << v.volumes[v.volumes.size()*0.1] << " " <<  v.volumes[v.volumes.size()*0.9] << " ";
+	os << v.dataL[v.dataL.size()*0.1] << " " <<  v.dataL[v.dataL.size()*0.9] << " ";
+	os << v.dataW[v.dataW.size()*0.1] << " " <<  v.dataW[v.dataW.size()*0.9] << " ";
+	os << v.dataH[v.dataH.size()*0.1] << " " <<  v.dataH[v.dataH.size()*0.9] << " ";
+
+
+	//os << v.space_volumes.size() << " "; // nb_spaces
+
+/*
+	if(v.next_space){
+		os << v.next_space->getL() << " ";
+		os << v.next_space->getW() << " ";
+		os << v.next_space->getH() << " ";
+		os << v.next_space->getVolume() << " ";
+	}else{
+		os << "0 0 0 0 ";
+	}
+	*/
+
 
 	for(auto vol:v.volumes)
 		 os << vol << ",";
@@ -255,6 +307,7 @@ inline std::ostream& operator <<(std::ostream& os, const compactState& v){
 		 os << data << ",";
 	os << " ";
 
+/*
 	for(auto vol:v.space_volumes)
 		 os << vol << ",";
 	os << " ";
@@ -270,7 +323,7 @@ inline std::ostream& operator <<(std::ostream& os, const compactState& v){
 	for(auto data:v.spacesH)
 		 os << data << ",";
 	os << endl;
-
+*/
   //os << v.nb_valid_blocks<< endl;
   return os;
 }

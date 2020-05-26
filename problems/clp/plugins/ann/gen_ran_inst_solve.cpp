@@ -48,7 +48,7 @@ double greedy_eval(Greedy *g, Greedy *gr, clpState* s0){
 
 		val+=s_copy.get_value();
 	}
-	return val/10.0;
+	return val/100.0;
 }
 
 void generate_data(string file, double min_fr, int max_time, double alpha, double beta, double gamma, double p,
@@ -61,7 +61,7 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
   //cout << "cargando la instancia..." << endl;
 
     Block::FSB=false;
-    clpState* s0 = new_state(file,inst, min_fr, 10000);
+    clpState* s0 = new_state(file,inst, min_fr, 1000);
 
   //  cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
@@ -88,14 +88,20 @@ void generate_data(string file, double min_fr, int max_time, double alpha, doubl
 		  gr->next(S);
 
 	  compactState c(*s0);
-	  cout << c ;
+
 
 	  double vcs_eval=greedy_eval(gr_vcs, gr, s0);
 	  double vloss_eval=greedy_eval(gr_vloss, gr, s0);
 	  double cs_eval=greedy_eval(gr_cs, gr, s0);
 	  double mean = (vcs_eval + vloss_eval + cs_eval)/3.0;
 
-	  cout << vcs_eval-mean << "," << vloss_eval-mean << "," << cs_eval-mean << endl;
+
+      double m = max(vcs_eval-mean,vloss_eval-mean);
+      m = max(vloss_eval-mean,cs_eval-mean);
+      if (m>0.0001){
+    	  cout << c ;
+    	  cout << vcs_eval << "," << vloss_eval << "," << cs_eval << endl;
+      }
 
 		//cout << "bsg solving" << endl;
 	  /*BSG *bsg= new BSG(vcs,*gr2, 4);
