@@ -114,7 +114,8 @@ public:
 
 	void add_children(State* s){ children.push_back(s); }
 
-	int get_id() const { return id; }
+	int get_id(int pid=-1) const {
+		return id; }
 
 	void set_id(int id) { this->id=id; }
 
@@ -135,7 +136,7 @@ protected:
 	//list of actions for reconstructing the state from scratch
 	mutable list<const Action*> path;
 
-	int id;
+ int id;
 
 
 

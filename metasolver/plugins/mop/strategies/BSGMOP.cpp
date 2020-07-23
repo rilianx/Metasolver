@@ -264,6 +264,7 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 		if((filtered_states.size()+frontera.size())<=n){
 			for(it3=frontera.begin();it3!=frontera.end();it3++){
 				State* s= it3->first;
+				int first_id = s->get_id();
 				State* final_state= it3->second;
 				Action* a = s->next_action(*final_state);
 
@@ -271,7 +272,23 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 				s->transition(*a);
 				it3->first=s;
 				filtered_states.push_back((*it3));
-				s->set_id(final_state->get_id());
+
+				int id = final_state->get_id();
+				int nb_actions=0;
+				if(generate_tree_search_output){
+					list< Action* > actions;
+					s->get_actions(actions);
+					nb_actions=actions.size();
+					if(first_id == final_state->get_id()){
+						 id = State::count_states++;
+						 cout.clear();
+						 cout << id <<"," << final_state->get_id()  << "," <<  final_state->get_value() << "," << nb_actions << endl;
+						 cout.setstate(std::ios_base::failbit);
+						 final_state->set_id(id);
+					 }
+				 }
+				 s->set_id(id);
+
 			}
 		}
 		else{
@@ -280,13 +297,29 @@ void BSG_MOP::filter_nondominated_sort (list< pair<State*,State*> >& filtered_st
 
 			for(it3=frontera.begin();it3!=frontera.end();it3++){
 				State* s= it3->first;
+				int first_id = s->get_id();
 				State* final_state= it3->second;
 				Action* a = s->next_action(*final_state);
 		 		s=s->clone();
 				s->transition(*a);
 				it3->first=s;
 				filtered_states.push_back((*it3));
-				s->set_id(final_state->get_id());
+
+				int id = final_state->get_id();
+				int nb_actions=0;
+				if(generate_tree_search_output){
+					list< Action* > actions;
+					s->get_actions(actions);
+					nb_actions=actions.size();
+					if(first_id == final_state->get_id()){
+						 id = State::count_states++;
+						 cout.clear();
+						 cout << id <<"," << final_state->get_id()  << "," <<  final_state->get_value() << "," << nb_actions << endl;
+						 cout.setstate(std::ios_base::failbit);
+						 final_state->set_id(id);
+					 }
+				 }
+				 s->set_id(id);
 			}
 
 		}
@@ -338,13 +371,17 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 	int i=0;
     //se expanden los nodos de la lista S
+		//cout.clear();
+		//cout << "new level" << endl;
+		//cout.setstate(std::ios_base::failbit);
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++, i++){
         State& state=**itS;
-       // cout << state.get_value() << endl;
+        // cout << state.get_value() << endl;
         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
        //each level of the search tree should explore max_level_size nodes, thus...
-        int w =  (double) max_level_size / (double) S.size() + 0.5;
+        //int w =  (double) max_level_size / (double) S.size() + 0.5;
+				int w = sqrt(max_level_size);
 
         //we attempt to orient the search to the objective lambda1[i]) * f1 + lambda2[i] * f2,
 		//where lambda1 = 1 - lambda2
@@ -353,11 +390,12 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 
       	list< Action* > best_actions;
-      	get_best_actions(state, best_actions, w);
+      	get_best_actions(state, best_actions, w); //podría dar
+				w=best_actions.size();
 
         //Actions are evaluated using the greedy algorithm
         for(auto action : best_actions){
-        	State& state_copy = *state.child_clone();
+        	State& state_copy = *state.clone();
         	state_copy.transition(*action);
 
           int nb_actions=0;
@@ -374,11 +412,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         	pair<double, double> value = make_pair(state_copy.get_value(), state_copy.get_value2());
 
-					if(generate_tree_search_output){
-						cout.clear();
-						cout << state_copy.get_id() <<"," << state.get_id()  << "," <<  state_copy.get_value() << "," << nb_actions << endl;
-						cout.setstate(std::ios_base::failbit);
-					}
+
+
 
 
         	//si state_copy es solucion no dominada se agrega a NDS
@@ -399,12 +434,23 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 			if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
-        	if(state_actions.find(value) == state_actions.end()){
+        	if(state_actions.find(value) == state_actions.end() && i==0){
         	//	cout << value.first << endl;
         		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
+
+						if(generate_tree_search_output){
+							int id = State::count_states++;
+							cout.clear();
+							state_copy.set_id(id);
+							cout << state_copy.get_id() <<"," << state.get_id()  << "," <<  state_copy.get_value() << "," << nb_actions << endl;
+							cout.setstate(std::ios_base::failbit);
+						}
+
+
         	}
 			else delete &state_copy;
         }
+				i++;
 
     }
 
