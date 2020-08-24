@@ -374,18 +374,20 @@ list<State*> BSG_MOP::next(list<State*>& S){
 		//cout.clear();
 		//cout << "new level" << endl;
 		//cout.setstate(std::ios_base::failbit);
+		list<double> proms;
+
     for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++, i++){
         State& state=**itS;
         // cout << state.get_value() << endl;
         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
        //each level of the search tree should explore max_level_size nodes, thus...
-        //int w =  (double) max_level_size / (double) S.size() + 0.5;
-				int w = sqrt(max_level_size);
+        int w =  (double) max_level_size / (double) S.size() + 0.5;
+				//int w = sqrt(max_level_size);
 
         //we attempt to orient the search to the objective lambda1[i]) * f1 + lambda2[i] * f2,
-		//where lambda1 = 1 - lambda2
-		//we assume that states of S are sorted by decreasing order w.r.t. objective 1
+		   //where lambda1 = 1 - lambda2
+		   //we assume that states of S are sorted by decreasing order w.r.t. objective 1
       	if(oriented_greedy) evl->set_lambda2(lambda2_v[i]);
 
 
@@ -394,6 +396,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 				w=best_actions.size();
 
         //Actions are evaluated using the greedy algorithm
+				double sum=0;
+				int act=0;
         for(auto action : best_actions){
         	State& state_copy = *state.clone();
         	state_copy.transition(*action);
@@ -412,9 +416,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
         	pair<double, double> value = make_pair(state_copy.get_value(), state_copy.get_value2());
 
-
-
-
+          //cout << value.first << ",";
+					//sum +=  value.first;
 
         	//si state_copy es solucion no dominada se agrega a NDS
 
@@ -426,15 +429,16 @@ list<State*> BSG_MOP::next(list<State*>& S){
 						<< state_copy.get_path().size() << " nodes" << endl;//, lambda:"  << evl->get_lambda2()  << endl;
         	}
 
-        	//se inserta el estado si no hay uno equivalente en el mapa
+
         	if(rule==MIN1) value.second = 0.0;
         	else if(rule==MIN2) value.first = 0.0;
 					//value.first = round(value.first*10000)/10000;
 					value.second = 0.0; //round(value.second*100)/100;
 
-			if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
+			    if(rule==MIN1MIN2) {value.first*=value.second; value.second=0.0;}
 
-        	if(state_actions.find(value) == state_actions.end() && i==0){
+        	//se inserta el estado si no hay uno equivalente en el mapa
+        	if(state_actions.find(value) == state_actions.end()){
         	//	cout << value.first << endl;
         		state_actions.insert(make_pair(value,  make_pair(&state, &state_copy)) );
 
@@ -448,12 +452,18 @@ list<State*> BSG_MOP::next(list<State*>& S){
 
 
         	}
-			else delete &state_copy;
+			    else delete &state_copy;
+			    //act++;
         }
-				i++;
+				//cout << endl ;
+				//proms.push_back(sum/best_actions.size());
+
 
     }
 
+		//cout << "proms:";
+		//for(double p : proms) cout << p <<",";
+    //cout << endl;
 
     list< pair<State*,State*> >filtered_states;
     list <State*>return_states;
