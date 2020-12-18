@@ -80,16 +80,6 @@ public:
 
 	bool verify_solution();
 
-    void MatLab_print(double pause_time=0.0) const {
-		cout << "axis equal" << endl;
-		cout <<  "DrawCuboid([" << getL() << ";" << getW() << ";" << getH() <<"],["
-			<< (double)getL()/2.0 << ";" <<
-			getW()/2.0 << ";" <<
-			getH()/2.0 << "],[0,0,0],[0 0 0], 0.0);" << endl;
-
-		MatLab_printR();
-    }
-
 	map<const BoxShape*, int> nb_boxes;
 	int n_boxes;
 
@@ -102,6 +92,19 @@ public:
 	AABBContainer<AABB>* blocks;
 
 
+    void recursive_print(ostream& os, Vector3 mins=Vector3(0,0,0)) const{
+    	if(n_boxes==1 && getVolume()==occupied_volume)
+    		print(os, mins);
+    	else{
+       	   	const AABB* b=&blocks->top();
+       	   	while(true){
+       	   		b->getBlock()->recursive_print(os, mins+b->getMins());
+       	   		if(blocks->has_next()) b=&blocks->next();
+       	   		else break;
+       	   	}
+    	}
+    }
+
 protected:
 
 	//only the clone function can use the copy constructor
@@ -111,33 +114,10 @@ protected:
 		total_weight(b.total_weight), total_profit(b.total_profit) {	}
 
 
-    void MatLab_printR(int i=1, int j=1, double R=0.0, double G=0.0, double B=0.0, double alpha=1.0, Vector3 mins=Vector3(0,0,0)) const{
-    	int ii=i;
-    	if(i>1 && n_boxes==1)
-    		MatLab_print(i,j,R,G,B, alpha, mins);
-    	else{
-       	   	const AABB* b=&blocks->top();
-       	   	while(true){
-       	   		if(i==1){
-       	   			cout << "pause(1);" << endl;
-       	   			R=double_rand(); G=double_rand(); B=double_rand(); ii++;
-       	   		}
-       	   		else j++;
 
 
-       	   		b->getBlock()->MatLab_printR(ii,j,R,G,B, alpha, mins+b->getMins());
-       	   		if(blocks->has_next()) b=&blocks->next();
-       	   		else break;
-       	   	}
-    	}
-    }
-
-    void MatLab_print(int i, int j, double R, double G, double B, double alpha, Vector3 mins) const{
-    	cout << "a(" << i << "," << j << ")=DrawCuboid([" << getL() << ";" << getW() << ";" << getH() <<"],["
-             << (double) getL()/2.0 + (double) mins.getX() << ";" <<
-                (double) getW()/2.0 + (double) mins.getY() << ";" <<
-                (double) getH()/2.0 + (double) mins.getZ() << "],[0,0,0],["
-             << R << " " << G << " " << B << "]," << alpha << ");" << endl;
+    void print(ostream& os, Vector3 mins) const{
+		os << mins << "," << mins+*this << endl;
     }
 
 	double occupied_volume;
@@ -150,6 +130,9 @@ protected:
 
 
 };
+
+ostream& operator<<(ostream& os, const Block& dt);
+
 
 class Block_fsb : public Block{
 public:

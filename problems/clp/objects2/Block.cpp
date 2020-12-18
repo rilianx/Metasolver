@@ -128,4 +128,10 @@ double double_rand(double min, double max){
 	return min+(max-min)*((double)rand()/(double)RAND_MAX);
 }
 
+ostream& operator<<(ostream& os, const Block& dt)
+{
+	dt.recursive_print(os);
+    return os;
+}
+
 }

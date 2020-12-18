@@ -106,11 +106,6 @@ public:
 	map<const BoxShape*, int> nb_left_boxes;
 	list<const Block*> valid_blocks;
 
-	virtual void print() {
-		cont->MatLab_print();
-	}
-
-
 	static double weight_of_allboxes;
 	static double profit_of_allboxes;
  	static double density_of_allboxes;

@@ -88,7 +88,7 @@ inline Vector3 operator-(Vector3 lhs, const Vector3& rhs){
 }
 
 inline std::ostream& operator <<(std::ostream& os, const Vector3& v){
-	return os << "(" << v.x << "," << v.y << "," <<v.z << ")" ;
+	return os << v.x << "," << v.y << "," <<v.z ;
 }
 
 } /* namespace clp */

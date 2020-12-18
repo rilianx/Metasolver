@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 
   args::ValueFlag<string> _ref(parser, "\"double double\"", "Reference point. (format: \"y1 y2\")", {"ref"});
 
-  args::Flag _matlab(parser, "double", "Matlab output", {"matlab"});
+  args::Flag _print(parser, "double", "Print output", {"print"});
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
@@ -235,7 +235,7 @@ int main(int argc, char** argv){
     for(auto point : pareto){
 			//the point does not strict dominate ref
 
-
+		
     	if(best_profit==0.0 && point.second) {
            best_profit=point.first.second;
            nadir_volume=point.first.first;
@@ -259,11 +259,12 @@ int main(int argc, char** argv){
     cout << "Vmax\tPmax\tHV\t#sols" << endl;
     cout << best_volume <<  " " << best_profit << " " << hv <<  " " <<  n << endl;
 
-    if(_matlab){
+    if(_print){
+		cout << "best_solution:" << endl;
     	map< pair<double, double>, State*> ::iterator it = pareto.end();
     	it--;
     	it--;
-    	dynamic_cast<const clpState*>(it->second)->cont->MatLab_print();
+    	cout << *dynamic_cast<const clpState*>(it->second)->cont << endl;
     }
 
 
