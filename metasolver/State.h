@@ -100,7 +100,7 @@ public:
 
 
 
-	virtual void get_actions(list< Action* >& actions) const = 0;
+	virtual void get_actions(list< Action* >& actions, int sample=0) const = 0;
 
 	virtual Action* next_action(State& final);
 

@@ -228,7 +228,7 @@ int main(int argc, char** argv){
 
 	}
 
-	s00->cont->MatLab_print();
+	//s00->cont->MatLab_print();
 
 }
 

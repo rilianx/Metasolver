@@ -1,20 +1,26 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-yanira-nsga   3   4  11  17  22  25  25  25  18  11   5   4 
-yanira-o-search   3   5  11  19  24  25  25  24  18  11   5   3 
-yanira-max-v   3   5   9  18  25  25  25  23  17  10   5   4 
-yanira-nsga yanira-o-search yanira-max-v 
-1.000000 25/25 25/25 25/25 
-1.200480 25/22 24/24 23/25 
-1.503759 18/17 18/19 17/18 
-2.000000 11/11 11/11 10/9 
-5.000000 5/4 5/5 5/5 
-10.000000 4/3 3/3 4/3 
+bsg_800sample   0   0   0   2  13 1600  23   0   0   0   0   0 
+bsg_800sample 
+1.000000 23/1600 
+1.200480 0/13 
+1.503759 0/2 
+2.000000 0/0 
+5.000000 0/0 
+10.000000 0/0 
 
 
 instances with significative gains (1.2)
+../../problems/clp/benchs/BR/BR0.txt -i 2 --min_fr=1.0 1 1 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 37 --min_fr=1.0 1 1 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 9 --min_fr=1.0 1 1 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 10 --min_fr=1.0 1 1 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 53 --min_fr=1.0 1 1 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 22 --min_fr=1.0 0 0 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 88 --min_fr=1.0 0 0 1 1 
+../../problems/clp/benchs/BR/BR0.txt -i 54 --min_fr=1.0 1 1 1 1 
 
 gains
-0.000100 1.000000 25 1.354261 25 1.239084 25 1.374680 25 
-total time: 1.000000 1.005443 0.977393 0.993111 
+0.000100 1.000000 1600 0.963216 1600 
+total time: 1.000000 0.962996 

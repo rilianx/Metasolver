@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 #include "objects2/BoxShape.h"
 #include "clpState.h"
@@ -20,7 +21,7 @@ using namespace metasolver;
 namespace clp {
 
 
-void clpState::get_actions(list< Action* >& actions) const{
+void clpState::get_actions(list< Action* >& actions, int nsample) const{
 	list<const Block*>::const_iterator it;
 
     const Space* sp=NULL;
@@ -42,6 +43,23 @@ void clpState::get_actions(list< Action* >& actions) const{
 			cont->spaces->pop();
 		}
 	}
+	
+
+	if(nsample!=0 && actions.size() > nsample){
+		// probabilidad de eliminar acción actual
+		double p = double(actions.size() - nsample) / double(actions.size());
+		for(auto it=actions.begin(); it!=actions.end(); ){
+			if(p < (double)rand()/(double)RAND_MAX ){
+				auto it2=it; it++;
+				delete *it2;
+				actions.erase(it2);
+				if (actions.size() == nsample) return;
+			}else it++;
+			if(it==actions.end()) it=actions.begin();
+		}
+	}
+	
+	
 }
 
 

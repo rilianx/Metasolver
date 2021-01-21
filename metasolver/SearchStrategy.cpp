@@ -32,7 +32,7 @@ int SearchStrategy::get_best_actions(const State& s, list< Action* >& bactions, 
 	//map<double,Action*> ranked_actions;
 
 	list< Action* > actions;
-	s.get_actions(actions);
+	s.get_actions(actions, nsample);
 	if(tot_act) *tot_act=actions.size();
 
 	//if(actions.size()<=n) {bactions=actions; return bactions.size();}

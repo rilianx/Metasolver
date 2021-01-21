@@ -130,6 +130,7 @@ double double_rand(double min, double max){
 
 ostream& operator<<(ostream& os, const Block& dt)
 {
+	os << dt.getL() << "," << dt.getW() << "," << dt.getH() << endl;
 	dt.recursive_print(os);
     return os;
 }

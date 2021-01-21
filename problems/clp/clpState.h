@@ -91,7 +91,7 @@ public:
 
 	}
 
-	virtual void get_actions(list< Action* >& actions) const;
+	virtual void get_actions(list< Action* >& actions, int nsample=0) const;
 
 	/*
 	* Rearranges the elements in the path pseudo-randomly

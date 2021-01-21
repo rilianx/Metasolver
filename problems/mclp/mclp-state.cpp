@@ -20,7 +20,7 @@ using namespace metasolver;
 namespace clp {
 
 //TODO: ¿Que hacemos aqui?
-void mclpState::get_actions(list< Action* >& actions) const{
+void mclpState::get_actions(list< Action* >& actions, int nsample) const{
 	/*
 	list<const Block*>::const_iterator it;
 

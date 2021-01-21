@@ -32,9 +32,10 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _maxblocks(parser, "int", "Block_generation:  Maximum number ob generated blocks", {"maxb"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
 	args::ValueFlag<int> _seed(parser, "int", "Random seed", {"seed"});
-	args::ValueFlag<string> _strategy(parser, "double", "Strategy (bsg, bsg_p, bsg_vp, ns+cd, o-search)", {'s'});
+	args::ValueFlag<string> _strategy(parser, "double", "Strategy (greedy, bsg, bsg_p, bsg_vp, ns+cd, o-search)", {'s'});
   args::ValueFlag<string> _theta_v(parser, "double", "VPD's parameter vector (max vol)", {"theta_v"});
   args::ValueFlag<string> _theta_p(parser, "double", "VPD's parameter vector (max profit)", {"theta_p"});
+    args::ValueFlag<int> _nsample(parser, "int", "Maximum number of actions to be evaluated by greedy (default: 0 (max))", {"nsample"});
 	args::ValueFlag<int> _write_tree_search(parser, "double", "Write a tree search steps (nb_of_beams)", {"wts"});
 
   args::ValueFlag<string> _ref(parser, "\"double double\"", "Reference point. (format: \"y1 y2\")", {"ref"});
@@ -81,7 +82,7 @@ int main(int argc, char** argv){
 
 		if(strategy=="o-search" || strategy=="ns+cd")
 			srule = BSG_MOP::NSGA2;
-		else if(strategy=="bsg")
+		else if(strategy=="bsg" || strategy=="greedy")
 			srule = BSG_MOP::MIN1;
 		else if(strategy=="bsg_p")
 			srule = BSG_MOP::MIN2;
@@ -190,7 +191,9 @@ int main(int argc, char** argv){
 		VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont, theta);
     vcs->set_parameters2 (theta_p);
 
-    SearchStrategy *gr = new Greedy (vcs);
+	int nsample=0;
+	if (_nsample) nsample=_nsample.Get();
+    SearchStrategy *gr = new Greedy (vcs, nsample);
 
     int beams=4;
     if(_write_tree_search)
@@ -210,10 +213,17 @@ int main(int argc, char** argv){
 
 	cout << "***** Running the solver BSGMOP solver *****" << endl;
 	double eval;
-	if(!_write_tree_search)
-     eval=1-de->run(s_copy, maxtime, begin_time) ;
-	else
-		 eval=1-bsg->run(s_copy, maxtime, begin_time) ;
+	if(!_write_tree_search){
+		if(strategy=="greedy"){
+			eval=1-gr->run(s_copy, maxtime, begin_time) ;
+			cout << "best_solution:" << endl;
+			cout << s_copy.get_value() << endl;
+			cout << *dynamic_cast<const clpState*>(&s_copy)->cont << endl;
+			return 0;
+		}else
+		 	eval=1-de->run(s_copy, maxtime, begin_time) ;
+	}else
+		eval=1-bsg->run(s_copy, maxtime, begin_time) ;
 
     if(strategy=="bsg_vp"){
     	cout << "running with bsg_p" << endl;
@@ -264,7 +274,8 @@ int main(int argc, char** argv){
     	map< pair<double, double>, State*> ::iterator it = pareto.end();
     	it--;
     	it--;
-    	cout << *dynamic_cast<const clpState*>(it->second)->cont << endl;
+		cout << best_volume << endl;
+    	cout << *dynamic_cast<const clpState*>(it->second)->cont;
     }
 
 
