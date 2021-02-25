@@ -191,6 +191,7 @@ double clpState::density_of_allboxes=0.0;
 double clpState::square_density_of_allboxes=0.0;
 double clpState::Wmax=0.0;
 int clpState::nb_boxes=0;
+map <int,int> clpState::nb_boxes_by_type;
 
 clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f, clpState::FormatP fp){
 
@@ -198,8 +199,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 	ifstream in(file.c_str());
 	string line;
-	if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp){
+	if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp  || f==clpState::BRpc){
 		getline(in,line); //number of instances
+		
 	}
 
 	clpState *s=NULL;
@@ -207,7 +209,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 	for(int inst=0;inst<=i; inst++){
 		string line;
 
-		if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp){
+		if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp || f==clpState::BRpc){
 			getline(in, line ); //n_inst random_seed
 		}
 
@@ -222,10 +224,12 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			s= new clpState((Block::FSB)? new Block_fsb(l,w,h):new Block(l,w,h));
 		}
 
-		if(f==clpState::_1C || f==clpState::BRwp){
+		if(f==clpState::_1C || f==clpState::BRwp || f==clpState::BRpc){
 			getline(in, line );
 			std::stringstream ss1(line);
 			ss1 >> clpState::Wmax;
+			//cout << clpState::Wmax << endl;
+			
 		}
 
 
@@ -253,7 +257,14 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			double profit = 1.0;
 			double vol;
 			bool rot1, rot2, rot3;
+
 			std::stringstream ss1(line);
+
+			//Practical Constraints
+			int type = 1; // tipo de caja (por contenido)
+			double supported_weight_factor = 1.0; // peso que soporta: w*supported_weight_factor
+			double v_stability; //factor de estabilidad vertical
+			double h_stability; //factor de estabilidad horizontal
 
 			if(f==clpState::BR){
 
@@ -269,6 +280,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 				if(fp==clpState::ALL_ONE) profit = 1;
 				else if(fp==clpState::WEIGHT) profit = weight;
 				vol=l*h*w;
+			}else if(f==clpState::BRpc){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability;
+				vol=l*h*w;
 			}
 			else if(f==clpState::_1C){
 
@@ -281,16 +295,21 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 
 
 			if(inst==i){
-
+				//cout <<  id << l << rot1 << w << rot2 << h << rot3 << n << weight;
+				//cout << type << supported_weight_factor << h_stability << h_stability << v_stability;
 				BoxShape* boxt;
 				if(f==clpState::_1C) boxt=new BoxShape(id, ll, ww, hh, rot1, rot2, rot3, weight, profit);
-				else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
+				else if(f==clpState::BRpc){
+					boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit, 
+					type, supported_weight_factor*w, h_stability, v_stability);
+				}else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
 
 				clpState::weight_of_allboxes += weight*(double) n;
 				clpState::profit_of_allboxes += profit*(double) n;
 				clpState::density_of_allboxes += (weight/((l*w*h)/1000000.0))* (double) n;
 				clpState::square_density_of_allboxes += pow((weight/((l*w*h)/1000000.0)),2) * (double) n;
 				clpState::nb_boxes += n;
+				clpState::nb_boxes_by_type[type] +=n;
 
 				if(fp==clpState::WEIGHT)
 					clpState::profit_of_allboxes = clpState::Wmax;
@@ -394,6 +413,15 @@ void clpState::_transition(const Action& action) {
 
 	//se actualizan los bloques validos
 	update_valid_blocks();
+
+	//Filling the singlebox_blocks
+	if(singlebox_blocks){
+		list<const AABB*> aabbs;
+		get_singlebox_AABBs(aabbs, &b,act.space.get_location(b));
+		for(auto aabb:aabbs){
+		   singlebox_blocks->insert(*aabb);
+	  }
+	}
 }
 
 bool is_constructible(const clpState& s, const Block& b){

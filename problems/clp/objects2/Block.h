@@ -78,6 +78,8 @@ public:
 
     virtual double getTotalProfit() const {return total_profit;}
 
+	const BoxShape* get_box_shape() const {return nb_boxes.begin()->first;}
+
 	bool verify_solution();
 
 	map<const BoxShape*, int> nb_boxes;

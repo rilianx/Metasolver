@@ -77,6 +77,7 @@ problems/clp/objects2/Block_fsb.cpp
 ADD_LIBRARY(
 clp_state
 problems/clp/clpState.cpp
+problems/clp/clpState_pc.cpp
 )
 
 ADD_LIBRARY(

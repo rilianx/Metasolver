@@ -10,8 +10,10 @@
 
 namespace clp {
 
-BoxShape::BoxShape(int id, double l, double w, double h, bool rot1, bool rot2, bool rot3, double weight, double profit) :
-	Volume(l,w,h), id(id), weight(weight), profit(profit) {
+BoxShape::BoxShape(int id, double l, double w, double h, bool rot1, bool rot2, bool rot3, double weight, double profit,
+int type, double supported_weight, double h_stability, double v_stability) :
+	Volume(l,w,h), id(id), weight(weight), profit(profit), 
+  type(type), supported_weight(supported_weight), h_stability(h_stability), v_stability(v_stability) {
 
       is_valid_orientation[WLH]=rot3;
       is_valid_orientation[LWH]=rot3;

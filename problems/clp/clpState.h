@@ -32,6 +32,7 @@ public:
 
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
+
 	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
 
 	const Block& block;
@@ -46,13 +47,17 @@ public:
 
     static bool left;
 
-    enum Format{BR, _1C, BRw, BRwp};
+    enum Format{BR, _1C, BRw, BRwp, BRpc};
 
     enum FormatP{NORMAL, ALL_ONE, WEIGHT};
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim){
+	valid_blocks(S.valid_blocks), mindim(S.mindim), 
+	singlebox_blocks(NULL){
+
+		if(S.singlebox_blocks)
+		   singlebox_blocks = new AABBList(*S.singlebox_blocks);
 
 	}
 
@@ -71,6 +76,8 @@ public:
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f, FormatP fp);
 
 	virtual double get_value() const{
+
+
 		return cont->getOccupiedVolume()/cont->getVolume();
 	}
 
@@ -106,12 +113,42 @@ public:
 	map<const BoxShape*, int> nb_left_boxes;
 	list<const Block*> valid_blocks;
 
+	//For Practical Constraint operations
+	AABBContainer<AABB>* singlebox_blocks;
+	
+
+	void get_singlebox_AABBs(list<const AABB*>& aabbs, const Block* this_b, Vector3 mins) const{
+		clp::AABBContainer<clp::AABB> * blocks = this_b->blocks;
+		if(blocks == NULL){
+			aabbs.push_back(new AABB(mins, this_b));
+			return;
+		}else{
+			const AABB* b=&blocks->top();
+			while(true){
+						get_singlebox_AABBs(aabbs, b->getBlock(), mins+b->getMins());
+						if(blocks->has_next()) b=&blocks->next();
+						else break;
+			}
+		}
+	}
+
+	static map<int,int> nb_boxes_by_type;
 	static double weight_of_allboxes;
 	static double profit_of_allboxes;
  	static double density_of_allboxes;
-  static double square_density_of_allboxes;
-  static int nb_boxes;
+  	static double square_density_of_allboxes;
+  	static int nb_boxes;
 	static double Wmax;
+
+	//practical constraints
+	enum adj_type{DOWN=1, UP=2, BACK=4, FORTH=8, LEFT=16, RIGHT=32};
+	void get_adjacent_aabbs(const AABB& ab, list<const AABB*>& aabb_list, int adj=clpState::UP, int d=10) const;
+	map <int, set<string>> recursive_extra_movements(AABB aabb, int client, map <int, set<string>> extra_movementsMAP) const;
+	double multidrop() const;
+	double loadbalance() const;
+	double loadbalanceA() const;
+	double completeshipment() const;
+
 
 protected:
 

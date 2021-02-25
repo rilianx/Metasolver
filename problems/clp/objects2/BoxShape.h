@@ -17,7 +17,10 @@ public:
 	enum Orientation{LWH=0, LHW, WLH, WHL, HLW, HWL, OR};
 
 
-	BoxShape(int id, double l, double w, double h, bool rot1=true, bool rot2=true, bool rot3=true, double weight=1.0, double profit=1.0);
+	BoxShape(int id, double l, double w, double h, bool rot1=true, bool rot2=true, bool rot3=true, 
+	double weight=1.0, double profit=1.0,
+	//practical constraints
+	int type=0, double supported_weight=0.0, double h_stability = 0.0, double v_stability = 0.0);
 
 	bool is_valid(Orientation o) const {return is_valid_orientation[o];}
 
@@ -46,13 +49,22 @@ public:
 
     double get_profit() const { return profit; }
 
+	int get_type() const {return type;}
+	double get_supported_weight() const{return supported_weight;}
+	double get_h_stability() const {return h_stability;}
+	double get_v_stability() const {return v_stability;}
 
 private:
 	int id;
 	bool is_valid_orientation[6];
-
 	double weight;
 	double profit;
+
+	//Practical Constraints
+	int type;
+	double supported_weight;
+	double h_stability;
+	double v_stability;
 
 };
 

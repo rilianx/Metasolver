@@ -1,26 +1,17 @@
 solved instances in standard strategy times
 mintime:0.000100
 <0.10 [0.10,0.20] [0.20,0.50] [0.50,0.67] [0.67,0.83] [0.83,1.00] [1.00,1.20] [1.20,1.50] [1.50,2.00] [2.00,5.00] [5.00,10.00] >10.00 
-bsg_800sample   0   0   0   2  13 1600  23   0   0   0   0   0 
-bsg_800sample 
-1.000000 23/1600 
-1.200480 0/13 
-1.503759 0/2 
-2.000000 0/0 
-5.000000 0/0 
-10.000000 0/0 
+
+1.000000 
+1.200480 
+1.503759 
+2.000000 
+5.000000 
+10.000000 
 
 
 instances with significative gains (1.2)
-../../problems/clp/benchs/BR/BR0.txt -i 2 --min_fr=1.0 1 1 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 37 --min_fr=1.0 1 1 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 9 --min_fr=1.0 1 1 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 10 --min_fr=1.0 1 1 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 53 --min_fr=1.0 1 1 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 22 --min_fr=1.0 0 0 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 88 --min_fr=1.0 0 0 1 1 
-../../problems/clp/benchs/BR/BR0.txt -i 54 --min_fr=1.0 1 1 1 1 
 
 gains
-0.000100 1.000000 1600 0.963216 1600 
-total time: 1.000000 0.962996 
+0.000100 1.000000 1600 
+total time: 1.000000 

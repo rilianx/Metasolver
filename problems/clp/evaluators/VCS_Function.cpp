@@ -41,9 +41,11 @@ double VCS_Function::eval_action(const State& s, const Action &a){
     long resW=sp.getW() - b.getW();
     long resH=sp.getH() - b.getH();
 
-
     if(resL<0 || resW<0 || resH<0) return -1.0;
-    if(clpState::Wmax > 0.0 && ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::Wmax) return -1.0;
+
+    if(clpState::Wmax > 0.0 && ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::Wmax) 
+		return -1.0;
+
 
 
     double alpha=this->alpha + lambda2*(this->alpha_2 - this->alpha);
@@ -67,11 +69,14 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 	if(clpState::Wmax > 0.0){
 		double density = b.getTotalWeight() / (double) b.getVolume();
 		double profit = b.getTotalProfit();
+		
+		//cout << pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
+		//		     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3) << endl;
 
 		return ( pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
 				     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3));
 	}
-
+	
 	return (pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
 	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
 }
