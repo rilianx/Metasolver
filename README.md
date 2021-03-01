@@ -89,18 +89,6 @@ where V(b), P(b) and D(b) are the volume, profit and density of the block b resp
 
 *theta* is the parameter vector of the function used for weighting the different criteria.
 
-Installation
--------
-
-Download the branch:
-
-     git clone https://github.com/rilianx/Metasolver.git
-     git checkout -t origin/mop-bsg
-
-Compile the project:
-
-     cmake .
-     make
 
 Options
 -------
