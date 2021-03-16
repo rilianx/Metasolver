@@ -74,6 +74,10 @@ public:
 	virtual State* create_neighbor(State* s0);
 
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f, FormatP fp);
+	friend clpState* new_state(long L, long W, long H, double Wmax, map<BoxShape*, int>& boxes);
+
+	
+	
 
 	virtual double get_value() const{
 
@@ -148,11 +152,13 @@ public:
 	double loadbalance() const;
 	double loadbalanceA() const;
 	double completeshipment() const;
-
+	
+	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
 
 protected:
 
 	virtual void _transition(const Action& action);
+
 
 private:
 
@@ -180,7 +186,7 @@ private:
 
 	void update_min_dim();
 
-	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
+
 
 	/*
 	 * calculate the number of supported blocks for each block
@@ -206,6 +212,11 @@ private:
 
 clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR,
 		clpState::FormatP fp=clpState::NORMAL);
+
+clpState* new_state(long L, long W, long H, double Wmax, map<BoxShape*, int>& boxes);
+
+void read_instance(long& L, long& W, long& H, double& Wmax, map<BoxShape*, int>& boxes,
+				 string file, int i, clpState::Format f=clpState::BR, clpState::FormatP fp=clpState::NORMAL);
 
 } /* namespace clp */
 

@@ -113,7 +113,24 @@ int main(int argc, char** argv){
 	double r=0.0;
 
     Block::FSB=fsb;
-    clpState* s0 = new_state(file,inst, min_fr, 10000, f);
+    //clpState* s0 = new_state(file,inst, min_fr, 10000, f);
+
+	long L, W, H;
+	double Wmax;
+
+	//En este mapa se almacenan todas las cajas de la instancia junto a su cantidad
+	map<BoxShape*, int> boxes;
+
+	// se lee la instancia
+	read_instance(L, W, H, Wmax, boxes, file, inst, f);
+
+	// se genera un estado 
+	clpState* s0 = new_state(L, W, H, Wmax, boxes);
+
+	//generación de bloques
+	s0->general_block_generator(min_fr, 10000, *s0->cont);
+
+
 	
 	if(f==clpState::BRpc) s0->singlebox_blocks = new AABBList(); //for keeping boxes
 

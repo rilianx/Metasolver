@@ -193,6 +193,149 @@ double clpState::Wmax=0.0;
 int clpState::nb_boxes=0;
 map <int,int> clpState::nb_boxes_by_type;
 
+clpState* new_state(long L, long W, long H, double Wmax, map<BoxShape*, int>& boxes){
+	clpState::weight_of_allboxes=0.0;
+	clpState *s= new clpState(new Block(L,W,H));
+	clpState::Wmax=Wmax;
+
+	for (auto boxp : boxes){
+		BoxShape* boxt = boxp.first;
+		int n = boxp.second;
+		int vol = boxt->getVolume();
+
+
+		clpState::weight_of_allboxes += boxt->get_weight()*(double) n;
+		clpState::profit_of_allboxes += boxt->get_profit()*(double) n;
+		clpState::density_of_allboxes += (boxt->get_weight()/((vol)/1000000.0))* (double) n;
+		clpState::square_density_of_allboxes += pow((boxt->get_weight()/((vol)/1000000.0)),2) * (double) n;
+		clpState::nb_boxes += n;
+		clpState::nb_boxes_by_type[boxt->get_type()] +=n;
+
+		s->nb_left_boxes.insert(make_pair(boxt,n));
+		for(int o=0; o<6; o++){
+			if(boxt->is_valid((BoxShape::Orientation) o)){
+				if(!Block::FSB)
+					s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o, vol));
+				else
+					s->valid_blocks.push_back(new Block_fsb(*boxt,(BoxShape::Orientation) o, vol));
+			}
+		}
+	}
+
+	s->update_min_dim();
+	return s;
+
+}
+
+void read_instance(long& L, long& W, long& H, double& Wmax, map<BoxShape*, int>& boxes,
+				 string file, int i, clpState::Format f, clpState::FormatP fp){
+	
+	ifstream in(file.c_str());
+	string line;
+	if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp  || f==clpState::BRpc){
+		getline(in,line); //number of instances
+		
+	}
+
+
+	for(int inst=0;inst<=i; inst++){
+		string line;
+
+		if(f==clpState::BR || f==clpState::BRw || f==clpState::BRwp || f==clpState::BRpc){
+			getline(in, line ); //n_inst random_seed
+		}
+
+		getline(in, line); //L W H
+
+		if(inst==i){
+			std::stringstream ss(line);
+			ss >> L >> W >> H;
+		}
+
+		if(f==clpState::_1C || f==clpState::BRwp || f==clpState::BRpc){
+			getline(in, line );
+			std::stringstream ss1(line);
+			ss1 >> Wmax;
+			
+		}
+
+
+		getline(in, line); //types of boxes
+
+		std::stringstream ss0(line);
+		int nb_types;
+		ss0 >> nb_types;
+
+		//se lee el archivo de entrada
+		//Objetos BoxType, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
+		//y restricciones de rotación
+		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
+
+
+		for(int j=0;j<nb_types;j++){
+			getline(in, line );
+
+
+			int n, id;
+			long l,h,w;
+			double ll,hh,ww;
+			double weight = 1.0;
+			double profit = 1.0;
+			double vol;
+			bool rot1, rot2, rot3;
+
+			std::stringstream ss1(line);
+
+			//Practical Constraints
+			int type = 1; // tipo de caja (por contenido)
+			double supported_weight_factor = 1.0; // peso que soporta: w*supported_weight_factor
+			double v_stability; //factor de estabilidad vertical
+			double h_stability; //factor de estabilidad horizontal
+
+			if(f==clpState::BR){
+
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
+
+				//cout << l << " " << w << " " << h << endl;
+				vol=l*h*w;
+			}else if(f==clpState::BRw){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight;
+				vol=l*h*w;
+			}else if(f==clpState::BRwp){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> profit;
+				if(fp==clpState::ALL_ONE) profit = 1;
+				else if(fp==clpState::WEIGHT) profit = weight;
+				vol=l*h*w;
+			}else if(f==clpState::BRpc){
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability;
+				vol=l*h*w;
+			}
+			else if(f==clpState::_1C){
+
+				ss1 >> ll >> rot1 >> ww >> rot2 >> hh >> rot3 >> weight >> n;
+				if(fp==clpState::ALL_ONE) profit = 1;
+				profit = weight;
+				vol=ll*hh*ww;
+			}
+
+			if(inst==i){
+				BoxShape* boxt;
+				if(f==clpState::_1C) boxt=new BoxShape(id, ll, ww, hh, rot1, rot2, rot3, weight, profit);
+				else if(f==clpState::BRpc){
+					boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit, 
+					type, supported_weight_factor*w, h_stability, v_stability);
+				}else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
+
+				boxes[boxt]=n;
+
+				if(fp==clpState::WEIGHT)
+					clpState::profit_of_allboxes = clpState::Wmax;
+			}
+		}
+
+	}
+}
+
 clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::Format f, clpState::FormatP fp){
 
   clpState::weight_of_allboxes=0.0;
@@ -330,9 +473,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 	}
 
 	//cout << "Test" << endl;
+	s->update_min_dim();
 	s->general_block_generator(min_fr, max_bl, *s->cont);
 	//cout << "Test2" << endl;
-	s->update_min_dim();
 	//cout << "Test3" << endl;
 	return s;
 }
@@ -369,6 +512,7 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 		B.insert(B.end(),N.begin(),N.end());
 		P=N;
 	}
+	
 }
 
 
