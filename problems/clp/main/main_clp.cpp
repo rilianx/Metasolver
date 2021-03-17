@@ -124,8 +124,13 @@ int main(int argc, char** argv){
 	// se lee la instancia
 	read_instance(L, W, H, Wmax, boxes, file, inst, f);
 
-	// se genera un estado 
+	//read_instanceMCLP(list<Volume*> TUs, list<double> Wmax, map<BoxShape*, int>, ...);
+
+	//Algoritmo de particionamiento que selecciona cajas para los distintos TUs.
+
+	// se genera un estado (un estado por TU)
 	clpState* s0 = new_state(L, W, H, Wmax, boxes);
+
 
 	//generación de bloques
 	s0->general_block_generator(min_fr, 10000, *s0->cont);
