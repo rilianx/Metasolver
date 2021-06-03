@@ -31,7 +31,9 @@ VCS_Function::~VCS_Function(){
 
 
 
-
+//MOMENTO 4
+//Descarta bloques que violan una resticcion
+//Calcula puntaje para el resto de los bloques (prioridad)
 double VCS_Function::eval_action(const State& s, const Action &a){
 	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
@@ -41,8 +43,10 @@ double VCS_Function::eval_action(const State& s, const Action &a){
     long resW=sp.getW() - b.getW();
     long resH=sp.getH() - b.getH();
 
+	//Se verfica que el bloque quepa en el espacio
     if(resL<0 || resW<0 || resH<0) return -1.0;
 
+	//Se verifica que el peso máximo no se supere
     if(clpState::Wmax > 0.0 && ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::Wmax) 
 		return -1.0;
 
@@ -56,13 +60,17 @@ double VCS_Function::eval_action(const State& s, const Action &a){
     double delta2=this->delta2 + lambda2*(this->delta2_2 - this->delta2);
     double delta3=this->delta3 + lambda2*(this->delta3_2 - this->delta3);
 
+	//estimacion del volumen que se perdera en el contenedor (-)
 	double loss=(beta>0.0)?
 			Loss(dynamic_cast<const clpState*>(&s)->nb_left_boxes, b, sp) : 0.0;
 
+	//volumen ocupado del bloque (+)
 	double vol=(delta>0.0)? (double) b.getOccupiedVolume(): 1.0;
 
+	//superficie en contacto (+)
 	double cs=(alpha>0.0)? CS_p(s, b, sp, p) : 1.0;
 
+	//cantidad de cajas dentro del bloque (-)
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
 
@@ -73,6 +81,7 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 		//cout << pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
 		//		     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3) << endl;
 
+		//puntaje del bloque
 		return ( pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
 				     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3));
 	}

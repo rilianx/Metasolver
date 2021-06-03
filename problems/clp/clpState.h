@@ -78,10 +78,9 @@ public:
 
 	
 	
-
+	//MOMENTO 5
+	//Ser penalizada con algunas restricciones blandas
 	virtual double get_value() const{
-
-
 		return cont->getOccupiedVolume()/cont->getVolume();
 	}
 
@@ -194,6 +193,9 @@ private:
 	 * @zero_support_aabb set of blocks with no supports
 	 */
 	void compute_supports(map<const AABB*,int>& n_supports, set<const AABB*>& zero_support_aabb);
+
+	//correccion de error al ejecutar el make
+	void get_actions(list< Action* >& actions) const;
 
 	/*
 	 * update the number of supported blocks after placing the block

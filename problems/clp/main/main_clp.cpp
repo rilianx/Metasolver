@@ -18,10 +18,102 @@
 #include "GlobalVariables.h"
 #include "BSG.h"
 
+
 bool global::TRACE = false;
 
 using namespace std;
+//structs de prueba
+struct caja
+{
+	double peso;
+	double volumen;
+};
 
+
+struct entrega
+{
+	caja cajas[3];	
+};
+
+struct tu
+{
+	list<entrega> entregas;
+	double pesoMax = 115.9;
+	double volMax = 271.9;
+};
+
+struct delivery
+{
+	list<BoxShape> boxes; //lista de cajas de la entrega
+	int type; //id de la entrega
+};
+
+
+
+//funciones de prueba
+bool hay_peso_volumen(double,double,double,double);
+double pesoEntrega(entrega *);
+double volumenEntrega(entrega *);
+void addArrayCaja(caja *, int *, caja *, int);
+void mostraArrayCaja(caja *, int);
+void arraycero(caja *,int);
+caja* extraerCajas(caja *, int, double, double);
+//void nuevos_peso_volumen()
+
+double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax, 
+		double min_fr, double alpha, double beta, double gamma, double p, double delta, double r){
+	//Se se pasa lb a un mapa y se envia a solucionarlo
+	map<BoxShape*, int> lbmapa; 
+	for(auto i : lb){
+		if (lbmapa.find(i) == lbmapa.end()) lbmapa.insert({i,1});
+		else lbmapa[i]++;
+	}
+	
+	//se crea nodo raiz
+	clpState* s0 = new_state(L, W, H, Wmax, lbmapa);
+	s0->general_block_generator(min_fr, 10000, *s0->cont);
+	
+	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
+ 	alpha, beta, gamma, p, delta, 0.0, r);
+
+
+	cout << "greedy" << endl;
+	SearchStrategy *gr = new Greedy (vcs);
+
+	cout << "bsg" << endl;
+	BSG *bsg= new BSG(vcs,*gr, 8, 0.0, 0, false);
+
+	cout << "running" << endl;
+
+	clock_t begin_time=clock();
+	double eval=bsg->run(*s0, 9999, begin_time) ;
+	//identificar los contenedores que entraron en el tu --> S
+	cout << "eval: " << eval << endl;
+
+	const clpState* sbest = dynamic_cast<const clpState*> (bsg->get_best_state());
+	map<const BoxShape*, int> lbmapa2  = sbest->nb_left_boxes;
+	cout << lbmapa2.size() << endl;
+
+	
+	lb.clear();
+
+	for (auto b : lbmapa2){
+		const BoxShape* box = b.first;
+		int n = b.second;
+		for(int i=0; i<n; i++) lb.push_back((BoxShape*) box);
+	} 		
+
+	return sbest->cont->getOccupiedVolume();
+}
+
+list<BoxShape*> get_delivery_boxes(list<BoxShape*>& all_boxes, int d){
+	list<BoxShape*> lr;
+	for (auto  b : all_boxes)
+		if (b->get_type() == d) 
+			lr.push_back(b);
+
+	return lr;
+}
 
 int main(int argc, char** argv){
 
@@ -120,64 +212,193 @@ int main(int argc, char** argv){
 
 	//En este mapa se almacenan todas las cajas de la instancia junto a su cantidad
 	map<BoxShape*, int> boxes;
-
 	// se lee la instancia
 	read_instance(L, W, H, Wmax, boxes, file, inst, f);
-
-	//read_instanceMCLP(list<Volume*> TUs, list<double> Wmax, map<BoxShape*, int>, ...);
-
-	//Algoritmo de particionamiento que selecciona cajas para los distintos TUs.
-
-	// se genera un estado (un estado por TU)
-	clpState* s0 = new_state(L, W, H, Wmax, boxes);
-
-
-	//generación de bloques
-	s0->general_block_generator(min_fr, 10000, *s0->cont);
-
-
+	clpState* s0;
+	list<BoxShape*> lista; // lista de cajas
 	
-	if(f==clpState::BRpc) s0->singlebox_blocks = new AABBList(); //for keeping boxes
+	//for usado para recorrer el mapa boxes, de aqui se sacan las cajas
+	for (auto b : boxes){
+		BoxShape* box = b.first;
+		int n = b.second;
+		
+		//cout <<"tipo: " <<box->get_type() << endl;
+		int tipo = box->get_type();	
+		box->getVolume();
+		box->get_weight();
+		for(int i=0; i<n; i++) lista.push_back(box);
+	}
+	//for (auto i : lista){	cout << "box en lista: " << i->get_type() << endl;	}
+
+	//Ordena la lista con las cajas usando el campo type
+	lista.sort([] (BoxShape* a, BoxShape* b) {
+		return a->get_type() < b->get_type();
+	});
+	
+	//for (auto i : lista){	cout << "box en lista ordenada: " << i->get_type() << endl;	}
+	int cont = 0;
+	bool rvacio = false; //para controlar el loop 1
+	bool dloop = true; //para controlar el loop 2
+	
+	//id del primer y ultimo cliente (d y dMax)
+	int d = lista.front()->get_type();
+	//cout << "Primer type en la lista: " << d << endl;
+	int dMax = lista.back()->get_type();
+	//cout << "Ultimo type en la lista: " << dMax << endl;
+
+	int tu = 0;
+	
+	
+	int bins = 0;
+
+	double pesomax = Wmax;
+	double volmax = L*W*H;
+	cout << "peso y volumen maximos: " << pesomax << " , " << volmax << endl;
+	
+	//se obtiene lista de cajas del cliente d
+	list<BoxShape*> lr = get_delivery_boxes(lista,d);
+	cout << "Total boxes: " << lista.size() << " boxes" << endl;
+	cout << "Delivery " << d << ":" << lr.size() << " boxes" << endl;
+	
+	//cajas candidatas para ir en el contenedor (selecccionadas)
+	list<BoxShape*> lb;
+	//peso y volumen de cajas selccionadas
+	double pe=0.0;
+	double ve=0.0;
+	while (dloop){ //itera por los clientes		
+
+		while(!lr.empty()){
+			BoxShape* b = lr.front(); lr.pop_front();
+			lb.push_back(b);
+			pe = pe + b->get_weight();
+			ve = ve + b->getVolume();
+			
+			//cajas en lb sobre pasan el peso o volumen máximo del contenedor
+			if (pe > pesomax || ve > volmax || (lr.empty() && d==dMax) ) {
+				cout << "Peso cajas: " << (double)pe/(double)pesomax ;
+				cout << "\tVolumen cajas: " << (double)ve/(double)volmax << endl;
+
+				//se resuelve el problema para el contenedor actual
+				double vol=bsg_solve(lb, L, W, H, Wmax, min_fr, alpha, beta, gamma, p, delta, r);
+				bins++; //contenedores
+				cout << "remaining boxes: " << lb.size() << endl;
+				pe=0.0;
+				ve=0.0;
+				for(auto b : lb){
+					pe = pe + b->get_weight();
+					ve = ve + b->getVolume();
+				}
+			}
+			
+		}
+
+		d = d+1;
+		if(d>dMax) dloop=false;
+		else{
+			lr=get_delivery_boxes(lista,d);
+			cout << "Delivery " << d << ":" << lr.size() << " boxes" << endl;
+		}
+
+		
+	}
+
+	cout << "TUs: " << bins << endl;
 
 
-    cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
-
-    clock_t begin_time=clock();
-
-    VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
-    alpha, beta, gamma, p, delta, 0.0, r);
-
-
-	cout << "greedy" << endl;
-    SearchStrategy *gr = new Greedy (vcs);
-
-	cout << "bsg" << endl;
-    BSG *bsg= new BSG(vcs,*gr, 8, 0.0, 0, _plot);
-
-	//cout << "double effort" << endl;
-    SearchStrategy *de= new DoubleEffort(*bsg);
-
-	cout << "copying state" << endl;
-	State& s_copy= *s0->clone();
-
-	cout << "running" << endl;
-
-
-    double eval=de->run(s_copy, maxtime, begin_time) ;
-
-    cout << "% volume utilization" << endl;
-	cout << eval*100.0 << endl;
-
+	/*
 	if(f==clpState::BRpc){
 		if(dynamic_cast<const clpState*>(de->get_best_state())!=NULL){
 			cout << "multidrop:" << dynamic_cast<const clpState*>(de->get_best_state())->multidrop() << endl;
 			cout << "angle:" << dynamic_cast<const clpState*>(de->get_best_state())->loadbalanceA() << endl;
 			cout << "completeShipment:" << dynamic_cast<const clpState*>(de->get_best_state())->completeshipment() << endl;
 		}
-	}
+	}*/
 	
 
 
 
 
+}
+
+
+
+
+bool hay_peso_volumen(double px,double vx,double p,double v){
+
+	if ((px > p) && (vx > v))
+	{
+		return true;
+	}
+	
+
+	return false;
+}
+
+double pesoEntrega(entrega *e){
+	double p = 0.0;
+	for (int i = 0; i < 3; i++)
+	{
+		p = p + e->cajas[i].peso;
+		//cout << "peso entrega e " << i << " : " << e->cajas[i].peso << endl;
+		//cout << "nuevo peso: " << p << endl;
+	}
+	
+	return p;
+
+}
+double volumenEntrega(entrega *e){
+	double p = 0.0;
+	for (int i = 0; i < 3; i++)
+	{	
+		//cout << "En funcion volumen caja " << i << " : " << e->cajas[i].volumen << endl;  
+		p = p + e->cajas[i].volumen;
+
+	}
+	
+	return p;
+
+}
+/*
+void addArrayCaja(caja * a, int * ai, caja * b, int bi){
+
+	for (int i = 0; i < bi; i++)
+	{
+		a[ai] = b[bi];
+	}
+	cout << "Se actualizo " << i+1 << " a "; 
+	ai = ai + bi;
+	cout << ai << endl;
+	
+}
+*/
+void mostraArrayCaja(caja * a, int b){
+	//cout << "----------------------funcion------------------------ " << endl;
+	for (int i = 0; i < b; i++)
+	{
+		//cout << "Jalea Funcion" << endl;
+		cout << "Peso caja " << i+1 << " : " << a[i].peso;  
+	
+		cout << "\t \t Volumen caja " << i+1 << " : " << a[i].volumen << endl;
+	}
+	
+}
+
+void arraycero(caja *caja,int size){
+
+	for (int i = 0; i <= size; i++)
+	{
+		caja->peso = 0.0;
+		caja->volumen = 0.0;
+		
+	}	
+}
+
+caja* extraerCajas(caja * c, int size, double peso, double vol){
+	caja caja[size];
+	for (int i = 0; i < size; i++)
+	{
+		caja[i] = c[i];
+	}
+	
+	return caja;
 }
