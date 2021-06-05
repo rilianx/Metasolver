@@ -56,8 +56,10 @@ public:
 	valid_blocks(S.valid_blocks), mindim(S.mindim), 
 	singlebox_blocks(NULL){
 
-		if(S.singlebox_blocks)
+		if(S.singlebox_blocks){
 		   singlebox_blocks = new AABBList(*S.singlebox_blocks);
+		   //bloxs = *S.bloxs;
+		}
 
 	}
 
@@ -118,6 +120,7 @@ public:
 
 	//For Practical Constraint operations
 	AABBContainer<AABB>* singlebox_blocks;
+	//list<AABB>* aabb_bloxs; //box-blocks
 	
 
 	void get_singlebox_AABBs(list<const AABB*>& aabbs, const Block* this_b, Vector3 mins) const{
@@ -128,9 +131,9 @@ public:
 		}else{
 			const AABB* b=&blocks->top();
 			while(true){
-						get_singlebox_AABBs(aabbs, b->getBlock(), mins+b->getMins());
-						if(blocks->has_next()) b=&blocks->next();
-						else break;
+				get_singlebox_AABBs(aabbs, b->getBlock(), mins+b->getMins());
+				if(blocks->has_next()) b=&blocks->next();
+				else break;
 			}
 		}
 	}
@@ -145,6 +148,7 @@ public:
 
 	//practical constraints
 	enum adj_type{DOWN=1, UP=2, BACK=4, FORTH=8, LEFT=16, RIGHT=32};
+	list<AABB> get_adjacent_aabbs(const AABB& ab, int adj, int d) const;
 	void get_adjacent_aabbs(const AABB& ab, list<const AABB*>& aabb_list, int adj=clpState::UP, int d=10) const;
 	map <int, set<string>> recursive_extra_movements(AABB aabb, int client, map <int, set<string>> extra_movementsMAP) const;
 	double multidrop() const;

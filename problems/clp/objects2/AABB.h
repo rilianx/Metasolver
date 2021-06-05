@@ -65,6 +65,10 @@ class AABB {
         }
 
 
+    	bool operator <=(const AABB& s2) const{
+            return (mins>=s2.mins && maxs<=s2.maxs);
+    	}
+
     	bool operator >=(const AABB& s2) const{
             return (mins<=s2.mins && maxs>=s2.maxs);
     	}
@@ -81,7 +85,11 @@ class AABB {
 					  getZmax()<=b.getZmin() || b.getZmax()<=getZmin() );
 		}
 
-		bool intersects(AABB&) const;
+		bool intersects(const AABB& b) const {
+			  return !( getXmax()<b.getXmin() || b.getXmax() <getXmin() ||
+					  getYmax()<b.getYmin() || b.getYmax()<getYmin() ||
+					  getZmax()<b.getZmin() || b.getZmax()<getZmin() );
+		}
 
 		friend inline std::ostream& operator <<(std::ostream& os, const AABB& v);
 
@@ -99,7 +107,7 @@ class AABB {
 bool greater_volume(const AABB& a, const AABB& b) ;
 
 inline std::ostream& operator <<(std::ostream& os, const AABB& ab){
-	return os << ab.mins << " ; " << ab.maxs  ;
+	return os << ab.mins << "," << ab.maxs  ;
 }
 
 }

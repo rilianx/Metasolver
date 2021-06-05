@@ -27,6 +27,7 @@ Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volum
 		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	nb_boxes[&box]=1;
+	aabb_bloxs.push_back(AABB(Vector3(0,0,0), this));
 };
 
 Block::~Block() {
@@ -54,6 +55,9 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
     spaces->crop_volume(b,*this, min_dim);
 
     blocks->insert(b);
+
+	for(auto bb : block.aabb_bloxs)
+		aabb_bloxs.push_back(AABB(bb.getMins()+point, bb.getBlock()));
 }
 
 

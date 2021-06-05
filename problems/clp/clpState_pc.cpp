@@ -13,6 +13,45 @@ using namespace metasolver;
 
 namespace clp {
 
+	//debería estar en AABB
+     list<AABB> clpState::get_adjacent_aabbs(const AABB& ab, int adj, int d) const{
+
+		Vector3 mins = ab.getMins() + Vector3(1,1,1);
+		Vector3 maxs = ab.getMaxs() - Vector3(1,1,1);
+		for (int nbit=0; nbit<6; nbit++){
+			int bit = (adj & ( 1 << nbit )) >> nbit;
+			if(bit == 1){
+				 switch(nbit){
+					 case 0: //DOWN
+					   mins.setZ(std::max(ab.getMins().getZ()-d,(long)0));  break;
+					 case 1: //UP
+		 			   maxs.setZ(ab.getMaxs().getZ()+d); break;
+					 case 2: //BACK
+					   mins.setX(std::max(ab.getMins().getX()-d,(long)0)); break;
+					 case 3: //FORTH
+		 			   maxs.setX(ab.getMaxs().getX()+d); break;
+					 case 4: //LEFT
+					   mins.setY(std::max(ab.getMins().getY()-d, (long)0)); break;
+					 case 5: //RIGHT
+		 			   maxs.setY(ab.getMaxs().getY()+d); break;
+				 }
+			}
+		}
+		list<AABB> adjacent_bloxs;
+
+		list<const AABB*> aabb_list=cont->blocks->get_intersected_objects(AABB(mins,maxs));
+		for (auto aabb: aabb_list){
+			if(!(ab <= *aabb)) //is not contained in the aabb-block
+				for(auto bloxs:aabb->getBlock()->aabb_bloxs){
+					AABB ab2 = AABB(aabb->getMins() + bloxs.getMins(), bloxs.getBlock());
+					if(ab.intersects(ab2))
+						adjacent_bloxs.push_back(ab);
+				}
+		}
+		
+		return adjacent_bloxs;
+	}
+
     void clpState::get_adjacent_aabbs(const AABB& ab, list<const AABB*>& aabb_list, int adj, int d) const{
 		Vector3 mins = ab.getMins() + Vector3(1,1,1);
 		Vector3 maxs = ab.getMaxs() - Vector3(1,1,1);

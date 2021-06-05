@@ -72,6 +72,7 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	//se crea nodo raiz
 	clpState* s0 = new_state(L, W, H, Wmax, lbmapa);
 	s0->general_block_generator(min_fr, 10000, *s0->cont);
+	s0->singlebox_blocks = new AABBList(); //for keeping boxes
 	
 	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
  	alpha, beta, gamma, p, delta, 0.0, r);
@@ -102,6 +103,26 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 		int n = b.second;
 		for(int i=0; i<n; i++) lb.push_back((BoxShape*) box);
 	} 		
+
+	/*
+	for(AABB aabb = sbest->cont->blocks->top(); sbest->cont->blocks->has_next(); aabb = sbest->cont->blocks->next()){
+		cout << "block:" << aabb << endl;
+		for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
+			AABB aabb3(aabb2.getMins()+aabb.getMins(), aabb2.getBlock());
+			cout << "-->" << aabb3 << endl;
+			if(aabb3.getZmin()==120){
+				for(auto aabb4 : sbest->get_adjacent_aabbs(aabb3, clpState::adj_type::DOWN,0))
+					cout << "  ---->down" << aabb4 << endl;
+			}
+		}
+
+	}*/
+
+
+
+
+
+	
 
 	return sbest->cont->getOccupiedVolume();
 }
@@ -205,6 +226,7 @@ int main(int argc, char** argv){
 	double r=0.0;
 
     Block::FSB=fsb;
+	Space::bottom_up=true;
     //clpState* s0 = new_state(file,inst, min_fr, 10000, f);
 
 	long L, W, H;

@@ -82,7 +82,10 @@ public:
 
 	bool verify_solution();
 
+	//cajita
 	map<const BoxShape*, int> nb_boxes;
+
+
 	int n_boxes;
 
 
@@ -92,6 +95,9 @@ public:
     * List of sub-blocks located in the block
     */
 	AABBContainer<AABB>* blocks;
+
+	//location of inner bloxs (unitary blocks)
+	list<AABB> aabb_bloxs;
 
 
     void recursive_print(ostream& os, Vector3 mins=Vector3(0,0,0)) const{
@@ -107,13 +113,14 @@ public:
     	}
     }
 
+
 protected:
 
 	//only the clone function can use the copy constructor
 	Block(const Block& b) : Volume(b.getL(),b.getW(),b.getH()),
 		occupied_volume(b.occupied_volume), n_boxes(b.n_boxes),
 	 	spaces(new SpaceSet(*b.spaces, *this)), blocks(new AABBList(*b.blocks)),
-		total_weight(b.total_weight), total_profit(b.total_profit) {	}
+		total_weight(b.total_weight), total_profit(b.total_profit), aabb_bloxs(b.aabb_bloxs) {	}
 
 
 
