@@ -104,6 +104,7 @@ class AABB {
 		}
 
 		double contact_surfaceZ(list<const AABB*>& aabb_list) const;
+		double contact_surfaceZ(const AABB& aabb) const;
 
 
 		friend inline std::ostream& operator <<(std::ostream& os, const AABB& v);

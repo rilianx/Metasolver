@@ -38,7 +38,7 @@ double VCS_Function::min_contact_surface(const clpState& s, const AABB& aabb){
 	for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
 		if(aabb2.getZmin()==0){
 			list<const AABB*> aabb_list=s.get_adjacent_aabbs(aabb2+aabb.getMins(), clpState::DOWN,0);
-			min_cs = min(min_cs,AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list));
+			min_cs = min(min_cs,AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list)/(aabb2.getL()*aabb2.getW()));
 		}	
 	}
 	return min_cs;
@@ -64,6 +64,11 @@ double VCS_Function::eval_action(const State& s, const Action &a){
     if(clpState::Wmax > 0.0 && ss->cont->getTotalWeight() + b.getTotalWeight() > clpState::Wmax) 
 		return -1.0;
 
+	//Minima superficie basal de contacto
+    AABB bb(sp.get_location(b), &b);
+	double mcs = min_contact_surface(*ss, bb);
+	if(mcs < 0.5) return -1.0;
+
 
 
     double alpha=this->alpha + lambda2*(this->alpha_2 - this->alpha);
@@ -87,10 +92,7 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 	//cantidad de cajas dentro del bloque (-)
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
-	//Minima superficie basal de contacto
-    //AABB bb(sp.get_location(b), &b);
-	//double mcs = min_contact_surface(*ss, bb);
-	//if(mcs < 0.5) cout << mcs << endl;
+
 
 
 

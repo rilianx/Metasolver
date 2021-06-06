@@ -87,6 +87,20 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim &&
 				(b1->getTotalWeight() + b1->getTotalWeight () <= wmax || wmax ==0.0) ){
 
+
+			if(z2>0){
+				//verificar que se cumpla restricción de soporte
+				for(auto aabb2 :b2->aabb_bloxs){
+					if(aabb2.getZmin()==0){
+						double support=AABB(aabb2+Vector3(0,0,z2)).contact_surfaceZ(AABB(Vector3(0,0,0),b1))/(double)(b2->getX()*b2->getY());
+						//box is not supported (vertical stability)
+						if(support < 0.5) 
+							return blocks;
+						
+					}
+				}
+			}
+
 			Block* new_block;
 
 			new_block=new Block(ll,ww,hh);
