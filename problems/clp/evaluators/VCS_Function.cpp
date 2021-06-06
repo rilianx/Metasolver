@@ -9,10 +9,10 @@
 #include <math.h>
 #include "VLossFunction.h"
 #include "VCS_Function.h"
-#include "../clpState.h"
-#include "../objects2/AABB.h"
-#include "../objects2/Block.h"
-#include "../../metasolver/GlobalVariables.h"
+#include "clpState.h"
+#include "AABB.h"
+#include "Block.h"
+#include "GlobalVariables.h"
 
 using namespace std;
 
@@ -29,6 +29,20 @@ VCS_Function::~VCS_Function(){
 
 }
 
+double VCS_Function::min_contact_surface(const clpState& s, const AABB& aabb){
+	if(aabb.getZmin()==0) return 1.0;
+	double min_cs=1.0;
+
+	//Se revisan los bloques unitarios en la base de cada bloque
+	//Y se calcula el area de contacto
+	for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
+		if(aabb2.getZmin()==0){
+			list<const AABB*> aabb_list=s.get_adjacent_aabbs(aabb2+aabb.getMins(), clpState::DOWN,0);
+			min_cs = min(min_cs,AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list));
+		}	
+	}
+	return min_cs;
+}
 
 
 //MOMENTO 4
@@ -72,6 +86,13 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
 	//cantidad de cajas dentro del bloque (-)
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
+
+	//Minima superficie basal de contacto
+    //AABB bb(sp.get_location(b), &b);
+	//double mcs = min_contact_surface(*ss, bb);
+	//if(mcs < 0.5) cout << mcs << endl;
+
+
 
 
 	if(clpState::Wmax > 0.0){

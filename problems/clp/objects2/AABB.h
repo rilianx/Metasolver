@@ -60,6 +60,11 @@ class AABB {
 
 		inline long getSurface() const {return 2*(getL()*getW()+getL()*getH()+getW()*getH());}
 
+		AABB& operator+=(const Vector3& b) {
+			mins+=b; maxs+=b;
+	   		return *this;
+	 	}
+
         bool operator==(const AABB& b) const{
             return (volume == b.volume && mins==b.mins && maxs==b.maxs);
         }
@@ -91,6 +96,16 @@ class AABB {
 					  getZmax()<b.getZmin() || b.getZmax()<getZmin() );
 		}
 
+		static long surface_in_contact(const AABB &b1, const AABB& b2){
+			long l= min(b1.getXmax(),b2.getXmax()) - max(b1.getXmin(),b2.getXmin());
+			long w= min(b1.getYmax(),b2.getYmax()) - max(b1.getYmin(),b2.getYmin()) ;
+			if(l<=0 || w<=0) return 0;
+			return l*w;
+		}
+
+		double contact_surfaceZ(list<const AABB*>& aabb_list) const;
+
+
 		friend inline std::ostream& operator <<(std::ostream& os, const AABB& v);
 
 
@@ -108,6 +123,11 @@ bool greater_volume(const AABB& a, const AABB& b) ;
 
 inline std::ostream& operator <<(std::ostream& os, const AABB& ab){
 	return os << ab.mins << "," << ab.maxs  ;
+}
+
+inline AABB operator+(AABB lhs, const Vector3& rhs){
+	lhs += rhs;
+	return lhs;
 }
 
 }

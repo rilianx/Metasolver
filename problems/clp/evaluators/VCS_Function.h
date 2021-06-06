@@ -9,6 +9,7 @@
 #define VCS_FUNCTION_H_
 
 #include "VLossFunction.h"
+#include "clpState.h"
 #include <vector>
 
 using namespace std;
@@ -57,6 +58,7 @@ public:
 	static int nn;
 
 	double CS_p(const State& s, const Block& b, const Space& sp, double p);
+	double min_contact_surface(const clpState& s, const AABB& aabb);
 
 protected:
 

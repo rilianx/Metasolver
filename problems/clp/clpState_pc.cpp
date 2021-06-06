@@ -14,7 +14,7 @@ using namespace metasolver;
 namespace clp {
 
 	//debería estar en AABB
-     list<AABB> clpState::get_adjacent_aabbs(const AABB& ab, int adj, int d) const{
+     list<const AABB*> clpState::get_adjacent_aabbs(const AABB& ab, int adj, int d) const{
 
 		Vector3 mins = ab.getMins() + Vector3(1,1,1);
 		Vector3 maxs = ab.getMaxs() - Vector3(1,1,1);
@@ -37,19 +37,10 @@ namespace clp {
 				 }
 			}
 		}
-		list<AABB> adjacent_bloxs;
 
 		list<const AABB*> aabb_list=cont->blocks->get_intersected_objects(AABB(mins,maxs));
-		for (auto aabb: aabb_list){
-			if(!(ab <= *aabb)) //is not contained in the aabb-block
-				for(auto bloxs:aabb->getBlock()->aabb_bloxs){
-					AABB ab2 = AABB(aabb->getMins() + bloxs.getMins(), bloxs.getBlock());
-					if(ab.intersects(ab2))
-						adjacent_bloxs.push_back(ab);
-				}
-		}
 		
-		return adjacent_bloxs;
+		return aabb_list;
 	}
 
     void clpState::get_adjacent_aabbs(const AABB& ab, list<const AABB*>& aabb_list, int adj, int d) const{

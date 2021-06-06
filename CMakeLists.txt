@@ -46,6 +46,7 @@ metasolver/strategies/BSG.cpp
 metasolver/strategies/Greedy.cpp
 metasolver/strategies/Simulation.cpp
 metasolver/State.cpp
+problems/clp/clpState_pc.cpp
 )
 
 ADD_LIBRARY(
@@ -58,6 +59,7 @@ nsga2
  metasolver/plugins/mop/strategies/Chromosome.cpp
  metasolver/plugins/mop/strategies/NSGA2.cpp
  problems/clp/plugins/ga/clp_chromosome.cpp
+ problems/clp/clpState_pc.cpp
 )
 
 ADD_LIBRARY(

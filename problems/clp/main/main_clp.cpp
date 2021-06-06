@@ -104,19 +104,21 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 		for(int i=0; i<n; i++) lb.push_back((BoxShape*) box);
 	} 		
 
-	/*
+	//Se imprimen los bloques
 	for(AABB aabb = sbest->cont->blocks->top(); sbest->cont->blocks->has_next(); aabb = sbest->cont->blocks->next()){
 		cout << "block:" << aabb << endl;
-		for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
-			AABB aabb3(aabb2.getMins()+aabb.getMins(), aabb2.getBlock());
-			cout << "-->" << aabb3 << endl;
-			if(aabb3.getZmin()==120){
-				for(auto aabb4 : sbest->get_adjacent_aabbs(aabb3, clpState::adj_type::DOWN,0))
-					cout << "  ---->down" << aabb4 << endl;
-			}
-		}
+		if(aabb.getZmin()==0) continue;
 
-	}*/
+		//Se revisan los bloques unitarios en la base de cada bloque
+		//Y se calcula el area de contacto
+		for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
+			if(aabb2.getZmin()==0){
+				cout << "-->" << aabb2+aabb.getMins();
+				list<const AABB*> aabb_list=sbest->get_adjacent_aabbs(aabb2+aabb.getMins(), clpState::DOWN,0);
+				cout << ", %supported:" << AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list) << endl;
+			}	
+		}
+	}
 
 
 

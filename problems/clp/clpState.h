@@ -148,7 +148,7 @@ public:
 
 	//practical constraints
 	enum adj_type{DOWN=1, UP=2, BACK=4, FORTH=8, LEFT=16, RIGHT=32};
-	list<AABB> get_adjacent_aabbs(const AABB& ab, int adj, int d) const;
+	list<const AABB*> get_adjacent_aabbs(const AABB& ab, int adj, int d) const;
 	void get_adjacent_aabbs(const AABB& ab, list<const AABB*>& aabb_list, int adj=clpState::UP, int d=10) const;
 	map <int, set<string>> recursive_extra_movements(AABB aabb, int client, map <int, set<string>> extra_movementsMAP) const;
 	double multidrop() const;

@@ -50,6 +50,21 @@ list<AABB> AABB::subtract(const AABB& b) const{
     return sub;
 }
 
+//compute the surface in contact of this (unitary aabb), related to the aabb_list
+double AABB::contact_surfaceZ(list<const AABB*>& aabb_list) const{
+	double sc=0;
+	for(auto aabb:aabb_list){
+		for(auto unitary_aabb : aabb->block->aabb_bloxs){
+			AABB un_aabb(unitary_aabb+aabb->getMins());
+			if(getZmin() == un_aabb.getZmax())
+				sc+=surface_in_contact(*this, un_aabb);
+		}
+	}
+
+	return (double)sc/(double)(this->getL()*this->getW());
+	//exit(0);
+}
+
 
 
 bool greater_volume(const AABB& a, const AABB& b) { return a.getVolume() > b.getVolume() ; }
