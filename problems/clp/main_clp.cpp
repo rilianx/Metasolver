@@ -77,6 +77,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::Flag _json(parser, "double", "json output tuple: (loaded, remaining, utilization)", {"json"});
 	args::Flag _show_layout(parser, "layout", "Show the layout of the boxes in the best found solution", {"show_layout"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
@@ -210,6 +211,7 @@ int main(int argc, char** argv){
     	system("firefox problems/clp/tree_plot/index.html");
     }
 
+
   if(_show_layout){
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
     actions.sort(clpState::height_sort);
@@ -232,15 +234,25 @@ int main(int argc, char** argv){
 
 }
 
-/*
-	const AABB* b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->top();
-	while(dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->has_next()){
-		cout << *b << ":" << b->getVolume() << "(" << b->getOccupiedVolume() << ")" << endl;
-		b = &dynamic_cast<const clpState*>(de->get_best_state())->cont->blocks->next();
-	}
-*/
 
-	//s00->cont->MatLab_print();
+   if(_json){
+	   	bool first;
+		cout << "{\"remaining\" :["; first=true;
+		for(auto b:dynamic_cast<const clpState*>(de->get_best_state())->nb_left_boxes)
+		    if(b.second > 0){
+			   if(first)  first=false; else cout << "," ;
+			   cout << "[" << b.first->get_id() << "," << b.second << "]";
+			}
+		cout << "], \"loaded\" :["; first=true;
+		for(auto b:dynamic_cast<const clpState*>(de->get_best_state())->nb_left_boxes){
+			int load = s0->nb_left_boxes[b.first] -b.second;
+			if(load>0){
+			   if(first)  first=false; else cout << "," ;
+			   cout << "[" <<  b.first->get_id() << "," << load << "]";
+			}
+		}
+		cout << "], \"utilization\" : " << eval << "}"<<endl;
+	}
 
 
 }
