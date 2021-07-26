@@ -39,6 +39,31 @@ Block::~Block() {
 	if(boxes) delete boxes;
 }
 
+//Bottom contact surface and Load Bearing
+void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights){
+
+	for(auto b:*block.boxes){
+		 //solo me interesan las cajas de la base (no soportadas dentro del bloque)
+		 if(b.supporting_aabbs.size()==0){
+			b += point; 
+			b.bottom_contact_surface=0;
+
+			//se agregan supporting boxes a b
+			if(b.getZmin()>0){
+				AABB inf_face = b.get_face(AABB::Z, true); //Se obtiene cara inferior de la caja
+				list<const AABB*> intersected_boxes = boxes->get_intersected_objects_strict(inf_face);
+				for (auto ib : intersected_boxes){
+					b.supporting_aabbs.push_back(ib);
+					b.bottom_contact_surface += ( min(ib->getXmax(),b.getXmax()) - max(ib->getXmin(),b.getXmin()) ) * 
+													( min(ib->getYmax(),b.getYmax()) - max(ib->getYmin(),b.getYmin()) );
+				}
+			}else
+				b.bottom_contact_surface = b.getL()*b.getW();
+			
+			b.propagate_weight_const(b.box->get_weight()+b.supported_weight, sup_weights); //load bearing without modifying supported weights!
+		}
+	}
+}
 
 
 void Block::insert(const Block& block, const Vector3& point, const Vector3 min_dim){
@@ -61,8 +86,12 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 
 	//Inserto las cajas del bloque en boxes
 	for(auto b:*block.boxes){
+		
 		b += point; 
-		b.bottom_contact_surface = 0;
+		b.supporting_aabbs.clear();
+		b.bottom_contact_surface=0;
+		b.supported_weight=0.0;
+
 
 		//se agregan supporting boxes a b
 		if(b.getZmin()>0){
@@ -76,12 +105,11 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 		}else
 			b.bottom_contact_surface = b.getL()*b.getW();
 		
+		b.propagate_weight(b.box->get_weight()); //load bearing
 
 		//se insertan las cajas en boxes
-		boxes->insert(b);
+		boxes->insert(b);	
 	}
-	
-
 }
 
 

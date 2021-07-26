@@ -148,7 +148,7 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 
 	//Se imprimen los bloques
 	for(auto aabb : *sbest->cont->boxes )
-		cout << aabb << "," << (double)aabb.bottom_contact_surface/(double)(aabb.getL()*aabb.getW()) << endl;
+		cout << aabb << "," << (double)aabb.bottom_contact_surface/(double)(aabb.getL()*aabb.getW()) << "," << aabb.supported_weight << endl;
 	
 
 

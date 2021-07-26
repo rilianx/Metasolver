@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <list>
+#include <map>
 
 #include "BoxShape.h"
 #include "Block.h"
@@ -152,18 +153,47 @@ class AABB {
 		
 		//lista de AABB que soportan el AABB actual
 		list<const AABB*> supporting_aabbs;
-		double supported_weight;
-		long bottom_contact_surface;
+		long bottom_contact_surface=0;
+		mutable double supported_weight=0.0; //se modifica al agregar cajas
 
 		void set_box(const BoxShape* b){ box=b; }
 
+		/* Recursive function for propagating weights top-down */
+		void propagate_weight(double weight) const{
+			for (auto supp:supporting_aabbs){
+				// proporcion de la base en contacto con supp
+				double cs = double(( min(supp->getXmax(),getXmax()) - max(supp->getXmin(),getXmin()) ) * 
+												( min(supp->getYmax(),getYmax()) - max(supp->getYmin(),getYmin()) )) / bottom_contact_surface;
+				
+				double pweight =  weight*cs;
+				supp->supported_weight += weight*cs;
+				supp->propagate_weight(pweight);
+			}
+		}
 
+		void propagate_weight_const(double weight, map<const AABB*,double>& sup_weights) const{
+			for (auto supp:supporting_aabbs){
+				// proporcion de la base en contacto con supp
+				double cs = double(( min(supp->getXmax(),getXmax()) - max(supp->getXmin(),getXmin()) ) * 
+												( min(supp->getYmax(),getYmax()) - max(supp->getYmin(),getYmin()) )) / bottom_contact_surface;
+				
+				double pweight =  weight*cs;
+				if(sup_weights.find(supp) == sup_weights.end())
+					sup_weights[supp]=supp->supported_weight + weight*cs;
+				else
+					sup_weights[supp] += weight*cs;
+
+			}
+		}
+
+
+		const BoxShape* box;
 
 	protected:
 	    Vector3 mins;
 	    Vector3 maxs;
 	    const Block* block;
-		const BoxShape* box;
+		
 
         long volume;
 

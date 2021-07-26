@@ -80,6 +80,9 @@ public:
 
 	const BoxShape* get_box_shape() const {return nb_boxes.begin()->first;}
 
+	//Bottom contact surface and Load Bearing
+	void BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights);
+
 	bool verify_solution();
 
 	//cajita
@@ -100,7 +103,6 @@ public:
     * List of boxes located in the block
     */
     AABBList* boxes;
-
 
 
     void recursive_print(ostream& os, Vector3 mins=Vector3(0,0,0)) const{
