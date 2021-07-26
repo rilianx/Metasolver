@@ -70,6 +70,8 @@ public:
 	}
 
 	virtual list<const T*> get_intersected_objects(const AABB& volume) const ;
+	
+	virtual list<const T*> get_intersected_objects_strict(const AABB& volume) const ;
 
 	list<const T*> get_bisected_objects(long cut) const;
 
@@ -99,6 +101,15 @@ list<const T*> AABBTree<T>::get_intersected_objects(const AABB& volume) const{
 	list<const T*> intersected_objects;
 	btDbvtIntersector<T> intersector(intersected_objects);
     _tree.collideTV ( _tree.m_root, get_outer_btDbvtAabb(volume), intersector);
+
+    return intersected_objects;
+}
+
+template<class T>
+list<const T*> AABBTree<T>::get_intersected_objects_strict(const AABB& volume) const{
+	list<const T*> intersected_objects;
+	btDbvtIntersector<T> intersector(intersected_objects);
+    _tree.collideTV ( _tree.m_root, get_inner_btDbvtAabb(volume), intersector);
 
     return intersected_objects;
 }

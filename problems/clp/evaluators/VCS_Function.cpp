@@ -28,18 +28,18 @@ VCS_Function::VCS_Function(map<const BoxShape*, int>& nb_boxes, Vector3& dims, d
 VCS_Function::~VCS_Function(){
 
 }
-
+//Calcula la superficie de contacto entre AABB(bloque en una ubicacion)axis aligned bounded box
 double VCS_Function::min_contact_surface(const clpState& s, const AABB& aabb){
 	if(aabb.getZmin()==0) return 1.0;
 	double min_cs=1.0;
 
 	//Se revisan los bloques unitarios en la base de cada bloque
 	//Y se calcula el area de contacto
-	for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
+	for(auto aabb2 : *aabb.getBlock()->boxes){
 		if(aabb2.getZmin()==0){
 			list<const AABB*> aabb_list=s.get_adjacent_aabbs(aabb2+aabb.getMins(), clpState::DOWN,0);
-			min_cs = min(min_cs,AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list)/(aabb2.getL()*aabb2.getW()));
-		}	
+			min_cs = min(min_cs,AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list)/(aabb.getL()* aabb2.getW()));
+		}
 	}
 	return min_cs;
 }
@@ -67,7 +67,7 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 	//Minima superficie basal de contacto
     AABB bb(sp.get_location(b), &b);
 	double mcs = min_contact_surface(*ss, bb);
-	if(mcs < 0.5) return -1.0;
+	if(mcs < 0.6) return -1.0;
 
 
 

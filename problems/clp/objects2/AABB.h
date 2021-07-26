@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <list>
 
+#include "BoxShape.h"
 #include "Block.h"
 #include "Vector3.h"
 #include "Volume.h"
@@ -60,6 +61,44 @@ class AABB {
 
 		inline long getSurface() const {return 2*(getL()*getW()+getL()*getH()+getW()*getH());}
 
+		enum dim{X,Y,Z};
+		AABB get_face(int dim, bool min) const {
+			Vector3 mins = this->mins;
+			Vector3 maxs = this->maxs;
+
+			if(dim==X){
+				if(min){
+					maxs.setX(mins.getX());
+					mins.setX(mins.getX()-1);
+				}else{
+					mins.setX(maxs.getX());
+					maxs.setX(mins.getX()+1);	
+				}
+			}
+
+			if(dim==Y){
+				if(min){
+					maxs.setY(mins.getY());
+					mins.setY(mins.getY()-1);
+				}else{
+					mins.setY(maxs.getY());
+					maxs.setY(mins.getY()+1);	
+				}
+			}
+
+			if(dim==Z){
+				if(min){
+					maxs.setZ(mins.getZ());
+					mins.setZ(mins.getZ()-1);
+				}else{
+					mins.setZ(maxs.getZ());
+					maxs.setZ(mins.getZ()+1);	
+				}
+			}
+
+			return AABB(mins,maxs);
+		}
+
 		AABB& operator+=(const Vector3& b) {
 			mins+=b; maxs+=b;
 	   		return *this;
@@ -109,12 +148,22 @@ class AABB {
 
 		friend inline std::ostream& operator <<(std::ostream& os, const AABB& v);
 
+		/* Para AABB boxes */
+		
+		//lista de AABB que soportan el AABB actual
+		list<const AABB*> supporting_aabbs;
+		double supported_weight;
+		long bottom_contact_surface;
+
+		void set_box(const BoxShape* b){ box=b; }
+
 
 
 	protected:
 	    Vector3 mins;
 	    Vector3 maxs;
 	    const Block* block;
+		const BoxShape* box;
 
         long volume;
 

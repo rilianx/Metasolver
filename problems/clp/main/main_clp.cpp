@@ -60,18 +60,39 @@ void arraycero(caja *,int);
 caja* extraerCajas(caja *, int, double, double);
 //void nuevos_peso_volumen()
 
+
+list<BoxShape*> get_delivery_boxes(list<BoxShape*>& all_boxes, int d){
+	list<BoxShape*> lr;
+	for (auto  b : all_boxes)
+		if (b->get_type() == d) 
+			lr.push_back(b);
+
+	return lr;
+}
+
+//list<BoxShape*>& lb
+//list<list<BoxShape*>>& C
 double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax, 
 		double min_fr, double alpha, double beta, double gamma, double p, double delta, double r){
 	//Se se pasa lb a un mapa y se envia a solucionarlo
 	map<BoxShape*, int> lbmapa; 
+	//Para C:
+	/*
+	for(auto lb : C){
+		for(auto i : lb){
+			if (lbmapa.find(i) == lbmapa.end()) lbmapa.insert({i,1});
+			else lbmapa[i]++;
+		}
+	}*/
+	//Para Lb:
 	for(auto i : lb){
 		if (lbmapa.find(i) == lbmapa.end()) lbmapa.insert({i,1});
 		else lbmapa[i]++;
 	}
-	
+
 	//se crea nodo raiz
 	clpState* s0 = new_state(L, W, H, Wmax, lbmapa);
-	s0->general_block_generator(min_fr, 10000, *s0->cont);
+	s0->general_block_generator(min_fr, 10000, *s0->cont); 
 	s0->singlebox_blocks = new AABBList(); //for keeping boxes
 	
 	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
@@ -87,38 +108,48 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	cout << "running" << endl;
 
 	clock_t begin_time=clock();
-	double eval=bsg->run(*s0, 9999, begin_time) ;
+	double eval=gr->run(*s0, 9999, begin_time) ;
 	//identificar los contenedores que entraron en el tu --> S
 	cout << "eval: " << eval << endl;
 
-	const clpState* sbest = dynamic_cast<const clpState*> (bsg->get_best_state());
+	const clpState* sbest = dynamic_cast<const clpState*> (gr->get_best_state());
 	map<const BoxShape*, int> lbmapa2  = sbest->nb_left_boxes;
 	cout << lbmapa2.size() << endl;
 
-	
-	lb.clear();
+	/*
+	C.clear();
+	list<BoxShape*> lista; // lista de cajas
+	for (auto b : lbmapa2){
+		const BoxShape* box = b.first;
+		int n = b.second;
+		for(int i=0; i<n; i++){
+			lista.push_back((BoxShape*) box);
+		}
+	}
+	lista.sort([] (BoxShape* a, BoxShape* b) {
+		return a->get_type() < b->get_type();
+	});
+	int d = lista.front()->get_type();
+	int dMax = lista.back()->get_type();
 
+	for( ;d < dMax;d++){
+		list<BoxShape*> clBoxes = get_delivery_boxes(lista,d);
+		C.push_back(clBoxes);
+	}
+	*/
+
+
+	lb.clear();
 	for (auto b : lbmapa2){
 		const BoxShape* box = b.first;
 		int n = b.second;
 		for(int i=0; i<n; i++) lb.push_back((BoxShape*) box);
-	} 		
+	}
 
 	//Se imprimen los bloques
-	//Se imprimen los bloques
-	for(AABB aabb = sbest->cont->blocks->top(); sbest->cont->blocks->has_next(); aabb = sbest->cont->blocks->next()){
-		//Se revisan los bloques unitarios en la base de cada bloque
-		//Y se calcula el area de contacto
-		for(auto aabb2 :aabb.getBlock()->aabb_bloxs){
-			cout << aabb2+aabb.getMins() << endl; 
-			if(aabb.getZmin()>0){ 
-				if(aabb2.getZmin()==0){
-					list<const AABB*> aabb_list=sbest->get_adjacent_aabbs(aabb2+aabb.getMins(), clpState::DOWN,0);
-					//cout << ", %supported:" << AABB(aabb2+aabb.getMins()).contact_surfaceZ(aabb_list)/(double)(aabb2.getL()*aabb2.getW()) << endl;
-				}
-			}
-		}
-	}
+	for(auto aabb : *sbest->cont->boxes )
+		cout << aabb << "," << (double)aabb.bottom_contact_surface/(double)(aabb.getL()*aabb.getW()) << endl;
+	
 
 
 
@@ -129,14 +160,6 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	return sbest->cont->getOccupiedVolume();
 }
 
-list<BoxShape*> get_delivery_boxes(list<BoxShape*>& all_boxes, int d){
-	list<BoxShape*> lr;
-	for (auto  b : all_boxes)
-		if (b->get_type() == d) 
-			lr.push_back(b);
-
-	return lr;
-}
 
 int main(int argc, char** argv){
 
@@ -272,13 +295,60 @@ int main(int argc, char** argv){
 
 	int tu = 0;
 	
-	
 	int bins = 0;
 
 	double pesomax = Wmax;
 	double volmax = L*W*H;
 	cout << "peso y volumen maximos: " << pesomax << " , " << volmax << endl;
-	
+/*
+	//Listas de grupos G: grupos de cajas de un cliente. Q: Lista de espera 
+	list<list<BoxShape*>> G;
+	list<list<BoxShape*>> Q;
+	//cajas candidatas para ir en el contenedor (selecccionadas)
+	list<BoxShape*> lb;
+	//Generando grupos por cliente
+	for( ;d < dMax;d++){
+		list<BoxShape*> clBoxes = get_delivery_boxes(lista,d);
+		G.push_back(clBoxes);
+	}
+	for(auto group : G){
+		double W=0.0;
+		double V=0.0;
+		list<list<BoxShape*>> C;
+		while(W < pesomax && W < volmax && !G.empty() ){
+			list<BoxShape*> B = G.front(); G.pop_front();
+			//Validacion de conflicto
+			if(false){
+				Q.push_back(B);
+			}
+			else{
+				//calculo de peso y volumen del grupo
+				double pGroup=0.0;
+				double vGroup=0.0;
+				for(auto box : B){
+					pGroup = pGroup + box->get_weight();
+					vGroup = vGroup + box->getVolume();
+				}
+				W=W + pGroup; V=V + vGroup;
+				C.push_back(B);
+			}
+		}
+		
+		//cambios para el bsg:
+		//lb: boxes->adaptar a grupos de boxes C
+		//Retornar lista L de remaining groups -> sigue siendo C
+		//list<BoxShape*> lb;//para que compile
+		double vol=bsg_solve(C, L, W, H, Wmax, min_fr, alpha, beta, gamma, p, delta, r);
+		//list<list<BoxShape*>> L; //para que compile
+		//verificar que lo junte por delante*merge
+		//usar insert
+		G.insert(G.begin(),C.begin(),C.end());
+		G.insert(G.begin(),Q.begin(),Q.end());
+		bins++; //contenedores
+	}
+	*/
+
+/////////////////////
 	//se obtiene lista de cajas del cliente d
 	list<BoxShape*> lr = get_delivery_boxes(lista,d);
 	cout << "Total boxes: " << lista.size() << " boxes" << endl;
@@ -289,6 +359,7 @@ int main(int argc, char** argv){
 	//peso y volumen de cajas selccionadas
 	double pe=0.0;
 	double ve=0.0;
+
 	while (dloop){ //itera por los clientes		
 
 		while(!lr.empty()){
@@ -303,6 +374,7 @@ int main(int argc, char** argv){
 				cout << "\tVolumen cajas: " << (double)ve/(double)volmax << endl;
 
 				//se resuelve el problema para el contenedor actual
+				//implementacion del paper
 				double vol=bsg_solve(lb, L, W, H, Wmax, min_fr, alpha, beta, gamma, p, delta, r);
 				bins++; //contenedores
 				cout << "remaining boxes: " << lb.size() << endl;

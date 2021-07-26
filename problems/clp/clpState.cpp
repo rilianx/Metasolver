@@ -517,6 +517,92 @@ void clpState::general_block_generator(double min_fr, int max_bl, const Vector3&
 
 
 
+//MOMENTO 2
+//TODO: Generar bloques por cliente
+/*
+void clpState::general_block_generator(double min_fr, int max_bl, const Vector3& max_dim){
+	//while para cada cliente
+	//en cada iteracion B debería inicializarse con bloques unitarios de cliente respectivo
+
+	//Se extrae en lista2 todos los clientes
+	list<int> lista2;
+	for(auto bl : valid_blocks){
+		map<const BoxShape*, int> nb_boxes = bl->nb_boxes;
+		//for usado para recorrer el mapa nb_boxes
+		for (auto b : nb_boxes){
+			int n = b.second;
+			int id = b.first->get_type();
+			for(int i=0; i<n; i++) lista2.push_back(id);
+		}
+	}
+	//Ordena la lista de clientes en orden ascendente
+	lista2.sort();
+	//Obtengo el primer y ultimo cliente
+	int first_cl = lista2.front();
+	int last_cl = lista2.back();
+	list<const Block*> B2;
+
+	bool loop = true;
+	while (loop){ //itera por los clientes
+
+		//se agrupan bloques pertenecientes a un cliente en client_blocks
+		list<const Block*> client_blocks;
+		for(auto bl : valid_blocks){
+			auto iter = bl->nb_boxes.begin();
+			if(iter->first->get_type() == first_cl){
+				client_blocks.push_back(bl);
+			}
+		}
+
+		list<const Block*>& B=client_blocks; //bloques con 1 caja dentro, pertenecientes al cliente d
+		list<const Block*> P=B;
+		//max_bl era generalmente 10000 bloques, ahora debe ser 1 para generar un unico bloque por cada conjunto
+		//de bloques de un cliente
+		//Guardar cada B en un B2 por cada ciclo, luego guardar en valid_blocks
+		while(B.size()<max_bl){
+			list<const Block*>  N;
+			list<const Block*> :: iterator itP=P.begin();
+			int new_elems=0;
+			//se tratan de juntar pares bloques
+			for(;itP!=P.end() && B.size()+new_elems<max_bl; itP++){
+				list<const Block*> :: iterator itB=B.begin();
+				for(;itB!=B.end() && B.size()+new_elems<max_bl ; itB++){
+
+					//cout << "new_blocks" << endl;
+					//se intentan crear  bloques juntando itP con itB (hasta 3 bloques)
+					//min_fr: porcentaje mínimo que debe tener el bloque ocupado (98%, 100%).
+					//TODO: dejar bloque más pesado abajo
+					list<const Block*> newB = (*itP)->create_new_blocks(*itB, min_fr, max_dim, clpState::Wmax);
+
+
+					list<const Block*>:: iterator itNew=newB.begin();
+					for(;itNew!=newB.end();itNew++){
+					if(is_constructible(*this,**itNew) && **itNew <= *cont){
+						int NoldSize=N.size();
+						N.push_back(*itNew);
+						new_elems++;
+
+						if(B.size()+new_elems>=max_bl) break;
+					}else { //delete *itNew; }
+					}
+				}
+			}
+			if(N.size()==0) break;
+			B.insert(B.end(),N.begin(),N.end());
+			P=N;
+		}
+
+		first_cl = first_cl+1;
+		if(first_cl>last_cl) loop=false;
+
+		B2.insert(B2.begin(),B.begin(),B.end());
+
+	}
+	valid_blocks = B2;
+}
+*/
+
+
 void clpState::update_min_dim(){
 	map<const BoxShape*, int>::const_iterator it= nb_left_boxes.begin();
 	for(;it!=nb_left_boxes.end();it++){

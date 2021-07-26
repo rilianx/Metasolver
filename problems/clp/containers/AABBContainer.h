@@ -31,7 +31,7 @@ public:
 	AABBContainer() : sz(0) {  };
 
 	AABBContainer(const AABBContainer<T>& a) : sz(0) {
-		cout << "AABBContainer copy should not be used" << endl;
+		//cout << "AABBContainer copy should not be used" << endl;
 	}
 
 
@@ -49,6 +49,10 @@ public:
 
 	virtual list<const T*> get_intersected_objects(const AABB& volume) const {
 		return tree.get_intersected_objects(volume);
+	};
+
+	virtual list<const T*> get_intersected_objects_strict(const AABB& volume) const {
+		return tree.get_intersected_objects_strict(volume);
 	};
 
 	virtual list<const T*> get_bisected_objects(long cut) const {

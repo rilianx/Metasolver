@@ -18,21 +18,25 @@ bool Block::FSB=false;
 set<const Block*, block_order> Block::all_blocks;
 
 Block::Block(double l, double w, double h) : Volume(l,w,h),occupied_volume(0), total_weight(0.0), total_profit(0.0), n_boxes(0),
-		spaces(new SpaceSet(*this)), blocks(new AABBList()) {
+		spaces(new SpaceSet(*this)), blocks(new AABBList()), boxes(new AABBList()) {
 	spaces->insert(Space (*this));
 }
 
 Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volume) :
 		Volume(box.getL_d(o), box.getW_d(o), box.getH_d(o)), occupied_volume(occupied_volume),
-		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL) {
+		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL), boxes(new AABBList()) {
 
 	nb_boxes[&box]=1;
-	aabb_bloxs.push_back(AABB(Vector3(0,0,0), this));
+	AABB AABBox = AABB(Vector3(0,0,0), this);
+	AABBox.set_box(&box);
+	boxes->insert(AABBox);
+
 };
 
 Block::~Block() {
 	if(spaces) delete spaces;
 	if(blocks) delete blocks;
+	if(boxes) delete boxes;
 }
 
 
@@ -51,13 +55,33 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
     total_profit += block.getTotalProfit();
 
 	AABB b(point, &block);
-
     spaces->crop_volume(b,*this, min_dim);
-
     blocks->insert(b);
 
-	for(auto bb : block.aabb_bloxs)
-		aabb_bloxs.push_back(AABB(bb.getMins()+point, bb.getBlock()));
+
+	//Inserto las cajas del bloque en boxes
+	for(auto b:*block.boxes){
+		b += point; 
+		b.bottom_contact_surface = 0;
+
+		//se agregan supporting boxes a b
+		if(b.getZmin()>0){
+			AABB inf_face = b.get_face(AABB::Z, true); //Se obtiene cara inferior de la caja
+			list<const AABB*> intersected_boxes = boxes->get_intersected_objects_strict(inf_face);
+			for (auto ib : intersected_boxes){
+				b.supporting_aabbs.push_back(ib);
+				b.bottom_contact_surface += ( min(ib->getXmax(),b.getXmax()) - max(ib->getXmin(),b.getXmin()) ) * 
+												( min(ib->getYmax(),b.getYmax()) - max(ib->getYmin(),b.getYmin()) );
+			}
+		}else
+			b.bottom_contact_surface = b.getL()*b.getW();
+		
+
+		//se insertan las cajas en boxes
+		boxes->insert(b);
+	}
+	
+
 }
 
 
@@ -90,13 +114,12 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 
 			if(z2>0){
 				//verificar que se cumpla restricción de soporte
-				for(auto aabb2 :b2->aabb_bloxs){
+				for(auto aabb2:*b2->boxes){
 					if(aabb2.getZmin()==0){
 						double support=AABB(aabb2+Vector3(0,0,z2)).contact_surfaceZ(AABB(Vector3(0,0,0),b1))/(double)(b2->getX()*b2->getY());
 						//box is not supported (vertical stability)
 						if(support < 0.5) 
 							return blocks;
-						
 					}
 				}
 			}

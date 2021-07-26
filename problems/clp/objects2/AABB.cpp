@@ -12,12 +12,12 @@ using namespace std;
 namespace clp {
 
 AABB::AABB(long x1, long y1, long z1, long x2, long y2, long z2) : mins(x1,y1,z1), maxs(x2,y2,z2),
-	volume((x2-x1) * (y2-y1) * (z2-z1)), block(NULL) {}
+	volume((x2-x1) * (y2-y1) * (z2-z1)), block(NULL), box(NULL) {}
 
 AABB::AABB(const Vector3& mins, const Block* b) : mins(mins),
 			maxs(mins+*b), block(b), volume(block->getVolume()) {}
 
-AABB::AABB(const Vector3& mins, const Vector3& maxs) : mins(mins), maxs(maxs), block(NULL),
+AABB::AABB(const Vector3& mins, const Vector3& maxs) : mins(mins), maxs(maxs), block(NULL), box(NULL),
 		volume( (maxs.getX() - mins.getX())*(maxs.getY() - mins.getY())*(maxs.getZ() - mins.getZ()) ) { };
 
 long AABB::getOccupiedVolume() const {return block->getOccupiedVolume();}
@@ -49,13 +49,14 @@ list<AABB> AABB::subtract(const AABB& b) const{
 
     return sub;
 }
-
+//Calcula superficie de contacto entre 2 bloques AABB
 double AABB::contact_surfaceZ(const AABB& aabb) const{
 	double sc=0.0;
-	for(auto unitary_aabb : aabb.block->aabb_bloxs){
-			AABB un_aabb(unitary_aabb+aabb.getMins());
-			if(getZmin() == un_aabb.getZmax())
-				sc+=surface_in_contact(*this, un_aabb);
+	for(auto unitary_aabb:*aabb.block->boxes){
+		AABB un_aabb(unitary_aabb+aabb.getMins());
+		if(getZmin() == un_aabb.getZmax())
+			sc+=surface_in_contact(*this, un_aabb);
+		
 	}
 	return sc;
 }

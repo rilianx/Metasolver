@@ -5,6 +5,7 @@
  *      Author: ignacio
  */
 
+
 #ifndef AABBCONTAINER_AABBLIST_H_
 #define AABBCONTAINER_AABBLIST_H_
 
@@ -55,6 +56,9 @@ public:
     	const AABB& sp=*data_it; data_it++;
 		return sp;
     };
+
+	list<AABB>::iterator begin() { return data.begin(); }
+    list<AABB>::iterator end()   { return data.end(); } 
 
 private:
 	list<AABB> data;

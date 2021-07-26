@@ -64,8 +64,8 @@ nsga2
 
 ADD_LIBRARY(
 clp
-problems/clp/containers/AABBContainer.cpp
 problems/clp/containers/AABBTree.cpp
+problems/clp/containers/AABBContainer.cpp
 problems/clp/evaluators/VCS_Function.cpp
 problems/clp/evaluators/VLossFunction.cpp
 problems/clp/objects2/AABB.cpp
@@ -95,29 +95,12 @@ problems/clp/plugins/kdtree/BlockSet.cpp
 )
 
 
-ADD_EXECUTABLE(MCLP problems/mclp/main/mclp-solver.cpp)
+
 ADD_EXECUTABLE(BSG_CLP problems/clp/main/main_clp.cpp)
-ADD_EXECUTABLE(BSG_CLP_ANN problems/clp/plugins/ann/main_clp_ann.cpp)
-ADD_EXECUTABLE(CLP_GENSOLV problems/clp/plugins/ann/gen_ran_inst_solve.cpp)
-ADD_EXECUTABLE(test_BSG_CLP problems/clp/test_clp.cpp)
-ADD_EXECUTABLE(BSG_SIMULATOR problems/clp/main/bsg-simulator.cpp)
-ADD_EXECUTABLE(BSG_B problems/clp/main/clp_bsg-mop.cpp)
-ADD_EXECUTABLE(test_BSGMOP_CLP problems/clp/test_clp_mop.cpp)
-#ADD_EXECUTABLE(testEvalMOP problems/clp/test_evalMOP.cpp)
-ADD_EXECUTABLE(CLP_gen problems/clp/ClpInstanceGenerator.cpp)
-ADD_EXECUTABLE(NSGA_CLP problems/clp/plugins/ga/main.cpp)
 
-target_link_libraries(MCLP mclp_state  clp bsg)
 target_link_libraries(BSG_CLP clp_state clp clp_kdtree bsg)
-target_link_libraries(BSG_CLP_ANN clp_state clp clp_kdtree bsg)
-target_link_libraries(test_BSG_CLP clp_state clp clp_kdtree bsg)
-target_link_libraries(CLP_GENSOLV clp_state clp clp_kdtree bsg)
-target_link_libraries(NSGA_CLP clp_state clp nsga2 bsg)
 
-target_link_libraries(BSG_SIMULATOR bsg_mop clp_state clp bsg)
-target_link_libraries(BSG_B bsg_mop clp_state clp bsg)
-target_link_libraries(test_BSGMOP_CLP bsg_mop clp_state clp bsg)
-#target_link_libraries(testEvalMOP bsg_mop clp_state clp bsg)
+
 
 enable_testing()
 
