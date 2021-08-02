@@ -39,14 +39,34 @@ Block::~Block() {
 	if(boxes) delete boxes;
 }
 
+bool Block::validate_BCS_and_LB(const Block& b, const Vector3& point) const{
+	map<const AABB*,double> sup_weights;
+	BCS_and_LB(b,point,sup_weights);
+
+	for(auto box:*b.boxes){
+		 //solo me interesan las cajas de la base (no soportadas dentro del bloque)
+		 if(box.supporting_aabbs.size()==0 && box.bottom_contact_surface<box.box->get_v_stability()) return false;
+	}
+
+	//if (sup_weights.size() > 0) cout << sup_weights.size()  << endl;
+	for (auto box:sup_weights){
+
+		if (box.second>box.first->box->get_supported_weight()) return false;
+	}
+
+	return true;
+
+}
+
 //Bottom contact surface and Load Bearing
-void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights){
+void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights) const{
 
 	for(auto b:*block.boxes){
 		 //solo me interesan las cajas de la base (no soportadas dentro del bloque)
-		 if(b.supporting_aabbs.size()==0){
-			b += point; 
+		 if(b.getZmin()==0.0){
+			b = AABB(b)+point; 
 			b.bottom_contact_surface=0;
+			b.supporting_aabbs.clear();
 
 			//se agregan supporting boxes a b
 			if(b.getZmin()>0){
@@ -59,6 +79,9 @@ void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*
 				}
 			}else
 				b.bottom_contact_surface = b.getL()*b.getW();
+
+
+			//cout << "bb:" << b << "," << b.supported_weight << endl;
 			
 			b.propagate_weight_const(b.box->get_weight()+b.supported_weight, sup_weights); //load bearing without modifying supported weights!
 		}
@@ -83,11 +106,13 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
     spaces->crop_volume(b,*this, min_dim);
     blocks->insert(b);
 
-
 	//Inserto las cajas del bloque en boxes
+	//cout << "boxes(" <<  boxes->size() << ")" << endl;
 	for(auto b:*block.boxes){
 		
-		b += point; 
+		
+		b = AABB(b)+ point; 
+		//cout << b << "," << b.box->get_weight() <<  endl;
 		b.supporting_aabbs.clear();
 		b.bottom_contact_surface=0;
 		b.supported_weight=0.0;
@@ -105,7 +130,7 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 		}else
 			b.bottom_contact_surface = b.getL()*b.getW();
 		
-		b.propagate_weight(b.box->get_weight()); //load bearing
+		b.propagate_weight(b.box->get_weight()+0); //load bearing
 
 		//se insertan las cajas en boxes
 		boxes->insert(b);	
@@ -140,17 +165,11 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 				(b1->getTotalWeight() + b1->getTotalWeight () <= wmax || wmax ==0.0) ){
 
 
-			if(z2>0){
-				//verificar que se cumpla restricción de soporte
-				for(auto aabb2:*b2->boxes){
-					if(aabb2.getZmin()==0){
-						double support=AABB(aabb2+Vector3(0,0,z2)).contact_surfaceZ(AABB(Vector3(0,0,0),b1))/(double)(b2->getX()*b2->getY());
-						//box is not supported (vertical stability)
-						if(support < 0.5) 
-							return blocks;
-					}
-				}
+			if (z2>0){
+				// Validating Vertical Stability and Load Bearing
+				if(!b1->validate_BCS_and_LB(*b2, Vector3(0,0,z2))) return blocks;
 			}
+
 
 			Block* new_block;
 

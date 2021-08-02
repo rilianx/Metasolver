@@ -12,13 +12,16 @@ using namespace std;
 namespace clp {
 
 AABB::AABB(long x1, long y1, long z1, long x2, long y2, long z2) : mins(x1,y1,z1), maxs(x2,y2,z2),
-	volume((x2-x1) * (y2-y1) * (z2-z1)), block(NULL), box(NULL) {}
+	volume((x2-x1) * (y2-y1) * (z2-z1)), block(NULL), box(NULL),
+	supported_weight(0.0), bottom_contact_surface(0.0) {}
 
 AABB::AABB(const Vector3& mins, const Block* b) : mins(mins),
-			maxs(mins+*b), block(b), volume(block->getVolume()) {}
+			maxs(mins+*b), block(b), volume(block->getVolume()),  
+			supported_weight(0.0), bottom_contact_surface(0.0) {}
 
 AABB::AABB(const Vector3& mins, const Vector3& maxs) : mins(mins), maxs(maxs), block(NULL), box(NULL),
-		volume( (maxs.getX() - mins.getX())*(maxs.getY() - mins.getY())*(maxs.getZ() - mins.getZ()) ) { };
+		volume( (maxs.getX() - mins.getX())*(maxs.getY() - mins.getY())*(maxs.getZ() - mins.getZ()) ),  
+		supported_weight(0.0), bottom_contact_surface(0.0) { };
 
 long AABB::getOccupiedVolume() const {return block->getOccupiedVolume();}
 
@@ -71,9 +74,50 @@ double AABB::contact_surfaceZ(list<const AABB*>& aabb_list) const{
 	//exit(0);
 }
 
+/* Recursive function for propagating weights top-down */
+void AABB::propagate_weight(double weight) const{
+	for (auto supp:supporting_aabbs){
+		// proporcion de la base en contacto con supp
+		double cs = double(( min(supp->getXmax(),getXmax()) - max(supp->getXmin(),getXmin()) ) * 
+										( min(supp->getYmax(),getYmax()) - max(supp->getYmin(),getYmin()) )) / bottom_contact_surface;
+		
+		double pweight =  weight*cs;
+		supp->supported_weight += weight*cs;
+		if(supp->supported_weight > supp->box->get_supported_weight()) {
+			cout << *supp << endl;
+			cout << supp->supported_weight <<">" << supp->box->get_supported_weight() << endl;
+			exit(0);
+		}
+
+		supp->propagate_weight(pweight);
+	}
+}
+
+void AABB::propagate_weight_const(double weight, map<const AABB*,double>& sup_weights) const{
+	for (auto supp:supporting_aabbs){
+		// proporcion de la base en contacto con supp
+		double cs = double(( min(supp->getXmax(),getXmax()) - max(supp->getXmin(),getXmin()) ) * 
+										( min(supp->getYmax(),getYmax()) - max(supp->getYmin(),getYmin()) )) / bottom_contact_surface;
+		
+		double pweight =  weight*cs;
+		//cout << *supp << endl;
+		//cout << supp->supported_weight<< endl;
+
+		if(sup_weights.find(supp) == sup_weights.end())
+			sup_weights[supp]=supp->supported_weight + weight*cs;
+		else
+			sup_weights[supp] += weight*cs;
+
+		supp->propagate_weight_const(pweight, sup_weights);
+
+	}
+}
+
 
 
 bool greater_volume(const AABB& a, const AABB& b) { return a.getVolume() > b.getVolume() ; }
 }
+
+
 
 

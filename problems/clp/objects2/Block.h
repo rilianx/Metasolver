@@ -80,8 +80,11 @@ public:
 
 	const BoxShape* get_box_shape() const {return nb_boxes.begin()->first;}
 
-	//Bottom contact surface and Load Bearing
-	void BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights);
+	//verify the contraints: Load bearing and vertical stability if the new block b is added
+	bool validate_BCS_and_LB(const Block& b, const Vector3& point) const;
+
+	//Compute Bottom contact surface and Load Bearing
+	void BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights) const;
 
 	bool verify_solution();
 

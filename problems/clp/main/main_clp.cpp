@@ -45,7 +45,7 @@ struct tu
 struct delivery
 {
 	list<BoxShape> boxes; //lista de cajas de la entrega
-	int type; //id de la entrega
+	int id_client; //id de la entrega
 };
 
 
@@ -64,7 +64,7 @@ caja* extraerCajas(caja *, int, double, double);
 list<BoxShape*> get_delivery_boxes(list<BoxShape*>& all_boxes, int d){
 	list<BoxShape*> lr;
 	for (auto  b : all_boxes)
-		if (b->get_type() == d) 
+		if (b->get_id_client() == d) 
 			lr.push_back(b);
 
 	return lr;
@@ -93,7 +93,7 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	//se crea nodo raiz
 	clpState* s0 = new_state(L, W, H, Wmax, lbmapa);
 	s0->general_block_generator(min_fr, 10000, *s0->cont); 
-	s0->singlebox_blocks = new AABBList(); //for keeping boxes
+	//s0->singlebox_blocks = new AABBList(); //for keeping boxes
 	
 	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont,
  	alpha, beta, gamma, p, delta, 0.0, r);
@@ -108,11 +108,11 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	cout << "running" << endl;
 
 	clock_t begin_time=clock();
-	double eval=gr->run(*s0, 9999, begin_time) ;
+	double eval=bsg->run(*s0, 9999, begin_time) ;
 	//identificar los contenedores que entraron en el tu --> S
 	cout << "eval: " << eval << endl;
 
-	const clpState* sbest = dynamic_cast<const clpState*> (gr->get_best_state());
+	const clpState* sbest = dynamic_cast<const clpState*> (bsg->get_best_state());
 	map<const BoxShape*, int> lbmapa2  = sbest->nb_left_boxes;
 	cout << lbmapa2.size() << endl;
 
@@ -147,8 +147,12 @@ double bsg_solve(list<BoxShape*>& lb, long L, long W, long H, double Wmax,
 	}
 
 	//Se imprimen los bloques
-	for(auto aabb : *sbest->cont->boxes )
-		cout << aabb << "," << (double)aabb.bottom_contact_surface/(double)(aabb.getL()*aabb.getW()) << "," << aabb.supported_weight << endl;
+	for(auto aabb : *sbest->cont->boxes ){
+		cout << "---" << endl;
+		cout << "box:" << aabb << endl;
+		cout << "vertical_stability:" << (double)aabb.bottom_contact_surface/(double)(aabb.getL()*aabb.getW()) << ">" << aabb.box->get_v_stability() << endl;
+		cout << "supported_weight:" << aabb.supported_weight << "<" << aabb.box->get_supported_weight()  << endl;
+	}
 	
 
 
@@ -269,17 +273,16 @@ int main(int argc, char** argv){
 		BoxShape* box = b.first;
 		int n = b.second;
 		
-		//cout <<"tipo: " <<box->get_type() << endl;
-		int tipo = box->get_type();	
+		int id_client = box->get_id_client();	
 		box->getVolume();
 		box->get_weight();
 		for(int i=0; i<n; i++) lista.push_back(box);
 	}
 	//for (auto i : lista){	cout << "box en lista: " << i->get_type() << endl;	}
 
-	//Ordena la lista con las cajas usando el campo type
+	//Ordena la lista con las cajas usando el campo id_client
 	lista.sort([] (BoxShape* a, BoxShape* b) {
-		return a->get_type() < b->get_type();
+		return a->get_id_client() < b->get_id_client();
 	});
 	
 	//for (auto i : lista){	cout << "box en lista ordenada: " << i->get_type() << endl;	}
@@ -288,10 +291,10 @@ int main(int argc, char** argv){
 	bool dloop = true; //para controlar el loop 2
 	
 	//id del primer y ultimo cliente (d y dMax)
-	int d = lista.front()->get_type();
-	//cout << "Primer type en la lista: " << d << endl;
-	int dMax = lista.back()->get_type();
-	//cout << "Ultimo type en la lista: " << dMax << endl;
+	int d = lista.front()->get_id_client();
+	//cout << "Primer id_client en la lista: " << d << endl;
+	int dMax = lista.back()->get_id_client();
+	//cout << "Ultimo id_client en la lista: " << dMax << endl;
 
 	int tu = 0;
 	
@@ -370,13 +373,16 @@ int main(int argc, char** argv){
 			
 			//cajas en lb sobre pasan el peso o volumen máximo del contenedor
 			if (pe > pesomax || ve > volmax || (lr.empty() && d==dMax) ) {
+				
 				cout << "Peso cajas: " << (double)pe/(double)pesomax ;
 				cout << "\tVolumen cajas: " << (double)ve/(double)volmax << endl;
+				cout << "inital boxes: " << lb.size() << endl;
 
 				//se resuelve el problema para el contenedor actual
 				//implementacion del paper
 				double vol=bsg_solve(lb, L, W, H, Wmax, min_fr, alpha, beta, gamma, p, delta, r);
 				bins++; //contenedores
+				
 				cout << "remaining boxes: " << lb.size() << endl;
 				pe=0.0;
 				ve=0.0;

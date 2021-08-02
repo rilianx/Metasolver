@@ -20,7 +20,7 @@ public:
 	BoxShape(int id, double l, double w, double h, bool rot1=true, bool rot2=true, bool rot3=true, 
 	double weight=1.0, double profit=1.0,
 	//practical constraints
-	int type=0, double supported_weight=0.0, double h_stability = 0.0, double v_stability = 0.0);
+	int type=0, double supported_weight=0.0, double h_stability = 0.0, double v_stability = 0.0, int id_client=0);
 
 	bool is_valid(Orientation o) const {return is_valid_orientation[o];}
 
@@ -53,6 +53,7 @@ public:
 	double get_supported_weight() const{return supported_weight;}
 	double get_h_stability() const {return h_stability;}
 	double get_v_stability() const {return v_stability;}
+	double get_id_client() const {return id_client;}
 
 private:
 	int id;
@@ -61,6 +62,7 @@ private:
 	double profit;
 
 	//Practical Constraints
+	int id_client;
 	int type;
 	double supported_weight;
 	double h_stability;

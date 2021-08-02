@@ -291,6 +291,7 @@ void read_instance(long& L, long& W, long& H, double& Wmax, map<BoxShape*, int>&
 			double supported_weight_factor = 1.0; // peso que soporta: w*supported_weight_factor
 			double v_stability; //factor de estabilidad vertical
 			double h_stability; //factor de estabilidad horizontal
+			int id_client =0;
 
 			if(f==clpState::BR){
 
@@ -307,7 +308,7 @@ void read_instance(long& L, long& W, long& H, double& Wmax, map<BoxShape*, int>&
 				else if(fp==clpState::WEIGHT) profit = weight;
 				vol=l*h*w;
 			}else if(f==clpState::BRpc){
-				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability;
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability >> id_client;
 				vol=l*h*w;
 			}
 			else if(f==clpState::_1C){
@@ -323,7 +324,7 @@ void read_instance(long& L, long& W, long& H, double& Wmax, map<BoxShape*, int>&
 				if(f==clpState::_1C) boxt=new BoxShape(id, ll, ww, hh, rot1, rot2, rot3, weight, profit);
 				else if(f==clpState::BRpc){
 					boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit, 
-					type, supported_weight_factor*w, h_stability, v_stability);
+					type, supported_weight_factor*w, h_stability, v_stability, id_client);
 				}else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
 
 				boxes[boxt]=n;
@@ -408,6 +409,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 			double supported_weight_factor = 1.0; // peso que soporta: w*supported_weight_factor
 			double v_stability; //factor de estabilidad vertical
 			double h_stability; //factor de estabilidad horizontal
+			double id_client;
 
 			if(f==clpState::BR){
 
@@ -424,7 +426,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 				else if(fp==clpState::WEIGHT) profit = weight;
 				vol=l*h*w;
 			}else if(f==clpState::BRpc){
-				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability;
+				ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n >> weight >> type >> supported_weight_factor >> h_stability >> h_stability >> v_stability >> id_client;
 				vol=l*h*w;
 			}
 			else if(f==clpState::_1C){
@@ -444,7 +446,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl, clpState::For
 				if(f==clpState::_1C) boxt=new BoxShape(id, ll, ww, hh, rot1, rot2, rot3, weight, profit);
 				else if(f==clpState::BRpc){
 					boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit, 
-					type, supported_weight_factor*w, h_stability, v_stability);
+					type, supported_weight_factor*w, h_stability, v_stability, id_client);
 				}else boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3, weight, profit);
 
 				clpState::weight_of_allboxes += weight*(double) n;
