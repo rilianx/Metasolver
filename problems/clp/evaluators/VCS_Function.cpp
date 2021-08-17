@@ -52,6 +52,8 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 	const Block& b = dynamic_cast<const clpAction*>(&a)->block;
 	const Space& sp =dynamic_cast<const clpAction*>(&a)->space;
 	const clpState* ss =dynamic_cast<const clpState*>(&s);
+	
+	
 
     long resL=sp.getL() - b.getL();
     long resW=sp.getW() - b.getW();
@@ -66,9 +68,9 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
 	//Se verifica que si al agregar el bloque b en el contenedor, se siguen
 	//cumpliendo las restricciones Load Bearing y Vertical stability
+	
 	if (!ss->cont->validate_BCS_and_LB(b,sp.get_location(b))) return -1.0;
-
-
+	
 	//double mcs = min_contact_surface(*ss, bb);
 	//if(mcs < 0.6) return -1.0;
 

@@ -53,13 +53,8 @@ public:
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim), 
-	singlebox_blocks(NULL){
+	valid_blocks(S.valid_blocks), mindim(S.mindim){
 
-		if(S.singlebox_blocks){
-		   singlebox_blocks = new AABBList(*S.singlebox_blocks);
-		   //bloxs = *S.bloxs;
-		}
 
 	}
 
@@ -119,7 +114,7 @@ public:
 	list<const Block*> valid_blocks;
 
 	//For Practical Constraint operations
-	AABBContainer<AABB>* singlebox_blocks;
+	//AABBContainer<AABB>* singlebox_blocks;
 	//list<AABB>* aabb_bloxs; //box-blocks
 	
 

@@ -195,6 +195,14 @@ map <int,int> clpState::nb_boxes_by_type;
 
 clpState* new_state(long L, long W, long H, double Wmax, map<BoxShape*, int>& boxes){
 	clpState::weight_of_allboxes=0.0;
+	clpState::weight_of_allboxes=0.0;
+	clpState::profit_of_allboxes=0.0;
+	clpState::density_of_allboxes=0.0;
+	clpState::square_density_of_allboxes=0.0;
+	clpState::Wmax=0.0;
+	clpState::nb_boxes=0;
+	clpState::nb_boxes_by_type = map <int,int>();
+
 	clpState *s= new clpState(new Block(L,W,H));
 	clpState::Wmax=Wmax;
 
@@ -646,14 +654,7 @@ void clpState::_transition(const Action& action) {
 	//se actualizan los bloques validos
 	update_valid_blocks();
 
-	//Filling the singlebox_blocks
-	if(singlebox_blocks){
-		list<const AABB*> aabbs;
-		get_singlebox_AABBs(aabbs, &b,act.space.get_location(b));
-		for(auto aabb:aabbs){
-		   singlebox_blocks->insert(*aabb);
-	  }
-	}
+
 }
 
 bool is_constructible(const clpState& s, const Block& b){

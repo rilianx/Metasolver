@@ -42,15 +42,15 @@ Block::~Block() {
 bool Block::validate_BCS_and_LB(const Block& b, const Vector3& point) const{
 	map<const AABB*,double> sup_weights;
 	BCS_and_LB(b,point,sup_weights);
+	
 
 	for(auto box:*b.boxes){
 		 //solo me interesan las cajas de la base (no soportadas dentro del bloque)
-		 if(box.supporting_aabbs.size()==0 && box.bottom_contact_surface<box.box->get_v_stability()) return false;
+		 if(box.getZmin()==0.0 && box.bottom_contact_surface/(box.getL()*box.getW()) < box.box->get_v_stability()) return false;
 	}
 
-	//if (sup_weights.size() > 0) cout << sup_weights.size()  << endl;
+	
 	for (auto box:sup_weights){
-
 		if (box.second>box.first->box->get_supported_weight()) return false;
 	}
 
@@ -61,11 +61,11 @@ bool Block::validate_BCS_and_LB(const Block& b, const Vector3& point) const{
 //Bottom contact surface and Load Bearing
 void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*,double>& sup_weights) const{
 
-	for(auto b:*block.boxes){
+	for(AABB& bb:*block.boxes){
 		 //solo me interesan las cajas de la base (no soportadas dentro del bloque)
-		 if(b.getZmin()==0.0){
-			b = AABB(b)+point; 
-			b.bottom_contact_surface=0;
+		 if(bb.getZmin()==0.0){
+			AABB b = AABB(bb)+point; 
+			bb.bottom_contact_surface=0;
 			b.supporting_aabbs.clear();
 
 			//se agregan supporting boxes a b
@@ -74,11 +74,11 @@ void Block::BCS_and_LB(const Block& block, const Vector3& point, map<const AABB*
 				list<const AABB*> intersected_boxes = boxes->get_intersected_objects_strict(inf_face);
 				for (auto ib : intersected_boxes){
 					b.supporting_aabbs.push_back(ib);
-					b.bottom_contact_surface += ( min(ib->getXmax(),b.getXmax()) - max(ib->getXmin(),b.getXmin()) ) * 
+					bb.bottom_contact_surface += ( min(ib->getXmax(),b.getXmax()) - max(ib->getXmin(),b.getXmin()) ) * 
 													( min(ib->getYmax(),b.getYmax()) - max(ib->getYmin(),b.getYmin()) );
 				}
 			}else
-				b.bottom_contact_surface = b.getL()*b.getW();
+				bb.bottom_contact_surface = b.getL()*b.getW();
 
 
 			//cout << "bb:" << b << "," << b.supported_weight << endl;

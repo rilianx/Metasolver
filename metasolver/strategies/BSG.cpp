@@ -25,10 +25,9 @@ list<State*> BSG::next(list<State*>& S){
      int i=0;
      for(list<State*>::iterator itS=S.begin(); itS!=S.end() && get_time()<=timelimit; itS++,i++){
          State& state=**itS;
-        // cout << state.get_value() << endl;
+        
 
          if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
-
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
          list< Action* > best_actions;
@@ -36,21 +35,22 @@ list<State*> BSG::next(list<State*>& S){
          //each level of the search tree should explore max_level_size nodes, thus...
          int w =  (double) max_level_size / (double) S.size() + 0.5;
 
+        
          get_best_actions(state, best_actions, w);
-
-
+         //cout << "n_actions:" << best_actions.size() << endl;
+       
 
          //the actions are evaluated and saved in the sorted map
          list< Action* >::iterator it = best_actions.begin();
 
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
+           
 
         	 State& state_copy = *state.child_clone();
         	 state_copy.transition(**it);
-        	 //cout << state_copy.get_value() << endl;
         	 delete *it;
 
-           double value = greedy.run(state_copy, timelimit, begin_time);
+           double value = greedy.run(state_copy, timelimit, begin_time);           
 
            if(generate_tree_search_output){
              cout.clear();
