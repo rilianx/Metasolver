@@ -32,7 +32,7 @@ LINK_LIBRARIES(
     endif(COMMAND cmake_policy)
 
 
- SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -no-pie")
 
 # ADD_DEFINITION(-g -pg)
 
