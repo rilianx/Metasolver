@@ -382,8 +382,8 @@ list<State*> BSG_MOP::next(list<State*>& S){
         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
        //each level of the search tree should explore max_level_size nodes, thus...
-        int w =  (double) max_level_size / (double) S.size() + 0.5;
-				//int w = sqrt(max_level_size);
+        //int w =  (double) max_level_size / (double) S.size() + 0.5;
+	int w = sqrt(max_level_size);
 
         //we attempt to orient the search to the objective lambda1[i]) * f1 + lambda2[i] * f2,
 		   //where lambda1 = 1 - lambda2
