@@ -19,8 +19,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Dependencies
 
-include_directories(
+## Bullet
+set(
+    BULLET_INCLUDE_DIR
     lib/bullet-2.80/src
+)
+find_library(
+    BULLET_DYNAMICS_LIBRARY
+    NAME BulletDynamics
+    PATHS lib/bullet-2.80/src/BulletDynamics
+    REQUIRED
+)
+find_library(
+    BULLET_COLLISION_LIBRARY
+    NAME BulletCollision
+    PATHS lib/bullet-2.80/src/BulletCollision
+    REQUIRED
+)
+find_library(
+    BULLET_LINEAR_MATH_LIBRARY
+    NAME LinearMath
+    PATHS lib/bullet-2.80/src/LinearMath
+    REQUIRED
+)
+add_library(Bullet STATIC IMPORTED)
+set_target_properties(Bullet PROPERTIES IMPORTED_LOCATION ${BULLET_COLLISION_LIBRARY})
+target_include_directories(Bullet SYSTEM INTERFACE ${BULLET_INCLUDE_DIR})
+target_link_libraries(Bullet INTERFACE ${BULLET_DYNAMICS_LIBRARY} ${BULLET_COLLISION_LIBRARY} ${BULLET_LINEAR_MATH_LIBRARY})
+
+link_libraries(Bullet)
+
+include_directories(
     metasolver
     metasolver/strategies/
     problems/clp/containers
@@ -32,18 +61,6 @@ include_directories(
     problems/mclp
     metasolver/plugins/mop/strategies/
 )
-
-link_directories(
-    lib/bullet-2.80/src/BulletCollision
-    lib/bullet-2.80/src/BulletDynamics
-    lib/bullet-2.80/src/LinearMath
-)
-
-link_libraries(
-    BulletDynamics BulletCollision LinearMath
-)
-
-# Libraries
 
 add_library(
     bsg
