@@ -2,7 +2,8 @@ BUILD_DIR := build/
 BUILD_TYPE := Release
 TEST_LOG_FILE := test.log
 
-NUMBER_OF_THREADS := $$(expr `nproc --all` / 2)
+HALF_THREADS := $$(expr `nproc --all` / 2)
+NUMBER_OF_THREADS := $$(($(HALF_THREADS)>0 ? $(HALF_THREADS) : 1))
 
 .PHONY: build test clean
 
