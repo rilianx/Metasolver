@@ -20,26 +20,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 # Dependencies
 
 ## Bullet
-set(
-    BULLET_INCLUDE_DIR
-    lib/bullet-2.80/src
-)
+set(BULLET_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet-2.80/src )
+set(BULLET_STATIC_LIBRARIES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/static/)
 find_library(
     BULLET_DYNAMICS_LIBRARY
     NAME BulletDynamics
-    PATHS lib/bullet-2.80/src/BulletDynamics
+    PATHS ${BULLET_STATIC_LIBRARIES_DIR}
     REQUIRED
 )
 find_library(
     BULLET_COLLISION_LIBRARY
     NAME BulletCollision
-    PATHS lib/bullet-2.80/src/BulletCollision
+    PATHS ${BULLET_STATIC_LIBRARIES_DIR}
     REQUIRED
 )
 find_library(
     BULLET_LINEAR_MATH_LIBRARY
     NAME LinearMath
-    PATHS lib/bullet-2.80/src/LinearMath
+    PATHS ${BULLET_STATIC_LIBRARIES_DIR}
     REQUIRED
 )
 add_library(Bullet STATIC IMPORTED)
