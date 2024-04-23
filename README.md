@@ -6,6 +6,7 @@ BSG is a method based on beam search(an adaptation of a branch-and-bound algorit
 
 ```sh
 git clone https://github.com/rilianx/Metasolver.git
+cd Metasolver
 make
 ```
 
