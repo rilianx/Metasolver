@@ -137,7 +137,13 @@ By default the values of $\theta_v$ and $\theta_p$ are tuned for maximizing the 
 
 ## Experiments
 
+<<<<<<< HEAD
 * [Results of BSG on the classic BR instances.](https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vTp6t3tOLYOzoEXScyt5GEJxhu7oML3eq2yyX0J_t6YiMrTTf6XsXhkSsqJ5AxGkFjYBfUyl_vlLsAe/pubhtml?gid=1713343267&single=true)
+=======
+Experiments
+----------
+* [Results with BSG-VCS for the BR instances.](https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vTp6t3tOLYOzoEXScyt5GEJxhu7oML3eq2yyX0J_t6YiMrTTf6XsXhkSsqJ5AxGkFjYBfUyl_vlLsAe/pubhtml?gid=1713343267&single=true)
+>>>>>>> parent of 449cc101 (README updated)
 * [Results of experiments on BRwp1.0-0.5 instances.](https://docs.google.com/spreadsheets/d/e/2PACX-1vSk0_iexrd_v7x-I_72Albt21t9iLka3o9CUatUYh0jcxl7O-Lw_dLpJ9FRF0GdlqQ7AyrCFXoCF5wX/pubhtml?gid=1240292960&single=true)
 * [Results of experiments on NMFTA instances.](https://docs.google.com/spreadsheets/d/e/2PACX-1vSk0_iexrd_v7x-I_72Albt21t9iLka3o9CUatUYh0jcxl7O-Lw_dLpJ9FRF0GdlqQ7AyrCFXoCF5wX/pubhtml?gid=157777762&single=true)
 
