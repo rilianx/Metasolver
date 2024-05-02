@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _json(parser, "double", "json output tuple: (loaded, remaining, utilization)", {"json"});
-	args::Flag _verbose(parser, "layout", "Show the layout of the boxes in the best found solution", {"show_actions"});
+	args::Flag _verbose(parser, "layout", "Show the layout of the boxes in the best found solution", {"verbose"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
