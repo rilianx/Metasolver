@@ -41,6 +41,8 @@ class Block : public Volume{
 public:
 
 	static bool FSB;
+	static int INCREMENTAL_ID;
+	int id;
 
 	/**
 	 * Constructs a container of dimensions l,w,h
@@ -54,6 +56,7 @@ public:
 	}
 
 	virtual Block* clone(){
+		id = INCREMENTAL_ID++;
 		return new Block(*this);
 	}
 

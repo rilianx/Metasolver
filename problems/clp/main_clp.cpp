@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _json(parser, "double", "json output tuple: (loaded, remaining, utilization)", {"json"});
-	args::Flag _show_layout(parser, "layout", "Show the layout of the boxes in the best found solution", {"show_layout"});
+	args::Flag _verbose(parser, "layout", "Show the layout of the boxes in the best found solution", {"show_actions"});
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
 
 
@@ -212,25 +212,28 @@ int main(int argc, char** argv){
     }
 
 
-  if(_show_layout){
+  if(_verbose){
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
-    actions.sort(clpState::height_sort);
+	
 
 
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
+	for (const Block* block:s00->valid_blocks){
+		cout << "block: " << block->id << " " << *block << endl;
+		for (auto pair:block->nb_boxes){
+			cout << " -- box: " << *pair.first << " n: " << pair.second << endl;
+		}
+	}
 
-  cout << endl;
+	cout << "Solve steps: " << endl;
+
 	for(auto action:actions){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
 		s00->transition(*clp_action);
-
-		//cout << "block :" << clp_action->block << endl;
-		//cout << "location :" << clp_action->space.get_location(clp_action->block) << endl;
-
-
+		cout << "action: block:" << clp_action->block.id << " space:" << clp_action->space.get_location(clp_action->block) << endl;
+		
 	}
 
-	s00->cont->MatLab_print();
 
 }
 

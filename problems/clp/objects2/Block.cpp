@@ -15,10 +15,12 @@ using namespace std;
 namespace clp {
 
 bool Block::FSB=false;
+int Block::INCREMENTAL_ID=0;
 set<const Block*, block_order> Block::all_blocks;
 
 Block::Block(double l, double w, double h) : Volume(l,w,h),occupied_volume(0), total_weight(0.0), total_profit(0.0), n_boxes(0),
 		spaces(new SpaceSet(*this)), blocks(new AABBList()) {
+	id = INCREMENTAL_ID++;
 	spaces->insert(Space (*this));
 }
 
@@ -26,7 +28,9 @@ Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volum
 		Volume(box.getL_d(o), box.getW_d(o), box.getH_d(o)), occupied_volume(occupied_volume),
 		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL) {
 
+	id = INCREMENTAL_ID++;
 	nb_boxes[&box]=1;
+
 };
 
 Block::~Block() {

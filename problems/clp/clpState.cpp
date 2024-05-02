@@ -376,6 +376,7 @@ void clpState::_transition(const Action& action) {
 
 	//se actualizan los bloques validos
 	update_valid_blocks();
+
 }
 
 bool is_constructible(const clpState& s, const Block& b){
