@@ -1,0 +1,8 @@
+language: cpp
+compiler: gcc
+dist: xenial
+
+script:
+ - cmake .
+ - make
+ - make CTEST_OUTPUT_ON_FAILURE=1 test ARGS="-V"

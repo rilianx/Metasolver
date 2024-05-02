@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rilianx/Metasolver.svg?branch=mop-bsg)](https://travis-ci.org/rilianx/Metasolver)
+
 # BSG for CLP
 Description
 ------
