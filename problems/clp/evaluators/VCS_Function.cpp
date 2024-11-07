@@ -63,17 +63,25 @@ double VCS_Function::eval_action(const State& s, const Action &a){
 
 	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
 
+	dynamic_cast<const clpAction*>(&a)->metrics.push_back(vol);
+	dynamic_cast<const clpAction*>(&a)->metrics.push_back(loss);
+	dynamic_cast<const clpAction*>(&a)->metrics.push_back(cs);
+	dynamic_cast<const clpAction*>(&a)->metrics.push_back(n);
 
+	double eval;
 	if(clpState::Wmax > 0.0){
 		double density = b.getTotalWeight() / (double) b.getVolume();
 		double profit = b.getTotalProfit();
 
-		return ( pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
+		eval =( pow(vol, delta)  * pow((1.0-loss), beta) * pow(cs, alpha) *
 				     pow(n,gamma) * pow(density, delta2) * pow(profit, delta3));
 	}
 
-	return (pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
-	//return (loss_vol + alpha * log (cs) + gamma*log(n) );
+
+	eval= (pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma) );
+	dynamic_cast<const clpAction*>(&a)->metrics.push_back(eval);
+
+	return eval;
 }
 
 double VCS_Function::CS_p(const State& s, const Block& b, const Space& sp, double p){

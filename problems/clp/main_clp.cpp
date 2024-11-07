@@ -78,15 +78,14 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _json(parser, "double", "json output tuple: (loaded, remaining, utilization)", {"json"});
-	args::Flag _verbose(parser, "layout", "Show the layout of the boxes in the best found solution", {"verbose"});
+	args::Flag _verbose(parser, "layout", "Show the actions to reach the solution", {"verbose"});
+	args::ValueFlag<int> _verbose2(parser, "layout", "Show the actions to reach the solution (v2). Should be indicated the number of actions per state", {"verbose2"});
+
 	args::Flag _plot(parser, "double", "plot tree", {"plot"});
-
-
 
 	args::Flag fsb(parser, "fsb", "full-support blocks", {"fsb"});
 	args::Flag trace(parser, "trace", "Trace", {"trace"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set");
-
 
 	cout.precision(8);
 	try
@@ -212,7 +211,7 @@ int main(int argc, char** argv){
     }
 
 
-  if(_verbose){
+  if(_verbose || _verbose2){
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
 	
 
@@ -229,8 +228,30 @@ int main(int argc, char** argv){
 
 	for(auto action:actions){
 		const clpAction* clp_action = dynamic_cast<const clpAction*> (action);
+
+		list< Action* > best_actions;
+		if (_verbose2){
+			gr->get_best_actions(*s00, best_actions, _verbose2.Get());
+			best_actions.push_back(new clpAction(*clp_action));
+		}
+
 		s00->transition(*clp_action);
-		cout << "action: block:" << clp_action->block.id << " space:" << clp_action->space.get_location(clp_action->block) << endl;
+		cout << "selected block:" << clp_action->block.id << " space:" << clp_action->space.get_location(clp_action->block) << endl;
+
+		set<int> visited;
+		if(_verbose2){
+			for (auto act:best_actions){
+				const clpAction* clp_act = dynamic_cast<const clpAction*> (act);
+				if (visited.find(clp_act->block.id) != visited.end()) continue;
+				visited.insert(clp_act->block.id);
+
+				std::cout << "  action block:" << clp_act->block.id << " eval: ";
+				for (auto it = clp_act->metrics.begin(); it != clp_act->metrics.end(); ++it) 
+					std::cout << *it << " ";
+				
+				std::cout << std::endl;
+			}
+		}
 		
 	}
 

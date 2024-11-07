@@ -47,7 +47,7 @@ list<State*> BSG::next(list<State*>& S){
 
         	 State& state_copy = *state.clone();
         	 state_copy.transition(**it);
-        	 //cout << state_copy.get_value() << endl;
+        	 
         	 delete *it;
 
              double value = greedy.run(state_copy, timelimit, begin_time);

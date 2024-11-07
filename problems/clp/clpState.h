@@ -37,6 +37,8 @@ public:
 	const Block& block;
 	const Space space;
 
+	mutable list <double> metrics;
+
 };
 
 bool is_constructible(const clpState& s, const Block& b);
