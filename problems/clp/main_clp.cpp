@@ -214,8 +214,6 @@ int main(int argc, char** argv){
   if(_verbose || _verbose2){
 	list<const Action*>& actions= dynamic_cast<const clpState*>(de->get_best_state())->get_path();
 	
-
-
 	clpState* s00 = dynamic_cast<clpState*> (s0->clone());
 	for (const Block* block:s00->valid_blocks){
 		cout << "block: " << block->id << " " << *block << endl;
