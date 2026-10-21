@@ -29,13 +29,13 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _inst(parser, "int", "Instance", {'i'});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit", {'t', "timelimit"});
-	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Beta parameter", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
+	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
+	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 2.2652", {"beta"});
+	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.3896", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
-	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::Flag _portfolio(parser, "portfolio", "BSG: the root is expanded with greedy solutions using random parameters (alpha, beta, gamma, p); the best ones continue the search with their parameters", {"portfolio"});
+	args::Flag _portfolio(parser, "portfolio", "BSG: the root is expanded with greedy solutions using perturbed parameters (+-20% of alpha, beta, gamma, p); the best ones continue the search with their parameters", {"portfolio"});
 	args::ValueFlag<double> _max_carried(parser, "double", "BSG: maximum proportion of the beam for paths carried from previous levels. Default: 1 (no limit)", {"max_carried"});
 	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
 	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
@@ -72,7 +72,9 @@ int main(int argc, char** argv){
 	double min_fr=(_min_fr)? _min_fr.Get():0.98;
 	int maxtime=(_maxtime)? _maxtime.Get():100;
 
-	double alpha=4.0, beta=1.0, gamma=0.2, delta=1.0, p=0.04;
+	//parametros ajustados por L. Guesser con irace (los de Araya et al. 2017 son
+	//alpha=4, beta=1, gamma=0.2, p=0.04)
+	double alpha=2.4407, beta=2.2652, gamma=0.3896, delta=1.0, p=0.0164;
 	if(_alpha) alpha=_alpha.Get();
 	if(_beta) beta=_beta.Get();
 	if(_gamma) gamma=_gamma.Get();
@@ -99,18 +101,18 @@ int main(int argc, char** argv){
 	BSG *bsg= new BSG(vcs, *gr, 4);
 	if(_max_carried) bsg->set_max_carried(_max_carried.Get());
 
-	//portafolio de parametros: parametros por defecto, los de L. Guesser y aleatorios
-	//(uniformes en los rangos usados por L. Guesser con irace)
+	//portafolio de parametros: los parametros indicados, los de Araya et al. (2017) y
+	//perturbaciones uniformes de +-20% de los parametros indicados
 	std::mt19937 prng(1);
-	int guesser = vcs->add_params(VCS_Function::Params{2.4407, 2.2652, 0.3896, 0.0164, delta});
+	int araya = vcs->add_params(VCS_Function::Params{4.0, 1.0, 0.2, 0.04, delta});
 	if(_portfolio)
 		bsg->set_root_sampler([&](const State& root, int k) -> State* {
 			clpState* c = static_cast<clpState*>(root.clone());
 			if(k==0) c->param = 0;
-			else if(k==1) c->param = guesser;
+			else if(k==1) c->param = araya;
 			else{
-				std::uniform_real_distribution<double> ua(0.0,8.0), ub(0.0,4.0), ug(0.0,0.4), up(0.0,0.05);
-				c->param = vcs->add_params(VCS_Function::Params{ua(prng), ub(prng), ug(prng), up(prng), delta});
+				std::uniform_real_distribution<double> u(0.8, 1.2);
+				c->param = vcs->add_params(VCS_Function::Params{alpha*u(prng), beta*u(prng), gamma*u(prng), p*u(prng), delta});
 			}
 			return c;
 		});
