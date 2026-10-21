@@ -15,6 +15,7 @@
 #include "LNS.h"
 #include "CPSAT.h"
 #include <cstdlib>
+#include <random>
 
 using namespace std;
 using namespace clp;
@@ -34,6 +35,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
+	args::Flag _portfolio(parser, "portfolio", "BSG: the root is expanded with greedy solutions using random parameters (alpha, beta, gamma, p); the best ones continue the search with their parameters", {"portfolio"});
 	args::ValueFlag<double> _max_carried(parser, "double", "BSG: maximum proportion of the beam for paths carried from previous levels. Default: 1 (no limit)", {"max_carried"});
 	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
 	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
@@ -96,6 +98,22 @@ int main(int argc, char** argv){
 	SearchStrategy *gr = new Greedy(vcs);
 	BSG *bsg= new BSG(vcs, *gr, 4);
 	if(_max_carried) bsg->set_max_carried(_max_carried.Get());
+
+	//portafolio de parametros: parametros por defecto, los de L. Guesser y aleatorios
+	//(uniformes en los rangos usados por L. Guesser con irace)
+	std::mt19937 prng(1);
+	int guesser = vcs->add_params(VCS_Function::Params{2.4407, 2.2652, 0.3896, 0.0164, delta});
+	if(_portfolio)
+		bsg->set_root_sampler([&](const State& root, int k) -> State* {
+			clpState* c = static_cast<clpState*>(root.clone());
+			if(k==0) c->param = 0;
+			else if(k==1) c->param = guesser;
+			else{
+				std::uniform_real_distribution<double> ua(0.0,8.0), ub(0.0,4.0), ug(0.0,0.4), up(0.0,0.05);
+				c->param = vcs->add_params(VCS_Function::Params{ua(prng), ub(prng), ug(prng), up(prng), delta});
+			}
+			return c;
+		});
 	SearchStrategy *de= new DoubleEffort(*bsg);
 
 	State& s_copy= *s0->clone();

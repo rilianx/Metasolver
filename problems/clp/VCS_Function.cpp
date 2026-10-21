@@ -18,7 +18,9 @@ VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<in
 		const vector<const Block*>& blocks,
 		long L, long W, long H, double alpha, double beta, double gamma, double p, double delta,
 		bool fix_knapsack) :
-		fix_knapsack(fix_knapsack), alpha(alpha), beta(beta), gamma(gamma), p(p), delta(delta) {
+		fix_knapsack(fix_knapsack), alpha(alpha), beta(beta), gamma(gamma), p(p), delta(delta), current(0) {
+
+	params.push_back(Params{alpha, beta, gamma, p, delta});
 
 	long dims[3]={L, W, H};
 	for(int d=0; d<3; d++){
@@ -48,6 +50,12 @@ static inline long expansion(double p, long l){
 }
 
 void VCS_Function::set_space(const clpState& s, const Space& sp){
+	if(s.param!=current){
+		const Params& t = params[s.param];
+		alpha=t.alpha; beta=t.beta; gamma=t.gamma; p=t.p; delta=t.delta;
+		current=s.param;
+	}
+
 	//cota de (1-loss)^beta en el espacio: 1-loss <= volumen del espacio / volumen rellenable
 	loss_bound = 1.0;
 	if(beta>0.0){
@@ -75,11 +83,18 @@ double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp, do
 
 	//poda: la perdida de volumen solo se calcula si la cota de la evaluacion
 	//(con el mayor valor posible de (1-loss)^beta) supera el umbral
-	if(pow_vol[b.id] * loss_bound * pow_cs * pow_n[b.id] * (1.0+1e-9) <= threshold) return -1.0;
+	double pv, pn;
+	if(current==0) { pv=pow_vol[b.id]; pn=pow_n[b.id]; }
+	else{
+		pv = pow((delta>0.0)? (double) b.getOccupiedVolume(): 1.0, delta);
+		pn = pow((gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0, gamma);
+	}
+
+	if(pv * loss_bound * pow_cs * pn * (1.0+1e-9) <= threshold) return -1.0;
 
 	double loss=(beta>0.0)? Loss(s.left, b, sp) : 0.0;
 
-	return pow_vol[b.id] * pow((1.0-loss),beta) * pow_cs * pow_n[b.id];
+	return pv * pow((1.0-loss),beta) * pow_cs * pn;
 }
 
 double VCS_Function::CS_p(const clpState& s, const Block& b, const Space& sp){

@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <set>
+#include <functional>
 #include "../SearchStrategy.h"
 
 namespace metasolver {
@@ -97,6 +98,14 @@ public:
 	void set_beams(int b){beams=b;}
 
 	/**
+	 * Expansion de la raiz por muestreo: en vez de evaluar las mejores acciones de la
+	 * raiz con un mismo greedy, se evaluan max_level_size variantes de la raiz
+	 * (p.ej. con parametros distintos de la heuristica) obtenidas con sampler(raiz, i),
+	 * completadas con greedy. Las mejores continuan la busqueda.
+	 */
+	void set_root_sampler(std::function<State*(const State&, int)> sampler){ root_sampler=sampler; }
+
+	/**
 	 * Limita la proporcion del beam que pueden ocupar los caminos heredados de
 	 * niveles anteriores (cuyo valor ya fue seleccionado como maximo, por lo que
 	 * tienen ventaja frente a los hijos evaluados con una sola corrida greedy)
@@ -132,6 +141,7 @@ protected:
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
+				s->inherit(*final_state);
 				nextS.push_back(s);
 
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
@@ -159,6 +169,8 @@ protected:
 	//estados finales (greedy) evaluados en el nivel actual; los demas de
 	//state_actions son caminos heredados de niveles anteriores
 	set<const State*> fresh;
+
+	std::function<State*(const State&, int)> root_sampler;
 
 	//proporcion maxima del beam para caminos heredados (1: sin limite)
 	double max_carried;

@@ -84,6 +84,12 @@ public:
 	 */
 	virtual uint64_t get_hash() const { return 0; }
 
+	/**
+	 * El estado (obtenido siguiendo el camino de la solucion final) hereda los
+	 * atributos de busqueda de final (p.ej. parametros de la heuristica)
+	 */
+	virtual void inherit(const State& final) { }
+
 	virtual Action* next_action(State& final);
 
 	bool is_root(){ return (path.size()==0); }

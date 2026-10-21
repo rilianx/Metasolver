@@ -30,6 +30,25 @@ list<State*> BSG::next(list<State*>& S){
          if(verbose && state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
 
+         //expansion de la raiz por muestreo
+         if(root_sampler && state.is_root()){
+        	 for(int k=0; k<max_level_size && get_time()<=timelimit; k++){
+        		 State* v = root_sampler(state, k);
+        		 double value = greedy.run(*v, timelimit, begin_time);
+        		 if(value > get_best_value()){
+        			 if(best_state) delete best_state;
+        			 best_state = v->clone();
+        			 if(verbose) cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
+        					 << best_state->get_path().size() << " nodes" << endl;
+        		 }
+        		 if(state_actions.find(-value)==state_actions.end()){
+        			 state_actions[-value]= make_pair(&state, v);
+        			 fresh.insert(v);
+        		 }else delete v;
+        	 }
+        	 continue;
+         }
+
          //se obtiene la lista de las mejores acciones a partir del estado actual
          list< Action* > best_actions;
          
