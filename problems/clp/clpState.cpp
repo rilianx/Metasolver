@@ -19,7 +19,6 @@ using namespace metasolver;
 namespace clp {
 
 vector<const BoxShape*> clpState::types;
-vector<int> clpState::max_count;
 
 static inline uint64_t mix(uint64_t h){
 	h ^= h >> 33; h *= 0xff51afd7ed558ccdull;
@@ -82,21 +81,14 @@ void clpState::_transition(const Action& action) {
 
 	hash += placement_hash(b.id, x, y, z);
 
-	update_valid_blocks(b);
+	update_valid_blocks();
 }
 
-void clpState::update_valid_blocks(const Block& placed) {
-	//solo los tipos de caja usados por el bloque ubicado pueden
-	//hacer que otros bloques dejen de ser construibles
-	vector< pair<int,int> > critical;
-	for(auto& p : placed.boxes)
-		if(left[p.first] < max_count[p.first]) critical.push_back(make_pair(p.first, left[p.first]));
-	if(critical.empty()) return;
-
+void clpState::update_valid_blocks() {
 	valid_blocks.erase(remove_if(valid_blocks.begin(), valid_blocks.end(),
-		[&](const Block* b){
-			for(auto& c : critical)
-				if(b->count(c.first) > c.second) return true;
+		[this](const Block* b){
+			for(auto& p : b->boxes)
+				if(left[p.first] < p.second) return true;
 			return false;
 		}), valid_blocks.end());
 }
@@ -170,11 +162,6 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 
 	for(size_t k=0; k<s->valid_blocks.size(); k++)
 		const_cast<Block*>(s->valid_blocks[k])->id = k;
-
-	clpState::max_count.assign(clpState::types.size(), 0);
-	for(const Block* b : s->valid_blocks)
-		for(auto& p : b->boxes)
-			clpState::max_count[p.first] = max(clpState::max_count[p.first], p.second);
 	return s;
 }
 

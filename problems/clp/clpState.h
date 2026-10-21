@@ -64,9 +64,6 @@ public:
 	//tipos de caja de la instancia
 	static vector<const BoxShape*> types;
 
-	//cantidad maxima de cajas de cada tipo en un bloque
-	static vector<int> max_count;
-
 	//los espacios en los que no cabe ningun bloque se eliminan al buscar acciones
 	mutable Container cont;
 
@@ -86,10 +83,9 @@ private:
 	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
 
 	/**
-	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas
-	 * restantes luego de ubicar el bloque placed
+	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas restantes
 	 */
-	void update_valid_blocks(const Block& placed);
+	void update_valid_blocks();
 
 	void update_min_dim();
 
