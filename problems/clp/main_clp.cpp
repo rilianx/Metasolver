@@ -13,6 +13,8 @@
 #include "DoubleEffort.h"
 #include "BSG.h"
 #include "LNS.h"
+#include "CPSAT.h"
+#include <cstdlib>
 
 using namespace std;
 using namespace clp;
@@ -34,8 +36,14 @@ int main(int argc, char** argv){
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
 	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
 	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
+	args::ValueFlag<string> _lns_center(parser, "string", "LNS: center of the destroyed region (void, middle). Default: void", {"lns_center"});
 	args::ValueFlag<double> _lns_frac(parser, "double", "LNS: proportion of the timelimit used by LNS. Default: 0.3", {"lns_frac"});
 	args::ValueFlag<int> _lns_beams(parser, "int", "LNS: number of beams of the BSG used for repairing. Default: 4", {"lns_beams"});
+	args::ValueFlag<string> _lns_repair(parser, "string", "LNS: repair (bsg, exact, hybrid). Default: bsg", {"lns_repair"});
+	args::ValueFlag<string> _ortools(parser, "path", "LNS exact repair: OR-Tools library (e.g. .../site-packages/ortools/.libs/libortools.so.9). Default: $ORTOOLS_LIB", {"ortools_lib"});
+	args::ValueFlag<double> _exact_time(parser, "double", "LNS exact repair: time limit per CP-SAT call. Default: 1.0", {"exact_time"});
+	args::ValueFlag<int> _exact_boxes(parser, "int", "LNS exact repair: maximum number of candidate boxes. Default: 40", {"exact_boxes"});
+	args::ValueFlag<int> _exact_workers(parser, "int", "LNS exact repair: CP-SAT workers. Default: 1", {"exact_workers"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set (BR format)");
 
 	cout.precision(8);
@@ -98,13 +106,37 @@ int main(int argc, char** argv){
 			if(_lns_shape.Get()=="slab") shape = clpLNS::SLAB;
 			else if(_lns_shape.Get()!="box") { cerr << "Unknown LNS shape: " << _lns_shape.Get() << endl; return 1; }
 		}
+		clpLNS::Center center = clpLNS::VOID;
+		if(_lns_center){
+			if(_lns_center.Get()=="middle") center = clpLNS::MIDDLE;
+			else if(_lns_center.Get()!="void") { cerr << "Unknown LNS center: " << _lns_center.Get() << endl; return 1; }
+		}
 		int lns_beams = (_lns_beams)? _lns_beams.Get() : 4;
 
-		clpLNS lns(*s0, vcs, *gr, shape, lns_beams);
+		clpLNS::Repair repair = clpLNS::BSG_REPAIR;
+		if(_lns_repair){
+			if(_lns_repair.Get()=="exact") repair = clpLNS::EXACT_REPAIR;
+			else if(_lns_repair.Get()=="hybrid") repair = clpLNS::HYBRID_REPAIR;
+			else if(_lns_repair.Get()!="bsg") { cerr << "Unknown LNS repair: " << _lns_repair.Get() << endl; return 1; }
+		}
+
+		CpSolver* solver = NULL;
+		clpLNS::ExactParams exact;
+		if(repair!=clpLNS::BSG_REPAIR){
+			string lib = (_ortools)? _ortools.Get() : (getenv("ORTOOLS_LIB")? getenv("ORTOOLS_LIB") : "");
+			if(lib.empty()) { cerr << "The exact repair needs the OR-Tools library (--ortools_lib or $ORTOOLS_LIB)" << endl; return 1; }
+			solver = new CpSolver(lib);
+			if(_exact_time) exact.max_time = _exact_time.Get();
+			if(_exact_boxes) exact.max_boxes = _exact_boxes.Get();
+			if(_exact_workers) exact.workers = _exact_workers.Get();
+		}
+
+		clpLNS lns(*s0, vcs, *gr, shape, center, repair, solver, exact, lns_beams);
 		clpState* best = lns.run(*static_cast<const clpState*>(de->get_best_state()), maxtime, begin_time);
 		eval = best->get_value();
 		if(!best->is_feasible()) { cerr << "ERROR: infeasible LNS solution" << endl; return 1; }
 		cout << "LNS iterations: " << lns.get_iterations() << endl;
+		if(solver) cout << "LNS improvements by exact repair: " << lns.get_exact_improvements() << endl;
 	}
 
 	if(!static_cast<const clpState*>(de->get_best_state())->is_feasible()){
