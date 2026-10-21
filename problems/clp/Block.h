@@ -22,13 +22,13 @@ namespace clp {
 class Block {
 public:
 	/** bloque de una caja en la orientacion o */
-	Block(const BoxShape& box, int o) :
+	Block(const BoxShape& box, int o) : id(-1),
 		l(box.getL(o)), w(box.getW(o)), h(box.getH(o)),
 		occupied_volume(box.getVolume()), n_boxes(1) {
 		boxes.push_back(std::make_pair(box.type, 1));
 	}
 
-	Block(long l, long w, long h) : l(l), w(w), h(h), occupied_volume(0), n_boxes(0) {}
+	Block(long l, long w, long h) : id(-1), l(l), w(w), h(h), occupied_volume(0), n_boxes(0) {}
 
 	long getL() const { return l; }
 	long getW() const { return w; }
@@ -52,6 +52,9 @@ public:
 	 */
 	static void generate_blocks(std::vector<const Block*>& B, const std::vector<int>& left,
 			double min_fr, int max_bl, long L, long W, long H);
+
+	//indice del bloque en la lista de bloques de la instancia
+	int id;
 
 	long l, w, h;
 	long occupied_volume;

@@ -21,6 +21,17 @@ namespace clp {
 vector<const BoxShape*> clpState::types;
 vector<int> clpState::max_count;
 
+static inline uint64_t mix(uint64_t h){
+	h ^= h >> 33; h *= 0xff51afd7ed558ccdull;
+	h ^= h >> 33; h *= 0xc4ceb9fe1a85ec53ull;
+	h ^= h >> 33;
+	return h;
+}
+
+static inline uint64_t placement_hash(int id, long x, long y, long z){
+	return mix(mix(mix(mix((uint64_t) id) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
+}
+
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
 	VCS_Function& vcs = *static_cast<VCS_Function*>(evl);
 
@@ -68,6 +79,8 @@ void clpState::_transition(const Action& action) {
 	long x, y, z;
 	act.space.get_location(b.getL(), b.getW(), b.getH(), x, y, z);
 	cont.insert(b, x, y, z, min_l, min_w, min_h);
+
+	hash += placement_hash(b.id, x, y, z);
 
 	update_valid_blocks(b);
 }
@@ -154,6 +167,9 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 	Block::generate_blocks(s->valid_blocks, s->left, min_fr, max_bl,
 			s->cont.getL(), s->cont.getW(), s->cont.getH());
 	s->update_min_dim();
+
+	for(size_t k=0; k<s->valid_blocks.size(); k++)
+		const_cast<Block*>(s->valid_blocks[k])->id = k;
 
 	clpState::max_count.assign(clpState::types.size(), 0);
 	for(const Block* b : s->valid_blocks)

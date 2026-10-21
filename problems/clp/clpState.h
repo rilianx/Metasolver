@@ -43,7 +43,7 @@ class clpState : public State {
 public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
-		valid_blocks(S.valid_blocks), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h) { }
+		valid_blocks(S.valid_blocks), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
 
@@ -54,6 +54,12 @@ public:
 	virtual int get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const;
 
 	int get_n_valid_blocks() const {return valid_blocks.size();}
+
+	/**
+	 * Hash del conjunto de bloques ubicados (independiente del orden en que se ubicaron).
+	 * Los estados con los mismos bloques en las mismas posiciones son equivalentes.
+	 */
+	virtual uint64_t get_hash() const { return hash; }
 
 	//tipos de caja de la instancia
 	static vector<const BoxShape*> types;
@@ -77,7 +83,7 @@ protected:
 
 private:
 
-	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H) { }
+	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
 
 	/**
 	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas
@@ -89,6 +95,8 @@ private:
 
 	//menor dimension de las cajas restantes (los espacios menores se descartan)
 	long min_l, min_w, min_h;
+
+	uint64_t hash;
 };
 
 /**

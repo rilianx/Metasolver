@@ -10,6 +10,7 @@
 #include <list>
 #include <iostream>
 #include <functional>
+#include <cstdint>
 
 
 
@@ -76,6 +77,12 @@ public:
 	 * de mejor a peor
 	 */
 	virtual int get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const = 0;
+
+	/**
+	 * Identificador del estado (0 si no se implementa). Dos estados con el mismo
+	 * hash deben ser equivalentes. Se utiliza en Greedy para no repetir calculos.
+	 */
+	virtual uint64_t get_hash() const { return 0; }
 
 	virtual Action* next_action(State& final);
 
