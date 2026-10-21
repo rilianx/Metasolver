@@ -12,6 +12,7 @@
 #include "Greedy.h"
 #include "DoubleEffort.h"
 #include "BSG.h"
+#include "LNS.h"
 
 using namespace std;
 using namespace clp;
@@ -31,6 +32,10 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
+	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
+	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
+	args::ValueFlag<double> _lns_frac(parser, "double", "LNS: proportion of the timelimit used by LNS. Default: 0.3", {"lns_frac"});
+	args::ValueFlag<int> _lns_beams(parser, "int", "LNS: number of beams of the BSG used for repairing. Default: 4", {"lns_beams"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set (BR format)");
 
 	cout.precision(8);
@@ -83,7 +88,29 @@ int main(int argc, char** argv){
 
 	State& s_copy= *s0->clone();
 
-	double eval=de->run(s_copy, maxtime, begin_time);
+	double lns_frac = (_lns)? ((_lns_frac)? _lns_frac.Get() : 0.3) : 0.0;
+
+	double eval=de->run(s_copy, maxtime*(1.0-lns_frac), begin_time);
+
+	if(_lns){
+		clpLNS::Shape shape = clpLNS::BOX;
+		if(_lns_shape){
+			if(_lns_shape.Get()=="slab") shape = clpLNS::SLAB;
+			else if(_lns_shape.Get()!="box") { cerr << "Unknown LNS shape: " << _lns_shape.Get() << endl; return 1; }
+		}
+		int lns_beams = (_lns_beams)? _lns_beams.Get() : 4;
+
+		clpLNS lns(*s0, vcs, *gr, shape, lns_beams);
+		clpState* best = lns.run(*static_cast<const clpState*>(de->get_best_state()), maxtime, begin_time);
+		eval = best->get_value();
+		if(!best->is_feasible()) { cerr << "ERROR: infeasible LNS solution" << endl; return 1; }
+		cout << "LNS iterations: " << lns.get_iterations() << endl;
+	}
+
+	if(!static_cast<const clpState*>(de->get_best_state())->is_feasible()){
+		cerr << "ERROR: infeasible solution" << endl;
+		return 1;
+	}
 
 	cout << "% volume utilization" << endl;
 	cout << eval*100 << endl;

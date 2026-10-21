@@ -19,6 +19,7 @@ using namespace metasolver;
 namespace clp {
 
 vector<const BoxShape*> clpState::types;
+vector<int> clpState::initial_boxes;
 
 static inline uint64_t mix(uint64_t h){
 	h ^= h >> 33; h *= 0xff51afd7ed558ccdull;
@@ -94,6 +95,23 @@ void clpState::update_valid_blocks() {
 		}), valid_blocks.end());
 }
 
+bool clpState::is_feasible() const{
+	const vector<PlacedBlock>& B = cont.blocks;
+	AABB container(0, 0, 0, cont.getL(), cont.getW(), cont.getH());
+	vector<int> used(types.size(), 0);
+	long volume=0;
+	for(size_t i=0; i<B.size(); i++){
+		if(!container.contains(B[i])) return false;
+		for(size_t j=i+1; j<B.size(); j++)
+			if(B[i].strict_intersects(B[j])) return false;
+		for(auto& p : B[i].block->boxes) used[p.first] += p.second;
+		volume += B[i].block->getOccupiedVolume();
+	}
+	for(size_t t=0; t<types.size(); t++)
+		if(used[t] + left[t] != initial_boxes[t] || left[t] < 0) return false;
+	return volume == cont.getOccupiedVolume();
+}
+
 void clpState::update_min_dim(){
 	for(const BoxShape* box : types){
 		if(left[box->type] <= 0) continue;
@@ -150,6 +168,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 			BoxShape* box=new BoxShape(j, id, l, w, h, rot1, rot2, rot3);
 			clpState::types.push_back(box);
 			s->left.push_back(n);
+			clpState::initial_boxes.push_back(n);
 
 		}
 	}

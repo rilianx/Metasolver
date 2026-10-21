@@ -28,11 +28,12 @@ public:
 	 * @param beams the number of beams
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
+	 * @verbose prints the new best solutions
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool verbose=true) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose) {}
 
 
 	virtual ~BSG();
@@ -153,6 +154,9 @@ protected:
 
 	double p_elite;
 	int n_elite;
+
+	//imprime las nuevas mejores soluciones
+	bool verbose;
 
 };
 

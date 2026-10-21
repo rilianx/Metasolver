@@ -12,7 +12,7 @@ namespace metasolver {
 
 
 BSG::~BSG(){
-
+	initialize(NULL);
 }
 
 list<State*> BSG::next(list<State*>& S){
@@ -27,7 +27,7 @@ list<State*> BSG::next(list<State*>& S){
          State& state=**itS;
         // cout << state.get_value() << endl;
 
-         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         if(verbose && state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
@@ -57,7 +57,7 @@ list<State*> BSG::next(list<State*>& S){
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
-            	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
+            	 if(verbose) cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }
 

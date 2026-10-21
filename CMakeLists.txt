@@ -21,6 +21,7 @@ add_executable(BSG_CLP
   metasolver/strategies/Greedy.cpp
   problems/clp/Block.cpp
   problems/clp/Container.cpp
+  problems/clp/LNS.cpp
   problems/clp/clpState.cpp
   problems/clp/VCS_Function.cpp
 )

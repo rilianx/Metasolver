@@ -56,6 +56,12 @@ public:
 	int get_n_valid_blocks() const {return valid_blocks.size();}
 
 	/**
+	 * Verifica la solucion: bloques dentro del contenedor, sin intersecciones y
+	 * sin usar mas cajas que las disponibles
+	 */
+	bool is_feasible() const;
+
+	/**
 	 * Hash del conjunto de bloques ubicados (independiente del orden en que se ubicaron).
 	 * Los estados con los mismos bloques en las mismas posiciones son equivalentes.
 	 */
@@ -63,6 +69,9 @@ public:
 
 	//tipos de caja de la instancia
 	static vector<const BoxShape*> types;
+
+	//cantidad de cajas de cada tipo en la instancia
+	static vector<int> initial_boxes;
 
 	//los espacios en los que no cabe ningun bloque se eliminan al buscar acciones
 	mutable Container cont;
