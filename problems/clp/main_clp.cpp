@@ -66,11 +66,12 @@ int main(int argc, char** argv){
 	cout << "min_fr:" << min_fr << endl;
 	cout << "Maxtime:" << maxtime << endl;
 
+	//el tiempo incluye la lectura de la instancia y la generacion de bloques
+	clock_t begin_time=clock();
+
 	clpState* s0 = new_state(file, inst, min_fr, 10000);
 
 	cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
-
-	clock_t begin_time=clock();
 
 	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left,
 			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), alpha, beta, gamma, p, delta);
