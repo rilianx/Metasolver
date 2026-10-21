@@ -71,7 +71,11 @@ public:
 		_transition(action);
 	}
 	
-	virtual void get_actions(list< Action* >& actions) const = 0;
+	/**
+	 * Retorna (en bactions) las n mejores acciones segun el evaluador, ordenadas
+	 * de mejor a peor
+	 */
+	virtual int get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const = 0;
 
 	virtual Action* next_action(State& final);
 

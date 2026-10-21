@@ -5,58 +5,116 @@
  *      Author: iaraya
  */
 
-#include <map>
-#include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
-#include "objects2/BoxShape.h"
 #include "clpState.h"
+#include "VCS_Function.h"
 
 using namespace std;
 using namespace metasolver;
 
 namespace clp {
 
+vector<const BoxShape*> clpState::types;
+vector<int> clpState::max_count;
 
-void clpState::get_actions(list< Action* >& actions) const{
-	list<const Block*>::const_iterator it;
+int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
+	VCS_Function& vcs = *static_cast<VCS_Function*>(evl);
 
-    const Space* sp=NULL;
+	while(cont.spaces.size()>0){
+		int isp = cont.top_space();
+		const Space& sp = cont.spaces[isp];
 
-    //cout << valid_blocks.size() << endl;
+		vcs.set_space(*this, sp);
 
-	while(cont->spaces->size()>0 && actions.size()==0){
-
-
-	    sp=&cont->spaces->top();
-	    //cout << "spaces:" << cont->spaces->size() << endl;
-
-		for(it = valid_blocks.begin();it!=valid_blocks.end();it++)
-			if(**it <= sp->getDimensions()) actions.push_back(new clpAction(**it,*sp));
-
-		//the space is removed
-		if(actions.size()==0){
-			//cout << "to delete: " << *sp << ";" << sp << endl;
-			cont->spaces->pop();
+		//las mejores n acciones ordenadas de peor a mejor (en caso de empate,
+		//la evaluada primero se considera peor)
+		vector< pair<double, const Block*> > ranked;
+		bool any=false;
+		for(const Block* b : valid_blocks){
+			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
+			any=true;
+			double eval = vcs.eval(*this, *b, sp);
+			if(eval>0 && ((int)ranked.size()<n || ranked.front().first < eval)){
+				auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
+						[](double e, const pair<double, const Block*>& r){ return e < r.first; });
+				ranked.insert(pos, make_pair(eval, b));
+				if((int)ranked.size()==n+1) ranked.erase(ranked.begin());
+			}
 		}
+
+		//el espacio se elimina si no cabe ningun bloque
+		if(!any) { cont.remove_space(isp); continue; }
+
+		for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
+			bactions.push_back(new clpAction(*it->second, sp));
+
+		return bactions.size();
 	}
+	return 0;
 }
 
+void clpState::_transition(const Action& action) {
+	const clpAction& act = static_cast<const clpAction&>(action);
+	const Block& b= act.block;
+
+	//se actualizan las cajas restantes
+	for(auto& p : b.boxes) left[p.first] -= p.second;
+
+	//se inserta el bloque en el contenedor
+	long x, y, z;
+	act.space.get_location(b.getL(), b.getW(), b.getH(), x, y, z);
+	cont.insert(b, x, y, z, min_l, min_w, min_h);
+
+	update_valid_blocks(b);
+}
+
+void clpState::update_valid_blocks(const Block& placed) {
+	//solo los tipos de caja usados por el bloque ubicado pueden
+	//hacer que otros bloques dejen de ser construibles
+	vector< pair<int,int> > critical;
+	for(auto& p : placed.boxes)
+		if(left[p.first] < max_count[p.first]) critical.push_back(make_pair(p.first, left[p.first]));
+	if(critical.empty()) return;
+
+	valid_blocks.erase(remove_if(valid_blocks.begin(), valid_blocks.end(),
+		[&](const Block* b){
+			for(auto& c : critical)
+				if(b->count(c.first) > c.second) return true;
+			return false;
+		}), valid_blocks.end());
+}
+
+void clpState::update_min_dim(){
+	for(const BoxShape* box : types){
+		if(left[box->type] <= 0) continue;
+		for(int o=0; o<6; o++)
+			if(box->is_valid(o)){
+				min_l = min(min_l, box->getL(o));
+				min_w = min(min_w, box->getW(o));
+				min_h = min(min_h, box->getH(o));
+			}
+	}
+}
 
 clpState* new_state(string file, int i, double min_fr, int max_bl){
 
 	ifstream in(file.c_str());
+	if(!in){
+		cerr << "No se pudo abrir el archivo " << file << endl;
+		exit(1);
+	}
+
 	string line;
 	getline(in,line); //number of instances
 
 	clpState *s=NULL;
 
 	for(int inst=0;inst<=i; inst++){
-		string line;
-
-		getline(in, line ); //n_inst random_seed
+		getline(in, line); //n_inst random_seed
 		getline(in, line); //L W H
 
 		if(inst==i){
@@ -64,131 +122,44 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 			long l,w,h;
 			ss >> l >> w >> h;
 			cout << l << " " <<  w << " " << h << endl;
-			s= new clpState(new Block(l,w,h));
+			s= new clpState(l, w, h);
 		}
 
 		getline(in, line); //types of boxes
-
 		std::stringstream ss0(line);
 		int nb_types;
 		ss0 >> nb_types;
 
-		//se lee el archivo de entrada
-		//Objetos BoxShape, guardan los datos para cada tipo de cajas: dimensiones (w x l x h)
-		//y restricciones de rotación
-		//En el objeto clp se agregan los tipos de cajas y el número de elementos que hay de cada tipo
+		//cada linea: id l rot1 w rot2 h rot3 n
 		for(int j=0;j<nb_types;j++){
-			getline(in, line );
+			getline(in, line);
+			if(inst!=i) continue;
 
 			int n, id;
 			long l,h,w;
 			bool rot1, rot2, rot3;
 			std::stringstream ss1(line);
 			ss1 >> id >> l >> rot1 >> w >> rot2 >> h >> rot3 >> n;
-			double vol=l*h*w;
 
-			if(inst==i){
-				BoxShape* boxt=new BoxShape(id, l, w, h, rot1, rot2, rot3);
+			BoxShape* box=new BoxShape(j, id, l, w, h, rot1, rot2, rot3);
+			clpState::types.push_back(box);
+			s->left.push_back(n);
 
-				s->nb_left_boxes.insert(make_pair(boxt,n));
-				for(int o=0; o<6; o++)
-					if(boxt->is_valid((BoxShape::Orientation) o))
-						s->valid_blocks.push_back(new Block(*boxt,(BoxShape::Orientation) o, vol));
-			}
+			for(int o=0; o<6; o++)
+				if(box->is_valid(o))
+					s->valid_blocks.push_back(new Block(*box, o));
 		}
 	}
 
-	s->general_block_generator(min_fr, max_bl, *s->cont);
+	Block::generate_blocks(s->valid_blocks, s->left, min_fr, max_bl,
+			s->cont.getL(), s->cont.getW(), s->cont.getH());
 	s->update_min_dim();
+
+	clpState::max_count.assign(clpState::types.size(), 0);
+	for(const Block* b : s->valid_blocks)
+		for(auto& p : b->boxes)
+			clpState::max_count[p.first] = max(clpState::max_count[p.first], p.second);
 	return s;
 }
 
-void clpState::general_block_generator(double min_fr, int max_bl, const Vector3& max_dim){
-
-    list<const Block*>& B=valid_blocks;
-    list<const Block*> P=B;
-	while(B.size()<max_bl){
-		list<const Block*>  N;
-		list<const Block*> :: iterator itP=P.begin();
-	    int new_elems=0;
-	    for(;itP!=P.end() && B.size()+new_elems<max_bl; itP++){
-	    	list<const Block*> :: iterator itB=B.begin();
-	    	for(;itB!=B.end() && B.size()+new_elems<max_bl ; itB++){
-
-	    		//cout << "new_blocks" << endl;
-				list<const Block*> newB = (*itP)->create_new_blocks(*itB, min_fr, max_dim);
-
-
-				list<const Block*>:: iterator itNew=newB.begin();
-				for(;itNew!=newB.end();itNew++){
-				   if(is_constructible(*this,**itNew) && **itNew <= *cont){
-					  N.push_back(*itNew);
-					  new_elems++;
-
-					  if(B.size()+new_elems>=max_bl) break;
-				   }else { /*delete *itNew;*/ }
-				}
-	    	}
-	    }
-		if(N.size()==0) break;
-		B.insert(B.end(),N.begin(),N.end());
-		P=N;
-	}
-}
-
-
-
-void clpState::update_min_dim(){
-	map<const BoxShape*, int>::const_iterator it= nb_left_boxes.begin();
-	for(;it!=nb_left_boxes.end();it++){
-		if(it->second >0){
-			for(int o=0; o<6; o++)
-				if(it->first->is_valid((BoxShape::Orientation) o)){
-					if(mindim.getX() > it->first->getL((BoxShape::Orientation) o) )
-						mindim.setX(it->first->getL((BoxShape::Orientation) o));
-
-					if(mindim.getY() > it->first->getW((BoxShape::Orientation) o) )
-						mindim.setY(it->first->getW((BoxShape::Orientation) o));
-
-					if(mindim.getZ() > it->first->getH((BoxShape::Orientation) o) )
-						mindim.setZ(it->first->getH((BoxShape::Orientation) o));
-				}
-		}
-	}
-}
-
-
-
-void clpState::_transition(const Action& action) {
-	const clpAction& act = *dynamic_cast<const clpAction*> (&action);
-
-	const Block& b= act.block;
-
-	//se actualizan las cajas restantes
-	bool update=false;
-	map<const BoxShape*, int>::const_iterator it= b.nb_boxes.begin();
-	for(;it!=b.nb_boxes.end();it++){
-		nb_left_boxes[it->first] -= it->second;
-		if(nb_left_boxes[it->first]==0) update=true;
-	}
-	//if(update) update_min_dim();
-
-	//se inserta el bloque en el contenedor
-	cont->insert(b, act.space.get_location(b), mindim);
-
-	//se actualizan los bloques validos
-	update_valid_blocks();
-
-}
-
-bool is_constructible(const clpState& s, const Block& b){
-	map<const BoxShape*, int>::const_iterator it= b.nb_boxes.begin();
-	for(;it!=b.nb_boxes.end();it++)
-		if(s.nb_left_boxes.at(it->first) < it->second)
-			return false;
-
-	return true;
-}
-
-
-}
+} /* namespace clp */

@@ -5,75 +5,71 @@
  *      Author: iaraya
  */
 
-
-
-
 #ifndef CLPSTATE_H_
 #define CLPSTATE_H_
 
-#include <map>
 #include <string>
+#include <vector>
+#include <list>
 
-#include "../metasolver/State.h"
-#include "objects2/Block.h"
-
+#include "State.h"
+#include "BoxShape.h"
+#include "Block.h"
+#include "Container.h"
 
 using namespace std;
 using namespace metasolver;
 
 namespace clp {
 
-class BlockSet;
-class clpState;
-
+/**
+ * Accion: ubicar un bloque en la esquina de anclaje de un espacio libre
+ */
 class clpAction : public Action{
 public:
 	clpAction(const Block& block, const Space& space) : block(block), space(space) { }
-
-	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
 	virtual Action* clone() const{ return new clpAction(*this); }
 
 	const Block& block;
 	const Space space;
-
 };
 
-bool is_constructible(const clpState& s, const Block& b);
-
+/**
+ * Solucion parcial: el contenedor con los bloques ubicados, la cantidad de cajas
+ * restantes de cada tipo y la lista de bloques que aun se pueden construir.
+ */
 class clpState : public State {
 public:
 
-	clpState(const clpState& S) : State(S),
-	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
-	valid_blocks(S.valid_blocks), mindim(S.mindim){
+	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
+		valid_blocks(S.valid_blocks), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h) { }
 
-	}
-
-	virtual ~clpState(){
-		if(cont) delete cont;
-	}
-
-
-	virtual State* clone() const{
-		State* st=new clpState(*this);
-		return st;
-	}
-
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
+	virtual State* clone() const{ return new clpState(*this); }
 
 	virtual double get_value() const{
-		return cont->getOccupiedVolume()/cont->getVolume();
+		return (double) cont.getOccupiedVolume() / (double) cont.getVolume();
 	}
 
-	virtual void get_actions(list< Action* >& actions) const;
+	virtual int get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const;
 
-	int get_n_valid_blocks() {return valid_blocks.size();}
+	int get_n_valid_blocks() const {return valid_blocks.size();}
 
-	//member variables
-	Block* cont;
-	map<const BoxShape*, int> nb_left_boxes;
-	list<const Block*> valid_blocks;
+	//tipos de caja de la instancia
+	static vector<const BoxShape*> types;
+
+	//cantidad maxima de cajas de cada tipo en un bloque
+	static vector<int> max_count;
+
+	//los espacios en los que no cabe ningun bloque se eliminan al buscar acciones
+	mutable Container cont;
+
+	//cantidad restante de cajas de cada tipo
+	vector<int> left;
+
+	vector<const Block*> valid_blocks;
+
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 
 protected:
 
@@ -81,42 +77,23 @@ protected:
 
 private:
 
-	clpState(Block* cont) :  cont(cont), mindim(cont->getL(),cont->getW(),cont->getH()) {  };
+	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H) { }
 
 	/**
-	 * Remove the free spaces in the container that cannot
-	 * include any leaving box
+	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas
+	 * restantes luego de ubicar el bloque placed
 	 */
-	void update_free_spaces() { };
-
-	/**
-	 * Remove blocks from the valid_block list that do not
-	 * fit in any free space or cannot be constructed with the leaving boxes
-	 */
-	void update_valid_blocks() {
-		list<const Block*>::iterator it = valid_blocks.begin();
-		while(it!=valid_blocks.end()){
-			if(!is_constructible(*this,**it))
-				it=valid_blocks.erase(it);
-			else it++;
-		}
-
-	};
+	void update_valid_blocks(const Block& placed);
 
 	void update_min_dim();
 
-	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
-
-	//menor dimension de las cajas restantes
-	Vector3 mindim;
-
-
-
-
+	//menor dimension de las cajas restantes (los espacios menores se descartan)
+	long min_l, min_w, min_h;
 };
 
-
-
+/**
+ * Lee la instancia (formato BR) y genera los bloques
+ */
 clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000);
 
 } /* namespace clp */

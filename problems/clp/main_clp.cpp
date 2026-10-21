@@ -14,6 +14,7 @@
 #include "BSG.h"
 
 using namespace std;
+using namespace clp;
 
 // ejemplo: BSG_CLP problems/clp/benchs/BR/BR7.txt -i 0 -t 30
 
@@ -71,7 +72,8 @@ int main(int argc, char** argv){
 
 	clock_t begin_time=clock();
 
-	VCS_Function* vcs = new VCS_Function(s0->nb_left_boxes, *s0->cont, alpha, beta, gamma, p, delta);
+	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left,
+			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), alpha, beta, gamma, p, delta);
 
 	SearchStrategy *gr = new Greedy(vcs);
 	BSG *bsg= new BSG(vcs, *gr, 4);

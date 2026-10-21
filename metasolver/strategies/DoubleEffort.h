@@ -31,8 +31,9 @@ public:
 		}
 
 
+		//si el esfuerzo no se puede duplicar, la busqueda termina
 		if(!bsg.double_effort()){
-			clean(S);
+			S.clear();
 			return S;
 		}
 
