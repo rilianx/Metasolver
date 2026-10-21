@@ -40,6 +40,18 @@ public:
 
 	void add_exactly_one(const std::vector<int>& literals);
 
+	/**
+	 * intervalo [start, start+size) (start es una variable y size una constante),
+	 * opcional segun el literal presence. Retorna su indice (para add_cumulative)
+	 */
+	int add_interval(int start, int64_t size, int presence);
+
+	/** intervalo fijo [start, start+size) */
+	int add_fixed_interval(int64_t start, int64_t size);
+
+	/** la suma de las demandas de los intervalos que contienen un punto no supera capacity */
+	void add_cumulative(int64_t capacity, const std::vector<int>& intervals, const std::vector<int64_t>& demands);
+
 	/** maximizar sum coeffs[i]*vars[i] */
 	void maximize(const std::vector<int>& vars, const std::vector<int64_t>& coeffs);
 
@@ -73,9 +85,14 @@ public:
 	 */
 	Status solve(const CpModel& model, double max_time, int num_workers, std::vector<int64_t>& solution);
 
+	/** valor objetivo y cota de la ultima llamada a solve */
+	double get_objective() const { return objective; }
+	double get_bound() const { return bound; }
+
 private:
 	typedef void (*SolveFunction)(const void*, int, const void*, int, void**, int*);
 	SolveFunction solve_function;
+	double objective, bound;
 };
 
 } /* namespace clp */

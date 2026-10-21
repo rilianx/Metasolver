@@ -52,10 +52,11 @@ public:
 
 	/** parametros de la reparacion exacta */
 	struct ExactParams {
-		ExactParams() : max_time(1.0), max_boxes(40), workers(1) { }
+		ExactParams() : max_time(1.0), max_boxes(40), workers(1), redundant(true) { }
 		double max_time; //tiempo maximo por llamada a CP-SAT
 		int max_boxes;   //maximo de cajas candidatas en el modelo
 		int workers;     //hilos de CP-SAT
+		bool redundant;  //restricciones redundantes (cumulative por eje y volumen)
 	};
 
 	/**
@@ -63,12 +64,13 @@ public:
 	 * @param greedy greedy usado por el BSG de la reparacion
 	 * @param solver solver CP-SAT (solo para la reparacion exacta o hibrida)
 	 * @param beams numero de beams del BSG de la reparacion
+	 * @param samples destrucciones evaluadas por iteracion (se elige la de mayor potencial de mejora)
 	 * @param k0 proporcion inicial de bloques eliminados
 	 * @param kmax proporcion maxima (crece cuando no hay mejora)
 	 */
 	clpLNS(const clpState& s0, ActionEvaluator* evl, SearchStrategy& greedy, Shape shape, Center center=VOID,
 			Repair repair=BSG_REPAIR, CpSolver* solver=NULL, ExactParams exact=ExactParams(),
-			int beams=4, double k0=0.1, double kmax=0.5, double growth=1.2, unsigned int seed=1);
+			int beams=4, int samples=8, double k0=0.1, double kmax=0.5, double growth=1.2, unsigned int seed=1);
 
 	/**
 	 * Mejora la solucion s hasta el limite de tiempo tl (medido desde bt).
@@ -95,6 +97,19 @@ private:
 	 */
 	void destroy(const clpState& s, int k, std::vector<PlacedBlock>& keep, std::vector<PlacedBlock>& removed);
 
+	/** region de la reparacion exacta */
+	struct Region {
+		AABB R;                      //caja envolvente de los bloques eliminados y del espacio vacio
+		std::vector<AABB> obstacles; //bloques que se mantienen e intersectan R
+		long free_volume;            //volumen de R sin los obstaculos
+		long removed_volume;         //volumen de cajas de los bloques eliminados
+		long potential;              //espacio vacio de R que podrian ocupar las cajas sin usar
+		int boxes;                   //cajas de los bloques eliminados
+	};
+
+	Region region(const std::vector<PlacedBlock>& keep, const std::vector<PlacedBlock>& removed,
+			bool has_void, const AABB& void_space) const;
+
 	/** reparacion con BSG (nuevo estado o NULL) */
 	clpState* bsg_repair(const std::vector<PlacedBlock>& keep, double tl, clock_t bt);
 
@@ -117,6 +132,7 @@ private:
 	CpSolver* solver;
 	ExactParams exact;
 	int beams;
+	int samples;
 	double k0, kmax, growth;
 	std::mt19937 rng;
 	int iterations;

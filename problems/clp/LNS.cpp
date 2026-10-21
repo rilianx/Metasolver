@@ -13,10 +13,10 @@ using namespace std;
 namespace clp {
 
 clpLNS::clpLNS(const clpState& s0, ActionEvaluator* evl, SearchStrategy& greedy, Shape shape, Center center,
-		Repair repair, CpSolver* solver, ExactParams exact, int beams, double k0, double kmax, double growth,
-		unsigned int seed) :
+		Repair repair, CpSolver* solver, ExactParams exact, int beams, int samples, double k0, double kmax,
+		double growth, unsigned int seed) :
 	s0(s0), evl(evl), greedy(greedy), shape(shape), center(center), repair(repair), solver(solver),
-	exact(exact), beams(beams), k0(k0), kmax(kmax), growth(growth), rng(seed), iterations(0),
+	exact(exact), beams(beams), samples(samples), k0(k0), kmax(kmax), growth(growth), rng(seed), iterations(0),
 	exact_improvements(0), has_void(false), too_large(false) {
 
 	for(const Block* b : s0.valid_blocks)
@@ -92,39 +92,71 @@ clpState* clpLNS::bsg_repair(const vector<PlacedBlock>& keep, double tl, clock_t
 	return r? static_cast<clpState*>(r->clone()) : NULL;
 }
 
+clpLNS::Region clpLNS::region(const vector<PlacedBlock>& keep, const vector<PlacedBlock>& removed,
+		bool has_void, const AABB& void_space) const{
+	Region reg;
+	AABB& R = reg.R;
+
+	//caja envolvente de los bloques eliminados y del espacio vacio usado como centro
+	R = removed[0];
+	if(has_void){
+		R.xmin=min(R.xmin, void_space.xmin); R.ymin=min(R.ymin, void_space.ymin); R.zmin=min(R.zmin, void_space.zmin);
+		R.xmax=max(R.xmax, void_space.xmax); R.ymax=max(R.ymax, void_space.ymax); R.zmax=max(R.zmax, void_space.zmax);
+	}
+	reg.removed_volume=0; reg.boxes=0;
+	vector<int> removed_boxes(clpState::types.size(), 0);
+	for(const PlacedBlock& b : removed){
+		R.xmin=min(R.xmin, b.xmin); R.ymin=min(R.ymin, b.ymin); R.zmin=min(R.zmin, b.zmin);
+		R.xmax=max(R.xmax, b.xmax); R.ymax=max(R.ymax, b.ymax); R.zmax=max(R.zmax, b.zmax);
+		reg.removed_volume += b.block->getOccupiedVolume();
+		reg.boxes += b.block->n_boxes;
+		for(auto& p : b.block->boxes) removed_boxes[p.first] += p.second;
+	}
+
+	//obstaculos: bloques que se mantienen e intersectan la region
+	reg.free_volume = R.getVolume();
+	vector<int> used(clpState::types.size(), 0);
+	for(const PlacedBlock& b : keep){
+		for(auto& p : b.block->boxes) used[p.first] += p.second;
+		if(b.strict_intersects(R)){
+			reg.obstacles.push_back(b);
+			reg.free_volume -= (min(b.xmax,R.xmax)-max(b.xmin,R.xmin)) * (min(b.ymax,R.ymax)-max(b.ymin,R.ymin))
+					* (min(b.zmax,R.zmax)-max(b.zmin,R.zmin));
+		}
+	}
+
+	//potencial: espacio vacio de la region que podrian ocupar las cajas sin usar que caben en ella
+	long unused_volume=0;
+	for(const BoxShape* box : clpState::types){
+		int t=box->type;
+		long unused = clpState::initial_boxes[t] - used[t] - removed_boxes[t];
+		if(unused<=0) continue;
+		bool fits=false;
+		for(int o=0; o<6 && !fits; o++)
+			fits = box->is_valid(o) && box->getL(o)<=R.getL() && box->getW(o)<=R.getW() && box->getH(o)<=R.getH();
+		if(fits) unused_volume += unused*box->getVolume();
+	}
+	reg.potential = min(reg.free_volume - reg.removed_volume, unused_volume);
+	return reg;
+}
+
 clpState* clpLNS::exact_repair(const vector<PlacedBlock>& keep, const vector<PlacedBlock>& removed,
 		double tl, clock_t bt){
 	too_large=false;
 	double remaining = tl - double(clock()-bt)/double(CLOCKS_PER_SEC);
 	if(!solver || remaining <= 0.0) return NULL;
 
-	//region: caja envolvente de los bloques eliminados y del espacio vacio
-	//que se uso como centro de la destruccion
-	AABB R = removed[0];
-	if(has_void){
-		R.xmin=min(R.xmin, void_space.xmin); R.ymin=min(R.ymin, void_space.ymin); R.zmin=min(R.zmin, void_space.zmin);
-		R.xmax=max(R.xmax, void_space.xmax); R.ymax=max(R.ymax, void_space.ymax); R.zmax=max(R.zmax, void_space.zmax);
-	}
-	long removed_volume=0;
-	for(const PlacedBlock& b : removed){
-		R.xmin=min(R.xmin, b.xmin); R.ymin=min(R.ymin, b.ymin); R.zmin=min(R.zmin, b.zmin);
-		R.xmax=max(R.xmax, b.xmax); R.ymax=max(R.ymax, b.ymax); R.zmax=max(R.zmax, b.zmax);
-		removed_volume += b.block->getOccupiedVolume();
-	}
+	Region reg = region(keep, removed, has_void, void_space);
+	const AABB& R = reg.R;
+	const vector<AABB>& obstacles = reg.obstacles;
+	long free_volume = reg.free_volume, removed_volume = reg.removed_volume;
 
-	//obstaculos: bloques que se mantienen e intersectan la region
-	vector<AABB> obstacles;
-	long free_volume = R.getVolume();
-	for(const PlacedBlock& b : keep)
-		if(b.strict_intersects(R)){
-			obstacles.push_back(b);
-			free_volume -= (min(b.xmax,R.xmax)-max(b.xmin,R.xmin)) * (min(b.ymax,R.ymax)-max(b.ymin,R.ymin))
-					* (min(b.zmax,R.zmax)-max(b.zmin,R.zmin));
-		}
-
-	//cajas de los bloques eliminados (solucion inicial del modelo)
+	//cajas de los bloques eliminados (solucion inicial del modelo), por tipo y x
 	vector<Block::BoxPlacement> current;
 	for(const PlacedBlock& b : removed) b.block->get_boxes(b.xmin, b.ymin, b.zmin, current);
+	sort(current.begin(), current.end(), [](const Block::BoxPlacement& a, const Block::BoxPlacement& b){
+		return (a.type!=b.type)? a.type<b.type : a.x<b.x;
+	});
 	if((int)current.size() > exact.max_boxes) { too_large=true; return NULL; }
 
 	clpState* partial = rebuild(keep);
@@ -221,9 +253,42 @@ clpState* clpLNS::exact_repair(const vector<PlacedBlock>& keep, const vector<Pla
 			sep_obs[i].insert(sep_obs[i].end(), s.begin(), s.end());
 		}
 
-		//las copias de un mismo tipo se usan en orden (simetria)
-		if(i>0 && cand[i].type==cand[i-1].type)
+		//simetria: las copias de un mismo tipo se usan en orden y ordenadas por x
+		if(i>0 && cand[i].type==cand[i-1].type){
 			m.add_linear({p[i-1], p[i]}, {1,-1}, 0, 1);
+			m.add_linear({x[i-1], x[i]}, {1,-1}, -INF, 0, {p[i]});
+		}
+	}
+
+	//restricciones redundantes: en cada eje, la suma de las secciones de las cajas
+	//(y obstaculos) que cruzan un plano no supera la seccion de la region (cumulative,
+	//con un intervalo opcional por caja y orientacion); volumen total acotado por
+	//el volumen libre de la region
+	if(exact.redundant){
+		vector<int> ix, iy, iz;
+		vector<int64_t> dx, dy, dz;
+		for(int i=0; i<n; i++)
+			for(size_t k=0; k<cand[i].ors.size(); k++){
+				const Orientation& d = cand[i].ors[k];
+				ix.push_back(m.add_interval(x[i], d.l, o[i][k])); dx.push_back(d.w*d.h);
+				iy.push_back(m.add_interval(y[i], d.w, o[i][k])); dy.push_back(d.l*d.h);
+				iz.push_back(m.add_interval(z[i], d.h, o[i][k])); dz.push_back(d.l*d.w);
+			}
+		for(const AABB& ob : obstacles){
+			long x1=max(ob.xmin,R.xmin), x2=min(ob.xmax,R.xmax);
+			long y1=max(ob.ymin,R.ymin), y2=min(ob.ymax,R.ymax);
+			long z1=max(ob.zmin,R.zmin), z2=min(ob.zmax,R.zmax);
+			ix.push_back(m.add_fixed_interval(x1, x2-x1)); dx.push_back((y2-y1)*(z2-z1));
+			iy.push_back(m.add_fixed_interval(y1, y2-y1)); dy.push_back((x2-x1)*(z2-z1));
+			iz.push_back(m.add_fixed_interval(z1, z2-z1)); dz.push_back((x2-x1)*(y2-y1));
+		}
+		m.add_cumulative(R.getW()*R.getH(), ix, dx);
+		m.add_cumulative(R.getL()*R.getH(), iy, dy);
+		m.add_cumulative(R.getL()*R.getW(), iz, dz);
+
+		vector<int64_t> v;
+		for(int i=0; i<n; i++) v.push_back(clpState::types[cand[i].type]->getVolume());
+		m.add_linear(p, v, 0, free_volume);
 	}
 
 	//sin interseccion entre cajas
@@ -327,7 +392,23 @@ clpState* clpLNS::run(const clpState& s, double tl, clock_t bt){
 		int n = best->cont.blocks.size();
 		int k = max(2, (int) lround(kf*n));
 		if(k>=n) break;
-		destroy(*best, k, keep, removed);
+		//se elige, entre varias destrucciones, la de mayor potencial de mejora (en la
+		//reparacion exacta, solo las que no superan el maximo de cajas)
+		long best_potential=-1;
+		bool chosen=false, chosen_ok=false;
+		AABB best_void; bool best_has_void=false;
+		for(int smp=0; smp<samples; smp++){
+			vector<PlacedBlock> keep_s, removed_s;
+			destroy(*best, k, keep_s, removed_s);
+			Region reg = region(keep_s, removed_s, has_void, void_space);
+			bool ok = (repair!=EXACT_REPAIR || reg.boxes <= exact.max_boxes);
+			if(!chosen || (ok && !chosen_ok) || (ok==chosen_ok && reg.potential > best_potential)){
+				chosen=true; chosen_ok=ok; best_potential=reg.potential;
+				keep.swap(keep_s); removed.swap(removed_s);
+				best_void = void_space; best_has_void = has_void;
+			}
+		}
+		void_space = best_void; has_void = best_has_void;
 
 		//reparacion
 		clpState* r = NULL;

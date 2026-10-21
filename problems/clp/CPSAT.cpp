@@ -19,12 +19,16 @@ enum {
 	MODEL_VARIABLES=2, MODEL_CONSTRAINTS=3, MODEL_OBJECTIVE=4, MODEL_HINT=6,
 	VARIABLE_DOMAIN=2,
 	CONSTRAINT_ENFORCEMENT=2, CONSTRAINT_BOOL_OR=3, CONSTRAINT_LINEAR=12, CONSTRAINT_EXACTLY_ONE=29,
+	CONSTRAINT_INTERVAL=19, CONSTRAINT_CUMULATIVE=22,
+	INTERVAL_START=4, INTERVAL_END=5, INTERVAL_SIZE=6,
+	CUMULATIVE_CAPACITY=1, CUMULATIVE_INTERVALS=2, CUMULATIVE_DEMANDS=3,
+	EXPR_VARS=1, EXPR_COEFFS=2, EXPR_OFFSET=3,
 	LINEAR_VARS=1, LINEAR_COEFFS=2, LINEAR_DOMAIN=3,
 	BOOL_LITERALS=1,
 	OBJECTIVE_VARS=1, OBJECTIVE_SCALING=3, OBJECTIVE_COEFFS=4,
 	HINT_VARS=1, HINT_VALUES=2,
 	PARAMS_MAX_TIME=36, PARAMS_NUM_WORKERS=206,
-	RESPONSE_STATUS=1, RESPONSE_SOLUTION=2
+	RESPONSE_STATUS=1, RESPONSE_SOLUTION=2, RESPONSE_OBJECTIVE=3, RESPONSE_BOUND=4
 };
 
 enum { VARINT=0, FIXED64=1, LEN=2 };
@@ -66,6 +70,20 @@ bool get_varint(const unsigned char*& p, const unsigned char* end, uint64_t& v){
 	return false;
 }
 
+/** LinearExpressionProto: var + offset (var<0: constante) */
+string expression(int var, int64_t offset){
+	string e;
+	if(var>=0){
+		put_packed(e, EXPR_VARS, vector<int>{var});
+		put_packed(e, EXPR_COEFFS, vector<int64_t>{1});
+	}
+	if(offset!=0){
+		put_key(e, EXPR_OFFSET, VARINT);
+		put_varint(e, (uint64_t) offset);
+	}
+	return e;
+}
+
 }
 
 int CpModel::new_var(int64_t lb, int64_t ub){
@@ -100,6 +118,39 @@ void CpModel::add_exactly_one(const vector<int>& literals){
 	put_packed(b, BOOL_LITERALS, literals);
 	string c;
 	put_bytes(c, CONSTRAINT_EXACTLY_ONE, b);
+	constraints.push_back(c);
+}
+
+int CpModel::add_interval(int start, int64_t size, int presence){
+	string it;
+	put_bytes(it, INTERVAL_START, expression(start, 0));
+	put_bytes(it, INTERVAL_END, expression(start, size));
+	put_bytes(it, INTERVAL_SIZE, expression(-1, size));
+	string c;
+	put_packed(c, CONSTRAINT_ENFORCEMENT, vector<int>{presence});
+	put_bytes(c, CONSTRAINT_INTERVAL, it);
+	constraints.push_back(c);
+	return constraints.size()-1;
+}
+
+int CpModel::add_fixed_interval(int64_t start, int64_t size){
+	string it;
+	put_bytes(it, INTERVAL_START, expression(-1, start));
+	put_bytes(it, INTERVAL_END, expression(-1, start+size));
+	put_bytes(it, INTERVAL_SIZE, expression(-1, size));
+	string c;
+	put_bytes(c, CONSTRAINT_INTERVAL, it);
+	constraints.push_back(c);
+	return constraints.size()-1;
+}
+
+void CpModel::add_cumulative(int64_t capacity, const vector<int>& intervals, const vector<int64_t>& demands){
+	string cu;
+	put_bytes(cu, CUMULATIVE_CAPACITY, expression(-1, capacity));
+	put_packed(cu, CUMULATIVE_INTERVALS, intervals);
+	for(int64_t d : demands) put_bytes(cu, CUMULATIVE_DEMANDS, expression(-1, d));
+	string c;
+	put_bytes(c, CONSTRAINT_CUMULATIVE, cu);
 	constraints.push_back(c);
 }
 
@@ -139,7 +190,7 @@ string CpModel::serialize() const{
 	return s;
 }
 
-CpSolver::CpSolver(const string& library){
+CpSolver::CpSolver(const string& library) : objective(0.0), bound(0.0) {
 	void* handle = dlopen(library.c_str(), RTLD_NOW | RTLD_LOCAL);
 	if(!handle){
 		cerr << "No se pudo cargar OR-Tools (" << library << "): " << dlerror() << endl;
@@ -166,6 +217,7 @@ CpSolver::Status CpSolver::solve(const CpModel& model, double max_time, int num_
 	//se decodifican el estado y la solucion
 	Status status=UNKNOWN;
 	solution.clear();
+	objective=0.0; bound=0.0;
 	const unsigned char* p = (const unsigned char*) res;
 	const unsigned char* end = p + res_len;
 	while(p<end){
@@ -182,7 +234,13 @@ CpSolver::Status CpSolver::solve(const CpModel& model, double max_time, int num_
 			p += len;
 			if(field==RESPONSE_SOLUTION)
 				while(q<p){ uint64_t v; get_varint(q, p, v); solution.push_back((int64_t) v); }
-		}else if(wire==FIXED64) p+=8;
+		}else if(wire==FIXED64){
+			if(p+8>end) break;
+			double d; memcpy(&d, p, 8);
+			if(field==RESPONSE_OBJECTIVE) objective=d;
+			else if(field==RESPONSE_BOUND) bound=d;
+			p+=8;
+		}
 		else if(wire==5) p+=4;
 		else break;
 	}

@@ -39,10 +39,12 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _lns_center(parser, "string", "LNS: center of the destroyed region (void, middle). Default: void", {"lns_center"});
 	args::ValueFlag<double> _lns_frac(parser, "double", "LNS: proportion of the timelimit used by LNS. Default: 0.3", {"lns_frac"});
 	args::ValueFlag<int> _lns_beams(parser, "int", "LNS: number of beams of the BSG used for repairing. Default: 4", {"lns_beams"});
+	args::ValueFlag<int> _lns_samples(parser, "int", "LNS: destructions evaluated per iteration (the one with the largest potential improvement is repaired). Default: 8", {"lns_samples"});
 	args::ValueFlag<string> _lns_repair(parser, "string", "LNS: repair (bsg, exact, hybrid). Default: bsg", {"lns_repair"});
 	args::ValueFlag<string> _ortools(parser, "path", "LNS exact repair: OR-Tools library (e.g. .../site-packages/ortools/.libs/libortools.so.9). Default: $ORTOOLS_LIB", {"ortools_lib"});
 	args::ValueFlag<double> _exact_time(parser, "double", "LNS exact repair: time limit per CP-SAT call. Default: 1.0", {"exact_time"});
 	args::ValueFlag<int> _exact_boxes(parser, "int", "LNS exact repair: maximum number of candidate boxes. Default: 40", {"exact_boxes"});
+	args::ValueFlag<int> _exact_redundant(parser, "0/1", "LNS exact repair: redundant constraints (cumulative per axis, volume). Default: 1", {"exact_redundant"});
 	args::ValueFlag<int> _exact_workers(parser, "int", "LNS exact repair: CP-SAT workers. Default: 1", {"exact_workers"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set (BR format)");
 
@@ -129,9 +131,12 @@ int main(int argc, char** argv){
 			if(_exact_time) exact.max_time = _exact_time.Get();
 			if(_exact_boxes) exact.max_boxes = _exact_boxes.Get();
 			if(_exact_workers) exact.workers = _exact_workers.Get();
+			if(_exact_redundant) exact.redundant = _exact_redundant.Get()!=0;
 		}
 
-		clpLNS lns(*s0, vcs, *gr, shape, center, repair, solver, exact, lns_beams);
+		int lns_samples = (_lns_samples)? _lns_samples.Get() : 8;
+
+		clpLNS lns(*s0, vcs, *gr, shape, center, repair, solver, exact, lns_beams, lns_samples);
 		clpState* best = lns.run(*static_cast<const clpState*>(de->get_best_state()), maxtime, begin_time);
 		eval = best->get_value();
 		if(!best->is_feasible()) { cerr << "ERROR: infeasible LNS solution" << endl; return 1; }
