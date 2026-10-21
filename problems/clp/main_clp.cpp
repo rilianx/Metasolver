@@ -73,7 +73,7 @@ int main(int argc, char** argv){
 
 	cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
-	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left,
+	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left, s0->valid_blocks,
 			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), alpha, beta, gamma, p, delta);
 
 	SearchStrategy *gr = new Greedy(vcs);

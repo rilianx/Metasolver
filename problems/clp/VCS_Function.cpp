@@ -15,12 +15,24 @@ using namespace std;
 namespace clp {
 
 VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<int>& nb_boxes,
+		const vector<const Block*>& blocks,
 		long L, long W, long H, double alpha, double beta, double gamma, double p, double delta) :
 		alpha(alpha), beta(beta), gamma(gamma), p(p), delta(delta) {
 
-	compute_mX(types, nb_boxes, L, mL, listL, 0);
-	compute_mX(types, nb_boxes, W, mW, listW, 1);
-	compute_mX(types, nb_boxes, H, mH, listH, 2);
+	long dims[3]={L, W, H};
+	for(int d=0; d<3; d++){
+		LossData& D=ld[d];
+		compute_mX(types, nb_boxes, dims[d], D.mX, D.listX, d);
+	}
+
+	pow_vol.resize(blocks.size());
+	pow_n.resize(blocks.size());
+	for(const Block* b : blocks){
+		double vol=(delta>0.0)? (double) b->getOccupiedVolume(): 1.0;
+		double n=(gamma>0.0)? (1.0/(double) b->n_boxes) : 1.0;
+		pow_vol[b->id] = pow(vol, delta);
+		pow_n[b->id] = pow(n, gamma);
+	}
 }
 
 //desplazamiento del pseudo-contacto para un largo l
@@ -46,13 +58,9 @@ double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp){
 
 	double loss=(beta>0.0)? Loss(s.left, b, sp) : 0.0;
 
-	double vol=(delta>0.0)? (double) b.getOccupiedVolume(): 1.0;
-
 	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
 
-	double n=(gamma>0.0)? (1.0/(double) b.n_boxes) : 1.0;
-
-	return pow(vol, delta)  * pow((1.0-loss),beta) * pow(cs,alpha) * pow(n,gamma);
+	return pow_vol[b.id] * pow((1.0-loss),beta) * pow(cs,alpha) * pow_n[b.id];
 }
 
 double VCS_Function::CS_p(const clpState& s, const Block& b, const Space& sp){
@@ -112,22 +120,22 @@ long VCS_Function::surface_in_contact_container(const AABB& b, long L, long W, l
 double VCS_Function::Loss(const vector<int>& left, const Block& block, const Space& free_space) const{
 	long L=free_space.getL(), W=free_space.getW(), H=free_space.getH();
 
-	long lossL = compute_lossX(left, block, L - block.getL(), mL, listL);
-	long lossW = compute_lossX(left, block, W - block.getW(), mW, listW);
-	long lossH = compute_lossX(left, block, H - block.getH(), mH, listH);
+	long lossL = compute_lossX(0, left, block, L - block.getL());
+	long lossW = compute_lossX(1, left, block, W - block.getW());
+	long lossH = compute_lossX(2, left, block, H - block.getH());
 
-	long max_vol = mL[L]*mW[W]*mH[H];
+	long max_vol = ld[0].mX[L]*ld[1].mX[W]*ld[2].mX[H];
 	long vloss = max_vol - (L-lossL)*(W-lossW)*(H-lossH);
 	return (double) vloss / (double) max_vol;
 }
 
-long VCS_Function::compute_lossX(const vector<int>& left, const Block& block, long resX,
-		const vector<long>& mX, const vector< vector<int> >& listX) const{
-	long maxX = mX[resX];
+long VCS_Function::compute_lossX(int d, const vector<int>& left, const Block& block, long resX) const{
+	const LossData& D=ld[d];
+	long maxX = D.mX[resX];
 	while(maxX>0){
-		for(int t : listX[maxX])
+		for(int t : D.listX[maxX])
 			if(left[t] > 0 && left[t] - block.count(t) > 0) return resX-maxX;
-		maxX = mX[maxX-1];
+		maxX = D.mX[maxX-1];
 	}
 	return resX;
 }

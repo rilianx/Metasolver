@@ -26,7 +26,11 @@ class clpState;
  */
 class VCS_Function : public metasolver::ActionEvaluator {
 public:
+	/**
+	 * @param blocks bloques de la instancia (indexados por Block::id)
+	 */
 	VCS_Function(const std::vector<const BoxShape*>& types, const std::vector<int>& nb_boxes,
+			const std::vector<const Block*>& blocks,
 			long L, long W, long H, double alpha=4.0, double beta=1.0,
 			double gamma=0.2, double p=0.04, double delta=1.0);
 
@@ -52,21 +56,30 @@ private:
 	double Loss(const std::vector<int>& left, const Block& block, const Space& free_space) const;
 
 	/**
-	 * Retorna la perdida en la dimension (lossX) de un espacio residual de largo resX
+	 * Retorna la perdida en la dimension d de un espacio residual de largo resX
 	 */
-	long compute_lossX(const std::vector<int>& left, const Block& block, long resX,
-			const std::vector<long>& mX, const std::vector< std::vector<int> >& listX) const;
+	long compute_lossX(int d, const std::vector<int>& left, const Block& block, long resX) const;
+
+	/**
+	 * Solucion de la mochila en una dimension:
+	 * mX[i]: maximo largo <= i que se puede llenar con cajas
+	 * listX[i]: tipos de caja que permiten llenar exactamente el largo i
+	 */
+	struct LossData {
+		std::vector<long> mX;
+		std::vector< std::vector<int> > listX;
+	};
 
 	/**
 	 * Resuelve el problema de la mochila en la dimension dim (0:L, 1:W, 2:H) con capacidad X.
-	 * mX[i]: maximo largo <= i que se puede llenar con cajas
-	 * listX[i]: tipos de caja que permiten llenar exactamente el largo i
 	 */
 	void compute_mX(const std::vector<const BoxShape*>& types, const std::vector<int>& nb_boxes,
 			long X, std::vector<long>& mX, std::vector< std::vector<int> >& listX, int dim);
 
-	std::vector<long> mL, mW, mH;
-	std::vector< std::vector<int> > listL, listW, listH;
+	LossData ld[3];
+
+	//pow(vol,delta) y pow(n,gamma) de cada bloque (constantes durante la busqueda)
+	std::vector<double> pow_vol, pow_n;
 
 	//bloques ubicados en la vecindad del espacio actual
 	std::vector<const PlacedBlock*> neighbors;
