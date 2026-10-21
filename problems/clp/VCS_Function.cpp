@@ -48,6 +48,13 @@ static inline long expansion(double p, long l){
 }
 
 void VCS_Function::set_space(const clpState& s, const Space& sp){
+	//cota de (1-loss)^beta en el espacio: 1-loss <= volumen del espacio / volumen rellenable
+	loss_bound = 1.0;
+	if(beta>0.0){
+		long max_vol = ld[0].mX[sp.getL()]*ld[1].mX[sp.getW()]*ld[2].mX[sp.getH()];
+		loss_bound = (max_vol>0)? pow(max(1.0, (double) sp.getVolume()/(double) max_vol), beta) : HUGE_VAL;
+	}
+
 	neighbors.clear();
 	if(alpha<=0.0) return;
 
@@ -59,15 +66,20 @@ void VCS_Function::set_space(const clpState& s, const Space& sp){
 		if(b.touches(region)) neighbors.push_back(&b);
 }
 
-double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp){
+double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp, double threshold){
 
 	if(!b.fits(sp.getL(), sp.getW(), sp.getH())) return -1.0;
 
+	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
+	double pow_cs = pow(cs,alpha);
+
+	//poda: la perdida de volumen solo se calcula si la cota de la evaluacion
+	//(con el mayor valor posible de (1-loss)^beta) supera el umbral
+	if(pow_vol[b.id] * loss_bound * pow_cs * pow_n[b.id] * (1.0+1e-9) <= threshold) return -1.0;
+
 	double loss=(beta>0.0)? Loss(s.left, b, sp) : 0.0;
 
-	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
-
-	return pow_vol[b.id] * pow((1.0-loss),beta) * pow(cs,alpha) * pow_n[b.id];
+	return pow_vol[b.id] * pow((1.0-loss),beta) * pow_cs * pow_n[b.id];
 }
 
 double VCS_Function::CS_p(const clpState& s, const Block& b, const Space& sp){

@@ -9,6 +9,7 @@
 #define VCS_FUNCTION_H_
 
 #include <vector>
+#include <cmath>
 #include "ActionEvaluator.h"
 #include "BoxShape.h"
 #include "Block.h"
@@ -45,8 +46,12 @@ public:
 	 */
 	void set_space(const clpState& s, const Space& sp);
 
-	/** evalua el bloque b ubicado en el espacio indicado en set_space */
-	double eval(const clpState& s, const Block& b, const Space& sp);
+	/**
+	 * Evalua el bloque b ubicado en el espacio indicado en set_space.
+	 * Si se sabe que la evaluacion no supera threshold (cota sin la perdida de
+	 * volumen), retorna -1 sin calcular la perdida
+	 */
+	double eval(const clpState& s, const Block& b, const Space& sp, double threshold=-HUGE_VAL);
 
 private:
 
@@ -88,6 +93,9 @@ private:
 
 	//pow(vol,delta) y pow(n,gamma) de cada bloque (constantes durante la busqueda)
 	std::vector<double> pow_vol, pow_n;
+
+	//cota de (1-loss)^beta en el espacio actual
+	double loss_bound;
 
 	//bloques ubicados en la vecindad del espacio actual
 	std::vector<const PlacedBlock*> neighbors;

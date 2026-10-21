@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 #include "clpState.h"
 #include "VCS_Function.h"
@@ -49,7 +50,9 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		for(const Block* b : valid_blocks){
 			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
 			any=true;
-			double eval = vcs.eval(*this, *b, sp);
+			//umbral: evaluacion que hay que superar para entrar a las n mejores
+			double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().first;
+			double eval = vcs.eval(*this, *b, sp, threshold);
 			if(eval>0 && ((int)ranked.size()<n || ranked.front().first < eval)){
 				auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
 						[](double e, const pair<double, const Block*>& r){ return e < r.first; });
