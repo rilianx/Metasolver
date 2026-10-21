@@ -9,6 +9,7 @@
 #define STRATEGIES_BSG_H_
 
 #include <cmath>
+#include <set>
 #include "../SearchStrategy.h"
 
 namespace metasolver {
@@ -33,7 +34,7 @@ public:
 	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool verbose=true) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose), max_carried(1.0) {}
 
 
 	virtual ~BSG();
@@ -95,6 +96,13 @@ public:
 
 	void set_beams(int b){beams=b;}
 
+	/**
+	 * Limita la proporcion del beam que pueden ocupar los caminos heredados de
+	 * niveles anteriores (cuyo valor ya fue seleccionado como maximo, por lo que
+	 * tienen ventaja frente a los hijos evaluados con una sola corrida greedy)
+	 */
+	void set_max_carried(double q){max_carried=q;}
+
 
 protected:
 
@@ -107,13 +115,20 @@ protected:
 		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
-		//cout << "filtered_states" << endl;
+		int n_carried=0;
 		while(state_action!=sorted_states.end()){
 			State* s= state_action->second.first;
 			State* final_state=state_action->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
+			//cuota de caminos heredados de niveles anteriores
+			bool carried = fresh.find(final_state)==fresh.end();
+			if(a && carried && nextS.size()<beams && n_carried>=max(1, (int)(max_carried*beams+0.5))){
+				delete a; a=NULL;
+			}
+
 			if(nextS.size()<beams && a){
+				if(carried) n_carried++;
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
@@ -134,11 +149,19 @@ protected:
 		 k++;
 		}
 
+		fresh.clear();
 		return nextS;
 
 	}
 
 	map<double, pair<State*, State*> > state_actions;
+
+	//estados finales (greedy) evaluados en el nivel actual; los demas de
+	//state_actions son caminos heredados de niveles anteriores
+	set<const State*> fresh;
+
+	//proporcion maxima del beam para caminos heredados (1: sin limite)
+	double max_carried;
 
 	SearchStrategy& greedy;
 

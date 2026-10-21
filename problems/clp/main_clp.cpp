@@ -34,6 +34,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
+	args::ValueFlag<double> _max_carried(parser, "double", "BSG: maximum proportion of the beam for paths carried from previous levels. Default: 1 (no limit)", {"max_carried"});
 	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
 	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
 	args::ValueFlag<string> _lns_center(parser, "string", "LNS: center of the destroyed region (void, middle). Default: void", {"lns_center"});
@@ -94,6 +95,7 @@ int main(int argc, char** argv){
 
 	SearchStrategy *gr = new Greedy(vcs);
 	BSG *bsg= new BSG(vcs, *gr, 4);
+	if(_max_carried) bsg->set_max_carried(_max_carried.Get());
 	SearchStrategy *de= new DoubleEffort(*bsg);
 
 	State& s_copy= *s0->clone();
