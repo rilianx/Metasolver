@@ -35,7 +35,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::Flag _portfolio(parser, "portfolio", "BSG: the root is expanded with greedy solutions using perturbed parameters (+-20% of alpha, beta, gamma, p); the best ones continue the search with their parameters", {"portfolio"});
+	args::ValueFlag<int> _root_samples(parser, "int", "BSG: each child of the root is evaluated with m greedy solutions (the first one with the given parameters, the others with +-20% perturbations of alpha, beta, gamma, p); its value is the best one. Default: 1", {"root_samples"});
+	args::Flag _root_inherit(parser, "root_inherit", "BSG: with --root_samples, the child continues with the parameters of its best greedy solution (otherwise, with the given parameters)", {"root_inherit"});
 	args::ValueFlag<double> _max_carried(parser, "double", "BSG: maximum proportion of the beam for paths carried from previous levels. Default: 1 (no limit)", {"max_carried"});
 	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
 	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
@@ -101,21 +102,17 @@ int main(int argc, char** argv){
 	BSG *bsg= new BSG(vcs, *gr, 4);
 	if(_max_carried) bsg->set_max_carried(_max_carried.Get());
 
-	//portafolio de parametros: los parametros indicados, los de Araya et al. (2017) y
-	//perturbaciones uniformes de +-20% de los parametros indicados
+	//evaluacion de los hijos de la raiz con parametros perturbados (+-20%)
 	std::mt19937 prng(1);
-	int araya = vcs->add_params(VCS_Function::Params{4.0, 1.0, 0.2, 0.04, delta});
-	if(_portfolio)
-		bsg->set_root_sampler([&](const State& root, int k) -> State* {
-			clpState* c = static_cast<clpState*>(root.clone());
-			if(k==0) c->param = 0;
-			else if(k==1) c->param = araya;
+	if(_root_samples && _root_samples.Get()>1)
+		bsg->set_root_samples(_root_samples.Get(), [&](State& st, int j){
+			clpState& c = static_cast<clpState&>(st);
+			if(j<=0) c.param = 0;
 			else{
 				std::uniform_real_distribution<double> u(0.8, 1.2);
-				c->param = vcs->add_params(VCS_Function::Params{alpha*u(prng), beta*u(prng), gamma*u(prng), p*u(prng), delta});
+				c.param = vcs->add_params(VCS_Function::Params{alpha*u(prng), beta*u(prng), gamma*u(prng), p*u(prng), delta});
 			}
-			return c;
-		});
+		}, _root_inherit);
 	SearchStrategy *de= new DoubleEffort(*bsg);
 
 	State& s_copy= *s0->clone();

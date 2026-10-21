@@ -30,25 +30,6 @@ list<State*> BSG::next(list<State*>& S){
          if(verbose && state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
 
-         //expansion de la raiz por muestreo
-         if(root_sampler && state.is_root()){
-        	 for(int k=0; k<max_level_size && get_time()<=timelimit; k++){
-        		 State* v = root_sampler(state, k);
-        		 double value = greedy.run(*v, timelimit, begin_time);
-        		 if(value > get_best_value()){
-        			 if(best_state) delete best_state;
-        			 best_state = v->clone();
-        			 if(verbose) cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
-        					 << best_state->get_path().size() << " nodes" << endl;
-        		 }
-        		 if(state_actions.find(-value)==state_actions.end()){
-        			 state_actions[-value]= make_pair(&state, v);
-        			 fresh.insert(v);
-        		 }else delete v;
-        	 }
-        	 continue;
-         }
-
          //se obtiene la lista de las mejores acciones a partir del estado actual
          list< Action* > best_actions;
          
@@ -64,12 +45,23 @@ list<State*> BSG::next(list<State*>& S){
 
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
 
-        	 State& state_copy = *state.clone();
-        	 state_copy.transition(**it);
-        	 
-        	 delete *it;
+        	 //en la raiz, cada hijo puede evaluarse con varias variantes del greedy
+        	 //(p.ej. parametros perturbados); se conserva la de mayor valor
+        	 int m = (root_samples>1 && state.is_root())? root_samples : 1;
+        	 State* best_copy = NULL;
+        	 double value = 0.0;
+        	 for(int j=0; j<m; j++){
+        		 State* v = state.clone();
+        		 if(m>1) root_variant(*v, j);
+        		 v->transition(**it);
+        		 double val = greedy.run(*v, timelimit, begin_time);
+        		 if(!best_copy || val > value) { delete best_copy; best_copy=v; value=val; }
+        		 else delete v;
+        	 }
+        	 if(m>1 && !root_inherit) root_variant(*best_copy, -1);
+        	 State& state_copy = *best_copy;
 
-             double value = greedy.run(state_copy, timelimit, begin_time);
+        	 delete *it;
 
 
             //best_state update

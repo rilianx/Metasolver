@@ -35,7 +35,7 @@ public:
 	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool verbose=true) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose), max_carried(1.0) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose), root_samples(1), root_inherit(false), max_carried(1.0) {}
 
 
 	virtual ~BSG();
@@ -98,12 +98,14 @@ public:
 	void set_beams(int b){beams=b;}
 
 	/**
-	 * Expansion de la raiz por muestreo: en vez de evaluar las mejores acciones de la
-	 * raiz con un mismo greedy, se evaluan max_level_size variantes de la raiz
-	 * (p.ej. con parametros distintos de la heuristica) obtenidas con sampler(raiz, i),
-	 * completadas con greedy. Las mejores continuan la busqueda.
+	 * Evaluacion de los hijos de la raiz con m variantes del greedy: variant(s, j) modifica
+	 * el estado s para la variante j (j=0: la original; j=-1: volver a la original).
+	 * El valor del hijo es el maximo sobre las variantes y se sigue el camino de la mejor;
+	 * si inherit es true, el hijo continua con esa variante (si no, con la original)
 	 */
-	void set_root_sampler(std::function<State*(const State&, int)> sampler){ root_sampler=sampler; }
+	void set_root_samples(int m, std::function<void(State&, int)> variant, bool inherit){
+		root_samples=m; root_variant=variant; root_inherit=inherit;
+	}
 
 	/**
 	 * Limita la proporcion del beam que pueden ocupar los caminos heredados de
@@ -170,7 +172,9 @@ protected:
 	//state_actions son caminos heredados de niveles anteriores
 	set<const State*> fresh;
 
-	std::function<State*(const State&, int)> root_sampler;
+	int root_samples;
+	std::function<void(State&, int)> root_variant;
+	bool root_inherit;
 
 	//proporcion maxima del beam para caminos heredados (1: sin limite)
 	double max_carried;
