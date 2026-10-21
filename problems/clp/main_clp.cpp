@@ -30,6 +30,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter", {'p'});
+	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set (BR format)");
 
 	cout.precision(8);
@@ -74,7 +75,7 @@ int main(int argc, char** argv){
 	cout << "n_blocks:"<< s0->get_n_valid_blocks() << endl;
 
 	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left, s0->valid_blocks,
-			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), alpha, beta, gamma, p, delta);
+			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), alpha, beta, gamma, p, delta, _fix_knapsack);
 
 	SearchStrategy *gr = new Greedy(vcs);
 	BSG *bsg= new BSG(vcs, *gr, 4);

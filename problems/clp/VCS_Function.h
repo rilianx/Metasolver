@@ -28,11 +28,15 @@ class VCS_Function : public metasolver::ActionEvaluator {
 public:
 	/**
 	 * @param blocks bloques de la instancia (indexados por Block::id)
+	 * @param fix_knapsack si es true, la mochila de la perdida de volumen considera los
+	 * largos de todas las orientaciones permitidas de cada caja (la version original
+	 * solo considera las orientaciones LWH, WHL y HLW, lo que omite largos validos en
+	 * los ejes x e y cuando la caja no puede ponerse con su largo vertical)
 	 */
 	VCS_Function(const std::vector<const BoxShape*>& types, const std::vector<int>& nb_boxes,
 			const std::vector<const Block*>& blocks,
 			long L, long W, long H, double alpha=4.0, double beta=1.0,
-			double gamma=0.2, double p=0.04, double delta=1.0);
+			double gamma=0.2, double p=0.04, double delta=1.0, bool fix_knapsack=false);
 
 	/**
 	 * Prepara la evaluacion de bloques en el espacio sp: se buscan los bloques
@@ -77,6 +81,8 @@ private:
 	 */
 	void compute_mX(const std::vector<const BoxShape*>& types, const std::vector<int>& nb_boxes,
 			long X, std::vector<long>& mX, std::vector< std::vector<int> >& listX, int dim);
+
+	bool fix_knapsack;
 
 	LossData ld[3];
 

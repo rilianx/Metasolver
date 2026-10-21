@@ -16,8 +16,9 @@ namespace clp {
 
 VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<int>& nb_boxes,
 		const vector<const Block*>& blocks,
-		long L, long W, long H, double alpha, double beta, double gamma, double p, double delta) :
-		alpha(alpha), beta(beta), gamma(gamma), p(p), delta(delta) {
+		long L, long W, long H, double alpha, double beta, double gamma, double p, double delta,
+		bool fix_knapsack) :
+		fix_knapsack(fix_knapsack), alpha(alpha), beta(beta), gamma(gamma), p(p), delta(delta) {
 
 	long dims[3]={L, W, H};
 	for(int d=0; d<3; d++){
@@ -159,14 +160,21 @@ void VCS_Function::compute_mX(const vector<const BoxShape*>& types, const vector
 		int n=nb_boxes[box->type];
 		if(n <= 0) continue;
 
-		for(int ii=0; ii<3; ii++){
-			long x=0;
-			switch(ii){
-				case 0: x=box->get(dim, BoxShape::LWH); break;
-				case 1: if(box->is_valid(BoxShape::WHL)) x=box->get(dim, BoxShape::WHL); break;
-				case 2: if(box->is_valid(BoxShape::HLW)) x=box->get(dim, BoxShape::HLW); break;
-			}
-			if(x==0) continue;
+		//largos de la caja en la dimension dim
+		vector<long> lengths;
+		if(fix_knapsack){
+			//todos los largos distintos de las orientaciones permitidas
+			for(int o=0; o<6; o++)
+				if(box->is_valid(o) && find(lengths.begin(), lengths.end(), box->get(dim, o))==lengths.end())
+					lengths.push_back(box->get(dim, o));
+		}else{
+			//version original: solo las orientaciones LWH, WHL y HLW
+			lengths.push_back(box->get(dim, BoxShape::LWH));
+			if(box->is_valid(BoxShape::WHL)) lengths.push_back(box->get(dim, BoxShape::WHL));
+			if(box->is_valid(BoxShape::HLW)) lengths.push_back(box->get(dim, BoxShape::HLW));
+		}
+
+		for(long x : lengths){
 
 			for(long i=0; i<=X-x; i++){
 				if(!flag[i]) continue;
