@@ -16,9 +16,7 @@ using namespace std;
 
 namespace clp {
 
-VLossFunction::VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double r) :
-				ActionEvaluator (r){
-	// TODO Auto-generated constructor stub
+VLossFunction::VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims) {
 
 	mL= new long[dims.getX()+1];
     mW= new long[dims.getY()+1];

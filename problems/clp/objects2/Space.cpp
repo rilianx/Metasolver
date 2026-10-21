@@ -11,8 +11,6 @@
 
 namespace clp{
 
-bool Space::bottom_up=false;
-
 Space::Space(const Vector3& vec) : AABB(0, 0, 0, vec.getX(), vec.getY(), vec.getZ()) {
 	initialize(vec);
 }
@@ -55,7 +53,7 @@ void Space::initialize(const Vector3& cont){
         anchor[1]=1;
     }
 
-    if(Block::FSB || bottom_up || getZmin()  <= cont.getZ() - getZmax() ){
+    if(getZmin()  <= cont.getZ() - getZmax() ){
     	dist+=getZmin() ;
     	anchor[2]=0;
     }else{
@@ -111,8 +109,6 @@ Vector3 Space::get_location(const Vector3& block) const{
 
 bool by_manhattan_distance::operator()(const Space& sp1, const Space& sp2) {
 	//if(&sp1==&sp2) return false;
-    if(Space::bottom_up && sp1.getZmin() != sp2.getZmin()) return sp1.getZmin() < sp2.getZmin();
-
 	if(sp1.get_manhattan_distance() != sp2.get_manhattan_distance())
 		return sp1.get_manhattan_distance() < sp2.get_manhattan_distance();
 

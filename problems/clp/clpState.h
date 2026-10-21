@@ -32,12 +32,10 @@ public:
 
 	clpAction(const AABB& aabb, const Vector3& cont) : block(*aabb.getBlock()), space(aabb, cont) { }
 
-	virtual Action* clone() const{ return new clpAction(*this); cout << space.getVolume() << endl;}
+	virtual Action* clone() const{ return new clpAction(*this); }
 
 	const Block& block;
 	const Space space;
-
-	mutable list <double> metrics;
 
 };
 
@@ -45,12 +43,6 @@ bool is_constructible(const clpState& s, const Block& b);
 
 class clpState : public State {
 public:
-
-    static bool left;
-
-    enum Format{BR, _1C, BRw, BRwp};
-
-    enum FormatP{NORMAL, ALL_ONE, WEIGHT};
 
 	clpState(const clpState& S) : State(S),
 	cont(S.cont->clone()), nb_left_boxes(S.nb_left_boxes),
@@ -68,38 +60,13 @@ public:
 		return st;
 	}
 
-	virtual State* create_neighbor(State* s0);
-
-	friend clpState* new_state(string file, int instance, double min_fr, int max_bl, Format f, FormatP fp);
+	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 
 	virtual double get_value() const{
 		return cont->getOccupiedVolume()/cont->getVolume();
 	}
 
-	virtual double get_value2() const{
-		//return 0.0;
-		//return cont->getTotalProfit();
-		return  cont->getTotalProfit() / profit_of_allboxes;
-	}
-
-	static bool height_sort(const Action* a1, const Action* a2){
-		const clpAction* ca1 = dynamic_cast<const clpAction*> (a1);
-		const clpAction* ca2 = dynamic_cast<const clpAction*> (a2);
-
-		if(ca1->space.get_location(ca1->block).getZ() < ca2->space.get_location(ca2->block).getZ())
-			return true;
-		return false;
-
-
-	}
-
 	virtual void get_actions(list< Action* >& actions) const;
-
-	/*
-	* Rearranges the elements in the path pseudo-randomly
-	*/
-	virtual int shuffle_path();
-
 
 	int get_n_valid_blocks() {return valid_blocks.size();}
 
@@ -107,18 +74,6 @@ public:
 	Block* cont;
 	map<const BoxShape*, int> nb_left_boxes;
 	list<const Block*> valid_blocks;
-
-	virtual void print() {
-		cont->MatLab_print();
-	}
-
-
-	static double weight_of_allboxes;
-	static double profit_of_allboxes;
- 	static double density_of_allboxes;
-  static double square_density_of_allboxes;
-  static int nb_boxes;
-	static double Wmax;
 
 protected:
 
@@ -152,18 +107,6 @@ private:
 
 	void general_block_generator(double min_fr, int max_bl, const Vector3& max_dim);
 
-	/*
-	 * calculate the number of supported blocks for each block
-	 * @n_supports number of support blocks for each block
-	 * @zero_support_aabb set of blocks with no supports
-	 */
-	void compute_supports(map<const AABB*,int>& n_supports, set<const AABB*>& zero_support_aabb);
-
-	/*
-	 * update the number of supported blocks after placing the block
-	 */
-	void update_supports(const AABB* block,
-			map<const AABB*,int>& n_supports, set<const AABB*>& zero_support_aabb);
 	//menor dimension de las cajas restantes
 	Vector3 mindim;
 
@@ -174,8 +117,7 @@ private:
 
 
 
-clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000, clpState::Format f=clpState::BR,
-		clpState::FormatP fp=clpState::NORMAL);
+clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000);
 
 } /* namespace clp */
 

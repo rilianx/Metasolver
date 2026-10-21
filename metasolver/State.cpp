@@ -10,8 +10,6 @@
 
 namespace metasolver {
 
-int State::count_states=0;
-
 Action* State::next_action(State& final){
     if(get_path().size() >= final.get_path().size() ) return NULL;
 

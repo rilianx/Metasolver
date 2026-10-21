@@ -12,7 +12,6 @@
 
 
 using namespace std;
-using namespace metasolver;
 
 namespace clp{
 
@@ -75,7 +74,6 @@ void SpaceSet::pop(){ if(marked) erase(*marked); }
 
 const Space* SpaceSet::_insert(const Space& sp){
 	pair<set<Space, by_manhattan_distance>::iterator,bool> p = data.insert(sp);
-	if(global::TRACE) cout << "insert_space:+" <<  (*p.first) << ";" << &(*p.first) << endl;
     if(p.second)
     	return (&(*p.first));
     else
@@ -100,7 +98,6 @@ const Space& SpaceSet::top() const{
 }
 
 void SpaceSet::_erase(const Space& sp){
-	if(global::TRACE) cout << "delete_space: " << sp << ";" << &sp << endl;
     data.erase(sp);
 }
 

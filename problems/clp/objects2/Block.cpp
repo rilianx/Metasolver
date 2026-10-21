@@ -14,11 +14,10 @@ using namespace std;
 
 namespace clp {
 
-bool Block::FSB=false;
 int Block::INCREMENTAL_ID=0;
 set<const Block*, block_order> Block::all_blocks;
 
-Block::Block(double l, double w, double h) : Volume(l,w,h),occupied_volume(0), total_weight(0.0), total_profit(0.0), n_boxes(0),
+Block::Block(double l, double w, double h) : Volume(l,w,h),occupied_volume(0), n_boxes(0),
 		spaces(new SpaceSet(*this)), blocks(new AABBList()) {
 	id = INCREMENTAL_ID++;
 	spaces->insert(Space (*this));
@@ -26,7 +25,7 @@ Block::Block(double l, double w, double h) : Volume(l,w,h),occupied_volume(0), t
 
 Block::Block(const BoxShape& box, BoxShape::Orientation o, double occupied_volume) :
 		Volume(box.getL_d(o), box.getW_d(o), box.getH_d(o)), occupied_volume(occupied_volume),
-		total_weight(box.get_weight()), total_profit(box.get_profit()), n_boxes(1), spaces(NULL), blocks(NULL) {
+		n_boxes(1), spaces(NULL), blocks(NULL) {
 
 	id = INCREMENTAL_ID++;
 	nb_boxes[&box]=1;
@@ -50,8 +49,6 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 
     //Se actualiza el volumen ocupado
     occupied_volume += block.getOccupiedVolume();
-    total_weight += block.getTotalWeight();
-    total_profit += block.getTotalProfit();
 
 	AABB b(point, &block);
 
@@ -61,7 +58,7 @@ void Block::insert(const Block& block, const Vector3& point, const Vector3 min_d
 }
 
 
-list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim, double wmax) const{
+list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, const Vector3& max_dim) const{
 
 	const Block* b1=this;
 	list<const Block*> blocks;
@@ -84,8 +81,7 @@ list<const Block* > Block::create_new_blocks(const Block* b2, double min_fr, con
 
 		double vol= ll*ww*hh;
 
-		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim &&
-				(b1->getTotalWeight() + b1->getTotalWeight () <= wmax || wmax ==0.0) ){
+		if( ((double) (b1->occupied_volume+b2->occupied_volume) / (double) vol) >= min_fr && Vector3(ll,ww,hh) <= max_dim){
 
 			Block* new_block;
 
@@ -127,9 +123,5 @@ bool block_order::operator()(const Block* b1, const Block* b2) {
 	return false; //they are equal
 }
 
-
-double double_rand(double min, double max){
-	return min+(max-min)*((double)rand()/(double)RAND_MAX);
-}
 
 }

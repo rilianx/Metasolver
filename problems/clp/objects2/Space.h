@@ -41,8 +41,6 @@ public:
 	const bool* get_anchor() const {return anchor;}
 
 
-	static bool bottom_up;
-
 
 private:
 	bool anchor[3];

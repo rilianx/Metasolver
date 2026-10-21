@@ -8,7 +8,6 @@
 #include "AABB.h"
 #include "Space.h"
 #include "AABBContainer.h"
-#include "GlobalVariables.h"
 
 #ifndef SPACESET_H_
 #define SPACESET_H_

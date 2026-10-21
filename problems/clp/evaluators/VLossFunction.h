@@ -17,7 +17,7 @@ namespace clp {
 
 class VLossFunction : public ActionEvaluator{
 public:
-	VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims, double r=0.0);
+	VLossFunction(const std::map<const BoxShape*, int>& nb_boxes, Vector3& dims);
 
 	virtual ~VLossFunction();
 

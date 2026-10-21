@@ -8,6 +8,7 @@
 #ifndef OBJECTS_VECTOR3_H_
 #define OBJECTS_VECTOR3_H_
 #include <iostream>
+#include <cmath>
 #include <math.h>
 
 namespace clp {

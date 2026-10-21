@@ -5,7 +5,7 @@
  *      Author: ignacio
  */
 
-#include "btBulletDynamicsCommon.h"
+#include <BulletCollision/BroadphaseCollision/btDbvt.h>
 #include <map>
 
 #include "../objects2/AABB.h"
