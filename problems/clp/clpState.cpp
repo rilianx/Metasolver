@@ -42,7 +42,8 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 
 		//las mejores n acciones ordenadas de peor a mejor (en caso de empate,
 		//la evaluada primero se considera peor)
-		vector< pair<double, const Block*> > ranked;
+		static vector< pair<double, const Block*> > ranked;
+		ranked.clear();
 		bool any=false;
 		for(const Block* b : valid_blocks){
 			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
@@ -150,18 +151,13 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 			clpState::types.push_back(box);
 			s->left.push_back(n);
 
-			for(int o=0; o<6; o++)
-				if(box->is_valid(o))
-					s->valid_blocks.push_back(new Block(*box, o));
 		}
 	}
 
-	Block::generate_blocks(s->valid_blocks, s->left, min_fr, max_bl,
+	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
 			s->cont.getL(), s->cont.getW(), s->cont.getH());
 	s->update_min_dim();
 
-	for(size_t k=0; k<s->valid_blocks.size(); k++)
-		const_cast<Block*>(s->valid_blocks[k])->id = k;
 	return s;
 }
 

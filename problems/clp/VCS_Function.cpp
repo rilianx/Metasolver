@@ -22,7 +22,13 @@ VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<in
 	long dims[3]={L, W, H};
 	for(int d=0; d<3; d++){
 		LossData& D=ld[d];
-		compute_mX(types, nb_boxes, dims[d], D.mX, D.listX, d);
+		vector< vector<int> > listX;
+		compute_mX(types, nb_boxes, dims[d], D.mX, listX, d);
+		D.offset.assign(1, 0);
+		for(auto& l : listX){
+			D.list.insert(D.list.end(), l.begin(), l.end());
+			D.offset.push_back(D.list.size());
+		}
 	}
 
 	pow_vol.resize(blocks.size());
@@ -133,8 +139,10 @@ long VCS_Function::compute_lossX(int d, const vector<int>& left, const Block& bl
 	const LossData& D=ld[d];
 	long maxX = D.mX[resX];
 	while(maxX>0){
-		for(int t : D.listX[maxX])
+		for(int k=D.offset[maxX]; k<D.offset[maxX+1]; k++){
+			int t=D.list[k];
 			if(left[t] > 0 && left[t] - block.count(t) > 0) return resX-maxX;
+		}
 		maxX = D.mX[maxX-1];
 	}
 	return resX;

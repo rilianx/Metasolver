@@ -63,11 +63,13 @@ private:
 	/**
 	 * Solucion de la mochila en una dimension:
 	 * mX[i]: maximo largo <= i que se puede llenar con cajas
-	 * listX[i]: tipos de caja que permiten llenar exactamente el largo i
+	 * tipos de caja que permiten llenar exactamente el largo i:
+	 *   list[offset[i]] ... list[offset[i+1]-1]  (arreglo contiguo)
 	 */
 	struct LossData {
 		std::vector<long> mX;
-		std::vector< std::vector<int> > listX;
+		std::vector<int> offset;
+		std::vector<int> list;
 	};
 
 	/**
