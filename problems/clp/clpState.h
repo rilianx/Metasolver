@@ -11,11 +11,13 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <cmath>
 
 #include "State.h"
 #include "BoxShape.h"
 #include "Block.h"
 #include "Container.h"
+#include "ULD.h"
 
 using namespace std;
 using namespace metasolver;
@@ -23,16 +25,20 @@ using namespace metasolver;
 namespace clp {
 
 /**
- * Accion: ubicar un bloque en la esquina de anclaje de un espacio libre
+ * Accion: ubicar un bloque en un espacio libre, en la posicion (x,y,z)
+ * (la esquina de anclaje del espacio, salvo que haya que desplazarlo por los
+ * recortes del ULD)
  */
 class clpAction : public Action{
 public:
-	clpAction(const Block& block, const Space& space) : block(block), space(space) { }
+	clpAction(const Block& block, const Space& space, long x, long y, long z) :
+		block(block), space(space), x(x), y(y), z(z) { }
 
 	virtual Action* clone() const{ return new clpAction(*this); }
 
 	const Block& block;
 	const Space space;
+	const long x, y, z;
 };
 
 /**
@@ -43,7 +49,8 @@ class clpState : public State {
 public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
-		valid_blocks(S.valid_blocks), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
+		valid_blocks(S.valid_blocks), weight_left(S.weight_left),
+		min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
 
@@ -56,10 +63,25 @@ public:
 	int get_n_valid_blocks() const {return valid_blocks.size();}
 
 	/**
-	 * Verifica la solucion: bloques dentro del contenedor, sin intersecciones y
-	 * sin usar mas cajas que las disponibles
+	 * Posicion del bloque b en el espacio sp: la esquina de anclaje, desplazada si es
+	 * necesario para cumplir los recortes del ULD. Con soporte, el bloque se ubica en
+	 * la base del espacio y debe quedar completamente apoyado.
+	 * Retorna false si el bloque no se puede ubicar en el espacio.
+	 */
+	bool locate(const Block& b, const Space& sp, long& x, long& y, long& z) const;
+
+	/**
+	 * Verifica la solucion: bloques dentro del contenedor (y de los recortes), sin
+	 * intersecciones, sin usar mas cajas que las disponibles, sin superar el peso
+	 * maximo y, con soporte, con todos los bloques apoyados
 	 */
 	bool is_feasible() const;
+
+	/** peso total de los bloques ubicados */
+	double get_weight() const;
+
+	/** centro de gravedad de la carga (se asume el peso de cada bloque en su centro) */
+	void get_cog(double& x, double& y, double& z) const;
 
 	/**
 	 * Hash del conjunto de bloques ubicados (independiente del orden en que se ubicaron).
@@ -81,7 +103,18 @@ public:
 
 	vector<const Block*> valid_blocks;
 
+	//capacidad de peso restante
+	double weight_left;
+
+	//ULD (recortes y peso maximo) o NULL (contenedor sin restricciones adicionales)
+	static const ULD* uld;
+
+	//los bloques se deben apoyar completamente sobre el piso o sobre bloques con
+	//la cara superior completa y sin cajas fragiles
+	static bool support;
+
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
+	friend clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl);
 
 protected:
 
@@ -89,7 +122,9 @@ protected:
 
 private:
 
-	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
+	clpState(long L, long W, long H) : cont(L, W, H), weight_left(HUGE_VAL),
+		min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
+
 
 	/**
 	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas restantes
@@ -108,6 +143,12 @@ private:
  * Lee la instancia (formato BR) y genera los bloques
  */
 clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10000);
+
+/**
+ * Estado inicial para cargar el ULD u con las cajas left de los tipos clpState::types
+ * (se fijan clpState::uld e initial_boxes y se generan los bloques)
+ */
+clpState* new_state(const ULD& u, const vector<int>& left, double min_fr=0.98, int max_bl=10000);
 
 } /* namespace clp */
 

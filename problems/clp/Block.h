@@ -56,9 +56,13 @@ public:
 	 * x, y, z (generador de bloques guillotina). Retorna a lo mas max_bl bloques.
 	 * @param left cantidad disponible de cajas de cada tipo
 	 * @param min_fr proporcion minima del volumen del bloque ocupada por cajas
+	 * @param support si es true, solo se generan bloques en que cada caja esta
+	 * completamente apoyada: al apilar dos bloques, el de abajo tiene la cara superior
+	 * completa, sin cajas fragiles, y la base del de arriba cabe en ella
 	 */
 	static std::vector<const Block*> generate_blocks(const std::vector<const BoxShape*>& types,
-			const std::vector<int>& left, double min_fr, int max_bl, long L, long W, long H);
+			const std::vector<int>& left, double min_fr, int max_bl, long L, long W, long H,
+			bool support=false);
 
 	//indice del bloque en la lista de bloques de la instancia
 	int id;
@@ -67,6 +71,12 @@ public:
 	long occupied_volume;
 	int n_boxes;
 	Boxes boxes;
+
+	double weight;
+
+	//la cara superior esta completamente cubierta por cajas no fragiles
+	//(se pueden apoyar otros bloques sobre ella)
+	bool supportive;
 
 private:
 	static std::vector<Block> all;

@@ -1,0 +1,40 @@
+These files were generated and used in:
+C. Paquay, S. Limbourg, José F. Oliveira and M. Schyns "MIP-based constructive heuristics for the three-dimensional bin-packing problem with 
+transportation constraints", to be submitted (2017)
+
+and in
+
+C. Paquay, S. Limbourg and M. Schyns "A tailored two-phase constructive heuristic for the three-dimensional bin-packing problem with 
+transportation constraints", to be submitted (2017)
+
+The procedure used to create these test problems is presented in the above papers. It is based on the sampling of an initial data set of 562 rectangular boxes.
+
+These instances are especially designed for the three-dimensional Multiple Bin Size Bin Packing Problem (highly heterogeneous assortment of the boxes).
+
+Directories Final_instances, preliminary_Data_sets and training_data_sets
+--------------------------
+Each directory contains csv files describing a set of boxes.
+For the directories Final_instances and training_data_sets, the number of boxes is given in the name of the files: n10sample0 indicates that 10 boxes are described.
+For the directory preliminary_data_sets, the instances are grouped per size in different directories.
+Each sample size holds 30 instances.
+
+The csv file contains the following information. Each line corresponds to a box and is composed of 9 numerical fields:
+(1)box length; (2)box width; (3)box height; (4)box weight; (5)0/1 indicator box length; (6)0/1 indicator
+box width; (7)0/1 indicator box height(8)1 if fragile box; (9)1 if very dense box
+The 0/1 indicates whether placement in the vertical orientation is permissible (=1) or not (=0).
+
+For example:
+500;400;600;18;1;1;1;0;0 describes a box with length=500, width=400, height=600, weight=18, all the orientations are allowed, the box is neither fragile nor very dense.
+
+File uld.csv
+----------------
+This file contains the information about the bins (Unit Load Devices in the context). Each of the six lines describes a bin and is composed of 22 numerical fields:
+(1) bin length; (2) bin width; (3) bin height; (4) bin weight capacity; (5) bin cost; (6) (resp. (7),
+(8)) authorised deviation of the CG along the length (resp. the width, the height); (9)-(11) describe 
+the type 1 cut; (12)-(14) describe the type 2 cut; (15)-(17) describe the type 3 cut; (18)-(20) 
+describe the type 4 cut; (21) actual volume; (22) bin type
+
+For the descriptions of the cuts, please refer to :
+Paquay, C., Schyns, M. & Limbourg, S. (2016). "A mixed integer programming formulation for the three-dimensional bin packing problem deriving from an air cargo application". International 
+Transactions in Operational Research, 23(1-2), 187-213.
+

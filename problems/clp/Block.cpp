@@ -22,6 +22,15 @@ struct GenBlock {
 	long occupied_volume;
 	int n_boxes;
 	vector<Block::BoxCount> boxes;
+	double weight;
+	//la cara superior esta completamente cubierta por cajas
+	bool top_full;
+	//contiene alguna caja fragil
+	bool fragile;
+	//se consideran top_full y fragile al comparar bloques
+	bool support;
+
+	bool supportive() const { return top_full && !fragile; }
 };
 
 // hash de bloques (ver Apendice A de la disertacion de L. Guesser)
@@ -52,7 +61,8 @@ struct BlockHash {
 struct BlockEqual {
 	bool operator()(const GenBlock* b1, const GenBlock* b2) const {
 		return b1->l==b2->l && b1->w==b2->w && b1->h==b2->h &&
-			   b1->occupied_volume==b2->occupied_volume && b1->boxes==b2->boxes;
+			   b1->occupied_volume==b2->occupied_volume && b1->boxes==b2->boxes &&
+			   (!b1->support || b1->top_full==b2->top_full);
 	}
 };
 
@@ -62,6 +72,9 @@ GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h){
 	b->l=l; b->w=w; b->h=h;
 	b->occupied_volume = b1->occupied_volume + b2->occupied_volume;
 	b->n_boxes = b1->n_boxes + b2->n_boxes;
+	b->weight = b1->weight + b2->weight;
+	b->fragile = b1->fragile || b2->fragile;
+	b->support = b1->support;
 	b->boxes.reserve(b1->boxes.size() + b2->boxes.size());
 	auto i=b1->boxes.begin(), j=b2->boxes.begin();
 	while(i!=b1->boxes.end() || j!=b2->boxes.end()){
@@ -72,9 +85,21 @@ GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h){
 	return b;
 }
 
-bool is_constructible(const vector<int>& left, const GenBlock& b){
-	for(auto& p : b.boxes)
-		if(left[p.first] < p.second) return false;
+/** las cajas de b1 y b2 juntas estan disponibles */
+bool is_constructible(const vector<int>& left, const GenBlock& b1, const GenBlock& b2){
+	auto i=b1.boxes.begin(), j=b2.boxes.begin();
+	while(i!=b1.boxes.end() || j!=b2.boxes.end()){
+		if(j==b2.boxes.end() || (i!=b1.boxes.end() && i->first < j->first)){
+			if(left[i->first] < i->second) return false;
+			i++;
+		}else if(i==b1.boxes.end() || j->first < i->first){
+			if(left[j->first] < j->second) return false;
+			j++;
+		}else{
+			if(left[i->first] < i->second + j->second) return false;
+			i++; j++;
+		}
+	}
 	return true;
 }
 
@@ -84,7 +109,7 @@ vector<Block> Block::all;
 vector<Block::BoxCount> Block::all_boxes;
 
 vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types,
-		const vector<int>& left, double min_fr, int max_bl, long L, long W, long H){
+		const vector<int>& left, double min_fr, int max_bl, long L, long W, long H, bool support){
 
 	//bloques de una caja
 	vector<const GenBlock*> B;
@@ -95,6 +120,10 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 				b->l=box->getL(o); b->w=box->getW(o); b->h=box->getH(o);
 				b->occupied_volume=box->getVolume();
 				b->n_boxes=1;
+				b->weight=box->weight;
+				b->top_full=true;
+				b->fragile=box->fragile;
+				b->support=support;
 				b->boxes.push_back(make_pair(box->type, 1));
 				B.push_back(b);
 			}
@@ -109,6 +138,9 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 			const GenBlock* b1 = P[ip];
 			for(int ib=0; ib<nB && nB+(int)N.size()<max_bl; ib++){
 				const GenBlock* b2 = B[ib];
+				//las combinaciones que no se pueden construir con las cajas disponibles se descartan
+				//(se revisa solo si alguna direccion cumple las dimensiones y el volumen minimo)
+				bool checked=false;
 
 				for(int i=0; i<3; i++){
 					long ll= max(b1->l, b2->l);
@@ -124,13 +156,31 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 					if((double)(b1->occupied_volume+b2->occupied_volume) / vol < min_fr ||
 							ll>L || ww>W || hh>H) continue;
 
+					if(!checked){
+						if(!is_constructible(left, *b1, *b2)) break;
+						checked=true;
+					}
+
+					//cara superior del bloque resultante
+					bool top_full=false;
+					if(support){
+						if(i==2){
+							//el bloque de abajo debe soportar completamente al de arriba
+							const GenBlock *down=b1, *up=b2;
+							if(!(down->supportive() && up->l<=down->l && up->w<=down->w)) swap(down, up);
+							if(!(down->supportive() && up->l<=down->l && up->w<=down->w)) continue;
+							top_full = up->top_full && up->l==down->l && up->w==down->w;
+						}else
+							top_full = b1->top_full && b2->top_full && b1->h==b2->h &&
+								((i==0)? b1->w==b2->w : b1->l==b2->l);
+					}
+
 					GenBlock* nb = join(b1, b2, ll, ww, hh);
+					nb->top_full = top_full;
 					if(!all_blocks.insert(nb).second) { delete nb; continue; }
 
-					if(is_constructible(left, *nb)){
-						N.push_back(nb);
-						if(nB+(int)N.size()>=max_bl) break;
-					}
+					N.push_back(nb);
+					if(nB+(int)N.size()>=max_bl) break;
 				}
 			}
 		}
@@ -150,6 +200,8 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 		b.l=g->l; b.w=g->w; b.h=g->h;
 		b.occupied_volume=g->occupied_volume;
 		b.n_boxes=g->n_boxes;
+		b.weight=g->weight;
+		b.supportive=g->supportive();
 		size_t first = all_boxes.size();
 		all_boxes.insert(all_boxes.end(), g->boxes.begin(), g->boxes.end());
 		b.boxes.first = all_boxes.data()+first;

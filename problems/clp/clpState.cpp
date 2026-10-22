@@ -21,6 +21,22 @@ namespace clp {
 
 vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
+const ULD* clpState::uld=NULL;
+bool clpState::support=false;
+
+//bloques ubicados que pueden soportar a otros en la base del espacio actual
+static vector<const PlacedBlock*> support_tops;
+
+/** area de [x,x+l) x [y,y+w) cubierta por las caras superiores de los bloques tops */
+static long covered_area(const vector<const PlacedBlock*>& tops, long x, long y, long l, long w){
+	long area=0;
+	for(const PlacedBlock* t : tops){
+		long dx = min(x+l, t->xmax) - max(x, t->xmin);
+		long dy = min(y+w, t->ymax) - max(y, t->ymin);
+		if(dx>0 && dy>0) area += dx*dy;
+	}
+	return area;
+}
 
 static inline uint64_t mix(uint64_t h){
 	h ^= h >> 33; h *= 0xff51afd7ed558ccdull;
@@ -29,8 +45,10 @@ static inline uint64_t mix(uint64_t h){
 	return h;
 }
 
+//(mix(0)=0: sin la constante, el bloque 0 en el origen tendria hash 0 y los estados
+//con y sin el serian equivalentes para el greedy)
 static inline uint64_t placement_hash(int id, long x, long y, long z){
-	return mix(mix(mix(mix((uint64_t) id) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
+	return mix(mix(mix(mix((uint64_t) id + 0x9e3779b97f4a7c15ull) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
 }
 
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
@@ -40,23 +58,37 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		int isp = cont.top_space();
 		const Space& sp = cont.spaces[isp];
 
+		if(support){
+			support_tops.clear();
+			if(sp.zmin>0){
+				for(const PlacedBlock& b : cont.blocks)
+					if(b.zmax==sp.zmin && b.block->supportive && b.xmin<sp.xmax && sp.xmin<b.xmax &&
+							b.ymin<sp.ymax && sp.ymin<b.ymax) support_tops.push_back(&b);
+				//el espacio no tiene base
+				if(support_tops.empty()) { cont.remove_space(isp); continue; }
+			}
+		}
+
 		vcs.set_space(*this, sp);
 
 		//las mejores n acciones ordenadas de peor a mejor (en caso de empate,
 		//la evaluada primero se considera peor)
-		static vector< pair<double, const Block*> > ranked;
+		struct Ranked { double eval; const Block* b; long x, y, z; };
+		static vector<Ranked> ranked;
 		ranked.clear();
 		bool any=false;
 		for(const Block* b : valid_blocks){
 			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
+			long x, y, z;
+			if(!locate(*b, sp, x, y, z)) continue;
 			any=true;
 			//umbral: evaluacion que hay que superar para entrar a las n mejores
-			double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().first;
-			double eval = vcs.eval(*this, *b, sp, threshold);
-			if(eval>0 && ((int)ranked.size()<n || ranked.front().first < eval)){
+			double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
+			double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
+			if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
 				auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
-						[](double e, const pair<double, const Block*>& r){ return e < r.first; });
-				ranked.insert(pos, make_pair(eval, b));
+						[](double e, const Ranked& r){ return e < r.eval; });
+				ranked.insert(pos, Ranked{eval, b, x, y, z});
 				if((int)ranked.size()==n+1) ranked.erase(ranked.begin());
 			}
 		}
@@ -65,11 +97,23 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		if(!any) { cont.remove_space(isp); continue; }
 
 		for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
-			bactions.push_back(new clpAction(*it->second, sp));
+			bactions.push_back(new clpAction(*it->b, sp, it->x, it->y, it->z));
 
 		return bactions.size();
 	}
 	return 0;
+}
+
+bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z) const{
+	long l=b.getL(), w=b.getW(), h=b.getH();
+	sp.get_location(l, w, h, x, y, z);
+	if(support) z=sp.zmin;
+
+	if(uld && !uld->adjust(x, z, l, h, sp.xmin, sp.xmax-l, sp.zmin, sp.zmax-h, !support))
+		return false;
+
+	if(support && z>0 && covered_area(support_tops, x, y, l, w) < l*w) return false;
+	return true;
 }
 
 void clpState::_transition(const Action& action) {
@@ -78,10 +122,10 @@ void clpState::_transition(const Action& action) {
 
 	//se actualizan las cajas restantes
 	for(auto& p : b.boxes) left[p.first] -= p.second;
+	weight_left -= b.weight;
 
 	//se inserta el bloque en el contenedor
-	long x, y, z;
-	act.space.get_location(b.getL(), b.getW(), b.getH(), x, y, z);
+	long x=act.x, y=act.y, z=act.z;
 	cont.insert(b, x, y, z, min_l, min_w, min_h);
 
 	hash += placement_hash(b.id, x, y, z);
@@ -92,6 +136,7 @@ void clpState::_transition(const Action& action) {
 void clpState::update_valid_blocks() {
 	valid_blocks.erase(remove_if(valid_blocks.begin(), valid_blocks.end(),
 		[this](const Block* b){
+			if(b->weight > weight_left + 1e-9) return true;
 			for(auto& p : b->boxes)
 				if(left[p.first] < p.second) return true;
 			return false;
@@ -105,14 +150,43 @@ bool clpState::is_feasible() const{
 	long volume=0;
 	for(size_t i=0; i<B.size(); i++){
 		if(!container.contains(B[i])) return false;
+		if(uld && !uld->inside(B[i])) return false;
 		for(size_t j=i+1; j<B.size(); j++)
 			if(B[i].strict_intersects(B[j])) return false;
 		for(auto& p : B[i].block->boxes) used[p.first] += p.second;
 		volume += B[i].block->getOccupiedVolume();
+
+		if(support && B[i].zmin>0){
+			vector<const PlacedBlock*> tops;
+			for(const PlacedBlock& b : B)
+				if(b.zmax==B[i].zmin && b.block->supportive) tops.push_back(&b);
+			if(covered_area(tops, B[i].xmin, B[i].ymin, B[i].getL(), B[i].getW()) < B[i].getL()*B[i].getW())
+				return false;
+		}
 	}
 	for(size_t t=0; t<types.size(); t++)
 		if(used[t] + left[t] != initial_boxes[t] || left[t] < 0) return false;
+	if(uld && get_weight() > uld->max_weight + 1e-6) return false;
 	return volume == cont.getOccupiedVolume();
+}
+
+double clpState::get_weight() const{
+	double w=0.0;
+	for(const PlacedBlock& b : cont.blocks) w += b.block->weight;
+	return w;
+}
+
+void clpState::get_cog(double& x, double& y, double& z) const{
+	double w=0.0;
+	x=y=z=0.0;
+	for(const PlacedBlock& b : cont.blocks){
+		double bw=b.block->weight;
+		x += bw*(b.xmin+b.xmax)/2.0;
+		y += bw*(b.ymin+b.ymax)/2.0;
+		z += bw*(b.zmin+b.zmax)/2.0;
+		w += bw;
+	}
+	if(w>0){ x/=w; y/=w; z/=w; }
 }
 
 void clpState::update_min_dim(){
@@ -178,6 +252,21 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 
 	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
 			s->cont.getL(), s->cont.getW(), s->cont.getH());
+	s->update_min_dim();
+
+	return s;
+}
+
+clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl){
+	clpState* s = new clpState(u.L, u.W, u.H);
+	clpState::uld = &u;
+	clpState::initial_boxes = left;
+	s->left = left;
+	s->weight_left = u.max_weight;
+
+	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
+			u.L, u.W, u.H, clpState::support);
+	s->update_valid_blocks();
 	s->update_min_dim();
 
 	return s;

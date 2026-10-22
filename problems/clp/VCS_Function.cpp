@@ -32,8 +32,10 @@ VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<in
 		}
 	}
 
-	pow_vol.resize(blocks.size());
-	pow_n.resize(blocks.size());
+	int max_id=-1;
+	for(const Block* b : blocks) max_id=max(max_id, b->id);
+	pow_vol.resize(max_id+1);
+	pow_n.resize(max_id+1);
 	for(const Block* b : blocks){
 		double vol=(delta>0.0)? (double) b->getOccupiedVolume(): 1.0;
 		double n=(gamma>0.0)? (1.0/(double) b->n_boxes) : 1.0;
@@ -66,11 +68,12 @@ void VCS_Function::set_space(const clpState& s, const Space& sp){
 		if(b.touches(region)) neighbors.push_back(&b);
 }
 
-double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp, double threshold){
+double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp, long x, long y, long z,
+		double threshold){
 
 	if(!b.fits(sp.getL(), sp.getW(), sp.getH())) return -1.0;
 
-	double cs=(alpha>0.0)? CS_p(s, b, sp) : 1.0;
+	double cs=(alpha>0.0)? CS_p(s, b, x, y, z) : 1.0;
 	double pow_cs = pow(cs,alpha);
 
 	//poda: la perdida de volumen solo se calcula si la cota de la evaluacion
@@ -82,10 +85,7 @@ double VCS_Function::eval(const clpState& s, const Block& b, const Space& sp, do
 	return pow_vol[b.id] * pow((1.0-loss),beta) * pow_cs * pow_n[b.id];
 }
 
-double VCS_Function::CS_p(const clpState& s, const Block& b, const Space& sp){
-	long x, y, z;
-	sp.get_location(b.getL(), b.getW(), b.getH(), x, y, z);
-
+double VCS_Function::CS_p(const clpState& s, const Block& b, long x, long y, long z){
 	long dx=expansion(p, b.getL()), dy=expansion(p, b.getW()), dz=expansion(p, b.getH());
 
 	AABB bb(x, y, z, x+b.getL(), y+b.getW(), z+b.getH());

@@ -11,15 +11,16 @@
 namespace clp {
 
 /**
- * Tipo de caja: dimensiones y orientaciones permitidas.
+ * Tipo de caja: dimensiones, orientaciones permitidas, peso y si es fragil.
  * Cada tipo se identifica por su indice (type) en la instancia.
  */
 class BoxShape {
 public:
 	enum Orientation{LWH=0, LHW, WLH, WHL, HLW, HWL};
 
-	BoxShape(int type, int id, long l, long w, long h, bool rot1, bool rot2, bool rot3) :
-		type(type), id(id), l(l), w(w), h(h) {
+	BoxShape(int type, int id, long l, long w, long h, bool rot1, bool rot2, bool rot3,
+			double weight=0.0, bool fragile=false) :
+		type(type), id(id), l(l), w(w), h(h), weight(weight), fragile(fragile) {
 		valid[LWH]=true;
 		valid[WLH]=rot3;
 		valid[WHL]=rot1;
@@ -62,6 +63,11 @@ public:
 	const int type;
 	const int id;
 	const long l, w, h;
+
+	double weight;
+
+	//no se puede ubicar nada sobre la caja
+	bool fragile;
 
 private:
 	bool valid[6];

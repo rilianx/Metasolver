@@ -47,15 +47,16 @@ public:
 	void set_space(const clpState& s, const Space& sp);
 
 	/**
-	 * Evalua el bloque b ubicado en el espacio indicado en set_space.
+	 * Evalua el bloque b ubicado en la posicion (x,y,z) del espacio indicado en set_space.
 	 * Si se sabe que la evaluacion no supera threshold (cota sin la perdida de
 	 * volumen), retorna -1 sin calcular la perdida
 	 */
-	double eval(const clpState& s, const Block& b, const Space& sp, double threshold=-HUGE_VAL);
+	double eval(const clpState& s, const Block& b, const Space& sp, long x, long y, long z,
+			double threshold=-HUGE_VAL);
 
 private:
 
-	double CS_p(const clpState& s, const Block& b, const Space& sp);
+	double CS_p(const clpState& s, const Block& b, long x, long y, long z);
 
 	long surface_in_contact(const AABB& b, const AABB& bi) const;
 	long surface_in_contact_container(const AABB& b, long L, long W, long H) const;
