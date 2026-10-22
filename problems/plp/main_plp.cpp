@@ -28,6 +28,9 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _grid(parser, "int", "Starting points per axis (x,y). Default: 4", {"grid"});
 	args::ValueFlag<double> _slide(parser, "double", "Weight of x,y (towards the walls) in the LP descent. Default: 0.065", {"slide"});
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
+	args::Flag _no_separate(parser, "no_separate", "Fixed height: do not try the LP separation (requires ibex) before the BSG repair", {"no_separate"});
+	args::ValueFlag<double> _sep_step(parser, "double", "Initial height decrease of the LP separation phase (proportion). Default: 0.01", {"sep_step"});
+	args::ValueFlag<int> _sep_iter(parser, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
 	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 30", {"blocks"});
 	args::ValueFlag<int> _block_pair(parser, "int", "Pseudo-blocks per pair of item types. Default: 2", {"block_pair"});
@@ -176,9 +179,38 @@ int main(int argc, char** argv){
 
 		//2. se baja la altura y se resuelve con un contenedor de altura fija
 		double band0 = (_band)? _band.Get() : 0.2, band = band0;
-		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && step > 1e-4){
+		double sep_step = (_sep_step)? _sep_step.Get() : 0.01;
+		bool need_sep = true;
+		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
 			double tl = min((double) maxtime, elapsed() + slice);
+
+			//fase A: bajadas pequenas de la altura resueltas por separacion por LP desde la mejor solucion
+			//(las piezas que sobresalen se bajan aunque queden solapadas); al estancarse, fase B (BSG)
+			if(lp && !_no_separate && need_sep){
+				need_sep = false;
+				for(double ss = sep_step; ss >= 1e-3 && elapsed() < maxtime && H > lb*(1+1e-6); ){
+					double hm = max(lb, H*(1-ss));
+					vector<int> ps;
+					vector<Vec3> ts;
+					for(const Placement& p : S.items){
+						int pc = inst.types[p.type].piece;
+						ps.push_back(pc);
+						Vec3 u = p.t;
+						u.z = min(u.z, max(0.0, hm - inst.pieces[pc].bbox.extent().z));
+						ts.push_back(u);
+					}
+					if(placer.separate(ps, ts, hm, *lp, (_sep_iter)? _sep_iter.Get() : 50)){
+						double H2 = (_no_improve)? hm : polish(ps, ts);
+						cout << "[separacion] H=" << hm << " (" << elapsed() << " s): sin solapamiento, altura " << H2 << endl;
+						if(H2 < H){
+							H = H2;
+							for(size_t i=0; i<ts.size(); i++) S.items[i].t = ts[i];
+						}else ss /= 2;
+					}else ss /= 2;
+				}
+				continue;
+			}
 
 			//se mantienen las piezas de la mejor solucion bajo (1-band)*hmax
 			vector<Placement> keep;
@@ -207,7 +239,7 @@ int main(int argc, char** argv){
 				double H2 = (_no_improve)? S2.height() : polish(p2, t2);
 				for(size_t i=0; i<t2.size(); i++) S2.items[i].t = t2[i];
 				cout << ((ok)? "todas las piezas" : "completada") << ", altura " << H2 << endl;
-				if(H2 < H) { H = H2; S.items = S2.items; }
+				if(H2 < H) { H = H2; S.items = S2.items; need_sep = true; }
 			}else cout << endl;
 			delete s;
 		}

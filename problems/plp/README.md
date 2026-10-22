@@ -125,6 +125,15 @@ Metodología (2D) en la que se basa la compactación por LP:
   cero (`band = 1`), y luego se baja menos la altura (`step/2`). Cada altura tiene a lo más
   `--slice` = 10% del tiempo. Si la carga parcial no está completa, se completa sobre la carga (altura
   abierta) por si mejora la altura.
+* **Separación por LP** (`Placer::separate`, requiere ibex; fase previa a la reparación con BSG): se baja la
+  altura un 1% (`--sep_step`), las piezas que sobresalen se bajan aunque queden solapadas y un LP elimina el
+  solapamiento: variables `t_i` y una holgura `s ≥ 0` por par de partes cercanas, `n·(t_i − t_j) + s ≥ d` para
+  una faceta del NFP (la de mayor holgura; si el par sigue solapado se rota entre las 3 primeras); minimiza
+  `Σ w_ij s` con pesos de búsqueda local guiada (aumentan para los pares que siguen solapados). Si se estanca,
+  la pieza más pequeña de un par solapado se reinserta en el espacio libre. Si se elimina el solapamiento, se
+  mejora la solución y se vuelve a bajar; si no, el paso se reduce a la mitad (hasta 0.1%) y luego se pasa a la
+  reparación con BSG (`--no_separate` la desactiva). Basado en Egeblad et al. (2009), Gomes y Oliveira (2006) y
+  Lamas-Fernández et al. (2023).
 * Todas las soluciones se verifican con `Solution::verify`.
 
 ### Compilación con ibex (opcional)
