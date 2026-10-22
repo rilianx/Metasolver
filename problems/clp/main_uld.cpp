@@ -38,7 +38,8 @@ struct Load {
 
 	double utilization() const { return volume/uld->volume; }
 	bool cog_ok() const {
-		return fabs(cog[0]-uld->L/2.0) <= uld->dev[0] && fabs(cog[1]-uld->W/2.0) <= uld->dev[1];
+		return fabs(cog[0]-uld->L/2.0) <= uld->dev[0] && fabs(cog[1]-uld->W/2.0) <= uld->dev[1] &&
+			cog[2] <= uld->dev[2];
 	}
 };
 

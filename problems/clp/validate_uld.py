@@ -7,7 +7,9 @@ uso: validate_uld.py <instancia.csv> <uld.csv> <solucion.csv> [--support corners
 Verifica: cada caja cargada exactamente una vez; orientacion permitida; caja dentro del
 ULD y de sus recortes; sin intersecciones; peso maximo; soporte (las cuatro esquinas
 inferiores de cada caja sobre cajas no fragiles o el piso, o la base completa); nada sobre
-cajas fragiles. Cuenta los ULDs con el centro de gravedad fuera de la desviacion permitida.
+cajas fragiles. Cuenta los ULDs con el centro de gravedad fuera de la desviacion permitida
+en x o y (cog_violations, como Hessler et al. 2024) y los con el centro de gravedad sobre la
+altura maxima (cog_z_violations, Paquay et al. 2016).
 """
 import sys
 from itertools import permutations
@@ -66,6 +68,7 @@ def main():
             errors.append(f"item {it} not loaded")
 
     n_cog = 0
+    n_cog_z = 0
     cost = 0
     util = []
     for u, (ut, boxes) in sorted(loads.items()):
@@ -73,13 +76,14 @@ def main():
         cost += U['cost']
         weight = 0.0
         vol = 0.0
-        mx = my = 0.0
+        mx = my = mz = 0.0
         for (it, x, y, z, l, w, h) in boxes:
             I = items[it]
             weight += I[3]
             vol += l * w * h
             mx += I[3] * (x + l / 2)
             my += I[3] * (y + w / 2)
+            mz += I[3] * (z + h / 2)
             # orientacion: (l,w,h) es una permutacion de las dimensiones y la vertical esta permitida
             ok = any(I[p[0]] == l and I[p[1]] == w and I[p[2]] == h and I[4 + p[2]] == 1
                      for p in permutations(range(3)))
@@ -130,12 +134,14 @@ def main():
             cx, cy = mx / weight, my / weight
             if abs(cx - U['L'] / 2) > U['dev'][0] + 1e-6 or abs(cy - U['W'] / 2) > U['dev'][1] + 1e-6:
                 n_cog += 1
+            if mz / weight > U['dev'][2] + 1e-6:
+                n_cog_z += 1
         util.append(vol / U['vol'])
 
     for e in errors[:20]:
         print("ERROR:", e)
     print(f"feasible {int(not errors)} n_ulds {len(loads)} cost {cost:.1f} cog_violations {n_cog} "
-          f"utilizations {' '.join(f'{100 * v:.2f}' for v in util)}")
+          f"cog_z_violations {n_cog_z} utilizations {' '.join(f'{100 * v:.2f}' for v in util)}")
     sys.exit(1 if errors else 0)
 
 

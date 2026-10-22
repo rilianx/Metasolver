@@ -71,7 +71,8 @@ public:
 	/**
 	 * Desplazamiento (dx,dy) de toda la carga que minimiza la desviacion del centro de
 	 * gravedad (respetando los limites y recortes del ULD). Retorna la desviacion que
-	 * excede la permitida despues de desplazar, relativa a la permitida, sumada en x e y
+	 * excede la permitida despues de desplazar, relativa a la permitida, sumada en x, y y z
+	 * (en z, la altura del CoG que excede la maxima permitida)
 	 */
 	double cog_violation(long& dx, long& dy) const;
 

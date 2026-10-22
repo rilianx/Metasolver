@@ -271,7 +271,9 @@ double clpState::cog_violation(long& dx, long& dy) const{
 
 	double ex = max(0.0, fabs(cx+dx - cont.getL()/2.0) - uld->dev[0]) / uld->dev[0];
 	double ey = max(0.0, fabs(cy+dy - cont.getW()/2.0) - uld->dev[1]) / uld->dev[1];
-	return ex+ey;
+	//en z, el CoG debe estar bajo la altura dev[2] (Paquay et al. 2016)
+	double ez = max(0.0, cz - uld->dev[2]) / uld->dev[2];
+	return ex+ey+ez;
 }
 
 void clpState::translate(long dx, long dy){
