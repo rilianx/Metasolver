@@ -1,0 +1,94 @@
+/*
+ * Placer.h
+ *
+ * Generacion de posiciones factibles para una pieza (sin rotaciones).
+ *
+ * La pieza A (trasladada en t) y una parte fija B (trasladada en tB) se solapan si y solo si
+ * t - tB esta en el interior de NFP(A,B) = B + (-A) (no-fit polytope, convexo para
+ * partes convexas). Cada faceta n.x <= d del NFP define una restriccion lineal valida
+ * n.(t - tB) >= d. Desde una posicion factible se elige, para cada parte cercana, una faceta
+ * que la posicion satisface y se resuelve un LP en t (descenso por LP); se repite hasta que
+ * la posicion no mejora.
+ */
+
+#ifndef PLP_PLACER_H_
+#define PLP_PLACER_H_
+
+#include <vector>
+#include <map>
+#include "Instance.h"
+#include "SmallLP.h"
+
+namespace plp {
+
+/** parte convexa ubicada */
+struct PlacedPart {
+	int part;   //indice global de la parte
+	Vec3 t;
+	Box3 bbox;
+};
+
+class Placer {
+public:
+
+	/**
+	 * @param grid numero de puntos de partida por eje (x,y) en la cara superior de la carga
+	 * @param slide peso de x e y (hacia la pared mas cercana) en la funcion objetivo del descenso;
+	 *        el peso de z (gravedad) es 1
+	 */
+	Placer(const Instance& inst, int grid=3, double slide=0.1, double eps=1e-6);
+
+	/**
+	 * Posiciones factibles para la pieza p dadas las partes ubicadas.
+	 * top es la altura actual de la carga.
+	 */
+	void candidates(int p, const std::vector<PlacedPart>& placed, double top, std::vector<Vec3>& out);
+
+	/** true si la pieza p en t no se solapa con las partes ubicadas (penetracion <= eps) */
+	bool feasible(int p, const Vec3& t, const std::vector<PlacedPart>& placed) const;
+
+	/**
+	 * Mejora una solucion (piezas pieces[i] en t[i]) moviendo una pieza a la vez con las demas fijas:
+	 * - la pieza vuelve a descender por LP desde su posicion (compactacion);
+	 * - las piezas que definen la altura se prueban en otras posiciones candidatas.
+	 * Repite hasta que la altura no mejora. Retorna la nueva altura.
+	 */
+	double improve(const std::vector<int>& pieces, std::vector<Vec3>& t, int max_passes=50);
+
+	/** partes ubicadas de las piezas, salvo la pieza skip */
+	void place_all(const std::vector<int>& pieces, const std::vector<Vec3>& t, int skip, std::vector<PlacedPart>& out) const;
+
+	/** partes (indices globales) de la pieza p */
+	const std::vector<int>& get_parts(int p) const { return piece_parts[p]; }
+
+	const ConvexPolytope& get_part(int k) const { return *parts[k]; }
+
+	const Instance& inst;
+
+	/**
+	 * Descenso por LP: desde la posicion factible t, minimiza c.t sin solapar las partes ubicadas
+	 * (en una region de confianza alrededor de t, eligiendo una faceta de cada NFP cercano)
+	 * hasta que la posicion no mejora. Retorna una posicion factible.
+	 */
+	Vec3 descend(int p, Vec3 t, const Vec3& c, const std::vector<PlacedPart>& placed);
+
+private:
+	/** NFP de la parte a (movil) respecto a la parte b (fija), ambas sin trasladar */
+	const ConvexPolytope& nfp(int a, int b);
+
+	int grid;
+	double slide;
+	double eps;
+	double tol;
+
+	std::vector<const ConvexPolytope*> parts;
+	std::vector< std::vector<int> > piece_parts;
+
+	std::map< std::pair<int,int>, ConvexPolytope > nfps;
+
+	SmallLP lp;
+};
+
+} /* namespace plp */
+
+#endif /* PLP_PLACER_H_ */

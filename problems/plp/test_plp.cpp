@@ -11,6 +11,9 @@
 #include "ConvexPolytope.h"
 #include "Instance.h"
 #include "Solution.h"
+#include "SmallLP.h"
+#include "plpState.h"
+#include "Greedy.h"
 
 using namespace std;
 using namespace plp;
@@ -124,6 +127,34 @@ static void test_instances(const string& benchs) {
 	CHECK(near(eg.pieces[0].volume, 256, 1e-6));
 }
 
+static void test_lp() {
+	//min z - x  s.a.  0 <= x,y,z <= 1,  x + z >= 1  (optimo: x=1, z=0)
+	SmallLP lp;
+	for(int k=0; k<3; k++){
+		Vec3 u; u[k]=1;
+		lp.add(u, 1.0);
+		lp.add(-u, 0.0);
+	}
+	lp.add(Vec3(-1,0,-1), -1.0);
+	bool opt;
+	Vec3 x = lp.minimize(Vec3(-1,0,1), Vec3(0.5,0.5,1), &opt);
+	CHECK(opt);
+	CHECK(near(x.x, 1.0) && near(x.z, 0.0));
+}
+
+static void test_greedy(const string& benchs) {
+	Instance inst = Instance::load(benchs + "/Stoyan et al. 2005/Example1.json");
+	Placer placer(inst);
+	PLP_Function f(placer);
+	plpState s(inst);
+	Greedy gr(&f);
+	gr.run(s);
+	CHECK(s.get_n_left()==0);
+	Report r = s.get_solution().verify();
+	CHECK(r.feasible);
+	CHECK(near(s.get_value(), r.density));
+}
+
 int main(int argc, char** argv) {
 	if(argc<2) { cerr << "uso: test_plp <carpeta benchs>" << endl; return 1; }
 	try{
@@ -131,6 +162,8 @@ int main(int argc, char** argv) {
 		test_penetration();
 		test_solution(argv[1]);
 		test_instances(argv[1]);
+		test_lp();
+		test_greedy(argv[1]);
 	}catch(exception& e){
 		cerr << "ERROR: " << e.what() << endl;
 		return 1;

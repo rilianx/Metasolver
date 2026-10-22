@@ -55,6 +55,49 @@ Las piezas no convexas de Liu et al. (2015) y Egeblad et al. (2009) todavía no 
 
 Mejor solución conocida incluida: `Stoyan et al. 2005/Solution1.json` (Example1, H = 17.463).
 
+## Literatura y resultados por recolectar
+
+Para comparar hay que extraer, por instancia, la altura obtenida (y la mejor), el tiempo y la máquina.
+
+| # | Referencia | Qué extraer |
+|---|---|---|
+| 1 | Stoyan, Gil, Scheithauer, Pankratov, Magdalina (2005). *Packing of convex polytopes into a parallelepiped*. Optimization 54(2):215–235. doi:10.1080/02331930500050681 | Alturas de Example1–3 (convexas) |
+| 2 | Stoyan, Gil, Pankratov, Scheithauer (2004). *Packing non-convex polytopes into a parallelepiped*. Preprint MATH-NM-06-2004, TU Dresden | Alturas de Example1–5 |
+| 3 | Egeblad, Nielsen, Brazil (2009). *Translational packing of arbitrary polytopes*. Computational Geometry 42(4):269–288. doi:10.1016/j.comgeo.2008.06.003 | Merged1–5 y Stoyan 2005 (solo traslaciones, igual que aquí) |
+| 4 | Liu, Liu, Cao, Yao (2015). *HAPE3D — a new constructive algorithm for the 3D irregular packing problem*. Frontiers of Information Technology & Electronic Engineering 16(5):380–390. doi:10.1631/FITEE.1400421 | Experiment1 y Stoyan 2004 (Experiment2–5); revisar si permite rotaciones |
+| 5 | Lamas-Fernández, Bennell, Martínez-Sykora (2023). *Voxel-based solution approaches to the three-dimensional irregular packing problem*. Operations Research 71(4):1298–1317. doi:10.1287/opre.2022.2260 | Tablas del artículo y del e-companion: mejores alturas conocidas de casi todos los conjuntos (p.ej., Merged5 = 29.24); revisar si permite rotaciones |
+| 6 | Tollenaere, Martínez-Sykora, Wauters (2026). *Mixed-integer linear programming models for 3D irregular strip packing problems*. EJOR 331(2):365–380. doi:10.1016/j.ejor.2025.10.041 | Óptimos y cotas de STOYAN_2004, STOYAN_2005, TETRAHEDRONS y DIAMONDS (2–20 ítems) |
+| 7 | Romanova, Bennell, Stoyan, Pankratov (2018). *Packing of concave polyhedra with continuous rotations using nonlinear optimisation*. EJOR 268(1):37–53. doi:10.1016/j.ejor.2018.01.025 | Con rotaciones continuas: resultados en instancias previas (referencia, no comparable directamente) |
+| 8 | Egeblad, Nielsen, Odgaard (2007). *Fast neighborhood search for two- and three-dimensional nesting problems*. EJOR 183(3):1249–1266 | Resultados 3D previos de la misma línea que [3] |
+| 9 | Ma, Chen, Hu, Wang (2018). *Packing irregular objects in 3D space via hybrid optimization*. Computer Graphics Forum 37(5) (SGP 2018) | Uniones de convexos y comparación con instancias de la literatura |
+| 10 | Leão, Toledo, Oliveira, Carravilla, Alvarez-Valdés (2020). *Irregular packing problems: A review of mathematical models*. EJOR 282(3):803–822 | Revisión: modelos y referencias adicionales |
+| 11 | Tollenaere, Çalık, Wauters (2024). *Efficient use of collision detection for volume maximization problems*. EJOR 319(3):967–982. doi:10.1016/j.ejor.2024.05.048 | Técnicas de detección de colisiones (no tiene instancias de carga) |
+
+Metodología (2D) en la que se basa la compactación por LP:
+* Li, Milenkovic (1995). *Compaction and separation algorithms for non-convex polygons and their applications*. EJOR 84(3):539–561.
+* Gomes, Oliveira (2006). *Solving irregular strip packing problems by hybridising simulated annealing and linear programming*. EJOR 171(3):811–829.
+
+## Algoritmo (BSG_PLP)
+
+* **Estado** (`plpState`): piezas ubicadas y restantes. Una acción ubica una pieza en una posición factible.
+  El valor de una solución completa es la densidad `V / (W·D·H)`.
+* **Posiciones** (`Placer`): la pieza parte sobre la carga (z = altura actual) en una grilla de
+  `grid x grid` puntos (x,y) y desciende por LP. Para cada parte convexa cercana se usa su NFP
+  `B ⊕ (−A)` (envolvente convexa de las diferencias de vértices, en caché por par de partes) y se elige
+  la faceta que la posición actual satisface y que permite avanzar más en la dirección de descenso; con
+  esas facetas el conjunto de posiciones válidas es convexo y se minimiza `z + slide·(x,y hacia la
+  pared más cercana)` con un LP de 3 variables (`SmallLP`, conjunto activo desde un punto factible).
+  Se repite (región de confianza del tamaño de la pieza) hasta que la posición no mejora.
+* **Evaluación** (`PLP_Function`): `alpha·log(V/Vmax) − beta·z/H0 − gamma·max(0, ztop − top)/H0`.
+* **Búsqueda**: BSG con `DoubleEffort` (como en el CLP).
+* **Mejora final** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y
+  las piezas que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
+* Todas las soluciones se verifican con `Solution::verify`.
+
+```
+./BSG_PLP "problems/plp/benchs/Stoyan et al. 2005/Example1.json" -t 30 -o sol.json
+```
+
 ## Herramientas
 
 ```
@@ -84,3 +127,6 @@ envolvente parta en el origen (`"itemOrigin": "AlignToMinimum"`).
 * `Instance`: piezas como unión de convexos e instancias en formato JSON de ESICUP.
 * `Solution`: lectura/escritura de soluciones y verificación.
 * `Json`: lector/escritor JSON mínimo (sin dependencias).
+* `SmallLP`: LP en 3 variables (conjunto activo, todos los iterados son factibles).
+* `Placer`: NFPs, descenso por LP, posiciones candidatas y mejora de soluciones.
+* `plpState`: estado, acción y evaluador para el BSG; `main_plp.cpp`: `BSG_PLP`.

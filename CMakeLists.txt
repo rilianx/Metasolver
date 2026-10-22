@@ -32,14 +32,31 @@ add_library(plp
   problems/plp/Mesh.cpp
   problems/plp/Instance.cpp
   problems/plp/Solution.cpp
+  problems/plp/SmallLP.cpp
+  problems/plp/Placer.cpp
+  problems/plp/plpState.cpp
 )
-target_include_directories(plp PUBLIC problems/plp)
+target_include_directories(plp PUBLIC problems/plp metasolver metasolver/strategies)
 
 add_executable(PLP_check problems/plp/main_plp_check.cpp)
 target_include_directories(PLP_check PRIVATE problems/clp)
 target_link_libraries(PLP_check plp)
 
-add_executable(test_plp problems/plp/test_plp.cpp)
+add_executable(BSG_PLP
+  problems/plp/main_plp.cpp
+  metasolver/SearchStrategy.cpp
+  metasolver/State.cpp
+  metasolver/strategies/BSG.cpp
+  metasolver/strategies/Greedy.cpp
+)
+target_include_directories(BSG_PLP PRIVATE problems/clp)
+target_link_libraries(BSG_PLP plp)
+
+add_executable(test_plp problems/plp/test_plp.cpp
+  metasolver/SearchStrategy.cpp
+  metasolver/State.cpp
+  metasolver/strategies/Greedy.cpp
+)
 target_link_libraries(test_plp plp)
 
 enable_testing()
@@ -47,3 +64,4 @@ add_test(NAME br7 COMMAND BSG_CLP ${CMAKE_CURRENT_SOURCE_DIR}/problems/clp/bench
 add_test(NAME plp_unit COMMAND test_plp ${CMAKE_CURRENT_SOURCE_DIR}/problems/plp/benchs)
 add_test(NAME plp_check_stoyan2005 COMMAND PLP_check -q "${CMAKE_CURRENT_SOURCE_DIR}/problems/plp/benchs/Stoyan et al. 2005/Example1.json"
   -s "${CMAKE_CURRENT_SOURCE_DIR}/problems/plp/benchs/Stoyan et al. 2005/Solution1.json")
+add_test(NAME plp_bsg_stoyan2005 COMMAND BSG_PLP -t 2 "${CMAKE_CURRENT_SOURCE_DIR}/problems/plp/benchs/Stoyan et al. 2005/Example1.json")

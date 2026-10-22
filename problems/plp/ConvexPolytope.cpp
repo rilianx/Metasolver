@@ -4,6 +4,7 @@
 
 #include <map>
 #include <algorithm>
+#include <random>
 #include "ConvexPolytope.h"
 
 using namespace std;
@@ -70,8 +71,12 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 	faces.push_back(make_face(p, i1, i3, i2));
 	faces.push_back(make_face(p, i2, i3, i0));
 
-	//insercion incremental
-	for(int i=0; i<(int)p.size(); i++){
+	//insercion incremental (en orden aleatorio, con semilla fija)
+	vector<int> order(p.size());
+	for(int i=0; i<(int)p.size(); i++) order[i]=i;
+	mt19937 rng(12345);
+	shuffle(order.begin(), order.end(), rng);
+	for(int i : order){
 		if(i==i0 || i==i1 || i==i2 || i==i3) continue;
 		map<pair<int,int>, bool> vis_edges;
 		bool visible=false;
@@ -84,6 +89,7 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 		if(!visible) continue;
 
 		//aristas del horizonte: su gemela pertenece a una cara no visible
+		faces.erase(remove_if(faces.begin(), faces.end(), [](const HullFace& f){ return !f.alive; }), faces.end());
 		for(auto& e : vis_edges){
 			if(vis_edges.count(make_pair(e.first.second, e.first.first))) continue;
 			faces.push_back(make_face(p, e.first.first, e.first.second, i));
