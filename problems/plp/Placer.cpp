@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include "Placer.h"
+#include "LPBackend.h"
 
 using namespace std;
 
@@ -178,6 +179,95 @@ double Placer::improve(const vector<int>& pieces, vector<Vec3>& t, int max_passe
 
 		double H2 = height(-1);
 		if(H2 >= H - tol) { H = H2; break; }
+		H = H2;
+	}
+	return H;
+}
+
+double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp, int max_iter) {
+	int n = pieces.size();
+	auto height = [&]() {
+		double h=0;
+		for(int i=0; i<n; i++) h = max(h, t[i].z + inst.pieces[pieces[i]].bbox.extent().z);
+		return h;
+	};
+
+	//region de confianza: la mitad de la menor dimension de las piezas
+	double delta = numeric_limits<double>::max();
+	for(int i=0; i<n; i++){
+		Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+		delta = min(delta, 0.5*min(min(e.x, e.y), e.z));
+	}
+
+	double H = height();
+	vector<PlacedPart> placed;
+	for(int it=0; it<max_iter; it++){
+		lp.reset(3*n+1);
+		int h = 3*n;
+		lp.set_bounds(h, 0.0, numeric_limits<double>::infinity());
+		lp.set_cost(h, 1.0);
+		for(int i=0; i<n; i++){
+			Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+			double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), numeric_limits<double>::infinity() };
+			for(int c=0; c<3; c++)
+				lp.set_bounds(3*i+c, max(0.0, t[i][c]-delta), min(up[c], t[i][c]+delta));
+			//empuja las demas piezas hacia abajo (desempate)
+			lp.set_cost(3*i+2, 1e-3/n);
+			//z_i + e_z <= H
+			lp.add_row({ {3*i+2, 1.0}, {h, -1.0} }, -numeric_limits<double>::infinity(), -e.z);
+		}
+
+		//pares de partes cercanas
+		for(int i=0; i<n; i++)
+			for(int j=i+1; j<n; j++){
+				for(int a : piece_parts[pieces[i]])
+					for(int b : piece_parts[pieces[j]]){
+						//rel = t_i - t_j; solapan si rel esta en el interior de NFP(a,b)
+						const Box3& ab = parts[a]->get_bbox();
+						const Box3& bb = parts[b]->get_bbox();
+						Vec3 rel = t[i] - t[j];
+						bool near=true;
+						for(int c=0; c<3 && near; c++)
+							near = rel[c] > bb.lo[c]-ab.hi[c] - 2*delta - tol && rel[c] < bb.hi[c]-ab.lo[c] + 2*delta + tol;
+						if(!near) continue;
+
+						const ConvexPolytope& N = nfp(a, b);
+						//direccion deseada de rel: la pieza mas alta baja respecto a la otra
+						Vec3 g(0, 0, (t[i].z >= t[j].z)? -1.0 : 1.0);
+						int best=-1, worst=-1;
+						double best_step=-1, best_g=0, worst_s=-numeric_limits<double>::max();
+						const vector<Plane>& F = N.get_facets();
+						for(int f=0; f<(int)F.size(); f++){
+							double s = dot(F[f].n, rel) - F[f].d;
+							if(s > worst_s) { worst_s=s; worst=f; }
+							if(s < -tol) continue;
+							double ng = dot(F[f].n, g);
+							double step = (ng >= -1e-12)? numeric_limits<double>::max() : max(0.0,s)/(-ng);
+							if(step > best_step || (step==best_step && ng > best_g)) { best_step=step; best_g=ng; best=f; }
+						}
+						if(best<0) best=worst;
+						const Vec3& nn = F[best].n;
+						//n.(t_i - t_j) >= d
+						lp.add_row({ {3*i, nn.x}, {3*i+1, nn.y}, {3*i+2, nn.z}, {3*j, -nn.x}, {3*j+1, -nn.y}, {3*j+2, -nn.z} },
+								F[best].d, numeric_limits<double>::infinity());
+					}
+			}
+
+		if(!lp.minimize()) break;
+		vector<double> x = lp.solution();
+		vector<Vec3> t2(n);
+		for(int i=0; i<n; i++) t2[i] = Vec3(x[3*i], x[3*i+1], max(0.0, x[3*i+2]));
+
+		//se acepta solo si es factible (tolerancias del LP)
+		bool ok=true;
+		for(int i=0; i<n && ok; i++){
+			place_all(pieces, t2, i, placed);
+			ok = feasible(pieces[i], t2[i], placed);
+		}
+		if(!ok) break;
+		t = t2;
+		double H2 = height();
+		if(H2 >= H - 1e-6*H) { H = H2; break; }
 		H = H2;
 	}
 	return H;

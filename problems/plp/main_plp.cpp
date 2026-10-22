@@ -9,6 +9,7 @@
 #include <iostream>
 #include "args.hxx"
 #include "plpState.h"
+#include "LPBackend.h"
 #include "Greedy.h"
 #include "DoubleEffort.h"
 #include "BSG.h"
@@ -29,6 +30,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::Flag _greedy(parser, "greedy", "Only the greedy algorithm", {"greedy"});
 	args::Flag _no_improve(parser, "no_improve", "Do not improve the best solution (compaction and relocation of the highest pieces)", {"no_improve"});
+	args::Flag _no_compact(parser, "no_compact", "Do not use the global LP compaction (requires ibex)", {"no_compact"});
+	args::ValueFlag<int> _compact_greedy(parser, "int", "Compact every greedy solution with this number of LP iterations (0: only the best solution). Default: 0", {"compact_greedy"});
 	args::ValueFlag<string> _out(parser, "file", "Output solution (ESICUP JSON)", {'o', "output"});
 	args::ValueFlag<string> _root(parser, "dir", "Root folder of the piece paths", {"root"});
 	args::Positional<std::string> _file(parser, "instance", "Instance (ESICUP JSON)");
@@ -73,7 +76,10 @@ int main(int argc, char** argv){
 		plpState s0(inst);
 
 		const plpState* best;
-		Greedy gr(&f);
+		int cg = (_compact_greedy)? _compact_greedy.Get() : 0;
+		LPBackend* lpg = (cg>0 && !_no_compact)? LPBackend::create() : NULL;
+		if(cg>0 && !lpg) cout << "WARNING: --compact_greedy requiere compilar con ibex" << endl;
+		CompactGreedy gr(&f, lpg, cg);
 		BSG bsg(&f, gr, beams);
 		DoubleEffort de(bsg);
 		if(_greedy){
@@ -90,12 +96,27 @@ int main(int argc, char** argv){
 		}
 
 		Solution S = best->get_solution();
+		delete lpg;
 		cout << "search_height: " << S.height() << endl;
 		if(!_no_improve){
 			vector<int> pieces;
 			vector<Vec3> t;
 			for(const Placement& p : S.items) { pieces.push_back(inst.types[p.type].piece); t.push_back(p.t); }
-			placer.improve(pieces, t);
+			double H = placer.improve(pieces, t);
+			cout << "improve_height: " << H << endl;
+
+			//compactacion global por LP alternada con la mejora local
+			LPBackend* lp = (_no_compact)? NULL : LPBackend::create();
+			if(lp){
+				for(int k=0; k<20; k++){
+					double H1 = placer.compact(pieces, t, *lp);
+					double H2 = placer.improve(pieces, t);
+					cout << "compact_height (" << lp->name() << "): " << H1 << " -> " << H2 << endl;
+					if(H2 >= H - 1e-6*H) break;
+					H = H2;
+				}
+				delete lp;
+			}
 			for(size_t i=0; i<t.size(); i++) S.items[i].t = t[i];
 		}
 

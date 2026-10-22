@@ -92,13 +92,47 @@ Metodología (2D) en la que se basa la compactación por LP:
 * **Búsqueda**: BSG con `DoubleEffort` (como en el CLP).
 * **Mejora final** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y
   las piezas que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
+* **Compactación global por LP** (`Placer::compact`, requiere ibex): un LP con las traslaciones de
+  todas las piezas y la altura `H` como variables (minimiza `H`). Para cada par de partes que pueden
+  tocarse dentro de la región de confianza (cada pieza se mueve a lo más la mitad de la menor dimensión
+  de las piezas, por eje) se fija una faceta de su NFP: `n·(t_i − t_j) >= d`. Se resuelve con
+  `ibex::LPSolver` (SoPlex o CLP), se eligen de nuevo las facetas y se repite mientras `H` baje.
+  En `BSG_PLP` se alterna con la mejora local sobre la mejor solución; con `--compact_greedy k`
+  además se compacta (k iteraciones) cada solución completa del greedy dentro del BSG.
 * Todas las soluciones se verifican con `Solution::verify`.
+
+### Compilación con ibex (opcional)
+
+ibex con SoPlex (rama `dfb-sc-paper` de https://github.com/rilianx/ibex-lib; necesita `flex` y `bison`):
+
+```
+git clone -b dfb-sc-paper https://github.com/rilianx/ibex-lib.git
+mkdir ibex-lib/build && cd ibex-lib/build
+cmake .. -DLP_LIB=soplex -DCMAKE_INSTALL_PREFIX=$HOME/ibex
+make -j4 ibex && make install
+```
+
+y luego, en Metasolver: `cmake .. -DIBEX_DIR=$HOME/ibex`. Sin `IBEX_DIR` todo compila igual, pero sin la
+compactación global.
 
 ```
 ./BSG_PLP "problems/plp/benchs/Stoyan et al. 2005/Example1.json" -t 30 -o sol.json
 ```
 
-Resultados iniciales (30 s, parámetros por defecto; tabla completa en `results/bsg_plp_v1.md`):
+Efecto de la compactación global (30 s por instancia, 4 procesos en paralelo; ibex/SoPlex):
+
+| Instancia | sin compactación | compactación final | `--compact_greedy 5` |
+|---|---|---|---|
+| Stoyan 2005 Example1 | 17.97 | 17.84 | 17.84 |
+| Stoyan 2005 Example2 | 20.68 | 20.45 | 20.30 |
+| Stoyan 2005 Example3 | 35.42 | 35.13 | 35.63 |
+| Stoyan 2004 Example1 | 73.30 | 72.32 | 65.81 |
+| Stoyan 2004 Example2 | 38.60 | 38.60 | 39.27 |
+| Stoyan 2004 Example3 | 59.89 | 57.88 | 57.83 |
+| Stoyan 2004 Example4 | 75.07 | 73.59 | 72.75 |
+| Stoyan 2004 Example5 | 94.12 | 93.04 | 93.23 |
+
+Resultados iniciales (30 s, parámetros por defecto, sin ibex; tabla completa en `results/bsg_plp_v1.md`):
 
 | Instancia | Ítems | H_lb | H | Referencia |
 |---|---|---|---|---|
@@ -139,4 +173,5 @@ envolvente parta en el origen (`"itemOrigin": "AlignToMinimum"`).
 * `Json`: lector/escritor JSON mínimo (sin dependencias).
 * `SmallLP`: LP en 3 variables (conjunto activo, todos los iterados son factibles).
 * `Placer`: NFPs, descenso por LP, posiciones candidatas y mejora de soluciones.
-* `plpState`: estado, acción y evaluador para el BSG; `main_plp.cpp`: `BSG_PLP`.
+* `plpState`: estado, acción y evaluador para el BSG, y `CompactGreedy`; `main_plp.cpp`: `BSG_PLP`.
+* `LPBackend`: interfaz para LPs grandes; implementación con `ibex::LPSolver` si se compila con `IBEX_DIR`.

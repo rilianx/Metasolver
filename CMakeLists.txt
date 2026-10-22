@@ -35,8 +35,23 @@ add_library(plp
   problems/plp/SmallLP.cpp
   problems/plp/Placer.cpp
   problems/plp/plpState.cpp
+  problems/plp/LPBackend.cpp
 )
 target_include_directories(plp PUBLIC problems/plp metasolver metasolver/strategies)
+
+# compactacion global por LP con ibex (SoPlex o CLP), opcional:
+#   cmake .. -DIBEX_DIR=<prefijo de instalacion de ibex>
+set(IBEX_DIR "" CACHE PATH "Installation prefix of ibex (optional, for the LP compaction of PLP)")
+if(IBEX_DIR)
+  find_package(PkgConfig REQUIRED)
+  set(ENV{PKG_CONFIG_PATH} "${IBEX_DIR}/share/pkgconfig:${IBEX_DIR}/lib/pkgconfig")
+  pkg_check_modules(IBEX REQUIRED ibex)
+  target_compile_definitions(plp PUBLIC PLP_WITH_IBEX)
+  target_include_directories(plp PUBLIC ${IBEX_INCLUDE_DIRS})
+  target_compile_options(plp PUBLIC ${IBEX_CFLAGS_OTHER})
+  target_link_libraries(plp PUBLIC ${IBEX_LDFLAGS})
+  message(STATUS "PLP: compactacion por LP con ibex (${IBEX_DIR})")
+endif()
 
 add_executable(PLP_check problems/plp/main_plp_check.cpp)
 target_include_directories(PLP_check PRIVATE problems/clp)

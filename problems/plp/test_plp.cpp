@@ -14,6 +14,7 @@
 #include "SmallLP.h"
 #include "plpState.h"
 #include "Greedy.h"
+#include "LPBackend.h"
 
 using namespace std;
 using namespace plp;
@@ -155,6 +156,27 @@ static void test_greedy(const string& benchs) {
 	CHECK(near(s.get_value(), r.density));
 }
 
+static void test_compact(const string& benchs) {
+	LPBackend* lp = LPBackend::create();
+	if(!lp) { cout << "(sin ibex: no se prueba la compactacion)" << endl; return; }
+	Instance inst = Instance::load(benchs + "/Stoyan et al. 2005/Example3.json");
+	Placer placer(inst);
+	PLP_Function f(placer);
+	plpState s(inst);
+	Greedy gr(&f);
+	gr.run(s);
+	vector<int> pieces;
+	vector<Vec3> t;
+	s.get_positions(pieces, t);
+	double H0 = s.get_height();
+	double H = placer.compact(pieces, t, *lp);
+	CHECK(H <= H0 + 1e-9);
+	s.set_positions(t);
+	CHECK(near(s.get_height(), H));
+	CHECK(s.get_solution().verify().feasible);
+	delete lp;
+}
+
 int main(int argc, char** argv) {
 	if(argc<2) { cerr << "uso: test_plp <carpeta benchs>" << endl; return 1; }
 	try{
@@ -164,6 +186,7 @@ int main(int argc, char** argv) {
 		test_instances(argv[1]);
 		test_lp();
 		test_greedy(argv[1]);
+		test_compact(argv[1]);
 	}catch(exception& e){
 		cerr << "ERROR: " << e.what() << endl;
 		return 1;

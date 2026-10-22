@@ -55,6 +55,15 @@ public:
 	 */
 	double improve(const std::vector<int>& pieces, std::vector<Vec3>& t, int max_passes=50);
 
+	/**
+	 * Compactacion global por LP: variables t_i (todas las piezas) y H; minimiza H.
+	 * Para cada par de partes que pueden tocarse dentro de la region de confianza
+	 * (|t_i - t_i^0| <= delta por eje) se fija una faceta del NFP: n.(t_i - t_j) >= d.
+	 * Se repite (eligiendo de nuevo las facetas) mientras la altura baje.
+	 * Retorna la nueva altura. Las posiciones se actualizan solo si la solucion es factible.
+	 */
+	double compact(const std::vector<int>& pieces, std::vector<Vec3>& t, class LPBackend& lp, int max_iter=30);
+
 	/** partes ubicadas de las piezas, salvo la pieza skip */
 	void place_all(const std::vector<int>& pieces, const std::vector<Vec3>& t, int skip, std::vector<PlacedPart>& out) const;
 

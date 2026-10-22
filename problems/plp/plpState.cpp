@@ -5,6 +5,7 @@
 #include <cmath>
 #include <map>
 #include "plpState.h"
+#include "LPBackend.h"
 
 using namespace std;
 
@@ -107,4 +108,50 @@ Solution plpState::get_solution() const {
 	return S;
 }
 
+void plpState::get_positions(vector<int>& pieces, vector<Vec3>& t) const {
+	pieces.clear();
+	t.clear();
+	for(const Item& it : items){
+		pieces.push_back(inst->types[it.type].piece);
+		t.push_back(it.t);
+	}
+}
+
+void plpState::set_positions(const vector<Vec3>& t) {
+	top = 0;
+	for(size_t i=0; i<items.size(); i++){
+		items[i].t = t[i];
+		top = max(top, t[i].z + inst->pieces[inst->types[items[i].type].piece].bbox.extent().z);
+	}
+	//las partes ubicadas ya no se usan (la solucion esta completa), pero se mantienen consistentes
+	placed.clear();
+	for(const Item& it : items){
+		const Piece& P = inst->pieces[inst->types[it.type].piece];
+		int first=0;
+		for(int p=0; p<inst->types[it.type].piece; p++) first += inst->pieces[p].parts.size();
+		for(size_t k=0; k<P.parts.size(); k++){
+			PlacedPart pp;
+			pp.part = first+k;
+			pp.t = it.t;
+			pp.bbox.lo = P.parts[k].get_bbox().lo + it.t;
+			pp.bbox.hi = P.parts[k].get_bbox().hi + it.t;
+			placed.push_back(pp);
+		}
+	}
+}
+
+double CompactGreedy::run(State& s, double tl, clock_t bt) {
+	Greedy::run(s, tl, bt);
+	plpState& ps = dynamic_cast<plpState&>(s);
+	if(lp && ps.get_n_left()==0 && (tl==0.0 || double(clock()-bt)/CLOCKS_PER_SEC <= tl)){
+		vector<int> pieces;
+		vector<Vec3> t;
+		ps.get_positions(pieces, t);
+		static_cast<PLP_Function*>(evl)->placer.compact(pieces, t, *lp, iterations);
+		ps.set_positions(t);
+	}
+	return s.get_value();
+}
+
 } /* namespace plp */
+

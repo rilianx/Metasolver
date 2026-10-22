@@ -11,6 +11,7 @@
 
 #include <vector>
 #include "State.h"
+#include "Greedy.h"
 #include "Placer.h"
 #include "Solution.h"
 
@@ -47,6 +48,22 @@ private:
 	double vmax, h0;
 };
 
+/**
+ * Greedy que compacta cada solucion completa con un LP global (Placer::compact).
+ * El BSG compara entonces las soluciones compactadas.
+ */
+class CompactGreedy : public Greedy {
+public:
+	CompactGreedy(PLP_Function* evl, class LPBackend* lp, int iterations=5) :
+		Greedy(evl), lp(lp), iterations(iterations) { }
+
+	virtual double run(State& s, double tl=99999.9, clock_t bt=clock());
+
+private:
+	class LPBackend* lp;
+	int iterations;
+};
+
 class plpState : public State {
 public:
 
@@ -63,6 +80,15 @@ public:
 	virtual uint64_t get_hash() const { return hash; }
 
 	Solution get_solution() const;
+
+	/** piezas (indices de Instance::pieces) y posiciones de la solucion actual */
+	void get_positions(std::vector<int>& pieces, std::vector<Vec3>& t) const;
+
+	/**
+	 * Reemplaza las posiciones de una solucion completa (p.ej., despues de compactarla).
+	 * El camino de acciones no cambia; el valor y la solucion usan las nuevas posiciones.
+	 */
+	void set_positions(const std::vector<Vec3>& t);
 
 	double get_height() const { return top; }
 
