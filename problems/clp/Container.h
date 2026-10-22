@@ -21,6 +21,7 @@ namespace clp {
 class Container {
 public:
 	Container(long L, long W, long H) : L(L), W(W), H(H), occupied_volume(0) {
+		regions.push_back(AABB(0,0,0,L,W,H));
 		spaces.push_back(Space(AABB(0,0,0,L,W,H), L, W, H));
 	}
 
@@ -36,6 +37,20 @@ public:
 		for(int i=0; i<(int)spaces.size(); i++)
 			if(best<0 || spaces[i] < spaces[best]) best=i;
 		return best;
+	}
+
+	/** indice del espacio con mayor prioridad de la region r, -1 si no hay */
+	int top_space(int r) const {
+		int best=-1;
+		for(int i=0; i<(int)spaces.size(); i++)
+			if(spaces[i].region==r && (best<0 || spaces[i] < spaces[best])) best=i;
+		return best;
+	}
+
+	/** region (contenedor) que contiene a la caja b */
+	int region_of(const AABB& b) const {
+		for(int r=0; r<(int)regions.size(); r++) if(regions[r].contains(b)) return r;
+		return -1;
 	}
 
 	void remove_space(int i){
@@ -58,11 +73,26 @@ public:
 	 */
 	void set_floor(long e, long delta, bool substructure){
 		spaces.clear();
+		add_floor(0, e, delta, substructure);
+	}
+
+	/**
+	 * Varios contenedores (regiones disjuntas) que se cargan a la vez, sin espacios iniciales
+	 * (ver add_floor)
+	 */
+	void set_regions(const std::vector<AABB>& r){
+		regions=r;
+		spaces.clear();
+	}
+
+	/** espacios iniciales de la region r (ver set_floor) */
+	void add_floor(int r, long e, long delta, bool substructure){
+		const AABB& b=regions[r];
 		if(substructure)
-			spaces.push_back(Space(AABB(0,0,delta,L,W,H), L, W, H));
+			spaces.push_back(Space(AABB(b.xmin,b.ymin,b.zmin+delta,b.xmax,b.ymax,b.zmax), b, r));
 		else{
-			spaces.push_back(Space(AABB(e,e,0,L-e,W-e,H), L, W, H));
-			if(e>0) spaces.push_back(Space(AABB(0,0,delta,L,W,H), L, W, H));
+			spaces.push_back(Space(AABB(b.xmin+e,b.ymin+e,b.zmin,b.xmax-e,b.ymax-e,b.zmax), b, r));
+			if(e>0) spaces.push_back(Space(AABB(b.xmin,b.ymin,b.zmin+delta,b.xmax,b.ymax,b.zmax), b, r));
 		}
 	}
 
@@ -74,6 +104,8 @@ public:
 
 	const long L, W, H;
 	long occupied_volume;
+	//contenedores (una region, o varios cuando se cargan a la vez)
+	std::vector<AABB> regions;
 	std::vector<Space> spaces;
 	//espacios sin apoyo (se reactivan al insertar un bloque)
 	std::vector<Space> dormant;

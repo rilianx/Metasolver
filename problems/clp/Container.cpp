@@ -28,15 +28,17 @@ void Container::insert(const Block& b, long x, long y, long z, long min_l, long 
 	static vector<int> touching;
 	pieces.clear(); touching.clear();
 
+	int r=0;
 	auto add_piece = [&](long x1, long y1, long z1, long x2, long y2, long z2){
 		if(x2-x1 >= min_l && y2-y1 >= min_w && z2-z1 >= min_h)
-			pieces.push_back(Space(AABB(x1,y1,z1,x2,y2,z2), L, W, H));
+			pieces.push_back(Space(AABB(x1,y1,z1,x2,y2,z2), regions[r], r));
 	};
 
 	for(size_t i=0; i<spaces.size(); ){
 		const Space& sp = spaces[i];
 		if(!sp.touches(pb)) { i++; continue; }
 		if(!sp.strict_intersects(pb)) { touching.push_back(i); i++; continue; }
+		r=sp.region;
 
 		if(pb.xmax < sp.xmax) add_piece(pb.xmax, sp.ymin, sp.zmin, sp.xmax, sp.ymax, sp.zmax);
 		if(pb.ymax < sp.ymax) add_piece(sp.xmin, pb.ymax, sp.zmin, sp.xmax, sp.ymax, sp.zmax);

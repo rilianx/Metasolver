@@ -59,7 +59,7 @@ private:
 	double CS_p(const clpState& s, const Block& b, long x, long y, long z);
 
 	long surface_in_contact(const AABB& b, const AABB& bi) const;
-	long surface_in_contact_container(const AABB& b, long L, long W, long H) const;
+	long surface_in_contact_container(const AABB& b, const AABB& bounds) const;
 
 	/* Perdida de volumen */
 
@@ -100,6 +100,9 @@ private:
 
 	//bloques ubicados en la vecindad del espacio actual
 	std::vector<const PlacedBlock*> neighbors;
+
+	//contenedor del espacio actual
+	AABB bounds;
 
 	double alpha, beta, gamma, p, delta;
 };

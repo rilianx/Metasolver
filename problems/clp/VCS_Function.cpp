@@ -50,6 +50,8 @@ static inline long expansion(double p, long l){
 }
 
 void VCS_Function::set_space(const clpState& s, const Space& sp){
+	bounds = s.cont.regions[sp.region];
+
 	//cota de (1-loss)^beta en el espacio: 1-loss <= volumen del espacio / volumen rellenable
 	loss_bound = 1.0;
 	if(beta>0.0){
@@ -95,7 +97,7 @@ double VCS_Function::CS_p(const clpState& s, const Block& b, long x, long y, lon
 	for(const PlacedBlock* bi : neighbors)
 		if(bi->touches(bexp)) surface += surface_in_contact(bb, *bi);
 
-	surface += surface_in_contact_container(bb, s.cont.getL(), s.cont.getW(), s.cont.getH());
+	surface += surface_in_contact_container(bb, bounds);
 
 	return (double)surface / (double)(bb.getSurface());
 }
@@ -121,17 +123,17 @@ long VCS_Function::surface_in_contact(const AABB& b, const AABB& bi) const{
 	return 0;
 }
 
-long VCS_Function::surface_in_contact_container(const AABB& b, long L, long W, long H) const{
+long VCS_Function::surface_in_contact_container(const AABB& b, const AABB& c) const{
 	long surface=0;
 
-	if(b.xmin <= p*(double)b.getL()) surface += b.getW() * b.getH();
-	if(b.xmax >= L - p*(double)b.getL()) surface += b.getW() * b.getH();
+	if(b.xmin - c.xmin <= p*(double)b.getL()) surface += b.getW() * b.getH();
+	if(b.xmax >= c.xmax - p*(double)b.getL()) surface += b.getW() * b.getH();
 
-	if(b.ymin <= p*(double)b.getW()) surface += b.getL() * b.getH();
-	if(b.ymax >= W - p*(double)b.getW()) surface += b.getL() * b.getH();
+	if(b.ymin - c.ymin <= p*(double)b.getW()) surface += b.getL() * b.getH();
+	if(b.ymax >= c.ymax - p*(double)b.getW()) surface += b.getL() * b.getH();
 
-	if(b.zmin <= p*(double)b.getH()) surface += b.getL() * b.getW();
-	if(b.zmax >= H - p*(double)b.getH()) surface += b.getL() * b.getW();
+	if(b.zmin - c.zmin <= p*(double)b.getH()) surface += b.getL() * b.getW();
+	if(b.zmax >= c.zmax - p*(double)b.getH()) surface += b.getL() * b.getW();
 
 	return surface;
 }

@@ -73,21 +73,30 @@ struct PlacedBlock : public AABB {
  */
 class Space : public AABB {
 public:
-	Space(const AABB& a, long L, long W, long H) : AABB(a), volume(a.getVolume()) {
+	Space(const AABB& a, long L, long W, long H) : Space(a, AABB(0,0,0,L,W,H), 0) { }
+
+	/**
+	 * Espacio dentro de la region bounds (el contenedor, o uno de los contenedores cuando se
+	 * cargan varios a la vez) de indice region
+	 */
+	Space(const AABB& a, const AABB& bounds, int region) : AABB(a), volume(a.getVolume()), region(region) {
+		long x0=xmin-bounds.xmin, y0=ymin-bounds.ymin, z0=zmin-bounds.zmin;
+		long L=bounds.getL(), W=bounds.getW(), H=bounds.getH();
+		long x1=xmax-bounds.xmin, y1=ymax-bounds.ymin, z1=zmax-bounds.zmin;
 		if(origin_anchor){
 			anchor[0]=anchor[1]=anchor[2]=0;
-			manhattan_distance=xmin+ymin+zmin;
+			manhattan_distance=x0+y0+z0;
 			return;
 		}
 		long dist=0;
-		if(xmin <= L - xmax){ dist+=xmin; anchor[0]=0; }
-		else { dist+=L - xmax; anchor[0]=1; }
+		if(x0 <= L - x1){ dist+=x0; anchor[0]=0; }
+		else { dist+=L - x1; anchor[0]=1; }
 
-		if(ymin <= W - ymax){ dist+=ymin; anchor[1]=0; }
-		else { dist+=W - ymax; anchor[1]=1; }
+		if(y0 <= W - y1){ dist+=y0; anchor[1]=0; }
+		else { dist+=W - y1; anchor[1]=1; }
 
-		if(zmin <= H - zmax){ dist+=zmin; anchor[2]=0; }
-		else { dist+=H - zmax; anchor[2]=1; }
+		if(z0 <= H - z1){ dist+=z0; anchor[2]=0; }
+		else { dist+=H - z1; anchor[2]=1; }
 
 		manhattan_distance=dist;
 	}
@@ -116,6 +125,7 @@ public:
 	}
 
 	long volume;
+	int region;
 	long manhattan_distance;
 	bool anchor[3];
 

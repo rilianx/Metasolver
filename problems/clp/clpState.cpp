@@ -22,6 +22,8 @@ namespace clp {
 vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
+vector<const ULD*> clpState::region_ulds;
+double clpState::open_penalty=0.01;
 bool clpState::support=false;
 bool clpState::corner_support=false;
 
@@ -99,101 +101,129 @@ bool clpState::dormant_space(const Space& sp) const{
 	return dormant_spaces;
 }
 
+//ULD, region y desplazamiento en x del espacio que se evalua (con varios ULDs, cada uno
+//ocupa una region del contenedor)
+static const ULD* cur_uld=NULL;
+static int cur_region=0;
+static long cur_ox=0;
+
+//mejores acciones (de peor a mejor)
+struct Ranked { double eval; const Block* b; long x, y, z; Space sp; };
+static vector<Ranked> ranked;
+
+int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
+	const Space sp = cont.spaces[isp];
+	cur_region = sp.region;
+	cur_uld = region_ulds.empty()? uld : region_ulds[sp.region];
+	cur_ox = cont.regions[sp.region].xmin;
+
+	if(support && corner_support){
+		support_faces.clear();
+		if(sp.zmin>0){
+			bool any_face=false;
+			long z=sp.zmin;
+			//piso elevado (subestructura)
+			if(cur_uld && cur_uld->substructure && z==cur_uld->delta){
+				const ULD& u=*cur_uld;
+				support_faces.push_back(Face{cur_ox+u.edge, u.edge, cur_ox+u.L-u.edge, u.W-u.edge, false, true});
+				any_face=true;
+			}
+			for(const PlacedBlock& b : cont.blocks){
+				if(b.zmin>=z || b.zmax<z-padding || b.xmin>sp.xmax || sp.xmin>b.xmax ||
+						b.ymin>sp.ymax || sp.ymin>b.ymax) continue;
+				for(const Block::PlacedBox& p : b.block->pboxes){
+					long top=b.zmin+p.zmax;
+					if(top>z || top<z-padding) continue;
+					bool fragile=types[p.type]->fragile;
+					support_faces.push_back(Face{b.xmin+p.xmin, b.ymin+p.ymin, b.xmin+p.xmax, b.ymin+p.ymax,
+						fragile, top==z});
+					any_face = any_face || (!fragile && top==z);
+				}
+			}
+			//el espacio no tiene base: queda sin considerar hasta que se ubique otro bloque
+			//(si algun bloque cabe en el)
+			if(!any_face) {
+				bool fits=false;
+				for(const Block* b : valid_blocks)
+					if(b->fits(sp.getL(), sp.getW(), sp.getH())){ fits=true; break; }
+				if(fits && dormant_space(sp)) cont.make_dormant(isp);
+				else cont.remove_space(isp);
+				return 0;
+			}
+		}
+	}else if(support){
+		support_tops.clear();
+		if(sp.zmin>0){
+			for(const PlacedBlock& b : cont.blocks)
+				if(b.zmax==sp.zmin && b.block->supportive && b.xmin<sp.xmax && sp.xmin<b.xmax &&
+						b.ymin<sp.ymax && sp.ymin<b.ymax) support_tops.push_back(&b);
+			//el espacio no tiene base
+			if(support_tops.empty()) { cont.remove_space(isp); return 0; }
+		}
+	}
+
+	vcs.set_space(*this, sp);
+
+	//las mejores n acciones ordenadas de peor a mejor (en caso de empate,
+	//la evaluada primero se considera peor)
+	bool any=false;
+	//algun bloque cabe pero no esta apoyado
+	bool unsupported=false;
+	for(const Block* b : valid_blocks){
+		if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
+		long x, y, z;
+		bool sup;
+		if(!locate(*b, sp, x, y, z, &sup)){
+			unsupported = unsupported || !sup;
+			continue;
+		}
+		any=true;
+		//umbral: evaluacion que hay que superar para entrar a las n mejores
+		double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
+		double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
+		if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
+			auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
+					[](double e, const Ranked& r){ return e < r.eval; });
+			ranked.insert(pos, Ranked{eval, b, x, y, z, sp});
+			if((int)ranked.size()==n+1) ranked.erase(ranked.begin());
+		}
+	}
+
+	//el espacio se elimina si no cabe ningun bloque (si caben pero no estan apoyados,
+	//queda sin considerar hasta que se ubique otro bloque)
+	if(!any) {
+		if(unsupported && corner_support && dormant_space(sp)) cont.make_dormant(isp);
+		else cont.remove_space(isp);
+		return 0;
+	}
+	return 1;
+}
+
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
 	VCS_Function& vcs = *static_cast<VCS_Function*>(evl);
 
-	while(cont.spaces.size()>0){
-		int isp = cont.top_space();
-		const Space& sp = cont.spaces[isp];
-
-		if(support && corner_support){
-			support_faces.clear();
-			if(sp.zmin>0){
-				bool any_face=false;
-				long z=sp.zmin;
-				//piso elevado (subestructura)
-				if(uld && uld->substructure && z==uld->delta){
-					support_faces.push_back(Face{uld->edge, uld->edge, uld->L-uld->edge, uld->W-uld->edge, false, true});
-					any_face=true;
-				}
-				for(const PlacedBlock& b : cont.blocks){
-					if(b.zmin>=z || b.zmax<z-padding || b.xmin>sp.xmax || sp.xmin>b.xmax ||
-							b.ymin>sp.ymax || sp.ymin>b.ymax) continue;
-					for(const Block::PlacedBox& p : b.block->pboxes){
-						long top=b.zmin+p.zmax;
-						if(top>z || top<z-padding) continue;
-						bool fragile=types[p.type]->fragile;
-						support_faces.push_back(Face{b.xmin+p.xmin, b.ymin+p.ymin, b.xmin+p.xmax, b.ymin+p.ymax,
-							fragile, top==z});
-						any_face = any_face || (!fragile && top==z);
-					}
-				}
-				//el espacio no tiene base: queda sin considerar hasta que se ubique otro bloque
-				//(si algun bloque cabe en el)
-				if(!any_face) {
-					bool fits=false;
-					for(const Block* b : valid_blocks)
-						if(b->fits(sp.getL(), sp.getW(), sp.getH())){ fits=true; break; }
-					if(fits && dormant_space(sp)) cont.make_dormant(isp);
-					else cont.remove_space(isp);
-					continue;
-				}
-			}
-		}else if(support){
-			support_tops.clear();
-			if(sp.zmin>0){
-				for(const PlacedBlock& b : cont.blocks)
-					if(b.zmax==sp.zmin && b.block->supportive && b.xmin<sp.xmax && sp.xmin<b.xmax &&
-							b.ymin<sp.ymax && sp.ymin<b.ymax) support_tops.push_back(&b);
-				//el espacio no tiene base
-				if(support_tops.empty()) { cont.remove_space(isp); continue; }
-			}
+	if(region_ulds.empty()){
+		while(cont.spaces.size()>0){
+			int isp = cont.top_space();
+			ranked.clear();
+			if(!eval_space(isp, vcs, n)) continue;
+			for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
+				bactions.push_back(new clpAction(*it->b, it->sp, it->x, it->y, it->z));
+			return bactions.size();
 		}
-
-		vcs.set_space(*this, sp);
-
-		//las mejores n acciones ordenadas de peor a mejor (en caso de empate,
-		//la evaluada primero se considera peor)
-		struct Ranked { double eval; const Block* b; long x, y, z; };
-		static vector<Ranked> ranked;
-		ranked.clear();
-		bool any=false;
-		//algun bloque cabe pero no esta apoyado
-		bool unsupported=false;
-		for(const Block* b : valid_blocks){
-			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
-			long x, y, z;
-			bool sup;
-			if(!locate(*b, sp, x, y, z, &sup)){
-				unsupported = unsupported || !sup;
-				continue;
-			}
-			any=true;
-			//umbral: evaluacion que hay que superar para entrar a las n mejores
-			double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
-			double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
-			if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
-				auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
-						[](double e, const Ranked& r){ return e < r.eval; });
-				ranked.insert(pos, Ranked{eval, b, x, y, z});
-				if((int)ranked.size()==n+1) ranked.erase(ranked.begin());
-			}
-		}
-
-		//el espacio se elimina si no cabe ningun bloque (si caben pero no estan apoyados,
-		//queda sin considerar hasta que se ubique otro bloque)
-		if(!any) {
-			if(unsupported && corner_support && dormant_space(sp)) cont.make_dormant(isp);
-			else cont.remove_space(isp);
-			continue;
-		}
-
-		for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
-			bactions.push_back(new clpAction(*it->b, sp, it->x, it->y, it->z));
-
-		return bactions.size();
+		return 0;
 	}
-	return 0;
+
+	//varios ULDs: las mejores acciones entre los espacios de mayor prioridad de cada ULD
+	ranked.clear();
+	for(int r=0; r<(int)cont.regions.size(); r++)
+		while(true){
+			int isp = cont.top_space(r);
+			if(isp<0 || eval_space(isp, vcs, n)) break;
+		}
+	for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
+		bactions.push_back(new clpAction(*it->b, it->sp, it->x, it->y, it->z));
+	return bactions.size();
 }
 
 bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z, bool* supported) const{
@@ -202,8 +232,14 @@ bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z
 	sp.get_location(l, w, h, x, y, z);
 	if(support) z=sp.zmin;
 
-	if(uld && !uld->adjust(x, z, l, h, sp.xmin, sp.xmax-l, sp.zmin, sp.zmax-h, !support))
-		return false;
+	if(cur_uld){
+		//coordenadas del ULD
+		long xl=x-cur_ox;
+		if(!cur_uld->adjust(xl, z, l, h, sp.xmin-cur_ox, sp.xmax-l-cur_ox, sp.zmin, sp.zmax-h, !support))
+			return false;
+		x=xl+cur_ox;
+	}
+	if(!region_ulds.empty() && b.weight > region_weight[cur_region] + 1e-9) return false;
 
 	//con el criterio de las esquinas puede quedar un hueco bajo una caja: una caja fragil
 	//ubicada en el hueco no puede tocar la base de la caja de arriba
@@ -241,6 +277,11 @@ void clpState::_transition(const Action& action) {
 
 	//se inserta el bloque en el contenedor
 	long x=act.x, y=act.y, z=act.z;
+	if(!region_ulds.empty()){
+		int r=cont.region_of(AABB(x, y, z, x+b.getL(), y+b.getW(), z+b.getH()));
+		region_weight[r] -= b.weight;
+		weight_left = *max_element(region_weight.begin(), region_weight.end());
+	}
 	cont.insert(b, x, y, z, min_l, min_w, min_h);
 
 	hash += placement_hash(b.id, x, y, z);
@@ -265,11 +306,17 @@ bool clpState::is_feasible() const{
 	long volume=0;
 	for(size_t i=0; i<B.size(); i++){
 		if(!container.contains(B[i])) return false;
-		if(uld && !uld->inside(B[i])) return false;
+		//ULD del bloque (en sus coordenadas)
+		int r=cont.region_of(B[i]);
+		if(r<0) return false;
+		const ULD* u = region_ulds.empty()? uld : region_ulds[r];
+		const AABB& R=cont.regions[r];
+		AABB b(B[i].xmin-R.xmin, B[i].ymin-R.ymin, B[i].zmin-R.zmin, B[i].xmax-R.xmin, B[i].ymax-R.ymin, B[i].zmax-R.zmin);
+		if(u && !u->inside(b)) return false;
 		//bajo la altura delta solo se puede cargar dentro del borde (con subestructura,
 		//nada bajo delta)
-		if(uld && B[i].zmin < uld->delta && (uld->substructure || B[i].xmin < uld->edge ||
-				B[i].ymin < uld->edge || B[i].xmax > uld->L-uld->edge || B[i].ymax > uld->W-uld->edge)) return false;
+		if(u && b.zmin < u->delta && (u->substructure || b.xmin < u->edge ||
+				b.ymin < u->edge || b.xmax > u->L-u->edge || b.ymax > u->W-u->edge)) return false;
 		for(size_t j=i+1; j<B.size(); j++)
 			if(B[i].strict_intersects(B[j])) return false;
 		for(auto& p : B[i].block->boxes) used[p.first] += p.second;
@@ -287,6 +334,11 @@ bool clpState::is_feasible() const{
 	for(size_t t=0; t<types.size(); t++)
 		if(used[t] + left[t] != initial_boxes[t] || left[t] < 0) return false;
 	if(uld && get_weight() > uld->max_weight + 1e-6) return false;
+	for(size_t r=0; r<region_ulds.size(); r++){
+		double w=0;
+		for(const PlacedBlock& b : B) if(cont.regions[r].contains(b)) w += b.block->weight;
+		if(w > region_ulds[r]->max_weight + 1e-6) return false;
+	}
 	return volume == cont.getOccupiedVolume();
 }
 
@@ -296,33 +348,39 @@ double clpState::get_weight() const{
 	return w;
 }
 
-void clpState::get_cog(double& x, double& y, double& z) const{
+void clpState::get_cog(double& x, double& y, double& z, int r) const{
+	const AABB& R=cont.regions[r];
 	double w=0.0;
 	x=y=z=0.0;
 	for(const PlacedBlock& b : cont.blocks){
+		if(!R.contains(b)) continue;
 		double bw=b.block->weight;
-		x += bw*(b.xmin+b.block->cog[0]);
-		y += bw*(b.ymin+b.block->cog[1]);
-		z += bw*(b.zmin+b.block->cog[2]);
+		x += bw*(b.xmin-R.xmin+b.block->cog[0]);
+		y += bw*(b.ymin-R.ymin+b.block->cog[1]);
+		z += bw*(b.zmin-R.zmin+b.block->cog[2]);
 		w += bw;
 	}
 	if(w>0){ x/=w; y/=w; z/=w; }
 }
 
-double clpState::cog_violation(long& dx, long& dy) const{
+double clpState::cog_violation(long& dx, long& dy, int r) const{
+	const ULD* u = region_ulds.empty()? uld : region_ulds[r];
+	const AABB& R=cont.regions[r];
 	double cx, cy, cz;
-	get_cog(cx, cy, cz);
+	get_cog(cx, cy, cz, r);
 
 	//desplazamientos posibles
-	long xlo=-cont.getL(), xhi=cont.getL(), ylo=-cont.getW(), yhi=cont.getW();
-	long e=uld->edge, L=cont.getL(), W=cont.getW();
-	for(const PlacedBlock& b : cont.blocks){
-		uld->x_shift_range(b, xlo, xhi);
+	long L=u->L, W=u->W, e=u->edge;
+	long xlo=-L, xhi=L, ylo=-W, yhi=W;
+	for(const PlacedBlock& pb : cont.blocks){
+		if(!R.contains(pb)) continue;
+		AABB b(pb.xmin-R.xmin, pb.ymin-R.ymin, pb.zmin-R.zmin, pb.xmax-R.xmin, pb.ymax-R.ymin, pb.zmax-R.zmin);
+		u->x_shift_range(b, xlo, xhi);
 		ylo=max(ylo, -b.ymin);
 		yhi=min(yhi, W-b.ymax);
 		//bajo la altura delta, los bloques quedan dentro del borde; sobre la subestructura,
 		//los bloques no se alejan del piso elevado (no disminuye su apoyo)
-		if(b.zmin < uld->delta || (uld->substructure && b.zmin == uld->delta)){
+		if(b.zmin < u->delta || (u->substructure && b.zmin == u->delta)){
 			xlo = max(xlo, (b.xmin>=e)? e-b.xmin : 0);
 			xhi = min(xhi, (b.xmax<=L-e)? L-e-b.xmax : 0);
 			ylo = max(ylo, (b.ymin>=e)? e-b.ymin : 0);
@@ -331,21 +389,52 @@ double clpState::cog_violation(long& dx, long& dy) const{
 	}
 
 	//el desplazamiento mas cercano al que centra la carga
-	dx = min(max((long) floor(cont.getL()/2.0 - cx + 0.5), xlo), xhi);
-	dy = min(max((long) floor(cont.getW()/2.0 - cy + 0.5), ylo), yhi);
+	dx = min(max((long) floor(L/2.0 - cx + 0.5), xlo), xhi);
+	dy = min(max((long) floor(W/2.0 - cy + 0.5), ylo), yhi);
 
-	double ex = max(0.0, fabs(cx+dx - cont.getL()/2.0) - uld->dev[0]) / uld->dev[0];
-	double ey = max(0.0, fabs(cy+dy - cont.getW()/2.0) - uld->dev[1]) / uld->dev[1];
+	double ex = max(0.0, fabs(cx+dx - L/2.0) - u->dev[0]) / u->dev[0];
+	double ey = max(0.0, fabs(cy+dy - W/2.0) - u->dev[1]) / u->dev[1];
 	//en z, el CoG debe estar bajo la altura dev[2] (Paquay et al. 2016)
-	double ez = max(0.0, cz - uld->dev[2]) / uld->dev[2];
+	double ez = max(0.0, cz - u->dev[2]) / u->dev[2];
 	return ex+ey+ez;
 }
 
-void clpState::translate(long dx, long dy){
+void clpState::translate(long dx, long dy, int r){
+	const AABB R=cont.regions[r];
 	for(PlacedBlock& b : cont.blocks){
+		if(!R.contains(b)) continue;
 		b.xmin+=dx; b.xmax+=dx;
 		b.ymin+=dy; b.ymax+=dy;
 	}
+}
+
+double clpState::get_value() const{
+	if(region_ulds.empty()){
+		double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+		if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
+			long dx, dy;
+			v /= 1.0 + cog_penalty*cog_violation(dx, dy);
+		}
+		return v;
+	}
+
+	//varios ULDs: volumen cargado respecto al de todos los ULDs, penalizado por el CoG de
+	//cada ULD y por el volumen de los ULDs usados
+	double vol=0, opened=0, viol=0;
+	for(int r=0; r<(int)region_ulds.size(); r++){
+		vol += region_ulds[r]->volume;
+		bool used=false;
+		for(const PlacedBlock& b : cont.blocks) if(cont.regions[r].contains(b)){ used=true; break; }
+		if(!used) continue;
+		opened += region_ulds[r]->volume;
+		if(cog_penalty>0.0){
+			long dx, dy;
+			viol += cog_violation(dx, dy, r);
+		}
+	}
+	double v = (double) cont.getOccupiedVolume() / vol;
+	v /= 1.0 + cog_penalty*viol;
+	return v - open_penalty*opened/vol;
 }
 
 void clpState::update_min_dim(){
@@ -419,6 +508,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl){
 	clpState* s = new clpState(u.L, u.W, u.H);
 	clpState::uld = &u;
+	clpState::region_ulds.clear();
 	if(u.edge>0 || u.substructure) s->cont.set_floor(u.edge, u.delta, u.substructure);
 	clpState::initial_boxes = left;
 	s->left = left;
@@ -426,6 +516,39 @@ clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int ma
 
 	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
 			u.L, u.W, u.H, clpState::support);
+	if(clpState::corner_support) Block::compute_placed_boxes();
+	s->update_valid_blocks();
+	s->update_min_dim();
+
+	return s;
+}
+
+clpState* new_state(const vector<const ULD*>& us, const vector<int>& left, double min_fr, int max_bl){
+	//los ULDs se ubican uno al lado del otro en x, separados por gap
+	const long gap=1000;
+	long L=0, W=0, H=0, Lmax=0;
+	vector<AABB> regions;
+	for(const ULD* u : us){
+		regions.push_back(AABB(L, 0, 0, L+u->L, u->W, u->H));
+		L += u->L + gap;
+		W=max(W, u->W); H=max(H, u->H); Lmax=max(Lmax, u->L);
+	}
+	L -= gap;
+
+	clpState* s = new clpState(L, W, H);
+	clpState::uld = NULL;
+	clpState::region_ulds = us;
+	s->cont.set_regions(regions);
+	for(size_t r=0; r<us.size(); r++){
+		s->cont.add_floor(r, us[r]->edge, us[r]->delta, us[r]->substructure);
+		s->region_weight.push_back(us[r]->max_weight);
+	}
+	s->weight_left = *max_element(s->region_weight.begin(), s->region_weight.end());
+	clpState::initial_boxes = left;
+	s->left = left;
+
+	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
+			Lmax, W, H, clpState::support);
 	if(clpState::corner_support) Block::compute_placed_boxes();
 	s->update_valid_blocks();
 	s->update_min_dim();

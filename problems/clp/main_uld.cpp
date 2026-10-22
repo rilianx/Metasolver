@@ -150,10 +150,7 @@ static const ULD* select_uld(const vector<int>& left){
  * sin intersecciones, sin superar el peso maximo, cajas apoyadas (si hay soporte) y nada
  * sobre las fragiles
  */
-static bool check_boxes(const clpState& s, const ULD& u){
-	vector<Block::PlacedBox> B;
-	for(const PlacedBlock& b : s.cont.blocks) b.block->get_boxes(b.xmin, b.ymin, b.zmin, B);
-
+static bool check_placed(const vector<Block::PlacedBox>& B, const ULD& u){
 	double weight=0;
 	for(size_t i=0; i<B.size(); i++){
 		const Block::PlacedBox& a=B[i];
@@ -191,6 +188,13 @@ static bool check_boxes(const clpState& s, const ULD& u){
 		}
 	}
 	if(weight > u.max_weight + 1e-6){ cerr << "weight exceeded" << endl; return false; }
+	return true;
+}
+
+static bool check_boxes(const clpState& s, const ULD& u){
+	vector<Block::PlacedBox> B;
+	for(const PlacedBlock& b : s.cont.blocks) b.block->get_boxes(b.xmin, b.ymin, b.zmin, B);
+	if(!check_placed(B, u)) return false;
 
 	//cantidades de cajas
 	vector<int> n(clpState::types.size(), 0);
@@ -294,6 +298,61 @@ static Load load(const ULD& u, const vector<int>& left, const Params& P){
 		Load res2 = load_cog(ulds_sub[i], left, P);
 		if(res2.value > res.value) res=res2;
 	}
+	return res;
+}
+
+/**
+ * carga a la vez los ULDs us con las cajas left (un solo estado de BSG en que los espacios de
+ * todos los ULDs son candidatos; P.time segundos por ULD). Retorna la carga de cada ULD usado
+ */
+static vector<Load> load_joint(const vector<const ULD*>& us, const vector<int>& left, const Params& P){
+	vector<Load> res;
+	clpState* s0 = new_state(us, left, P.min_fr, P.max_bl);
+	if(s0->get_n_valid_blocks()==0){ delete s0; clpState::region_ulds.clear(); return res; }
+
+	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left, s0->valid_blocks,
+			s0->cont.getL(), s0->cont.getW(), s0->cont.getH(), P.alpha, P.beta, P.gamma, P.p, P.delta, P.fix_knapsack);
+	Greedy* gr = new Greedy(vcs);
+	BSG* bsg = new BSG(vcs, *gr, 4);
+	DoubleEffort* de = new DoubleEffort(*bsg);
+
+	clock_t begin_time=clock();
+	streambuf* buf=cout.rdbuf(NULL);
+	State* s_copy = s0->clone();
+	de->run(*s_copy, P.time*us.size(), begin_time);
+	cout.rdbuf(buf);
+
+	clpState* best = de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL;
+	if(best){
+		bool feasible = best->is_feasible();
+		for(size_t r=0; r<us.size(); r++){
+			const AABB R=best->cont.regions[r];
+			Load ld;
+			ld.uld=us[r];
+			ld.boxes.assign(left.size(), 0);
+			ld.volume=ld.weight=0.0;
+			//se desplaza la carga del ULD para centrar el centro de gravedad
+			long dx, dy;
+			double viol = best->cog_violation(dx, dy, r);
+			best->translate(dx, dy, r);
+			for(const PlacedBlock& b : best->cont.blocks){
+				if(!R.contains(b)) continue;
+				for(auto& p : b.block->boxes) ld.boxes[p.first] += p.second;
+				ld.volume += b.block->getOccupiedVolume();
+				ld.weight += b.block->weight;
+				b.block->get_boxes(b.xmin-R.xmin, b.ymin-R.ymin, b.zmin-R.zmin, ld.placed);
+			}
+			if(ld.placed.empty()) continue;
+			best->get_cog(ld.cog[0], ld.cog[1], ld.cog[2], r);
+			viol = best->cog_violation(dx, dy, r);
+			ld.value = ld.volume/ld.uld->volume/(1.0 + clpState::cog_penalty*viol);
+			ld.feasible = feasible && check_placed(ld.placed, *us[r]);
+			res.push_back(ld);
+		}
+		delete best;
+	}
+	delete de; delete bsg; delete gr; delete vcs; delete s0;
+	clpState::region_ulds.clear();
 	return res;
 }
 
@@ -440,6 +499,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<long> _padding(parser, "int", "Maximum height of the padding material. Default: 0", {"padding"});
 	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
 	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
+	args::Flag _joint(parser, "joint", "Load all the available ULD types at once (one BSG state with the spaces of all of them) before the sequential loading", {"joint"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -524,6 +584,36 @@ int main(int argc, char** argv){
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
+
+	//carga conjunta de un ULD de cada tipo disponible (sin y con subestructura)
+	if(_joint){
+		vector<Load> best;
+		double best_vol=-1, best_opened=0;
+		for(int sub=0; sub<=(int)use_substructure; sub++){
+			vector<const ULD*> us;
+			for(size_t i=0; i<ulds.size(); i++)
+				if(available[i]!=0) us.push_back(sub? &ulds_sub[i] : &ulds[i]);
+			vector<Load> res = load_joint(us, left, P);
+			double vol=0, opened=0;
+			bool ok=true;
+			for(const Load& ld : res){ vol+=ld.volume; opened+=ld.uld->volume; ok = ok && ld.feasible; }
+			if(!ok) continue;
+			if(vol > best_vol*(1+1e-9) || (fabs(vol-best_vol) <= 1e-9*vol && opened < best_opened)){
+				best=res; best_vol=vol; best_opened=opened;
+			}
+		}
+		for(Load& ld : best){
+			//los ULDs con el CoG fuera de rango se recargan por separado con sus cajas
+			if(!ld.cog_ok()){
+				Load ld2 = load(*ld.uld, ld.boxes, P);
+				if(ld2.boxes==ld.boxes && ld2.feasible && ld2.cog_ok()) ld=ld2;
+			}
+			for(size_t t=0; t<left.size(); t++) left[t]-=ld.boxes[t];
+			int i=uld_index(*ld.uld);
+			if(available[i]>0) available[i]--;
+			loads.push_back(ld);
+		}
+	}
 
 	while(remaining()>0){
 		const ULD* u = select_uld(left);
