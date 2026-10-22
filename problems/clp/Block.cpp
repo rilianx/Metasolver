@@ -238,8 +238,10 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 		b.boxes.last = all_boxes.data()+all_boxes.size();
 		all.push_back(b);
 	}
-	for(const GenBlock* g : all_blocks) delete g;
+	//(los bloques de una caja no estan en all_blocks; se borran antes que los otros, que se
+	//leen al revisar n_boxes)
 	for(size_t k=0; k<B.size(); k++) if(B[k]->n_boxes==1) delete B[k];
+	for(const GenBlock* g : all_blocks) delete g;
 
 	all_pboxes.clear();
 	for(Block& b : all) b.pboxes.first = b.pboxes.last = 0;
