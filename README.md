@@ -25,6 +25,9 @@ Code structure
   * `Container`: placed blocks and maximal free spaces.
   * `VCS_Function`: VCS evaluation function (volume, pseudo-contact surface,
     volume loss and number of boxes).
+* `problems/plp/`: packing of polyhedra (3D irregular strip packing, ESICUP
+  instances): instance and solution readers and a solution checker
+  (`PLP_check`). See `problems/plp/README.md`.
 
 Implementation notes
 -------
