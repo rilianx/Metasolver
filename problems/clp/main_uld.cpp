@@ -34,12 +34,16 @@ struct Load {
 	double cog[3];
 	bool feasible;
 	double value;           //evaluacion de la carga (volumen penalizado por el CoG)
+	vector<Block::PlacedBox> placed;  //cajas ubicadas
 
 	double utilization() const { return volume/uld->volume; }
 	bool cog_ok() const {
 		return fabs(cog[0]-uld->L/2.0) <= uld->dev[0] && fabs(cog[1]-uld->W/2.0) <= uld->dev[1];
 	}
 };
+
+//lineas del archivo de la instancia (desde 0) con las cajas de cada tipo
+static vector< vector<int> > type_items;
 
 /** lee las cajas (formato de Paquay et al.) agrupando las identicas en tipos */
 static vector<int> read_items(const string& file){
@@ -49,25 +53,27 @@ static vector<int> read_items(const string& file){
 		exit(1);
 	}
 	//cada linea: l;w;h;peso;l vertical;w vertical;h vertical;fragil;muy densa
-	map<vector<double>, int> count;
-	vector< vector<double> > order;
+	map<vector<double>, int> type;
+	vector<int> n;
 	string line;
+	int item=0;
 	while(getline(in, line)){
 		vector<double> f;
 		stringstream ss(line);
 		string tok;
 		while(getline(ss, tok, ';')) if(!tok.empty()) f.push_back(atof(tok.c_str()));
 		if(f.size()<9) continue;
-		f.resize(8);
-		if(count[f]++ == 0) order.push_back(f);
-	}
-
-	vector<int> n;
-	for(auto& f : order){
-		int t=clpState::types.size();
-		clpState::types.push_back(new BoxShape(t, t, (long) f[0], (long) f[1], (long) f[2],
-				f[4]!=0, f[5]!=0, f[6]!=0, f[3], f[7]!=0));
-		n.push_back(count[f]);
+		f.resize(9);
+		if(!type.count(f)){
+			int t=clpState::types.size();
+			type[f]=t;
+			clpState::types.push_back(new BoxShape(t, t, (long) f[0], (long) f[1], (long) f[2],
+					f[4]!=0, f[5]!=0, f[6]!=0, f[3], f[7]!=0));
+			n.push_back(0);
+			type_items.push_back(vector<int>());
+		}
+		n[type[f]]++;
+		type_items[type[f]].push_back(item++);
 	}
 	return n;
 }
@@ -211,6 +217,7 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
 		res.weight = best->get_weight();
 		best->get_cog(res.cog[0], res.cog[1], res.cog[2]);
 		res.feasible = best->is_feasible() && check_boxes(*best, u);
+		for(const PlacedBlock& b : best->cont.blocks) b.block->get_boxes(b.xmin, b.ymin, b.zmin, res.placed);
 		res.value = best->get_value();
 		delete best;
 	}
@@ -319,6 +326,7 @@ int main(int argc, char** argv){
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
 	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2", {"subset_ratio"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
+	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
 
@@ -454,6 +462,17 @@ int main(int argc, char** argv){
 	cout << "n_ulds " << loads.size() << " median_util " << median
 		<< " total_util " << 100*total_vol/total_uld_vol << " cost " << cost
 		<< " cog_violations " << cog_viol << " time " << time << endl;
+
+	if(_output){
+		ofstream out(_output.Get().c_str());
+		out << "uld;uld_type;item;x;y;z;l;w;h" << endl;
+		vector<size_t> next(type_items.size(), 0);
+		for(size_t i=0; i<loads.size(); i++)
+			for(const Block::PlacedBox& b : loads[i].placed)
+				out << i << ";" << loads[i].uld->type << ";" << type_items[b.type][next[b.type]++] << ";"
+					<< b.xmin << ";" << b.ymin << ";" << b.zmin << ";"
+					<< b.xmax-b.xmin << ";" << b.ymax-b.ymin << ";" << b.zmax-b.zmin << endl;
+	}
 
 	if(!feasible){
 		cerr << "ERROR: infeasible solution" << endl;

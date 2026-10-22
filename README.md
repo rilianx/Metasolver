@@ -128,7 +128,11 @@ disables it): the boxes of a ULD (from the least utilized) are freed and the oth
 are loaded again with their boxes and the freed ones; the boxes that are not loaded pass
 to the next ULD. The ULD is eliminated if all the freed boxes are loaded.
 
-The solutions are verified box by box.
+The solutions are verified box by box. With `-o file` the solution is written (one line
+per box: ULD, ULD type, item (line of the instance file, from 0), position and dimensions)
+and it can be checked with an independent validator:
+
+     python3 problems/clp/validate_uld.py <instance.csv> problems/clp/benchs/ULD/uld.csv <solution> [--support corners|full|none]
 
 Results on the 300 final instances (30 per size, 10 to 100 boxes), number of ULDs
 and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler et al.
@@ -154,6 +158,7 @@ and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler 
       --subset_ratio=[double]           Volume of the boxes given to each ULD (ratio of its volume, 0: all). Default: 2
       --no_eliminate                    Do not try to eliminate ULDs
       --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
+      -o[string], --output=[string]     Write the solution to this file
       -v, --verbose                     Print the loaded ULDs
 ```
 
