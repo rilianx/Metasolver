@@ -25,3 +25,31 @@ Brecha = (altura − Ref.)/Ref.; "mejor" es la mejor de las 3 semillas y "media"
 | T2025/TETRAHEDRONS | 19 | -0.1% | -0.1% | -0.1% | -0.1% |
 
 b30 vs base (media por instancia): mejor en 12, peor en 21, igual en 41
+
+## Criterio por hueco en la envolvente convexa (`h30`, commit `d65aea2`) contra la versión base
+
+Mismas condiciones (3 semillas). `h30`: `--blocks 30`, aceptación por hueco agregado ≤ 0.1 y evaluación por volumen por pieza.
+
+| Instancia | Ref. | base mejor | base media | h30 mejor | h30 media |
+|---|---|---|---|---|---|
+| Stoyan et al. 2004 Example1 | — | 60.26 | 62.06 | 62.57 | 62.96 |
+| Stoyan et al. 2004 Example2 | 28.47 | 37.40 | 38.49 | 36.00 | 37.92 |
+| Stoyan et al. 2004 Example3 | 41.30 | 53.84 | 55.58 | 56.26 | 57.36 |
+| Stoyan et al. 2004 Example4 | 54.83 | 68.02 | 70.59 | 69.41 | 72.76 |
+| Stoyan et al. 2004 Example5 | 72.33 | 91.09 | 93.69 | 90.36 | 93.42 |
+| Stoyan et al. 2005 Example1 | 17.46 | 17.84 | 17.84 | 17.84 | 17.84 |
+| Stoyan et al. 2005 Example2 | 19.01 | 20.70 | 20.78 | 20.82 | 20.82 |
+| Stoyan et al. 2005 Example3 | 29.76 | 32.29 | 33.12 | 33.32 | 33.81 |
+
+| Grupo | n | base: brecha mejor | base: brecha media | h30: brecha mejor | h30: brecha media |
+|---|---|---|---|---|---|
+| Stoyan 2004 | 4 | +27.9% | +32.0% | +28.5% | +33.5% |
+| Stoyan 2005 | 3 | +6.5% | +7.6% | +7.9% | +8.4% |
+| T2025/DIAMONDS | 9 | -0.5% | -0.4% | -0.6% | -0.3% |
+| T2025/STOYAN 2004 | 19 | +1.6% | +2.3% | +1.2% | +1.6% |
+| T2025/STOYAN 2005 | 19 | +3.9% | +5.1% | +4.9% | +6.0% |
+| T2025/TETRAHEDRONS | 19 | -0.1% | -0.1% | -0.1% | -0.1% |
+
+h30 vs base (media por instancia): mejor en 11, peor en 16, igual en 47
+
+h30 contra b30 (media por instancia): mejor en 23, peor en 12, igual en 39.
