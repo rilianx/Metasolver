@@ -39,17 +39,8 @@ public:
 			long L, long W, long H, double alpha=4.0, double beta=1.0,
 			double gamma=0.2, double p=0.04, double delta=1.0, bool fix_knapsack=false);
 
-	/** parametros de la funcion */
-	struct Params { double alpha, beta, gamma, p, delta; };
-
-	/** agrega un vector de parametros; retorna su indice (clpState::param) */
-	int add_params(const Params& t) { params.push_back(t); return params.size()-1; }
-
-	const Params& get_params(int i) const { return params[i]; }
-
 	/**
-	 * Prepara la evaluacion de bloques en el espacio sp con los parametros del estado s
-	 * (clpState::param): se buscan los bloques
+	 * Prepara la evaluacion de bloques en el espacio sp: se buscan los bloques
 	 * ubicados que pueden estar en pseudo-contacto con algun bloque dentro de sp
 	 * (Algoritmo 4.2 de la disertacion de L. Guesser)
 	 */
@@ -109,12 +100,7 @@ private:
 	//bloques ubicados en la vecindad del espacio actual
 	std::vector<const PlacedBlock*> neighbors;
 
-	//parametros del estado que se esta evaluando (ver set_space); el indice 0 son los
-	//parametros del constructor, para los que se precalculan pow_vol y pow_n
 	double alpha, beta, gamma, p, delta;
-	int current;
-
-	std::vector<Params> params;
 };
 
 } /* namespace clp */

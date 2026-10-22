@@ -22,11 +22,6 @@ struct GenBlock {
 	long occupied_volume;
 	int n_boxes;
 	vector<Block::BoxCount> boxes;
-	//bloque combinado: hijos y posicion del segundo hijo (el primero esta en el origen)
-	const GenBlock* c1=NULL;
-	const GenBlock* c2=NULL;
-	long ox=0, oy=0, oz=0;
-	int id=-1;
 };
 
 // hash de bloques (ver Apendice A de la disertacion de L. Guesser)
@@ -62,10 +57,9 @@ struct BlockEqual {
 };
 
 /** une las cajas de b1 y b2 en un nuevo bloque de dimensiones l,w,h */
-GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h, long ox, long oy, long oz){
+GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h){
 	GenBlock* b = new GenBlock();
 	b->l=l; b->w=w; b->h=h;
-	b->c1=b1; b->c2=b2; b->ox=ox; b->oy=oy; b->oz=oz;
 	b->occupied_volume = b1->occupied_volume + b2->occupied_volume;
 	b->n_boxes = b1->n_boxes + b2->n_boxes;
 	b->boxes.reserve(b1->boxes.size() + b2->boxes.size());
@@ -130,7 +124,7 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 					if((double)(b1->occupied_volume+b2->occupied_volume) / vol < min_fr ||
 							ll>L || ww>W || hh>H) continue;
 
-					GenBlock* nb = join(b1, b2, ll, ww, hh, (i==0)? b1->l:0, (i==1)? b1->w:0, (i==2)? b1->h:0);
+					GenBlock* nb = join(b1, b2, ll, ww, hh);
 					if(!all_blocks.insert(nb).second) { delete nb; continue; }
 
 					if(is_constructible(left, *nb)){
@@ -150,13 +144,9 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 	for(const GenBlock* g : B) nboxes += g->boxes.size();
 	all_boxes.clear(); all_boxes.reserve(nboxes);
 	all.clear(); all.reserve(B.size());
-	for(size_t k=0; k<B.size(); k++) const_cast<GenBlock*>(B[k])->id = k;
 	for(const GenBlock* g : B){
 		Block b;
 		b.id = all.size();
-		b.child1 = (g->c1)? g->c1->id : -1;
-		b.child2 = (g->c2)? g->c2->id : -1;
-		b.ox=g->ox; b.oy=g->oy; b.oz=g->oz;
 		b.l=g->l; b.w=g->w; b.h=g->h;
 		b.occupied_volume=g->occupied_volume;
 		b.n_boxes=g->n_boxes;
@@ -172,18 +162,6 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 	vector<const Block*> blocks;
 	for(const Block& b : all) blocks.push_back(&b);
 	return blocks;
-}
-
-void Block::get_boxes(long x, long y, long z, vector<BoxPlacement>& out) const{
-	if(child1<0){
-		BoxPlacement p;
-		p.type=boxes.begin()->first;
-		p.x=x; p.y=y; p.z=z; p.l=l; p.w=w; p.h=h;
-		out.push_back(p);
-		return;
-	}
-	all[child1].get_boxes(x, y, z, out);
-	all[child2].get_boxes(x+ox, y+oy, z+oz, out);
 }
 
 } /* namespace clp */

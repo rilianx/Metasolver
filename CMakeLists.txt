@@ -21,13 +21,9 @@ add_executable(BSG_CLP
   metasolver/strategies/Greedy.cpp
   problems/clp/Block.cpp
   problems/clp/Container.cpp
-  problems/clp/LNS.cpp
-  problems/clp/CPSAT.cpp
   problems/clp/clpState.cpp
   problems/clp/VCS_Function.cpp
 )
-
-target_link_libraries(BSG_CLP ${CMAKE_DL_LIBS})
 
 enable_testing()
 add_test(NAME br7 COMMAND BSG_CLP ${CMAKE_CURRENT_SOURCE_DIR}/problems/clp/benchs/BR/BR7.txt -i 0 -t 2)

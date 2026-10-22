@@ -50,15 +50,6 @@ public:
 
 	bool fits(long L, long W, long H) const { return l<=L && w<=W && h<=H; }
 
-	/** caja ubicada (tipo, posicion y dimensiones segun su orientacion) */
-	struct BoxPlacement {
-		int type;
-		long x, y, z, l, w, h;
-	};
-
-	/** agrega a out las cajas del bloque ubicado en la posicion (x,y,z) */
-	void get_boxes(long x, long y, long z, std::vector<BoxPlacement>& out) const;
-
 	/**
 	 * Genera los bloques de la instancia: primero los bloques de una caja (en cada
 	 * orientacion permitida) y luego los que resultan de combinarlos en las direcciones
@@ -76,11 +67,6 @@ public:
 	long occupied_volume;
 	int n_boxes;
 	Boxes boxes;
-
-	//bloque combinado: indices de los dos sub-bloques (-1 si es de una caja) y
-	//posicion relativa del segundo (el primero esta en el origen)
-	int child1, child2;
-	long ox, oy, oz;
 
 private:
 	static std::vector<Block> all;

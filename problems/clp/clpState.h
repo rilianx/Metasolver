@@ -43,7 +43,7 @@ class clpState : public State {
 public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
-		valid_blocks(S.valid_blocks), param(S.param), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
+		valid_blocks(S.valid_blocks), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
 
@@ -65,10 +65,7 @@ public:
 	 * Hash del conjunto de bloques ubicados (independiente del orden en que se ubicaron).
 	 * Los estados con los mismos bloques en las mismas posiciones son equivalentes.
 	 */
-	virtual uint64_t get_hash() const { return (param==0)? hash : hash ^ (0x9ddfea08eb382d69ull*(uint64_t)param); }
-
-	/** el estado hereda los parametros de la solucion final que sigue (ver BSG) */
-	virtual void inherit(const State& final) { param = static_cast<const clpState&>(final).param; }
+	virtual uint64_t get_hash() const { return hash; }
 
 	//tipos de caja de la instancia
 	static vector<const BoxShape*> types;
@@ -84,9 +81,6 @@ public:
 
 	vector<const Block*> valid_blocks;
 
-	//indice de los parametros de la funcion de evaluacion (VCS_Function::add_params)
-	int param;
-
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 
 protected:
@@ -95,7 +89,7 @@ protected:
 
 private:
 
-	clpState(long L, long W, long H) : cont(L, W, H), param(0), min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
+	clpState(long L, long W, long H) : cont(L, W, H), min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
 
 	/**
 	 * Elimina de valid_blocks los bloques que no se pueden construir con las cajas restantes

@@ -9,8 +9,6 @@
 #define STRATEGIES_BSG_H_
 
 #include <cmath>
-#include <set>
-#include <functional>
 #include "../SearchStrategy.h"
 
 namespace metasolver {
@@ -30,12 +28,11 @@ public:
 	 * @param beams the number of beams
 	 * @p_elite the proportion of beams in the elite set (0.0, means 1 beam)
 	 * @max_level_size the maximum number of expanded nodes by level of the tree
-	 * @verbose prints the new best solutions
 	 */
-	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0, bool verbose=true) :
+	BSG(ActionEvaluator* evl, SearchStrategy& greedy, int beams, double p_elite=0.0, int max_level_size=0) :
 		SearchStrategy(evl), greedy(greedy), beams(beams),
 		max_level_size((max_level_size==0)? beams*beams:max_level_size),
-		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))), verbose(verbose), root_samples(1), root_inherit(false), max_carried(1.0) {}
+		p_elite(p_elite), n_elite(max(1, (int)(p_elite*beams))) {}
 
 
 	virtual ~BSG();
@@ -97,23 +94,6 @@ public:
 
 	void set_beams(int b){beams=b;}
 
-	/**
-	 * Evaluacion de los hijos de la raiz con m variantes del greedy: variant(s, j) modifica
-	 * el estado s para la variante j (j=0: la original; j=-1: volver a la original).
-	 * El valor del hijo es el maximo sobre las variantes y se sigue el camino de la mejor;
-	 * si inherit es true, el hijo continua con esa variante (si no, con la original)
-	 */
-	void set_root_samples(int m, std::function<void(State&, int)> variant, bool inherit){
-		root_samples=m; root_variant=variant; root_inherit=inherit;
-	}
-
-	/**
-	 * Limita la proporcion del beam que pueden ocupar los caminos heredados de
-	 * niveles anteriores (cuyo valor ya fue seleccionado como maximo, por lo que
-	 * tienen ventaja frente a los hijos evaluados con una sola corrida greedy)
-	 */
-	void set_max_carried(double q){max_carried=q;}
-
 
 protected:
 
@@ -126,24 +106,15 @@ protected:
 		//Si no hay acción posible o si la cuota the beams ha sido sobrepasada
 		//se elimina final_state y el elemento del mapa
 		int k=0;
-		int n_carried=0;
 		while(state_action!=sorted_states.end()){
 			State* s= state_action->second.first;
 			State* final_state=state_action->second.second;
 			Action* a = (s)? s->next_action(*final_state):NULL;
 
-			//cuota de caminos heredados de niveles anteriores
-			bool carried = fresh.find(final_state)==fresh.end();
-			if(a && carried && nextS.size()<beams && n_carried>=max(1, (int)(max_carried*beams+0.5))){
-				delete a; a=NULL;
-			}
-
 			if(nextS.size()<beams && a){
-				if(carried) n_carried++;
 				s=s->clone();
 				state_action->second.first=s;
 				s->transition(*a);
-				s->inherit(*final_state);
 				nextS.push_back(s);
 
 		 		//cout <<  state_action->second.first->get_value() << " --> " << state_action->second.second->get_value()  << endl;
@@ -161,23 +132,11 @@ protected:
 		 k++;
 		}
 
-		fresh.clear();
 		return nextS;
 
 	}
 
 	map<double, pair<State*, State*> > state_actions;
-
-	//estados finales (greedy) evaluados en el nivel actual; los demas de
-	//state_actions son caminos heredados de niveles anteriores
-	set<const State*> fresh;
-
-	int root_samples;
-	std::function<void(State&, int)> root_variant;
-	bool root_inherit;
-
-	//proporcion maxima del beam para caminos heredados (1: sin limite)
-	double max_carried;
 
 	SearchStrategy& greedy;
 
@@ -193,9 +152,6 @@ protected:
 
 	double p_elite;
 	int n_elite;
-
-	//imprime las nuevas mejores soluciones
-	bool verbose;
 
 };
 

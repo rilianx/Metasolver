@@ -38,8 +38,19 @@ in his dissertation (chapter 4):
 * the greedy remembers the states already visited (skip feature) and
   rebuilds the rest of the solution instead of evaluating it again.
 
-None of them changes the search: for the same amount of work, the solutions
-found are the same as in the original implementation.
+Besides, the volume loss of a candidate block is only computed when an upper
+bound of its evaluation can enter the n best ones, and the blocks of the
+instance are stored contiguously in memory.
+
+None of them changes the search: for the same parameters, the solutions found
+are the same as in the original implementation (~9x faster).
+
+The default parameters of the evaluation function are the ones tuned by
+L. Guesser with irace (alpha=2.4407, beta=2.2652, gamma=0.3896, p=0.0164).
+On the BR instances (sets 1-15, 10 instances per set, 30 s) they improve
+the volume utilization by ~0.17 percentage points w.r.t. the parameters of
+Araya et al. (2017): alpha=4, beta=1, gamma=0.2, p=0.04. With these parameters
+the search is the same as in the original implementation.
 
 Installation
 -------
@@ -62,14 +73,22 @@ Options
       -i[int]                           Instance
       --min_fr=[double]                 Minimum volume occupied by a block
                                         (proportion)
-      -t[int], --timelimit=[int]        Timelimit
-      --alpha=[double]                  Alpha parameter
-      --beta=[double]                   Beta parameter
-      --gamma=[double]                  Gamma parameter
+      -t[int], --timelimit=[int]        Timelimit (it includes the block generation)
+      --alpha=[double]                  Alpha parameter. Default: 2.4407
+      --beta=[double]                   Beta parameter. Default: 2.2652
+      --gamma=[double]                  Gamma parameter. Default: 0.3896
       --delta=[double]                  Delta parameter
-      -p[double]                        p parameter
+      -p[double]                        p parameter. Default: 0.0164
+      --fix_knapsack                    Volume loss: consider the lengths of all
+                                        the allowed orientations of the boxes
       instance-set                      The name of the instance set (BR format)
 ```
+
+`--fix_knapsack`: the knapsack problems used to estimate the volume loss only
+consider the orientations LWH, WHL and HLW of each box, which omits valid
+lengths in the x and y axes when the box cannot be placed with its length in
+vertical. With this option all the allowed orientations are considered (it
+does not change the average results significantly).
 
 Example
 -----

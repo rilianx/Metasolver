@@ -27,7 +27,7 @@ list<State*> BSG::next(list<State*>& S){
          State& state=**itS;
         // cout << state.get_value() << endl;
 
-         if(verbose && state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
+         if(state.is_root()) cout << "beams/max_level_size:" << beams << "/" << max_level_size << endl;
 
 
          //se obtiene la lista de las mejores acciones a partir del estado actual
@@ -45,30 +45,19 @@ list<State*> BSG::next(list<State*>& S){
 
          for(; it!=best_actions.end()&& get_time()<=timelimit;it++){
 
-        	 //en la raiz, cada hijo puede evaluarse con varias variantes del greedy
-        	 //(p.ej. parametros perturbados); se conserva la de mayor valor
-        	 int m = (root_samples>1 && state.is_root())? root_samples : 1;
-        	 State* best_copy = NULL;
-        	 double value = 0.0;
-        	 for(int j=0; j<m; j++){
-        		 State* v = state.clone();
-        		 if(m>1) root_variant(*v, j);
-        		 v->transition(**it);
-        		 double val = greedy.run(*v, timelimit, begin_time);
-        		 if(!best_copy || val > value) { delete best_copy; best_copy=v; value=val; }
-        		 else delete v;
-        	 }
-        	 if(m>1 && !root_inherit) root_variant(*best_copy, -1);
-        	 State& state_copy = *best_copy;
+        	 State& state_copy = *state.clone();
+        	 state_copy.transition(**it);
 
         	 delete *it;
+
+             double value = greedy.run(state_copy, timelimit, begin_time);
 
 
             //best_state update
              if(value > get_best_value()){
             	 if(best_state) delete best_state; 
             	 best_state = state_copy.clone();
-            	 if(verbose) cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
+            	 cout << "[BSG_path] new best_solution_found ("<< get_time() <<"): " << value << " "
             			 << best_state->get_path().size() << " nodes" << endl;
              }
 
@@ -76,7 +65,6 @@ list<State*> BSG::next(list<State*>& S){
              if(state_actions.find(-value)==state_actions.end()){
             	// cout << value << endl;
             	 state_actions[-value]= make_pair(&state, &state_copy);
-            	 fresh.insert(&state_copy);
              }else delete &state_copy;
 
          }

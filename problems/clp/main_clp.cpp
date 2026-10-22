@@ -12,10 +12,6 @@
 #include "Greedy.h"
 #include "DoubleEffort.h"
 #include "BSG.h"
-#include "LNS.h"
-#include "CPSAT.h"
-#include <cstdlib>
-#include <random>
 
 using namespace std;
 using namespace clp;
@@ -35,21 +31,6 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::ValueFlag<int> _root_samples(parser, "int", "BSG: each child of the root is evaluated with m greedy solutions (the first one with the given parameters, the others with +-20% perturbations of alpha, beta, gamma, p); its value is the best one. Default: 1", {"root_samples"});
-	args::Flag _root_inherit(parser, "root_inherit", "BSG: with --root_samples, the child continues with the parameters of its best greedy solution (otherwise, with the given parameters)", {"root_inherit"});
-	args::ValueFlag<double> _max_carried(parser, "double", "BSG: maximum proportion of the beam for paths carried from previous levels. Default: 1 (no limit)", {"max_carried"});
-	args::Flag _lns(parser, "lns", "Improve the best BSG solution with LNS (destroying central regions)", {"lns"});
-	args::ValueFlag<string> _lns_shape(parser, "string", "LNS: shape of the destroyed region (box, slab). Default: box", {"lns_shape"});
-	args::ValueFlag<string> _lns_center(parser, "string", "LNS: center of the destroyed region (void, middle). Default: void", {"lns_center"});
-	args::ValueFlag<double> _lns_frac(parser, "double", "LNS: proportion of the timelimit used by LNS. Default: 0.3", {"lns_frac"});
-	args::ValueFlag<int> _lns_beams(parser, "int", "LNS: number of beams of the BSG used for repairing. Default: 4", {"lns_beams"});
-	args::ValueFlag<int> _lns_samples(parser, "int", "LNS: destructions evaluated per iteration (the one with the largest potential improvement is repaired). Default: 8", {"lns_samples"});
-	args::ValueFlag<string> _lns_repair(parser, "string", "LNS: repair (bsg, exact, hybrid). Default: bsg", {"lns_repair"});
-	args::ValueFlag<string> _ortools(parser, "path", "LNS exact repair: OR-Tools library (e.g. .../site-packages/ortools/.libs/libortools.so.9). Default: $ORTOOLS_LIB", {"ortools_lib"});
-	args::ValueFlag<double> _exact_time(parser, "double", "LNS exact repair: time limit per CP-SAT call. Default: 1.0", {"exact_time"});
-	args::ValueFlag<int> _exact_boxes(parser, "int", "LNS exact repair: maximum number of candidate boxes. Default: 40", {"exact_boxes"});
-	args::ValueFlag<int> _exact_redundant(parser, "0/1", "LNS exact repair: redundant constraints (cumulative per axis, volume). Default: 1", {"exact_redundant"});
-	args::ValueFlag<int> _exact_workers(parser, "int", "LNS exact repair: CP-SAT workers. Default: 1", {"exact_workers"});
 	args::Positional<std::string> _file(parser, "instance-set", "The name of the instance set (BR format)");
 
 	cout.precision(8);
@@ -100,68 +81,11 @@ int main(int argc, char** argv){
 
 	SearchStrategy *gr = new Greedy(vcs);
 	BSG *bsg= new BSG(vcs, *gr, 4);
-	if(_max_carried) bsg->set_max_carried(_max_carried.Get());
-
-	//evaluacion de los hijos de la raiz con parametros perturbados (+-20%)
-	std::mt19937 prng(1);
-	if(_root_samples && _root_samples.Get()>1)
-		bsg->set_root_samples(_root_samples.Get(), [&](State& st, int j){
-			clpState& c = static_cast<clpState&>(st);
-			if(j<=0) c.param = 0;
-			else{
-				std::uniform_real_distribution<double> u(0.8, 1.2);
-				c.param = vcs->add_params(VCS_Function::Params{alpha*u(prng), beta*u(prng), gamma*u(prng), p*u(prng), delta});
-			}
-		}, _root_inherit);
 	SearchStrategy *de= new DoubleEffort(*bsg);
 
 	State& s_copy= *s0->clone();
 
-	double lns_frac = (_lns)? ((_lns_frac)? _lns_frac.Get() : 0.3) : 0.0;
-
-	double eval=de->run(s_copy, maxtime*(1.0-lns_frac), begin_time);
-
-	if(_lns){
-		clpLNS::Shape shape = clpLNS::BOX;
-		if(_lns_shape){
-			if(_lns_shape.Get()=="slab") shape = clpLNS::SLAB;
-			else if(_lns_shape.Get()!="box") { cerr << "Unknown LNS shape: " << _lns_shape.Get() << endl; return 1; }
-		}
-		clpLNS::Center center = clpLNS::VOID;
-		if(_lns_center){
-			if(_lns_center.Get()=="middle") center = clpLNS::MIDDLE;
-			else if(_lns_center.Get()!="void") { cerr << "Unknown LNS center: " << _lns_center.Get() << endl; return 1; }
-		}
-		int lns_beams = (_lns_beams)? _lns_beams.Get() : 4;
-
-		clpLNS::Repair repair = clpLNS::BSG_REPAIR;
-		if(_lns_repair){
-			if(_lns_repair.Get()=="exact") repair = clpLNS::EXACT_REPAIR;
-			else if(_lns_repair.Get()=="hybrid") repair = clpLNS::HYBRID_REPAIR;
-			else if(_lns_repair.Get()!="bsg") { cerr << "Unknown LNS repair: " << _lns_repair.Get() << endl; return 1; }
-		}
-
-		CpSolver* solver = NULL;
-		clpLNS::ExactParams exact;
-		if(repair!=clpLNS::BSG_REPAIR){
-			string lib = (_ortools)? _ortools.Get() : (getenv("ORTOOLS_LIB")? getenv("ORTOOLS_LIB") : "");
-			if(lib.empty()) { cerr << "The exact repair needs the OR-Tools library (--ortools_lib or $ORTOOLS_LIB)" << endl; return 1; }
-			solver = new CpSolver(lib);
-			if(_exact_time) exact.max_time = _exact_time.Get();
-			if(_exact_boxes) exact.max_boxes = _exact_boxes.Get();
-			if(_exact_workers) exact.workers = _exact_workers.Get();
-			if(_exact_redundant) exact.redundant = _exact_redundant.Get()!=0;
-		}
-
-		int lns_samples = (_lns_samples)? _lns_samples.Get() : 8;
-
-		clpLNS lns(*s0, vcs, *gr, shape, center, repair, solver, exact, lns_beams, lns_samples);
-		clpState* best = lns.run(*static_cast<const clpState*>(de->get_best_state()), maxtime, begin_time);
-		eval = best->get_value();
-		if(!best->is_feasible()) { cerr << "ERROR: infeasible LNS solution" << endl; return 1; }
-		cout << "LNS iterations: " << lns.get_iterations() << endl;
-		if(solver) cout << "LNS improvements by exact repair: " << lns.get_exact_improvements() << endl;
-	}
+	double eval=de->run(s_copy, maxtime, begin_time);
 
 	if(!static_cast<const clpState*>(de->get_best_state())->is_feasible()){
 		cerr << "ERROR: infeasible solution" << endl;
