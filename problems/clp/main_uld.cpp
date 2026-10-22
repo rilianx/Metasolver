@@ -476,6 +476,86 @@ static void load_remaining(vector<Load>& loads, vector<int>& left, const Params&
 	}
 }
 
+/**
+ * Saca de la carga ld cajas que no tienen nada encima (ni apoyado sobre ellas con relleno),
+ * de arriba hacia abajo, hasta sacar la proporcion p del volumen cargado. El resto de la carga
+ * sigue siendo factible (salvo el centro de gravedad)
+ */
+static Load ruin(const Load& ld, double p){
+	const vector<Block::PlacedBox>& B=ld.placed;
+	vector<bool> gone(B.size(), false);
+	double removed=0;
+	while(removed < p*ld.volume){
+		int best=-1;
+		for(size_t i=0; i<B.size(); i++){
+			if(gone[i]) continue;
+			bool covered=false;
+			for(size_t j=0; j<B.size() && !covered; j++){
+				if(gone[j] || j==i) continue;
+				if(B[j].zmin >= B[i].zmax && B[j].zmin <= B[i].zmax + clpState::padding &&
+						min(B[i].xmax, B[j].xmax) > max(B[i].xmin, B[j].xmin) &&
+						min(B[i].ymax, B[j].ymax) > max(B[i].ymin, B[j].ymin)) covered=true;
+			}
+			if(!covered && (best<0 || B[i].zmax > B[best].zmax)) best=i;
+		}
+		if(best<0) break;
+		gone[best]=true;
+		removed += (double)(B[best].xmax-B[best].xmin)*(B[best].ymax-B[best].ymin)*(B[best].zmax-B[best].zmin);
+	}
+
+	Load res=ld;
+	res.placed.clear();
+	res.boxes.assign(ld.boxes.size(), 0);
+	res.volume=0;
+	for(size_t i=0; i<B.size(); i++){
+		if(gone[i]) continue;
+		res.placed.push_back(B[i]);
+		res.boxes[B[i].type]++;
+		res.volume += (double)(B[i].xmax-B[i].xmin)*(B[i].ymax-B[i].ymin)*(B[i].zmax-B[i].zmin);
+	}
+	return res;
+}
+
+/**
+ * Ruina y reconstruccion: se liberan las cajas del ULD target (si target>=0) y las cajas freed,
+ * se saca la proporcion p de cada uno de los otros ULDs (ver ruin) y se reconstruyen (de mayor
+ * a menor volumen libre) dejando fijas las cajas que quedaron y agregando las liberadas. Si se
+ * cargan todas las cajas liberadas (o, sin target, mas volumen que antes), se acepta: se
+ * elimina el ULD target y freed queda con las cajas que no se cargaron.
+ */
+static bool ruin_recreate(vector<Load>& loads, int target, vector<int>& freed, double p, const Params& P){
+	vector<int> pool=freed;
+	if(target>=0) for(size_t t=0; t<pool.size(); t++) pool[t]+=loads[target].boxes[t];
+	double pool_vol0=0;
+	for(size_t t=0; t<pool.size(); t++) pool_vol0 += (double) pool[t]*clpState::types[t]->getVolume();
+
+	vector<Load> new_loads=loads;
+	vector<int> others;
+	for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(i);
+	sort(others.begin(), others.end(), [&](int a, int b){
+		return loads[a].uld->volume - loads[a].volume > loads[b].uld->volume - loads[b].volume; });
+
+	for(int i : others){
+		Load base = ruin(loads[i], p);
+		vector<int> avail=pool;
+		for(size_t t=0; t<pool.size(); t++) avail[t] += loads[i].boxes[t]-base.boxes[t];
+		Load ld = load_more(base, avail, P);
+		if(!ld.feasible || (loads[i].cog_ok() && !ld.cog_ok())) continue;
+		new_loads[i]=ld;
+		for(size_t t=0; t<pool.size(); t++) pool[t] = avail[t] + base.boxes[t] - ld.boxes[t];
+		if(count(pool.begin(), pool.end(), 0)==(int)pool.size()) break;
+	}
+
+	double pool_vol=0;
+	for(size_t t=0; t<pool.size(); t++) pool_vol += (double) pool[t]*clpState::types[t]->getVolume();
+	bool ok = (target>=0)? pool_vol==0 : pool_vol < pool_vol0;
+	if(!ok) return false;
+	if(target>=0) new_loads.erase(new_loads.begin()+target);
+	loads=new_loads;
+	freed=pool;
+	return true;
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-ULD *********.", "BSG Solver for air cargo loading (ULDs).");
@@ -500,6 +580,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
 	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
 	args::Flag _joint(parser, "joint", "Load all the available ULD types at once (one BSG state with the spaces of all of them) before the sequential loading", {"joint"});
+	args::ValueFlag<string> _ruin(parser, "string", "Proportions of the volume removed from each ULD in the ruin and recreate phase (comma separated, empty: none). Default: 0.3,0.6", {"ruin"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -549,6 +630,13 @@ int main(int argc, char** argv){
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
 
 	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.0;
+	vector<double> ruin_ratios, ruin_leftover={0.3, 0.6, 0.9};
+	{
+		string r=(_ruin)? _ruin.Get() : "0.3,0.6";
+		stringstream ss(r);
+		string tok;
+		while(getline(ss, tok, ',')) if(!tok.empty()) ruin_ratios.push_back(atof(tok.c_str()));
+	}
 
 	clpState::min_overlap=(_min_overlap)? _min_overlap.Get() : 0.0;
 	clpState::padding=(_padding)? _padding.Get() : 0;
@@ -660,9 +748,27 @@ int main(int argc, char** argv){
 
 	if(remaining()>0) load_remaining(loads, left, P);
 
-	//se eliminan ULDs repartiendo sus cajas en los otros
-	if(!_no_eliminate)
+	//cajas no cargadas (ULDs limitados): ruina y reconstruccion sin eliminar ULDs, mientras
+	//se cargue alguna caja
+	for(bool progress=true; progress && remaining()>0; ){
+		progress=false;
+		for(double p : ruin_leftover)
+			if(remaining()>0 && ruin_recreate(loads, -1, left, p, P)) progress=true;
+	}
+
+	//si se cargaron todas las cajas, se eliminan ULDs repartiendo sus cajas en los otros
+	if(!_no_eliminate && remaining()==0)
 		while(eliminate_uld(loads, P));
+
+	//ruina y reconstruccion: eliminacion del ULD menos utilizado
+	for(double p : ruin_ratios){
+		if(remaining()>0) break;
+		while(loads.size()>1){
+			int target = min_element(loads.begin(), loads.end(), [](const Load& a, const Load& b){
+				return a.utilization() < b.utilization(); }) - loads.begin();
+			if(!ruin_recreate(loads, target, left, p, P)) break;
+		}
+	}
 
 	//se intenta recargar las cajas del ULD menos utilizado en el ULD mas pequeno posible
 	Load& worst = *min_element(loads.begin(), loads.end(),

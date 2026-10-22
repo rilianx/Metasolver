@@ -123,10 +123,16 @@ Each ULD is loaded with a subset of the remaining boxes (`--subset_ratio`, defau
 the largest boxes that fit in the ULD, up to twice the volume of the ULD (0: all the boxes).
 The boxes that are not loaded return to the pool.
 
+With a limited number of ULDs (`--uld_count`), the boxes that were not loaded are inserted
+into the loaded ULDs by ruin and recreate (see below) before any ULD is eliminated.
+
 After the sequential loading, the program tries to eliminate ULDs (`--no_eliminate`
 disables it): the boxes of a ULD (from the least utilized) are freed and the other ULDs
 are loaded again with their boxes and the freed ones; the boxes that are not loaded pass
-to the next ULD. The ULD is eliminated if all the freed boxes are loaded.
+to the next ULD. The ULD is eliminated if all the freed boxes are loaded. Then, ruin and recreate (`--ruin`,
+default 0.3,0.6): the boxes of the least utilized ULD are freed, a proportion of the volume of
+each other ULD is removed (boxes with nothing on top, from the top) and the other ULDs are
+loaded again keeping the remaining boxes fixed and adding the freed ones.
 
 The solutions are verified box by box. With `-o file` the solution is written (one line
 per box: ULD, ULD type, item (line of the instance file, from 0), position and dimensions)
