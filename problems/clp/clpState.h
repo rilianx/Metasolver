@@ -52,7 +52,7 @@ public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
 		valid_blocks(S.valid_blocks), weight_left(S.weight_left), region_weight(S.region_weight),
-		min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
+		cog(S.cog), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
 
@@ -184,6 +184,10 @@ public:
 	//penalizacion de la desviacion del centro de gravedad en get_value
 	static double cog_penalty;
 
+	//penalizacion de la desviacion del centro de gravedad en la evaluacion de los bloques
+	//(la evaluacion VCS se divide por 1 + cog_greedy * desviacion al ubicar el bloque)
+	static double cog_greedy;
+
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 	friend clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl);
 	friend clpState* new_state(const vector<const ULD*>& us, const vector<int>& left, double min_fr, int max_bl);
@@ -195,7 +199,23 @@ protected:
 private:
 
 	clpState(long L, long W, long H) : cont(L, W, H), weight_left(HUGE_VAL),
-		min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) { }
+		min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) {
+		cog.w=cog.mx=cog.my=cog.mz=0.0;
+		cog.xlo=-L; cog.xhi=L; cog.ylo=-W; cog.yhi=W;
+	}
+
+	/**
+	 * Peso y momentos de la carga y desplazamientos posibles de toda la carga (un ULD), para
+	 * evaluar el centro de gravedad al ubicar cada bloque
+	 */
+	struct CogStats {
+		double w, mx, my, mz;
+		long xlo, xhi, ylo, yhi;
+	};
+	CogStats cog;
+
+	/** desviacion del CoG (ver cog_violation) si se ubica el bloque b en (x,y,z) */
+	double cog_violation_with(const Block& b, long x, long y, long z) const;
 
 
 	/**

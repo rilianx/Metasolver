@@ -24,12 +24,15 @@ vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
 vector<const ULD*> clpState::region_ulds;
 double clpState::open_penalty=0.01;
+double clpState::cog_greedy=0.0;
 bool clpState::support=false;
 bool clpState::corner_support=false;
 
 double clpState::min_overlap=0.0;
 bool clpState::dormant_spaces=false;
 long clpState::padding=0;
+
+static void shift_limits(const ULD& u, const AABB& b, long& xlo, long& xhi, long& ylo, long& yhi);
 
 //caras bajo la base del espacio actual (criterio de las esquinas o del area)
 static vector<clpState::Face> support_faces;
@@ -181,6 +184,8 @@ int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
 		//umbral: evaluacion que hay que superar para entrar a las n mejores
 		double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
 		double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
+		if(eval>0 && cog_greedy>0.0 && uld && region_ulds.empty())
+			eval /= 1.0 + cog_greedy*cog_violation_with(*b, x, y, z);
 		if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
 			auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
 					[](double e, const Ranked& r){ return e < r.eval; });
@@ -274,6 +279,14 @@ void clpState::_transition(const Action& action) {
 	//se actualizan las cajas restantes
 	for(auto& p : b.boxes) left[p.first] -= p.second;
 	weight_left -= b.weight;
+	if(uld && region_ulds.empty()){
+		cog.w += b.weight;
+		cog.mx += b.weight*(act.x+b.cog[0]);
+		cog.my += b.weight*(act.y+b.cog[1]);
+		cog.mz += b.weight*(act.z+b.cog[2]);
+		shift_limits(*uld, AABB(act.x, act.y, act.z, act.x+b.getL(), act.y+b.getW(), act.z+b.getH()),
+				cog.xlo, cog.xhi, cog.ylo, cog.yhi);
+	}
 
 	//se inserta el bloque en el contenedor
 	long x=act.x, y=act.y, z=act.z;
@@ -363,6 +376,49 @@ void clpState::get_cog(double& x, double& y, double& z, int r) const{
 	if(w>0){ x/=w; y/=w; z/=w; }
 }
 
+/**
+ * restringe los desplazamientos [xlo,xhi] x [ylo,yhi] de la carga para que el bloque b (en
+ * coordenadas del ULD u) cumpla los recortes y el borde
+ */
+static void shift_limits(const ULD& u, const AABB& b, long& xlo, long& xhi, long& ylo, long& yhi){
+	long L=u.L, W=u.W, e=u.edge;
+	u.x_shift_range(b, xlo, xhi);
+	ylo=max(ylo, -b.ymin);
+	yhi=min(yhi, W-b.ymax);
+	//bajo la altura delta, los bloques quedan dentro del borde; sobre la subestructura,
+	//los bloques no se alejan del piso elevado (no disminuye su apoyo)
+	if(b.zmin < u.delta || (u.substructure && b.zmin == u.delta)){
+		xlo = max(xlo, (b.xmin>=e)? e-b.xmin : 0);
+		xhi = min(xhi, (b.xmax<=L-e)? L-e-b.xmax : 0);
+		ylo = max(ylo, (b.ymin>=e)? e-b.ymin : 0);
+		yhi = min(yhi, (b.ymax<=W-e)? W-e-b.ymax : 0);
+	}
+}
+
+/** exceso de la desviacion del CoG (cx,cy,cz) en el ULD u con los desplazamientos posibles */
+static double cog_excess(const ULD& u, double cx, double cy, double cz, long xlo, long xhi, long ylo, long yhi,
+		long& dx, long& dy){
+	long L=u.L, W=u.W;
+	dx = min(max((long) floor(L/2.0 - cx + 0.5), xlo), xhi);
+	dy = min(max((long) floor(W/2.0 - cy + 0.5), ylo), yhi);
+	double ex = max(0.0, fabs(cx+dx - L/2.0) - u.dev[0]) / u.dev[0];
+	double ey = max(0.0, fabs(cy+dy - W/2.0) - u.dev[1]) / u.dev[1];
+	//en z, el CoG debe estar bajo la altura dev[2] (Paquay et al. 2016)
+	double ez = max(0.0, cz - u.dev[2]) / u.dev[2];
+	return ex+ey+ez;
+}
+
+double clpState::cog_violation_with(const Block& b, long x, long y, long z) const{
+	double w = cog.w + b.weight;
+	if(w<=0) return 0.0;
+	double cx = (cog.mx + b.weight*(x+b.cog[0]))/w;
+	double cy = (cog.my + b.weight*(y+b.cog[1]))/w;
+	double cz = (cog.mz + b.weight*(z+b.cog[2]))/w;
+	long xlo=cog.xlo, xhi=cog.xhi, ylo=cog.ylo, yhi=cog.yhi, dx, dy;
+	shift_limits(*uld, AABB(x, y, z, x+b.getL(), y+b.getW(), z+b.getH()), xlo, xhi, ylo, yhi);
+	return cog_excess(*uld, cx, cy, cz, xlo, xhi, ylo, yhi, dx, dy);
+}
+
 double clpState::cog_violation(long& dx, long& dy, int r) const{
 	const ULD* u = region_ulds.empty()? uld : region_ulds[r];
 	const AABB& R=cont.regions[r];
@@ -370,33 +426,13 @@ double clpState::cog_violation(long& dx, long& dy, int r) const{
 	get_cog(cx, cy, cz, r);
 
 	//desplazamientos posibles
-	long L=u->L, W=u->W, e=u->edge;
-	long xlo=-L, xhi=L, ylo=-W, yhi=W;
+	long xlo=-u->L, xhi=u->L, ylo=-u->W, yhi=u->W;
 	for(const PlacedBlock& pb : cont.blocks){
 		if(!R.contains(pb)) continue;
 		AABB b(pb.xmin-R.xmin, pb.ymin-R.ymin, pb.zmin-R.zmin, pb.xmax-R.xmin, pb.ymax-R.ymin, pb.zmax-R.zmin);
-		u->x_shift_range(b, xlo, xhi);
-		ylo=max(ylo, -b.ymin);
-		yhi=min(yhi, W-b.ymax);
-		//bajo la altura delta, los bloques quedan dentro del borde; sobre la subestructura,
-		//los bloques no se alejan del piso elevado (no disminuye su apoyo)
-		if(b.zmin < u->delta || (u->substructure && b.zmin == u->delta)){
-			xlo = max(xlo, (b.xmin>=e)? e-b.xmin : 0);
-			xhi = min(xhi, (b.xmax<=L-e)? L-e-b.xmax : 0);
-			ylo = max(ylo, (b.ymin>=e)? e-b.ymin : 0);
-			yhi = min(yhi, (b.ymax<=W-e)? W-e-b.ymax : 0);
-		}
+		shift_limits(*u, b, xlo, xhi, ylo, yhi);
 	}
-
-	//el desplazamiento mas cercano al que centra la carga
-	dx = min(max((long) floor(L/2.0 - cx + 0.5), xlo), xhi);
-	dy = min(max((long) floor(W/2.0 - cy + 0.5), ylo), yhi);
-
-	double ex = max(0.0, fabs(cx+dx - L/2.0) - u->dev[0]) / u->dev[0];
-	double ey = max(0.0, fabs(cy+dy - W/2.0) - u->dev[1]) / u->dev[1];
-	//en z, el CoG debe estar bajo la altura dev[2] (Paquay et al. 2016)
-	double ez = max(0.0, cz - u->dev[2]) / u->dev[2];
-	return ex+ey+ez;
+	return cog_excess(*u, cx, cy, cz, xlo, xhi, ylo, yhi, dx, dy);
 }
 
 void clpState::translate(long dx, long dy, int r){
