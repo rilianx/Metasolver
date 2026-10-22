@@ -98,6 +98,16 @@ Metodología (2D) en la que se basa la compactación por LP:
 ./BSG_PLP "problems/plp/benchs/Stoyan et al. 2005/Example1.json" -t 30 -o sol.json
 ```
 
+Resultados iniciales (30 s, parámetros por defecto; tabla completa en `results/bsg_plp_v1.md`):
+
+| Instancia | Ítems | H_lb | H | Referencia |
+|---|---|---|---|---|
+| Stoyan 2005 Example1 | 7 | 16 | 17.97 | 17.46 (Stoyan et al. 2005) |
+| Stoyan 2005 Example2 | 12 | 16 | 20.68 | por recolectar |
+| Stoyan 2005 Example3 | 25 | 16 | 36.00 | por recolectar |
+| Stoyan 2004 Example1 | 80 | 24.46 | 72.18 | por recolectar |
+| Stoyan 2004 Example2–5 | 20–50 | 29 | 40.00 / 59.10 / 76.47 / 99.81 | por recolectar |
+
 ## Herramientas
 
 ```
