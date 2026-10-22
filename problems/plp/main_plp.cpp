@@ -149,6 +149,14 @@ int main(int argc, char** argv){
 		//1. strip packing (altura abierta)
 		plpState* best = search(numeric_limits<double>::infinity(), (_greedy)? maxtime : strip_time*maxtime, vector<Placement>());
 		if(!best || best->get_n_left()>0){
+			//la busqueda no alcanzo a completar una solucion: greedy sin limite de tiempo
+			cout << "WARNING: sin solucion completa en la busqueda inicial; se completa con un greedy" << endl;
+			delete best;
+			best = new plpState(inst);
+			CompactGreedy gr(&f, lpg, cg);
+			gr.run(*best, 0.0);
+		}
+		if(best->get_n_left()>0){
 			cerr << "ERROR: no se encontro una solucion completa" << endl;
 			return 1;
 		}

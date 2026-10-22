@@ -44,10 +44,15 @@ public:
 	}
 
 	virtual bool minimize() {
-		lp->set_bounds(bounds);
-		lp->set_cost(cost);
-		ibex::LPSolver::Status st = lp->minimize();
-		return st==ibex::LPSolver::Status::Optimal || st==ibex::LPSolver::Status::OptimalProved;
+		//SoPlex puede lanzar excepciones internas (p.ej., SPxInternalCodeException) que ibex no captura
+		try{
+			lp->set_bounds(bounds);
+			lp->set_cost(cost);
+			ibex::LPSolver::Status st = lp->minimize();
+			return st==ibex::LPSolver::Status::Optimal || st==ibex::LPSolver::Status::OptimalProved;
+		}catch(...){
+			return false;
+		}
 	}
 
 	virtual vector<double> solution() const {
