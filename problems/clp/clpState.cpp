@@ -25,28 +25,42 @@ const ULD* clpState::uld=NULL;
 bool clpState::support=false;
 bool clpState::corner_support=false;
 
-//caras superiores de las cajas en la base del espacio actual (criterio de las esquinas)
-struct Face { long x1, y1, x2, y2; bool fragile; };
-static vector<Face> support_faces;
+double clpState::min_overlap=0.0;
+long clpState::padding=0;
 
-/** las cuatro esquinas de la base de cada caja inferior del bloque b ubicado en (x,y) se
- * apoyan en caras de cajas no fragiles, y ninguna se apoya sobre una caja fragil */
-static bool corners_supported(const Block& b, long x, long y, const vector<Face>& faces){
+//caras bajo la base del espacio actual (criterio de las esquinas o del area)
+static vector<clpState::Face> support_faces;
+
+bool clpState::box_supported(long x1, long y1, long x2, long y2, const vector<Face>& faces){
+	int corners=0;
+	long direct=0, indirect=0;
+	for(const Face& f : faces){
+		long dx = min(x2, f.x2)-max(x1, f.x1), dy = min(y2, f.y2)-max(y1, f.y1);
+		bool overlap = dx>0 && dy>0;
+		if(f.fragile){
+			//nada se apoya sobre una caja fragil (ni sobre relleno puesto sobre ella)
+			if(f.direct && overlap) return false;
+			continue;
+		}
+		if(!f.direct){
+			if(overlap) indirect += dx*dy;
+			continue;
+		}
+		if(overlap) direct += dx*dy;
+		if(!(corners&1) && f.x1<=x1 && x1<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=1;
+		if(!(corners&2) && f.x1<=x2 && x2<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=2;
+		if(!(corners&4) && f.x1<=x1 && x1<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=4;
+		if(!(corners&8) && f.x1<=x2 && x2<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=8;
+	}
+	if(corners==15) return true;
+	return min_overlap>0.0 && direct>0 && (double)(direct+indirect) >= min_overlap*(double)((x2-x1)*(y2-y1));
+}
+
+/** las cajas inferiores del bloque b ubicado en (x,y) estan apoyadas en las caras faces */
+static bool corners_supported(const Block& b, long x, long y, const vector<clpState::Face>& faces){
 	for(const Block::PlacedBox& p : b.pboxes){
 		if(p.zmin>0) continue;
-		long x1=x+p.xmin, y1=y+p.ymin, x2=x+p.xmax, y2=y+p.ymax;
-		int corners=0;
-		for(const Face& f : faces){
-			if(f.fragile){
-				if(min(x2, f.x2)>max(x1, f.x1) && min(y2, f.y2)>max(y1, f.y1)) return false;
-				continue;
-			}
-			if(!(corners&1) && f.x1<=x1 && x1<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=1;
-			if(!(corners&2) && f.x1<=x2 && x2<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=2;
-			if(!(corners&4) && f.x1<=x1 && x1<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=4;
-			if(!(corners&8) && f.x1<=x2 && x2<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=8;
-		}
-		if(corners!=15) return false;
+		if(!clpState::box_supported(x+p.xmin, y+p.ymin, x+p.xmax, y+p.ymax, faces)) return false;
 	}
 	return true;
 }
@@ -90,18 +104,34 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 			support_faces.clear();
 			if(sp.zmin>0){
 				bool any_face=false;
+				long z=sp.zmin;
+				//piso elevado (subestructura)
+				if(uld && uld->substructure && z==uld->delta){
+					support_faces.push_back(Face{uld->edge, uld->edge, uld->L-uld->edge, uld->W-uld->edge, false, true});
+					any_face=true;
+				}
 				for(const PlacedBlock& b : cont.blocks){
-					if(b.zmin>=sp.zmin || b.zmax<sp.zmin || b.xmin>sp.xmax || sp.xmin>b.xmax ||
+					if(b.zmin>=z || b.zmax<z-padding || b.xmin>sp.xmax || sp.xmin>b.xmax ||
 							b.ymin>sp.ymax || sp.ymin>b.ymax) continue;
 					for(const Block::PlacedBox& p : b.block->pboxes){
-						if(b.zmin+p.zmax != sp.zmin) continue;
+						long top=b.zmin+p.zmax;
+						if(top>z || top<z-padding) continue;
 						bool fragile=types[p.type]->fragile;
-						support_faces.push_back(Face{b.xmin+p.xmin, b.ymin+p.ymin, b.xmin+p.xmax, b.ymin+p.ymax, fragile});
-						any_face = any_face || !fragile;
+						support_faces.push_back(Face{b.xmin+p.xmin, b.ymin+p.ymin, b.xmin+p.xmax, b.ymin+p.ymax,
+							fragile, top==z});
+						any_face = any_face || (!fragile && top==z);
 					}
 				}
-				//el espacio no tiene base
-				if(!any_face) { cont.remove_space(isp); continue; }
+				//el espacio no tiene base: queda sin considerar hasta que se ubique otro bloque
+				//(si algun bloque cabe en el)
+				if(!any_face) {
+					bool fits=false;
+					for(const Block* b : valid_blocks)
+						if(b->fits(sp.getL(), sp.getW(), sp.getH())){ fits=true; break; }
+					if(fits) cont.make_dormant(isp);
+					else cont.remove_space(isp);
+					continue;
+				}
 			}
 		}else if(support){
 			support_tops.clear();
@@ -122,10 +152,16 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		static vector<Ranked> ranked;
 		ranked.clear();
 		bool any=false;
+		//algun bloque cabe pero no esta apoyado
+		bool unsupported=false;
 		for(const Block* b : valid_blocks){
 			if(!b->fits(sp.getL(), sp.getW(), sp.getH())) continue;
 			long x, y, z;
-			if(!locate(*b, sp, x, y, z)) continue;
+			bool sup;
+			if(!locate(*b, sp, x, y, z, &sup)){
+				unsupported = unsupported || !sup;
+				continue;
+			}
 			any=true;
 			//umbral: evaluacion que hay que superar para entrar a las n mejores
 			double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
@@ -138,8 +174,13 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 			}
 		}
 
-		//el espacio se elimina si no cabe ningun bloque
-		if(!any) { cont.remove_space(isp); continue; }
+		//el espacio se elimina si no cabe ningun bloque (si caben pero no estan apoyados,
+		//queda sin considerar hasta que se ubique otro bloque)
+		if(!any) {
+			if(unsupported && corner_support) cont.make_dormant(isp);
+			else cont.remove_space(isp);
+			continue;
+		}
 
 		for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
 			bactions.push_back(new clpAction(*it->b, sp, it->x, it->y, it->z));
@@ -149,7 +190,8 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 	return 0;
 }
 
-bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z) const{
+bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z, bool* supported) const{
+	if(supported) *supported=true;
 	long l=b.getL(), w=b.getW(), h=b.getH();
 	sp.get_location(l, w, h, x, y, z);
 	if(support) z=sp.zmin;
@@ -173,7 +215,11 @@ bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z
 	}
 
 	if(support && z>0){
-		if(corner_support) return corners_supported(b, x, y, support_faces);
+		if(corner_support){
+			bool ok=corners_supported(b, x, y, support_faces);
+			if(supported) *supported=ok;
+			return ok;
+		}
 		if(covered_area(support_tops, x, y, l, w) < l*w) return false;
 	}
 	return true;
@@ -214,6 +260,10 @@ bool clpState::is_feasible() const{
 	for(size_t i=0; i<B.size(); i++){
 		if(!container.contains(B[i])) return false;
 		if(uld && !uld->inside(B[i])) return false;
+		//bajo la altura delta solo se puede cargar dentro del borde (con subestructura,
+		//nada bajo delta)
+		if(uld && B[i].zmin < uld->delta && (uld->substructure || B[i].xmin < uld->edge ||
+				B[i].ymin < uld->edge || B[i].xmax > uld->L-uld->edge || B[i].ymax > uld->W-uld->edge)) return false;
 		for(size_t j=i+1; j<B.size(); j++)
 			if(B[i].strict_intersects(B[j])) return false;
 		for(auto& p : B[i].block->boxes) used[p.first] += p.second;
@@ -259,10 +309,19 @@ double clpState::cog_violation(long& dx, long& dy) const{
 
 	//desplazamientos posibles
 	long xlo=-cont.getL(), xhi=cont.getL(), ylo=-cont.getW(), yhi=cont.getW();
+	long e=uld->edge, L=cont.getL(), W=cont.getW();
 	for(const PlacedBlock& b : cont.blocks){
 		uld->x_shift_range(b, xlo, xhi);
 		ylo=max(ylo, -b.ymin);
-		yhi=min(yhi, cont.getW()-b.ymax);
+		yhi=min(yhi, W-b.ymax);
+		//bajo la altura delta, los bloques quedan dentro del borde; sobre la subestructura,
+		//los bloques no se alejan del piso elevado (no disminuye su apoyo)
+		if(b.zmin < uld->delta || (uld->substructure && b.zmin == uld->delta)){
+			xlo = max(xlo, (b.xmin>=e)? e-b.xmin : 0);
+			xhi = min(xhi, (b.xmax<=L-e)? L-e-b.xmax : 0);
+			ylo = max(ylo, (b.ymin>=e)? e-b.ymin : 0);
+			yhi = min(yhi, (b.ymax<=W-e)? W-e-b.ymax : 0);
+		}
 	}
 
 	//el desplazamiento mas cercano al que centra la carga
@@ -354,6 +413,7 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl){
 	clpState* s = new clpState(u.L, u.W, u.H);
 	clpState::uld = &u;
+	if(u.edge>0 || u.substructure) s->cont.set_floor(u.edge, u.delta, u.substructure);
 	clpState::initial_boxes = left;
 	s->left = left;
 	s->weight_left = u.max_weight;

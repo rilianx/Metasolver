@@ -90,9 +90,10 @@ public:
 	 * Posicion del bloque b en el espacio sp: la esquina de anclaje, desplazada si es
 	 * necesario para cumplir los recortes del ULD. Con soporte, el bloque se ubica en
 	 * la base del espacio y debe quedar completamente apoyado.
-	 * Retorna false si el bloque no se puede ubicar en el espacio.
+	 * Retorna false si el bloque no se puede ubicar en el espacio (supported indica si
+	 * fue por falta de apoyo).
 	 */
-	bool locate(const Block& b, const Space& sp, long& x, long& y, long& z) const;
+	bool locate(const Block& b, const Space& sp, long& x, long& y, long& z, bool* supported=NULL) const;
 
 	/**
 	 * Verifica la solucion: bloques dentro del contenedor (y de los recortes), sin
@@ -142,6 +143,23 @@ public:
 	//(y ninguna caja queda sobre una caja fragil). Requiere support=true (los
 	//bloques se generan con soporte completo)
 	static bool corner_support;
+
+	//con corner_support, una caja tambien esta apoyada si parte de su base se apoya
+	//directamente y al menos min_overlap de su base se apoya directa o indirectamente
+	//(sobre relleno, en cajas no fragiles hasta padding bajo la base; Hessler et al. 2024)
+	static double min_overlap;
+	static long padding;
+
+	/** cara superior de una caja (o del piso elevado) bajo la base de un bloque */
+	struct Face {
+		long x1, y1, x2, y2;
+		bool fragile;
+		//a la altura de la base (si no, apoyo indirecto sobre relleno)
+		bool direct;
+	};
+
+	/** la base [x1,x2] x [y1,y2] de una caja esta apoyada en las caras faces */
+	static bool box_supported(long x1, long y1, long x2, long y2, const vector<Face>& faces);
 
 	//penalizacion de la desviacion del centro de gravedad en get_value
 	static double cog_penalty;

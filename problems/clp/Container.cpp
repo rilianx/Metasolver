@@ -17,6 +17,10 @@ void Container::insert(const Block& b, long x, long y, long z, long min_l, long 
 	PlacedBlock pb(x, y, z, b.getL(), b.getW(), b.getH(), &b);
 	blocks.push_back(pb);
 
+	//los espacios sin apoyo se vuelven a considerar
+	spaces.insert(spaces.end(), dormant.begin(), dormant.end());
+	dormant.clear();
+
 	// los espacios que intersectan al bloque se reemplazan por los sub-espacios
 	// resultantes de restarle el bloque (pieces); los que solo lo tocan (touching)
 	// se mantienen, pero pueden contener a alguna pieza

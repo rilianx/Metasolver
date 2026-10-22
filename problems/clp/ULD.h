@@ -36,6 +36,12 @@ public:
 	//volumen utilizable (sin los recortes)
 	double volume;
 
+	//borde del piso de ancho edge (para cerrar la red), sobre el que no se puede cargar
+	//bajo la altura delta (Hessler et al. 2024)
+	long edge=0, delta=0;
+	//el piso (sin el borde) se eleva a la altura delta
+	bool substructure=false;
+
 	/** el bloque [x1,x2] x [z1,z2] (en el plano x-z) cumple todos los recortes */
 	bool inside(long x1, long z1, long x2, long z2) const {
 		for(const Cut& f : cuts)

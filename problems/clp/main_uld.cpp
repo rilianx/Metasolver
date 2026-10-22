@@ -79,30 +79,52 @@ static vector<int> read_items(const string& file){
 	return n;
 }
 
-/** la caja t cabe sola en el ULD u (sobre el piso si hay soporte) */
+/**
+ * la caja cabe sola en el ULD u: sobre el piso dentro del borde o, si el ULD tiene borde,
+ * sobre la subestructura (apoyada en ella al menos en min_overlap de su base)
+ */
 static bool fits(const BoxShape& box, const ULD& u){
 	if(box.weight > u.max_weight) return false;
+	long e=u.edge;
 	for(int o=0; o<6; o++){
 		if(!box.is_valid(o)) continue;
 		long l=box.getL(o), w=box.getW(o), h=box.getH(o);
-		if(l>u.L || w>u.W || h>u.H) continue;
-		long x=0, z=0;
-		if(u.adjust(x, z, l, h, 0, u.L-l, 0, u.H-h, !clpState::support)) return true;
+		if(l<=u.L-2*e && w<=u.W-2*e && h<=u.H){
+			long x=e, z=0;
+			if(u.adjust(x, z, l, h, e, u.L-e-l, 0, u.H-h, !clpState::support)) return true;
+		}
+		if(e>0 && l<=u.L && w<=u.W && h<=u.H-u.delta){
+			long x=(u.L-l)/2, z=u.delta;
+			if(!u.adjust(x, z, l, h, 0, u.L-l, u.delta, u.H-h, false)) continue;
+			long y=(u.W-w)/2;
+			double in = (double)(min(x+l, u.L-e)-max(x, e)) * (double)(min(y+w, u.W-e)-max(y, e));
+			if(in >= max(clpState::min_overlap, 1e-9)*l*w || (x>=e && x+l<=u.L-e && y>=e && y+w<=u.W-e)) return true;
+		}
 	}
 	return false;
+}
+
+//ULDs (sin y con subestructura) y cantidad disponible de cada tipo (-1: ilimitada)
+static vector<ULD> ulds, ulds_sub;
+static vector<int> available;
+static bool use_substructure=false;
+
+static int uld_index(const ULD& u){
+	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
+	return -1;
 }
 
 /**
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<ULD>& ulds, const vector<int>& left){
+static const ULD* select_uld(const vector<int>& left){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
 		if(left[b->type]==0) continue;
 		int nf=0;
-		for(size_t u=0; u<ulds.size(); u++) nf += (F[b->type][u] = fits(*b, ulds[u]));
+		for(size_t u=0; u<ulds.size(); u++) nf += (F[b->type][u] = (available[u]!=0 && fits(*b, ulds[u])));
 		if(nf>0) m=min(m, nf);
 	}
 
@@ -124,8 +146,9 @@ static const ULD* select_uld(const vector<ULD>& ulds, const vector<int>& left){
 }
 
 /**
- * Verificacion caja por caja: dentro del ULD (y sus recortes), sin intersecciones,
- * sin superar el peso maximo, cajas apoyadas (si hay soporte) y nada sobre las fragiles
+ * Verificacion caja por caja: dentro del ULD (y sus recortes, fuera del borde bajo delta),
+ * sin intersecciones, sin superar el peso maximo, cajas apoyadas (si hay soporte) y nada
+ * sobre las fragiles
  */
 static bool check_boxes(const clpState& s, const ULD& u){
 	vector<Block::PlacedBox> B;
@@ -139,26 +162,31 @@ static bool check_boxes(const clpState& s, const ULD& u){
 		if(a.xmin<0 || a.ymin<0 || a.zmin<0 || a.xmax>u.L || a.ymax>u.W || a.zmax>u.H || !u.inside(ai)){
 			cerr << "box outside the ULD " << ai << endl; return false;
 		}
+		if(a.zmin < u.delta && (u.substructure || a.xmin < u.edge || a.ymin < u.edge ||
+				a.xmax > u.L-u.edge || a.ymax > u.W-u.edge)){
+			cerr << "box on the edge of the ULD " << ai << endl; return false;
+		}
 		long supported=0;
-		int corners=0;
+		vector<clpState::Face> faces;
+		if(u.substructure && a.zmin==u.delta)
+			faces.push_back(clpState::Face{u.edge, u.edge, u.L-u.edge, u.W-u.edge, false, true});
 		for(size_t j=0; j<B.size(); j++){
 			if(j==i) continue;
 			const Block::PlacedBox& b=B[j];
 			AABB bj(b.xmin, b.ymin, b.zmin, b.xmax, b.ymax, b.zmax);
 			if(j>i && ai.strict_intersects(bj)){ cerr << "boxes intersect " << ai << " " << bj << endl; return false; }
-			if(b.zmax!=a.zmin) continue;
+			if(b.zmax > a.zmin || b.zmax < a.zmin-clpState::padding) continue;
+			bool fragile=clpState::types[b.type]->fragile;
+			faces.push_back(clpState::Face{b.xmin, b.ymin, b.xmax, b.ymax, fragile, b.zmax==a.zmin});
 			long dx=min(a.xmax, b.xmax)-max(a.xmin, b.xmin), dy=min(a.ymax, b.ymax)-max(a.ymin, b.ymin);
-			if(dx>0 && dy>0){
-				if(clpState::types[b.type]->fragile){ cerr << "box on a fragile box " << ai << endl; return false; }
+			if(b.zmax==a.zmin && dx>0 && dy>0){
+				if(fragile){ cerr << "box on a fragile box " << ai << endl; return false; }
 				supported += dx*dy;
 			}
-			if(clpState::types[b.type]->fragile) continue;
-			long cx[2]={a.xmin, a.xmax}, cy[2]={a.ymin, a.ymax};
-			for(int k=0; k<4; k++)
-				if(b.xmin<=cx[k%2] && cx[k%2]<=b.xmax && b.ymin<=cy[k/2] && cy[k/2]<=b.ymax) corners |= 1<<k;
 		}
 		if(clpState::support && a.zmin>0){
-			bool ok = clpState::corner_support? corners==15 : supported==(a.xmax-a.xmin)*(a.ymax-a.ymin);
+			bool ok = clpState::corner_support? clpState::box_supported(a.xmin, a.ymin, a.xmax, a.ymax, faces) :
+					supported==(a.xmax-a.xmin)*(a.ymax-a.ymin);
 			if(!ok){ cerr << "box not supported " << ai << endl; return false; }
 		}
 	}
@@ -232,12 +260,23 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
  * permitido, se repite la busqueda anclando los espacios en el origen (la carga queda
  * agrupada y se puede centrar) y se elige la mejor de las dos cargas
  */
-static Load load(const ULD& u, const vector<int>& left, const Params& P){
+static Load load_cog(const ULD& u, const vector<int>& left, const Params& P){
 	Load res = load_bsg(u, left, P);
 	if(clpState::cog_penalty>0.0 && !res.cog_ok()){
 		Space::origin_anchor=true;
 		Load res2 = load_bsg(u, left, P);
 		Space::origin_anchor=false;
+		if(res2.value > res.value) res=res2;
+	}
+	return res;
+}
+
+/** carga el ULD del tipo de u, sin y (si hay borde) con subestructura, y elige la mejor carga */
+static Load load(const ULD& u, const vector<int>& left, const Params& P){
+	int i=uld_index(u);
+	Load res = load_cog(ulds[i], left, P);
+	if(use_substructure){
+		Load res2 = load_cog(ulds_sub[i], left, P);
 		if(res2.value > res.value) res=res2;
 	}
 	return res;
@@ -309,6 +348,27 @@ static vector<int> select_subset(const vector<int>& left, const ULD& u, double r
 	return subset;
 }
 
+/**
+ * Cajas que no se cargaron (ULDs limitados): se recarga cada ULD (de mayor a menor volumen
+ * libre) con sus cajas y las no cargadas, y se acepta si aumenta el volumen cargado
+ * (sin dejar el centro de gravedad fuera de rango si no lo estaba)
+ */
+static void load_remaining(vector<Load>& loads, vector<int>& left, const Params& P){
+	vector<int> order(loads.size());
+	for(size_t i=0; i<order.size(); i++) order[i]=i;
+	sort(order.begin(), order.end(), [&](int a, int b){
+		return loads[a].uld->volume - loads[a].volume > loads[b].uld->volume - loads[b].volume; });
+	for(int i : order){
+		if(count(left.begin(), left.end(), 0)==(int)left.size()) return;
+		vector<int> avail = loads[i].boxes;
+		for(size_t t=0; t<avail.size(); t++) avail[t]+=left[t];
+		Load ld = load(*loads[i].uld, avail, P);
+		if(!ld.feasible || (loads[i].cog_ok() && !ld.cog_ok()) || ld.volume <= loads[i].volume) continue;
+		loads[i]=ld;
+		for(size_t t=0; t<left.size(); t++) left[t] = avail[t]-ld.boxes[t];
+	}
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-ULD *********.", "BSG Solver for air cargo loading (ULDs).");
@@ -326,8 +386,14 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
 	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2", {"subset_ratio"});
+	args::ValueFlag<long> _edge(parser, "int", "Width of the edge of the ULD floor on which loading is not allowed below the height of the vertical edge offset (Hessler et al. 2024). Default: 0", {"edge"});
+	args::ValueFlag<long> _edge_offset(parser, "int", "Vertical edge offset (with an edge, a substructure of this height can also be used). Default: 0", {"edge_offset"});
+	args::ValueFlag<double> _min_overlap(parser, "double", "Support: a box is also supported if part of its base rests on other boxes and the proportion min_overlap of its base rests on boxes or on padding (Hessler et al. 2024). Default: 0 (only the four corners)", {"min_overlap"});
+	args::ValueFlag<long> _padding(parser, "int", "Maximum height of the padding material. Default: 0", {"padding"});
+	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
+	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
-	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
+	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
 
@@ -376,15 +442,30 @@ int main(int argc, char** argv){
 
 	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.0;
 
+	clpState::min_overlap=(_min_overlap)? _min_overlap.Get() : 0.0;
+	clpState::padding=(_padding)? _padding.Get() : 0;
+
 	clock_t begin_time=clock();
 
-	vector<ULD> ulds=ULD::read(uld_file);
+	ulds=ULD::read(uld_file);
+	for(ULD& u : ulds){
+		if(_edge) u.edge=_edge.Get();
+		if(_edge_offset) u.delta=_edge_offset.Get();
+		if(_cog_rel){
+			u.dev[0]=(long) (_cog_rel.Get()*u.L/2.0);
+			u.dev[1]=(long) (_cog_rel.Get()*u.W/2.0);
+		}
+	}
+	use_substructure = clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
+	ulds_sub=ulds;
+	for(ULD& u : ulds_sub) u.substructure=true;
+	available.assign(ulds.size(), (_uld_count)? _uld_count.Get() : -1);
 	vector<int> left=read_items(file);
 
 	for(const BoxShape* b : clpState::types){
 		bool any=false;
 		for(const ULD& u : ulds) any = any || fits(*b, u);
-		if(!any){
+		if(!any && available[0]<0){
 			cerr << "ERROR: box " << b->type << " does not fit in any ULD" << endl;
 			return 1;
 		}
@@ -394,7 +475,9 @@ int main(int argc, char** argv){
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 
 	while(remaining()>0){
-		const ULD* u = select_uld(ulds, left);
+		const ULD* u = select_uld(left);
+		//no quedan ULDs disponibles en que quepan las cajas restantes
+		if(!u) break;
 		Load ld = load(*u, select_subset(left, *u, subset_ratio), P);
 		int n=0; for(int x : ld.boxes) n+=x;
 		//si no se cargo ninguna caja del subconjunto, se usan todas
@@ -408,7 +491,10 @@ int main(int argc, char** argv){
 		}
 		for(size_t t=0; t<left.size(); t++) left[t]-=ld.boxes[t];
 		loads.push_back(ld);
+		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
+
+	if(remaining()>0) load_remaining(loads, left, P);
 
 	//se eliminan ULDs repartiendo sus cajas en los otros
 	if(!_no_eliminate)
@@ -418,7 +504,8 @@ int main(int argc, char** argv){
 	Load& worst = *min_element(loads.begin(), loads.end(),
 			[](const Load& a, const Load& b){ return a.utilization() < b.utilization(); });
 	vector<const ULD*> smaller;
-	for(const ULD& u : ulds) if(u.volume < worst.uld->volume) smaller.push_back(&u);
+	for(size_t i=0; i<ulds.size(); i++)
+		if(ulds[i].volume < worst.uld->volume && available[i]!=0) smaller.push_back(&ulds[i]);
 	sort(smaller.begin(), smaller.end(), [](const ULD* a, const ULD* b){ return a->volume < b->volume; });
 	for(const ULD* u : smaller){
 		const vector<int>& boxes=worst.boxes;
@@ -427,7 +514,12 @@ int main(int argc, char** argv){
 			if(boxes[t]>0 && !fits(*clpState::types[t], *u)) all_fit=false;
 		if(!all_fit) continue;
 		Load ld = load(*u, boxes, P);
-		if(ld.boxes==boxes && (ld.cog_ok() || !worst.cog_ok())){ worst=ld; break; }
+		if(ld.boxes==boxes && (ld.cog_ok() || !worst.cog_ok())){
+			if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
+			if(available[uld_index(*worst.uld)]>=0) available[uld_index(*worst.uld)]++;
+			worst=ld;
+			break;
+		}
 	}
 
 	double time=double(clock()-begin_time)/double(CLOCKS_PER_SEC);
@@ -454,23 +546,24 @@ int main(int argc, char** argv){
 		for(size_t i=0; i<loads.size(); i++){
 			const Load& ld=loads[i];
 			int n=0; for(int x : ld.boxes) n+=x;
-			cout << "ULD " << i+1 << " type " << ld.uld->type << ": boxes " << n
+			cout << "ULD " << i+1 << " type " << ld.uld->type << (ld.uld->substructure? " (substructure)":"") << ": boxes " << n
 				<< " utilization " << util[i] << "% weight " << ld.weight << "/" << ld.uld->max_weight
 				<< " cog (" << ld.cog[0]-ld.uld->L/2.0 << "," << ld.cog[1]-ld.uld->W/2.0 << ")"
 				<< (ld.cog_ok()? "":" violated") << endl;
 		}
 	}
+	int unloaded=remaining();
 	cout << "n_ulds " << loads.size() << " median_util " << median
 		<< " total_util " << 100*total_vol/total_uld_vol << " cost " << cost
-		<< " cog_violations " << cog_viol << " time " << time << endl;
+		<< " cog_violations " << cog_viol << " unloaded " << unloaded << " time " << time << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
-		out << "uld;uld_type;item;x;y;z;l;w;h" << endl;
+		out << "uld;uld_type;substructure;item;x;y;z;l;w;h" << endl;
 		vector<size_t> next(type_items.size(), 0);
 		for(size_t i=0; i<loads.size(); i++)
 			for(const Block::PlacedBox& b : loads[i].placed)
-				out << i << ";" << loads[i].uld->type << ";" << type_items[b.type][next[b.type]++] << ";"
+				out << i << ";" << loads[i].uld->type << ";" << loads[i].uld->substructure << ";" << type_items[b.type][next[b.type]++] << ";"
 					<< b.xmin << ";" << b.ymin << ";" << b.zmin << ";"
 					<< b.xmax-b.xmin << ";" << b.ymax-b.ymin << ";" << b.zmax-b.zmin << endl;
 	}

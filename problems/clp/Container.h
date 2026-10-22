@@ -44,6 +44,29 @@ public:
 	}
 
 	/**
+	 * El espacio i deja de considerarse hasta la siguiente insercion (no hay bloques que se
+	 * puedan apoyar en su base, pero un bloque ubicado despues podria darle apoyo)
+	 */
+	void make_dormant(int i){
+		dormant.push_back(spaces[i]);
+		remove_space(i);
+	}
+
+	/**
+	 * Espacios iniciales de un ULD con un borde de ancho e en el piso, sobre el que no se
+	 * puede cargar bajo la altura delta. Con subestructura, el piso se eleva a la altura delta
+	 */
+	void set_floor(long e, long delta, bool substructure){
+		spaces.clear();
+		if(substructure)
+			spaces.push_back(Space(AABB(0,0,delta,L,W,H), L, W, H));
+		else{
+			spaces.push_back(Space(AABB(e,e,0,L-e,W-e,H), L, W, H));
+			if(e>0) spaces.push_back(Space(AABB(0,0,delta,L,W,H), L, W, H));
+		}
+	}
+
+	/**
 	 * Ubica el bloque b en la posicion (x,y,z) y actualiza los espacios libres.
 	 * Los espacios resultantes con alguna dimension menor a las de min_dim se descartan.
 	 */
@@ -52,6 +75,8 @@ public:
 	const long L, W, H;
 	long occupied_volume;
 	std::vector<Space> spaces;
+	//espacios sin apoyo (se reactivan al insertar un bloque)
+	std::vector<Space> dormant;
 	std::vector<PlacedBlock> blocks;
 };
 
