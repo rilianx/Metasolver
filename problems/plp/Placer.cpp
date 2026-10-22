@@ -109,7 +109,7 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 	return t;
 }
 
-void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int max_eval) {
+void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int max_eval, bool by_box, double min_gain) {
 	if(!blocks.empty()) throw runtime_error("generate_blocks: los bloques ya fueron generados");
 
 	//vertices y volumen de la envolvente convexa de cada pieza
@@ -155,6 +155,7 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int
 				bb.add(b2);
 				Vec3 e = bb.extent();
 				if(e.x > inst.W + eps || e.y > inst.D + eps) continue;
+				if(by_box && bb.volume() > (1-min_gain)*(P1.bbox.volume() + P2.bbox.volume())) continue;
 				cand.push_back(make_pair(bb.volume(), r));
 			}
 			sort(cand.begin(), cand.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
@@ -163,7 +164,7 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int
 			vector< pair<double,Vec3> > ok;
 			vector<Vec3> seen;
 			for(const auto& c : cand){
-				if((int)seen.size() >= max_eval) break;
+				if((int)seen.size() >= ((by_box)? per_pair : max_eval)) break;
 				const Vec3& r = c.second;
 				//con piezas iguales, r y -r forman el mismo bloque
 				bool repeated=false;
@@ -175,9 +176,10 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int
 				vector<Vec3> pts = pv[p1];
 				for(const Vec3& v : pv[p2]) pts.push_back(v + r);
 				double waste = (ConvexPolytope::hull(pts).get_volume() - hull_vol[p1] - hull_vol[p2]) / vol;
-				if(waste <= max_waste) ok.push_back(make_pair(waste, r));
+				if(by_box || waste <= max_waste) ok.push_back(make_pair(waste, r));
 			}
-			sort(ok.begin(), ok.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
+			//por caja: en el orden de la caja (ya ordenados); por hueco: menor hueco primero
+			if(!by_box) sort(ok.begin(), ok.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
 
 			for(int k=0; k<(int)ok.size() && k<per_pair; k++){
 				const Vec3& r = ok[k].second;
@@ -197,7 +199,8 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int
 			}
 		}
 
-	sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.waste < y.waste; });
+	if(by_box) sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.density > y.density; });
+	else sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.waste < y.waste; });
 	if((int)all.size() > max_blocks) all.resize(max_blocks);
 	blocks = all;
 

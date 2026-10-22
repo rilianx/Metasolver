@@ -22,8 +22,8 @@ inline uint64_t mix(uint64_t x) {
 
 }
 
-PLP_Function::PLP_Function(Placer& placer, double alpha, double beta, double gamma) :
-		placer(placer), alpha(alpha), beta(beta), gamma(gamma), vmax(0) {
+PLP_Function::PLP_Function(Placer& placer, double alpha, double beta, double gamma, bool per_piece) :
+		placer(placer), alpha(alpha), beta(beta), gamma(gamma), per_piece(per_piece), vmax(0) {
 	for(const Piece& P : placer.inst.pieces) vmax = max(vmax, P.volume);
 	h0 = placer.inst.height_lower_bound();
 }
@@ -31,7 +31,7 @@ PLP_Function::PLP_Function(Placer& placer, double alpha, double beta, double gam
 double PLP_Function::eval(int p, const Vec3& t, double top) const {
 	double ztop = t.z + placer.shape_extent(p).z;
 	//volumen por pieza (un pseudobloque no se prefiere solo por ser mas grande)
-	double v = placer.shape_volume(p) / placer.shape_pieces(p);
+	double v = placer.shape_volume(p) / ((per_piece)? placer.shape_pieces(p) : 1);
 	return alpha*log(v/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
 }
 

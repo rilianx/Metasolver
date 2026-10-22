@@ -43,7 +43,8 @@ public:
  */
 class PLP_Function : public ActionEvaluator {
 public:
-	PLP_Function(Placer& placer, double alpha=1.0, double beta=1.0, double gamma=1.0);
+	/** per_piece: un pseudobloque se evalua con el volumen por pieza (si no, con su volumen total) */
+	PLP_Function(Placer& placer, double alpha=1.0, double beta=1.0, double gamma=1.0, bool per_piece=true);
 
 	/** evaluacion de la forma p del Placer (pieza o pseudobloque) en t */
 	double eval(int p, const Vec3& t, double top) const;
@@ -52,6 +53,7 @@ public:
 
 private:
 	double alpha, beta, gamma;
+	bool per_piece;
 	double vmax, h0;
 };
 

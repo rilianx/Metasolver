@@ -67,9 +67,13 @@ public:
 	 * tocan); se evaluan las max_eval factibles de menor caja envolvente. Un bloque se acepta si su hueco
 	 * agregado (envolvente convexa del bloque - envolventes de las piezas, relativo al volumen de las piezas)
 	 * es a lo mas max_waste. Se conservan los per_pair de menor hueco por par y los max_blocks mejores en total.
+	 * Con by_box=true el criterio es el de la caja envolvente: se acepta si la caja del bloque es al menos una
+	 * fraccion min_gain menor que la suma de las cajas de las piezas, se toman por par los per_pair factibles
+	 * de menor caja y en total los de mayor densidad (volumen / caja).
 	 * Las formas p >= n_pieces() son los bloques (p - n_pieces()).
 	 */
-	void generate_blocks(int max_blocks, int per_pair=2, double max_waste=0.1, int max_eval=30);
+	void generate_blocks(int max_blocks, int per_pair=2, double max_waste=0.1, int max_eval=30,
+			bool by_box=false, double min_gain=0.05);
 
 	/** numero de piezas de la forma p (1 para piezas, 2 para pseudobloques) */
 	int shape_pieces(int p) const { return shape_npieces[p]; }
