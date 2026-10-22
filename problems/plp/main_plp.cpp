@@ -23,10 +23,10 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<int> _maxtime(parser, "int", "Timelimit (seconds). Default: 30", {'t', "timelimit"});
 	args::ValueFlag<double> _alpha(parser, "double", "Weight of the volume of the piece. Default: 1", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Weight of the height of the piece. Default: 1", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Weight of the increase of the height. Default: 1", {"gamma"});
-	args::ValueFlag<int> _grid(parser, "int", "Starting points per axis (x,y). Default: 3", {"grid"});
-	args::ValueFlag<double> _slide(parser, "double", "Weight of x,y (towards the walls) in the LP descent. Default: 0.1", {"slide"});
+	args::ValueFlag<double> _beta(parser, "double", "Weight of the height of the piece. Default: 5.53", {"beta"});
+	args::ValueFlag<double> _gamma(parser, "double", "Weight of the increase of the height. Default: 0.77", {"gamma"});
+	args::ValueFlag<int> _grid(parser, "int", "Starting points per axis (x,y). Default: 4", {"grid"});
+	args::ValueFlag<double> _slide(parser, "double", "Weight of x,y (towards the walls) in the LP descent. Default: 0.065", {"slide"});
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
 	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 30", {"blocks"});
@@ -34,7 +34,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _block_criterion(parser, "box|hull", "Acceptance of pseudo-blocks: reduction of the bounding box (box) or added waste in the convex hull (hull). Default: hull", {"block_criterion"});
 	args::ValueFlag<double> _block_gain(parser, "double", "box criterion: minimum reduction of the bounding box w.r.t. the boxes of the pieces. Default: 0.05", {"block_gain"});
 	args::ValueFlag<string> _block_eval(parser, "total|piece", "Volume of a pseudo-block in the evaluation: total or per piece. Default: total", {"block_eval"});
-	args::ValueFlag<double> _block_waste(parser, "double", "Maximum added waste of a pseudo-block: (convex hull of the block - convex hulls of the pieces) / volume of the pieces. Default: 0.1", {"block_waste"});
+	args::ValueFlag<double> _block_waste(parser, "double", "Maximum added waste of a pseudo-block: (convex hull of the block - convex hulls of the pieces) / volume of the pieces. Default: 0.07", {"block_waste"});
 	args::Flag _greedy(parser, "greedy", "Only the greedy algorithm", {"greedy"});
 	args::Flag _no_improve(parser, "no_improve", "Do not improve the best solution (compaction and relocation of the highest pieces)", {"no_improve"});
 	args::Flag _no_compact(parser, "no_compact", "Do not use the global LP compaction (requires ibex)", {"no_compact"});
@@ -65,10 +65,11 @@ int main(int argc, char** argv){
 
 	int maxtime = (_maxtime)? _maxtime.Get() : 30;
 	double alpha = (_alpha)? _alpha.Get() : 1.0;
-	double beta = (_beta)? _beta.Get() : 1.0;
-	double gamma = (_gamma)? _gamma.Get() : 1.0;
-	int grid = (_grid)? _grid.Get() : 3;
-	double slide = (_slide)? _slide.Get() : 0.1;
+	//ajustados con Optuna (problems/plp/results/ajuste.md)
+	double beta = (_beta)? _beta.Get() : 5.53;
+	double gamma = (_gamma)? _gamma.Get() : 0.77;
+	int grid = (_grid)? _grid.Get() : 4;
+	double slide = (_slide)? _slide.Get() : 0.065;
 	int beams = (_beams)? _beams.Get() : 4;
 
 	clock_t begin_time=clock();
@@ -88,7 +89,7 @@ int main(int argc, char** argv){
 		if(nblocks > 0){
 			string crit = (_block_criterion)? _block_criterion.Get() : "hull";
 			if(crit!="box" && crit!="hull") throw runtime_error("--block_criterion debe ser box o hull");
-			placer.generate_blocks(nblocks, (_block_pair)? _block_pair.Get() : 2, (_block_waste)? _block_waste.Get() : 0.1, 30,
+			placer.generate_blocks(nblocks, (_block_pair)? _block_pair.Get() : 2, (_block_waste)? _block_waste.Get() : 0.07, 30,
 					crit=="box", (_block_gain)? _block_gain.Get() : 0.05);
 			cout << "blocks: " << placer.get_blocks().size() << " (" << double(clock()-begin_time)/CLOCKS_PER_SEC << " s)" << endl;
 			for(const Block& B : placer.get_blocks())

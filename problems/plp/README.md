@@ -89,6 +89,8 @@ Metodología (2D) en la que se basa la compactación por LP:
   pared más cercana)` con un LP de 3 variables (`SmallLP`, conjunto activo desde un punto factible).
   Se repite (región de confianza del tamaño de la pieza) hasta que la posición no mejora.
 * **Evaluación** (`PLP_Function`): `alpha·log(V/Vmax) − beta·z/H0 − gamma·max(0, ztop − top)/H0`.
+  Valores por defecto ajustados con Optuna (`results/ajuste.md`): `alpha` 1, `beta` 5.53, `gamma` 0.77,
+  `slide` 0.065, `grid` 4, `block_waste` 0.07.
 * **Pseudobloques** (`--blocks N`, `Placer::generate_blocks`): pares de piezas en una posición relativa
   compacta, que el BSG puede ubicar como una sola forma (como los bloques del CLP). Un bloque es la unión de
   las partes convexas de sus dos piezas (no es convexo); para el `Placer` es una forma más, con partes
