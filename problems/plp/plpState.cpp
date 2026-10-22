@@ -30,7 +30,9 @@ PLP_Function::PLP_Function(Placer& placer, double alpha, double beta, double gam
 
 double PLP_Function::eval(int p, const Vec3& t, double top) const {
 	double ztop = t.z + placer.shape_extent(p).z;
-	return alpha*log(placer.shape_volume(p)/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
+	//volumen por pieza (un pseudobloque no se prefiere solo por ser mas grande)
+	double v = placer.shape_volume(p) / placer.shape_pieces(p);
+	return alpha*log(v/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
 }
 
 plpState::plpState(const Instance& inst, double hmax) : inst(&inst), n_left(0), top(0), volume(0), hmax(hmax), hash(0x9e3779b97f4a7c15ull) {

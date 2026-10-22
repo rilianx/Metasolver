@@ -25,6 +25,7 @@ Placer::Placer(const Instance& inst, int grid, double slide, double eps) :
 		}
 		shape_box.push_back(P.bbox);
 		shape_vol.push_back(P.volume);
+		shape_npieces.push_back(1);
 	}
 }
 
@@ -108,8 +109,18 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 	return t;
 }
 
-void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
+void Placer::generate_blocks(int max_blocks, int per_pair, double max_waste, int max_eval) {
 	if(!blocks.empty()) throw runtime_error("generate_blocks: los bloques ya fueron generados");
+
+	//vertices y volumen de la envolvente convexa de cada pieza
+	vector< vector<Vec3> > pv(inst.pieces.size());
+	vector<double> hull_vol(inst.pieces.size());
+	for(size_t p=0; p<inst.pieces.size(); p++){
+		for(int a : piece_parts[p])
+			for(const Vec3& v : parts[a]->get_vertices()) pv[p].push_back(v);
+		hull_vol[p] = ConvexPolytope::hull(pv[p]).get_volume();
+	}
+
 	vector<Block> all;
 	int nt = inst.types.size();
 	for(int k1=0; k1<nt; k1++)
@@ -118,14 +129,14 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
 			int p1 = inst.types[k1].piece, p2 = inst.types[k2].piece;
 			const Piece& P1 = inst.pieces[p1];
 			const Piece& P2 = inst.pieces[p2];
-			double box_sum = P1.bbox.volume() + P2.bbox.volume();
+			double vol = P1.volume + P2.volume;
 
 			//p1 fija en el origen; p2 en r se solapa con p1 si r esta en el interior de NFP(parte de p2, parte de p1)
 			vector<PlacedPart> fixed;
 			for(int b : piece_parts[p1]) fixed.push_back(PlacedPart{b, Vec3(), parts[b]->get_bbox()});
 
-			//posiciones relativas candidatas (vertices de los NFP) ordenadas por el volumen de la caja del bloque
-			//(vertices de los NFP y, para cada faceta n.r <= d, los puntos del plano sobre los ejes: r = (d/n_i) e_i)
+			//posiciones relativas candidatas: vertices de los NFP y, para cada faceta n.r <= d,
+			//los puntos de su plano sobre los ejes (r = (d/n_i) e_i: deslizar p2 junto a p1 a lo largo de un eje)
 			vector<Vec3> rs;
 			for(int a : piece_parts[p2])
 				for(int b : piece_parts[p1]){
@@ -135,6 +146,8 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
 						for(int i=0; i<3; i++)
 							if(fabs(f.n[i]) > 1e-9) { Vec3 r; r[i] = f.d/f.n[i]; rs.push_back(r); }
 				}
+
+			//se ordenan por el volumen de la caja del bloque (filtro barato)
 			vector< pair<double,Vec3> > cand;
 			for(const Vec3& r : rs){
 				Box3 bb = P1.bbox;
@@ -142,22 +155,32 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
 				bb.add(b2);
 				Vec3 e = bb.extent();
 				if(e.x > inst.W + eps || e.y > inst.D + eps) continue;
-				if(bb.volume() > (1-min_gain)*box_sum) continue;
 				cand.push_back(make_pair(bb.volume(), r));
 			}
 			sort(cand.begin(), cand.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
 
-			vector<Vec3> chosen;
+			//hueco agregado = envolvente(bloque) - envolvente(p1) - envolvente(p2), para max_eval candidatos factibles
+			vector< pair<double,Vec3> > ok;
+			vector<Vec3> seen;
 			for(const auto& c : cand){
-				if((int)chosen.size() >= per_pair) break;
+				if((int)seen.size() >= max_eval) break;
 				const Vec3& r = c.second;
 				//con piezas iguales, r y -r forman el mismo bloque
 				bool repeated=false;
-				for(const Vec3& u : chosen)
+				for(const Vec3& u : seen)
 					if((u-r).norm() <= 1e3*tol || (k1==k2 && (u+r).norm() <= 1e3*tol)) { repeated=true; break; }
 				if(repeated || !feasible(p2, r, fixed)) continue;
-				chosen.push_back(r);
+				seen.push_back(r);
 
+				vector<Vec3> pts = pv[p1];
+				for(const Vec3& v : pv[p2]) pts.push_back(v + r);
+				double waste = (ConvexPolytope::hull(pts).get_volume() - hull_vol[p1] - hull_vol[p2]) / vol;
+				if(waste <= max_waste) ok.push_back(make_pair(waste, r));
+			}
+			sort(ok.begin(), ok.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
+
+			for(int k=0; k<(int)ok.size() && k<per_pair; k++){
+				const Vec3& r = ok[k].second;
 				Box3 bb = P1.bbox;
 				Box3 b2; b2.lo = P2.bbox.lo + r; b2.hi = P2.bbox.hi + r;
 				bb.add(b2);
@@ -165,15 +188,16 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
 				B.k1 = k1; B.k2 = k2;
 				B.o1 = -bb.lo;
 				B.o2 = r - bb.lo;
-				B.volume = P1.volume + P2.volume;
+				B.volume = vol;
 				B.bbox.lo = Vec3();
 				B.bbox.hi = bb.extent();
-				B.density = B.volume / bb.volume();
+				B.waste = ok[k].first;
+				B.density = vol / bb.volume();
 				all.push_back(B);
 			}
 		}
 
-	sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.density > y.density; });
+	sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.waste < y.waste; });
 	if((int)all.size() > max_blocks) all.resize(max_blocks);
 	blocks = all;
 
@@ -183,6 +207,7 @@ void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
 		for(int a : piece_parts[inst.types[B.k2].piece]) shape_parts.back().push_back(ShapePart{a, B.o2});
 		shape_box.push_back(B.bbox);
 		shape_vol.push_back(B.volume);
+		shape_npieces.push_back(2);
 	}
 }
 

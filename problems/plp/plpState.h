@@ -38,7 +38,7 @@ public:
 /**
  * Evaluacion de una accion (mayor es mejor):
  *   alpha*log(V/Vmax) - beta*z/H0 - gamma*max(0, ztop - top)/H0
- * V: volumen de la forma (pieza o pseudobloque), Vmax: volumen de la pieza mas grande, z: base,
+ * V: volumen por pieza de la forma (pieza o pseudobloque), Vmax: volumen de la pieza mas grande, z: base,
  * ztop: tope de la pieza, top: altura actual de la carga, H0: cota inferior de la altura.
  */
 class PLP_Function : public ActionEvaluator {

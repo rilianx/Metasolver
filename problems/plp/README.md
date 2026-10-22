@@ -90,12 +90,17 @@ Metodología (2D) en la que se basa la compactación por LP:
   Se repite (región de confianza del tamaño de la pieza) hasta que la posición no mejora.
 * **Evaluación** (`PLP_Function`): `alpha·log(V/Vmax) − beta·z/H0 − gamma·max(0, ztop − top)/H0`.
 * **Pseudobloques** (`--blocks N`, `Placer::generate_blocks`): pares de piezas en una posición relativa
-  compacta, que el BSG puede ubicar como una sola forma (como los bloques del CLP). Para cada par de tipos se
-  prueban como posiciones relativas los vértices de los NFP entre sus partes y, para cada faceta del NFP, los
-  puntos de su plano sobre los ejes (deslizar una pieza junto a la otra a lo largo de un eje). Se conservan las
-  posiciones factibles cuya caja envolvente es al menos 5% (`--block_gain`) menor que la suma de las cajas de
-  las piezas, las `--block_pair` de mayor densidad por par y las N mejores en total. Un bloque es una forma
-  más del `Placer` (lista de partes convexas con un desplazamiento), así que reutiliza los NFP ya calculados.
+  compacta, que el BSG puede ubicar como una sola forma (como los bloques del CLP). Un bloque es la unión de
+  las partes convexas de sus dos piezas (no es convexo); para el `Placer` es una forma más, con partes
+  desplazadas, que reutiliza los NFP ya calculados.
+  * Posiciones relativas candidatas: vértices de los NFP entre las partes y, para cada faceta del NFP, los
+    puntos de su plano sobre los ejes (deslizar una pieza junto a la otra a lo largo de un eje). Se evalúan
+    las 30 factibles de menor caja envolvente.
+  * Criterio de aceptación: hueco agregado = (vol. de la envolvente convexa del bloque − vol. de las
+    envolventes de las dos piezas) / volumen de las piezas ≤ `--block_waste` (0.1). En piezas convexas es el
+    espacio atrapado entre ellas; es negativo si una pieza entra en una concavidad de la otra.
+  * Se conservan los `--block_pair` (2) de menor hueco por par de tipos y los N de menor hueco en total.
+  * En la evaluación de acciones, un bloque usa el volumen por pieza (no se prefiere solo por ser más grande).
 * **Búsqueda**: BSG con `DoubleEffort` (como en el CLP).
 * **Mejora final** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y
   las piezas que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.

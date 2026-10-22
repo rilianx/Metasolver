@@ -44,6 +44,9 @@ struct Block {
 	Vec3 o1, o2;
 	double volume;
 	Box3 bbox;
+	//hueco agregado: (envolvente convexa del bloque - envolventes de las piezas) / volumen de las piezas
+	//(negativo si una pieza entra en una concavidad de la otra)
+	double waste;
 	//volumen de las piezas / volumen de la caja envolvente del bloque
 	double density;
 };
@@ -59,13 +62,17 @@ public:
 	Placer(const Instance& inst, int grid=3, double slide=0.1, double eps=1e-6);
 
 	/**
-	 * Genera pseudobloques de dos piezas: para cada par de tipos se prueban como posiciones relativas los
-	 * vertices de los NFP entre sus partes (las piezas se tocan); se conservan las per_pair posiciones
-	 * factibles de mayor densidad (volumen / caja envolvente) cuya caja es al menos un fraccion min_gain
-	 * menor que la suma de las cajas de las piezas, y en total los max_blocks mejores.
+	 * Genera pseudobloques de dos piezas. Para cada par de tipos, las posiciones relativas candidatas son
+	 * los vertices de los NFP entre sus partes y los puntos de sus facetas sobre los ejes (las piezas se
+	 * tocan); se evaluan las max_eval factibles de menor caja envolvente. Un bloque se acepta si su hueco
+	 * agregado (envolvente convexa del bloque - envolventes de las piezas, relativo al volumen de las piezas)
+	 * es a lo mas max_waste. Se conservan los per_pair de menor hueco por par y los max_blocks mejores en total.
 	 * Las formas p >= n_pieces() son los bloques (p - n_pieces()).
 	 */
-	void generate_blocks(int max_blocks, int per_pair=2, double min_gain=0.05);
+	void generate_blocks(int max_blocks, int per_pair=2, double max_waste=0.1, int max_eval=30);
+
+	/** numero de piezas de la forma p (1 para piezas, 2 para pseudobloques) */
+	int shape_pieces(int p) const { return shape_npieces[p]; }
 
 	/**
 	 * Con seed > 0 los puntos de partida se perturban levemente (1e-7 de la escala). El algoritmo es muy
@@ -144,6 +151,7 @@ private:
 	std::vector< std::vector<ShapePart> > shape_parts;
 	std::vector<Box3> shape_box;
 	std::vector<double> shape_vol;
+	std::vector<int> shape_npieces;
 	std::vector<Block> blocks;
 
 	std::map< std::pair<int,int>, ConvexPolytope > nfps;
