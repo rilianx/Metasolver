@@ -317,7 +317,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 0", {"subset_ratio"});
+	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2", {"subset_ratio"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
@@ -365,7 +365,7 @@ int main(int argc, char** argv){
 	clpState::corner_support=(support=="corners");
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
 
-	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 0.0;
+	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.0;
 
 	clock_t begin_time=clock();
 

@@ -119,6 +119,10 @@ Constraints:
   is exceeded, the ULD is loaded again anchoring all the spaces at the origin
   (the load is grouped and it can be centered).
 
+Each ULD is loaded with a subset of the remaining boxes (`--subset_ratio`, default 2):
+the largest boxes that fit in the ULD, up to twice the volume of the ULD (0: all the boxes).
+The boxes that are not loaded return to the pool.
+
 After the sequential loading, the program tries to eliminate ULDs (`--no_eliminate`
 disables it): the boxes of a ULD (from the least utilized) are freed and the other ULDs
 are loaded again with their boxes and the freed ones; the boxes that are not loaded pass
@@ -130,12 +134,14 @@ Results on the 300 final instances (30 per size, 10 to 100 boxes), number of ULD
 and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler et al.
 2024: 708 ULDs, 11.2%, <0.5 s per instance):
 
-| -t (per ULD) | elimination | ULDs | CoG violations | avg time per instance |
-|---|---|---|---|---|
-| 1 s   | no  | 613 | 0.3% | 2.5 s  |
-| 1 s   | yes | 611 | 0.0% | 5.5 s  |
-| 0.1 s | no  | 638 | 0.9% | 0.27 s |
-| 0.1 s | yes | 636 | 0.2% | 0.61 s |
+| -t (per ULD) | subset ratio | elimination | ULDs | CoG violations | avg time per instance |
+|---|---|---|---|---|---|
+| 1 s   | all | no  | 613 | 0.3% | 2.5 s  |
+| 1 s   | all | yes | 611 | 0.0% | 5.5 s  |
+| 1 s   | 2   | yes | 605 | 0.0% | 5.4 s  |
+| 0.1 s | all | no  | 638 | 0.9% | 0.27 s |
+| 0.1 s | all | yes | 636 | 0.2% | 0.61 s |
+| 0.1 s | 2   | yes | 629 | 0.2% | 0.60 s |
 
 ```
 ./BSG_ULD {OPTIONS} [instance]
@@ -145,6 +151,8 @@ and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler 
       --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 10
       --support=[string]                corners, full or none. Default: corners
       --max_bl=[int]                    Maximum number of blocks. Default: 1000
+      --subset_ratio=[double]           Volume of the boxes given to each ULD (ratio of its volume, 0: all). Default: 2
+      --no_eliminate                    Do not try to eliminate ULDs
       --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
       -v, --verbose                     Print the loaded ULDs
 ```
