@@ -19,27 +19,34 @@ using namespace metasolver;
 
 namespace plp {
 
+/**
+ * Ubica una pieza del tipo type en t y, si type2 >= 0, una segunda pieza del tipo type2 en t2
+ * (pseudobloque).
+ */
 class plpAction : public Action {
 public:
-	plpAction(int type, const Vec3& t) : type(type), t(t) { }
+	plpAction(int type, const Vec3& t, int type2=-1, const Vec3& t2=Vec3()) : type(type), t(t), type2(type2), t2(t2) { }
 
 	virtual Action* clone() const { return new plpAction(*this); }
 
 	int type;
 	Vec3 t;
+	int type2;
+	Vec3 t2;
 };
 
 /**
  * Evaluacion de una accion (mayor es mejor):
  *   alpha*log(V/Vmax) - beta*z/H0 - gamma*max(0, ztop - top)/H0
- * V: volumen de la pieza, Vmax: volumen de la pieza mas grande, z: base de la pieza,
+ * V: volumen de la forma (pieza o pseudobloque), Vmax: volumen de la pieza mas grande, z: base,
  * ztop: tope de la pieza, top: altura actual de la carga, H0: cota inferior de la altura.
  */
 class PLP_Function : public ActionEvaluator {
 public:
 	PLP_Function(Placer& placer, double alpha=1.0, double beta=1.0, double gamma=1.0);
 
-	double eval(int type, const Vec3& t, double top) const;
+	/** evaluacion de la forma p del Placer (pieza o pseudobloque) en t */
+	double eval(int p, const Vec3& t, double top) const;
 
 	Placer& placer;
 
@@ -113,6 +120,8 @@ protected:
 	virtual void _transition(const Action& action);
 
 private:
+
+	void add_item(int type, const Vec3& t);
 
 	const Instance* inst;
 

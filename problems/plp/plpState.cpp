@@ -28,10 +28,9 @@ PLP_Function::PLP_Function(Placer& placer, double alpha, double beta, double gam
 	h0 = placer.inst.height_lower_bound();
 }
 
-double PLP_Function::eval(int type, const Vec3& t, double top) const {
-	const Piece& P = placer.inst.pieces[placer.inst.types[type].piece];
-	double ztop = t.z + P.bbox.extent().z;
-	return alpha*log(P.volume/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
+double PLP_Function::eval(int p, const Vec3& t, double top) const {
+	double ztop = t.z + placer.shape_extent(p).z;
+	return alpha*log(placer.shape_volume(p)/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
 }
 
 plpState::plpState(const Instance& inst, double hmax) : inst(&inst), n_left(0), top(0), volume(0), hmax(hmax), hash(0x9e3779b97f4a7c15ull) {
@@ -54,11 +53,29 @@ int plpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 	for(size_t k=0; k<left.size(); k++){
 		if(left[k]==0) continue;
 		pos.clear();
-		f->placer.candidates(inst->types[k].piece, placed, top, pos, hmax);
+		int p = inst->types[k].piece;
+		f->placer.candidates(p, placed, top, pos, hmax);
 		for(const Vec3& t : pos){
-			double e = f->eval(k, t, top);
+			double e = f->eval(p, t, top);
 			if((int)best.size() < n || e > best.begin()->first){
 				best.insert(make_pair(e, plpAction(k, t)));
+				if((int)best.size() > n) best.erase(best.begin());
+			}
+		}
+	}
+
+	//pseudobloques
+	const vector<Block>& blocks = f->placer.get_blocks();
+	for(size_t b=0; b<blocks.size(); b++){
+		const Block& B = blocks[b];
+		if(left[B.k1]==0 || left[B.k2]==0 || (B.k1==B.k2 && left[B.k1]<2)) continue;
+		int p = f->placer.n_pieces() + b;
+		pos.clear();
+		f->placer.candidates(p, placed, top, pos, hmax);
+		for(const Vec3& t : pos){
+			double e = f->eval(p, t, top);
+			if((int)best.size() < n || e > best.begin()->first){
+				best.insert(make_pair(e, plpAction(B.k1, t + B.o1, B.k2, t + B.o2)));
 				if((int)best.size() > n) best.erase(best.begin());
 			}
 		}
@@ -70,31 +87,35 @@ int plpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 
 void plpState::_transition(const Action& action) {
 	const plpAction& a = dynamic_cast<const plpAction&>(action);
-	const Piece& P = inst->pieces[inst->types[a.type].piece];
+	add_item(a.type, a.t);
+	if(a.type2 >= 0) add_item(a.type2, a.t2);
+}
 
-	items.push_back(Item{a.type, a.t});
-	for(const ConvexPolytope& C : P.parts){
-		PlacedPart pp;
-		pp.part = -1;
-		pp.t = a.t;
-		pp.bbox.lo = C.get_bbox().lo + a.t;
-		pp.bbox.hi = C.get_bbox().hi + a.t;
-		placed.push_back(pp);
-	}
+void plpState::add_item(int type, const Vec3& t) {
+	const Piece& P = inst->pieces[inst->types[type].piece];
+
+	items.push_back(Item{type, t});
 	//indices globales de las partes (mismo orden que Placer)
 	int first=0;
-	for(int p=0; p<inst->types[a.type].piece; p++) first += inst->pieces[p].parts.size();
-	for(size_t k=0; k<P.parts.size(); k++) placed[placed.size()-P.parts.size()+k].part = first+k;
+	for(int p=0; p<inst->types[type].piece; p++) first += inst->pieces[p].parts.size();
+	for(size_t k=0; k<P.parts.size(); k++){
+		PlacedPart pp;
+		pp.part = first+k;
+		pp.t = t;
+		pp.bbox.lo = P.parts[k].get_bbox().lo + t;
+		pp.bbox.hi = P.parts[k].get_bbox().hi + t;
+		placed.push_back(pp);
+	}
 
-	left[a.type]--;
+	left[type]--;
 	n_left--;
-	top = max(top, a.t.z + P.bbox.extent().z);
+	top = max(top, t.z + P.bbox.extent().z);
 	volume += P.volume;
 
 	//hash independiente del orden: suma de las ubicaciones (cuantizadas)
 	double q = 1e-6 * max(inst->W, inst->D);
-	uint64_t h = mix(a.type);
-	for(int c=0; c<3; c++) h = mix(h ^ (uint64_t) llround(a.t[c]/q));
+	uint64_t h = mix(type);
+	for(int c=0; c<3; c++) h = mix(h ^ (uint64_t) llround(t[c]/q));
 	hash += h;
 }
 

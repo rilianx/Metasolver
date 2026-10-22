@@ -3,6 +3,7 @@
  */
 
 #include <algorithm>
+#include <stdexcept>
 #include "Placer.h"
 #include "LPBackend.h"
 
@@ -11,15 +12,19 @@ using namespace std;
 namespace plp {
 
 Placer::Placer(const Instance& inst, int grid, double slide, double eps) :
-		inst(inst), grid(max(grid,2)), slide(slide), eps(eps) {
+		inst(inst), grid(max(grid,2)), slide(slide), eps(eps), seed(0) {
 	double scale = max(max(inst.W, inst.D), inst.height_lower_bound());
 	tol = 1e-9*scale;
 	for(const Piece& P : inst.pieces){
 		piece_parts.push_back(vector<int>());
+		shape_parts.push_back(vector<ShapePart>());
 		for(const ConvexPolytope& C : P.parts){
 			piece_parts.back().push_back(parts.size());
+			shape_parts.back().push_back(ShapePart{(int) parts.size(), Vec3()});
 			parts.push_back(&C);
 		}
+		shape_box.push_back(P.bbox);
+		shape_vol.push_back(P.volume);
 	}
 }
 
@@ -34,8 +39,8 @@ const ConvexPolytope& Placer::nfp(int a, int b) {
 }
 
 bool Placer::feasible(int p, const Vec3& t, const vector<PlacedPart>& placed) const {
-	for(int a : piece_parts[p]){
-		ConvexPolytope A = parts[a]->translated(t);
+	for(const ShapePart& sp : shape_parts[p]){
+		ConvexPolytope A = parts[sp.part]->translated(t + sp.off);
 		for(const PlacedPart& B : placed){
 			if(!A.get_bbox().overlaps(B.bbox, eps)) continue;
 			if(penetration_depth(A, parts[B.part]->translated(B.t), eps) > eps) return false;
@@ -45,7 +50,7 @@ bool Placer::feasible(int p, const Vec3& t, const vector<PlacedPart>& placed) co
 }
 
 Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& placed) {
-	Vec3 e = inst.pieces[p].bbox.extent();
+	Vec3 e = shape_box[p].extent();
 	double delta = max(max(e.x, e.y), e.z);
 	Vec3 g = -c / c.norm();
 
@@ -62,8 +67,11 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 			lp.add(-u, -R.lo[k]);
 		}
 
-		for(int a : piece_parts[p]){
-			const Box3& ab = parts[a]->get_bbox();
+		for(const ShapePart& sp : shape_parts[p]){
+			int a = sp.part;
+			Box3 ab;
+			ab.lo = parts[a]->get_bbox().lo + sp.off;
+			ab.hi = parts[a]->get_bbox().hi + sp.off;
 			for(const PlacedPart& B : placed){
 				//caja de las traslaciones t para las que A y B pueden solaparse
 				Box3 nb;
@@ -72,7 +80,8 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 				if(!nb.overlaps(R, -tol)) continue;
 
 				const ConvexPolytope& N = nfp(a, B.part);
-				Vec3 rel = t - B.t;
+				//la parte a esta en t + off
+				Vec3 rel = t + sp.off - B.t;
 				//faceta satisfecha por t que permite el mayor avance en la direccion de descenso g:
 				//holgura/(-n.g) si n.g < 0 (infinito si n.g >= 0, se prefiere la de mayor n.g)
 				int best=-1, worst=-1;
@@ -87,8 +96,8 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 					if(step > best_step || (step==best_step && ng > best_g)) { best_step=step; best_g=ng; best=f; }
 				}
 				if(best<0) best=worst;
-				//n.(t - tB) >= d  <=>  -n.t <= -d - n.tB
-				lp.add(-F[best].n, -F[best].d - dot(F[best].n, B.t));
+				//n.(t + off - tB) >= d  <=>  -n.t <= -d + n.(off - tB)
+				lp.add(-F[best].n, -F[best].d + dot(F[best].n, sp.off - B.t));
 			}
 		}
 
@@ -99,14 +108,98 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 	return t;
 }
 
+void Placer::generate_blocks(int max_blocks, int per_pair, double min_gain) {
+	if(!blocks.empty()) throw runtime_error("generate_blocks: los bloques ya fueron generados");
+	vector<Block> all;
+	int nt = inst.types.size();
+	for(int k1=0; k1<nt; k1++)
+		for(int k2=k1; k2<nt; k2++){
+			if(k1==k2 && inst.types[k1].demand<2) continue;
+			int p1 = inst.types[k1].piece, p2 = inst.types[k2].piece;
+			const Piece& P1 = inst.pieces[p1];
+			const Piece& P2 = inst.pieces[p2];
+			double box_sum = P1.bbox.volume() + P2.bbox.volume();
+
+			//p1 fija en el origen; p2 en r se solapa con p1 si r esta en el interior de NFP(parte de p2, parte de p1)
+			vector<PlacedPart> fixed;
+			for(int b : piece_parts[p1]) fixed.push_back(PlacedPart{b, Vec3(), parts[b]->get_bbox()});
+
+			//posiciones relativas candidatas (vertices de los NFP) ordenadas por el volumen de la caja del bloque
+			//(vertices de los NFP y, para cada faceta n.r <= d, los puntos del plano sobre los ejes: r = (d/n_i) e_i)
+			vector<Vec3> rs;
+			for(int a : piece_parts[p2])
+				for(int b : piece_parts[p1]){
+					const ConvexPolytope& N = nfp(a, b);
+					for(const Vec3& r : N.get_vertices()) rs.push_back(r);
+					for(const Plane& f : N.get_facets())
+						for(int i=0; i<3; i++)
+							if(fabs(f.n[i]) > 1e-9) { Vec3 r; r[i] = f.d/f.n[i]; rs.push_back(r); }
+				}
+			vector< pair<double,Vec3> > cand;
+			for(const Vec3& r : rs){
+				Box3 bb = P1.bbox;
+				Box3 b2; b2.lo = P2.bbox.lo + r; b2.hi = P2.bbox.hi + r;
+				bb.add(b2);
+				Vec3 e = bb.extent();
+				if(e.x > inst.W + eps || e.y > inst.D + eps) continue;
+				if(bb.volume() > (1-min_gain)*box_sum) continue;
+				cand.push_back(make_pair(bb.volume(), r));
+			}
+			sort(cand.begin(), cand.end(), [](const pair<double,Vec3>& x, const pair<double,Vec3>& y){ return x.first < y.first; });
+
+			vector<Vec3> chosen;
+			for(const auto& c : cand){
+				if((int)chosen.size() >= per_pair) break;
+				const Vec3& r = c.second;
+				//con piezas iguales, r y -r forman el mismo bloque
+				bool repeated=false;
+				for(const Vec3& u : chosen)
+					if((u-r).norm() <= 1e3*tol || (k1==k2 && (u+r).norm() <= 1e3*tol)) { repeated=true; break; }
+				if(repeated || !feasible(p2, r, fixed)) continue;
+				chosen.push_back(r);
+
+				Box3 bb = P1.bbox;
+				Box3 b2; b2.lo = P2.bbox.lo + r; b2.hi = P2.bbox.hi + r;
+				bb.add(b2);
+				Block B;
+				B.k1 = k1; B.k2 = k2;
+				B.o1 = -bb.lo;
+				B.o2 = r - bb.lo;
+				B.volume = P1.volume + P2.volume;
+				B.bbox.lo = Vec3();
+				B.bbox.hi = bb.extent();
+				B.density = B.volume / bb.volume();
+				all.push_back(B);
+			}
+		}
+
+	sort(all.begin(), all.end(), [](const Block& x, const Block& y){ return x.density > y.density; });
+	if((int)all.size() > max_blocks) all.resize(max_blocks);
+	blocks = all;
+
+	for(const Block& B : blocks){
+		shape_parts.push_back(vector<ShapePart>());
+		for(int a : piece_parts[inst.types[B.k1].piece]) shape_parts.back().push_back(ShapePart{a, B.o1});
+		for(int a : piece_parts[inst.types[B.k2].piece]) shape_parts.back().push_back(ShapePart{a, B.o2});
+		shape_box.push_back(B.bbox);
+		shape_vol.push_back(B.volume);
+	}
+}
+
 void Placer::candidates(int p, const vector<PlacedPart>& placed, double top, vector<Vec3>& out, double hmax) {
-	Vec3 e = inst.pieces[p].bbox.extent();
+	Vec3 e = shape_box[p].extent();
 	if(e.x > inst.W + eps || e.y > inst.D + eps || e.z > hmax + eps) return;
 	double X = max(0.0, inst.W - e.x), Y = max(0.0, inst.D - e.y);
 
 	for(int i=0; i<grid; i++)
 		for(int j=0; j<grid; j++){
 			Vec3 t0(X*i/(grid-1), Y*j/(grid-1), top);
+			if(seed){
+				uniform_real_distribution<double> u(0.0, 100.0*tol);
+				t0.x = min(X, t0.x + ((i==0)? u(rng) : -u(rng)));
+				t0.y = min(Y, t0.y + ((j==0)? u(rng) : -u(rng)));
+				t0.x = max(0.0, t0.x); t0.y = max(0.0, t0.y);
+			}
 			//gravedad y deslizamiento hacia las paredes mas cercanas
 			Vec3 c((t0.x <= X/2)? slide : -slide, (t0.y <= Y/2)? slide : -slide, 1.0);
 			Vec3 t = descend(p, t0, c, placed);
