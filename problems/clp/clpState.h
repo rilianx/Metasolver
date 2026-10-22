@@ -51,7 +51,7 @@ class clpState : public State {
 public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
-		valid_blocks(S.valid_blocks), weight_left(S.weight_left), region_weight(S.region_weight),
+		valid_blocks(S.valid_blocks), weight_left(S.weight_left),
 		cog(S.cog), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
@@ -59,10 +59,7 @@ public:
 	/**
 	 * Volumen ocupado (proporcion). En un ULD, si cog_penalty>0, se divide por
 	 * 1 + cog_penalty * (desviacion del centro de gravedad que excede la permitida)
-	 * (una carga desbalanceada sigue siendo mejor que el ULD vacio).
-	 * Con varios ULDs: volumen cargado respecto al de todos los ULDs, dividido por
-	 * 1 + cog_penalty * (suma de las desviaciones), menos open_penalty * (volumen de los ULDs
-	 * usados respecto al de todos)
+	 * (una carga desbalanceada sigue siendo mejor que el ULD vacio)
 	 */
 	virtual double get_value() const;
 
@@ -138,15 +135,6 @@ public:
 	//capacidad de peso restante
 	double weight_left;
 
-	//varios ULDs: capacidad de peso restante de cada ULD (weight_left es la mayor)
-	vector<double> region_weight;
-
-	//ULDs que se cargan a la vez (cada uno en una region del contenedor; vacio: un ULD)
-	static vector<const ULD*> region_ulds;
-
-	//varios ULDs: penalizacion del volumen de los ULDs usados en get_value
-	static double open_penalty;
-
 	//ULD (recortes y peso maximo) o NULL (contenedor sin restricciones adicionales)
 	static const ULD* uld;
 
@@ -190,7 +178,6 @@ public:
 
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 	friend clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl);
-	friend clpState* new_state(const vector<const ULD*>& us, const vector<int>& left, double min_fr, int max_bl);
 
 protected:
 
@@ -242,11 +229,6 @@ clpState* new_state(string file, int instance, double min_fr=0.98, int max_bl=10
  */
 clpState* new_state(const ULD& u, const vector<int>& left, double min_fr=0.98, int max_bl=10000);
 
-/**
- * Estado inicial para cargar a la vez los ULDs us (uno al lado del otro en x, cada uno en una
- * region del contenedor) con las cajas left (se fijan clpState::region_ulds e initial_boxes)
- */
-clpState* new_state(const vector<const ULD*>& us, const vector<int>& left, double min_fr=0.98, int max_bl=10000);
 
 } /* namespace clp */
 

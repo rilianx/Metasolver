@@ -22,8 +22,6 @@ namespace clp {
 vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
-vector<const ULD*> clpState::region_ulds;
-double clpState::open_penalty=0.01;
 double clpState::cog_greedy=0.0;
 bool clpState::support=false;
 bool clpState::corner_support=false;
@@ -104,10 +102,8 @@ bool clpState::dormant_space(const Space& sp) const{
 	return dormant_spaces;
 }
 
-//ULD, region y desplazamiento en x del espacio que se evalua (con varios ULDs, cada uno
-//ocupa una region del contenedor)
+//ULD y desplazamiento en x de la region del espacio que se evalua
 static const ULD* cur_uld=NULL;
-static int cur_region=0;
 static long cur_ox=0;
 
 //mejores acciones (de peor a mejor)
@@ -116,8 +112,7 @@ static vector<Ranked> ranked;
 
 int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
 	const Space sp = cont.spaces[isp];
-	cur_region = sp.region;
-	cur_uld = region_ulds.empty()? uld : region_ulds[sp.region];
+	cur_uld = uld;
 	cur_ox = cont.regions[sp.region].xmin;
 
 	if(support && corner_support){
@@ -184,7 +179,7 @@ int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
 		//umbral: evaluacion que hay que superar para entrar a las n mejores
 		double threshold = ((int)ranked.size()<n)? -HUGE_VAL : ranked.front().eval;
 		double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
-		if(eval>0 && cog_greedy>0.0 && uld && region_ulds.empty())
+		if(eval>0 && cog_greedy>0.0 && uld)
 			eval /= 1.0 + cog_greedy*cog_violation_with(*b, x, y, z);
 		if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
 			auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
@@ -207,28 +202,15 @@ int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
 	VCS_Function& vcs = *static_cast<VCS_Function*>(evl);
 
-	if(region_ulds.empty()){
-		while(cont.spaces.size()>0){
-			int isp = cont.top_space();
-			ranked.clear();
-			if(!eval_space(isp, vcs, n)) continue;
-			for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
-				bactions.push_back(new clpAction(*it->b, it->sp, it->x, it->y, it->z));
-			return bactions.size();
-		}
-		return 0;
+	while(cont.spaces.size()>0){
+		int isp = cont.top_space();
+		ranked.clear();
+		if(!eval_space(isp, vcs, n)) continue;
+		for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
+			bactions.push_back(new clpAction(*it->b, it->sp, it->x, it->y, it->z));
+		return bactions.size();
 	}
-
-	//varios ULDs: las mejores acciones entre los espacios de mayor prioridad de cada ULD
-	ranked.clear();
-	for(int r=0; r<(int)cont.regions.size(); r++)
-		while(true){
-			int isp = cont.top_space(r);
-			if(isp<0 || eval_space(isp, vcs, n)) break;
-		}
-	for(auto it=ranked.rbegin(); it!=ranked.rend(); it++)
-		bactions.push_back(new clpAction(*it->b, it->sp, it->x, it->y, it->z));
-	return bactions.size();
+	return 0;
 }
 
 bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z, bool* supported) const{
@@ -244,7 +226,6 @@ bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z
 			return false;
 		x=xl+cur_ox;
 	}
-	if(!region_ulds.empty() && b.weight > region_weight[cur_region] + 1e-9) return false;
 
 	//con el criterio de las esquinas puede quedar un hueco bajo una caja: una caja fragil
 	//ubicada en el hueco no puede tocar la base de la caja de arriba
@@ -279,7 +260,7 @@ void clpState::_transition(const Action& action) {
 	//se actualizan las cajas restantes
 	for(auto& p : b.boxes) left[p.first] -= p.second;
 	weight_left -= b.weight;
-	if(uld && region_ulds.empty()){
+	if(uld){
 		cog.w += b.weight;
 		cog.mx += b.weight*(act.x+b.cog[0]);
 		cog.my += b.weight*(act.y+b.cog[1]);
@@ -290,11 +271,6 @@ void clpState::_transition(const Action& action) {
 
 	//se inserta el bloque en el contenedor
 	long x=act.x, y=act.y, z=act.z;
-	if(!region_ulds.empty()){
-		int r=cont.region_of(AABB(x, y, z, x+b.getL(), y+b.getW(), z+b.getH()));
-		region_weight[r] -= b.weight;
-		weight_left = *max_element(region_weight.begin(), region_weight.end());
-	}
 	cont.insert(b, x, y, z, min_l, min_w, min_h);
 
 	hash += placement_hash(b.id, x, y, z);
@@ -322,7 +298,7 @@ bool clpState::is_feasible() const{
 		//ULD del bloque (en sus coordenadas)
 		int r=cont.region_of(B[i]);
 		if(r<0) return false;
-		const ULD* u = region_ulds.empty()? uld : region_ulds[r];
+		const ULD* u = uld;
 		const AABB& R=cont.regions[r];
 		AABB b(B[i].xmin-R.xmin, B[i].ymin-R.ymin, B[i].zmin-R.zmin, B[i].xmax-R.xmin, B[i].ymax-R.ymin, B[i].zmax-R.zmin);
 		if(u && !u->inside(b)) return false;
@@ -347,11 +323,6 @@ bool clpState::is_feasible() const{
 	for(size_t t=0; t<types.size(); t++)
 		if(used[t] + left[t] != initial_boxes[t] || left[t] < 0) return false;
 	if(uld && get_weight() > uld->max_weight + 1e-6) return false;
-	for(size_t r=0; r<region_ulds.size(); r++){
-		double w=0;
-		for(const PlacedBlock& b : B) if(cont.regions[r].contains(b)) w += b.block->weight;
-		if(w > region_ulds[r]->max_weight + 1e-6) return false;
-	}
 	return volume == cont.getOccupiedVolume();
 }
 
@@ -420,7 +391,7 @@ double clpState::cog_violation_with(const Block& b, long x, long y, long z) cons
 }
 
 double clpState::cog_violation(long& dx, long& dy, int r) const{
-	const ULD* u = region_ulds.empty()? uld : region_ulds[r];
+	const ULD* u = uld;
 	const AABB& R=cont.regions[r];
 	double cx, cy, cz;
 	get_cog(cx, cy, cz, r);
@@ -445,32 +416,12 @@ void clpState::translate(long dx, long dy, int r){
 }
 
 double clpState::get_value() const{
-	if(region_ulds.empty()){
-		double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
-		if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
-			long dx, dy;
-			v /= 1.0 + cog_penalty*cog_violation(dx, dy);
-		}
-		return v;
+	double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+	if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
+		long dx, dy;
+		v /= 1.0 + cog_penalty*cog_violation(dx, dy);
 	}
-
-	//varios ULDs: volumen cargado respecto al de todos los ULDs, penalizado por el CoG de
-	//cada ULD y por el volumen de los ULDs usados
-	double vol=0, opened=0, viol=0;
-	for(int r=0; r<(int)region_ulds.size(); r++){
-		vol += region_ulds[r]->volume;
-		bool used=false;
-		for(const PlacedBlock& b : cont.blocks) if(cont.regions[r].contains(b)){ used=true; break; }
-		if(!used) continue;
-		opened += region_ulds[r]->volume;
-		if(cog_penalty>0.0){
-			long dx, dy;
-			viol += cog_violation(dx, dy, r);
-		}
-	}
-	double v = (double) cont.getOccupiedVolume() / vol;
-	v /= 1.0 + cog_penalty*viol;
-	return v - open_penalty*opened/vol;
+	return v;
 }
 
 void clpState::update_min_dim(){
@@ -544,7 +495,6 @@ clpState* new_state(string file, int i, double min_fr, int max_bl){
 clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl){
 	clpState* s = new clpState(u.L, u.W, u.H);
 	clpState::uld = &u;
-	clpState::region_ulds.clear();
 	if(u.edge>0 || u.substructure) s->cont.set_floor(u.edge, u.delta, u.substructure);
 	clpState::initial_boxes = left;
 	s->left = left;
@@ -559,37 +509,5 @@ clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int ma
 	return s;
 }
 
-clpState* new_state(const vector<const ULD*>& us, const vector<int>& left, double min_fr, int max_bl){
-	//los ULDs se ubican uno al lado del otro en x, separados por gap
-	const long gap=1000;
-	long L=0, W=0, H=0, Lmax=0;
-	vector<AABB> regions;
-	for(const ULD* u : us){
-		regions.push_back(AABB(L, 0, 0, L+u->L, u->W, u->H));
-		L += u->L + gap;
-		W=max(W, u->W); H=max(H, u->H); Lmax=max(Lmax, u->L);
-	}
-	L -= gap;
-
-	clpState* s = new clpState(L, W, H);
-	clpState::uld = NULL;
-	clpState::region_ulds = us;
-	s->cont.set_regions(regions);
-	for(size_t r=0; r<us.size(); r++){
-		s->cont.add_floor(r, us[r]->edge, us[r]->delta, us[r]->substructure);
-		s->region_weight.push_back(us[r]->max_weight);
-	}
-	s->weight_left = *max_element(s->region_weight.begin(), s->region_weight.end());
-	clpState::initial_boxes = left;
-	s->left = left;
-
-	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
-			Lmax, W, H, clpState::support);
-	if(clpState::corner_support) Block::compute_placed_boxes();
-	s->update_valid_blocks();
-	s->update_min_dim();
-
-	return s;
-}
 
 } /* namespace clp */
