@@ -134,18 +134,20 @@ and it can be checked with an independent validator:
 
      python3 problems/clp/validate_uld.py <instance.csv> problems/clp/benchs/ULD/uld.csv <solution> [--support corners|full|none]
 
-Results on the 300 final instances (30 per size, 10 to 100 boxes), number of ULDs
-and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler et al.
-2024: 708 ULDs, 11.2%, <0.5 s per instance):
+Results on the 300 final instances (30 per size, 10 to 100 boxes), validated with
+`validate_uld.py`. Comparison instance by instance with Hessler et al. (2024)
+(`benchs/ULD/hessler2024_table8.json`, 708 ULDs, 11.2% of the ULDs with the center of gravity
+out of the allowed deviation in x or y; Paquay et al. 2018: 1010 ULDs) with
+`compare_hessler.py`. CoG z: center of gravity above the maximum height (Paquay et al. 2016),
+not considered by Hessler et al.
 
-| -t (per ULD) | subset ratio | elimination | ULDs | CoG violations | avg time per instance |
-|---|---|---|---|---|---|
-| 1 s   | all | no  | 613 | 0.3% | 2.5 s  |
-| 1 s   | all | yes | 611 | 0.0% | 5.5 s  |
-| 1 s   | 2   | yes | 605 | 0.0% | 5.4 s  |
-| 0.1 s | all | no  | 638 | 0.9% | 0.27 s |
-| 0.1 s | all | yes | 636 | 0.2% | 0.61 s |
-| 0.1 s | 2   | yes | 629 | 0.2% | 0.60 s |
+| -t (per ULD) | run | ULDs | better / equal / worse | Wilcoxon p | CoG xy | CoG z | avg time |
+|---|---|---|---|---|---|---|---|
+| 0.1 s | 1 | 634 | 76 / 222 / 2 | 5e-17 | 2 | 0 | 0.61 s |
+| 0.1 s | 2 | 632 | 78 / 220 / 2 | 2e-17 | 1 | 0 | 0.61 s |
+| 0.1 s | 3 | 631 | 79 / 219 / 2 | 1e-17 | 2 | 0 | 0.62 s |
+| 1 s   | 1 | 605 | 104 / 195 / 1 | 9e-24 | 0 | 0 | 5.4 s |
+| 1 s   | 2 | 606 | 103 / 196 / 1 | 2e-23 | 0 | 0 | 5.4 s |
 
 ```
 ./BSG_ULD {OPTIONS} [instance]
