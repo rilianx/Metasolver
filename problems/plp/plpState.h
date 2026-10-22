@@ -38,13 +38,13 @@ public:
 /**
  * Evaluacion de una accion (mayor es mejor):
  *   alpha*log(V/Vmax) - beta*z/H0 - gamma*max(0, ztop - top)/H0
- * V: volumen por pieza de la forma (pieza o pseudobloque), Vmax: volumen de la pieza mas grande, z: base,
+ * V: volumen de la forma (pieza o pseudobloque; por pieza con per_piece), Vmax: volumen de la pieza mas grande, z: base,
  * ztop: tope de la pieza, top: altura actual de la carga, H0: cota inferior de la altura.
  */
 class PLP_Function : public ActionEvaluator {
 public:
 	/** per_piece: un pseudobloque se evalua con el volumen por pieza (si no, con su volumen total) */
-	PLP_Function(Placer& placer, double alpha=1.0, double beta=1.0, double gamma=1.0, bool per_piece=true);
+	PLP_Function(Placer& placer, double alpha=1.0, double beta=1.0, double gamma=1.0, bool per_piece=false);
 
 	/** evaluacion de la forma p del Placer (pieza o pseudobloque) en t */
 	double eval(int p, const Vec3& t, double top) const;

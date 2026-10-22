@@ -29,11 +29,11 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _slide(parser, "double", "Weight of x,y (towards the walls) in the LP descent. Default: 0.1", {"slide"});
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
-	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 0", {"blocks"});
+	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 30", {"blocks"});
 	args::ValueFlag<int> _block_pair(parser, "int", "Pseudo-blocks per pair of item types. Default: 2", {"block_pair"});
 	args::ValueFlag<string> _block_criterion(parser, "box|hull", "Acceptance of pseudo-blocks: reduction of the bounding box (box) or added waste in the convex hull (hull). Default: hull", {"block_criterion"});
 	args::ValueFlag<double> _block_gain(parser, "double", "box criterion: minimum reduction of the bounding box w.r.t. the boxes of the pieces. Default: 0.05", {"block_gain"});
-	args::ValueFlag<string> _block_eval(parser, "total|piece", "Volume of a pseudo-block in the evaluation: total or per piece. Default: piece", {"block_eval"});
+	args::ValueFlag<string> _block_eval(parser, "total|piece", "Volume of a pseudo-block in the evaluation: total or per piece. Default: total", {"block_eval"});
 	args::ValueFlag<double> _block_waste(parser, "double", "Maximum added waste of a pseudo-block: (convex hull of the block - convex hulls of the pieces) / volume of the pieces. Default: 0.1", {"block_waste"});
 	args::Flag _greedy(parser, "greedy", "Only the greedy algorithm", {"greedy"});
 	args::Flag _no_improve(parser, "no_improve", "Do not improve the best solution (compaction and relocation of the highest pieces)", {"no_improve"});
@@ -84,7 +84,7 @@ int main(int argc, char** argv){
 
 		Placer placer(inst, grid, slide);
 		if(_seed) placer.set_seed(_seed.Get());
-		int nblocks = (_blocks)? _blocks.Get() : 0;
+		int nblocks = (_blocks)? _blocks.Get() : 30;
 		if(nblocks > 0){
 			string crit = (_block_criterion)? _block_criterion.Get() : "hull";
 			if(crit!="box" && crit!="hull") throw runtime_error("--block_criterion debe ser box o hull");
@@ -95,7 +95,7 @@ int main(int argc, char** argv){
 				cout << "  " << inst.pieces[inst.types[B.k1].piece].name << " + " << inst.pieces[inst.types[B.k2].piece].name
 					 << "  waste " << B.waste << "  density " << B.density << "  bbox " << B.bbox.extent() << endl;
 		}
-		string beval = (_block_eval)? _block_eval.Get() : "piece";
+		string beval = (_block_eval)? _block_eval.Get() : "total";
 		if(beval!="total" && beval!="piece") throw runtime_error("--block_eval debe ser total o piece");
 		PLP_Function f(placer, alpha, beta, gamma, beval=="piece");
 		int cg = (_compact_greedy)? _compact_greedy.Get() : 0;

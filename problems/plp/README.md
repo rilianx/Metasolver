@@ -100,7 +100,10 @@ Metodología (2D) en la que se basa la compactación por LP:
     envolventes de las dos piezas) / volumen de las piezas ≤ `--block_waste` (0.1). En piezas convexas es el
     espacio atrapado entre ellas; es negativo si una pieza entra en una concavidad de la otra.
   * Se conservan los `--block_pair` (2) de menor hueco por par de tipos y los N de menor hueco en total.
-  * En la evaluación de acciones, un bloque usa el volumen por pieza (no se prefiere solo por ser más grande).
+  * Por defecto se generan 30 bloques (`--blocks 0` los desactiva). `--block_criterion box` usa el criterio
+    anterior (caja del bloque al menos 5% menor que la suma de las cajas) y `--block_eval piece` evalúa un
+    bloque con el volumen por pieza en vez del total. Con 3 semillas, la combinación por defecto
+    (`hull` + `total`) fue la mejor en conjunto (`results/pseudobloques.md`).
 * **Búsqueda**: BSG con `DoubleEffort` (como en el CLP).
 * **Mejora final** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y
   las piezas que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
