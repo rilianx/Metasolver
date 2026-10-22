@@ -99,9 +99,9 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 	return t;
 }
 
-void Placer::candidates(int p, const vector<PlacedPart>& placed, double top, vector<Vec3>& out) {
+void Placer::candidates(int p, const vector<PlacedPart>& placed, double top, vector<Vec3>& out, double hmax) {
 	Vec3 e = inst.pieces[p].bbox.extent();
-	if(e.x > inst.W + eps || e.y > inst.D + eps) return;
+	if(e.x > inst.W + eps || e.y > inst.D + eps || e.z > hmax + eps) return;
 	double X = max(0.0, inst.W - e.x), Y = max(0.0, inst.D - e.y);
 
 	for(int i=0; i<grid; i++)
@@ -115,6 +115,9 @@ void Placer::candidates(int p, const vector<PlacedPart>& placed, double top, vec
 			t.x = min(max(t.x, 0.0), X);
 			t.y = min(max(t.y, 0.0), Y);
 			t.z = max(t.z, 0.0);
+
+			//la pieza parte sobre la carga: si no baja lo suficiente, no cabe en el contenedor
+			if(t.z + e.z > hmax + eps) continue;
 
 			bool repeated=false;
 			for(const Vec3& u : out) if((u-t).norm() <= 1e3*tol) { repeated=true; break; }

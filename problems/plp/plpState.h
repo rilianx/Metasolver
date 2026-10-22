@@ -59,6 +59,9 @@ public:
 
 	virtual double run(State& s, double tl=99999.9, clock_t bt=clock());
 
+	/** estrategias que se detienen cuando el greedy ubica todas las piezas en un contenedor de altura fija */
+	std::vector<SearchStrategy*> stop_when_complete;
+
 private:
 	class LPBackend* lp;
 	int iterations;
@@ -67,13 +70,24 @@ private:
 class plpState : public State {
 public:
 
-	/** estado inicial (contenedor vacio) */
-	plpState(const Instance& inst);
+	/**
+	 * Estado inicial (contenedor vacio). Con hmax finito el contenedor tiene altura hmax
+	 * (variante knapsack: maximizar el volumen cargado); si no, la altura es abierta.
+	 */
+	plpState(const Instance& inst, double hmax=std::numeric_limits<double>::infinity());
 
 	virtual State* clone() const { return new plpState(*this); }
 
-	/** densidad (volumen de las piezas / volumen hasta la altura de la carga) si se ubicaron todas las piezas; 0 si no */
+	/**
+	 * Altura abierta: densidad (volumen / (W*D*altura de la carga)) si se ubicaron todas las piezas; 0 si no.
+	 * Altura hmax: volumen cargado / volumen total (menos 1e-3*altura/hmax, para desempatar).
+	 */
 	virtual double get_value() const;
+
+	bool is_knapsack() const { return hmax < std::numeric_limits<double>::infinity(); }
+
+	/** quita la altura del contenedor (p.ej., para completar una carga parcial sobre la carga) */
+	void open_height() { hmax = std::numeric_limits<double>::infinity(); }
 
 	virtual int get_best_actions(ActionEvaluator* evl, std::list< Action* >& bactions, int n) const;
 
@@ -113,6 +127,9 @@ private:
 
 	double top;
 	double volume;
+
+	//altura del contenedor (infinito: altura abierta)
+	double hmax;
 
 	uint64_t hash;
 };

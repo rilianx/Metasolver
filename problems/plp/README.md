@@ -99,6 +99,15 @@ Metodología (2D) en la que se basa la compactación por LP:
   `ibex::LPSolver` (SoPlex o CLP), se eligen de nuevo las facetas y se repite mientras `H` baje.
   En `BSG_PLP` se alterna con la mejora local sobre la mejor solución; con `--compact_greedy k`
   además se compacta (k iteraciones) cada solución completa del greedy dentro del BSG.
+* **Bajar la altura y resolver con un contenedor fijo** (por defecto, después de `--strip_time` = 30% del
+  tiempo): se fija `Hc = H·(1 − step)` y se resuelve la variante knapsack (contenedor `W x D x Hc`, valor =
+  volumen cargado / volumen total; las posiciones candidatas que sobrepasan `Hc` se descartan). El BSG parte
+  con las piezas de la mejor solución que quedan bajo `(1 − band)·Hc` ya ubicadas y decide dónde van las
+  demás (destruir y reparar). El BSG se detiene en cuanto ubica todas las piezas; la solución se mejora
+  (compactación) y se vuelve a bajar la altura. Si falla, la franja libre crece (`band·1.5`) hasta partir de
+  cero (`band = 1`), y luego se baja menos la altura (`step/2`). Cada altura tiene a lo más
+  `--slice` = 10% del tiempo. Si la carga parcial no está completa, se completa sobre la carga (altura
+  abierta) por si mejora la altura.
 * Todas las soluciones se verifican con `Solution::verify`.
 
 ### Compilación con ibex (opcional)
@@ -131,6 +140,10 @@ Efecto de la compactación global (30 s por instancia, 4 procesos en paralelo; i
 | Stoyan 2004 Example3 | 59.89 | 57.88 | 57.83 |
 | Stoyan 2004 Example4 | 75.07 | 73.59 | 72.75 |
 | Stoyan 2004 Example5 | 94.12 | 93.04 | 93.23 |
+
+Con la bajada de altura y contenedor fijo (30 s, parámetros por defecto, ibex/SoPlex; tabla completa en
+`results/bsg_plp_v2.md`): Stoyan 2005 Example1–3: 17.84 / 20.30 / 34.15; Stoyan 2004 Example1–5:
+60.56 / 36.00 / 58.38 / 73.47 / 90.68.
 
 Resultados iniciales (30 s, parámetros por defecto, sin ibex; tabla completa en `results/bsg_plp_v1.md`):
 

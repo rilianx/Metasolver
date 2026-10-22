@@ -95,6 +95,12 @@ public:
 	 */
 	virtual bool double_effort() { return false; }
 
+	/**
+	 * Detiene la estrategia en la siguiente verificacion del limite de tiempo
+	 * (p.ej., cuando un greedy encuentra una solucion suficientemente buena)
+	 */
+	void stop() { timelimit = 1e-9; }
+
 
 	/**
 	 * \brief return the n best actions according to the ActionEvaluator

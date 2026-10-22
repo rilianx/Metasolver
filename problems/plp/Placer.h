@@ -40,9 +40,11 @@ public:
 
 	/**
 	 * Posiciones factibles para la pieza p dadas las partes ubicadas.
-	 * top es la altura actual de la carga.
+	 * top es la altura actual de la carga; hmax es la altura del contenedor
+	 * (se descartan las posiciones en que la pieza sobrepasa hmax).
 	 */
-	void candidates(int p, const std::vector<PlacedPart>& placed, double top, std::vector<Vec3>& out);
+	void candidates(int p, const std::vector<PlacedPart>& placed, double top, std::vector<Vec3>& out,
+			double hmax=std::numeric_limits<double>::infinity());
 
 	/** true si la pieza p en t no se solapa con las partes ubicadas (penetracion <= eps) */
 	bool feasible(int p, const Vec3& t, const std::vector<PlacedPart>& placed) const;

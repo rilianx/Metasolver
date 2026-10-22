@@ -34,11 +34,12 @@ double PLP_Function::eval(int type, const Vec3& t, double top) const {
 	return alpha*log(P.volume/vmax) - beta*t.z/h0 - gamma*max(0.0, ztop-top)/h0;
 }
 
-plpState::plpState(const Instance& inst) : inst(&inst), n_left(0), top(0), volume(0), hash(0x9e3779b97f4a7c15ull) {
+plpState::plpState(const Instance& inst, double hmax) : inst(&inst), n_left(0), top(0), volume(0), hmax(hmax), hash(0x9e3779b97f4a7c15ull) {
 	for(const ItemType& t : inst.types) { left.push_back(t.demand); n_left+=t.demand; }
 }
 
 double plpState::get_value() const {
+	if(is_knapsack()) return volume / inst->total_volume() - 1e-3*top/hmax;
 	if(n_left>0 || top<=0) return 0.0;
 	return volume / (inst->W * inst->D * top);
 }
@@ -53,7 +54,7 @@ int plpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 	for(size_t k=0; k<left.size(); k++){
 		if(left[k]==0) continue;
 		pos.clear();
-		f->placer.candidates(inst->types[k].piece, placed, top, pos);
+		f->placer.candidates(inst->types[k].piece, placed, top, pos, hmax);
 		for(const Vec3& t : pos){
 			double e = f->eval(k, t, top);
 			if((int)best.size() < n || e > best.begin()->first){
@@ -150,6 +151,8 @@ double CompactGreedy::run(State& s, double tl, clock_t bt) {
 		static_cast<PLP_Function*>(evl)->placer.compact(pieces, t, *lp, iterations);
 		ps.set_positions(t);
 	}
+	if(ps.is_knapsack() && ps.get_n_left()==0)
+		for(SearchStrategy* st : stop_when_complete) st->stop();
 	return s.get_value();
 }
 
