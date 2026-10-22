@@ -207,7 +207,8 @@ struct Params {
 };
 
 /** carga el ULD u con las cajas left usando BSG (P.time segundos de busqueda) */
-static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
+static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
+		const vector<Block::PlacedBox>* fixed=NULL, bool center=true){
 	Load res;
 	res.uld=&u;
 	res.boxes.assign(left.size(), 0);
@@ -218,6 +219,19 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
 
 	clpState* s0 = new_state(u, left, P.min_fr, P.max_bl);
 	if(s0->get_n_valid_blocks()==0){ delete s0; return res; }
+
+	//cajas fijas: se ubican como bloques de una caja antes de la busqueda
+	if(fixed){
+		for(const Block::PlacedBox& p : *fixed){
+			const Block* blk=NULL;
+			for(const Block* b : s0->valid_blocks)
+				if(b->child[0]<0 && b->box_type==p.type && b->getL()==p.xmax-p.xmin &&
+						b->getW()==p.ymax-p.ymin && b->getH()==p.zmax-p.zmin){ blk=b; break; }
+			if(!blk){ cerr << "ERROR: fixed box not found" << endl; exit(1); }
+			AABB a(p.xmin, p.ymin, p.zmin, p.xmax, p.ymax, p.zmax);
+			s0->transition(clpAction(*blk, Space(a, u.L, u.W, u.H), p.xmin, p.ymin, p.zmin));
+		}
+	}
 
 	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left, s0->valid_blocks,
 			u.L, u.W, u.H, P.alpha, P.beta, P.gamma, P.p, P.delta, P.fix_knapsack);
@@ -239,7 +253,7 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
 		//se desplaza la carga para centrar el centro de gravedad
 		long dx, dy;
 		best->cog_violation(dx, dy);
-		best->translate(dx, dy);
+		if(center) best->translate(dx, dy);
 
 		for(size_t t=0; t<left.size(); t++) res.boxes[t] = left[t] - best->left[t];
 		res.volume = best->cont.getOccupiedVolume();
@@ -260,11 +274,12 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
  * permitido, se repite la busqueda anclando los espacios en el origen (la carga queda
  * agrupada y se puede centrar) y se elige la mejor de las dos cargas
  */
-static Load load_cog(const ULD& u, const vector<int>& left, const Params& P){
-	Load res = load_bsg(u, left, P);
+static Load load_cog(const ULD& u, const vector<int>& left, const Params& P,
+		const vector<Block::PlacedBox>* fixed=NULL){
+	Load res = load_bsg(u, left, P, fixed);
 	if(clpState::cog_penalty>0.0 && !res.cog_ok()){
 		Space::origin_anchor=true;
-		Load res2 = load_bsg(u, left, P);
+		Load res2 = load_bsg(u, left, P, fixed);
 		Space::origin_anchor=false;
 		if(res2.value > res.value) res=res2;
 	}
@@ -280,6 +295,16 @@ static Load load(const ULD& u, const vector<int>& left, const Params& P){
 		if(res2.value > res.value) res=res2;
 	}
 	return res;
+}
+
+/**
+ * continua la carga del ULD de base (con sus cajas fijas en sus posiciones) agregando
+ * cajas de extra
+ */
+static Load load_more(const Load& base, const vector<int>& extra, const Params& P){
+	vector<int> avail = base.boxes;
+	for(size_t t=0; t<avail.size(); t++) avail[t]+=extra[t];
+	return load_cog(*base.uld, avail, P, &base.placed);
 }
 
 /**
@@ -326,14 +351,21 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 
 /**
  * Subconjunto de las cajas left para cargar el ULD u: las cajas que caben en u, de mayor a
- * menor volumen, hasta completar ratio veces el volumen del ULD (ratio<=0: todas)
+ * menor volumen, hasta completar ratio veces el volumen del ULD (ratio<=0: todas).
+ * Con ULDs limitados, primero las cajas que caben en menos tipos de ULD disponibles
  */
 static vector<int> select_subset(const vector<int>& left, const ULD& u, double ratio){
 	if(ratio<=0.0) return left;
-	vector<int> types;
-	for(const BoxShape* b : clpState::types)
-		if(left[b->type]>0 && fits(*b, u)) types.push_back(b->type);
-	sort(types.begin(), types.end(), [](int a, int b){
+	bool limited = count(available.begin(), available.end(), -1) < (int) available.size();
+	vector<int> types, nf(left.size(), 0);
+	for(const BoxShape* b : clpState::types){
+		if(left[b->type]==0 || !fits(*b, u)) continue;
+		types.push_back(b->type);
+		if(limited)
+			for(size_t i=0; i<ulds.size(); i++) nf[b->type] += (available[i]!=0 && fits(*b, ulds[i]));
+	}
+	sort(types.begin(), types.end(), [&](int a, int b){
+		if(nf[a]!=nf[b]) return nf[a] < nf[b];
 		return clpState::types[a]->getVolume() > clpState::types[b]->getVolume(); });
 
 	vector<int> subset(left.size(), 0);
@@ -348,9 +380,23 @@ static vector<int> select_subset(const vector<int>& left, const ULD& u, double r
 	return subset;
 }
 
+/** cajas de left que, entre los ULDs disponibles, solo caben en el tipo de u */
+static vector<int> only_in(const vector<int>& left, const ULD& u){
+	vector<int> res(left.size(), 0);
+	int iu=uld_index(u);
+	for(const BoxShape* b : clpState::types){
+		if(left[b->type]==0 || !fits(*b, u)) continue;
+		bool other=false;
+		for(size_t i=0; i<ulds.size() && !other; i++)
+			if((int)i!=iu && available[i]!=0 && fits(*b, ulds[i])) other=true;
+		if(!other) res[b->type]=left[b->type];
+	}
+	return res;
+}
+
 /**
  * Cajas que no se cargaron (ULDs limitados): se recarga cada ULD (de mayor a menor volumen
- * libre) con sus cajas y las no cargadas, y se acepta si aumenta el volumen cargado
+ * libre) con sus cajas y las no cargadas, y se acepta si carga todas sus cajas y alguna mas
  * (sin dejar el centro de gravedad fuera de rango si no lo estaba)
  */
 static void load_remaining(vector<Load>& loads, vector<int>& left, const Params& P){
@@ -362,8 +408,10 @@ static void load_remaining(vector<Load>& loads, vector<int>& left, const Params&
 		if(count(left.begin(), left.end(), 0)==(int)left.size()) return;
 		vector<int> avail = loads[i].boxes;
 		for(size_t t=0; t<avail.size(); t++) avail[t]+=left[t];
-		Load ld = load(*loads[i].uld, avail, P);
-		if(!ld.feasible || (loads[i].cog_ok() && !ld.cog_ok()) || ld.volume <= loads[i].volume) continue;
+		Load ld = load_more(loads[i], left, P);
+		bool all=true;
+		for(size_t t=0; t<avail.size(); t++) all = all && ld.boxes[t] >= loads[i].boxes[t];
+		if(!all || !ld.feasible || (loads[i].cog_ok() && !ld.cog_ok()) || ld.volume <= loads[i].volume) continue;
 		loads[i]=ld;
 		for(size_t t=0; t<left.size(); t++) left[t] = avail[t]-ld.boxes[t];
 	}
@@ -457,6 +505,8 @@ int main(int argc, char** argv){
 		}
 	}
 	use_substructure = clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
+	//con borde, el espacio sobre el borde no tiene apoyo hasta que se cargan cajas dentro de el
+	clpState::dormant_spaces = (ulds[0].edge>0);
 	ulds_sub=ulds;
 	for(ULD& u : ulds_sub) u.substructure=true;
 	available.assign(ulds.size(), (_uld_count)? _uld_count.Get() : -1);
@@ -473,12 +523,36 @@ int main(int argc, char** argv){
 
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
+	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
 		const ULD* u = select_uld(left);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, select_subset(left, *u, subset_ratio), P);
+		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
+		//disponibles), se carga el ULD priorizando esas cajas
+		if(limited){
+			vector<int> must=only_in(left, *u);
+			double must_vol=0, loaded_must=0;
+			for(size_t t=0; t<must.size(); t++){
+				must_vol += (double) must[t]*clpState::types[t]->getVolume();
+				loaded_must += (double) min(must[t], ld.boxes[t])*clpState::types[t]->getVolume();
+			}
+			if(loaded_must < must_vol){
+				//(sin centrar la carga, que se completa a continuacion)
+				Load ld2 = load_bsg(*u, must, P, NULL, false);
+				double loaded2=0;
+				for(size_t t=0; t<must.size(); t++) loaded2 += (double) ld2.boxes[t]*clpState::types[t]->getVolume();
+				if(loaded2 > loaded_must){
+					//se completa el ULD con las otras cajas
+					vector<int> rest=left;
+					for(size_t t=0; t<rest.size(); t++) rest[t]-=ld2.boxes[t];
+					Load ld3 = load_more(ld2, select_subset(rest, *u, subset_ratio), P);
+					ld = (ld3.feasible && ld3.volume >= ld2.volume)? ld3 : ld2;
+				}
+			}
+		}
 		int n=0; for(int x : ld.boxes) n+=x;
 		//si no se cargo ninguna caja del subconjunto, se usan todas
 		if(n==0 && subset_ratio>0.0){

@@ -26,6 +26,7 @@ bool clpState::support=false;
 bool clpState::corner_support=false;
 
 double clpState::min_overlap=0.0;
+bool clpState::dormant_spaces=false;
 long clpState::padding=0;
 
 //caras bajo la base del espacio actual (criterio de las esquinas o del area)
@@ -93,6 +94,11 @@ static inline uint64_t placement_hash(int id, long x, long y, long z){
 	return mix(mix(mix(mix((uint64_t) id + 0x9e3779b97f4a7c15ull) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
 }
 
+/** el espacio sp (sin apoyo) queda sin considerar hasta la siguiente insercion (con borde) */
+bool clpState::dormant_space(const Space& sp) const{
+	return dormant_spaces;
+}
+
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
 	VCS_Function& vcs = *static_cast<VCS_Function*>(evl);
 
@@ -128,7 +134,7 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 					bool fits=false;
 					for(const Block* b : valid_blocks)
 						if(b->fits(sp.getL(), sp.getW(), sp.getH())){ fits=true; break; }
-					if(fits) cont.make_dormant(isp);
+					if(fits && dormant_space(sp)) cont.make_dormant(isp);
 					else cont.remove_space(isp);
 					continue;
 				}
@@ -177,7 +183,7 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		//el espacio se elimina si no cabe ningun bloque (si caben pero no estan apoyados,
 		//queda sin considerar hasta que se ubique otro bloque)
 		if(!any) {
-			if(unsupported && corner_support) cont.make_dormant(isp);
+			if(unsupported && corner_support && dormant_space(sp)) cont.make_dormant(isp);
 			else cont.remove_space(isp);
 			continue;
 		}

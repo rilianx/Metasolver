@@ -95,6 +95,9 @@ public:
 	 */
 	bool locate(const Block& b, const Space& sp, long& x, long& y, long& z, bool* supported=NULL) const;
 
+	/** el espacio sp (sin apoyo) queda sin considerar hasta la siguiente insercion */
+	bool dormant_space(const Space& sp) const;
+
 	/**
 	 * Verifica la solucion: bloques dentro del contenedor (y de los recortes), sin
 	 * intersecciones, sin usar mas cajas que las disponibles, sin superar el peso
@@ -149,6 +152,10 @@ public:
 	//(sobre relleno, en cajas no fragiles hasta padding bajo la base; Hessler et al. 2024)
 	static double min_overlap;
 	static long padding;
+
+	//los espacios sin apoyo quedan sin considerar hasta la siguiente insercion (si no,
+	//se eliminan)
+	static bool dormant_spaces;
 
 	/** cara superior de una caja (o del piso elevado) bajo la base de un bloque */
 	struct Face {
