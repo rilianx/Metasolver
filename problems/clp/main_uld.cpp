@@ -570,7 +570,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 1000", {"max_bl"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
-	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks. Default: 0", {"cog_greedy"});
+	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks. Default: 1", {"cog_greedy"});
 	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 10", {"cog_penalty"});
 	args::ValueFlag<string> _support(parser, "string", "Support of the boxes: corners (the four bottom corners rest on non-fragile boxes or on the floor, as in Paquay et al. 2018), full (the whole base) or none. Default: corners", {"support"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
@@ -635,7 +635,7 @@ int main(int argc, char** argv){
 	clpState::support=(support!="none");
 	clpState::corner_support=(support=="corners");
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
-	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 0.0;
+	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 1.0;
 
 	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.0;
 	vector<double> ruin_ratios, ruin_leftover={0.3, 0.6, 0.9};

@@ -117,7 +117,10 @@ Constraints:
   load of each ULD is translated to center its center of gravity, the evaluation of the
   solutions is divided by 1 + p * (relative excess of the deviation), and if the deviation
   is exceeded, the ULD is loaded again anchoring all the spaces at the origin
-  (the load is grouped and it can be centered).
+  (the load is grouped and it can be centered); this is also tried when the ULD is less than
+  50% utilized and boxes remain. In the evaluation of the blocks, the VCS value is divided by
+  1 + `--cog_greedy` (default 1) * the deviation of the center of gravity after placing the
+  block (and translating the load).
 
 Each ULD is loaded with a subset of the remaining boxes (`--subset_ratio`, default 2):
 the largest boxes that fit in the ULD, up to twice the volume of the ULD (0: all the boxes).
