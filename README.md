@@ -137,6 +137,12 @@ default 0.3,0.6): the boxes of the least utilized ULD are freed, a proportion of
 each other ULD is removed (boxes with nothing on top, from the top) and the other ULDs are
 loaded again keeping the remaining boxes fixed and adding the freed ones.
 
+Parameters: tuned with irace (`problems/clp/tuning`) on 150 preliminary instances of Paquay
+et al. (`benchs/ULD/training`, different from the final ones), 0.1 s per ULD, minimizing
+the number of ULDs + 5 * the ULDs with the center of gravity out of range:
+subset_ratio=2.331, cog_penalty=5.928, cog_greedy=1.346, max_bl=1000 and the VCS parameters
+alpha=0.6054, beta=0.4103, gamma=0.4637, p=0.0196.
+
 The solutions are verified box by box. With `-o file` the solution is written (one line
 per box: ULD, ULD type, item (line of the instance file, from 0), position and dimensions)
 and it can be checked with an independent validator:

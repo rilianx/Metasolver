@@ -515,16 +515,16 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 1000", {"max_bl"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
-	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks. Default: 1", {"cog_greedy"});
-	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 10", {"cog_penalty"});
+	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks. Default: 1.346", {"cog_greedy"});
+	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 5.928", {"cog_penalty"});
 	args::ValueFlag<string> _support(parser, "string", "Support of the boxes: corners (the four bottom corners rest on non-fragile boxes or on the floor, as in Paquay et al. 2018), full (the whole base) or none. Default: corners", {"support"});
-	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 2.2652", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.3896", {"gamma"});
+	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 0.6054", {"alpha"});
+	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 0.4103", {"beta"});
+	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.4637", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
-	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
+	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0196", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2", {"subset_ratio"});
+	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2.331", {"subset_ratio"});
 	args::ValueFlag<long> _edge(parser, "int", "Width of the edge of the ULD floor on which loading is not allowed below the height of the vertical edge offset (Hessler et al. 2024). Default: 0", {"edge"});
 	args::ValueFlag<long> _edge_offset(parser, "int", "Vertical edge offset (with an edge, a substructure of this height can also be used). Default: 0", {"edge_offset"});
 	args::ValueFlag<double> _min_overlap(parser, "double", "Support: a box is also supported if part of its base rests on other boxes and the proportion min_overlap of its base rests on boxes or on padding (Hessler et al. 2024). Default: 0 (only the four corners)", {"min_overlap"});
@@ -561,7 +561,7 @@ int main(int argc, char** argv){
 	}
 
 	Params P;
-	P.alpha=2.4407; P.beta=2.2652; P.gamma=0.3896; P.delta=1.0; P.p=0.0164;
+	P.alpha=0.6054; P.beta=0.4103; P.gamma=0.4637; P.delta=1.0; P.p=0.0196;
 	if(_alpha) P.alpha=_alpha.Get();
 	if(_beta) P.beta=_beta.Get();
 	if(_gamma) P.gamma=_gamma.Get();
@@ -578,10 +578,10 @@ int main(int argc, char** argv){
 	}
 	clpState::support=(support!="none");
 	clpState::corner_support=(support=="corners");
-	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
-	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 1.0;
+	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 5.928;
+	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 1.346;
 
-	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.0;
+	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.331;
 	vector<double> ruin_ratios, ruin_leftover={0.3, 0.6, 0.9};
 	{
 		string r=(_ruin)? _ruin.Get() : "0.3,0.6";
