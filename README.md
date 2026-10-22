@@ -119,16 +119,23 @@ Constraints:
   is exceeded, the ULD is loaded again anchoring all the spaces at the origin
   (the load is grouped and it can be centered).
 
+After the sequential loading, the program tries to eliminate ULDs (`--no_eliminate`
+disables it): the boxes of a ULD (from the least utilized) are freed and the other ULDs
+are loaded again with their boxes and the freed ones; the boxes that are not loaded pass
+to the next ULD. The ULD is eliminated if all the freed boxes are loaded.
+
 The solutions are verified box by box.
 
 Results on the 300 final instances (30 per size, 10 to 100 boxes), number of ULDs
 and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler et al.
 2024: 708 ULDs, 11.2%, <0.5 s per instance):
 
-| -t (per ULD) | ULDs | CoG violations | avg time per instance |
-|---|---|---|---|
-| 1 s   | 613 | 0.3% | 2.5 s  |
-| 0.1 s | 636 | 0.9% | 0.27 s |
+| -t (per ULD) | elimination | ULDs | CoG violations | avg time per instance |
+|---|---|---|---|---|
+| 1 s   | no  | 613 | 0.3% | 2.5 s  |
+| 1 s   | yes | 611 | 0.0% | 5.5 s  |
+| 0.1 s | no  | 638 | 0.9% | 0.27 s |
+| 0.1 s | yes | 636 | 0.2% | 0.61 s |
 
 ```
 ./BSG_ULD {OPTIONS} [instance]

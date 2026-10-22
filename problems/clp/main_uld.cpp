@@ -235,6 +235,48 @@ static Load load(const ULD& u, const vector<int>& left, const Params& P){
 	return res;
 }
 
+/**
+ * Intenta eliminar un ULD: se liberan sus cajas y se recarga cada uno de los otros ULDs
+ * (de mayor a menor volumen libre) con sus cajas y las liberadas; las que no se cargan
+ * pasan al siguiente. El ULD se elimina si se cargan todas las cajas liberadas (los ULDs
+ * recargados no pueden quedar con el centro de gravedad fuera de rango si no lo estaban).
+ * Se prueban los ULDs de menor a mayor utilizacion. Retorna true si se elimino alguno.
+ */
+static bool eliminate_uld(vector<Load>& loads, const Params& P){
+	if(loads.size()<2) return false;
+
+	vector<int> order(loads.size());
+	for(size_t i=0; i<order.size(); i++) order[i]=i;
+	sort(order.begin(), order.end(), [&](int a, int b){ return loads[a].utilization() < loads[b].utilization(); });
+
+	for(int target : order){
+		vector<int> freed = loads[target].boxes;
+		vector<Load> new_loads = loads;
+
+		vector<int> others;
+		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(i);
+		sort(others.begin(), others.end(), [&](int a, int b){
+			return loads[a].uld->volume - loads[a].volume > loads[b].uld->volume - loads[b].volume; });
+
+		for(int i : others){
+			vector<int> avail = loads[i].boxes;
+			for(size_t t=0; t<avail.size(); t++) avail[t]+=freed[t];
+			Load ld = load(*loads[i].uld, avail, P);
+			if(!ld.feasible || (loads[i].cog_ok() && !ld.cog_ok()) || ld.volume <= loads[i].volume) continue;
+			new_loads[i]=ld;
+			for(size_t t=0; t<freed.size(); t++) freed[t] = avail[t]-ld.boxes[t];
+			if(count(freed.begin(), freed.end(), 0)==(int)freed.size()) break;
+		}
+
+		if(count(freed.begin(), freed.end(), 0)==(int)freed.size()){
+			new_loads.erase(new_loads.begin()+target);
+			loads=new_loads;
+			return true;
+		}
+	}
+	return false;
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-ULD *********.", "BSG Solver for air cargo loading (ULDs).");
@@ -251,6 +293,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
+	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
 
@@ -326,18 +369,24 @@ int main(int argc, char** argv){
 		loads.push_back(ld);
 	}
 
-	//se intenta recargar las cajas del ultimo ULD en el ULD mas pequeno posible
+	//se eliminan ULDs repartiendo sus cajas en los otros
+	if(!_no_eliminate)
+		while(eliminate_uld(loads, P));
+
+	//se intenta recargar las cajas del ULD menos utilizado en el ULD mas pequeno posible
+	Load& worst = *min_element(loads.begin(), loads.end(),
+			[](const Load& a, const Load& b){ return a.utilization() < b.utilization(); });
 	vector<const ULD*> smaller;
-	for(const ULD& u : ulds) if(u.volume < loads.back().uld->volume) smaller.push_back(&u);
+	for(const ULD& u : ulds) if(u.volume < worst.uld->volume) smaller.push_back(&u);
 	sort(smaller.begin(), smaller.end(), [](const ULD* a, const ULD* b){ return a->volume < b->volume; });
 	for(const ULD* u : smaller){
-		const vector<int>& last=loads.back().boxes;
+		const vector<int>& boxes=worst.boxes;
 		bool all_fit=true;
-		for(size_t t=0; t<last.size(); t++)
-			if(last[t]>0 && !fits(*clpState::types[t], *u)) all_fit=false;
+		for(size_t t=0; t<boxes.size(); t++)
+			if(boxes[t]>0 && !fits(*clpState::types[t], *u)) all_fit=false;
 		if(!all_fit) continue;
-		Load ld = load(*u, last, P);
-		if(ld.boxes==last){ loads.back()=ld; break; }
+		Load ld = load(*u, boxes, P);
+		if(ld.boxes==boxes && (ld.cog_ok() || !worst.cog_ok())){ worst=ld; break; }
 	}
 
 	double time=double(clock()-begin_time)/double(CLOCKS_PER_SEC);
