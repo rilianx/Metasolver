@@ -136,6 +136,12 @@ public:
 	//la cara superior completa y sin cajas fragiles
 	static bool support;
 
+	//criterio de soporte de Paquay et al. (2018) y Hessler et al. (2024): las cuatro
+	//esquinas inferiores de cada caja se apoyan en cajas no fragiles o en el piso
+	//(y ninguna caja queda sobre una caja fragil). Requiere support=true (los
+	//bloques se generan con soporte completo)
+	static bool corner_support;
+
 	//penalizacion de la desviacion del centro de gravedad en get_value
 	static double cog_penalty;
 

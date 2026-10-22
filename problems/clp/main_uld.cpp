@@ -133,19 +133,26 @@ static bool check_boxes(const clpState& s, const ULD& u){
 			cerr << "box outside the ULD " << ai << endl; return false;
 		}
 		long supported=0;
+		int corners=0;
 		for(size_t j=0; j<B.size(); j++){
 			if(j==i) continue;
 			const Block::PlacedBox& b=B[j];
 			AABB bj(b.xmin, b.ymin, b.zmin, b.xmax, b.ymax, b.zmax);
 			if(j>i && ai.strict_intersects(bj)){ cerr << "boxes intersect " << ai << " " << bj << endl; return false; }
+			if(b.zmax!=a.zmin) continue;
 			long dx=min(a.xmax, b.xmax)-max(a.xmin, b.xmin), dy=min(a.ymax, b.ymax)-max(a.ymin, b.ymin);
-			if(b.zmax==a.zmin && dx>0 && dy>0){
+			if(dx>0 && dy>0){
 				if(clpState::types[b.type]->fragile){ cerr << "box on a fragile box " << ai << endl; return false; }
 				supported += dx*dy;
 			}
+			if(clpState::types[b.type]->fragile) continue;
+			long cx[2]={a.xmin, a.xmax}, cy[2]={a.ymin, a.ymax};
+			for(int k=0; k<4; k++)
+				if(b.xmin<=cx[k%2] && cx[k%2]<=b.xmax && b.ymin<=cy[k/2] && cy[k/2]<=b.ymax) corners |= 1<<k;
 		}
-		if(clpState::support && a.zmin>0 && supported < (a.xmax-a.xmin)*(a.ymax-a.ymin)){
-			cerr << "box not supported " << ai << endl; return false;
+		if(clpState::support && a.zmin>0){
+			bool ok = clpState::corner_support? corners==15 : supported==(a.xmax-a.xmin)*(a.ymax-a.ymin);
+			if(!ok){ cerr << "box not supported " << ai << endl; return false; }
 		}
 	}
 	if(weight > u.max_weight + 1e-6){ cerr << "weight exceeded" << endl; return false; }
@@ -160,6 +167,7 @@ static bool check_boxes(const clpState& s, const ULD& u){
 
 struct Params {
 	double alpha, beta, gamma, p, delta, min_fr, time;
+	int max_bl;
 	bool fix_knapsack;
 };
 
@@ -173,7 +181,7 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
 	res.feasible=true;
 	res.value=0.0;
 
-	clpState* s0 = new_state(u, left, P.min_fr, 10000);
+	clpState* s0 = new_state(u, left, P.min_fr, P.max_bl);
 	if(s0->get_n_valid_blocks()==0){ delete s0; return res; }
 
 	VCS_Function* vcs = new VCS_Function(clpState::types, s0->left, s0->valid_blocks,
@@ -233,9 +241,10 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<string> _uld(parser, "string", "ULD file (default: uld.csv in the parent directory of the instance)", {"uld"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
+	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 1000", {"max_bl"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
 	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 10", {"cog_penalty"});
-	args::Flag _no_support(parser, "no_support", "Do not require full support of the blocks", {"no_support"});
+	args::ValueFlag<string> _support(parser, "string", "Support of the boxes: corners (the four bottom corners rest on non-fragile boxes or on the floor, as in Paquay et al. 2018), full (the whole base) or none. Default: corners", {"support"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
 	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 2.2652", {"beta"});
 	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.3896", {"gamma"});
@@ -277,8 +286,15 @@ int main(int argc, char** argv){
 	if(_p) P.p=_p.Get();
 	P.min_fr=(_min_fr)? _min_fr.Get():0.98;
 	P.time=(_maxtime)? _maxtime.Get():1.0;
+	P.max_bl=(_max_bl)? _max_bl.Get():1000;
 	P.fix_knapsack=_fix_knapsack;
-	clpState::support=!_no_support;
+	string support=(_support)? _support.Get() : "corners";
+	if(support!="corners" && support!="full" && support!="none"){
+		cerr << "Invalid support: " << support << endl;
+		return 1;
+	}
+	clpState::support=(support!="none");
+	clpState::corner_support=(support=="corners");
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
 
 	clock_t begin_time=clock();

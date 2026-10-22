@@ -108,8 +108,11 @@ Constraints:
   a cut when it does not fit at the anchor corner of the space);
 * weight capacity of the ULD;
 * allowed orientations of the boxes and fragile boxes (nothing on top of them);
-* full support: blocks are generated with all their boxes fully supported and they
-  are placed on the floor or on blocks whose top face is complete and without fragile boxes;
+* support (`--support`): blocks are generated with all their boxes fully supported.
+  With `corners` (default, the criterion of Paquay et al. 2018 and Hessler et al. 2024),
+  the four bottom corners of each box must rest on non-fragile boxes or on the floor and
+  no box can touch the top of a fragile box. With `full`, the blocks are placed on the
+  floor or on blocks whose top face is complete and without fragile boxes;
 * center of gravity: at most the allowed deviation from the center in x and y. The
   load of each ULD is translated to center its center of gravity, the evaluation of the
   solutions is divided by 1 + p * (relative excess of the deviation), and if the deviation
@@ -118,13 +121,23 @@ Constraints:
 
 The solutions are verified box by box.
 
+Results on the 300 final instances (30 per size, 10 to 100 boxes), number of ULDs
+and center of gravity violations (Paquay et al. 2018: 1010 ULDs, 12.9%; Hessler et al.
+2024: 708 ULDs, 11.2%, <0.5 s per instance):
+
+| -t (per ULD) | ULDs | CoG violations | avg time per instance |
+|---|---|---|---|
+| 1 s   | 613 | 0.3% | 2.5 s  |
+| 0.1 s | 636 | 0.9% | 0.27 s |
+
 ```
 ./BSG_ULD {OPTIONS} [instance]
 
       -t[double]                        Timelimit of the search in each ULD
                                         (seconds, without the block generation). Default: 1
       --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 10
-      --no_support                      Do not require full support of the blocks
+      --support=[string]                corners, full or none. Default: corners
+      --max_bl=[int]                    Maximum number of blocks. Default: 1000
       --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
       -v, --verbose                     Print the loaded ULDs
 ```

@@ -23,6 +23,33 @@ vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
 bool clpState::support=false;
+bool clpState::corner_support=false;
+
+//caras superiores de las cajas en la base del espacio actual (criterio de las esquinas)
+struct Face { long x1, y1, x2, y2; bool fragile; };
+static vector<Face> support_faces;
+
+/** las cuatro esquinas de la base de cada caja inferior del bloque b ubicado en (x,y) se
+ * apoyan en caras de cajas no fragiles, y ninguna se apoya sobre una caja fragil */
+static bool corners_supported(const Block& b, long x, long y, const vector<Face>& faces){
+	for(const Block::PlacedBox& p : b.pboxes){
+		if(p.zmin>0) continue;
+		long x1=x+p.xmin, y1=y+p.ymin, x2=x+p.xmax, y2=y+p.ymax;
+		int corners=0;
+		for(const Face& f : faces){
+			if(f.fragile){
+				if(min(x2, f.x2)>max(x1, f.x1) && min(y2, f.y2)>max(y1, f.y1)) return false;
+				continue;
+			}
+			if(!(corners&1) && f.x1<=x1 && x1<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=1;
+			if(!(corners&2) && f.x1<=x2 && x2<=f.x2 && f.y1<=y1 && y1<=f.y2) corners|=2;
+			if(!(corners&4) && f.x1<=x1 && x1<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=4;
+			if(!(corners&8) && f.x1<=x2 && x2<=f.x2 && f.y1<=y2 && y2<=f.y2) corners|=8;
+		}
+		if(corners!=15) return false;
+	}
+	return true;
+}
 double clpState::cog_penalty=0.0;
 
 //bloques ubicados que pueden soportar a otros en la base del espacio actual
@@ -59,7 +86,24 @@ int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, 
 		int isp = cont.top_space();
 		const Space& sp = cont.spaces[isp];
 
-		if(support){
+		if(support && corner_support){
+			support_faces.clear();
+			if(sp.zmin>0){
+				bool any_face=false;
+				for(const PlacedBlock& b : cont.blocks){
+					if(b.zmin>=sp.zmin || b.zmax<sp.zmin || b.xmin>sp.xmax || sp.xmin>b.xmax ||
+							b.ymin>sp.ymax || sp.ymin>b.ymax) continue;
+					for(const Block::PlacedBox& p : b.block->pboxes){
+						if(b.zmin+p.zmax != sp.zmin) continue;
+						bool fragile=types[p.type]->fragile;
+						support_faces.push_back(Face{b.xmin+p.xmin, b.ymin+p.ymin, b.xmin+p.xmax, b.ymin+p.ymax, fragile});
+						any_face = any_face || !fragile;
+					}
+				}
+				//el espacio no tiene base
+				if(!any_face) { cont.remove_space(isp); continue; }
+			}
+		}else if(support){
 			support_tops.clear();
 			if(sp.zmin>0){
 				for(const PlacedBlock& b : cont.blocks)
@@ -113,7 +157,25 @@ bool clpState::locate(const Block& b, const Space& sp, long& x, long& y, long& z
 	if(uld && !uld->adjust(x, z, l, h, sp.xmin, sp.xmax-l, sp.zmin, sp.zmax-h, !support))
 		return false;
 
-	if(support && z>0 && covered_area(support_tops, x, y, l, w) < l*w) return false;
+	//con el criterio de las esquinas puede quedar un hueco bajo una caja: una caja fragil
+	//ubicada en el hueco no puede tocar la base de la caja de arriba
+	if(corner_support && b.fragile){
+		for(const Block::PlacedBox& p : b.pboxes){
+			if(!types[p.type]->fragile) continue;
+			long top=z+p.zmax, x1=x+p.xmin, y1=y+p.ymin, x2=x+p.xmax, y2=y+p.ymax;
+			for(const PlacedBlock& pb : cont.blocks){
+				if(pb.zmin>top || pb.zmax<=top || pb.xmin>=x2 || pb.xmax<=x1 || pb.ymin>=y2 || pb.ymax<=y1) continue;
+				for(const Block::PlacedBox& q : pb.block->pboxes)
+					if(pb.zmin+q.zmin==top && min(x2, pb.xmin+q.xmax)>max(x1, pb.xmin+q.xmin) &&
+							min(y2, pb.ymin+q.ymax)>max(y1, pb.ymin+q.ymin)) return false;
+			}
+		}
+	}
+
+	if(support && z>0){
+		if(corner_support) return corners_supported(b, x, y, support_faces);
+		if(covered_area(support_tops, x, y, l, w) < l*w) return false;
+	}
 	return true;
 }
 
@@ -157,7 +219,8 @@ bool clpState::is_feasible() const{
 		for(auto& p : B[i].block->boxes) used[p.first] += p.second;
 		volume += B[i].block->getOccupiedVolume();
 
-		if(support && B[i].zmin>0){
+		//(con el criterio de las esquinas, el soporte se verifica caja por caja en BSG_ULD)
+		if(support && !corner_support && B[i].zmin>0){
 			vector<const PlacedBlock*> tops;
 			for(const PlacedBlock& b : B)
 				if(b.zmax==B[i].zmin && b.block->supportive) tops.push_back(&b);
@@ -295,6 +358,7 @@ clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int ma
 
 	s->valid_blocks = Block::generate_blocks(clpState::types, s->left, min_fr, max_bl,
 			u.L, u.W, u.H, clpState::support);
+	if(clpState::corner_support) Block::compute_placed_boxes();
 	s->update_valid_blocks();
 	s->update_min_dim();
 

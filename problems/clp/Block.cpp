@@ -125,6 +125,7 @@ bool is_constructible(const vector<int>& left, const GenBlock& b1, const GenBloc
 
 vector<Block> Block::all;
 vector<Block::BoxCount> Block::all_boxes;
+vector<Block::PlacedBox> Block::all_pboxes;
 
 vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types,
 		const vector<int>& left, double min_fr, int max_bl, long L, long W, long H, bool support){
@@ -226,6 +227,7 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 		b.n_boxes=g->n_boxes;
 		b.weight=g->weight;
 		b.supportive=g->supportive();
+		b.fragile=g->fragile;
 		for(int d=0; d<3; d++){ b.cog[d]=g->cog[d]; b.offset[d]= g->c1? g->off[d] : 0; }
 		b.child[0] = g->c1? index[g->c1] : -1;
 		b.child[1] = g->c2? index[g->c2] : -1;
@@ -239,9 +241,21 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 	for(const GenBlock* g : all_blocks) delete g;
 	for(size_t k=0; k<B.size(); k++) if(B[k]->n_boxes==1) delete B[k];
 
+	all_pboxes.clear();
+	for(Block& b : all) b.pboxes.first = b.pboxes.last = 0;
+
 	vector<const Block*> blocks;
 	for(const Block& b : all) blocks.push_back(&b);
 	return blocks;
+}
+
+void Block::compute_placed_boxes(){
+	all_pboxes.clear();
+	for(Block& b : all){
+		b.pboxes.first = all_pboxes.size();
+		b.get_boxes(0, 0, 0, all_pboxes);
+		b.pboxes.last = all_pboxes.size();
+	}
 }
 
 void Block::get_boxes(long x, long y, long z, vector<PlacedBox>& boxes) const{

@@ -59,6 +59,17 @@ public:
 	/** agrega a boxes las cajas del bloque ubicado en (x,y,z) */
 	void get_boxes(long x, long y, long z, std::vector<PlacedBox>& boxes) const;
 
+	/** calcula las cajas (pboxes) de todos los bloques */
+	static void compute_placed_boxes();
+
+	/** cajas del bloque (posiciones relativas a su esquina), ver compute_placed_boxes */
+	struct PlacedBoxes {
+		int first, last;
+		const PlacedBox* begin() const { return all_pboxes.data()+first; }
+		const PlacedBox* end() const { return all_pboxes.data()+last; }
+	};
+	PlacedBoxes pboxes;
+
 	/**
 	 * Genera los bloques de la instancia: primero los bloques de una caja (en cada
 	 * orientacion permitida) y luego los que resultan de combinarlos en las direcciones
@@ -87,6 +98,9 @@ public:
 	//(se pueden apoyar otros bloques sobre ella)
 	bool supportive;
 
+	//contiene alguna caja fragil
+	bool fragile;
+
 	//centro de gravedad relativo a la esquina del bloque
 	double cog[3];
 
@@ -99,6 +113,7 @@ public:
 private:
 	static std::vector<Block> all;
 	static std::vector<BoxCount> all_boxes;
+	static std::vector<PlacedBox> all_pboxes;
 };
 
 } /* namespace clp */
