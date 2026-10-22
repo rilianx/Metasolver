@@ -93,3 +93,42 @@ does not change the average results significantly).
 Example
 -----
      ./build/BSG_CLP problems/clp/benchs/BR/BR2.txt -i 47 -t 10
+
+Air cargo loading (BSG_ULD)
+-------
+`BSG_ULD` solves the air cargo palletization problem with the instances of
+Paquay et al. (2018) (`problems/clp/benchs/ULD`): all the boxes must be loaded
+into unit load devices (ULDs) of six types (Boeing 777), minimizing the number of
+ULDs. The ULDs are loaded one by one with BSG; the next ULD is selected as in
+Hessler et al. (2024) and, at the end, the boxes of the last ULD are reloaded into
+a smaller ULD when possible.
+
+Constraints:
+* ULD shapes: up to four corners cut in the x-z plane (a block is moved away from
+  a cut when it does not fit at the anchor corner of the space);
+* weight capacity of the ULD;
+* allowed orientations of the boxes and fragile boxes (nothing on top of them);
+* full support: blocks are generated with all their boxes fully supported and they
+  are placed on the floor or on blocks whose top face is complete and without fragile boxes;
+* center of gravity: at most the allowed deviation from the center in x and y. The
+  load of each ULD is translated to center its center of gravity, the evaluation of the
+  solutions is divided by 1 + p * (relative excess of the deviation), and if the deviation
+  is exceeded, the ULD is loaded again anchoring all the spaces at the origin
+  (the load is grouped and it can be centered).
+
+The solutions are verified box by box.
+
+```
+./BSG_ULD {OPTIONS} [instance]
+
+      -t[double]                        Timelimit of the search in each ULD
+                                        (seconds, without the block generation). Default: 1
+      --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 10
+      --no_support                      Do not require full support of the blocks
+      --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
+      -v, --verbose                     Print the loaded ULDs
+```
+
+Example:
+
+     ./build/BSG_ULD problems/clp/benchs/ULD/Final_instances/n50sample0.csv -t 1 -v

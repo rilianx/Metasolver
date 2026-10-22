@@ -50,6 +50,15 @@ public:
 
 	bool fits(long L, long W, long H) const { return l<=L && w<=W && h<=H; }
 
+	/** caja ubicada (tipo y posicion) */
+	struct PlacedBox {
+		int type;
+		long xmin, ymin, zmin, xmax, ymax, zmax;
+	};
+
+	/** agrega a boxes las cajas del bloque ubicado en (x,y,z) */
+	void get_boxes(long x, long y, long z, std::vector<PlacedBox>& boxes) const;
+
 	/**
 	 * Genera los bloques de la instancia: primero los bloques de una caja (en cada
 	 * orientacion permitida) y luego los que resultan de combinarlos en las direcciones
@@ -77,6 +86,15 @@ public:
 	//la cara superior esta completamente cubierta por cajas no fragiles
 	//(se pueden apoyar otros bloques sobre ella)
 	bool supportive;
+
+	//centro de gravedad relativo a la esquina del bloque
+	double cog[3];
+
+	//bloque formado por child[0] en la esquina y child[1] desplazado en offset
+	//(-1 si es un bloque de una caja, de tipo box_type)
+	int child[2];
+	long offset[3];
+	int box_type;
 
 private:
 	static std::vector<Block> all;

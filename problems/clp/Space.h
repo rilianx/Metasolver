@@ -69,11 +69,16 @@ struct PlacedBlock : public AABB {
 /**
  * Espacio libre maximal del contenedor.
  * Se guarda la esquina de anclaje (la mas cercana a una esquina del contenedor)
- * y la distancia manhattan a ella.
+ * y la distancia manhattan desde ella a esa esquina del contenedor.
  */
 class Space : public AABB {
 public:
 	Space(const AABB& a, long L, long W, long H) : AABB(a), volume(a.getVolume()) {
+		if(origin_anchor){
+			anchor[0]=anchor[1]=anchor[2]=0;
+			manhattan_distance=xmin+ymin+zmin;
+			return;
+		}
 		long dist=0;
 		if(xmin <= L - xmax){ dist+=xmin; anchor[0]=0; }
 		else { dist+=L - xmax; anchor[0]=1; }
@@ -113,6 +118,10 @@ public:
 	long volume;
 	long manhattan_distance;
 	bool anchor[3];
+
+	//si es true, todos los espacios se anclan en la esquina mas cercana al origen
+	//(la carga queda agrupada en torno al origen)
+	static bool origin_anchor;
 };
 
 } /* namespace clp */

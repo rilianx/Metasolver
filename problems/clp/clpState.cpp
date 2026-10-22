@@ -23,6 +23,7 @@ vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
 bool clpState::support=false;
+double clpState::cog_penalty=0.0;
 
 //bloques ubicados que pueden soportar a otros en la base del espacio actual
 static vector<const PlacedBlock*> support_tops;
@@ -181,12 +182,40 @@ void clpState::get_cog(double& x, double& y, double& z) const{
 	x=y=z=0.0;
 	for(const PlacedBlock& b : cont.blocks){
 		double bw=b.block->weight;
-		x += bw*(b.xmin+b.xmax)/2.0;
-		y += bw*(b.ymin+b.ymax)/2.0;
-		z += bw*(b.zmin+b.zmax)/2.0;
+		x += bw*(b.xmin+b.block->cog[0]);
+		y += bw*(b.ymin+b.block->cog[1]);
+		z += bw*(b.zmin+b.block->cog[2]);
 		w += bw;
 	}
 	if(w>0){ x/=w; y/=w; z/=w; }
+}
+
+double clpState::cog_violation(long& dx, long& dy) const{
+	double cx, cy, cz;
+	get_cog(cx, cy, cz);
+
+	//desplazamientos posibles
+	long xlo=-cont.getL(), xhi=cont.getL(), ylo=-cont.getW(), yhi=cont.getW();
+	for(const PlacedBlock& b : cont.blocks){
+		uld->x_shift_range(b, xlo, xhi);
+		ylo=max(ylo, -b.ymin);
+		yhi=min(yhi, cont.getW()-b.ymax);
+	}
+
+	//el desplazamiento mas cercano al que centra la carga
+	dx = min(max((long) floor(cont.getL()/2.0 - cx + 0.5), xlo), xhi);
+	dy = min(max((long) floor(cont.getW()/2.0 - cy + 0.5), ylo), yhi);
+
+	double ex = max(0.0, fabs(cx+dx - cont.getL()/2.0) - uld->dev[0]) / uld->dev[0];
+	double ey = max(0.0, fabs(cy+dy - cont.getW()/2.0) - uld->dev[1]) / uld->dev[1];
+	return ex+ey;
+}
+
+void clpState::translate(long dx, long dy){
+	for(PlacedBlock& b : cont.blocks){
+		b.xmin+=dx; b.xmax+=dx;
+		b.ymin+=dy; b.ymax+=dy;
+	}
 }
 
 void clpState::update_min_dim(){

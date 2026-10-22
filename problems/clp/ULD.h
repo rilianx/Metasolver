@@ -63,6 +63,17 @@ public:
 		return true;
 	}
 
+	/** restringe [lo,hi] a los desplazamientos en x del bloque b que cumplen los recortes */
+	void x_shift_range(const AABB& b, long& lo, long& hi) const {
+		lo = std::max(lo, -b.xmin);
+		hi = std::min(hi, L - b.xmax);
+		for(const Cut& f : cuts){
+			long rest = f.nz*(f.nz>0? b.zmax : b.zmin);
+			if(f.nx>0) hi = std::min(hi, floor_div(f.c - rest - f.nx*b.xmax, f.nx));
+			else if(f.nx<0) lo = std::max(lo, ceil_div(f.c - rest - f.nx*b.xmin, f.nx));
+		}
+	}
+
 	/** lee los ULDs del archivo uld.csv de Paquay et al. */
 	static std::vector<ULD> read(const std::string& file);
 

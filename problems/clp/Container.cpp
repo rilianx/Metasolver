@@ -9,6 +9,8 @@ using namespace std;
 
 namespace clp {
 
+bool Space::origin_anchor=false;
+
 void Container::insert(const Block& b, long x, long y, long z, long min_l, long min_w, long min_h){
 	occupied_volume += b.getOccupiedVolume();
 

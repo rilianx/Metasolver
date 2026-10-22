@@ -33,6 +33,7 @@ struct Load {
 	double weight;
 	double cog[3];
 	bool feasible;
+	double value;           //evaluacion de la carga (volumen penalizado por el CoG)
 
 	double utilization() const { return volume/uld->volume; }
 	bool cog_ok() const {
@@ -115,19 +116,62 @@ static const ULD* select_uld(const vector<ULD>& ulds, const vector<int>& left){
 	return best;
 }
 
+/**
+ * Verificacion caja por caja: dentro del ULD (y sus recortes), sin intersecciones,
+ * sin superar el peso maximo, cajas apoyadas (si hay soporte) y nada sobre las fragiles
+ */
+static bool check_boxes(const clpState& s, const ULD& u){
+	vector<Block::PlacedBox> B;
+	for(const PlacedBlock& b : s.cont.blocks) b.block->get_boxes(b.xmin, b.ymin, b.zmin, B);
+
+	double weight=0;
+	for(size_t i=0; i<B.size(); i++){
+		const Block::PlacedBox& a=B[i];
+		AABB ai(a.xmin, a.ymin, a.zmin, a.xmax, a.ymax, a.zmax);
+		weight += clpState::types[a.type]->weight;
+		if(a.xmin<0 || a.ymin<0 || a.zmin<0 || a.xmax>u.L || a.ymax>u.W || a.zmax>u.H || !u.inside(ai)){
+			cerr << "box outside the ULD " << ai << endl; return false;
+		}
+		long supported=0;
+		for(size_t j=0; j<B.size(); j++){
+			if(j==i) continue;
+			const Block::PlacedBox& b=B[j];
+			AABB bj(b.xmin, b.ymin, b.zmin, b.xmax, b.ymax, b.zmax);
+			if(j>i && ai.strict_intersects(bj)){ cerr << "boxes intersect " << ai << " " << bj << endl; return false; }
+			long dx=min(a.xmax, b.xmax)-max(a.xmin, b.xmin), dy=min(a.ymax, b.ymax)-max(a.ymin, b.ymin);
+			if(b.zmax==a.zmin && dx>0 && dy>0){
+				if(clpState::types[b.type]->fragile){ cerr << "box on a fragile box " << ai << endl; return false; }
+				supported += dx*dy;
+			}
+		}
+		if(clpState::support && a.zmin>0 && supported < (a.xmax-a.xmin)*(a.ymax-a.ymin)){
+			cerr << "box not supported " << ai << endl; return false;
+		}
+	}
+	if(weight > u.max_weight + 1e-6){ cerr << "weight exceeded" << endl; return false; }
+
+	//cantidades de cajas
+	vector<int> n(clpState::types.size(), 0);
+	for(auto& b : B) n[b.type]++;
+	for(size_t t=0; t<n.size(); t++)
+		if(n[t] != clpState::initial_boxes[t]-s.left[t]){ cerr << "wrong number of boxes" << endl; return false; }
+	return true;
+}
+
 struct Params {
 	double alpha, beta, gamma, p, delta, min_fr, time;
 	bool fix_knapsack;
 };
 
 /** carga el ULD u con las cajas left usando BSG (P.time segundos de busqueda) */
-static Load load(const ULD& u, const vector<int>& left, const Params& P){
+static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P){
 	Load res;
 	res.uld=&u;
 	res.boxes.assign(left.size(), 0);
 	res.volume=res.weight=0.0;
 	res.cog[0]=res.cog[1]=res.cog[2]=0.0;
 	res.feasible=true;
+	res.value=0.0;
 
 	clpState* s0 = new_state(u, left, P.min_fr, 10000);
 	if(s0->get_n_valid_blocks()==0){ delete s0; return res; }
@@ -147,16 +191,39 @@ static Load load(const ULD& u, const vector<int>& left, const Params& P){
 	de->run(*s_copy, P.time, begin_time);
 	cout.rdbuf(buf);
 
-	const clpState* best = static_cast<const clpState*>(de->get_best_state());
+	clpState* best = de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL;
 	if(best){
+		//se desplaza la carga para centrar el centro de gravedad
+		long dx, dy;
+		best->cog_violation(dx, dy);
+		best->translate(dx, dy);
+
 		for(size_t t=0; t<left.size(); t++) res.boxes[t] = left[t] - best->left[t];
 		res.volume = best->cont.getOccupiedVolume();
 		res.weight = best->get_weight();
 		best->get_cog(res.cog[0], res.cog[1], res.cog[2]);
-		res.feasible = best->is_feasible();
+		res.feasible = best->is_feasible() && check_boxes(*best, u);
+		res.value = best->get_value();
+		delete best;
 	}
 
 	delete de; delete bsg; delete gr; delete vcs; delete s0;
+	return res;
+}
+
+/**
+ * carga el ULD u con las cajas left. Si el centro de gravedad no queda dentro del rango
+ * permitido, se repite la busqueda anclando los espacios en el origen (la carga queda
+ * agrupada y se puede centrar) y se elige la mejor de las dos cargas
+ */
+static Load load(const ULD& u, const vector<int>& left, const Params& P){
+	Load res = load_bsg(u, left, P);
+	if(clpState::cog_penalty>0.0 && !res.cog_ok()){
+		Space::origin_anchor=true;
+		Load res2 = load_bsg(u, left, P);
+		Space::origin_anchor=false;
+		if(res2.value > res.value) res=res2;
+	}
 	return res;
 }
 
@@ -167,6 +234,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _uld(parser, "string", "ULD file (default: uld.csv in the parent directory of the instance)", {"uld"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
+	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 10", {"cog_penalty"});
 	args::Flag _no_support(parser, "no_support", "Do not require full support of the blocks", {"no_support"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
 	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 2.2652", {"beta"});
@@ -211,6 +279,7 @@ int main(int argc, char** argv){
 	P.time=(_maxtime)? _maxtime.Get():1.0;
 	P.fix_knapsack=_fix_knapsack;
 	clpState::support=!_no_support;
+	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
 
 	clock_t begin_time=clock();
 

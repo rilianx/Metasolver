@@ -54,9 +54,32 @@ public:
 
 	virtual State* clone() const{ return new clpState(*this); }
 
+	/**
+	 * Volumen ocupado (proporcion). En un ULD, si cog_penalty>0, se divide por
+	 * 1 + cog_penalty * (desviacion del centro de gravedad que excede la permitida)
+	 * (una carga desbalanceada sigue siendo mejor que el ULD vacio)
+	 */
 	virtual double get_value() const{
-		return (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+		double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+		if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
+			long dx, dy;
+			v /= 1.0 + cog_penalty*cog_violation(dx, dy);
+		}
+		return v;
 	}
+
+	/**
+	 * Desplazamiento (dx,dy) de toda la carga que minimiza la desviacion del centro de
+	 * gravedad (respetando los limites y recortes del ULD). Retorna la desviacion que
+	 * excede la permitida despues de desplazar, relativa a la permitida, sumada en x e y
+	 */
+	double cog_violation(long& dx, long& dy) const;
+
+	/**
+	 * Desplaza toda la carga en (dx,dy). Los espacios libres no se actualizan
+	 * (solo se usa en la solucion final)
+	 */
+	void translate(long dx, long dy);
 
 	virtual int get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const;
 
@@ -112,6 +135,9 @@ public:
 	//los bloques se deben apoyar completamente sobre el piso o sobre bloques con
 	//la cara superior completa y sin cajas fragiles
 	static bool support;
+
+	//penalizacion de la desviacion del centro de gravedad en get_value
+	static double cog_penalty;
 
 	friend clpState* new_state(string file, int instance, double min_fr, int max_bl);
 	friend clpState* new_state(const ULD& u, const vector<int>& left, double min_fr, int max_bl);

@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 #include <cstdint>
 #include "Block.h"
 
@@ -29,6 +30,12 @@ struct GenBlock {
 	bool fragile;
 	//se consideran top_full y fragile al comparar bloques
 	bool support;
+	//centro de gravedad relativo a la esquina
+	double cog[3];
+	//c1 en la esquina y c2 desplazado en off (NULL si es de una caja, de tipo type)
+	const GenBlock *c1, *c2;
+	long off[3];
+	int type;
 
 	bool supportive() const { return top_full && !fragile; }
 };
@@ -66,10 +73,21 @@ struct BlockEqual {
 	}
 };
 
-/** une las cajas de b1 y b2 en un nuevo bloque de dimensiones l,w,h */
-GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h){
+/**
+ * une las cajas de b1 y b2 en un nuevo bloque de dimensiones l,w,h: b1 en la esquina y b2
+ * a continuacion en la direccion dir (0:x, 1:y, 2:z)
+ */
+GenBlock* join(const GenBlock* b1, const GenBlock* b2, long l, long w, long h, int dir){
 	GenBlock* b = new GenBlock();
 	b->l=l; b->w=w; b->h=h;
+	b->c1=b1; b->c2=b2; b->type=-1;
+	b->off[0] = (dir==0)? b1->l : 0;
+	b->off[1] = (dir==1)? b1->w : 0;
+	b->off[2] = (dir==2)? b1->h : 0;
+	double wt = b1->weight + b2->weight;
+	for(int d=0; d<3; d++)
+		b->cog[d] = (wt>0)? (b1->weight*b1->cog[d] + b2->weight*(b2->cog[d]+b->off[d]))/wt
+				: (d==0? l : d==1? w : h)/2.0;
 	b->occupied_volume = b1->occupied_volume + b2->occupied_volume;
 	b->n_boxes = b1->n_boxes + b2->n_boxes;
 	b->weight = b1->weight + b2->weight;
@@ -124,6 +142,8 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 				b->top_full=true;
 				b->fragile=box->fragile;
 				b->support=support;
+				b->c1=b->c2=NULL; b->type=box->type;
+				b->cog[0]=b->l/2.0; b->cog[1]=b->w/2.0; b->cog[2]=b->h/2.0;
 				b->boxes.push_back(make_pair(box->type, 1));
 				B.push_back(b);
 			}
@@ -163,6 +183,7 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 
 					//cara superior del bloque resultante
 					bool top_full=false;
+					const GenBlock *first=b1, *second=b2;
 					if(support){
 						if(i==2){
 							//el bloque de abajo debe soportar completamente al de arriba
@@ -170,12 +191,13 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 							if(!(down->supportive() && up->l<=down->l && up->w<=down->w)) swap(down, up);
 							if(!(down->supportive() && up->l<=down->l && up->w<=down->w)) continue;
 							top_full = up->top_full && up->l==down->l && up->w==down->w;
+							first=down; second=up;
 						}else
 							top_full = b1->top_full && b2->top_full && b1->h==b2->h &&
 								((i==0)? b1->w==b2->w : b1->l==b2->l);
 					}
 
-					GenBlock* nb = join(b1, b2, ll, ww, hh);
+					GenBlock* nb = join(first, second, ll, ww, hh, i);
 					nb->top_full = top_full;
 					if(!all_blocks.insert(nb).second) { delete nb; continue; }
 
@@ -194,6 +216,8 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 	for(const GenBlock* g : B) nboxes += g->boxes.size();
 	all_boxes.clear(); all_boxes.reserve(nboxes);
 	all.clear(); all.reserve(B.size());
+	unordered_map<const GenBlock*, int> index;
+	for(size_t k=0; k<B.size(); k++) index[B[k]]=k;
 	for(const GenBlock* g : B){
 		Block b;
 		b.id = all.size();
@@ -202,6 +226,10 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 		b.n_boxes=g->n_boxes;
 		b.weight=g->weight;
 		b.supportive=g->supportive();
+		for(int d=0; d<3; d++){ b.cog[d]=g->cog[d]; b.offset[d]= g->c1? g->off[d] : 0; }
+		b.child[0] = g->c1? index[g->c1] : -1;
+		b.child[1] = g->c2? index[g->c2] : -1;
+		b.box_type = g->type;
 		size_t first = all_boxes.size();
 		all_boxes.insert(all_boxes.end(), g->boxes.begin(), g->boxes.end());
 		b.boxes.first = all_boxes.data()+first;
@@ -214,6 +242,15 @@ vector<const Block*> Block::generate_blocks(const vector<const BoxShape*>& types
 	vector<const Block*> blocks;
 	for(const Block& b : all) blocks.push_back(&b);
 	return blocks;
+}
+
+void Block::get_boxes(long x, long y, long z, vector<PlacedBox>& boxes) const{
+	if(child[0]<0){
+		boxes.push_back(PlacedBox{box_type, x, y, z, x+l, y+w, z+h});
+		return;
+	}
+	all[child[0]].get_boxes(x, y, z, boxes);
+	all[child[1]].get_boxes(x+offset[0], y+offset[1], z+offset[2], boxes);
 }
 
 } /* namespace clp */
