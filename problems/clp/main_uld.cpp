@@ -277,6 +277,30 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 	return false;
 }
 
+/**
+ * Subconjunto de las cajas left para cargar el ULD u: las cajas que caben en u, de mayor a
+ * menor volumen, hasta completar ratio veces el volumen del ULD (ratio<=0: todas)
+ */
+static vector<int> select_subset(const vector<int>& left, const ULD& u, double ratio){
+	if(ratio<=0.0) return left;
+	vector<int> types;
+	for(const BoxShape* b : clpState::types)
+		if(left[b->type]>0 && fits(*b, u)) types.push_back(b->type);
+	sort(types.begin(), types.end(), [](int a, int b){
+		return clpState::types[a]->getVolume() > clpState::types[b]->getVolume(); });
+
+	vector<int> subset(left.size(), 0);
+	double vol=0.0;
+	for(int t : types){
+		for(int k=0; k<left[t] && vol < ratio*u.volume; k++){
+			subset[t]++;
+			vol += clpState::types[t]->getVolume();
+		}
+		if(vol >= ratio*u.volume) break;
+	}
+	return subset;
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-ULD *********.", "BSG Solver for air cargo loading (ULDs).");
@@ -293,6 +317,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
+	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 0", {"subset_ratio"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
@@ -340,6 +365,8 @@ int main(int argc, char** argv){
 	clpState::corner_support=(support=="corners");
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 10.0;
 
+	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 0.0;
+
 	clock_t begin_time=clock();
 
 	vector<ULD> ulds=ULD::read(uld_file);
@@ -359,8 +386,13 @@ int main(int argc, char** argv){
 
 	while(remaining()>0){
 		const ULD* u = select_uld(ulds, left);
-		Load ld = load(*u, left, P);
+		Load ld = load(*u, select_subset(left, *u, subset_ratio), P);
 		int n=0; for(int x : ld.boxes) n+=x;
+		//si no se cargo ninguna caja del subconjunto, se usan todas
+		if(n==0 && subset_ratio>0.0){
+			ld = load(*u, left, P);
+			for(int x : ld.boxes) n+=x;
+		}
 		if(n==0){
 			cerr << "ERROR: no box was loaded in ULD " << u->type << endl;
 			return 1;
