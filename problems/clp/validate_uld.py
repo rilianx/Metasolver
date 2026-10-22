@@ -67,7 +67,11 @@ def main():
             dev = [cog_rel * L / 2, cog_rel * W / 2, f[7]]
         ulds[int(f[21])] = dict(L=L, W=W, H=H, cap=f[3], cost=f[4], dev=dev, cuts=cuts, vol=f[20])
 
-    sol = read_csv(solf)[1:]
+    sol = read_csv(solf)
+    # formato antiguo, sin la columna substructure
+    if 'substructure' not in sol[0]:
+        sol = [r[:2] + ['0'] + r[2:] for r in sol]
+    sol = sol[1:]
     errors = []
     used = {}
     loads = {}
