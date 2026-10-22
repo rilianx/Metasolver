@@ -145,15 +145,17 @@ Con la bajada de altura y contenedor fijo (30 s, parámetros por defecto, ibex/S
 `results/bsg_plp_v2.md`): Stoyan 2005 Example1–3: 17.84 / 20.30 / 34.15; Stoyan 2004 Example1–5:
 60.56 / 36.00 / 58.38 / 73.47 / 90.68.
 
-Resultados iniciales (30 s, parámetros por defecto, sin ibex; tabla completa en `results/bsg_plp_v1.md`):
+Comparación con la literatura (detalle en `results/comparacion.md`):
 
-| Instancia | Ítems | H_lb | H | Referencia |
-|---|---|---|---|---|
-| Stoyan 2005 Example1 | 7 | 16 | 17.97 | 17.46 (Stoyan et al. 2005) |
-| Stoyan 2005 Example2 | 12 | 16 | 20.68 | por recolectar |
-| Stoyan 2005 Example3 | 25 | 16 | 36.00 | por recolectar |
-| Stoyan 2004 Example1 | 80 | 24.46 | 72.18 | por recolectar |
-| Stoyan 2004 Example2–5 | 20–50 | 29 | 40.00 / 59.10 / 76.47 / 99.81 | por recolectar |
+| Instancia | Ítems | Mejor conocida | BSG_PLP (30 s) |
+|---|---|---|---|
+| Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.84 (+2.2%) |
+| Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 20.30 (+6.8%) |
+| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | 34.15 (+14.8%) |
+| Stoyan 2004 Example2–5 | 20–50 | 28.47 / 41.30 / 54.83 / 72.33 (Lamas-Fernández et al. 2023) | 36.00 / 58.38 / 73.47 / 90.68 (+25% a +41%) |
+| Tollenaere 2025 (66 instancias) | 2–20 | MILP, 1 h | 10 s: mejor en 10, igual en 20, peor en 36 |
+
+Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
 
 ## Herramientas
 
