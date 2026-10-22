@@ -23,6 +23,7 @@ vector<const BoxShape*> clpState::types;
 vector<int> clpState::initial_boxes;
 const ULD* clpState::uld=NULL;
 double clpState::cog_greedy=0.0;
+bool clpState::translate_cog=true;
 bool clpState::support=false;
 bool clpState::corner_support=false;
 
@@ -370,6 +371,7 @@ static void shift_limits(const ULD& u, const AABB& b, long& xlo, long& xhi, long
 static double cog_excess(const ULD& u, double cx, double cy, double cz, long xlo, long xhi, long ylo, long yhi,
 		long& dx, long& dy){
 	long L=u.L, W=u.W;
+	if(!clpState::translate_cog) xlo=xhi=ylo=yhi=0;
 	dx = min(max((long) floor(L/2.0 - cx + 0.5), xlo), xhi);
 	dy = min(max((long) floor(W/2.0 - cy + 0.5), ylo), yhi);
 	double ex = max(0.0, fabs(cx+dx - L/2.0) - u.dev[0]) / u.dev[0];

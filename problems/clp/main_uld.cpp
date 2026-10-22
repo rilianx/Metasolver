@@ -108,6 +108,8 @@ static bool fits(const BoxShape& box, const ULD& u){
 static vector<ULD> ulds, ulds_sub;
 static vector<int> available;
 static bool use_substructure=false;
+//recarga con los espacios anclados en el origen (ver load_cog)
+static bool regroup=true;
 
 static int uld_index(const ULD& u){
 	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
@@ -287,7 +289,7 @@ static Load load_cog(const ULD& u, const vector<int>& left, const Params& P,
 	double avail=0;
 	for(size_t t=0; t<left.size(); t++) avail += (double) left[t]*clpState::types[t]->getVolume();
 	bool small = res.utilization() < 0.5 && res.volume < avail;
-	if(clpState::cog_penalty>0.0 && (!res.cog_ok() || small)){
+	if(regroup && clpState::cog_penalty>0.0 && (!res.cog_ok() || small)){
 		Space::origin_anchor=true;
 		Load res2 = load_bsg(u, left, P, fixed);
 		Space::origin_anchor=false;
@@ -532,6 +534,9 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
 	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
 	args::ValueFlag<string> _ruin(parser, "string", "Proportions of the volume removed from each ULD in the ruin and recreate phase (comma separated, empty: none). Default: 0.3,0.6", {"ruin"});
+	args::Flag _no_translate(parser, "no_translate", "Ablation: do not translate the load to center its center of gravity", {"no_translate"});
+	args::Flag _no_regroup(parser, "no_regroup", "Ablation: do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
+	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -604,7 +609,9 @@ int main(int argc, char** argv){
 			u.dev[1]=(long) (_cog_rel.Get()*u.W/2.0);
 		}
 	}
-	use_substructure = clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
+	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
+	regroup = !_no_regroup;
+	clpState::translate_cog = !_no_translate;
 	//con borde, el espacio sobre el borde no tiene apoyo hasta que se cargan cajas dentro de el
 	clpState::dormant_spaces = (ulds[0].edge>0);
 	ulds_sub=ulds;

@@ -172,6 +172,9 @@ public:
 	//penalizacion de la desviacion del centro de gravedad en get_value
 	static double cog_penalty;
 
+	//la carga se puede desplazar para centrar el centro de gravedad
+	static bool translate_cog;
+
 	//penalizacion de la desviacion del centro de gravedad en la evaluacion de los bloques
 	//(la evaluacion VCS se divide por 1 + cog_greedy * desviacion al ubicar el bloque)
 	static double cog_greedy;
