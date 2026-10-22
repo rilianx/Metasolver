@@ -29,8 +29,10 @@ static inline uint64_t mix(uint64_t h){
 	return h;
 }
 
+//(mix(0)=0: sin la constante, el bloque 0 en el origen tendria hash 0 y los estados
+//con y sin el serian equivalentes para el greedy)
 static inline uint64_t placement_hash(int id, long x, long y, long z){
-	return mix(mix(mix(mix((uint64_t) id) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
+	return mix(mix(mix(mix((uint64_t) id + 0x9e3779b97f4a7c15ull) ^ (uint64_t) x) ^ (uint64_t) y) ^ (uint64_t) z);
 }
 
 int clpState::get_best_actions(ActionEvaluator* evl, list< Action* >& bactions, int n) const{
