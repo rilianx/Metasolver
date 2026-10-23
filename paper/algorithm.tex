@@ -184,7 +184,8 @@ Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 \label{sec:alg-multi}
 
 Algorithm~\ref{alg:multi} outlines the multi-ULD framework. It has a sequential construction
-phase followed by three improvement phases.
+phase followed by two improvement phases, which share the same insertion procedure, and a final
+replacement of the least utilized ULD by a smaller one.
 
 \paragraph{Sequential construction.}
 The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
@@ -197,26 +198,36 @@ may only fit in the selected type among the ULDs still available. If the loading
 leaves some of them out, the ULD is loaded again with these boxes first, and the load is then
 completed with the other boxes, keeping the first ones at their positions.
 
-\paragraph{Insertion of unloaded boxes.}
-When the number of ULDs is limited, some boxes may remain unloaded at the end of the
-construction. Each ULD, in decreasing order of free volume, is loaded again with its boxes fixed
-at their positions and the unloaded boxes available; the new loading is accepted if it loads
-more volume and its CoG is not out of range when the old one was not. Then a ruin-and-recreate
-phase \citep{Schrimpf2000} is applied: for $\rho \in \{0.3, 0.6, 0.9\}$, a proportion $\rho$ of
-the loaded volume of each ULD is removed, taking the boxes with nothing on top of them from the
-highest one down, so that the remaining load is still feasible; then the ULDs are completed, in
-decreasing order of free volume, with the removed and the unloaded boxes, keeping the remaining
-boxes fixed. The new solution is accepted if the unloaded volume decreases, and the phase is
-repeated while it decreases. The unloaded boxes are inserted without eliminating any ULD.
+\paragraph{Insertion of boxes into the loaded ULDs.}
+Both improvement phases rely on the same procedure, \textsc{Insert}, which inserts a pool of
+boxes into the ULDs already loaded, without adding ULDs. It applies four stages, each of which
+visits the ULDs in decreasing order of free volume; the new loading of a ULD is accepted if it
+loads more volume and its CoG is not out of range when the old one was not, and the boxes that
+the ULD no longer loads return to the pool:
+\begin{enumerate}
+\item \emph{Reload from scratch}: the ULD is loaded again with \textsc{LoadULD} with its boxes
+	and the boxes of the pool.
+\item \emph{Reload with fixed boxes}: the boxes of the ULD are kept at their positions and the
+	search continues with the boxes of the pool.
+\item \emph{Reload with priority}: the ULD is first loaded only with the boxes of the pool that fit
+	in its type, and the load is then completed with its own boxes and the rest of the pool. This
+	stage gives a chance to large boxes that do not fit in the free space left by the current load.
+\item \emph{Ruin and recreate} \citep{Schrimpf2000}: for $\rho \in \{0.3, 0.6, 0.9\}$, a proportion
+	$\rho$ of the loaded volume of each ULD is removed, taking the boxes with nothing on top of them
+	from the highest one down, so that the remaining load is still feasible; then the ULDs are
+	completed with the removed boxes and the pool, keeping the remaining boxes fixed. The new
+	solution is accepted if the volume of the pool decreases, and the stage is repeated while it
+	decreases.
+\end{enumerate}
+The procedure stops as soon as the pool is empty.
 
-\paragraph{Elimination of ULDs.}
-When all the boxes are loaded, the algorithm tries to eliminate ULDs. The ULDs are considered in
-increasing order of utilization. The boxes of the selected ULD are freed, and the other ULDs, in
-decreasing order of free volume, are loaded again from scratch with their own boxes and the freed
-ones; a new loading is accepted if it loads more volume and its CoG is not out of range when the
-old one was not, and the freed boxes that are not loaded pass to the next ULD. If all the freed
-boxes are loaded, the ULD is eliminated and the phase starts again; otherwise the next ULD is
-tried. The phase ends when no ULD can be eliminated.
+\paragraph{Unloaded boxes and elimination of ULDs.}
+When the number of ULDs is limited and some boxes remain unloaded after the construction,
+\textsc{Insert} is applied to them. When all the boxes are loaded, the algorithm tries to eliminate
+ULDs: the ULDs are considered in increasing order of utilization, the boxes of the selected ULD
+are freed and inserted into the other ULDs with \textsc{Insert}, and if all of them are inserted,
+the ULD is eliminated and the phase starts again; otherwise the next ULD is tried. The phase ends
+when no ULD can be eliminated.
 
 \paragraph{Smaller ULD.}
 Finally, similarly to \citet{Hessler2025}, who reload the last ULD, the boxes of the least utilized ULD are loaded into a smaller
@@ -237,12 +248,14 @@ accepted if all the boxes are loaded and the CoG is not out of range when it was
 	\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
 \EndWhile
 \If{$B \neq \emptyset$}
-	\State insert boxes of $B$ into the ULDs of $\mathcal{S}$ (with fixed boxes)
-	\Repeat
-		\For{$\rho \in \{0.3, 0.6, 0.9\}$} ruin and recreate $\mathcal{S}$ with $\rho$ and $B$ \EndFor
-	\Until{the unloaded volume does not decrease}
+	\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)}
 \Else
-	\While{some ULD of $\mathcal{S}$ can be eliminated} eliminate it \EndWhile
+	\Repeat \Comment{elimination of ULDs}
+		\For{$S \in \mathcal{S}$ in increasing order of utilization}
+			\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$
+			\If{$B' = \emptyset$} remove $S$ from $\mathcal{S}$; \textbf{break} \EndIf
+		\EndFor
+	\Until{no ULD was eliminated}
 \EndIf
 \State try to move the boxes of the least utilized ULD into a smaller ULD
 \State \Return $\mathcal{S}$, $B$
