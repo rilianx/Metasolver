@@ -21,3 +21,35 @@ Stoyan 2005 Ex3: mejor solución 28.01 (`solutions/Stoyan2005_Example3_28.01.jso
 
 El tiempo del BSG inicial influye poco en el resultado final (brecha media en Stoyan 2004 Ex2–5: +7.2%, +7.6% y +6.9%
 con 5%, 30% y 60%); con 30 s la reparación con BSG no se ejecuta (la oscilación usa todo el tiempo).
+
+## Kicks de varias piezas (`--kick_size`)
+
+120 s, 3 semillas, media (mejor). Las 63 soluciones fueron verificadas con `tools/check_solution.py` (incluidas las
+no convexas de Stoyan 2004).
+
+| Instancia | Mejor conocida | k = 1 | k ≤ 2 | k ≤ 3 |
+|---|---|---|---|---|
+| Stoyan 2004 Example1 | — | 53.77 (53.09) | 54.02 (53.75) | 54.12 (53.40) |
+| Stoyan 2004 Example2 | 28.47 | 31.81 (31.40) | 31.05 (29.60) | 32.01 (32.00) |
+| Stoyan 2004 Example3 | 41.30 | 47.53 (46.53) | 47.02 (45.00) | 48.10 (48.00) |
+| Stoyan 2004 Example4 | 54.83 | 60.42 (59.28) | 60.93 (59.28) | 61.03 (59.46) |
+| Stoyan 2004 Example5 | 72.33 | 74.53 (73.73) | 75.83 (74.31) | 75.54 (74.00) |
+| Stoyan 2005 Example2 | 19.01 | 20.82 (20.74) | 20.55 (20.33) | 20.58 (20.29) |
+| Stoyan 2005 Example3 | 29.76 | 29.00 (28.63) | 29.80 (29.00) | 29.78 (29.27) |
+| Brecha media | | +7.8% | +7.9% | +8.8% |
+
+Reinsertar varias piezas no mejora; `--kick_size` queda en 1.
+
+## MILP sobre una ventana de piezas (`tools/milp_window.py`, HiGHS 1.15)
+
+Stoyan 2005 Example2, desde la mejor solución (20.29); se optimizan las k piezas más altas con las demás fijas:
+
+| k | binarias | resultado | tiempo |
+|---|---|---|---|
+| 3 | 1232 | óptimo de la ventana = 20.29 (sin mejora) | < 1 min |
+| 5 | 1946 | óptimo de la ventana = 20.29 (sin mejora) | < 2 min |
+| 8 | 2640 | óptimo de la ventana = 20.29 (sin mejora) | 178 s |
+| 12 (modelo completo) | 3036 | sin solución factible en 300 s (cota 16) | 300 s |
+
+La solución es localmente óptima para ventanas de hasta 8 de las 12 piezas: la mejor conocida (19.01) requiere
+cambiar también las piezas de abajo.
