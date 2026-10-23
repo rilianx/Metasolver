@@ -153,9 +153,22 @@ public:
 	 * Busqueda local de minimo solapamiento con altura fija H: mueve las piezas solapadas por los tres ejes
 	 * (axis_move) y, en los minimos locales, aumenta los pesos de los pares que siguen solapados (busqueda local
 	 * guiada; los pesos persisten en weights). Retorna true si el solapamiento se elimina (verificado con overlap()).
+	 *
+	 * mult: pesos multiplicativos (Gardeyn et al. 2025, sparrow): en un minimo local el peso m_ij = 1 + w_ij de un par
+	 * solapado se multiplica por 1.2 + 0.8*pen_ij/max pen y el de los demas pares decae (x0.95, minimo 1); si no,
+	 * se suma 1 al peso de los pares solapados.
+	 * strike_iter > 0: se guarda la mejor disposicion (menor penetracion total sin pesos); tras strike_iter pasadas
+	 * sin mejorarla se vuelve a ella (strike) y tras max_strikes se termina. Al fallar, t queda en la mejor disposicion.
 	 */
 	bool minimize_overlap(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, int max_iter,
-			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng);
+			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng, bool mult=false,
+			int strike_iter=0, int max_strikes=3);
+
+	/**
+	 * Intercambio de las piezas i y j (Imamichi et al. 2009; Gardeyn et al. 2025): cada una toma el centro de la caja
+	 * de la otra (dentro del contenedor de altura H).
+	 */
+	void swap_pieces(const std::vector<int>& pieces, std::vector<Vec3>& t, int i, int j, double H) const;
 
 	/** penetracion entre las piezas i y j (suma sobre sus pares de partes, con los NFP) */
 	double pair_penetration(const std::vector<int>& pieces, const std::vector<Vec3>& t, int i, int j);

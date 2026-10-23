@@ -36,6 +36,11 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _gls_iter(parser, "int", "Maximum passes of the minimum-overlap local search. Default: 200", {"gls_iter"});
 	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
+	args::ValueFlag<string> _gls(parser, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: add", {"gls"});
+	args::ValueFlag<int> _strikes(parser, "int", "Minimum-overlap search: passes without improving the best overlapped layout before going back to it (0: never); 3 strikes end the search. Default: 0", {"strikes"});
+	args::ValueFlag<double> _sep_inc(parser, "double", "Height increase after a failed separation (proportion of sep_step; 0: kick directly). Default: 0.25", {"sep_inc"});
+	args::ValueFlag<string> _kick(parser, "reinsert|swap|mix", "Kick: reinsert pieces in the free space, swap two pieces of different type and similar volume, or either (1/2 each). Default: reinsert", {"kick"});
+	args::ValueFlag<double> _compress(parser, "double", "Proportion of the time for a final compression phase: from the best solution, small height decreases (0.05% to 0.001%) and separation. Default: 0", {"compress"});
 	args::ValueFlag<int> _sep_iter(parser, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
 	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 30", {"blocks"});
@@ -193,9 +198,21 @@ int main(int argc, char** argv){
 		if(sep_method!="axis" && sep_method!="lp" && sep_method!="both") throw runtime_error("--sep_method debe ser axis, lp o both");
 		int gls_iter = (_gls_iter)? _gls_iter.Get() : 200;
 		mt19937 rng((_seed)? _seed.Get() : 0);
-		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
+		string gls = (_gls)? _gls.Get() : "add";
+		if(gls!="add" && gls!="mult") throw runtime_error("--gls debe ser add o mult");
+		int strikes = (_strikes)? _strikes.Get() : 0;
+		double sep_inc = (_sep_inc)? _sep_inc.Get() : 0.25;
+		string kick = (_kick)? _kick.Get() : "reinsert";
+		if(kick!="reinsert" && kick!="swap" && kick!="mix") throw runtime_error("--kick debe ser reinsert, swap o mix");
+		double compress = (_compress)? _compress.Get() : 0.0;
+		//fin de la exploracion (el resto del tiempo es para la compresion)
+		double t_explore = maxtime*(1-compress);
+		auto min_overlap = [&](const vector<int>& ps, vector<Vec3>& ts, double h, map< pair<int,int>, double >& w) {
+			return placer.minimize_overlap(ps, ts, h, gls_iter, w, rng, gls=="mult", strikes);
+		};
+		while(!_greedy && strip_time < 1.0 && elapsed() < t_explore && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
-			double tl = min((double) maxtime, elapsed() + slice);
+			double tl = min(t_explore, elapsed() + slice);
 
 			//fase A: oscilacion estrategica con separacion por LP (Egeblad et al. 2009; Lamas-Fernandez et al. 2023).
 			//Se baja la altura (sep_step) y la separacion elimina el solapamiento: si lo logra, se mejora la solucion y
@@ -223,9 +240,9 @@ int main(int argc, char** argv){
 				clamp(ts, hc);
 				int kicks = 0, n = ps.size();
 				map< pair<int,int>, double > weights;   //pesos de la busqueda local guiada (persisten en la oscilacion)
-				while(kicks < max_kicks && elapsed() < maxtime && H > lb*(1+1e-6)){
+				while(kicks < max_kicks && elapsed() < t_explore && H > lb*(1+1e-6)){
 					bool sep_ok = false;
-					if(sep_method != "lp") sep_ok = placer.minimize_overlap(ps, ts, hc, gls_iter, weights, rng);
+					if(sep_method != "lp") sep_ok = min_overlap(ps, ts, hc, weights);
 					if(!sep_ok && sep_method != "axis") sep_ok = placer.separate(ps, ts, hc, *lp, sep_iter, &weights);
 					if(sep_ok){
 						double H2 = (_no_improve)? hc : polish(ps, ts);
@@ -241,8 +258,8 @@ int main(int argc, char** argv){
 						continue;
 					}
 					//oscilacion: se sube un poco la altura y se sigue desde la solucion solapada
-					hc += 0.25*sep_step*H;
-					if(hc < H*(1-1e-6)) { clamp(ts, hc); continue; }
+					hc += sep_inc*sep_step*H;
+					if(sep_inc > 0 && hc < H*(1-1e-6)) { clamp(ts, hc); continue; }
 
 					//kick: desde la mejor solucion se reinserta una pieza al azar en el espacio libre (altura H*(1-sep_step));
 					//si no hay posicion, se intercambian dos piezas de distinto tipo
@@ -251,8 +268,23 @@ int main(int argc, char** argv){
 					for(const Placement& p : S.items) ts.push_back(p.t);
 					hc = max(lb, H*(1-sep_step));
 					clamp(ts, hc);
-					//se reinsertan entre 1 y kick_size piezas distintas, una tras otra
 					uniform_int_distribution<int> pick(0, n-1);
+					if(kick=="swap" || (kick=="mix" && rng()%2)){
+						//intercambio de dos piezas de distinto tipo y volumen parecido (razon entre 1/2 y 2)
+						int a = pick(rng);
+						vector<int> comp;
+						double va = inst.pieces[ps[a]].volume;
+						for(int b=0; b<n; b++){
+							double vb = inst.pieces[ps[b]].volume;
+							if(ps[b]!=ps[a] && vb >= 0.5*va && vb <= 2*va) comp.push_back(b);
+						}
+						if(!comp.empty()){
+							placer.swap_pieces(ps, ts, a, comp[rng()%comp.size()], hc);
+							weights.clear();
+							continue;
+						}
+					}
+					//se reinsertan entre 1 y kick_size piezas distintas, una tras otra
 					int nk = uniform_int_distribution<int>(1, max(1, min(kick_size, n)))(rng);
 					vector<int> chosen;
 					while((int)chosen.size() < nk){
@@ -303,6 +335,39 @@ int main(int argc, char** argv){
 			}else cout << endl;
 			delete s;
 			need_sep = true;
+		}
+
+		//3. compresion (Gardeyn et al. 2025): desde la mejor solucion se baja la altura en pasos pequenos, que
+		//disminuyen con el tiempo (0.05% a 0.001%), y se separa; si falla se vuelve a la mejor solucion
+		if(compress > 0 && strip_time < 1.0 && !_greedy){
+			vector<int> ps;
+			for(const Placement& p : S.items) ps.push_back(inst.types[p.type].piece);
+			int n = ps.size(), tries = 0, ok = 0;
+			while(elapsed() < maxtime && H > lb*(1+1e-6)){
+				double frac = min(1.0, max(0.0, (elapsed()-t_explore)/max(1e-9, maxtime-t_explore)));
+				double cstep = 5e-4*(1-frac) + 1e-5*frac;
+				double hc = max(lb, H*(1-cstep));
+				vector<Vec3> ts;
+				for(const Placement& p : S.items) ts.push_back(p.t);
+				for(int i=0; i<n; i++){
+					Vec3 e = inst.pieces[ps[i]].bbox.extent();
+					ts[i].z = min(max(ts[i].z, 0.0), max(0.0, hc-e.z));
+				}
+				map< pair<int,int>, double > weights;
+				bool sep_ok = false;
+				if(sep_method != "lp") sep_ok = min_overlap(ps, ts, hc, weights);
+				if(!sep_ok && lp && sep_method != "axis") sep_ok = placer.separate(ps, ts, hc, *lp, (_sep_iter)? _sep_iter.Get() : 50, &weights);
+				tries++;
+				if(sep_ok){
+					double H2 = (_no_improve)? hc : polish(ps, ts);
+					if(H2 < H - 1e-12*H){
+						H = H2;
+						for(int i=0; i<n; i++) S.items[i].t = ts[i];
+						ok++;
+					}
+				}
+			}
+			cout << "[compresion] altura " << H << " (" << ok << "/" << tries << " intentos exitosos)" << endl;
 		}
 		delete lpg;
 		delete lp;

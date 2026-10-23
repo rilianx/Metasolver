@@ -642,18 +642,36 @@ double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int 
 }
 
 bool Placer::minimize_overlap(const vector<int>& pieces, vector<Vec3>& t, double H, int max_iter,
-		map< pair<int,int>, double >& weights, mt19937& rng) {
+		map< pair<int,int>, double >& weights, mt19937& rng, bool mult, int strike_iter, int max_strikes) {
 	int n = pieces.size();
 	vector<int> order(n);
 	for(int i=0; i<n; i++) order[i]=i;
+	double best = numeric_limits<double>::max();
+	vector<Vec3> best_t = t;
+	int since = 0, strikes = 0;
 	for(int it=0; it<max_iter; it++){
 		//pares solapados (penetracion por NFP)
 		vector< pair<int,int> > ov;
+		vector<double> pen;
 		vector<bool> involved(n, false);
+		double total = 0, pmax = 0;
 		for(int i=0; i<n; i++)
-			for(int j=i+1; j<n; j++)
-				if(pair_penetration(pieces, t, i, j) > eps) { ov.push_back(make_pair(i,j)); involved[i]=involved[j]=true; }
+			for(int j=i+1; j<n; j++){
+				double p = pair_penetration(pieces, t, i, j);
+				if(p > eps) { ov.push_back(make_pair(i,j)); pen.push_back(p); involved[i]=involved[j]=true; total += p; pmax = max(pmax, p); }
+			}
 		if(ov.empty()) return overlap(pieces, t) <= eps;
+
+		//mejor disposicion solapada y strikes
+		if(strike_iter > 0){
+			if(total < best*(1-1e-9)) { best = total; best_t = t; since = 0; }
+			else if(++since >= strike_iter){
+				since = 0;
+				t = best_t;
+				if(++strikes >= max_strikes) return false;
+				continue;
+			}
+		}
 
 		//pasada de movimientos por los ejes sobre las piezas solapadas
 		shuffle(order.begin(), order.end(), rng);
@@ -665,10 +683,33 @@ bool Placer::minimize_overlap(const vector<int>& pieces, vector<Vec3>& t, double
 			for(int ax : axes) gain += axis_move(pieces, t, i, ax, H, weights);
 		}
 		//minimo local: busqueda local guiada (los pares que siguen solapados pesan mas)
-		if(gain <= 1e-9)
-			for(const auto& pr : ov) weights[pr] += 1.0;
+		if(gain <= 1e-9){
+			if(mult){
+				for(auto& e : weights) e.second = max(0.0, 0.95*(1+e.second) - 1);
+				for(size_t k=0; k<ov.size(); k++){
+					double& w = weights[ov[k]];
+					//se deshace el decaimiento de los pares solapados y se multiplica segun la severidad
+					double m = (1+w)/0.95;
+					w = max(1.0, m) * (1.2 + 0.8*pen[k]/pmax) - 1;
+				}
+			}else
+				for(const auto& pr : ov) weights[pr] += 1.0;
+		}
 	}
+	if(strike_iter > 0) t = best_t;
 	return false;
+}
+
+void Placer::swap_pieces(const vector<int>& pieces, vector<Vec3>& t, int i, int j, double H) const {
+	Vec3 ei = inst.pieces[pieces[i]].bbox.extent(), ej = inst.pieces[pieces[j]].bbox.extent();
+	Vec3 ci = t[i] + ei*0.5, cj = t[j] + ej*0.5;
+	t[i] = cj - ei*0.5;
+	t[j] = ci - ej*0.5;
+	double up[2][3] = { { inst.W-ei.x, inst.D-ei.y, H-ei.z }, { inst.W-ej.x, inst.D-ej.y, H-ej.z } };
+	for(int c=0; c<3; c++){
+		t[i][c] = min(max(t[i][c], 0.0), max(0.0, up[0][c]));
+		t[j][c] = min(max(t[j][c], 0.0), max(0.0, up[1][c]));
+	}
 }
 
 } /* namespace plp */
