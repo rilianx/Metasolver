@@ -139,6 +139,27 @@ public:
 	 */
 	bool reinsert(const std::vector<int>& pieces, std::vector<Vec3>& t, int i, double H);
 
+	/**
+	 * Movimiento de minimo solapamiento (Egeblad et al. 2009; Umetani et al. 2009): traslada la pieza i a lo
+	 * largo del eje axis (0,1,2) a la posicion que minimiza sum_j w_ij * pen_ij, donde pen_ij es la suma, sobre
+	 * los pares de partes, de la profundidad de penetracion max(0, min_f (d_f - n_f.(t_i - t_j))) en su NFP.
+	 * A lo largo de la recta cada termino es concavo en un intervalo y cero fuera, asi que el minimo esta en los
+	 * extremos de esos intervalos o del contenedor (altura H). Retorna la mejora del objetivo (>= 0).
+	 */
+	double axis_move(const std::vector<int>& pieces, std::vector<Vec3>& t, int i, int axis, double H,
+			const std::map< std::pair<int,int>, double >& w);
+
+	/**
+	 * Busqueda local de minimo solapamiento con altura fija H: mueve las piezas solapadas por los tres ejes
+	 * (axis_move) y, en los minimos locales, aumenta los pesos de los pares que siguen solapados (busqueda local
+	 * guiada; los pesos persisten en weights). Retorna true si el solapamiento se elimina (verificado con overlap()).
+	 */
+	bool minimize_overlap(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, int max_iter,
+			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng);
+
+	/** penetracion entre las piezas i y j (suma sobre sus pares de partes, con los NFP) */
+	double pair_penetration(const std::vector<int>& pieces, const std::vector<Vec3>& t, int i, int j);
+
 	/** suma, sobre los pares de piezas, de la mayor profundidad de penetracion entre sus partes */
 	double overlap(const std::vector<int>& pieces, const std::vector<Vec3>& t, std::vector< std::pair<int,int> >* pairs=NULL) const;
 

@@ -32,6 +32,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::Flag _no_separate(parser, "no_separate", "Fixed height: do not try the LP separation (requires ibex) before the BSG repair", {"no_separate"});
 	args::ValueFlag<double> _sep_step(parser, "double", "Initial height decrease of the LP separation phase (proportion). Default: 0.01", {"sep_step"});
+	args::ValueFlag<string> _sep_method(parser, "axis|lp|both", "Separation: minimum-overlap moves along the axes with guided local search (axis), LP separation (lp) or both (axis, then lp). Default: both", {"sep_method"});
+	args::ValueFlag<int> _gls_iter(parser, "int", "Maximum passes of the minimum-overlap local search. Default: 200", {"gls_iter"});
 	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
 	args::ValueFlag<int> _sep_iter(parser, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
@@ -187,6 +189,9 @@ int main(int argc, char** argv){
 		bool need_sep = true;
 		int max_kicks = (_kicks)? _kicks.Get() : 30;
 		int kick_size = (_kick_size)? _kick_size.Get() : 1;
+		string sep_method = (_sep_method)? _sep_method.Get() : "both";
+		if(sep_method!="axis" && sep_method!="lp" && sep_method!="both") throw runtime_error("--sep_method debe ser axis, lp o both");
+		int gls_iter = (_gls_iter)? _gls_iter.Get() : 200;
 		mt19937 rng((_seed)? _seed.Get() : 0);
 		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
@@ -219,7 +224,10 @@ int main(int argc, char** argv){
 				int kicks = 0, n = ps.size();
 				map< pair<int,int>, double > weights;   //pesos de la busqueda local guiada (persisten en la oscilacion)
 				while(kicks < max_kicks && elapsed() < maxtime && H > lb*(1+1e-6)){
-					if(placer.separate(ps, ts, hc, *lp, sep_iter, &weights)){
+					bool sep_ok = false;
+					if(sep_method != "lp") sep_ok = placer.minimize_overlap(ps, ts, hc, gls_iter, weights, rng);
+					if(!sep_ok && sep_method != "axis") sep_ok = placer.separate(ps, ts, hc, *lp, sep_iter, &weights);
+					if(sep_ok){
 						double H2 = (_no_improve)? hc : polish(ps, ts);
 						if(H2 < H - 1e-9*H){
 							H = H2;

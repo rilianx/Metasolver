@@ -140,6 +140,12 @@ Metodología (2D) en la que se basa la compactación por LP:
   mejora la solución y se vuelve a bajar; si no, el paso se reduce a la mitad (hasta 0.1%) y luego se pasa a la
   reparación con BSG (`--no_separate` la desactiva). Basado en Egeblad et al. (2009), Gomes y Oliveira (2006) y
   Lamas-Fernández et al. (2023).
+* **Movimientos de mínimo solapamiento** (`Placer::axis_move`, `Placer::minimize_overlap`; Egeblad et al. 2009,
+  Umetani et al. 2009): una pieza se traslada a lo largo de un eje a la posición que minimiza la suma ponderada de
+  penetraciones con las demás (con los NFP: `max(0, min_f (d_f − n_f·rel))`, cóncava en un intervalo y cero fuera;
+  el mínimo exacto está en los extremos de los intervalos). La búsqueda local mueve las piezas solapadas por los
+  tres ejes y en los mínimos locales aumenta los pesos de los pares solapados (búsqueda local guiada). Con
+  `--sep_method both` (por defecto) se usa antes del LP de separación; `axis` o `lp` usan solo uno.
 * **Oscilación estratégica y kicks** (fase de separación): si la separación no elimina el solapamiento, se sube
   la altura un cuarto del paso y se sigue desde la solución solapada (los pesos de la búsqueda local guiada
   persisten). Cuando la altura vuelve a la de la mejor solución, kick: desde la mejor solución se reinserta una

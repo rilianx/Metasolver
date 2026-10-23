@@ -552,5 +552,124 @@ bool Placer::separate(const vector<int>& pieces, vector<Vec3>& t, double H, LPBa
 	return best <= eps;
 }
 
+namespace {
+
+/** profundidad de penetracion de rel en el NFP (0 si rel esta fuera) */
+inline double nfp_depth(const ConvexPolytope& N, const Vec3& rel) {
+	double m = numeric_limits<double>::max();
+	for(const Plane& f : N.get_facets()){
+		m = min(m, f.d - dot(f.n, rel));
+		if(m <= 0) return 0;
+	}
+	return m;
+}
+
+}
+
+double Placer::pair_penetration(const vector<int>& pieces, const vector<Vec3>& t, int i, int j) {
+	double s=0;
+	Vec3 rel = t[i] - t[j];
+	for(int a : piece_parts[pieces[i]])
+		for(int b : piece_parts[pieces[j]]){
+			const Box3& ab = parts[a]->get_bbox();
+			const Box3& bb = parts[b]->get_bbox();
+			bool near=true;
+			for(int c=0; c<3 && near; c++) near = rel[c] > bb.lo[c]-ab.hi[c] && rel[c] < bb.hi[c]-ab.lo[c];
+			if(near) s += nfp_depth(nfp(a, b), rel);
+		}
+	return s;
+}
+
+double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int axis, double H,
+		const map< pair<int,int>, double >& w) {
+	int n = pieces.size();
+	Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+	double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), max(0.0, H-e.z) };
+	double lo = 0, hi = up[axis], s0 = t[i][axis];
+
+	//terminos relevantes: (pieza j, parte a, parte b, peso) cuyo NFP corta la recta
+	struct Term { int j, a, b; double w; };
+	vector<Term> terms;
+	vector<double> cand = { lo, hi, min(max(s0, lo), hi) };
+	for(int j=0; j<n; j++){
+		if(j==i) continue;
+		auto it = w.find(make_pair(min(i,j), max(i,j)));
+		double wij = 1.0 + ((it==w.end())? 0.0 : it->second);
+		Vec3 rel = t[i] - t[j];
+		for(int a : piece_parts[pieces[i]])
+			for(int b : piece_parts[pieces[j]]){
+				const Box3& ab = parts[a]->get_bbox();
+				const Box3& bb = parts[b]->get_bbox();
+				//la recta (rel con la coordenada axis libre) debe cruzar la caja del NFP en las otras coordenadas
+				bool near=true;
+				for(int c=0; c<3 && near; c++)
+					if(c!=axis) near = rel[c] > bb.lo[c]-ab.hi[c] && rel[c] < bb.hi[c]-ab.lo[c];
+				if(!near) continue;
+				//intervalo de s en que rel esta dentro del NFP: n.rel(s) <= d para todas las facetas
+				const ConvexPolytope& N = nfp(a, b);
+				double L = -numeric_limits<double>::max(), U = numeric_limits<double>::max();
+				bool empty=false;
+				for(const Plane& f : N.get_facets()){
+					double r = f.d - dot(f.n, rel) + f.n[axis]*s0;   //n_axis*s <= r
+					if(fabs(f.n[axis]) < 1e-12) { if(r - f.n[axis]*s0 < 0 && f.d - dot(f.n, rel) < 0) { empty=true; break; } continue; }
+					if(f.n[axis] > 0) U = min(U, r/f.n[axis]); else L = max(L, r/f.n[axis]);
+				}
+				if(empty || L >= U || U <= lo || L >= hi) continue;
+				terms.push_back(Term{j, a, b, wij});
+				if(L > lo) cand.push_back(L);
+				if(U < hi) cand.push_back(U);
+			}
+	}
+	if(terms.empty()) return 0;
+
+	auto eval = [&](double s) {
+		double tot=0;
+		for(const Term& tm : terms){
+			Vec3 rel = t[i] - t[tm.j];
+			rel[axis] = s - t[tm.j][axis];
+			tot += tm.w * nfp_depth(nfp(tm.a, tm.b), rel);
+		}
+		return tot;
+	};
+	double f0 = eval(s0), best = f0, bs = s0;
+	for(double s : cand){
+		double f = eval(s);
+		//desempate: menor coordenada (gravedad / hacia las paredes)
+		if(f < best - 1e-12 || (fabs(f-best) <= 1e-12 && s < bs)) { best=f; bs=s; }
+	}
+	t[i][axis] = bs;
+	return f0 - best;
+}
+
+bool Placer::minimize_overlap(const vector<int>& pieces, vector<Vec3>& t, double H, int max_iter,
+		map< pair<int,int>, double >& weights, mt19937& rng) {
+	int n = pieces.size();
+	vector<int> order(n);
+	for(int i=0; i<n; i++) order[i]=i;
+	for(int it=0; it<max_iter; it++){
+		//pares solapados (penetracion por NFP)
+		vector< pair<int,int> > ov;
+		vector<bool> involved(n, false);
+		for(int i=0; i<n; i++)
+			for(int j=i+1; j<n; j++)
+				if(pair_penetration(pieces, t, i, j) > eps) { ov.push_back(make_pair(i,j)); involved[i]=involved[j]=true; }
+		if(ov.empty()) return overlap(pieces, t) <= eps;
+
+		//pasada de movimientos por los ejes sobre las piezas solapadas
+		shuffle(order.begin(), order.end(), rng);
+		double gain=0;
+		for(int i : order){
+			if(!involved[i]) continue;
+			int axes[3] = {0,1,2};
+			shuffle(axes, axes+3, rng);
+			for(int ax : axes) gain += axis_move(pieces, t, i, ax, H, weights);
+		}
+		//minimo local: busqueda local guiada (los pares que siguen solapados pesan mas)
+		if(gain <= 1e-9)
+			for(const auto& pr : ov) weights[pr] += 1.0;
+	}
+	return false;
+}
+
 } /* namespace plp */
 
