@@ -43,16 +43,18 @@ ax.plot(s, u, '-o', color=OURS, lw=1.5, ms=5, mec='white', mew=1, label='BSG (th
 for ti, si, ui in zip(t, s, u):
 	label(ax, si, ui, f'{ti:g} s', dx=5, dy=5)
 h = HESSLER['paquay']
-ax.plot([h[3]], [h[0]], 's', color=THEIRS, ms=6, mec='white', mew=1, label='RGS (Heßler et al. 2025)', zorder=3)
-# tiempo del RGS escalado a nuestra maquina (PassMark single thread: 4105 / 1624)
-SPEED = 4105 / 1624
-ax.plot([h[3]*SPEED], [h[0]], 's', mfc='none', mec=THEIRS, mew=1.2, ms=6, label='RGS, time scaled to our machine', zorder=3)
-ax.annotate('', xy=(h[3]*SPEED*0.93, h[0]), xytext=(h[3]*1.08, h[0]), arrowprops=dict(arrowstyle='->', color=MUTED, lw=0.8))
+SPEED = 4105 / 1624   # tiempo del RGS escalado a nuestra maquina (PassMark single thread)
+ax.axhline(h[0], color=THEIRS, lw=0.8, ls='--', zorder=1)
+ax.plot([h[3]], [h[0]], 's', color=THEIRS, ms=7, mec='white', mew=1, label='RGS (Heßler et al. 2025)', zorder=3)
+ax.plot([h[3]*SPEED], [h[0]], 's', mfc='white', mec=THEIRS, mew=1.4, ms=7, label='RGS, time scaled to our machine', zorder=3)
+ax.annotate('', xy=(h[3]*SPEED*0.92, h[0]), xytext=(h[3]*1.09, h[0]), arrowprops=dict(arrowstyle='->', color=THEIRS, lw=0.9))
+label(ax, h[3], h[0], f'RGS: {h[0]} ULDs', dx=-2, dy=-12)
 ax.set_xscale('log')
 ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f'{v:g}'))
 ax.set_xlabel('mean time per instance (s, log scale)')
 ax.set_ylabel('number of ULDs (300 instances)')
-ax.legend(loc='upper right', fontsize=7.5)
+ax.set_ylim(585, 722)
+ax.legend(loc='center right', fontsize=7.5)
 fig.tight_layout()
 fig.savefig(os.path.join(D, 'time.pdf'))
 
