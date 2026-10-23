@@ -144,14 +144,19 @@ Metodología (2D) en la que se basa la compactación por LP:
   Umetani et al. 2009): una pieza se traslada a lo largo de un eje a la posición que minimiza la suma ponderada de
   penetraciones con las demás (con los NFP: `max(0, min_f (d_f − n_f·rel))`, cóncava en un intervalo y cero fuera;
   el mínimo exacto está en los extremos de los intervalos). La búsqueda local mueve las piezas solapadas por los
-  tres ejes y en los mínimos locales aumenta los pesos de los pares solapados (búsqueda local guiada). Con
+  tres ejes y en los mínimos locales aumenta los pesos de los pares solapados (búsqueda local guiada; con
+  `--gls mult`, por defecto, como en sparrow de Gardeyn et al. 2025: el peso de un par solapado se multiplica por
+  1.2–2.0 según la severidad y el de los demás decae ×0.95; `--gls add` suma 1). Con
   `--sep_method both` (por defecto) se usa antes del LP de separación; `axis` o `lp` usan solo uno.
 * **Oscilación estratégica y kicks** (fase de separación): si la separación no elimina el solapamiento, se sube
   la altura un cuarto del paso y se sigue desde la solución solapada (los pesos de la búsqueda local guiada
   persisten). Cuando la altura vuelve a la de la mejor solución, kick: desde la mejor solución se reinserta una
   pieza al azar en el espacio libre (o se intercambian dos piezas de distinto tipo); con `--kick_size k` se
-  reinsertan entre 1 y k piezas. Tras `--kicks` (30) kicks
+  reinsertan entre 1 y k piezas; `--kick swap` intercambia dos piezas de distinto tipo y volumen parecido y
+  `--kick mix` elige uno de los dos al azar. Tras `--kicks` (30) kicks
   seguidos sin mejora se intenta la reparación con BSG y luego se vuelve a la oscilación, hasta agotar el tiempo.
+* Opciones evaluadas que no ayudaron (`results/papers.md`): `--strikes` (volver a la mejor disposición
+  solapada), `--sep_inc 0` con pasos más finos (exploración de sparrow) y `--compress` (fase final de compresión).
 * Todas las soluciones se verifican con `Solution::verify`.
 
 ### Compilación con ibex (opcional)
@@ -189,18 +194,19 @@ Con la bajada de altura y contenedor fijo (30 s, parámetros por defecto, ibex/S
 `results/bsg_plp_v2.md`): Stoyan 2005 Example1–3: 17.84 / 20.30 / 34.15; Stoyan 2004 Example1–5:
 60.56 / 36.00 / 58.38 / 73.47 / 90.68.
 
-Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, versión con movimientos de mínimo
-solapamiento; `results/largo.md`; soluciones en `results/solutions/`, verificadas con `tools/check_solution.py`):
+Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, con `--gls mult`;
+`results/papers.md`). La última columna es la mejor solución encontrada con cualquier configuración evaluada;
+esas soluciones están en `results/solutions/`, verificadas con `PLP_check` y `tools/check_solution.py` (eps 1e-9):
 
-| Instancia | Ítems | Mejor publicada | BSG_PLP (120 s): media (mejor) |
-|---|---|---|---|
-| Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.46 (30 s) |
-| Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 19.13 (19.13) |
-| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **28.34 (28.00)** |
-| Stoyan 2004 Example2 | 20 | 28.47 (Lamas-Fernández et al. 2023) | 29.88 (29.00) |
-| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | 42.09 (**41.00**) |
-| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | 56.52 (55.55) |
-| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | 72.68 (**69.98**) |
+| Instancia | Ítems | Mejor publicada | BSG_PLP (120 s): media (mejor) | Mejor nuestra |
+|---|---|---|---|---|
+| Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.46 (30 s) | 17.46 |
+| Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 19.13 (19.13) | 19.13 |
+| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **27.91 (27.64)** | **27.07** |
+| Stoyan 2004 Example2 | 20 | 28.47 (Lamas-Fernández et al. 2023) | 29.00 (29.00) | 29.00 |
+| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | 42.12 (41.88) | **40.24** |
+| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | 55.18 (**53.33**) | **53.33** |
+| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **70.75 (69.70)** | **67.67** |
 
 Lamas-Fernández et al. (2023) usan piezas voxelizadas (algo más grandes) y reportan el mejor de 10 corridas de 1 h.
 

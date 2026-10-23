@@ -36,7 +36,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _gls_iter(parser, "int", "Maximum passes of the minimum-overlap local search. Default: 200", {"gls_iter"});
 	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
-	args::ValueFlag<string> _gls(parser, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: add", {"gls"});
+	args::ValueFlag<string> _gls(parser, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
 	args::ValueFlag<int> _strikes(parser, "int", "Minimum-overlap search: passes without improving the best overlapped layout before going back to it (0: never); 3 strikes end the search. Default: 0", {"strikes"});
 	args::ValueFlag<double> _sep_inc(parser, "double", "Height increase after a failed separation (proportion of sep_step; 0: kick directly). Default: 0.25", {"sep_inc"});
 	args::ValueFlag<string> _kick(parser, "reinsert|swap|mix", "Kick: reinsert pieces in the free space, swap two pieces of different type and similar volume, or either (1/2 each). Default: reinsert", {"kick"});
@@ -198,7 +198,7 @@ int main(int argc, char** argv){
 		if(sep_method!="axis" && sep_method!="lp" && sep_method!="both") throw runtime_error("--sep_method debe ser axis, lp o both");
 		int gls_iter = (_gls_iter)? _gls_iter.Get() : 200;
 		mt19937 rng((_seed)? _seed.Get() : 0);
-		string gls = (_gls)? _gls.Get() : "add";
+		string gls = (_gls)? _gls.Get() : "mult";
 		if(gls!="add" && gls!="mult") throw runtime_error("--gls debe ser add o mult");
 		int strikes = (_strikes)? _strikes.Get() : 0;
 		double sep_inc = (_sep_inc)? _sep_inc.Get() : 0.25;
