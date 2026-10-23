@@ -518,6 +518,7 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
  * el CoG fuera de rango si no lo estaba). Generaliza la eliminacion (no sobran cajas) y el
  * cambio a un ULD mas pequeno (no se inserta ninguna). Retorna true si se hizo un cambio.
  */
+static int reduce_new=1;
 static bool reduce_volume(vector<Load>& loads, const Params& P){
 	vector<int> order(loads.size());
 	for(size_t i=0; i<order.size(); i++) order[i]=i;
@@ -530,26 +531,49 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
 		if(!others.empty()) insert(others, pool, P);
 		if(none(pool)){ loads=others; return true; }
-		//sobrante: ULD del tipo de menor volumen posible
+		//sobrante: 1 a reduce_new ULDs nuevos de menor volumen total que el sacado, de menor a
+		//mayor volumen total (el mas grande se carga primero, con todo el sobrante)
 		double pv=volume_of(pool), pw=0;
 		for(size_t t=0; t<pool.size(); t++) pw += pool[t]*clpState::types[t]->weight;
-		vector<int> ks;
-		for(size_t k=0; k<ulds.size(); k++){
-			bool own = ulds[k].type==tg.uld->type;
-			if(ulds[k].volume >= tg.uld->volume - 1e-6 || ulds[k].volume < pv || ulds[k].max_weight < pw) continue;
-			if(available[k]==0 && !own) continue;
-			bool all=true;
-			for(size_t t=0; t<pool.size() && all; t++) if(pool[t]>0 && !fits(*clpState::types[t], ulds[k])) all=false;
-			if(all) ks.push_back(k);
+		int kt=uld_index(*tg.uld);
+		vector<int> av=available;
+		if(av[kt]>=0) av[kt]++;
+		vector< vector<int> > combos;
+		for(size_t a=0; a<ulds.size(); a++){
+			combos.push_back({(int)a});
+			if(reduce_new>=2)
+				for(size_t b=0; b<ulds.size(); b++)
+					if(ulds[b].volume < ulds[a].volume || (ulds[b].volume == ulds[a].volume && b>=a)) combos.push_back({(int)a, (int)b});
 		}
-		sort(ks.begin(), ks.end(), [&](int a, int b){ return ulds[a].volume < ulds[b].volume; });
-		for(int k : ks){
-			Load ld=load(ulds[k], pool, P);
-			if(ld.boxes!=pool || !ld.feasible || (tg.cog_ok() && !ld.cog_ok())) continue;
-			int kt=uld_index(*tg.uld);
-			if(available[kt]>=0) available[kt]++;
-			if(available[k]>0) available[k]--;
-			others.push_back(ld);
+		auto cvol=[&](const vector<int>& C){ double v=0; for(int k : C) v+=ulds[k].volume; return v; };
+		sort(combos.begin(), combos.end(), [&](const vector<int>& x, const vector<int>& y){ return cvol(x) < cvol(y); });
+		for(const vector<int>& C : combos){
+			double vc=cvol(C), wc=0;
+			if(vc >= tg.uld->volume - 1e-6) break;
+			if(vc < pv) continue;
+			vector<int> a2=av; bool ok=true;
+			for(int k : C){ wc+=ulds[k].max_weight; if(a2[k]==0) ok=false; else if(a2[k]>0) a2[k]--; }
+			if(!ok || wc < pw) continue;
+			for(size_t t=0; t<pool.size() && ok; t++){
+				if(!pool[t]) continue;
+				bool any=false;
+				for(int k : C) any = any || fits(*clpState::types[t], ulds[k]);
+				ok=any;
+			}
+			if(!ok) continue;
+			vector<Load> nl; vector<int> rest=pool;
+			for(int k : C){
+				if(none(rest)) break;
+				Load ld=load(ulds[k], rest, P);
+				if(!ld.feasible || none(ld.boxes) || (tg.cog_ok() && !ld.cog_ok())){ ok=false; break; }
+				for(size_t t=0; t<rest.size(); t++) rest[t]-=ld.boxes[t];
+				nl.push_back(ld);
+			}
+			if(!ok || !none(rest)) continue;
+			//ULDs de C no usados (el primero ya cargo todo)
+			for(size_t i=nl.size(); i<C.size(); i++) if(a2[C[i]]>=0) a2[C[i]]++;
+			available=a2;
+			for(const Load& ld : nl) others.push_back(ld);
 			loads=others;
 			return true;
 		}
@@ -733,6 +757,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _reassign_tfrac(parser, "double", "Reassignment: time limit of BSG as a proportion of -t. Default: 1", {"reassign_tfrac"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _reduce(parser, "reduce", "Reduce the volume of the ULDs: remove a ULD, insert its boxes into the others and load the remaining ones into a smaller ULD (generalizes the elimination of ULDs)", {"reduce"});
+	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the remaining boxes (1 or 2). Default: 1", {"reduce_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -799,6 +824,7 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_max_new) max_new=_max_new.Get();
+	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_reassign_umax) reassign_umax=_reassign_umax.Get();
 	if(_reassign_tfrac) reassign_tfrac=_reassign_tfrac.Get();
 	if(_theta) theta=_theta.Get();
