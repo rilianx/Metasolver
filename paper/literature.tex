@@ -63,8 +63,10 @@ algorithms that place \emph{blocks} of boxes instead of single boxes:
 partial solution (BSG). \citet{Araya2017} introduced the VCS function to evaluate the blocks,
 which combines the volume of the block, its contact surface with the placed boxes and the
 container, the volume that the block makes unusable in the free space, and the number of boxes,
-and \citet{Araya2020} extended BSG to a biobjective container loading problem that also
-maximizes the profit of the loaded boxes.
+\citet{Araya2020} extended BSG to a biobjective container loading problem that also
+maximizes the profit of the loaded boxes, and \citet{Guesser2026} improved its implementation
+with cache-friendly data structures, the memoization of the greedy completions and a two-stage
+evaluation function, obtaining the best results to date on the classical instances.
 \citet{Hessler2025} also tested the RGS on the container loading instances of
 \citet{Bischoff1995} and reported that it lags behind BSG with VCS \citep{Araya2017}, which they
 attribute to the much larger number of boxes per container in those instances. To the best of
