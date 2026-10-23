@@ -194,19 +194,20 @@ Con la bajada de altura y contenedor fijo (30 s, parámetros por defecto, ibex/S
 `results/bsg_plp_v2.md`): Stoyan 2005 Example1–3: 17.84 / 20.30 / 34.15; Stoyan 2004 Example1–5:
 60.56 / 36.00 / 58.38 / 73.47 / 90.68.
 
-Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, con `--gls mult`;
-`results/papers.md`). La última columna es la mejor solución encontrada con cualquier configuración evaluada;
+Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, parámetros por defecto: `--gls mult`,
+`--gls_iter 500`; `results/papers.md`). La última columna es la mejor solución encontrada con cualquier configuración evaluada;
 esas soluciones están en `results/solutions/`, verificadas con `PLP_check` y `tools/check_solution.py` (eps 1e-9):
 
 | Instancia | Ítems | Mejor publicada | BSG_PLP (120 s): media (mejor) | Mejor nuestra |
 |---|---|---|---|---|
 | Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.46 (30 s) | 17.46 |
 | Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 19.13 (19.13) | 19.13 |
-| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **27.91 (27.64)** | **27.07** |
+| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **27.59 (27.33)** | **26.91** |
+| Stoyan 2004 Example1 | 25 | — | 52.28 (52.00) | 51.47 |
 | Stoyan 2004 Example2 | 20 | 28.47 (Lamas-Fernández et al. 2023) | 29.00 (29.00) | 29.00 |
-| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | 42.12 (41.88) | **40.24** |
-| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | 55.18 (**53.33**) | **53.33** |
-| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **70.75 (69.70)** | **67.67** |
+| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | **39.17 (38.93)** | **38.93** |
+| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | **54.60 (53.39)** | **53.12** |
+| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **67.75 (66.10)** | **65.50** |
 
 Lamas-Fernández et al. (2023) usan piezas voxelizadas (algo más grandes) y reportan el mejor de 10 corridas de 1 h.
 

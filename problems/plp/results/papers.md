@@ -52,3 +52,37 @@ Brecha respecto de la mejor publicada (Stoyan 2004 Example1 no tiene referencia)
 * Nuevas mejores soluciones (verificadas con `PLP_check` y `tools/check_solution.py`, eps 1e-9; en
   `solutions/`): S2004 Ex1 52.00, Ex3 **40.24**, Ex4 **53.33**, Ex5 **67.67**; S2005 Ex3 **27.07** (en negrita, menores
   que la mejor publicada).
+
+## Separación más rápida y más pasadas
+
+El perfil (gprof, Stoyan 2004 Example4) mostró que `Placer::nfp` (búsqueda en un `std::map`) tomaba el 40 % del
+tiempo y `axis_move` otro 43 %. Cambios (mismo algoritmo, ~5x más rápido en la separación por los ejes):
+acceso directo a los NFP; filtro por las cajas de las piezas en `axis_move`; facetas guardadas como `C − K·s`;
+cada término se evalúa solo en los candidatos dentro de su intervalo; matriz de penetraciones actualizada por
+fila. Con la misma semilla, los primeros pasos llegan a las mismas alturas en 0.6 s en vez de 3 s.
+
+Media (mejor) de 3 semillas, 120 s. `fast`: versión rápida con los parámetros de `mult`; `fls`: búsqueda local
+rápida (solo se mueven las piezas activas, Egeblad et al. 2009; Umetani et al. 2009).
+
+| Instancia | Ref. | mult | fast | fls | it500 | it1000 | fls500 |
+|---|---|---|---|---|---|---|---|
+| S2004 Ex1 | — | 52.52 (52.00) | 52.11 (51.47) | 52.50 (52.30) | 52.28 (52.00) | 51.65 (51.53) | 51.72 (51.37) |
+| S2004 Ex2 | 28.47 | 29.00 (29.00) | 29.00 (29.00) | 29.23 (29.00) | 29.00 (29.00) | 29.00 (29.00) | 29.00 (29.00) |
+| S2004 Ex3 | 41.30 | 42.12 (41.88) | 40.29 (40.00) | 40.67 (40.04) | 39.17 (**38.93**) | 40.34 (40.06) | 40.58 (40.03) |
+| S2004 Ex4 | 54.83 | 55.18 (53.33) | 53.87 (**53.12**) | 54.47 (54.04) | 54.60 (53.39) | 54.01 (53.40) | 56.86 (56.46) |
+| S2004 Ex5 | 72.33 | 70.75 (69.70) | 67.24 (**65.50**) | 68.47 (67.48) | 67.75 (66.10) | 67.41 (65.75) | 67.31 (66.09) |
+| S2005 Ex2 | 19.01 | 19.13 (19.13) | 19.42 (19.13) | 19.13 (19.13) | 19.13 (19.13) | 19.13 (19.13) | 19.13 (19.13) |
+| S2005 Ex3 | 29.76 | 27.91 (27.64) | 28.11 (27.86) | 27.47 (27.18) | 27.59 (27.33) | 27.40 (**26.91**) | 27.53 (27.38) |
+
+| Brecha media | mult | fast | fls | it500 | it1000 | fls500 |
+|---|---|---|---|---|---|---|
+| Stoyan 2004 (Ex2–5) | +0.6% | -2.3% | -1.2% | **-2.5%** | -2.2% | -0.8% |
+| Stoyan 2005 (Ex2–3) | -2.8% | -1.7% | -3.5% | -3.3% | **-3.7%** | -3.4% |
+| Instancias con mejor media que mult | | 4 (2 peor) | 5 (1 peor) | **5 (0 peor)** | | |
+
+* La velocidad se traduce en calidad: con más pasadas por separación (`--gls_iter 500`, ahora por defecto) la
+  media queda bajo la literatura en S2004 Ex3–5 y S2005 Ex3. 1000 pasadas no mejora más y `--fls` no aporta
+  (con el mismo esfuerzo mueve menos piezas por pasada).
+* S2004 Ex2 (29.00 vs 28.47) y S2005 Ex2 (19.13 vs 19.01) siguen sin cambios con ninguna configuración.
+* Nuevas mejores soluciones (en `solutions/`, verificadas con `PLP_check` y `tools/check_solution.py`, eps 1e-9):
+  S2004 Ex1 51.47, Ex3 **38.93**, Ex4 **53.12**, Ex5 **65.50**; S2005 Ex3 **26.91**.

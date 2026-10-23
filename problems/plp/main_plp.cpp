@@ -33,7 +33,7 @@ int main(int argc, char** argv){
 	args::Flag _no_separate(parser, "no_separate", "Fixed height: do not try the LP separation (requires ibex) before the BSG repair", {"no_separate"});
 	args::ValueFlag<double> _sep_step(parser, "double", "Initial height decrease of the LP separation phase (proportion). Default: 0.01", {"sep_step"});
 	args::ValueFlag<string> _sep_method(parser, "axis|lp|both", "Separation: minimum-overlap moves along the axes with guided local search (axis), LP separation (lp) or both (axis, then lp). Default: both", {"sep_method"});
-	args::ValueFlag<int> _gls_iter(parser, "int", "Maximum passes of the minimum-overlap local search. Default: 200", {"gls_iter"});
+	args::ValueFlag<int> _gls_iter(parser, "int", "Maximum passes of the minimum-overlap local search. Default: 500", {"gls_iter"});
 	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
 	args::ValueFlag<string> _gls(parser, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
@@ -197,7 +197,7 @@ int main(int argc, char** argv){
 		int kick_size = (_kick_size)? _kick_size.Get() : 1;
 		string sep_method = (_sep_method)? _sep_method.Get() : "both";
 		if(sep_method!="axis" && sep_method!="lp" && sep_method!="both") throw runtime_error("--sep_method debe ser axis, lp o both");
-		int gls_iter = (_gls_iter)? _gls_iter.Get() : 200;
+		int gls_iter = (_gls_iter)? _gls_iter.Get() : 500;
 		mt19937 rng((_seed)? _seed.Get() : 0);
 		string gls = (_gls)? _gls.Get() : "mult";
 		if(gls!="add" && gls!="mult") throw runtime_error("--gls debe ser add o mult");
