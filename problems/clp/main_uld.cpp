@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <set>
 #include <algorithm>
 #include <cmath>
 #include <functional>
@@ -522,6 +523,17 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
  * cambio a un ULD mas pequeno (no se inserta ninguna). Retorna true si se hizo un cambio.
  */
 static int reduce_new=1;
+//reduccion: memoria de intentos fallidos (--reduce_memo) y utilizacion maxima estimada
+//(--reduce_umax: se omiten los intentos y combinaciones que la exigirian)
+static bool reduce_memo=false;
+static double reduce_umax=1.0;
+static set<uint64_t> reduce_failed;
+static long st_skip=0, st_prune=0;
+static uint64_t load_key(const Load& l){
+	uint64_t h=0xcbf29ce484222325ull ^ (uint64_t) l.uld->type;
+	for(size_t t=0; t<l.boxes.size(); t++){ h ^= (uint64_t) l.boxes[t] + 0x9e3779b97f4a7c15ull + (h<<6) + (h>>2); h *= 0x100000001b3ull; }
+	return h;
+}
 static bool reduce_volume(vector<Load>& loads, const Params& P){
 	vector<int> order(loads.size());
 	for(size_t i=0; i<order.size(); i++) order[i]=i;
@@ -529,8 +541,19 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 	sort(order.begin(), order.end(), [&](int a, int b){ return waste(a) > waste(b); });
 	st_pass++;
 	for(int target : order){
-		st_try++;
 		const Load& tg=loads[target];
+		//con --reduce_memo, en una barrida no se reintenta un ULD que ya fallo y no cambio
+		uint64_t key=load_key(tg);
+		if(reduce_memo && reduce_failed.count(key)){ st_skip++; continue; }
+		//poda: los otros ULDs no pueden recibir mas que hasta umax de su volumen, y los nuevos
+		//suman menos que el sacado
+		if(reduce_umax < 1.0){
+			double room=0;
+			for(size_t i=0; i<loads.size(); i++)
+				if((int)i!=target) room += max(0.0, reduce_umax*loads[i].uld->volume - loads[i].volume);
+			if(tg.volume > room + reduce_umax*tg.uld->volume){ st_prune++; continue; }
+		}
+		st_try++;
 		vector<int> pool=tg.boxes;
 		vector<Load> others;
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
@@ -558,7 +581,7 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 		for(const vector<int>& C : combos){
 			double vc=cvol(C), wc=0;
 			if(vc >= tg.uld->volume - 1e-6) break;
-			if(vc < pv) continue;
+			if(vc*reduce_umax < pv){ if(reduce_umax<1.0) st_prune++; continue; }
 			vector<int> a2=av; bool ok=true;
 			for(int k : C){ wc+=ulds[k].max_weight; if(a2[k]==0) ok=false; else if(a2[k]>0) a2[k]--; }
 			if(!ok || wc < pw) continue;
@@ -588,6 +611,7 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 			return true;
 		}
 		st_fail++;
+		if(reduce_memo) reduce_failed.insert(key);
 	}
 	return false;
 }
@@ -768,6 +792,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _reassign_tfrac(parser, "double", "Reassignment: time limit of BSG as a proportion of -t. Default: 1", {"reassign_tfrac"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _reduce(parser, "reduce", "Reduce the volume of the ULDs: remove a ULD, insert its boxes into the others and load the remaining ones into a smaller ULD (generalizes the elimination of ULDs)", {"reduce"});
+	args::Flag _reduce_memo(parser, "reduce_memo", "Reduction of the volume: do not repeat attempts that failed with the same ULDs", {"reduce_memo"});
+	args::ValueFlag<double> _reduce_umax(parser, "double", "Reduction of the volume: skip attempts and combinations that would need a utilization above this value. Default: 1", {"reduce_umax"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the remaining boxes (1 or 2). Default: 1", {"reduce_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
@@ -836,6 +862,8 @@ int main(int argc, char** argv){
 	regroup = !_no_regroup;
 	if(_max_new) max_new=_max_new.Get();
 	if(_reduce_new) reduce_new=_reduce_new.Get();
+	reduce_memo=_reduce_memo;
+	if(_reduce_umax) reduce_umax=_reduce_umax.Get();
 	if(_reassign_umax) reassign_umax=_reassign_umax.Get();
 	if(_reassign_tfrac) reassign_tfrac=_reassign_tfrac.Get();
 	if(_theta) theta=_theta.Get();
@@ -986,7 +1014,15 @@ int main(int argc, char** argv){
 	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros (con
 	//--reduce: reduccion del volumen, que generaliza la eliminacion)
 	if(!_no_eliminate && remaining()==0){
-		if(_reduce) while(reduce_volume(loads, P));
+		//barridas: dentro de una, los ULDs que fallaron y no cambiaron no se reintentan; termina
+		//cuando una barrida completa no logra ningun cambio
+		if(_reduce)
+			for(bool changed=true; changed; ){
+				changed=false;
+				reduce_failed.clear();
+				while(reduce_volume(loads, P)) changed=true;
+				if(!reduce_memo) break;
+			}
 		else while(eliminate_uld(loads, P));
 	}
 
@@ -1055,7 +1091,7 @@ int main(int argc, char** argv){
 	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
 		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
 		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
-		<< " new2 " << st_new2 << " fail " << st_fail << endl;
+		<< " new2 " << st_new2 << " fail " << st_fail << " skip " << st_skip << " prune " << st_prune << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
