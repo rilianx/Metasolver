@@ -423,7 +423,23 @@ double Placer::overlap(const vector<int>& pieces, const vector<Vec3>& t, vector<
 	return total;
 }
 
-bool Placer::separate(const vector<int>& pieces, vector<Vec3>& t, double H, LPBackend& lp, int max_iter) {
+bool Placer::reinsert(const vector<int>& pieces, vector<Vec3>& t, int i, double H) {
+	vector<PlacedPart> others;
+	place_all(pieces, t, i, others);
+	double top=0;
+	for(size_t k=0; k<pieces.size(); k++)
+		if((int)k!=i) top = max(top, t[k].z + inst.pieces[pieces[k]].bbox.extent().z);
+	vector<Vec3> cand;
+	candidates(pieces[i], others, min(top, H), cand, H);
+	if(cand.empty()) return false;
+	Vec3 bc = cand[0];
+	for(const Vec3& v : cand) if(v.z < bc.z) bc = v;
+	t[i] = bc;
+	return true;
+}
+
+bool Placer::separate(const vector<int>& pieces, vector<Vec3>& t, double H, LPBackend& lp, int max_iter,
+		map< pair<int,int>, double >* weights) {
 	int n = pieces.size();
 	double delta = numeric_limits<double>::max();
 	for(int i=0; i<n; i++){
@@ -431,7 +447,8 @@ bool Placer::separate(const vector<int>& pieces, vector<Vec3>& t, double H, LPBa
 		delta = min(delta, 0.5*min(min(e.x, e.y), e.z));
 	}
 
-	map< pair<int,int>, double > w;          //pesos de los pares de piezas (busqueda local guiada)
+	map< pair<int,int>, double > wl;         //pesos de los pares de piezas (busqueda local guiada)
+	map< pair<int,int>, double >& w = (weights)? *weights : wl;
 	map< pair<int,int>, int > rot;           //rotacion de la faceta elegida por par de piezas solapadas
 	vector< pair<int,int> > ov;
 	double best = overlap(pieces, t, &ov);

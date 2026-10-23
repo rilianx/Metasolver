@@ -128,8 +128,16 @@ public:
 	 * faceta del NFP (la de mayor holgura en la posicion actual); minimiza sum w_ij s_k, donde w_ij es el peso
 	 * del par de piezas (busqueda local guiada: aumenta para los pares que siguen solapados).
 	 * Se repite eligiendo de nuevo las facetas. Retorna true si se elimina el solapamiento (t queda factible).
+	 * Si weights no es NULL, los pesos se leen y se actualizan ahi (persisten entre llamadas).
 	 */
-	bool separate(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, class LPBackend& lp, int max_iter=50);
+	bool separate(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, class LPBackend& lp, int max_iter=50,
+			std::map< std::pair<int,int>, double >* weights=NULL);
+
+	/**
+	 * Saca la pieza i y la reubica con el descenso por LP en el espacio libre del contenedor de altura H
+	 * (las demas piezas fijas). Retorna false si no hay posicion factible.
+	 */
+	bool reinsert(const std::vector<int>& pieces, std::vector<Vec3>& t, int i, double H);
 
 	/** suma, sobre los pares de piezas, de la mayor profundidad de penetracion entre sus partes */
 	double overlap(const std::vector<int>& pieces, const std::vector<Vec3>& t, std::vector< std::pair<int,int> >* pairs=NULL) const;

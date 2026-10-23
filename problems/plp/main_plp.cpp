@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <random>
 #include "args.hxx"
 #include "plpState.h"
 #include "LPBackend.h"
@@ -30,6 +31,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::Flag _no_separate(parser, "no_separate", "Fixed height: do not try the LP separation (requires ibex) before the BSG repair", {"no_separate"});
 	args::ValueFlag<double> _sep_step(parser, "double", "Initial height decrease of the LP separation phase (proportion). Default: 0.01", {"sep_step"});
+	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
 	args::ValueFlag<int> _sep_iter(parser, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
 	args::ValueFlag<int> _blocks(parser, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 30", {"blocks"});
@@ -181,33 +183,73 @@ int main(int argc, char** argv){
 		double band0 = (_band)? _band.Get() : 0.2, band = band0;
 		double sep_step = (_sep_step)? _sep_step.Get() : 0.01;
 		bool need_sep = true;
+		int max_kicks = (_kicks)? _kicks.Get() : 30;
+		mt19937 rng((_seed)? _seed.Get() : 0);
 		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
 			double tl = min((double) maxtime, elapsed() + slice);
 
-			//fase A: bajadas pequenas de la altura resueltas por separacion por LP desde la mejor solucion
-			//(las piezas que sobresalen se bajan aunque queden solapadas); al estancarse, fase B (BSG)
+			//fase A: oscilacion estrategica con separacion por LP (Egeblad et al. 2009; Lamas-Fernandez et al. 2023).
+			//Se baja la altura (sep_step) y la separacion elimina el solapamiento: si lo logra, se mejora la solucion y
+			//se vuelve a bajar; si no, se sube un poco la altura (sep_step/4) y se sigue desde la solucion solapada.
+			//Cuando la altura vuelve a la de la mejor solucion, kick: se intercambian dos piezas de la mejor solucion.
+			//La fase termina tras max_kicks kicks seguidos sin mejora; luego un intento de reparacion con BSG.
 			if(lp && !_no_separate && need_sep){
 				need_sep = false;
-				for(double ss = sep_step; ss >= 1e-3 && elapsed() < maxtime && H > lb*(1+1e-6); ){
-					double hm = max(lb, H*(1-ss));
-					vector<int> ps;
-					vector<Vec3> ts;
-					for(const Placement& p : S.items){
-						int pc = inst.types[p.type].piece;
-						ps.push_back(pc);
-						Vec3 u = p.t;
-						u.z = min(u.z, max(0.0, hm - inst.pieces[pc].bbox.extent().z));
-						ts.push_back(u);
+				int sep_iter = (_sep_iter)? _sep_iter.Get() : 50;
+				vector<int> ps;
+				for(const Placement& p : S.items) ps.push_back(inst.types[p.type].piece);
+				auto ext = [&](int i) { return inst.pieces[ps[i]].bbox.extent(); };
+				//piezas dentro del contenedor de altura h (las que sobresalen se bajan aunque se solapen)
+				auto clamp = [&](vector<Vec3>& ts, double h) {
+					for(size_t i=0; i<ts.size(); i++){
+						Vec3 e = ext(i);
+						ts[i].x = min(max(ts[i].x, 0.0), max(0.0, inst.W-e.x));
+						ts[i].y = min(max(ts[i].y, 0.0), max(0.0, inst.D-e.y));
+						ts[i].z = min(max(ts[i].z, 0.0), max(0.0, h-e.z));
 					}
-					if(placer.separate(ps, ts, hm, *lp, (_sep_iter)? _sep_iter.Get() : 50)){
-						double H2 = (_no_improve)? hm : polish(ps, ts);
-						cout << "[separacion] H=" << hm << " (" << elapsed() << " s): sin solapamiento, altura " << H2 << endl;
-						if(H2 < H){
+				};
+				vector<Vec3> ts;
+				for(const Placement& p : S.items) ts.push_back(p.t);
+				double hc = max(lb, H*(1-sep_step));
+				clamp(ts, hc);
+				int kicks = 0, n = ps.size();
+				map< pair<int,int>, double > weights;   //pesos de la busqueda local guiada (persisten en la oscilacion)
+				while(kicks < max_kicks && elapsed() < maxtime && H > lb*(1+1e-6)){
+					if(placer.separate(ps, ts, hc, *lp, sep_iter, &weights)){
+						double H2 = (_no_improve)? hc : polish(ps, ts);
+						if(H2 < H - 1e-9*H){
 							H = H2;
-							for(size_t i=0; i<ts.size(); i++) S.items[i].t = ts[i];
-						}else ss /= 2;
-					}else ss /= 2;
+							for(int i=0; i<n; i++) S.items[i].t = ts[i];
+							cout << "[separacion] (" << elapsed() << " s): altura " << H << " (kicks " << kicks << ")" << endl;
+							kicks = 0;
+						}
+						hc = max(lb, min(H, H2)*(1-sep_step));
+						clamp(ts, hc);
+						weights.clear();
+						continue;
+					}
+					//oscilacion: se sube un poco la altura y se sigue desde la solucion solapada
+					hc += 0.25*sep_step*H;
+					if(hc < H*(1-1e-6)) { clamp(ts, hc); continue; }
+
+					//kick: desde la mejor solucion se reinserta una pieza al azar en el espacio libre (altura H*(1-sep_step));
+					//si no hay posicion, se intercambian dos piezas de distinto tipo
+					kicks++;
+					ts.clear();
+					for(const Placement& p : S.items) ts.push_back(p.t);
+					hc = max(lb, H*(1-sep_step));
+					clamp(ts, hc);
+					uniform_int_distribution<int> pick(0, n-1);
+					int a = pick(rng);
+					if(!placer.reinsert(ps, ts, a, hc)){
+						int b = pick(rng);
+						for(int k=0; k<20 && ps[a]==ps[b]; k++) b = pick(rng);
+						if(ps[a]!=ps[b]) swap(ts[a], ts[b]);
+					}
+					weights.clear();
+					hc = max(lb, H*(1-sep_step));
+					clamp(ts, hc);
 				}
 				continue;
 			}
@@ -242,6 +284,7 @@ int main(int argc, char** argv){
 				if(H2 < H) { H = H2; S.items = S2.items; need_sep = true; }
 			}else cout << endl;
 			delete s;
+			need_sep = true;
 		}
 		delete lpg;
 		delete lp;

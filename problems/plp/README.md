@@ -134,6 +134,11 @@ Metodología (2D) en la que se basa la compactación por LP:
   mejora la solución y se vuelve a bajar; si no, el paso se reduce a la mitad (hasta 0.1%) y luego se pasa a la
   reparación con BSG (`--no_separate` la desactiva). Basado en Egeblad et al. (2009), Gomes y Oliveira (2006) y
   Lamas-Fernández et al. (2023).
+* **Oscilación estratégica y kicks** (fase de separación): si la separación no elimina el solapamiento, se sube
+  la altura un cuarto del paso y se sigue desde la solución solapada (los pesos de la búsqueda local guiada
+  persisten). Cuando la altura vuelve a la de la mejor solución, kick: desde la mejor solución se reinserta una
+  pieza al azar en el espacio libre (o se intercambian dos piezas de distinto tipo). Tras `--kicks` (30) kicks
+  seguidos sin mejora se intenta la reparación con BSG y luego se vuelve a la oscilación, hasta agotar el tiempo.
 * Todas las soluciones se verifican con `Solution::verify`.
 
 ### Compilación con ibex (opcional)
