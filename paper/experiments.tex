@@ -53,8 +53,9 @@ The algorithm is implemented in C++ (compiled with g++ 13.3, \texttt{-O3}). Each
 single thread; the experiments were carried out on a server with two Intel Xeon E5-2620 v4
 processors (8 cores each, 2.1\,GHz, 3.0\,GHz in turbo mode, hyper-threading disabled) and
 62\,GB of RAM, running 14 instances in parallel.
-\todo{benchmark de un nucleo (p.\ ej.\ PassMark single thread) del Xeon E5-2620 v4 y del Apple M2
-Pro de \citet{Hessler2025}.}
+According to the single-thread rating of PassMark \citep{PassMark}, one core of the Apple M2 Pro
+used by \citet{Hessler2025} is about 2.5 times faster than one core of our processor (4105
+against 1624).
 The time limit $t$ is the search time per ULD (excluding block generation); we report results
 for $t = 0.1$\,s and $t = 1$\,s. The code, the instances, the solutions and the scripts that
 produce all the tables are available at \todo{URL del repositorio}.
@@ -188,15 +189,19 @@ algorithm as a function of the mean time per instance, for time limits per ULD b
 and 2\,s. With $t = 0.02$\,s (0.16\,s per instance on average, at most 0.52\,s) our algorithm
 uses 638 ULDs, 9.9\% fewer than the RGS, and it is worse in only one instance. Increasing the
 time limit keeps reducing the number of ULDs: 621 ULDs in 0.34\,s, 617 in 0.62\,s, 602 in
-2.8\,s and 596 in 10.5\,s. Note that our machine is older than the one of \citet{Hessler2025}.
-\todo{factor de velocidad entre las maquinas (benchmark de un nucleo).}
+2.8\,s and 596 in 10.5\,s. Scaling the time of the RGS by the single-thread speed ratio of
+the machines (2.5), the RGS would need about 0.48\,s per instance on our machine, between the
+mean times of our algorithm with $t = 0.05$\,s (0.34\,s, 621 ULDs) and $t = 0.1$\,s (0.62\,s,
+617 ULDs): at a similar running time, our algorithm uses 12--13\% fewer ULDs. This scaling is
+only indicative, since the two processors have different architectures.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.62\textwidth]{figures/time.pdf}
 \caption{Number of ULDs in the 300 instances of the Paquay setting as a function of the mean
 time per instance (the labels are the time limits per ULD; mean of five runs for 0.1\,s and
-1\,s, one run otherwise), and the RGS of \citet{Hessler2025} (different machine).}
+1\,s, one run otherwise), and the RGS of \citet{Hessler2025}: time on their machine (filled
+square) and scaled to ours by the single-thread speed ratio of 2.5 (empty square).}
 \label{fig:time}
 \end{figure}
 

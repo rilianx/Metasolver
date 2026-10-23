@@ -44,6 +44,10 @@ for ti, si, ui in zip(t, s, u):
 	label(ax, si, ui, f'{ti:g} s', dx=5, dy=5)
 h = HESSLER['paquay']
 ax.plot([h[3]], [h[0]], 's', color=THEIRS, ms=6, mec='white', mew=1, label='RGS (Heßler et al. 2025)', zorder=3)
+# tiempo del RGS escalado a nuestra maquina (PassMark single thread: 4105 / 1624)
+SPEED = 4105 / 1624
+ax.plot([h[3]*SPEED], [h[0]], 's', mfc='none', mec=THEIRS, mew=1.2, ms=6, label='RGS, time scaled to our machine', zorder=3)
+ax.annotate('', xy=(h[3]*SPEED*0.93, h[0]), xytext=(h[3]*1.08, h[0]), arrowprops=dict(arrowstyle='->', color=MUTED, lw=0.8))
 ax.set_xscale('log')
 ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f'{v:g}'))
 ax.set_xlabel('mean time per instance (s, log scale)')
