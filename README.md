@@ -170,8 +170,8 @@ height (Paquay et al. 2016, not considered by Hessler et al.).
 | one     | 1 s   | 663.2 ± 0.4 | 27.0 | 76.2 / 16.2 | 4 | 1 | 12.5 s |
 
 Lower bound (`lower_bound_uld.py`: total volume / largest ULD, total weight / largest capacity,
-cliques of incompatible boxes): with 1 s per ULD about half of the paquay instances are solved
-to optimality (proven by the bound).
+cliques of incompatible boxes): the number of ULDs is proven optimal in 143 (0.1 s) and 160
+(1 s) of the 300 paquay instances (Hessler et al.: 80).
 
 Ablation (0.1 s per ULD, one run, one component turned off; ULDs and ULDs with the CoG out of
 range in x or y):
