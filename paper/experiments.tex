@@ -149,8 +149,10 @@ which is within range in the three ULDs.}
 \centering
 \footnotesize\setlength{\tabcolsep}{3.5pt}
 \caption{Results on the 300 final instances (mean $\pm$ standard deviation over five runs).
-Better/worse: number of instances in which our solution is better/worse than the RGS of
-\citet{Hessler2025}. Vol.: total volume of the ULDs. CoG$_{xy}$, CoG$_z$: number of ULDs with the CoG out of range.
+TPH: two-phase heuristic of \citet{Paquay2018b}; RGS: randomized greedy search of
+\citet{Hessler2025}. Better/worse: number of instances in which our solution is better/worse
+than the RGS. Vol.: total volume of the ULDs. CoG$_{xy}$, CoG$_z$: number (percentage) of ULDs with the CoG
+out of range.
 Time: mean time per instance (all ULDs).}
 \label{tab:results}
 \begin{tabular}{llrrrrrrr}
@@ -158,20 +160,20 @@ Time: mean time per instance (all ULDs).}
 Setting & Method & ULDs & Vol.\ (m$^3$) & Unloaded & Better/worse & CoG$_{xy}$ & CoG$_z$ & Time (s) \\
 \midrule
 \multirow{4}{*}{Paquay}
- & \citet{Paquay2018b} & 1010 & -- & 0 & & 12.9\% & -- & $\le 12$ \\
- & RGS \citep{Hessler2025} & 708 & 18\,648 & 0 & & 11.2\% & -- & $\le 0.5$ \\
- & BSG, $t = 0.1$\,s & 617.0 $\pm$ 0.0 & 17\,875 & 0 & 91.0 / 0 & 0 & 0 & 0.62 \\
- & BSG, $t = 1$\,s & 597.8 $\pm$ 0.4 & 17\,239 & 0 & 111.2 / 1 & 1 & 0 & 5.4 \\
+ & TPH & 1010 & -- & 0 & & 130 (12.9\%) & -- & $\le 12$ \\
+ & RGS & 708 & 18\,648 & 0 & & 79 (11.2\%) & -- & $\le 0.5$ \\
+ & BSG, $t = 0.1$\,s & 617.0 $\pm$ 0.0 & 17\,875 & 0 & 91.0 / 0 & 0 (0\%) & 0 & 0.62 \\
+ & BSG, $t = 1$\,s & 597.8 $\pm$ 0.4 & 17\,239 & 0 & 111.2 / 1 & 1 (0.2\%) & 0 & 5.4 \\
 \midrule
 \multirow{3}{*}{Adapted}
- & RGS \citep{Hessler2025} & 653 & 16\,843 & 0 & & 7.2\% & -- & $\le 1.3$ \\
- & BSG, $t = 0.1$\,s & 598.0 $\pm$ 0.0 & 17\,128 & 0 & 56.0 / 1 & 2 & 0 & 1.2 \\
- & BSG, $t = 1$\,s & 576.0 $\pm$ 0.0 & 16\,332 & 0 & 77.0 / 0 & 1 & 0 & 10.3 \\
+ & RGS & 653 & 16\,843 & 0 & & 47 (7.2\%) & -- & $\le 1.3$ \\
+ & BSG, $t = 0.1$\,s & 598.0 $\pm$ 0.0 & 17\,128 & 0 & 56.0 / 1 & 2 (0.3\%) & 0 & 1.2 \\
+ & BSG, $t = 1$\,s & 576.0 $\pm$ 0.0 & 16\,332 & 0 & 77.0 / 0 & 1 (0.2\%) & 0 & 10.3 \\
 \midrule
 \multirow{3}{*}{One}
- & RGS \citep{Hessler2025} & 729 & 16\,166 & 24 & & 10.1\% & -- & $\le 1.1$ \\
- & BSG, $t = 0.1$\,s & 706.0 $\pm$ 0.0 & 16\,050 & 22.0 $\pm$ 0.0 & 42.0 / 22.0 & 3 & 0 & 1.6 \\
- & BSG, $t = 1$\,s & 675.8 $\pm$ 0.4 & 15\,671 & 21.0 $\pm$ 0.0 & 64.4 / 20.2 & 2 & 1 & 13.0 \\
+ & RGS & 729 & 16\,166 & 24 & & 74 (10.1\%) & -- & $\le 1.1$ \\
+ & BSG, $t = 0.1$\,s & 706.0 $\pm$ 0.0 & 16\,050 & 22.0 $\pm$ 0.0 & 42.0 / 22.0 & 3 (0.4\%) & 0 & 1.6 \\
+ & BSG, $t = 1$\,s & 675.8 $\pm$ 0.4 & 15\,671 & 21.0 $\pm$ 0.0 & 64.4 / 20.2 & 2 (0.3\%) & 1 & 13.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -274,18 +276,11 @@ in 140 ($t = 0.1$\,s) and 157 ($t = 1$\,s) of the 300 instances of the Paquay se
 80 for the RGS. In the remaining instances our solutions use at most two ULDs more than the
 bound, but the bound is weak: it assumes that the boxes fill the largest ULD completely,
 whereas the non-final ULDs of our solutions are about 70\% full.
-We also tried a stronger relaxation, solved with the CP-SAT solver of OR-Tools: an assignment of
-the boxes to ULDs of any type that respects, in each ULD, the volume and the weight capacity,
-that every box fits in the ULD type and every pair of boxes fits together in its bounding box,
-and that the boxes that are longer than half of the ULD along some axis in all their
-orientations do not overlap in the projection along that axis (so the sum of their smallest
-projections does not exceed the area of the corresponding face of the ULD). This relaxation is
-solved in less than a second per instance, but it does not improve the bound in any instance.
-The remaining gaps occur in the instances whose total box volume exceeds an integer multiple of
-the volume of the largest ULD by more than about 60\% of it: closing them requires proving that
-the boxes cannot be packed with such a density, a three-dimensional feasibility question that
-volume and pairwise arguments cannot answer. The 136 instances in which our best solution uses
-one ULD more than the bound remain open.
+A stronger relaxation that also assigns the boxes to ULD types, with pairwise compatibility and
+area constraints, solved with the CP-SAT solver of OR-Tools, does not improve the bound in any
+instance: closing the remaining gaps requires proving that the boxes cannot be packed with such a
+density, a three-dimensional feasibility question that volume and pairwise arguments cannot
+answer. The 136 instances in which our best solution uses one ULD more than the bound remain open.
 
 \subsection{Running time}
 \label{sec:exp-time}

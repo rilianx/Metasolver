@@ -67,7 +67,13 @@ and $m = 16$, and after each run $w$ and $m/w$ are multiplied by $\sqrt{2}$. The
 completions of successive runs share many states; we store the states visited by the complete
 greedy runs (identified by a hash of their placed blocks), and when a greedy run reaches a known
 state, the rest of the solution is rebuilt from memory instead of evaluating the blocks again.
-This speeds up the search without changing its result.
+This speeds up the search without changing its result. The implementation also follows the
+optimizations proposed by \citet{Guesser}: the free spaces and the placed blocks are stored in
+contiguous arrays, the candidate blocks are filtered by their dimensions before being evaluated,
+the contact surface is computed only with the blocks near the selected space, the duplicate
+blocks are detected with a hash during the generation, and the volume loss of a block is
+computed only when an upper bound of its evaluation can enter the best ones. \todo{referencia
+de la tesis de L. Guesser (titulo, universidad, ano).}
 
 \subsection{ULD constraints}
 \label{sec:alg-uld}
@@ -91,11 +97,12 @@ block is placed. Each ULD is loaded twice, with and without the substructure, an
 the two loadings is kept.
 
 \paragraph{Support and fragility.}
-As in the full support variant of BSG \citep{Araya2017}, the blocks are generated so that the
-boxes inside a block are fully supported: two blocks are
-joined along $z$ only if the lower block has a complete top face without fragile boxes and the
-upper block fits on it. Then, only the boxes at the bottom of a block have to be checked when
-the block is placed. A block is placed on the base of the selected space, and it is feasible if
+The support criterion of the problem (the four corners of the base, or the area criterion of
+Section~\ref{sec:problem}) is checked box by box. Inside a block it is guaranteed by
+construction: two blocks are joined along $z$ only if the lower block has a complete top face
+without fragile boxes and the upper block fits on it, so that every box of the upper block has
+its whole base, and in particular its four corners, on non-fragile boxes. Therefore, only the
+boxes at the bottom of a block have to be checked when the block is placed. A block is placed on the base of the selected space, and it is feasible if
 each box at its bottom is supported according to the criterion of the instance (the four corners
 of its base or the area criterion of Section~\ref{sec:problem}), considering the top faces of
 the placed boxes at the height of its base (direct support) or at most $\hbar$ below it
