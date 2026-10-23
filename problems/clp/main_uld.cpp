@@ -540,6 +540,8 @@ static int max_new=3;
 static double theta=-1.0;
 static bool rollout=false;
 static double rollout_time=0.01;
+//conjuntos de cajas candidatos (--subsets): proporciones del volumen del ULD
+static vector<double> subset_rhos;
 
 /**
  * Completa la carga de las cajas left con la construccion secuencial (regla de Hessler et al.,
@@ -564,7 +566,10 @@ static Estimate complete(vector<int> left, const Params& P0){
 	available=av;
 	return e;
 }
-static bool reassign(vector<Load>& loads, const Params& P){
+//reasignacion: utilizacion maxima exigible a una combinacion y tiempo de BSG (proporcion de t)
+static double reassign_umax=1.0, reassign_tfrac=1.0;
+static bool reassign(vector<Load>& loads, const Params& P0){
+	Params P=P0; P.time=P0.time*reassign_tfrac;
 	int n=loads.size(), nt=ulds.size();
 	//conjuntos de 1 o 2 ULDs, de mayor a menor volumen perdido
 	vector< vector<int> > sets;
@@ -601,7 +606,7 @@ static bool reassign(vector<Load>& loads, const Params& P){
 		for(const vector<int>& C : combos){
 			double vC=cvol(C);
 			if(vC >= vS - 1e-6) break;
-			if(vC < bvol) continue;
+			if(vC*reassign_umax < bvol) continue;
 			//disponibilidad (se liberan los ULDs de S)
 			vector<int> av=available;
 			for(int i : S){ int k=uld_index(*loads[i].uld); if(av[k]>=0) av[k]++; }
@@ -676,7 +681,10 @@ int main(int argc, char** argv){
 	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (0: maximum loaded volume, 1: minimum lost volume). Default: rule of Hessler et al.", {"theta"});
 	args::Flag _rollout(parser, "rollout", "Select the next ULD type among the candidates by completing the solution with a fast construction (see --rollout_time) and minimizing the total volume of the ULDs", {"rollout"});
+	args::ValueFlag<string> _subsets(parser, "string", "Candidate sets of boxes for each ULD, evaluated with the rollout: the largest boxes (or the boxes that fit in fewer ULD types, then the largest) up to rho times the volume of the ULD, for each rho in the comma-separated list", {"subsets"});
 	args::ValueFlag<double> _rollout_time(parser, "double", "Time limit of each run of BSG in the rollout (0: only the greedy). Default: 0.01", {"rollout_time"});
+	args::ValueFlag<double> _reassign_umax(parser, "double", "Reassignment: skip combinations that would need a utilization above this value. Default: 1", {"reassign_umax"});
+	args::ValueFlag<double> _reassign_tfrac(parser, "double", "Reassignment: time limit of BSG as a proportion of -t. Default: 1", {"reassign_tfrac"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
@@ -744,9 +752,12 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_max_new) max_new=_max_new.Get();
+	if(_reassign_umax) reassign_umax=_reassign_umax.Get();
+	if(_reassign_tfrac) reassign_tfrac=_reassign_tfrac.Get();
 	if(_theta) theta=_theta.Get();
 	rollout=_rollout;
 	if(_rollout_time) rollout_time=_rollout_time.Get();
+	if(_subsets){ stringstream ss(_subsets.Get()); string tok; while(getline(ss, tok, ',')) subset_rhos.push_back(atof(tok.c_str())); }
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -807,6 +818,47 @@ int main(int argc, char** argv){
 				}else if(!take) take = score(ld2) > score(ld);
 				else if(rollout) e0=est(ld2);
 				if(take){ ld=ld2; u=c; }
+			}
+		}
+		//conjuntos de cajas candidatos para este ULD (--subsets): las mas grandes (o las que caben
+		//en menos tipos y luego las mas grandes) hasta rho veces el volumen del ULD, para cada
+		//rho; se elige con rollout la carga de menor volumen total estimado
+		if(!subset_rhos.empty()){
+			auto est=[&](const Load& l){
+				vector<int> rest=left;
+				for(size_t t=0; t<rest.size(); t++) rest[t]-=l.boxes[t];
+				int k=uld_index(*l.uld);
+				if(available[k]>0) available[k]--;
+				Estimate e=complete(rest, P);
+				if(available[k]>=0) available[k]++;
+				e.volume+=l.uld->volume; e.n++;
+				return e;
+			};
+			auto better_est=[](const Estimate& a, const Estimate& b){
+				if(fabs(a.unloaded-b.unloaded)>1e6) return a.unloaded<b.unloaded;
+				if(fabs(a.volume-b.volume)>1e6) return a.volume<b.volume;
+				return a.n<b.n;
+			};
+			Estimate e0=est(ld);
+			vector<int> ord;
+			for(size_t t=0; t<left.size(); t++) if(left[t]>0 && fits(*clpState::types[t], *u)) ord.push_back(t);
+			auto nfit=[&](int t){ int c=0; for(size_t k=0; k<ulds.size(); k++) c += available[k]!=0 && fits(*clpState::types[t], ulds[k]); return c; };
+			for(int hard=0; hard<2; hard++){
+				vector<int> o=ord;
+				stable_sort(o.begin(), o.end(), [&](int a, int b){
+					if(hard && nfit(a)!=nfit(b)) return nfit(a)<nfit(b);
+					return clpState::types[a]->getVolume() > clpState::types[b]->getVolume(); });
+				for(double rho : subset_rhos){
+					vector<int> sub(left.size(), 0);
+					double v=0;
+					for(int t : o)
+						for(int c=0; c<left[t] && v < rho*u->volume; c++){ sub[t]++; v+=clpState::types[t]->getVolume(); }
+					if(sub==left) continue;
+					Load ls=load(*u, sub, P);
+					if(!ls.feasible || none(ls.boxes) || (ld.cog_ok() && !ls.cog_ok())) continue;
+					Estimate e=est(ls);
+					if(better_est(e, e0)){ e0=e; ld=ls; }
+				}
 			}
 		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
