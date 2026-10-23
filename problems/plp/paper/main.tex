@@ -321,7 +321,8 @@ a wide margin, and on Example 2 it reaches the optimum.
 optimum of \citet{tollenaere2026} for Stoyan 2005 Example 1, and \citet{stoyan2004} (St04). Voxels: VNS of
 \citet{lamas2023} (best: standard resolution and 10 runs of 1 h for Stoyan, extra-fine resolution and 4 h for
 Merged; mean: standard resolution). Ours: mean (best) of 10 seeds, 120 s. $^*$Optimal (equal to the lower bound
-$H_0$). $^\dagger$Below the height of the tallest piece (29), see the text.}
+$H_0$). $^\dagger$Below the height of the tallest piece (29) in the public data; the instance probably differs
+in the orientation of the pieces, see the text.}
 \label{tab:results}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -346,8 +347,12 @@ Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \prov{\textbf{27.04 (27.00)}}\\
 \end{table}
 
 On Stoyan 2004 Example 2 our height, 29, equals the lower bound $H_0$ given by the tallest piece, so it is
-optimal; the height of 28.47 reported by \citet{lamas2023} is below the height of that piece, which indicates that
-their voxel instance differs from the original geometry. Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
+optimal for the orientation of the pieces in the public data. The height of 28.47 reported by \citet{lamas2023}
+is below the height of that piece; since their orientations are also fixed, their meshes must differ from the
+public data, most likely in the orientation of some pieces (the piece has dimensions $4\times26\times29$ and could
+lie with its longest side horizontal). The comparison with the voxel results on Stoyan 2004 should therefore be
+taken with caution, whereas the instances shared with 3DNest were checked against the volumes, bounding boxes and
+container dimensions reported by \citet{egeblad2009}. Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
 of pieces \citep{liu2015}. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
