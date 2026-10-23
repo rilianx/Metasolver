@@ -13,6 +13,7 @@
 #include <map>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include "args.hxx"
 #include "clpState.h"
 #include "VCS_Function.h"
@@ -519,31 +520,37 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 }
 
 /**
- * Reasignacion para reducir el volumen total de los ULDs: se toman 1 o 2 ULDs y se intenta
- * cargar sus cajas en 1 o 2 ULDs (tipos disponibles) de menor volumen total, probando las
- * combinaciones de menor a mayor volumen (el ULD mas grande primero y las cajas restantes en
- * el segundo). Se acepta el primer cambio que carga todas las cajas sin aumentar la cantidad
+ * Reasignacion para reducir el volumen total de los ULDs (el volumen perdido): se toman 1 o 2
+ * ULDs (de mayor a menor volumen perdido) y se intenta cargar sus cajas en 1 a max_new ULDs
+ * (tipos disponibles) de menor volumen total, probando las combinaciones de menor a mayor
+ * volumen (de mayor a menor ULD, cada uno con las cajas que no cargaron los anteriores). Se acepta el primer cambio que carga todas las cajas sin aumentar la cantidad
  * de ULDs con el CoG fuera de rango. Retorna true si se hizo un cambio.
  */
+static int max_new=3;
 static bool reassign(vector<Load>& loads, const Params& P){
 	int n=loads.size(), nt=ulds.size();
-	//conjuntos de 1 o 2 ULDs, de menor a mayor utilizacion
+	//conjuntos de 1 o 2 ULDs, de mayor a menor volumen perdido
 	vector< vector<int> > sets;
 	for(int i=0; i<n; i++) sets.push_back({i});
 	for(int i=0; i<n; i++) for(int j=i+1; j<n; j++) sets.push_back({i, j});
-	auto util=[&](const vector<int>& S){
-		double v=0, c=0;
-		for(int i : S){ v+=loads[i].volume; c+=loads[i].uld->volume; }
-		return v/c;
+	auto waste=[&](const vector<int>& S){
+		double w=0;
+		for(int i : S) w += loads[i].uld->volume - loads[i].volume;
+		return w;
 	};
-	stable_sort(sets.begin(), sets.end(), [&](const vector<int>& a, const vector<int>& b){ return util(a) < util(b); });
-	//combinaciones de 1 o 2 tipos (indices en ulds), el de mayor volumen primero
+	stable_sort(sets.begin(), sets.end(), [&](const vector<int>& a, const vector<int>& b){ return waste(a) > waste(b); });
+	//combinaciones de 1 a max_new tipos (indices en ulds), de mayor a menor volumen
+	vector<int> idx(nt);
+	for(int k=0; k<nt; k++) idx[k]=k;
+	sort(idx.begin(), idx.end(), [&](int a, int b){ return ulds[a].volume > ulds[b].volume; });
 	vector< vector<int> > combos;
-	for(int a=0; a<nt; a++){
-		combos.push_back({a});
-		for(int b=0; b<nt; b++)
-			if(ulds[b].volume < ulds[a].volume || (ulds[b].volume == ulds[a].volume && b>=a)) combos.push_back({a, b});
-	}
+	vector<int> cur;
+	function<void(int)> gen=[&](int from){
+		if(!cur.empty()) combos.push_back(cur);
+		if((int)cur.size()==max_new) return;
+		for(int p=from; p<nt; p++){ cur.push_back(idx[p]); gen(p); cur.pop_back(); }
+	};
+	gen(0);
 	auto cvol=[&](const vector<int>& C){ double v=0; for(int k : C) v+=ulds[k].volume; return v; };
 	stable_sort(combos.begin(), combos.end(), [&](const vector<int>& a, const vector<int>& b){ return cvol(a) < cvol(b); });
 
@@ -629,7 +636,8 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
-	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 or 2 ULDs of smaller total volume", {"reassign"});
+	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
+	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -695,6 +703,7 @@ int main(int argc, char** argv){
 	}
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
+	if(_max_new) max_new=_max_new.Get();
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;

@@ -8,9 +8,10 @@ en el escenario paquay, instancias que alcanzan la cota inferior.
 uso: paper_stats.py <paquay|adapted|one> <lb.txt|-> <dir1> [dir2 ...]
   cada directorio tiene <instancia>.out (BSG_ULD -v) y <instancia>.val (validate_uld.py);
   lb.txt: salida de lower_bound_uld.py (solo se usa en paquay).
-Comparacion con Hessler: con ULDs ilimitados, mejor = menos ULDs; con un ULD de cada tipo,
-mejor = mas volumen cargado (diferencia de mas de 0.05 m3, por el redondeo de su apendice)
-o, con el mismo volumen, menos ULDs. Requiere scipy.
+Comparacion con Hessler, con su objetivo: mejor = mas volumen cargado (con un ULD de cada
+tipo; diferencia de mas de 0.05 m3, por el redondeo de su apendice) o, con el mismo volumen
+cargado, menos volumen de ULDs (better/worse); tambien por la cantidad de ULDs
+(better_count/worse_count). Requiere scipy.
 """
 import sys, os, re, glob, json, statistics as st
 from scipy.stats import wilcoxon
@@ -37,6 +38,7 @@ TOL = 5e7  # 0.05 m3
 hun = {n: (TOT[n] - sum(u['u'] / 100 * ULD[u['type']][0] for u in HU[n])) if size(n) > H[n].get('L', size(n)) else 0.0 for n in H}
 hvol = sum(ULD[u['type']][0] for n in HU for u in HU[n]) * 1e-9
 hcost = sum(ULD[u['type']][1] for n in HU for u in HU[n])
+hvi = {n: sum(ULD[u['type']][0] for u in HU[n]) for n in HU}  # volumen de los ULDs por instancia
 
 pat = re.compile(r'ULD \d+ type (\d+)[^:]*: boxes \d+ utilization ([\d.]+)%')
 runs = []
@@ -55,6 +57,15 @@ for d in dirs:
     runs.append(R)
 
 def better(n, r):
+    """por el objetivo de Hessler et al.: volumen cargado, luego volumen de los ULDs"""
+    if setting == 'one':
+        if r['unv'] < hun[n] - TOL: return 1
+        if r['unv'] > hun[n] + TOL: return -1
+    v = r['vol'] * 1e9
+    return (v < hvi[n] - 1) - (v > hvi[n] + 1)
+
+def better_count(n, r):
+    """por la cantidad de ULDs (y, con ULDs limitados, volumen cargado primero)"""
     if setting == 'one':
         if r['unv'] < hun[n] - TOL: return 1
         if r['unv'] > hun[n] + TOL: return -1
@@ -72,6 +83,9 @@ res['time'] = ms([st.mean(r['time'] for r in R.values()) for R in runs])
 res['time_max'] = max(max(r['time'] for r in R.values()) for R in runs)
 res['better'] = ms([sum(better(n, R[n]) > 0 for n in R) for R in runs])
 res['worse'] = ms([sum(better(n, R[n]) < 0 for n in R) for R in runs])
+res['better_count'] = ms([sum(better_count(n, R[n]) > 0 for n in R) for R in runs])
+res['worse_count'] = ms([sum(better_count(n, R[n]) < 0 for n in R) for R in runs])
+res['wilcoxon_vol'] = [float('%.2g' % wilcoxon([R[n]['vol'] for n in sorted(R)], [hvi[n] * 1e-9 for n in sorted(R)]).pvalue) for R in runs]
 ks = sorted(runs[0])
 res['wilcoxon_ulds'] = [float('%.2g' % wilcoxon([R[n]['ulds'] for n in ks], [H[n]['C'] for n in ks]).pvalue) for R in runs]
 res['hessler'] = dict(ulds=sum(H[n]['C'] for n in H), un=sum(size(n) - H[n].get('L', size(n)) for n in H),
