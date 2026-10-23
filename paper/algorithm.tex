@@ -1,0 +1,249 @@
+% Descripcion del algoritmo
+\section{Algorithm}
+\label{sec:algorithm}
+
+The algorithm loads the ULDs one at a time. Each ULD is loaded by BSG, a beam search guided by a
+greedy algorithm, which builds the load with blocks of boxes placed in maximal free spaces
+(Section~\ref{sec:alg-bsg}). The ULD-specific features (the bevelled corners, the edge and the
+substructure, and the support and fragility constraints) are handled in the generation and the
+placement of the blocks (Section~\ref{sec:alg-uld}), and the CoG constraint at several levels
+of the search (Section~\ref{sec:alg-cog}). Section~\ref{sec:alg-multi} describes the
+multi-ULD framework.
+
+\subsection{Loading one ULD with BSG}
+\label{sec:alg-bsg}
+
+\paragraph{Blocks.}
+A block is a cuboid arrangement of boxes that is placed as a unit. Before loading a ULD, a set
+of blocks is generated from the boxes still available, as in \citet{Araya2017}: the blocks of
+one box are the boxes in their allowed orientations, and new blocks are obtained by joining two
+existing blocks along the $x$, $y$ or $z$ axis, so that every block has a guillotine structure.
+A joined block is kept only if its boxes are available, it fits in the bounding box of the ULD,
+the boxes fill at least a proportion $f_{\min}$ of its volume, and it is different from the
+blocks already generated (same dimensions and same boxes); the generation stops when
+$N_{\max}$ blocks have been generated. We use $f_{\min} = 0.98$, so that the blocks are
+almost solid. Each block stores its weight and its CoG, computed recursively from the two
+blocks that form it, which allows us to evaluate the CoG of a load without visiting its boxes.
+
+\paragraph{Free spaces and actions.}
+The free space of the ULD is represented by the set of maximal free spaces, the largest
+cuboids that do not intersect the placed blocks \citep{Parreno2008}. When a block is placed, the
+free spaces that intersect it are replaced by their maximal parts outside the block, and the
+spaces too small for any remaining box are discarded. As in \citet{Araya2014}, each space is
+anchored at its corner closest to a corner of the ULD, and the next space to fill is the one
+whose anchor corner is closest (in Manhattan distance) to the corresponding corner of the ULD,
+with ties broken by the larger volume. An action places a block that fits in this space at its
+anchor corner, which may be modified as explained in Section~\ref{sec:alg-uld}. A state of the
+search is a partial loading of the ULD, with its free spaces and the remaining boxes.
+
+\paragraph{Evaluation of the blocks.}
+The blocks that fit in the selected space are evaluated with the VCS function of
+\citet{Araya2017}:
+\begin{equation}
+\label{eq:vcs}
+\mathrm{VCS}(b) = V(b)\,\bigl(1 - \mathrm{loss}(b)\bigr)^{\beta}\,\mathrm{CS}_p(b)^{\alpha}\,
+	n(b)^{-\gamma},
+\end{equation}
+where $V(b)$ is the volume of the boxes of the block, $\mathrm{loss}(b)$ is the proportion of
+the volume of the free space that cannot be filled with the remaining boxes after placing the
+block (estimated with one-dimensional knapsack problems on each dimension of the space),
+$\mathrm{CS}_p(b)$ is the proportion of the surface of the block in contact with the placed
+blocks and the walls of the ULD, where faces at a distance of at most a proportion $p$ of the
+block dimension are considered in contact, and $n(b)$ is the number of boxes of the block. The
+evaluation is penalized by the CoG deviation caused by the block, as explained in
+Section~\ref{sec:alg-cog}.
+
+\paragraph{Greedy and beam search.}
+The greedy algorithm repeatedly selects the next free space and places the best evaluated block
+in it, until no block can be placed. The value of a complete loading is its volume utilization
+penalized by the CoG excess (Section~\ref{sec:alg-cog}). BSG \citep{Araya2014} is a beam
+search in which the children of each node are generated with the best evaluated blocks for the
+selected space, and each child is evaluated by the value of its greedy completion. At each
+level, the $w$ children with the best greedy values are kept, and a total of at most $m$
+children are generated, so that each node of the beam is expanded with about $m/w$ blocks. The
+best complete solution found by any greedy completion is returned. BSG is run iteratively with
+increasing effort until the time limit $t$ is reached \citep{Araya2017}: it starts with $w = 4$
+and $m = 16$, and after each run $w$ and $m/w$ are multiplied by $\sqrt{2}$. The greedy
+completions of successive runs share many states; we store the states visited by the complete
+greedy runs (identified by a hash of their placed blocks), and when a greedy run reaches a known
+state, the rest of the solution is rebuilt from memory instead of evaluating the blocks again.
+This speeds up the search without changing its result.
+
+\subsection{ULD constraints}
+\label{sec:alg-uld}
+
+\paragraph{Bevelled corners.}
+A block placed at the anchor corner of a space may cross one of the cuts of the ULD. In that
+case, the block is shifted along the $x$ axis, inside the space, to the closest position that
+satisfies all the cuts, which can be computed in closed form from the half-planes of the cuts;
+if there is no such position, the block is not placed in the space. Since the cuts are
+orthogonal to the $x$-$z$ plane, shifting the block along $x$ keeps it on the same base, which
+is necessary for its support. The free spaces are still cuboids, so a space next to a cut may
+contain positions that are not usable; they are simply not used by any block.
+
+\paragraph{Edge and substructure.}
+With a floor edge of width $e$ and offset $\delta$, the initial free spaces are the space above
+the floor inside the edge and the space above the height $\delta$ over the whole floor. With a
+substructure, the only initial space is the one above $\delta$, and the floor inside the edge
+is raised to $\delta$. A space above the edge has no support until boxes have been loaded inside
+it; instead of discarding it, it is kept aside (\emph{dormant}) and reconsidered after the next
+block is placed. Each ULD is loaded twice, with and without the substructure, and the best of
+the two loadings is kept.
+
+\paragraph{Support and fragility.}
+The blocks are generated so that the boxes inside a block are fully supported: two blocks are
+joined along $z$ only if the lower block has a complete top face without fragile boxes and the
+upper block fits on it. Then, only the boxes at the bottom of a block have to be checked when
+the block is placed. A block is placed on the base of the selected space, and it is feasible if
+each box at its bottom is supported according to the criterion of the instance (the four corners
+of its base or the area criterion of Section~\ref{sec:problem}), considering the top faces of
+the placed boxes at the height of its base (direct support) or at most $\hbar$ below it
+(support by padding material), and if it does not rest directly or through padding on a fragile
+box. Since the corner criterion allows gaps under a box, we also forbid placing a fragile box in
+such a gap if it would touch the base of the box above. If no block can be placed in a space
+because of the support, the space is discarded or, with an edge, kept dormant.
+
+\subsection{Center of gravity}
+\label{sec:alg-cog}
+
+The CoG constraint is taken into account in four ways.
+
+\paragraph{Translation of the load.}
+Once a ULD has been loaded, the whole load can be translated horizontally without changing its
+feasibility, as long as every block stays inside the ULD and its cuts and, if the ULD has an
+edge, the blocks below the height $\delta$ stay inside the edge and the blocks on the
+substructure stay on it. These conditions define an interval of feasible translations in $x$
+and in $y$, which can be updated incrementally when a block is placed. The final load of each
+ULD is translated by the feasible amount that brings its CoG closest to the center of the ULD.
+
+\paragraph{CoG excess.}
+Let $(\bar x, \bar y, \bar z)$ be the CoG of a loading after the best feasible translation
+$(\Delta x, \Delta y)$. Its CoG excess is
+\begin{equation}
+\label{eq:excess}
+\varepsilon = \frac{\bigl(|\bar x + \Delta x - L/2| - d^x\bigr)^+}{d^x}
+	+ \frac{\bigl(|\bar y + \Delta y - W/2| - d^y\bigr)^+}{d^y}
+	+ \frac{(\bar z - d^z)^+}{d^z},
+\end{equation}
+where $(a)^+ = \max(a, 0)$. The CoG constraint is satisfied if and only if $\varepsilon = 0$.
+
+\paragraph{Value of a solution.}
+The value of a (partial or complete) loading with volume utilization $u$ is
+\begin{equation}
+\label{eq:value}
+v = \frac{u}{1 + \lambda\,\varepsilon},
+\end{equation}
+where $\lambda \ge 0$ is a parameter. This value is used to compare the greedy completions in
+BSG and to select the best loading of a ULD. A multiplicative penalty keeps the value of any
+non-empty loading positive, so that an unbalanced loading is still preferred to an empty ULD.
+With a large $\lambda$, the CoG constraint becomes almost a hard constraint; with
+$\lambda = 0$, it is ignored.
+
+\paragraph{Evaluation of the blocks.}
+To guide the construction towards balanced loads, the VCS evaluation \eqref{eq:vcs} of a block
+is divided by $1 + \mu\,\varepsilon'$, where $\varepsilon'$ is the CoG excess of the partial
+loading after placing the block, including the best feasible translation, and $\mu \ge 0$ is a
+parameter. The weight and the moments of the partial loading and its interval of feasible
+translations are stored in each state, so that $\varepsilon'$ is computed in constant time for
+each candidate block.
+
+\paragraph{Grouped reload.}
+Since the spaces are anchored at the corners of the ULD closest to them, the greedy and BSG tend
+to fill the ULD from its walls towards its center. When the load does not fill the ULD, this
+can leave it spread against several walls, with little room to translate it. Therefore, if the
+CoG of the best loading is out of range, or the ULD is less than half full while boxes remain to
+be loaded, the ULD is loaded again with all the spaces anchored at the corner closest to the
+origin. The resulting load is grouped in one corner and can be translated to the center of the
+ULD. The loading with the best value \eqref{eq:value} is kept.
+
+Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
+
+\begin{algorithm}[htbp]
+\caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$.}
+\label{alg:load}
+\begin{algorithmic}[1]
+\State $S^* \gets$ empty loading
+\For{$s \in \{\text{without substructure}, \text{with substructure}\}$}
+	\Comment{only if the ULD has an edge}
+	\State generate the blocks for $B$ and a ULD of type $k$ with $s$
+	\State $S \gets \textsc{BSG}(k, s, B, t)$, with spaces anchored at the closest corner
+	\State translate $S$ to center its CoG
+	\If{$\varepsilon(S) > 0$ \textbf{or} ($u(S) < 0.5$ \textbf{and} $S$ does not contain all of $B$)}
+		\State $S' \gets \textsc{BSG}(k, s, B, t)$, with spaces anchored at the origin
+		\State translate $S'$ to center its CoG
+		\If{$v(S') > v(S)$} $S \gets S'$ \EndIf
+	\EndIf
+	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf
+\EndFor
+\State \Return $S^*$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Loading several ULDs}
+\label{sec:alg-multi}
+
+Algorithm~\ref{alg:multi} outlines the multi-ULD framework. It has a sequential construction
+phase followed by three improvement phases.
+
+\paragraph{Sequential construction.}
+The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
+as in \citet{Hessler2025}: among the ULD types into which the boxes that fit in the fewest
+available types fit, the type with the largest total volume of the remaining boxes that fit in
+it is selected (ties are broken by the larger ULD volume). A box fits in a ULD type if its
+weight does not exceed the capacity and, in some allowed orientation, it can be placed alone on
+the floor inside the edge or on the substructure. When the number of ULDs is limited, some boxes
+may only fit in the selected type among the ULDs still available. If the loading of the ULD
+leaves some of them out, the ULD is loaded again with these boxes first, and the load is then
+completed with the other boxes, keeping the first ones at their positions.
+
+\paragraph{Insertion of unloaded boxes.}
+When the number of ULDs is limited, some boxes may remain unloaded at the end of the
+construction. Each ULD, in decreasing order of free volume, is loaded again with its boxes fixed
+at their positions and the unloaded boxes available; the new loading is accepted if it loads
+more volume and its CoG is not out of range when the old one was not. Then a ruin-and-recreate
+phase \citep{Schrimpf2000} is applied: for $\rho \in \{0.3, 0.6, 0.9\}$, a proportion $\rho$ of
+the loaded volume of each ULD is removed, taking the boxes with nothing on top of them from the
+highest one down, so that the remaining load is still feasible; then the ULDs are completed, in
+decreasing order of free volume, with the removed and the unloaded boxes, keeping the remaining
+boxes fixed. The new solution is accepted if the unloaded volume decreases, and the phase is
+repeated while it decreases. The unloaded boxes are inserted without eliminating any ULD.
+
+\paragraph{Elimination of ULDs.}
+When all the boxes are loaded, the algorithm tries to eliminate ULDs. The ULDs are considered in
+increasing order of utilization. The boxes of the selected ULD are freed, and the other ULDs, in
+decreasing order of free volume, are loaded again from scratch with their own boxes and the freed
+ones; a new loading is accepted if it loads more volume and its CoG is not out of range when the
+old one was not, and the freed boxes that are not loaded pass to the next ULD. If all the freed
+boxes are loaded, the ULD is eliminated and the phase starts again; otherwise the next ULD is
+tried. The phase ends when no ULD can be eliminated.
+
+\paragraph{Smaller ULD.}
+Finally, similarly to \citet{Hessler2025}, who reload the last ULD, the boxes of the least utilized ULD are loaded into a smaller
+ULD type in which all of them fit, trying the types by increasing volume, and the change is
+accepted if all the boxes are loaded and the CoG is not out of range when it was not before.
+
+\begin{algorithm}[htbp]
+\caption{Multi-ULD framework.}
+\label{alg:multi}
+\begin{algorithmic}[1]
+\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
+\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
+	\State $k \gets$ next ULD type for $B$ \citep{Hessler2025}
+	\State $S \gets \textsc{LoadULD}(k, B)$
+	\If{the ULDs are limited and $S$ leaves out boxes that only fit in type $k$}
+		\State load these boxes first and complete $S$ with the other boxes of $B$
+	\EndIf
+	\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
+\EndWhile
+\If{$B \neq \emptyset$}
+	\State insert boxes of $B$ into the ULDs of $\mathcal{S}$ (with fixed boxes)
+	\Repeat
+		\For{$\rho \in \{0.3, 0.6, 0.9\}$} ruin and recreate $\mathcal{S}$ with $\rho$ and $B$ \EndFor
+	\Until{the unloaded volume does not decrease}
+\Else
+	\While{some ULD of $\mathcal{S}$ can be eliminated} eliminate it \EndWhile
+\EndIf
+\State try to move the boxes of the least utilized ULD into a smaller ULD
+\State \Return $\mathcal{S}$, $B$
+\end{algorithmic}
+\end{algorithm}

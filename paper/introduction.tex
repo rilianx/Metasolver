@@ -1,0 +1,72 @@
+% Introduccion
+\section{Introduction}
+\label{sec:intro}
+
+Before a cargo aircraft takes off, the individual shipments are consolidated onto air cargo
+pallets and into containers, the so-called unit load devices (ULDs), which are then loaded into
+the aircraft. The shape of a ULD depends on its position in the aircraft: lower-deck containers
+have bevelled bottom corners and main-deck pallets and containers have bevelled top corners, so
+that they fit the fuselage. Building the ULDs is a daily operational task in air freight
+terminals, where it has to be solved for many flights in a short time, and every ULD saved is
+space and weight that can be sold or saved in fuel. At the same time, a ULD plan is only usable if it respects the practical
+constraints of air transport: the weight capacity of each ULD, the allowed orientations of the
+boxes, fragile boxes on which nothing can be placed, the stability of the load, and the weight
+distribution, since the center of gravity (CoG) of each ULD must lie in a given area around its
+geometric center \citep{Paquay2016}. Building the ULDs is one of the subproblems of the air
+cargo load planning problem \citep{Brandt2019}.
+
+Assuming that the cargo consists of rectangular boxes, the problem is a three-dimensional
+Multiple Bin Size Bin Packing Problem (MBSBPP) in the typology of \citet{Wascher2007}, with
+non-cuboid bins and additional constraints. \citet{Paquay2016} proposed a mixed integer
+programming formulation of the problem, which can only solve small instances, and a set of
+instances derived from a real set of 562 boxes and the six ULD types of a Boeing 777.
+\citet{Paquay2018a} and \citet{Paquay2018b} proposed MIP-based and two-phase constructive
+heuristics for these instances. Recently, \citet{Hessler2025} extended the problem with
+further practical features (a floor edge for the cargo net locks, on which no box can be loaded,
+a substructure to raise the floor, and padding material to support the boxes) and proposed a
+randomized greedy search (RGS) based on a fast extreme-point insertion heuristic. The RGS uses
+30\% fewer ULDs than the heuristic of \citet{Paquay2018b} in a fraction of a second per
+instance, and it is, to the best of our knowledge, the state of the art for these instances.
+
+In this paper we show that a different algorithmic paradigm, borrowed from the single container
+loading problem, yields considerably better ULD plans. The beam search guided by a greedy
+(BSG) algorithm \citep{Araya2014,Araya2017} loads a container with \emph{blocks} of identical
+or similar boxes placed in \emph{maximal free spaces}, and selects the blocks with a beam search
+in which each node is evaluated by completing its partial solution with a greedy algorithm. It
+is among the best algorithms for the classical container loading problem
+\citep{Araya2017,Araya2020}, but the air cargo problem differs from it in several respects:
+the ULDs are not cuboids, the support of the boxes and the fragile boxes restrict how boxes can
+be stacked, the CoG of every ULD is constrained, several ULDs of different types must be loaded,
+and all the boxes must be loaded with as few ULDs as possible. Our contributions are the
+following:
+\begin{itemize}
+\item We adapt BSG to load a ULD with bevelled corners, a floor edge and an optional
+	substructure. The blocks are generated so that every box inside a block is supported, and
+	each block is placed in a free space only if the boxes of its base are supported according
+	to the corner or area criterion of the problem and no box touches a fragile box. A block that
+	crosses a bevelled side of the ULD is shifted along the length of the ULD to the nearest
+	feasible position.
+\item We handle the CoG constraint at three levels: the evaluation of the blocks is penalized
+	by the CoG deviation that the placement would cause, the value of a solution is penalized by
+	the excess of the CoG deviation over the allowed one, and the final load of each ULD is
+	translated as a whole to center its CoG. When the CoG is still out of range, the ULD is
+	loaded again with all the free spaces anchored at the same corner, which groups the load so
+	that it can be centered.
+\item We embed the single-ULD algorithm into a sequential multi-ULD framework with a
+	post-optimization phase that tries to eliminate ULDs by redistributing their boxes into the
+	other ULDs and, when the number of ULDs is limited, a ruin-and-recreate phase that inserts the
+	boxes left unloaded into the loaded ULDs.
+\item We tune the parameters once with irace on a separate training set and evaluate the
+	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
+	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
+	8--16\% fewer ULDs than the RGS in the settings with an unlimited number of ULDs, where it is
+	better in up to 111 of the 300 instances and worse in at most one; with one ULD of each type,
+	it leaves fewer boxes unloaded and uses 3--7\% fewer ULDs. Almost none of its ULDs violates the CoG constraint,
+	against 7--11\% of the ULDs of the RGS. All the solutions are checked by an independent
+	validator, and the code, the solutions and the scripts are publicly available.
+\end{itemize}
+
+The remainder of the paper is organized as follows. Section~\ref{sec:problem} defines the
+problem and Section~\ref{sec:literature} reviews the related literature.
+Section~\ref{sec:algorithm} describes the algorithm, Section~\ref{sec:experiments} reports the
+computational experiments, and Section~\ref{sec:conclusions} concludes the paper.

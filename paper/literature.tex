@@ -1,0 +1,73 @@
+% Revision de la literatura
+\section{Related work}
+\label{sec:literature}
+
+Three-dimensional packing problems with practical constraints have received much attention; we
+refer to \citet{Bortfeldt2013} for a review of the constraints considered in container loading,
+to \citet{Zhao2016} for a comparison of container loading algorithms, and to
+\citet{Brandt2019} for a definition of the air cargo load planning problem and a review of its
+subproblems. We focus on the works closest to ours: air cargo palletization, packing with
+weight distribution constraints, and the heuristics on which our algorithm is based.
+
+\paragraph{Air cargo palletization.}
+\citet{Chan2006} developed a decision support system for loading air cargo pallets in a real
+case study. \citet{Paquay2016} formulated the problem considered in this paper as a mixed
+integer program, with non-cuboid ULDs, weight capacities, orientations, fragile boxes, support
+and CoG constraints, and solved small instances with a commercial solver. To solve larger
+instances, \citet{Paquay2018a} proposed MIP-based constructive heuristics derived from a
+relax-and-fix algorithm, and \citet{Paquay2018b} a tailored two-phase constructive heuristic
+based on extreme points. \citet{Hessler2025}
+extended the problem with the ULD edge, the substructure and the padding material, and proposed a
+randomized greedy search (RGS). Each ULD is loaded by repeatedly calling an insertion heuristic
+with several sorting criteria of the boxes and a random perturbation of the order; the
+insertion heuristic places each box at the first feasible extreme point
+\citep{Crainic2008}, uses an extended set of extreme points that can be moved to fill the space
+under the bevelled sides of the ULD, and accelerates the feasibility checks with a grid of
+cells. The best loading of a ULD is selected with a score that combines the volume utilization
+and the weight balance, and the ULDs are loaded sequentially, first those that are needed for
+the boxes that fit in the fewest ULD types. Their algorithm improves the results of
+\citet{Paquay2018b} by about 30\% in a fraction of a second per instance. A related but
+different problem is the loading of the ULDs into the aircraft, which determines the position of
+each ULD to balance the aircraft, sometimes with several pickup and delivery points
+\citep{Lurkin2015,Mesquita2026}.
+
+\paragraph{Weight distribution.}
+Constraints on the CoG of the load arise in container loading \citep{Davies1999}, in pallet
+loading and in air cargo \citep{Chan2006,Paquay2016}, and they have also been studied in the
+three-dimensional knapsack problem \citep{Baldi2012} and in the load-balanced bin packing
+problem \citep{Trivella2016}. Most heuristics handle them in a post-processing step, for
+instance by rearranging parts of the load after the packing has been built
+\citep{Davies1999}, or with a score that trades the weight balance against the volume
+utilization \citep{Hessler2025}. In our algorithm the CoG is taken into account during the
+construction of every solution, in the evaluation of the blocks and in the value of the partial
+solutions, and the load is also translated at the end.
+
+\paragraph{Heuristics for three-dimensional packing.}
+Most heuristics for three-dimensional bin packing build the packing by placing one box at a
+time at a candidate position: the corner points of \citet{Martello2000}, the extreme points of
+\citet{Crainic2008}, or the maximal free spaces of \citet{Parreno2008}. \citet{Parreno2008} and
+\citet{Parreno2010} embedded a maximal-space constructive heuristic in GRASP and variable
+neighbourhood descent, and \citet{AlvarezValdes2013} extended it with path relinking to the
+multiple bin size bin packing problem. \citet{Gajda2022} proposed a randomized constructive
+heuristic for a real container loading problem with weight distribution along the truck axles.
+For the single container loading problem, the best results have been obtained by tree search
+algorithms that place \emph{blocks} of boxes instead of single boxes:
+\citet{Fanslau2010} combined blocks of boxes with a partition-controlled tree search,
+\citet{Zhu2012} proposed an iterative-doubling greedy lookahead algorithm, and
+\citet{Araya2014} a beam search in which each node is evaluated by a greedy completion of its
+partial solution (BSG). \citet{Araya2017} introduced the VCS function to evaluate the blocks,
+which combines the volume of the block, its contact surface with the placed boxes and the
+container, the volume that the block makes unusable in the free space, and the number of boxes,
+and \citet{Araya2020} extended BSG to a biobjective container loading problem.
+\citet{Hessler2025} also tested the RGS on the container loading instances of
+\citet{Bischoff1995} and reported that it lags behind BSG with VCS \citep{Araya2017}, which they
+attribute to the much larger number of boxes per container in those instances. To the best of
+our knowledge, block-based tree search has not been applied to air cargo palletization, where
+the boxes are highly heterogeneous, the ULDs are not cuboids, and the support, fragility and CoG
+constraints restrict the blocks that can be built and where they can be placed. The main purpose
+of this paper is to show how to handle these features and that, with them, block-based tree
+search also outperforms the state of the art on this problem.
+
+Finally, the elimination of ULDs and the insertion of the unloaded boxes in our multi-ULD
+framework are related to the local search heuristics that try to empty one bin at a time
+\citep{Faroe2003} and to the ruin and recreate principle \citep{Schrimpf2000}.

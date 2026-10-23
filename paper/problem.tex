@@ -1,0 +1,69 @@
+% Definicion del problema
+\section{Problem definition}
+\label{sec:problem}
+
+We follow the problem definition of \citet{Paquay2016} with the extensions of
+\citet{Hessler2025}. The length, width and height of a ULD correspond to the $x$, $y$ and $z$
+axes, respectively; $z$ is the vertical axis.
+
+\paragraph{Boxes.}
+A set $I$ of rectangular boxes must be loaded. Each box $i \in I$ has a length $l_i$, a width
+$w_i$, a height $h_i$ and a weight $q_i$. The boxes are placed orthogonally, and each box has a
+set of allowed orientations: for each of its three dimensions, the instance states whether the
+box can be placed with that dimension in the vertical direction (each allowed vertical
+dimension gives two orientations, rotated or not around the vertical axis). A box can be
+fragile, in which case nothing can be placed on top of it. The weight of a box is uniformly
+distributed, so that its CoG is its geometric center. The instance files of \citet{Paquay2018b}
+also flag very dense boxes; as \citet{Hessler2025}, we do not use this flag.
+
+\paragraph{ULDs.}
+A set $T$ of ULD types is available, in unlimited number or with a given number $n_k$ of ULDs
+of each type $k \in T$. A ULD of type $k$ is the bounding box $[0, L_k] \times [0, W_k] \times
+[0, H_k]$ from which up to four corners are cut by planes orthogonal to the $x$-$z$ plane, to fit
+the fuselage of the aircraft. We represent each cut by a half-plane $\{(x, z) :
+a\,x + b\,z \le c\}$ in the $x$-$z$ plane that contains the usable space; a box is inside the ULD
+if it is inside its bounding box and its projection on the $x$-$z$ plane satisfies all the cuts.
+The ULD type also defines its usable volume $V_k$, its weight capacity $Q_k$, the maximum
+deviations $d^x_k$ and $d^y_k$ of the CoG of the load from the geometric center in the length and
+width directions, and the maximum height $d^z_k$ of the CoG. Following \citet{Hessler2025}, the
+floor of the ULD may have an edge of width $e$ for the cargo net locks: no box can be loaded
+over the edge below the height $\delta$ (the vertical edge offset). To load large boxes at the
+bottom, a substructure of height $\delta$ can be used, which raises the floor (without the edge)
+to the height $\delta$; in that case no box can be loaded below the height $\delta$.
+
+\paragraph{Constraints.}
+A loading plan assigns each loaded box to a ULD, an orientation and a position. It is feasible
+if:
+\begin{enumerate}
+\item each box is inside its ULD and, if the ULD has an edge, it does not overlap the edge
+	below the height $\delta$;
+\item the boxes do not overlap;
+\item the total weight of the boxes in each ULD of type $k$ does not exceed $Q_k$;
+\item each box whose base is not on the floor is supported: either the four corners of its base
+	rest on other boxes (or on the floor or the substructure), or part of its base rests directly
+	on other boxes and at least a proportion $o$ of its base area rests directly on boxes or on
+	padding material \citep{Hessler2025}; padding material can fill gaps of height at most
+	$\hbar$ between the base of a box and the top of the boxes below;
+\item no box, and no padding material, is placed on top of a fragile box;
+\item the CoG $(\bar x, \bar y, \bar z)$ of the load of each ULD satisfies
+	$|\bar x - L_k/2| \le d^x_k$, $|\bar y - W_k/2| \le d^y_k$ and $\bar z \le d^z_k$.
+\end{enumerate}
+The original problem of \citet{Paquay2016} corresponds to $e = \delta = \hbar = 0$ and $o = 1$,
+that is, a box is supported only if the four corners of its base are supported.
+\citet{Hessler2025} do not consider the vertical CoG constraint; we consider it in all the
+experiments. Moreover, both \citet{Paquay2018b} and \citet{Hessler2025} treat the horizontal
+CoG constraint as a soft constraint, since their solutions contain ULDs with the CoG out of
+range; we report the number of such ULDs for all the methods.
+
+\paragraph{Objective.}
+When the number of ULDs is unlimited, all the boxes must be loaded and the objective is to
+minimize the number of ULDs. When it is limited, some boxes may be left unloaded, and the
+objective is first to maximize the number of loaded boxes and then to minimize the number of
+ULDs. These are the criteria used in the instance-by-instance comparison of
+Section~\ref{sec:experiments}, and the ones reported by \citet{Hessler2025}.
+\citet{Paquay2016} formulate the objective as the minimization of the unused volume, that is,
+of the total volume of the used ULDs, and \citet{Hessler2025} maximize the loaded volume and then
+minimize the total volume of the ULDs. Our algorithm minimizes the number of ULDs, and at the end
+it tries to move the boxes of its least utilized ULD into a smaller one
+(Section~\ref{sec:alg-multi}).
+\todo{reportar el volumen total de los ULDs de nuestras soluciones y del RGS.}
