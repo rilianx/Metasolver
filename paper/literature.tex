@@ -14,9 +14,10 @@ weight distribution constraints, and the heuristics on which our algorithm is ba
 case study. \citet{Paquay2016} formulated the problem considered in this paper as a mixed
 integer program, with non-cuboid ULDs, weight capacities, orientations, fragile boxes, support
 and CoG constraints, and solved small instances with a commercial solver. To solve larger
-instances, \citet{Paquay2018a} proposed MIP-based constructive heuristics derived from a
-relax-and-fix algorithm, and \citet{Paquay2018b} a tailored two-phase constructive heuristic
-based on extreme points. \citet{Hessler2025}
+instances, \citet{Paquay2018a} proposed three MIP-based constructive heuristics (relax-and-fix,
+insert-and-fix and fractional relax-and-fix), and \citet{Paquay2018b} a tailored two-phase
+constructive heuristic: the first phase packs the boxes into identical bins with an extension of
+the extreme points, and the second one deals with the several ULD types. \citet{Hessler2025}
 extended the problem with the ULD edge, the substructure and the padding material, and proposed a
 randomized greedy search (RGS). Each ULD is loaded by repeatedly calling an insertion heuristic
 with several sorting criteria of the boxes and a random perturbation of the order; the
