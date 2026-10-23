@@ -3,6 +3,7 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <set>
 #include <stdexcept>
 #include <cstdio>
@@ -392,8 +393,13 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 		vector<Vec3> t2(n);
 		for(int i=0; i<n; i++) t2[i] = Vec3(x[3*i], x[3*i+1], max(0.0, x[3*i+2]));
 
-		//se acepta solo si es factible (tolerancias del LP)
+		//se acepta solo si es factible (tolerancias del LP; el LP puede devolver una solucion invalida)
 		bool ok=true;
+		for(int i=0; i<n && ok; i++){
+			Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+			double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), numeric_limits<double>::max() };
+			for(int c=0; c<3 && ok; c++) ok = std::isfinite(t2[i][c]) && t2[i][c] >= -tol && t2[i][c] <= up[c] + tol;
+		}
 		for(int i=0; i<n && ok; i++){
 			place_all(pieces, t2, i, placed);
 			ok = feasible(pieces[i], t2[i], placed);

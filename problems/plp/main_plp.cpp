@@ -149,6 +149,15 @@ int main(int argc, char** argv){
 			return best? static_cast<plpState*>(best->clone()) : NULL;
 		};
 
+		//una nueva mejor solucion se acepta solo si es factible (defensa ante errores numericos)
+		long rejected = 0;
+		auto accept = [&](const Solution& S2) {
+			if(S2.verify().feasible) return true;
+			rejected++;
+			cout << "WARNING: solucion infactible descartada" << endl;
+			return false;
+		};
+
 		//mejora local y compactacion global por LP
 		auto polish = [&](vector<int>& pieces, vector<Vec3>& t) -> double {
 			double H = placer.improve(pieces, t);
@@ -184,8 +193,10 @@ int main(int argc, char** argv){
 		cout << "search_height: " << S.height() << endl;
 		double H = S.height();
 		if(!_no_improve){
-			H = polish(pieces, t);
-			for(size_t i=0; i<t.size(); i++) S.items[i].t = t[i];
+			double H2 = polish(pieces, t);
+			Solution S2 = S;
+			for(size_t i=0; i<t.size(); i++) S2.items[i].t = t[i];
+			if(accept(S2)) { H = H2; S.items = S2.items; }
 			cout << "improve_height (" << ((lp)? lp->name() : "sin LP") << "): " << H << endl;
 		}
 
@@ -252,8 +263,17 @@ int main(int argc, char** argv){
 					if(sep_ok){
 						double H2 = (_no_improve)? hc : polish(ps, ts);
 						if(H2 < H - 1e-9*H){
+							Solution S2 = S;
+							for(int i=0; i<n; i++) S2.items[i].t = ts[i];
+							if(!accept(S2)){
+								//se vuelve a la mejor solucion
+								ts.clear();
+								for(const Placement& p : S.items) ts.push_back(p.t);
+								clamp(ts, hc);
+								continue;
+							}
 							H = H2;
-							for(int i=0; i<n; i++) S.items[i].t = ts[i];
+							S.items = S2.items;
 							cout << "[separacion] (" << elapsed() << " s): altura " << H << " (kicks " << kicks << ")" << endl;
 							kicks = 0;
 						}
@@ -336,7 +356,7 @@ int main(int argc, char** argv){
 				double H2 = (_no_improve)? S2.height() : polish(p2, t2);
 				for(size_t i=0; i<t2.size(); i++) S2.items[i].t = t2[i];
 				cout << ((ok)? "todas las piezas" : "completada") << ", altura " << H2 << endl;
-				if(H2 < H) { H = H2; S.items = S2.items; need_sep = true; }
+				if(H2 < H && accept(S2)) { H = H2; S.items = S2.items; need_sep = true; }
 			}else cout << endl;
 			delete s;
 			need_sep = true;
@@ -366,8 +386,9 @@ int main(int argc, char** argv){
 				if(sep_ok){
 					double H2 = (_no_improve)? hc : polish(ps, ts);
 					if(H2 < H - 1e-12*H){
-						H = H2;
-						for(int i=0; i<n; i++) S.items[i].t = ts[i];
+						Solution S2 = S;
+						for(int i=0; i<n; i++) S2.items[i].t = ts[i];
+						if(accept(S2)) { H = H2; S.items = S2.items; }
 						ok++;
 					}
 				}
@@ -380,6 +401,7 @@ int main(int argc, char** argv){
 		double time = double(clock()-begin_time)/CLOCKS_PER_SEC;
 		Report r = S.verify();
 		cout << "separations: " << sep_calls << endl;
+		cout << "rejected: " << rejected << endl;
 		cout << "time: " << time << endl;
 		cout << r;
 		if(_out) S.save(_out.Get());
