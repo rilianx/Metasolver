@@ -419,6 +419,9 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 	return true;
 }
 
+//contadores (linea "stats" de la salida): cambios aceptados en cada etapa de insert, y
+//resultado de cada intento de la reduccion de volumen
+static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0;
 //etapas de la insercion de cajas (ablacion)
 static bool stage_scratch=true, stage_fixed=false, stage_priority=true, stage_ruin=true;
 
@@ -471,7 +474,7 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 			if(none(pool)) return;
 			vector<int> avail=with_pool(loads[i]);
 			Load ld=load(*loads[i].uld, avail, P);
-			if(improves(loads[i], ld)) take(i, ld, avail);
+			if(improves(loads[i], ld)){ take(i, ld, avail); st_scratch++; }
 		}
 
 	if(stage_fixed)
@@ -496,14 +499,14 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 			for(size_t t=0; t<rest.size(); t++) rest[t]-=ld2.boxes[t];
 			Load ld3=load_more(ld2, rest, P);
 			const Load& ld=(ld3.feasible && ld3.volume>=ld2.volume)? ld3 : ld2;
-			if(improves(loads[i], ld)) take(i, ld, avail);
+			if(improves(loads[i], ld)){ take(i, ld, avail); st_priority++; }
 		}
 
 	if(stage_ruin)
 		for(bool progress=true; progress && !none(pool); ){
 			progress=false;
 			for(double p : {0.3, 0.6, 0.9})
-				if(!none(pool) && ruin_recreate(loads, pool, p, P)) progress=true;
+				if(!none(pool) && ruin_recreate(loads, pool, p, P)){ progress=true; st_ruin++; }
 		}
 }
 
@@ -524,13 +527,18 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 	for(size_t i=0; i<order.size(); i++) order[i]=i;
 	auto waste=[&](int i){ return loads[i].uld->volume - loads[i].volume; };
 	sort(order.begin(), order.end(), [&](int a, int b){ return waste(a) > waste(b); });
+	st_pass++;
 	for(int target : order){
+		st_try++;
 		const Load& tg=loads[target];
 		vector<int> pool=tg.boxes;
 		vector<Load> others;
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
+		long s0=st_scratch, s1=st_priority, s2=st_ruin;
 		if(!others.empty()) insert(others, pool, P);
-		if(none(pool)){ loads=others; return true; }
+		//etapas de insert que aportaron a un cambio aceptado
+		auto useful=[&](){ su_scratch+=st_scratch-s0; su_priority+=st_priority-s1; su_ruin+=st_ruin-s2; };
+		if(none(pool)){ loads=others; st_elim++; useful(); return true; }
 		//sobrante: 1 a reduce_new ULDs nuevos de menor volumen total que el sacado, de menor a
 		//mayor volumen total (el mas grande se carga primero, con todo el sobrante)
 		double pv=volume_of(pool), pw=0;
@@ -575,8 +583,11 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 			available=a2;
 			for(const Load& ld : nl) others.push_back(ld);
 			loads=others;
+			if(nl.size()==1) st_new1++; else st_new2++;
+			useful();
 			return true;
 		}
+		st_fail++;
 	}
 	return false;
 }
@@ -1040,6 +1051,11 @@ int main(int argc, char** argv){
 	cout << "n_ulds " << loads.size() << " median_util " << median
 		<< " total_util " << 100*total_vol/total_uld_vol << " cost " << cost
 		<< " cog_violations " << cog_viol << " unloaded " << unloaded << " time " << time << endl;
+
+	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
+		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
+		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
+		<< " new2 " << st_new2 << " fail " << st_fail << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
