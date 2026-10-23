@@ -5,7 +5,7 @@ Verificacion independiente de una solucion (formato ESICUP) para piezas convexas
 No usa el codigo C++ del proyecto. Cada pieza es una union de partes convexas (envolventes de scipy):
 * si existe benchs/decompositions/<ruta de la pieza>.obj, las partes son sus cascarones cerrados consecutivos
   (o sus grupos o/g);
-* si no, la pieza es la envolvente convexa de TODOS los vertices de su archivo OBJ.
+* si no, la pieza es la envolvente convexa de TODOS los vertices de su archivo (OBJ o STL).
 La pieza se alinea al minimo de sus vertices (itemOrigin = AlignToMinimum). Para cada par de partes de piezas
 distintas se resuelve un LP que busca el punto mas profundo de su interseccion (max delta s.a.
 A1 x + delta <= b1, A2 x + delta <= b2, con normales unitarias); si delta > eps las piezas se solapan.
@@ -35,6 +35,14 @@ def read_obj(path):
         elif l[0] in ('o', 'g') and len(F) > groups[-1]: groups.append(len(F))
     return np.array(V), F, groups
 
+def read_stl_vertices(path):
+    data = open(path, 'rb').read()
+    n = int.from_bytes(data[80:84], 'little') if len(data) >= 84 else -1
+    if n >= 0 and len(data) == 84 + 50*n:   # binario
+        rec = np.frombuffer(data[84:], dtype=np.dtype([('n', '<f4', 3), ('v', '<f4', (3, 3)), ('a', '<u2')]), count=n)
+        return rec['v'].reshape(-1, 3).astype(float)
+    return np.array([[float(x) for x in l.split()[1:4]] for l in data.decode().splitlines() if l.strip().startswith('vertex')])
+
 def shells(F):
     """separa las caras en cascarones cerrados consecutivos (cada arista usada por exactamente dos caras)"""
     out, cnt, start, open_ = [], {}, 0, 0
@@ -54,8 +62,9 @@ def load_parts(rel):
         if rng is None: sys.exit('no se pudo separar en partes: ' + dec)
         parts = [V[sorted(set(i for f in F[a:b] for i in f))] for a, b in rng]
     else:
-        if not rel.lower().endswith('.obj'): sys.exit('solo archivos OBJ: ' + rel)
-        V, F, _ = read_obj(root + '/' + rel)
+        if rel.lower().endswith('.stl'): V = read_stl_vertices(root + '/' + rel)
+        elif rel.lower().endswith('.obj'): V, F, _ = read_obj(root + '/' + rel)
+        else: sys.exit('formato no soportado: ' + rel)
         parts = [V]
     lo = np.min([P.min(axis=0) for P in parts], axis=0)
     return [P - lo for P in parts]
