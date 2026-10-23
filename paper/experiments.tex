@@ -32,8 +32,10 @@ width directions, and a maximum height of the CoG \citep{Paquay2016}.
 Following \citet{Hessler2025}, we consider three settings:
 \begin{itemize}
 \item \textbf{Paquay}: the original instances. A box is supported if its four bottom corners
-	rest on non-fragile boxes or on the floor, there is no padding material, and the allowed
-	CoG deviations are those of the instance file.
+	rest on non-fragile boxes or on the floor, and there is no padding material. For these
+	instances, \citet{Hessler2025} set the maximum CoG deviation to 5\% of the half length and
+	half width of the ULD, which is stricter than the deviations of the instance file (10--20\% of
+	the half dimensions); we use the same limit.
 \item \textbf{Adapted}: the ULD floor has an edge of width $e = 10$\,mm for the cargo net locks,
 	on which no box can be loaded below the height $\delta = 10$\,mm; a substructure of height
 	$\delta$ can be used to raise the floor. A box is supported if its four bottom corners are
@@ -42,11 +44,12 @@ Following \citet{Hessler2025}, we consider three settings:
 	deviation is 10\% of the half length and half width of the ULD. These are the default
 	problem parameters of \citet[Table~2]{Hessler2025}.
 \item \textbf{One}: the adapted instances with only one ULD of each type, so that some boxes may
-	remain unloaded. Solutions are compared lexicographically: first the number of loaded boxes,
-	then the number of ULDs.
+	remain unloaded. As in \citet{Hessler2025}, solutions are compared lexicographically: first
+	the loaded volume, then the number of ULDs.
 \end{itemize}
 In the first two settings all the boxes must be loaded and the objective is to minimize the
-number of ULDs.
+number of ULDs. Our algorithm uses the same parameters and components in the three settings;
+only the problem data (edge, support criterion, CoG limits and number of ULDs) change.
 
 \paragraph{Implementation.}
 The algorithm is implemented in C++ (compiled with g++ 13.3, \texttt{-O3}). Each run uses a
@@ -64,7 +67,10 @@ produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}
 
 \paragraph{Parameter tuning.}
 The parameters of the algorithm were tuned once with irace \citep{LopezIbanez2016}, as
-\citet{Paquay2018b} did for their heuristic, on a separate training set and are used unchanged in the three settings and for both time limits.
+\citet{Paquay2018b} did for their heuristic, on a separate training set, and are used unchanged
+in the three settings and for both time limits. \todo{el ajuste se hizo con una version
+preliminar (espacios anclados en la esquina mas cercana, CoG del archivo); decidir si se
+re-ajusta con la version final.}
 The training set consists of 150 preliminary instances of \citet{Paquay2018b} (30 instances
 with 30, 40, 50, 60 and 100 boxes), disjoint from the final ones, in the Paquay setting with
 $t = 0.1$\,s and a budget of 3000 runs. The cost of a run is the number of ULDs plus five times
@@ -104,8 +110,11 @@ and above the maximum height (CoG$_z$, a constraint of \citet{Paquay2016} that
 feasible.
 The comparison with \citet{Hessler2025} uses their instance-by-instance results (Tables 8, 10
 and 12 of their online appendix). For each instance we count whether our solution is better
-(more boxes loaded or, with the same boxes, fewer ULDs), equal or worse, and we test the
-difference in the number of ULDs with the Wilcoxon signed-rank test. Each configuration is
+(fewer ULDs or, in the setting \emph{One}, more loaded volume or, with the same volume, fewer
+ULDs), equal or worse, and we test the difference in the number of ULDs with the Wilcoxon
+signed-rank test. In the setting \emph{One}, the unloaded volume of the RGS is computed from
+the utilization and the type of its ULDs (Table~13 of their appendix), which are rounded to
+0.1\%; we therefore consider two loaded volumes equal if they differ by less than 0.05\,m$^3$. Each configuration is
 run five times; we report the mean and the standard deviation.
 
 \subsection{Results}
