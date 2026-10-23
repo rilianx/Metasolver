@@ -108,8 +108,6 @@ static bool fits(const BoxShape& box, const ULD& u){
 static vector<ULD> ulds, ulds_sub;
 static vector<int> available;
 static bool use_substructure=false;
-//eleccion del siguiente ULD por la mayor utilizacion entre los candidatos (--select_util)
-static bool select_util=false;
 //todos los espacios anclados en el origen (la carga queda agrupada y se puede centrar)
 static bool origin_only=true;
 //ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
@@ -124,7 +122,7 @@ static int uld_index(const ULD& u){
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=NULL){
+static const ULD* select_uld(const vector<int>& left){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
@@ -146,7 +144,6 @@ static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=
 			if(nf==m) candidate=true;
 		}
 		if(!candidate) continue;
-		if(cands) cands->push_back(&ulds[u]);
 		if(vol>best_vol || (vol==best_vol && ulds[u].volume>best->volume)){ best=&ulds[u]; best_vol=vol; }
 	}
 	return best;
@@ -521,6 +518,85 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 	return false;
 }
 
+/**
+ * Reasignacion para reducir el volumen total de los ULDs: se toman 1 o 2 ULDs y se intenta
+ * cargar sus cajas en 1 o 2 ULDs (tipos disponibles) de menor volumen total, probando las
+ * combinaciones de menor a mayor volumen (el ULD mas grande primero y las cajas restantes en
+ * el segundo). Se acepta el primer cambio que carga todas las cajas sin aumentar la cantidad
+ * de ULDs con el CoG fuera de rango. Retorna true si se hizo un cambio.
+ */
+static bool reassign(vector<Load>& loads, const Params& P){
+	int n=loads.size(), nt=ulds.size();
+	//conjuntos de 1 o 2 ULDs, de menor a mayor utilizacion
+	vector< vector<int> > sets;
+	for(int i=0; i<n; i++) sets.push_back({i});
+	for(int i=0; i<n; i++) for(int j=i+1; j<n; j++) sets.push_back({i, j});
+	auto util=[&](const vector<int>& S){
+		double v=0, c=0;
+		for(int i : S){ v+=loads[i].volume; c+=loads[i].uld->volume; }
+		return v/c;
+	};
+	stable_sort(sets.begin(), sets.end(), [&](const vector<int>& a, const vector<int>& b){ return util(a) < util(b); });
+	//combinaciones de 1 o 2 tipos (indices en ulds), el de mayor volumen primero
+	vector< vector<int> > combos;
+	for(int a=0; a<nt; a++){
+		combos.push_back({a});
+		for(int b=0; b<nt; b++)
+			if(ulds[b].volume < ulds[a].volume || (ulds[b].volume == ulds[a].volume && b>=a)) combos.push_back({a, b});
+	}
+	auto cvol=[&](const vector<int>& C){ double v=0; for(int k : C) v+=ulds[k].volume; return v; };
+	stable_sort(combos.begin(), combos.end(), [&](const vector<int>& a, const vector<int>& b){ return cvol(a) < cvol(b); });
+
+	for(const vector<int>& S : sets){
+		vector<int> boxes(clpState::types.size(), 0);
+		double vS=0, bvol=0, bw=0; int cogS=0;
+		for(int i : S){
+			for(size_t t=0; t<boxes.size(); t++) boxes[t]+=loads[i].boxes[t];
+			vS+=loads[i].uld->volume; bvol+=loads[i].volume; bw+=loads[i].weight; cogS+=!loads[i].cog_ok();
+		}
+		for(const vector<int>& C : combos){
+			double vC=cvol(C);
+			if(vC >= vS - 1e-6) break;
+			if(vC < bvol) continue;
+			//disponibilidad (se liberan los ULDs de S)
+			vector<int> av=available;
+			for(int i : S){ int k=uld_index(*loads[i].uld); if(av[k]>=0) av[k]++; }
+			bool ok=true; double cw=0;
+			for(int k : C){ if(av[k]==0) ok=false; else if(av[k]>0) av[k]--; cw+=ulds[k].max_weight; }
+			if(!ok || cw < bw) continue;
+			//cada caja cabe en algun tipo de C
+			for(size_t t=0; t<boxes.size() && ok; t++){
+				if(!boxes[t]) continue;
+				bool any=false;
+				for(int k : C) any = any || fits(*clpState::types[t], ulds[k]);
+				ok=any;
+			}
+			if(!ok) continue;
+			vector<Load> nl;
+			vector<int> rest=boxes;
+			for(int k : C){
+				if(none(rest)) break;
+				Load ld=load(ulds[k], rest, P);
+				if(!ld.feasible || none(ld.boxes)){ ok=false; break; }
+				for(size_t t=0; t<rest.size(); t++) rest[t]-=ld.boxes[t];
+				nl.push_back(ld);
+			}
+			if(!ok || !none(rest)) continue;
+			int cogC=0; for(const Load& ld : nl) cogC+=!ld.cog_ok();
+			if(cogC > cogS) continue;
+			//se reemplazan los ULDs de S por los de C
+			vector<Load> res;
+			for(int i=0; i<n; i++) if(find(S.begin(), S.end(), i)==S.end()) res.push_back(loads[i]);
+			for(const Load& ld : nl) res.push_back(ld);
+			available=av;
+			for(size_t k=0; k<C.size(); k++) if(k>=nl.size()){ int kk=C[k]; if(available[kk]>=0) available[kk]++; }
+			loads=res;
+			return true;
+		}
+	}
+	return false;
+}
+
 int main(int argc, char** argv){
 
 	args::ArgumentParser parser("********* BSG-ULD *********.", "BSG Solver for air cargo loading (ULDs).");
@@ -553,7 +629,7 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
-	args::Flag _select_util(parser, "select_util", "Select the next ULD type by loading every candidate type (Hessler et al.) and keeping the best utilization", {"select_util"});
+	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 or 2 ULDs of smaller total volume", {"reassign"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -619,7 +695,6 @@ int main(int argc, char** argv){
 	}
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
-	select_util = _select_util;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -644,19 +719,10 @@ int main(int argc, char** argv){
 	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
-		vector<const ULD*> cands;
-		const ULD* u = select_uld(left, &cands);
+		const ULD* u = select_uld(left);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
-		//con --select_util: se carga cada tipo candidato y se elige la carga de mayor valor
-		//(utilizacion penalizada por el CoG)
-		if(select_util)
-			for(const ULD* c : cands){
-				if(c==u) continue;
-				Load ld2 = load(*c, left, P);
-				if(ld2.feasible && ld2.value > ld.value){ ld=ld2; u=c; }
-			}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
@@ -698,6 +764,11 @@ int main(int argc, char** argv){
 	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros
 	if(!_no_eliminate && remaining()==0)
 		while(eliminate_uld(loads, P));
+
+	//reasignacion para reducir el volumen de los ULDs (despues, se intenta eliminar de nuevo)
+	if(_reassign)
+		while(reassign(loads, P))
+			if(!_no_eliminate && remaining()==0) while(eliminate_uld(loads, P));
 
 	//se intenta recargar las cajas del ULD menos utilizado en el ULD mas pequeno posible
 	Load& worst = *min_element(loads.begin(), loads.end(),
