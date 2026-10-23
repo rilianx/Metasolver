@@ -319,7 +319,8 @@ double Placer::improve(const vector<int>& pieces, vector<Vec3>& t, int max_passe
 	return H;
 }
 
-double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp, int max_iter) {
+double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp, int max_iter, double margin, bool* applied) {
+	if(applied) *applied = false;
 	int n = pieces.size();
 	auto height = [&]() {
 		double h=0;
@@ -335,24 +336,12 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 	}
 
 	double H = height();
+	double wall = margin;
 	vector<PlacedPart> placed;
 	for(int it=0; it<max_iter; it++){
-		lp.reset(3*n+1);
-		int h = 3*n;
-		lp.set_bounds(h, 0.0, numeric_limits<double>::infinity());
-		lp.set_cost(h, 1.0);
-		for(int i=0; i<n; i++){
-			Vec3 e = inst.pieces[pieces[i]].bbox.extent();
-			double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), numeric_limits<double>::infinity() };
-			for(int c=0; c<3; c++)
-				lp.set_bounds(3*i+c, max(0.0, t[i][c]-delta), min(up[c], t[i][c]+delta));
-			//empuja las demas piezas hacia abajo (desempate)
-			lp.set_cost(3*i+2, 1e-3/n);
-			//z_i + e_z <= H
-			lp.add_row({ {3*i+2, 1.0}, {h, -1.0} }, -numeric_limits<double>::infinity(), -e.z);
-		}
-
-		//pares de partes cercanas
+		//pares de partes cercanas: una faceta del NFP por par
+		struct PairRow { int i, j; Vec3 n; double d; };
+		vector<PairRow> rows;
 		for(int i=0; i<n; i++)
 			for(int j=i+1; j<n; j++){
 				for(int a : piece_parts[pieces[i]])
@@ -381,17 +370,62 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 							if(step > best_step || (step==best_step && ng > best_g)) { best_step=step; best_g=ng; best=f; }
 						}
 						if(best<0) best=worst;
-						const Vec3& nn = F[best].n;
-						//n.(t_i - t_j) >= d
-						lp.add_row({ {3*i, nn.x}, {3*i+1, nn.y}, {3*i+2, nn.z}, {3*j, -nn.x}, {3*j+1, -nn.y}, {3*j+2, -nn.z} },
-								F[best].d, numeric_limits<double>::infinity());
+						rows.push_back(PairRow{i, j, F[best].n, F[best].d});
 					}
 			}
+
+		//con margen: holgura m_k en [0,margin] por par, n.(t_i - t_j) >= d + m_k, y se maximiza la suma (sin subir H)
+		int nm = (margin > 0)? rows.size() : 0;
+		lp.reset(3*n+1+nm + ((nm)? 2*n : 0));
+		int h = 3*n;
+		lp.set_bounds(h, 0.0, numeric_limits<double>::infinity());
+		lp.set_cost(h, 1.0);
+		for(int i=0; i<n; i++){
+			Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+			double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), numeric_limits<double>::infinity() };
+			for(int c=0; c<3; c++)
+				lp.set_bounds(3*i+c, max(0.0, min(t[i][c], up[c])-delta), min(up[c], t[i][c]+delta));
+			//con margen: x_i + w_i <= up, w_i en [0,margin] (se maximiza): el redondeo de t + extension no cruza la pared
+			if(nm)
+				for(int c=0; c<2; c++){
+					int w = 3*n+1+nm+2*i+c;
+					lp.set_bounds(w, 0.0, wall);
+					lp.set_cost(w, -1e-2/(2*n*wall));
+					lp.add_row({ {3*i+c, 1.0}, {w, 1.0} }, -numeric_limits<double>::infinity(), up[c]);
+				}
+			//empuja las demas piezas hacia abajo (desempate)
+			lp.set_cost(3*i+2, 1e-3/n);
+			//z_i + e_z <= H
+			lp.add_row({ {3*i+2, 1.0}, {h, -1.0} }, -numeric_limits<double>::infinity(), -e.z);
+		}
+
+		for(size_t k=0; k<rows.size(); k++){
+			const PairRow& r = rows[k];
+			const Vec3& nn = r.n;
+			int i = r.i, j = r.j;
+			//n.(t_i - t_j) >= d (+ margin*m_k)
+			vector< pair<int,double> > row = { {3*i, nn.x}, {3*i+1, nn.y}, {3*i+2, nn.z}, {3*j, -nn.x}, {3*j+1, -nn.y}, {3*j+2, -nn.z} };
+			if(nm){
+				int m = 3*n+1+k;
+				lp.set_bounds(m, 0.0, margin);
+				lp.set_cost(m, -1e-2/(nm*margin));
+				row.push_back(make_pair(m, -1.0));
+			}
+			lp.add_row(row, r.d, numeric_limits<double>::infinity());
+		}
 
 		if(!lp.minimize()) break;
 		vector<double> x = lp.solution();
 		vector<Vec3> t2(n);
 		for(int i=0; i<n; i++) t2[i] = Vec3(x[3*i], x[3*i+1], max(0.0, x[3*i+2]));
+		//el LP respeta las cotas con tolerancia: dentro del contenedor (si la desviacion es pequena)
+		for(int i=0; i<n; i++){
+			Vec3 e = inst.pieces[pieces[i]].bbox.extent();
+			double up[2] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y) };
+			for(int c=0; c<2; c++)
+				if(t2[i][c] < 0 && t2[i][c] > -tol) t2[i][c] = 0;
+				else if(t2[i][c] > up[c] && t2[i][c] < up[c]+tol) t2[i][c] = up[c];
+		}
 
 		//se acepta solo si es factible (tolerancias del LP; el LP puede devolver una solucion invalida)
 		bool ok=true;
@@ -406,7 +440,9 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 		}
 		if(!ok) break;
 		t = t2;
+		if(applied) *applied = true;
 		double H2 = height();
+		if(margin > 0) { H = H2; break; }    //con margen basta una iteracion
 		if(H2 >= H - 1e-6*H) { H = H2; break; }
 		H = H2;
 	}
@@ -675,77 +711,42 @@ double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int 
 }
 
 bool Placer::minimize_overlap(const vector<int>& pieces, vector<Vec3>& t, double H, int max_iter,
-		map< pair<int,int>, double >& weights, mt19937& rng, bool mult, int strike_iter, int max_strikes, bool fls) {
+		map< pair<int,int>, double >& weights, mt19937& rng, bool mult) {
 	int n = pieces.size();
 	vector<int> order(n);
 	for(int i=0; i<n; i++) order[i]=i;
-	double best = numeric_limits<double>::max();
-	vector<Vec3> best_t = t;
-	int since = 0, strikes = 0;
 
 	//penetraciones entre pares (se recalcula la fila de una pieza cuando se mueve)
 	vector< vector<double> > P(n, vector<double>(n, 0.0));
-	auto update_row = [&](int i) {
-		for(int j=0; j<n; j++)
-			if(j!=i) P[i][j] = P[j][i] = pair_penetration(pieces, t, i, j);
-	};
 	for(int i=0; i<n; i++)
 		for(int j=i+1; j<n; j++) P[i][j] = P[j][i] = pair_penetration(pieces, t, i, j);
-	//busqueda local rapida (Egeblad et al. 2009; Umetani et al. 2009): solo se mueven las piezas activas
-	vector<char> active(n, 1);
 
-	//esfuerzo en pasadas: cada pasada suma (piezas movidas)/(piezas solapadas), 1 sin fls
-	for(double work=0; work<max_iter; ){
+	for(int it=0; it<max_iter; it++){
 		//pares solapados
 		vector< pair<int,int> > ov;
 		vector<double> pen;
 		vector<bool> involved(n, false);
-		double total = 0, pmax = 0;
+		double pmax = 0;
 		for(int i=0; i<n; i++)
 			for(int j=i+1; j<n; j++)
-				if(P[i][j] > eps) { ov.push_back(make_pair(i,j)); pen.push_back(P[i][j]); involved[i]=involved[j]=true; total += P[i][j]; pmax = max(pmax, P[i][j]); }
+				if(P[i][j] > eps) { ov.push_back(make_pair(i,j)); pen.push_back(P[i][j]); involved[i]=involved[j]=true; pmax = max(pmax, P[i][j]); }
 		if(ov.empty()) return overlap(pieces, t) <= eps;
 
-		//mejor disposicion solapada y strikes
-		if(strike_iter > 0){
-			if(total < best*(1-1e-9)) { best = total; best_t = t; since = 0; }
-			else if(++since >= strike_iter){
-				since = 0;
-				t = best_t;
-				for(int i=0; i<n; i++) update_row(i);
-				fill(active.begin(), active.end(), 1);
-				if(++strikes >= max_strikes) return false;
-				continue;
-			}
-		}
-
-		//pasada de movimientos por los ejes sobre las piezas solapadas (y activas)
+		//pasada de movimientos por los ejes sobre las piezas solapadas
 		shuffle(order.begin(), order.end(), rng);
 		double gain=0;
-		bool any=false;
-		int moved=0, ninv=0;
-		for(int i=0; i<n; i++) ninv += involved[i];
 		for(int i : order){
-			if(!involved[i] || (fls && !active[i])) continue;
-			any = true;
-			moved++;
+			if(!involved[i]) continue;
 			Vec3 old = t[i];
 			int axes[3] = {0,1,2};
 			shuffle(axes, axes+3, rng);
-			double g=0;
-			for(int ax : axes) g += axis_move(pieces, t, i, ax, H, weights);
-			gain += g;
-			if(t[i].x!=old.x || t[i].y!=old.y || t[i].z!=old.z){
-				//se activan las piezas que solapaban con i o que ahora la solapan
-				for(int j=0; j<n; j++) if(j!=i && P[i][j] > eps) active[j] = 1;
-				update_row(i);
-				for(int j=0; j<n; j++) if(j!=i && P[i][j] > eps) active[j] = 1;
-			}
-			if(g <= 1e-9) active[i] = 0;
+			for(int ax : axes) gain += axis_move(pieces, t, i, ax, H, weights);
+			if(t[i].x!=old.x || t[i].y!=old.y || t[i].z!=old.z)
+				for(int j=0; j<n; j++)
+					if(j!=i) P[i][j] = P[j][i] = pair_penetration(pieces, t, i, j);
 		}
-		work += max(0.05, double(moved)/max(1,ninv));
 		//minimo local: busqueda local guiada (los pares que siguen solapados pesan mas)
-		if((fls)? !any : gain <= 1e-9){
+		if(gain <= 1e-9){
 			if(mult){
 				for(auto& e : weights) e.second = max(0.0, 0.95*(1+e.second) - 1);
 				for(size_t k=0; k<ov.size(); k++){
@@ -756,10 +757,8 @@ bool Placer::minimize_overlap(const vector<int>& pieces, vector<Vec3>& t, double
 				}
 			}else
 				for(const auto& pr : ov) weights[pr] += 1.0;
-			fill(active.begin(), active.end(), 1);
 		}
 	}
-	if(strike_iter > 0) t = best_t;
 	return false;
 }
 

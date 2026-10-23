@@ -85,8 +85,17 @@ Metodología (2D) en la que se basa la compactación por LP:
 
 ## Algoritmo (BSG_PLP)
 
-* **Estado** (`plpState`): piezas ubicadas y restantes. Una acción ubica una pieza en una posición factible.
-  El valor de una solución completa es la densidad `V / (W·D·H)`.
+Versión por defecto (la que rindió mejor en la ablación, `results/ablacion.md`):
+
+1. **Construcción**: un greedy ubica las piezas una a una (posiciones del `Placer`, evaluación `PLP_Function`).
+2. **Compactación** (`Placer::improve` y `Placer::compact`).
+3. **Oscilación estratégica** hasta agotar el tiempo: se baja la altura un 1 % (`--sep_step`) y se separan las
+   piezas con movimientos de mínimo solapamiento por los ejes; si se logra, se compacta y se vuelve a bajar; si
+   no, se sube la altura un cuarto del paso y se sigue desde la disposición solapada; al volver a la altura de
+   la mejor solución, kick (se reinserta una pieza al azar de la mejor solución en el espacio libre).
+
+Componentes:
+
 * **Posiciones** (`Placer`): la pieza parte sobre la carga (z = altura actual) en una grilla de
   `grid x grid` puntos (x,y) y desciende por LP. Para cada parte convexa cercana se usa su NFP
   `B ⊕ (−A)` (envolvente convexa de las diferencias de vértices, en caché por par de partes) y se elige
@@ -96,68 +105,47 @@ Metodología (2D) en la que se basa la compactación por LP:
   Se repite (región de confianza del tamaño de la pieza) hasta que la posición no mejora.
 * **Evaluación** (`PLP_Function`): `alpha·log(V/Vmax) − beta·z/H0 − gamma·max(0, ztop − top)/H0`.
   Valores por defecto ajustados con Optuna (`results/ajuste.md`): `alpha` 1, `beta` 5.53, `gamma` 0.77,
-  `slide` 0.065, `grid` 4, `block_waste` 0.07.
-* **Pseudobloques** (`--blocks N`, `Placer::generate_blocks`): pares de piezas en una posición relativa
-  compacta, que el BSG puede ubicar como una sola forma (como los bloques del CLP). Un bloque es la unión de
-  las partes convexas de sus dos piezas (no es convexo); para el `Placer` es una forma más, con partes
-  desplazadas, que reutiliza los NFP ya calculados.
-  * Posiciones relativas candidatas: vértices de los NFP entre las partes y, para cada faceta del NFP, los
-    puntos de su plano sobre los ejes (deslizar una pieza junto a la otra a lo largo de un eje). Se evalúan
-    las 30 factibles de menor caja envolvente.
-  * Criterio de aceptación: hueco agregado = (vol. de la envolvente convexa del bloque − vol. de las
-    envolventes de las dos piezas) / volumen de las piezas ≤ `--block_waste` (0.1). En piezas convexas es el
-    espacio atrapado entre ellas; es negativo si una pieza entra en una concavidad de la otra.
-  * Se conservan los `--block_pair` (2) de menor hueco por par de tipos y los N de menor hueco en total.
-  * Por defecto se generan 30 bloques (`--blocks 0` los desactiva). `--block_criterion box` usa el criterio
-    anterior (caja del bloque al menos 5% menor que la suma de las cajas) y `--block_eval piece` evalúa un
-    bloque con el volumen por pieza en vez del total. Con 3 semillas, la combinación por defecto
-    (`hull` + `total`) fue la mejor en conjunto (`results/pseudobloques.md`).
-* **Búsqueda**: BSG con `DoubleEffort` (como en el CLP).
-* **Mejora final** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y
-  las piezas que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
-* **Compactación global por LP** (`Placer::compact`, requiere ibex): un LP con las traslaciones de
-  todas las piezas y la altura `H` como variables (minimiza `H`). Para cada par de partes que pueden
-  tocarse dentro de la región de confianza (cada pieza se mueve a lo más la mitad de la menor dimensión
-  de las piezas, por eje) se fija una faceta de su NFP: `n·(t_i − t_j) >= d`. Se resuelve con
-  `ibex::LPSolver` (SoPlex o CLP), se eligen de nuevo las facetas y se repite mientras `H` baje.
-  En `BSG_PLP` se alterna con la mejora local sobre la mejor solución; con `--compact_greedy k`
-  además se compacta (k iteraciones) cada solución completa del greedy dentro del BSG.
-* **Bajar la altura y resolver con un contenedor fijo** (por defecto, después de `--strip_time` = 30% del
-  tiempo): se fija `Hc = H·(1 − step)` y se resuelve la variante knapsack (contenedor `W x D x Hc`, valor =
-  volumen cargado / volumen total; las posiciones candidatas que sobrepasan `Hc` se descartan). El BSG parte
-  con las piezas de la mejor solución que quedan bajo `(1 − band)·Hc` ya ubicadas y decide dónde van las
-  demás (destruir y reparar). El BSG se detiene en cuanto ubica todas las piezas; la solución se mejora
-  (compactación) y se vuelve a bajar la altura. Si falla, la franja libre crece (`band·1.5`) hasta partir de
-  cero (`band = 1`), y luego se baja menos la altura (`step/2`). Cada altura tiene a lo más
-  `--slice` = 10% del tiempo. Si la carga parcial no está completa, se completa sobre la carga (altura
-  abierta) por si mejora la altura.
-* **Separación por LP** (`Placer::separate`, requiere ibex; fase previa a la reparación con BSG): se baja la
-  altura un 1% (`--sep_step`), las piezas que sobresalen se bajan aunque queden solapadas y un LP elimina el
-  solapamiento: variables `t_i` y una holgura `s ≥ 0` por par de partes cercanas, `n·(t_i − t_j) + s ≥ d` para
-  una faceta del NFP (la de mayor holgura; si el par sigue solapado se rota entre las 3 primeras); minimiza
-  `Σ w_ij s` con pesos de búsqueda local guiada (aumentan para los pares que siguen solapados). Si se estanca,
-  la pieza más pequeña de un par solapado se reinserta en el espacio libre. Si se elimina el solapamiento, se
-  mejora la solución y se vuelve a bajar; si no, el paso se reduce a la mitad (hasta 0.1%) y luego se pasa a la
-  reparación con BSG (`--no_separate` la desactiva). Basado en Egeblad et al. (2009), Gomes y Oliveira (2006) y
-  Lamas-Fernández et al. (2023).
+  `slide` 0.065, `grid` 4.
+* **Mejora local** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y las piezas
+  que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
+* **Compactación global por LP** (`Placer::compact`, requiere ibex; `--no_compact` la desactiva): un LP con las
+  traslaciones de todas las piezas y la altura `H` como variables (minimiza `H`). Para cada par de partes que
+  pueden tocarse dentro de la región de confianza (cada pieza se mueve a lo más la mitad de la menor dimensión de
+  las piezas, por eje) se fija una faceta de su NFP: `n·(t_i − t_j) >= d`. Se resuelve con `ibex::LPSolver`
+  (SoPlex o CLP), se eligen de nuevo las facetas y se repite mientras `H` baje. Se alterna con la mejora local.
+  Sin ibex el algoritmo funciona casi igual (~1 % peor en Stoyan 2004).
 * **Movimientos de mínimo solapamiento** (`Placer::axis_move`, `Placer::minimize_overlap`; Egeblad et al. 2009,
   Umetani et al. 2009): una pieza se traslada a lo largo de un eje a la posición que minimiza la suma ponderada de
   penetraciones con las demás (con los NFP: `max(0, min_f (d_f − n_f·rel))`, cóncava en un intervalo y cero fuera;
   el mínimo exacto está en los extremos de los intervalos). La búsqueda local mueve las piezas solapadas por los
-  tres ejes y en los mínimos locales aumenta los pesos de los pares solapados (búsqueda local guiada; con
-  `--gls mult`, por defecto, como en sparrow de Gardeyn et al. 2025: el peso de un par solapado se multiplica por
-  1.2–2.0 según la severidad y el de los demás decae ×0.95; `--gls add` suma 1). Con
-  `--sep_method both` (por defecto) se usa antes del LP de separación; `axis` o `lp` usan solo uno.
-* **Oscilación estratégica y kicks** (fase de separación): si la separación no elimina el solapamiento, se sube
-  la altura un cuarto del paso y se sigue desde la solución solapada (los pesos de la búsqueda local guiada
-  persisten). Cuando la altura vuelve a la de la mejor solución, kick: desde la mejor solución se reinserta una
-  pieza al azar en el espacio libre (o se intercambian dos piezas de distinto tipo); con `--kick_size k` se
-  reinsertan entre 1 y k piezas; `--kick swap` intercambia dos piezas de distinto tipo y volumen parecido y
-  `--kick mix` elige uno de los dos al azar. Tras `--kicks` (30) kicks
-  seguidos sin mejora se intenta la reparación con BSG y luego se vuelve a la oscilación, hasta agotar el tiempo.
-* Opciones evaluadas que no ayudaron (`results/papers.md`): `--strikes` (volver a la mejor disposición
-  solapada), `--sep_inc 0` con pasos más finos (exploración de sparrow) y `--compress` (fase final de compresión).
-* Todas las soluciones se verifican con `Solution::verify`.
+  tres ejes (hasta `--gls_iter` = 500 pasadas) y en los mínimos locales actualiza los pesos de los pares
+  solapados (búsqueda local guiada; por defecto como en sparrow de Gardeyn et al. 2025: el peso de un par
+  solapado se multiplica por 1.2–2.0 según la severidad y el de los demás decae ×0.95; `--gls add` suma 1).
+  Los pesos persisten durante la oscilación y se borran tras una separación exitosa o un kick.
+* Una nueva mejor solución se acepta solo si `Solution::verify` la declara factible.
+* **Separación final con margen** (`--margin`, 1e-7; requiere ibex): una última compactación por LP con
+  `n·(t_i − t_j) ≥ d + m_k` y `x_i + w_i ≤ W − e_x` (lo mismo en y), con holguras `m_k, w_i ∈ [0, margin]` que se
+  maximizan sin subir la altura (sube ~1e-7). Deja una separación real, mayor que las tolerancias del LP, entre
+  las partes cercanas y respecto de las paredes, para que la solución se pueda certificar en aritmética exacta.
+  Luego las coordenadas se redondean a múltiplos de 2^-30 (exacto en doubles): en filas que llenan exactamente
+  el contenedor (sin holgura posible) las posiciones de contacto suelen ser sumas de dimensiones y el redondeo
+  elimina el error del LP. Con esto, 22 de 22 soluciones de prueba quedaron certificadas (`results/certificacion.md`).
+
+Opciones (desactivadas por defecto; no mejoraron en las instancias evaluadas):
+
+* `--init bsg`: construcción con BSG + `DoubleEffort` durante `--bsg_time` (30 %) del tiempo.
+* `--blocks N`: pseudobloques (pares de piezas en una posición relativa compacta que el BSG o el greedy ubican
+  como una sola forma; `Placer::generate_blocks`, `results/pseudobloques.md`). Se aceptan si el hueco agregado
+  (vol. de la envolvente convexa del bloque − vol. de las envolventes de las piezas) / vol. de las piezas
+  ≤ `--block_waste` (0.07).
+* `--sep_lp`: si los movimientos por los ejes fallan, separación por LP (`Placer::separate`): variables `t_i` y
+  una holgura por par de partes cercanas, `n·(t_i − t_j) + s ≥ d` para una faceta del NFP, minimiza `Σ w_ij s`
+  (Gomes y Oliveira 2006; Egeblad et al. 2009).
+* `--repair`: tras `--kicks` (30) kicks sin mejora, el BSG resuelve la variante knapsack con altura
+  `H·(1 − step)`, manteniendo las piezas de la mejor solución bajo `(1 − band)·H` (destruir y reparar).
+* `--kick swap`: el kick intercambia dos piezas de distinto tipo y volumen parecido.
+* Evaluadas y eliminadas (`results/papers.md`): volver a la mejor disposición solapada (strikes), exploración sin
+  subir la altura, compresión final, búsqueda local rápida y kicks de varias piezas.
 
 ### Compilación con ibex (opcional)
 
@@ -177,7 +165,10 @@ compactación global.
 ./BSG_PLP "problems/plp/benchs/Stoyan et al. 2005/Example1.json" -t 30 -o sol.json
 ```
 
-Efecto de la compactación global (30 s por instancia, 4 procesos en paralelo; ibex/SoPlex):
+### Resultados
+
+Versiones anteriores (con BSG; histórico). Efecto de la compactación global (30 s por instancia, 4 procesos en
+paralelo; ibex/SoPlex):
 
 | Instancia | sin compactación | compactación final | `--compact_greedy 5` |
 |---|---|---|---|
@@ -190,31 +181,31 @@ Efecto de la compactación global (30 s por instancia, 4 procesos en paralelo; i
 | Stoyan 2004 Example4 | 75.07 | 73.59 | 72.75 |
 | Stoyan 2004 Example5 | 94.12 | 93.04 | 93.23 |
 
-Con la bajada de altura y contenedor fijo (30 s, parámetros por defecto, ibex/SoPlex; tabla completa en
+Con la bajada de altura y contenedor fijo (30 s, ibex/SoPlex; tabla completa en
 `results/bsg_plp_v2.md`): Stoyan 2005 Example1–3: 17.84 / 20.30 / 34.15; Stoyan 2004 Example1–5:
 60.56 / 36.00 / 58.38 / 73.47 / 90.68.
 
-Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, parámetros por defecto: `--gls mult`,
-`--gls_iter 500`; `results/papers.md`). La última columna es la mejor solución encontrada con cualquier configuración evaluada;
+Comparación con la literatura (120 s, media de 3 semillas y mejor corrida, versión por defecto actual;
+`results/ablacion.md`). La última columna es la mejor solución encontrada con cualquier configuración evaluada;
 esas soluciones están en `results/solutions/`, verificadas con `PLP_check` y `tools/check_solution.py` (eps 1e-9):
 
 | Instancia | Ítems | Mejor publicada | BSG_PLP (120 s): media (mejor) | Mejor nuestra |
 |---|---|---|---|---|
 | Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.46 (30 s) | 17.46 |
 | Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 19.13 (19.13) | 19.13 |
-| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **27.59 (27.33)** | **26.91** |
-| Stoyan 2004 Example1 | 25 | — | 52.28 (52.00) | 51.47 |
+| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | **27.52 (27.00)** | **26.91** |
+| Stoyan 2004 Example1 | 25 | — | 53.21 (52.75) | 51.47 |
 | Stoyan 2004 Example2 | 20 | 28.47 (Lamas-Fernández et al. 2023) | 29.00 (29.00) | 29.00 |
-| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | **39.17 (38.93)** | **38.93** |
-| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | **54.60 (53.39)** | **52.64** |
-| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **67.75 (66.10)** | **64.20** |
+| Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | **40.15 (40.00)** | **38.93** |
+| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | **52.69 (50.91)** | **50.91** |
+| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **67.21 (66.54)** | **64.20** |
 
 Ablación de los componentes (la versión mínima rinde igual): `results/ablacion.md`.
 
 Instancias Merged de Egeblad et al. (2009), 600 s (`results/merged.md`; piezas de Ikonen descompuestas de forma
 exacta con `tools/decompose_prism.py`):
 
-| Instancia | Ítems | 3DNest (Egeblad et al. 2009) | Lamas-Fernández et al., 4 h | BSG_PLP mínima: media (mejor) |
+| Instancia | Ítems | 3DNest (Egeblad et al. 2009) | Lamas-Fernández et al., 4 h | BSG_PLP (versión por defecto actual): media (mejor) |
 |---|---|---|---|---|
 | Merged1 | 15 | 17.00 | 17.13 | **16.60 (16.55)** |
 | Merged2 | 30 | 21.98 | 22.06 | **21.00 (21.00)** |
@@ -222,11 +213,26 @@ exacta con `tools/decompose_prism.py`):
 | Merged4 | 60 | 27.81 | 26.47 | **24.47 (24.01)** |
 | Merged5 | 75 | 30.13 | 29.24 | **27.04 (27.00)**; completa: 26.40 |
 
+**Advertencia sobre las referencias de Stoyan 2004**: Lamas-Fernández et al. (2023) voxelizan las piezas
+sobreestimándolas (en Merged1, +15 % de volumen) y las demás referencias con geometría exacta son más débiles
+(Stoyan et al. 2004, HAPE3D); la comparación no es entre iguales. Stoyan 2005 Example3 y las Merged sí son la
+misma instancia exacta que 3DNest (Egeblad et al. 2009).
+
 Lamas-Fernández et al. (2023) usan piezas voxelizadas (algo más grandes) y reportan el mejor de 10 corridas de 1 h.
 
 Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
 
 ## Herramientas
+
+`tools/certify_solution.py instancia.json solucion.json benchs` (Python, numpy y scipy): **certificado exacto**,
+sin tolerancias. Los vértices y las traslaciones son doubles, es decir, racionales exactos; con `fractions` se
+verifica la contención y, para cada par de partes cercanas, un eje separador (normales de las caras y productos
+cruz de aristas, en racionales) con `max_A n·a <= min_B n·b`. Si falla, informa la violación exacta. Las piezas que
+se tocan exactamente (p. ej., una fila que llena el ancho del contenedor) pueden no tener posiciones de contacto
+representables en doubles; la separación final con margen lo evita cuando hay holgura.
+
+`tools/decompose_prism.py benchs pieza.stl ...`: descomposición convexa exacta de piezas prismáticas (extrusión de
+un polígono); escribe `benchs/decompositions/<pieza>.obj` y verifica que el volumen de las partes sea el de la malla.
 
 `tools/check_solution.py instancia.json solucion.json benchs [eps]` (Python, numpy y scipy): verificación
 independiente para piezas convexas o uniones de convexos (partes leídas de `benchs/decompositions` o envolvente

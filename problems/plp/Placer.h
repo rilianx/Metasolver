@@ -119,8 +119,11 @@ public:
 	 * (|t_i - t_i^0| <= delta por eje) se fija una faceta del NFP: n.(t_i - t_j) >= d.
 	 * Se repite (eligiendo de nuevo las facetas) mientras la altura baje.
 	 * Retorna la nueva altura. Las posiciones se actualizan solo si la solucion es factible.
+	 * margin > 0: n.(t_i - t_j) >= d + margin (una iteracion): deja una separacion real entre las piezas cercanas,
+	 * mayor que las tolerancias del LP, para que la solucion se pueda certificar en aritmetica exacta.
 	 */
-	double compact(const std::vector<int>& pieces, std::vector<Vec3>& t, class LPBackend& lp, int max_iter=30);
+	double compact(const std::vector<int>& pieces, std::vector<Vec3>& t, class LPBackend& lp, int max_iter=30,
+			double margin=0, bool* applied=NULL);
 
 	/**
 	 * Separacion por LP con altura fija H (las posiciones t pueden tener solapamientos).
@@ -157,14 +160,9 @@ public:
 	 * mult: pesos multiplicativos (Gardeyn et al. 2025, sparrow): en un minimo local el peso m_ij = 1 + w_ij de un par
 	 * solapado se multiplica por 1.2 + 0.8*pen_ij/max pen y el de los demas pares decae (x0.95, minimo 1); si no,
 	 * se suma 1 al peso de los pares solapados.
-	 * strike_iter > 0: se guarda la mejor disposicion (menor penetracion total sin pesos); tras strike_iter pasadas
-	 * sin mejorarla se vuelve a ella (strike) y tras max_strikes se termina. Al fallar, t queda en la mejor disposicion.
-	 * fls: busqueda local rapida; una pieza se desactiva cuando sus movimientos no mejoran y se activa cuando una pieza
-	 * que la solapa (antes o despues) se mueve; el minimo local es cuando no quedan piezas solapadas activas.
 	 */
 	bool minimize_overlap(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, int max_iter,
-			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng, bool mult=false,
-			int strike_iter=0, int max_strikes=3, bool fls=false);
+			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng, bool mult=true);
 
 	/**
 	 * Intercambio de las piezas i y j (Imamichi et al. 2009; Gardeyn et al. 2025): cada una toma el centro de la caja
