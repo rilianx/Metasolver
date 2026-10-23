@@ -313,14 +313,15 @@ geometry of 3DNest (Stoyan 2005 Examples 2--3 and Merged1--5), the method obtain
 cases; the exception is Stoyan 2005 Example 2 (19.13 versus 19.01). The improvement grows with the size of the
 instance: on Merged3--5 our best heights are \prov{8--9\%} below the best known values, obtained by the
 voxel VNS with the finest resolution and four hours. On Stoyan 2004, the method improves the exact reference by
-a wide margin and the voxel heights on three of four instances.
+a wide margin, and on Example 2 it reaches the optimum.
 
 \begin{table}[t]
 \centering\small
 \caption{Heights (lower is better). Exact: 3DNest \citep{egeblad2009} (best and mean of 10 runs of 600 s),
 optimum of \citet{tollenaere2026} for Stoyan 2005 Example 1, and \citet{stoyan2004} (St04). Voxels: VNS of
 \citet{lamas2023} (best: standard resolution and 10 runs of 1 h for Stoyan, extra-fine resolution and 4 h for
-Merged; mean: standard resolution). Ours: mean (best) of 10 seeds, 120 s.}
+Merged; mean: standard resolution). Ours: mean (best) of 10 seeds, 120 s. $^*$Optimal (equal to the lower bound
+$H_0$). $^\dagger$Below the height of the tallest piece (29), see the text.}
 \label{tab:results}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -331,7 +332,7 @@ Instance & $n$ & best & mean & best & mean & Ours\\
 Stoyan 2005 Ex1 & 7 & 17.46 (opt.) & -- & -- & -- & \prov{17.48 (17.46)}\\
 Stoyan 2005 Ex2 & 12 & \textbf{19.01} & 19.83 & 21.23 & 21.70 & \prov{19.13 (19.13)}\\
 Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \prov{\textbf{27.52 (27.00)}}\\
-Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & \textbf{28.47} & 29.40 & \prov{29.00 (29.00)}\\
+Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & 28.47$^\dagger$ & 29.40 & \prov{\textbf{29.00 (29.00)}}$^*$\\
 Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \prov{\textbf{40.15 (40.00)}}\\
 Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \prov{\textbf{52.69 (50.91)}}\\
 Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \prov{\textbf{67.21 (66.54)}}\\
@@ -344,7 +345,9 @@ Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \prov{\textbf{27.04 (27.00)}}\\
 \end{tabular}
 \end{table}
 
-Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
+On Stoyan 2004 Example 2 our height, 29, equals the lower bound $H_0$ given by the tallest piece, so it is
+optimal; the height of 28.47 reported by \citet{lamas2023} is below the height of that piece, which indicates that
+their voxel instance differs from the original geometry. Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
 of pieces \citep{liu2015}. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
