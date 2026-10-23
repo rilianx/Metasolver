@@ -108,6 +108,8 @@ static bool fits(const BoxShape& box, const ULD& u){
 static vector<ULD> ulds, ulds_sub;
 static vector<int> available;
 static bool use_substructure=false;
+//eleccion del siguiente ULD por la mayor utilizacion entre los candidatos (--select_util)
+static bool select_util=false;
 //todos los espacios anclados en el origen (la carga queda agrupada y se puede centrar)
 static bool origin_only=true;
 //ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
@@ -122,7 +124,7 @@ static int uld_index(const ULD& u){
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<int>& left){
+static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=NULL){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
@@ -144,6 +146,7 @@ static const ULD* select_uld(const vector<int>& left){
 			if(nf==m) candidate=true;
 		}
 		if(!candidate) continue;
+		if(cands) cands->push_back(&ulds[u]);
 		if(vol>best_vol || (vol==best_vol && ulds[u].volume>best->volume)){ best=&ulds[u]; best_vol=vol; }
 	}
 	return best;
@@ -550,6 +553,7 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
+	args::Flag _select_util(parser, "select_util", "Select the next ULD type by loading every candidate type (Hessler et al.) and keeping the best utilization", {"select_util"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -615,6 +619,7 @@ int main(int argc, char** argv){
 	}
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
+	select_util = _select_util;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -639,10 +644,19 @@ int main(int argc, char** argv){
 	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
-		const ULD* u = select_uld(left);
+		vector<const ULD*> cands;
+		const ULD* u = select_uld(left, &cands);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
+		//con --select_util: se carga cada tipo candidato y se elige la carga de mayor valor
+		//(utilizacion penalizada por el CoG)
+		if(select_util)
+			for(const ULD* c : cands){
+				if(c==u) continue;
+				Load ld2 = load(*c, left, P);
+				if(ld2.feasible && ld2.value > ld.value){ ld=ld2; u=c; }
+			}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
