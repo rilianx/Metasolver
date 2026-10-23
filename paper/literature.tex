@@ -17,7 +17,9 @@ and CoG constraints, and solved small instances with a commercial solver. To sol
 instances, \citet{Paquay2018a} proposed three MIP-based constructive heuristics (relax-and-fix,
 insert-and-fix and fractional relax-and-fix), and \citet{Paquay2018b} a tailored two-phase
 constructive heuristic: the first phase packs the boxes into identical bins with an extension of
-the extreme points, and the second one deals with the several ULD types. \citet{Hessler2025}
+the extreme points, and the second one deals with the several ULD types; if necessary, the weight distribution of
+the best loading is then improved in a post-processing step with shift and jump operators that
+move or repack boxes. \citet{Hessler2025}
 extended the problem with the ULD edge, the substructure and the padding material, and proposed a
 randomized greedy search (RGS). Each ULD is loaded by repeatedly calling an insertion heuristic
 with several sorting criteria of the boxes and a random perturbation of the order; the
@@ -37,8 +39,8 @@ Constraints on the CoG of the load arise in container loading \citep{Davies1999}
 loading and in air cargo \citep{Chan2006,Paquay2016}, and they have also been studied in the
 three-dimensional knapsack problem \citep{Baldi2012} and in the load-balanced bin packing
 problem \citep{Trivella2016}. Most heuristics handle them in a post-processing step, for
-instance by rearranging parts of the load after the packing has been built
-\citep{Davies1999}, or with a score that trades the weight balance against the volume
+instance by reordering and mirroring the walls of the load after the packing has been built
+\citep{Davies1999} or by shifting and repacking boxes \citep{Paquay2018b}, or with a score that trades the weight balance against the volume
 utilization \citep{Hessler2025}. In our algorithm the CoG is taken into account during the
 construction of every solution, in the evaluation of the blocks and in the value of the partial
 solutions, and the load is also translated at the end.
@@ -59,7 +61,8 @@ algorithms that place \emph{blocks} of boxes instead of single boxes:
 partial solution (BSG). \citet{Araya2017} introduced the VCS function to evaluate the blocks,
 which combines the volume of the block, its contact surface with the placed boxes and the
 container, the volume that the block makes unusable in the free space, and the number of boxes,
-and \citet{Araya2020} extended BSG to a biobjective container loading problem.
+and \citet{Araya2020} extended BSG to a biobjective container loading problem that also
+maximizes the profit of the loaded boxes.
 \citet{Hessler2025} also tested the RGS on the container loading instances of
 \citet{Bischoff1995} and reported that it lags behind BSG with VCS \citep{Araya2017}, which they
 attribute to the much larger number of boxes per container in those instances. To the best of

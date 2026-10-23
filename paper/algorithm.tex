@@ -15,7 +15,7 @@ multi-ULD framework.
 
 \paragraph{Blocks.}
 A block is a cuboid arrangement of boxes that is placed as a unit. Before loading a ULD, a set
-of blocks is generated from the boxes still available, as in \citet{Araya2017}: the blocks of
+of blocks is generated from the boxes still available, as in \citet{Fanslau2010} and \citet{Araya2014}: the blocks of
 one box are the boxes in their allowed orientations, and new blocks are obtained by joining two
 existing blocks along the $x$, $y$ or $z$ axis, so that every block has a guillotine structure.
 A joined block is kept only if its boxes are available, it fits in the bounding box of the ULD,
@@ -91,7 +91,8 @@ block is placed. Each ULD is loaded twice, with and without the substructure, an
 the two loadings is kept.
 
 \paragraph{Support and fragility.}
-The blocks are generated so that the boxes inside a block are fully supported: two blocks are
+As in the full support variant of BSG \citep{Araya2017}, the blocks are generated so that the
+boxes inside a block are fully supported: two blocks are
 joined along $z$ only if the lower block has a complete top face without fragile boxes and the
 upper block fits on it. Then, only the boxes at the bottom of a block have to be checked when
 the block is placed. A block is placed on the base of the selected space, and it is feasible if
