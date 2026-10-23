@@ -206,8 +206,10 @@ esas soluciones están en `results/solutions/`, verificadas con `PLP_check` y `t
 | Stoyan 2004 Example1 | 25 | — | 52.28 (52.00) | 51.47 |
 | Stoyan 2004 Example2 | 20 | 28.47 (Lamas-Fernández et al. 2023) | 29.00 (29.00) | 29.00 |
 | Stoyan 2004 Example3 | 30 | 41.30 (Lamas-Fernández et al. 2023) | **39.17 (38.93)** | **38.93** |
-| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | **54.60 (53.39)** | **53.12** |
-| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **67.75 (66.10)** | **65.50** |
+| Stoyan 2004 Example4 | 40 | 54.83 (Lamas-Fernández et al. 2023) | **54.60 (53.39)** | **52.64** |
+| Stoyan 2004 Example5 | 50 | 72.33 (Lamas-Fernández et al. 2023) | **67.75 (66.10)** | **64.20** |
+
+Ablación de los componentes (la versión mínima rinde igual): `results/ablacion.md`.
 
 Lamas-Fernández et al. (2023) usan piezas voxelizadas (algo más grandes) y reportan el mejor de 10 corridas de 1 h.
 
