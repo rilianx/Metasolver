@@ -1,0 +1,250 @@
+% Borrador de la seccion de experimentos (BSG para carga aerea en ULDs).
+% Requiere: booktabs, multirow, siunitx (opcional). \todo{...} marca lo pendiente.
+\providecommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\section{Computational experiments}
+\label{sec:experiments}
+
+This section evaluates the proposed algorithm on the benchmark of
+\citet{Paquay2018b} and on the two adapted variants introduced by \citet{Hessler2025}, and
+compares it instance by instance with the randomized greedy search (RGS) of
+\citet{Hessler2025}, which, to the best of our knowledge, reports the best results on these
+instances. Section~\ref{sec:exp-setup} describes the instances, the implementation, the
+parameter tuning and the evaluation protocol. Section~\ref{sec:exp-results} reports the main
+results, Section~\ref{sec:exp-bound} compares them with a lower bound,
+Section~\ref{sec:exp-time} analyzes the running time, Section~\ref{sec:exp-ablation} studies
+the contribution of each component and Section~\ref{sec:exp-tradeoff} the trade-off between the
+number of ULDs and the weight distribution.
+
+\subsection{Experimental setup}
+\label{sec:exp-setup}
+
+\paragraph{Instances.}
+We use the 300 final instances of \citet{Paquay2018b}: ten groups of 30 instances with
+$|I| \in \{10, 20, \dots, 100\}$ boxes sampled from a real set of 562 boxes, highly heterogeneous,
+with weights, allowed vertical orientations and fragile (non-stackable) boxes. Six ULD types
+of a Boeing 777 are available in unlimited number: three lower-deck containers (types 1--3,
+with up to two bottom corners cut to fit the fuselage) and three main-deck pallets and
+containers (types 4--6, with up to two top corners cut). Each ULD type has a weight capacity and
+a maximum deviation of the center of gravity (CoG) from its geometric center in the length and
+width directions, and a maximum height of the CoG \citep{Paquay2016}.
+Following \citet{Hessler2025}, we consider three settings:
+\begin{itemize}
+\item \textbf{Paquay}: the original instances. A box is supported if its four bottom corners
+	rest on non-fragile boxes or on the floor, there is no padding material, and the allowed
+	CoG deviations are those of the instance file.
+\item \textbf{Adapted}: the ULD floor has an edge of width $e = 10$\,mm for the cargo net locks,
+	on which no box can be loaded below the height $\delta = 10$\,mm; a substructure of height
+	$\delta$ can be used to raise the floor. A box is supported if its four bottom corners are
+	supported or if part of its base is directly supported and at least 90\% of its base is
+	supported directly or by padding material of height at most 10\,mm. The allowed CoG
+	deviation is 10\% of the half length and half width of the ULD. These are the default
+	problem parameters of \citet[Table~2]{Hessler2025}.
+\item \textbf{One}: the adapted instances with only one ULD of each type, so that some boxes may
+	remain unloaded. Solutions are compared lexicographically: first the number of loaded boxes,
+	then the number of ULDs.
+\end{itemize}
+In the first two settings all the boxes must be loaded and the objective is to minimize the
+number of ULDs.
+
+\paragraph{Implementation.}
+The algorithm is implemented in C++ (compiled with g++ 13.3, \texttt{-O3}) and runs on a single
+thread of an Intel Xeon processor at 2.80\,GHz with 15\,GB of RAM.
+\todo{dar el modelo exacto del procesador y un benchmark de un nucleo para comparar con el
+Apple M2 Pro de \citet{Hessler2025}.}
+The time limit $t$ is the search time per ULD (excluding block generation); we report results
+for $t = 0.1$\,s and $t = 1$\,s. The code, the instances, the solutions and the scripts that
+produce all the tables are available at \todo{URL del repositorio}.
+
+\paragraph{Parameter tuning.}
+The parameters of the algorithm were tuned once with irace \citep{LopezIbanez2016} on a
+separate training set and are used unchanged in the three settings and for both time limits.
+The training set consists of 150 preliminary instances of \citet{Paquay2018b} (30 instances
+with 30, 40, 50, 60 and 100 boxes), disjoint from the final ones, in the Paquay setting with
+$t = 0.1$\,s and a budget of 3000 runs. The cost of a run is the number of ULDs plus five times
+the number of ULDs whose CoG is out of range, plus $(1 - u)/2$, where $u$ is the total
+utilization, to break ties in favour of smaller ULDs. Table~\ref{tab:params} lists the tuned
+parameters.
+
+\begin{table}[htbp]
+\centering
+\caption{Parameters tuned with irace (training instances, Paquay setting, $t = 0.1$\,s).}
+\label{tab:params}
+\begin{tabular}{llll}
+\toprule
+Parameter & Description & Range & Value \\
+\midrule
+$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 12.66 \\
+$\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 0.599 \\
+\texttt{max\_bl} & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 500 \\
+$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 1.234 \\
+$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 0.239 \\
+$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.224 \\
+$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.057 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Validation and comparison.}
+Every solution is written to a file (position and orientation of each box) and checked by an
+independent validator, which does not share code with the solver: each box is loaded at most
+once, in an allowed orientation, inside its ULD and its cuts, outside the floor edge below
+$\delta$, without overlapping other boxes, supported according to the setting and not on top
+of a fragile box, and the weight capacity of each ULD is respected. The validator also counts
+the ULDs whose CoG is out of the allowed deviation in the length or width direction (CoG$_{xy}$)
+and above the maximum height (CoG$_z$, a constraint of \citet{Paquay2016} that
+\citet{Hessler2025} do not consider). All the 9000 solutions reported in this section are
+feasible.
+The comparison with \citet{Hessler2025} uses their instance-by-instance results (Tables 8, 10
+and 12 of their online appendix). For each instance we count whether our solution is better
+(more boxes loaded or, with the same boxes, fewer ULDs), equal or worse, and we test the
+difference in the number of ULDs with the Wilcoxon signed-rank test. Each configuration is
+run five times; we report the mean and the standard deviation.
+
+\subsection{Results}
+\label{sec:exp-results}
+
+Table~\ref{tab:results} summarizes the results. In the Paquay setting, our algorithm uses
+614.8 ULDs on average with $t = 0.1$\,s and 595.4 with $t = 1$\,s, against 708 for the RGS of
+\citet{Hessler2025} and 1010 for the two-phase heuristic of \citet{Paquay2018b}, a reduction of
+13.2\% and 15.9\% with respect to the RGS. It is better in 93 and 114 instances, respectively,
+and worse in at most one. In the adapted setting, it uses 591.0 and 572.6 ULDs against 653
+(9.5\% and 12.3\% fewer), and it is never worse. In both settings the differences are highly
+significant ($p < 10^{-14}$). Moreover, almost no ULD violates the CoG constraints (at most two
+in 300 instances), whereas 11.2\% (Paquay) and 7.2\% (adapted) of the ULDs of the RGS have the
+CoG out of range.
+
+In the setting with one ULD of each type, our algorithm uses 698.0 and 663.2 ULDs against 729,
+but leaves 26--27 boxes unloaded against 24 (out of 16\,500). It is better in 45 and 76
+instances and worse in 19 and 16. We attribute this to two factors: the parameters were tuned
+in the Paquay setting only, and the RGS gives the same importance to the weight balance and to
+the volume utilization in this setting ($I_w = 0.5$), which allows it to load more boxes at the
+price of 10.1\% of ULDs with the CoG out of range (Section~\ref{sec:exp-tradeoff}).
+
+With $t = 1$\,s the results are almost deterministic (standard deviation at most 0.5 ULDs),
+because in most ULDs the search ends before the time limit.
+
+\begin{table}[htbp]
+\centering
+\caption{Results on the 300 final instances (mean $\pm$ standard deviation over five runs).
+Better/worse: number of instances in which our solution is better/worse than the RGS of
+\citet{Hessler2025}. CoG$_{xy}$, CoG$_z$: number of ULDs with the CoG out of range. Time: mean
+time per instance (all ULDs).}
+\label{tab:results}
+\begin{tabular}{llrrrrrr}
+\toprule
+Setting & Method & ULDs & Unloaded & Better/worse & CoG$_{xy}$ & CoG$_z$ & Time (s) \\
+\midrule
+\multirow{4}{*}{Paquay}
+ & \citet{Paquay2018b} & 1010 & 0 & & 12.9\% & -- & $\le 12$ \\
+ & RGS \citep{Hessler2025} & 708 & 0 & & 11.2\% & -- & $\le 0.5$ \\
+ & BSG, $t = 0.1$\,s & 614.8 $\pm$ 0.8 & 0 & 93.2 / 0 & 0 & 0 & 0.60 \\
+ & BSG, $t = 1$\,s & 595.4 $\pm$ 0.5 & 0 & 113.6 / 1 & 1 & 0 & 5.4 \\
+\midrule
+\multirow{3}{*}{Adapted}
+ & RGS \citep{Hessler2025} & 653 & 0 & & 7.2\% & -- & $\le 1.3$ \\
+ & BSG, $t = 0.1$\,s & 591.0 $\pm$ 0.7 & 0 & 62.0 / 0 & 1 & 0 & 1.1 \\
+ & BSG, $t = 1$\,s & 572.6 $\pm$ 0.5 & 0 & 80.4 / 0 & 2 & 0 & 10.2 \\
+\midrule
+\multirow{3}{*}{One}
+ & RGS \citep{Hessler2025} & 729 & 24 & & 10.1\% & -- & $\le 1.1$ \\
+ & BSG, $t = 0.1$\,s & 698.0 $\pm$ 1.2 & 26.0 $\pm$ 1.4 & 45.2 / 18.8 & 3 & 0.8 & 1.5 \\
+ & BSG, $t = 1$\,s & 663.2 $\pm$ 0.4 & 27.0 $\pm$ 0.0 & 76.2 / 16.2 & 4 & 1 & 12.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\todo{tabla por grupo de tamano ($|I| = 10, \dots, 100$): ULDs y utilizacion mediana, como la
+Tabla 6 de \citet{Hessler2025}; costo total y volumen total de los ULDs.}
+
+\subsection{Comparison with a lower bound}
+\label{sec:exp-bound}
+
+A simple lower bound on the number of ULDs is the maximum of the total volume of the boxes
+divided by the volume of the largest ULD, the total weight divided by the largest weight
+capacity, and the size of a clique of pairwise incompatible boxes (two boxes are incompatible
+if they cannot be placed together in the bounding box of any ULD type). In these instances the
+bound is always given by the volume. Our solutions reach the bound, and are therefore optimal,
+in 143 ($t = 0.1$\,s) and 160 ($t = 1$\,s) of the 300 instances of the Paquay setting, against
+80 for the RGS. In the remaining instances our solutions use at most two ULDs more than the
+bound, but the bound is weak: it assumes that the boxes fill the largest ULD completely,
+whereas the non-final ULDs of our solutions are about 70\% full.
+\todo{cota mas fuerte o resolver las instancias pequenas con el modelo de \citet{Paquay2016}.}
+
+\subsection{Running time}
+\label{sec:exp-time}
+
+\citet{Hessler2025} solve each instance in at most 0.5\,s (Paquay setting) on an Apple M2 Pro.
+Our algorithm needs 0.60\,s per instance on average with $t = 0.1$\,s, on a different machine.
+To compare the methods at similar running times, Figure~\ref{fig:time} shows the number of ULDs
+as a function of the time limit per ULD. With the version of the algorithm described in a
+preliminary experiment, $t = 0.02$\,s (0.16\,s per instance on average) already yields 661 ULDs,
+7\% fewer than the RGS.
+\todo{repetir la curva ($t \in \{0.02, 0.05, 0.1, 0.2, 0.5, 1, 2\}$\,s) con la version final y
+normalizar el tiempo con un benchmark de un nucleo.}
+
+\begin{figure}[htbp]
+\centering
+\todo{figura: ULDs (eje y) vs. tiempo medio por instancia (eje x, log), con la linea horizontal
+de \citet{Hessler2025} (708) y de \citet{Paquay2018b} (1010).}
+\caption{Number of ULDs (Paquay setting) as a function of the mean time per instance.}
+\label{fig:time}
+\end{figure}
+
+\subsection{Contribution of the components}
+\label{sec:exp-ablation}
+
+Table~\ref{tab:ablation} reports the results when one component of the algorithm is removed
+($t = 0.1$\,s, one run). The three components that handle the CoG are essential for the weight
+distribution: without the penalty in the value of the solutions, the number of ULDs decreases
+slightly but 178--349 ULDs have the CoG out of range; without the translation of the load the
+CoG is out of range in 81--146 ULDs, and without the grouped reload in 20--29 ULDs (and the
+number of ULDs increases by 2--25). The penalty of the CoG in the evaluation of the blocks
+saves 4--10 ULDs without increasing the violations, the elimination of ULDs saves 4--13 ULDs,
+and the substructure saves 16--24 ULDs in the adapted settings. Removing all of them except the
+penalty and the translation increases the number of ULDs by 12 (Paquay), 37 (adapted) and 78
+(one).
+
+\begin{table}[htbp]
+\centering
+\caption{Ablation ($t = 0.1$\,s, one run): number of ULDs and number of ULDs with the CoG out
+of range in the length or width direction (in the setting \emph{One}, also the number of
+unloaded boxes).}
+\label{tab:ablation}
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{2}{c}{Paquay} & \multicolumn{2}{c}{Adapted} & \multicolumn{2}{c}{One} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Without & ULDs & CoG$_{xy}$ & ULDs & CoG$_{xy}$ & ULDs (unloaded) & CoG$_{xy}$ \\
+\midrule
+-- (complete algorithm) & 614 & 0 & 590 & 1 & 699 (25) & 3 \\
+CoG in the evaluation of the blocks & 621 & 1 & 600 & 4 & 703 (24) & 3 \\
+CoG penalty in the value & 610 & 178 & 589 & 300 & 674 (13) & 349 \\
+translation of the load & 618 & 81 & 597 & 85 & 706 (22) & 146 \\
+grouped reload & 624 & 20 & 592 & 29 & 724 (26) & 19 \\
+elimination of ULDs & 618 & 0 & 595 & 1 & 712 (24) & 3 \\
+substructure & -- & -- & 606 & 2 & 723 (24) & 4 \\
+all except penalty and translation & 626 & 21 & 627 & 54 & 777 (34) & 44 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Number of ULDs versus weight distribution}
+\label{sec:exp-tradeoff}
+
+The two methods treat the CoG differently: \citet{Hessler2025} combine the volume utilization
+and the weight balance in the score of a solution with weights $1 - I_w$ and $I_w$, with
+$I_w = 0.5$ in the adapted settings, whereas our penalty $\lambda$ makes the CoG almost a hard
+constraint. As the ablation shows, relaxing it reduces the number of ULDs and of unloaded boxes
+at the price of many CoG violations. To compare the methods independently of this choice,
+Figure~\ref{fig:tradeoff} shows the number of ULDs (and of unloaded boxes) against the
+percentage of ULDs with the CoG out of range for several values of $\lambda$.
+\todo{barrer $\lambda \in \{0, 0.5, 1, 2, 5, 12.66, 30\}$ en los tres escenarios y ubicar el
+punto de \citet{Hessler2025}.}
+
+\begin{figure}[htbp]
+\centering
+\todo{figura: ULDs vs. porcentaje de ULDs con el CoG fuera de rango, una curva por escenario.}
+\caption{Trade-off between the number of ULDs and the weight distribution.}
+\label{fig:tradeoff}
+\end{figure}
