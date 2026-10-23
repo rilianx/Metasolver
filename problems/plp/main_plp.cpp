@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <random>
+#include <algorithm>
 #include "args.hxx"
 #include "plpState.h"
 #include "LPBackend.h"
@@ -31,6 +32,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _beams(parser, "int", "Initial number of beams. Default: 4", {"beams"});
 	args::Flag _no_separate(parser, "no_separate", "Fixed height: do not try the LP separation (requires ibex) before the BSG repair", {"no_separate"});
 	args::ValueFlag<double> _sep_step(parser, "double", "Initial height decrease of the LP separation phase (proportion). Default: 0.01", {"sep_step"});
+	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
 	args::ValueFlag<int> _sep_iter(parser, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
@@ -184,6 +186,7 @@ int main(int argc, char** argv){
 		double sep_step = (_sep_step)? _sep_step.Get() : 0.01;
 		bool need_sep = true;
 		int max_kicks = (_kicks)? _kicks.Get() : 30;
+		int kick_size = (_kick_size)? _kick_size.Get() : 1;
 		mt19937 rng((_seed)? _seed.Get() : 0);
 		while(!_greedy && strip_time < 1.0 && elapsed() < maxtime && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
@@ -240,13 +243,20 @@ int main(int argc, char** argv){
 					for(const Placement& p : S.items) ts.push_back(p.t);
 					hc = max(lb, H*(1-sep_step));
 					clamp(ts, hc);
+					//se reinsertan entre 1 y kick_size piezas distintas, una tras otra
 					uniform_int_distribution<int> pick(0, n-1);
-					int a = pick(rng);
-					if(!placer.reinsert(ps, ts, a, hc)){
-						int b = pick(rng);
-						for(int k=0; k<20 && ps[a]==ps[b]; k++) b = pick(rng);
-						if(ps[a]!=ps[b]) swap(ts[a], ts[b]);
+					int nk = uniform_int_distribution<int>(1, max(1, min(kick_size, n)))(rng);
+					vector<int> chosen;
+					while((int)chosen.size() < nk){
+						int a = pick(rng);
+						if(find(chosen.begin(), chosen.end(), a)==chosen.end()) chosen.push_back(a);
 					}
+					for(int a : chosen)
+						if(!placer.reinsert(ps, ts, a, hc) && nk==1){
+							int b = pick(rng);
+							for(int k=0; k<20 && ps[a]==ps[b]; k++) b = pick(rng);
+							if(ps[a]!=ps[b]) swap(ts[a], ts[b]);
+						}
 					weights.clear();
 					hc = max(lb, H*(1-sep_step));
 					clamp(ts, hc);

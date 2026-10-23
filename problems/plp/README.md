@@ -143,7 +143,8 @@ Metodología (2D) en la que se basa la compactación por LP:
 * **Oscilación estratégica y kicks** (fase de separación): si la separación no elimina el solapamiento, se sube
   la altura un cuarto del paso y se sigue desde la solución solapada (los pesos de la búsqueda local guiada
   persisten). Cuando la altura vuelve a la de la mejor solución, kick: desde la mejor solución se reinserta una
-  pieza al azar en el espacio libre (o se intercambian dos piezas de distinto tipo). Tras `--kicks` (30) kicks
+  pieza al azar en el espacio libre (o se intercambian dos piezas de distinto tipo); con `--kick_size k` se
+  reinsertan entre 1 y k piezas. Tras `--kicks` (30) kicks
   seguidos sin mejora se intenta la reparación con BSG y luego se vuelve a la oscilación, hasta agotar el tiempo.
 * Todas las soluciones se verifican con `Solution::verify`.
 
@@ -197,9 +198,9 @@ Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
 
 ## Herramientas
 
-`tools/check_convex.py instancia.json solucion.json benchs [eps]` (Python, numpy y scipy): verificación
-independiente para piezas convexas (envolvente de todos los vértices del OBJ y un LP por par de piezas para el
-punto más profundo de la intersección). Detectó el error de `polytope7`, que `PLP_check` no podía ver porque
+`tools/check_solution.py instancia.json solucion.json benchs [eps]` (Python, numpy y scipy): verificación
+independiente para piezas convexas o uniones de convexos (partes leídas de `benchs/decompositions` o envolvente
+de todos los vértices del OBJ; un LP por par de partes para el punto más profundo de la intersección). Detectó el error de `polytope7`, que `PLP_check` no podía ver porque
 compartía la lectura de las mallas.
 
 ```
