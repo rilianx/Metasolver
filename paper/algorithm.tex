@@ -29,11 +29,16 @@ blocks that form it, which allows us to evaluate the CoG of a load without visit
 The free space of the ULD is represented by the set of maximal free spaces, the largest
 cuboids that do not intersect the placed blocks \citep{Parreno2008}. When a block is placed, the
 free spaces that intersect it are replaced by their maximal parts outside the block, and the
-spaces too small for any remaining box are discarded. As in \citet{Araya2014}, each space is
-anchored at its corner closest to a corner of the ULD, and the next space to fill is the one
-whose anchor corner is closest (in Manhattan distance) to the corresponding corner of the ULD,
-with ties broken by the larger volume. An action places a block that fits in this space at its
-anchor corner, which may be modified as explained in Section~\ref{sec:alg-uld}. A state of the
+spaces too small for any remaining box are discarded. In \citet{Araya2014}, each space is anchored at its corner
+closest to a corner of the container, and the next space to fill is the one whose anchor corner
+is closest (in Manhattan distance) to the corresponding corner of the container, so that the
+load grows from all the corners towards the center. Here, instead, every space is anchored at
+its corner closest to the origin of the ULD and the next space is the one closest to the
+origin, so that the load grows from one corner and stays grouped: a grouped load leaves room to
+translate it, which is needed to center its CoG (Section~\ref{sec:alg-cog}), and when it does
+not fill the ULD it is not spread against several walls. Ties are broken by the larger volume.
+An action places a block that fits in the selected space at its anchor corner, which may be
+modified as explained in Section~\ref{sec:alg-uld}. A state of the
 search is a partial loading of the ULD, with its free spaces and the remaining boxes.
 
 \paragraph{Evaluation of the blocks.}
@@ -112,7 +117,8 @@ because of the support, the space is discarded or, with an edge, kept dormant.
 \subsection{Center of gravity}
 \label{sec:alg-cog}
 
-The CoG constraint is taken into account in four ways.
+The CoG constraint is taken into account in three ways, besides the anchoring of the spaces at
+the origin.
 
 \paragraph{Translation of the load.}
 Once a ULD has been loaded, the whole load can be translated horizontally without changing its
@@ -153,15 +159,6 @@ parameter. The weight and the moments of the partial loading and its interval of
 translations are stored in each state, so that $\varepsilon'$ is computed in constant time for
 each candidate block.
 
-\paragraph{Grouped reload.}
-Since the spaces are anchored at the corners of the ULD closest to them, the greedy and BSG tend
-to fill the ULD from its walls towards its center. When the load does not fill the ULD, this
-can leave it spread against several walls, with little room to translate it. Therefore, if the
-CoG of the best loading is out of range, or the ULD is less than half full while boxes remain to
-be loaded, the ULD is loaded again with all the spaces anchored at the corner closest to the
-origin. The resulting load is grouped in one corner and can be translated to the center of the
-ULD. The loading with the best value \eqref{eq:value} is kept.
-
 Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 
 \begin{algorithm}[htbp]
@@ -172,13 +169,8 @@ Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 \For{$s \in \{\text{without substructure}, \text{with substructure}\}$}
 	\Comment{only if the ULD has an edge}
 	\State generate the blocks for $B$ and a ULD of type $k$ with $s$
-	\State $S \gets \textsc{BSG}(k, s, B, t)$, with spaces anchored at the closest corner
+	\State $S \gets \textsc{BSG}(k, s, B, t)$
 	\State translate $S$ to center its CoG
-	\If{$\varepsilon(S) > 0$ \textbf{or} ($u(S) < 0.5$ \textbf{and} $S$ does not contain all of $B$)}
-		\State $S' \gets \textsc{BSG}(k, s, B, t)$, with spaces anchored at the origin
-		\State translate $S'$ to center its CoG
-		\If{$v(S') > v(S)$} $S \gets S'$ \EndIf
-	\EndIf
 	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf
 \EndFor
 \State \Return $S^*$
@@ -205,22 +197,21 @@ completed with the other boxes, keeping the first ones at their positions.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 Both improvement phases rely on the same procedure, \textsc{Insert}, which inserts a pool of
-boxes into the ULDs already loaded, without adding ULDs. It applies four stages, each of which
+boxes into the ULDs already loaded, without adding ULDs. It applies three stages, each of which
 visits the ULDs in decreasing order of free volume; the new loading of a ULD is accepted if it
 loads more volume and its CoG is not out of range when the old one was not, and the boxes that
 the ULD no longer loads return to the pool:
 \begin{enumerate}
 \item \emph{Reload from scratch}: the ULD is loaded again with \textsc{LoadULD} with its boxes
 	and the boxes of the pool.
-\item \emph{Reload with fixed boxes}: the boxes of the ULD are kept at their positions and the
-	search continues with the boxes of the pool.
 \item \emph{Reload with priority}: the ULD is first loaded only with the boxes of the pool that fit
 	in its type, and the load is then completed with its own boxes and the rest of the pool. This
 	stage gives a chance to large boxes that do not fit in the free space left by the current load.
 \item \emph{Ruin and recreate} \citep{Schrimpf2000}: for $\rho \in \{0.3, 0.6, 0.9\}$, a proportion
 	$\rho$ of the loaded volume of each ULD is removed, taking the boxes with nothing on top of them
 	from the highest one down, so that the remaining load is still feasible; then the ULDs are
-	completed with the removed boxes and the pool, keeping the remaining boxes fixed. The new
+	completed with the removed boxes and the pool, keeping the remaining boxes at their
+	positions. The new
 	solution is accepted if the volume of the pool decreases, and the stage is repeated while it
 	decreases.
 \end{enumerate}

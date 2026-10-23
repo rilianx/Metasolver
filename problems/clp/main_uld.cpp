@@ -108,10 +108,10 @@ static bool fits(const BoxShape& box, const ULD& u){
 static vector<ULD> ulds, ulds_sub;
 static vector<int> available;
 static bool use_substructure=false;
-//recarga con los espacios anclados en el origen (ver load_cog)
+//todos los espacios anclados en el origen (la carga queda agrupada y se puede centrar)
+static bool origin_only=true;
+//ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
 static bool regroup=true;
-//ablacion: todos los espacios anclados en el origen siempre (sin recarga)
-static bool origin_only=false;
 
 static int uld_index(const ULD& u){
 	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
@@ -278,10 +278,10 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 }
 
 /**
- * carga el ULD u con las cajas left. Si el centro de gravedad no queda dentro del rango
- * permitido (o el ULD queda poco utilizado y quedan cajas), se repite la busqueda anclando
- * los espacios en el origen (la carga queda agrupada y se puede centrar) y se elige la mejor
- * de las dos cargas
+ * carga el ULD u con las cajas left (espacios anclados en el origen). Con --corner_anchor,
+ * si el centro de gravedad no queda dentro del rango permitido (o el ULD queda poco
+ * utilizado y quedan cajas), se repite la busqueda anclando los espacios en el origen (la
+ * carga queda agrupada y se puede centrar) y se elige la mejor de las dos cargas
  */
 static Load load_cog(const ULD& u, const vector<int>& left, const Params& P,
 		const vector<Block::PlacedBox>* fixed=NULL){
@@ -413,8 +413,6 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 
 //etapas de la insercion de cajas (ablacion)
 static bool stage_scratch=true, stage_fixed=false, stage_priority=true, stage_ruin=true;
-//ruina y reconstruccion tambien al eliminar ULDs (por defecto, solo para las cajas no cargadas)
-static bool ruin_eliminate=false;
 
 static double volume_of(const vector<int>& b){
 	double v=0;
@@ -446,11 +444,10 @@ static vector<int> by_free_volume(const vector<Load>& loads){
  *  2. con sus cajas fijas en sus posiciones y las de pool;
  *  3. con prioridad: se carga el ULD solo con las cajas de pool que caben en su tipo y se
  *     completa con sus cajas y el resto de pool;
- *  4. ruina y reconstruccion (ver ruin_recreate), mientras disminuya el volumen sin cargar
- *     (si ruin).
+ *  4. ruina y reconstruccion (ver ruin_recreate), mientras disminuya el volumen sin cargar.
  * pool queda con las cajas que no se insertaron.
  */
-static void insert(vector<Load>& loads, vector<int>& pool, const Params& P, bool ruin){
+static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 	auto with_pool=[&](const Load& ld){
 		vector<int> avail=ld.boxes;
 		for(size_t t=0; t<avail.size(); t++) avail[t]+=pool[t];
@@ -494,7 +491,7 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P, bool
 			if(improves(loads[i], ld)) take(i, ld, avail);
 		}
 
-	if(stage_ruin && ruin)
+	if(stage_ruin)
 		for(bool progress=true; progress && !none(pool); ){
 			progress=false;
 			for(double p : {0.3, 0.6, 0.9})
@@ -515,7 +512,7 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 		vector<int> pool=loads[target].boxes;
 		vector<Load> others;
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
-		insert(others, pool, P, ruin_eliminate);
+		insert(others, pool, P);
 		if(none(pool)){ loads=others; return true; }
 	}
 	return false;
@@ -545,12 +542,12 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
 	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
 	args::Flag _no_translate(parser, "no_translate", "Ablation: do not translate the load to center its center of gravity", {"no_translate"});
-	args::Flag _origin_only(parser, "origin_only", "Ablation: anchor all the spaces at the origin (no grouped reload)", {"origin_only"});
-	args::Flag _no_regroup(parser, "no_regroup", "Ablation: do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
+	args::Flag _corner_anchor(parser, "corner_anchor", "Ablation: anchor each space at its closest corner of the ULD (instead of the origin) and, if the center of gravity is out of range, load the ULD again with the spaces anchored at the origin", {"corner_anchor"});
+	args::Flag _no_regroup(parser, "no_regroup", "Ablation (with --corner_anchor): do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _no_scratch(parser, "no_scratch", "Ablation: insertion of boxes without the reload from scratch", {"no_scratch"});
 	args::Flag _fixed(parser, "fixed", "Ablation: insertion of boxes with a reload with fixed boxes", {"fixed"});
-	args::Flag _ruin_eliminate(parser, "ruin_eliminate", "Ablation: ruin and recreate also when eliminating ULDs", {"ruin_eliminate"});
+
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
@@ -618,7 +615,7 @@ int main(int argc, char** argv){
 	}
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
-	origin_only = _origin_only;
+	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
 	//con borde, el espacio sobre el borde no tiene apoyo hasta que se cargan cajas dentro de el
@@ -679,10 +676,10 @@ int main(int argc, char** argv){
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
 
-	stage_scratch=!_no_scratch; stage_fixed=_fixed; ruin_eliminate=_ruin_eliminate; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
+	stage_scratch=!_no_scratch; stage_fixed=_fixed; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
 
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
-	if(remaining()>0) insert(loads, left, P, true);
+	if(remaining()>0) insert(loads, left, P);
 
 	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros
 	if(!_no_eliminate && remaining()==0)

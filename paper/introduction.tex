@@ -46,12 +46,11 @@ following:
 	to the corner or area criterion of the problem and no box touches a fragile box. A block that
 	crosses a bevelled side of the ULD is shifted along the length of the ULD to the nearest
 	feasible position.
-\item We handle the CoG constraint in four ways: the evaluation of the blocks is penalized by
+\item We handle the CoG constraint in three ways: the evaluation of the blocks is penalized by
 	the CoG deviation that the placement would cause, the value of a solution is penalized by the
-	excess of the CoG deviation over the allowed one, the final load of each ULD is translated as
-	a whole to center its CoG, and, when the CoG is still out of range, the ULD is loaded again
-	with all the free spaces anchored at the same corner, which groups the load so that it can be
-	centered.
+	excess of the CoG deviation over the allowed one, and the final load of each ULD is translated
+	as a whole to center its CoG. To leave room for this translation, all the free spaces are
+	anchored at the corner closest to the origin of the ULD, which keeps the load grouped.
 \item We embed the single-ULD algorithm into a sequential multi-ULD framework with a
 	post-optimization phase that tries to eliminate ULDs by redistributing their boxes into the
 	other ULDs and, when the number of ULDs is limited, a ruin-and-recreate phase that inserts the
