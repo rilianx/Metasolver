@@ -122,20 +122,15 @@ Constraints:
   1 + `--cog_greedy` (default 1) * the deviation of the center of gravity after placing the
   block (and translating the load).
 
-Each ULD is loaded with a subset of the remaining boxes (`--subset_ratio`, default 2):
-the largest boxes that fit in the ULD, up to twice the volume of the ULD (0: all the boxes).
-The boxes that are not loaded return to the pool.
-
 With a limited number of ULDs (`--uld_count`), the boxes that were not loaded are inserted
-into the loaded ULDs by ruin and recreate (see below) before any ULD is eliminated.
+into the loaded ULDs before any ULD is eliminated, by ruin and recreate: a proportion (0.3,
+0.6, 0.9) of the volume of each ULD is removed (boxes with nothing on top, from the top) and
+the ULDs are loaded again keeping the remaining boxes fixed and adding the unloaded ones.
 
 After the sequential loading, the program tries to eliminate ULDs (`--no_eliminate`
 disables it): the boxes of a ULD (from the least utilized) are freed and the other ULDs
 are loaded again with their boxes and the freed ones; the boxes that are not loaded pass
-to the next ULD. The ULD is eliminated if all the freed boxes are loaded. Then, ruin and recreate (`--ruin`,
-default 0.3,0.6): the boxes of the least utilized ULD are freed, a proportion of the volume of
-each other ULD is removed (boxes with nothing on top, from the top) and the other ULDs are
-loaded again keeping the remaining boxes fixed and adding the freed ones.
+to the next ULD. The ULD is eliminated if all the freed boxes are loaded.
 
 Parameters: tuned with irace (`problems/clp/tuning`) on 150 preliminary instances of Paquay
 et al. (`benchs/ULD/training`, different from the final ones), 0.1 s per ULD, minimizing
@@ -172,7 +167,6 @@ not considered by Hessler et al.
       --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 10
       --support=[string]                corners, full or none. Default: corners
       --max_bl=[int]                    Maximum number of blocks. Default: 1000
-      --subset_ratio=[double]           Volume of the boxes given to each ULD (ratio of its volume, 0: all). Default: 2
       --no_eliminate                    Do not try to eliminate ULDs
       --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
       -o[string], --output=[string]     Write the solution to this file

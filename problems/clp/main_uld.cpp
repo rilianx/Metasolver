@@ -361,37 +361,6 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 	return false;
 }
 
-/**
- * Subconjunto de las cajas left para cargar el ULD u: las cajas que caben en u, de mayor a
- * menor volumen, hasta completar ratio veces el volumen del ULD (ratio<=0: todas).
- * Con ULDs limitados, primero las cajas que caben en menos tipos de ULD disponibles
- */
-static vector<int> select_subset(const vector<int>& left, const ULD& u, double ratio){
-	if(ratio<=0.0) return left;
-	bool limited = count(available.begin(), available.end(), -1) < (int) available.size();
-	vector<int> types, nf(left.size(), 0);
-	for(const BoxShape* b : clpState::types){
-		if(left[b->type]==0 || !fits(*b, u)) continue;
-		types.push_back(b->type);
-		if(limited)
-			for(size_t i=0; i<ulds.size(); i++) nf[b->type] += (available[i]!=0 && fits(*b, ulds[i]));
-	}
-	sort(types.begin(), types.end(), [&](int a, int b){
-		if(nf[a]!=nf[b]) return nf[a] < nf[b];
-		return clpState::types[a]->getVolume() > clpState::types[b]->getVolume(); });
-
-	vector<int> subset(left.size(), 0);
-	double vol=0.0;
-	for(int t : types){
-		for(int k=0; k<left[t] && vol < ratio*u.volume; k++){
-			subset[t]++;
-			vol += clpState::types[t]->getVolume();
-		}
-		if(vol >= ratio*u.volume) break;
-	}
-	return subset;
-}
-
 /** cajas de left que, entre los ULDs disponibles, solo caben en el tipo de u */
 static vector<int> only_in(const vector<int>& left, const ULD& u){
 	vector<int> res(left.size(), 0);
@@ -470,25 +439,23 @@ static Load ruin(const Load& ld, double p){
 }
 
 /**
- * Ruina y reconstruccion: se liberan las cajas del ULD target (si target>=0) y las cajas freed,
- * se saca la proporcion p de cada uno de los otros ULDs (ver ruin) y se reconstruyen (de mayor
- * a menor volumen libre) dejando fijas las cajas que quedaron y agregando las liberadas. Si se
- * cargan todas las cajas liberadas (o, sin target, mas volumen que antes), se acepta: se
- * elimina el ULD target y freed queda con las cajas que no se cargaron.
+ * Ruina y reconstruccion para las cajas no cargadas freed (ULDs limitados): se saca la
+ * proporcion p de cada ULD (ver ruin) y se reconstruyen (de mayor a menor volumen libre)
+ * dejando fijas las cajas que quedaron y agregando las liberadas. Se acepta si queda menos
+ * volumen sin cargar; freed queda con las cajas que no se cargaron.
  */
-static bool ruin_recreate(vector<Load>& loads, int target, vector<int>& freed, double p, const Params& P){
+static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, const Params& P){
 	vector<int> pool=freed;
-	if(target>=0) for(size_t t=0; t<pool.size(); t++) pool[t]+=loads[target].boxes[t];
 	double pool_vol0=0;
 	for(size_t t=0; t<pool.size(); t++) pool_vol0 += (double) pool[t]*clpState::types[t]->getVolume();
 
 	vector<Load> new_loads=loads;
-	vector<int> others;
-	for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(i);
-	sort(others.begin(), others.end(), [&](int a, int b){
+	vector<int> order(loads.size());
+	for(size_t i=0; i<order.size(); i++) order[i]=i;
+	sort(order.begin(), order.end(), [&](int a, int b){
 		return loads[a].uld->volume - loads[a].volume > loads[b].uld->volume - loads[b].volume; });
 
-	for(int i : others){
+	for(int i : order){
 		Load base = ruin(loads[i], p);
 		vector<int> avail=pool;
 		for(size_t t=0; t<pool.size(); t++) avail[t] += loads[i].boxes[t]-base.boxes[t];
@@ -501,9 +468,7 @@ static bool ruin_recreate(vector<Load>& loads, int target, vector<int>& freed, d
 
 	double pool_vol=0;
 	for(size_t t=0; t<pool.size(); t++) pool_vol += (double) pool[t]*clpState::types[t]->getVolume();
-	bool ok = (target>=0)? pool_vol==0 : pool_vol < pool_vol0;
-	if(!ok) return false;
-	if(target>=0) new_loads.erase(new_loads.begin()+target);
+	if(pool_vol >= pool_vol0) return false;
 	loads=new_loads;
 	freed=pool;
 	return true;
@@ -526,14 +491,12 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0196", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
-	args::ValueFlag<double> _subset_ratio(parser, "double", "Each ULD is loaded with a subset of the remaining boxes (the largest ones) whose volume is ratio times the volume of the ULD (0: all the boxes). Default: 2.331", {"subset_ratio"});
 	args::ValueFlag<long> _edge(parser, "int", "Width of the edge of the ULD floor on which loading is not allowed below the height of the vertical edge offset (Hessler et al. 2024). Default: 0", {"edge"});
 	args::ValueFlag<long> _edge_offset(parser, "int", "Vertical edge offset (with an edge, a substructure of this height can also be used). Default: 0", {"edge_offset"});
 	args::ValueFlag<double> _min_overlap(parser, "double", "Support: a box is also supported if part of its base rests on other boxes and the proportion min_overlap of its base rests on boxes or on padding (Hessler et al. 2024). Default: 0 (only the four corners)", {"min_overlap"});
 	args::ValueFlag<long> _padding(parser, "int", "Maximum height of the padding material. Default: 0", {"padding"});
 	args::ValueFlag<double> _cog_rel(parser, "double", "Maximum deviation of the center of gravity in x and y relative to the half dimensions of the ULD (Hessler et al. 2024; default: the deviations of the ULD file)", {"cog_rel"});
 	args::ValueFlag<int> _uld_count(parser, "int", "Number of available ULDs of each type. Default: unlimited", {"uld_count"});
-	args::ValueFlag<string> _ruin(parser, "string", "Proportions of the volume removed from each ULD in the ruin and recreate phase (comma separated, empty: none). Default: 0.3,0.6", {"ruin"});
 	args::Flag _no_translate(parser, "no_translate", "Ablation: do not translate the load to center its center of gravity", {"no_translate"});
 	args::Flag _no_regroup(parser, "no_regroup", "Ablation: do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
@@ -586,14 +549,7 @@ int main(int argc, char** argv){
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 5.928;
 	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 1.346;
 
-	double subset_ratio=(_subset_ratio)? _subset_ratio.Get() : 2.331;
-	vector<double> ruin_ratios, ruin_leftover={0.3, 0.6, 0.9};
-	{
-		string r=(_ruin)? _ruin.Get() : "0.3,0.6";
-		stringstream ss(r);
-		string tok;
-		while(getline(ss, tok, ',')) if(!tok.empty()) ruin_ratios.push_back(atof(tok.c_str()));
-	}
+	vector<double> ruin_ratios={0.3, 0.6, 0.9};
 
 	clpState::min_overlap=(_min_overlap)? _min_overlap.Get() : 0.0;
 	clpState::padding=(_padding)? _padding.Get() : 0;
@@ -636,7 +592,7 @@ int main(int argc, char** argv){
 		const ULD* u = select_uld(left);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
-		Load ld = load(*u, select_subset(left, *u, subset_ratio), P);
+		Load ld = load(*u, left, P);
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
@@ -655,17 +611,12 @@ int main(int argc, char** argv){
 					//se completa el ULD con las otras cajas
 					vector<int> rest=left;
 					for(size_t t=0; t<rest.size(); t++) rest[t]-=ld2.boxes[t];
-					Load ld3 = load_more(ld2, select_subset(rest, *u, subset_ratio), P);
+					Load ld3 = load_more(ld2, rest, P);
 					ld = (ld3.feasible && ld3.volume >= ld2.volume)? ld3 : ld2;
 				}
 			}
 		}
 		int n=0; for(int x : ld.boxes) n+=x;
-		//si no se cargo ninguna caja del subconjunto, se usan todas
-		if(n==0 && subset_ratio>0.0){
-			ld = load(*u, left, P);
-			for(int x : ld.boxes) n+=x;
-		}
 		if(n==0){
 			cerr << "ERROR: no box was loaded in ULD " << u->type << endl;
 			return 1;
@@ -681,23 +632,13 @@ int main(int argc, char** argv){
 	//se cargue alguna caja
 	for(bool progress=true; progress && remaining()>0; ){
 		progress=false;
-		for(double p : ruin_leftover)
-			if(remaining()>0 && ruin_recreate(loads, -1, left, p, P)) progress=true;
+		for(double p : ruin_ratios)
+			if(remaining()>0 && ruin_recreate(loads, left, p, P)) progress=true;
 	}
 
 	//si se cargaron todas las cajas, se eliminan ULDs repartiendo sus cajas en los otros
 	if(!_no_eliminate && remaining()==0)
 		while(eliminate_uld(loads, P));
-
-	//ruina y reconstruccion: eliminacion del ULD menos utilizado
-	for(double p : ruin_ratios){
-		if(remaining()>0) break;
-		while(loads.size()>1){
-			int target = min_element(loads.begin(), loads.end(), [](const Load& a, const Load& b){
-				return a.utilization() < b.utilization(); }) - loads.begin();
-			if(!ruin_recreate(loads, target, left, p, P)) break;
-		}
-	}
 
 	//se intenta recargar las cajas del ULD menos utilizado en el ULD mas pequeno posible
 	Load& worst = *min_element(loads.begin(), loads.end(),
