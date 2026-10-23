@@ -1,0 +1,413 @@
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{hyperref}
+
+% numeros provisionales (se reemplazan con la corrida final: 10 semillas, mismo tiempo, version final)
+\newcommand{\prov}[1]{\textcolor{blue}{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+
+\journal{European Journal of Operational Research}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Fast exact overlap minimization for three-dimensional irregular strip packing of polyhedra}
+
+\author[pucv]{Ignacio Araya\corref{cor1}}
+\ead{ignacio.araya@pucv.cl}
+\cortext[cor1]{Corresponding author}
+\address[pucv]{Escuela de Ingenier\'ia Inform\'atica, Pontificia Universidad Cat\'olica de Valpara\'iso, Chile}
+% TODO: coautores y afiliaciones
+
+\begin{abstract}
+We address the three-dimensional irregular strip packing problem: a set of polyhedra, possibly non-convex, must
+be placed by translation in a container with a fixed rectangular base so that the height is minimized. Pieces
+are represented exactly as unions of convex polytopes. Overlap between two convex parts is measured by the
+penetration depth of their relative position in the no-fit polytope (NFP), a quantity that, along any axis
+direction, is concave on an interval and zero outside it. Hence the position of a piece along an axis that
+minimizes its weighted overlap with all other pieces can be computed exactly by evaluating interval endpoints
+only. We embed this move in a strategic oscillation scheme with guided local search, kicks, and a global
+linear-programming compaction over NFP facets. An ablation study shows that this simple core is what matters:
+beam-search construction, pseudo-blocks, destroy-and-repair with a fixed container, and LP-based separation do
+not improve it. On the Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method
+improves the best known heights by \prov{3--9\%} and reaches in 10 seconds the utilization that the reference
+method attains in 600 seconds. It also improves the best known solutions of a classical convex instance and of
+the non-convex instances of \citet{stoyan2004}. Finally, a margin-based final compaction and dyadic rounding
+yield solutions whose feasibility is certified in exact rational arithmetic.
+\end{abstract}
+
+\begin{keyword}
+Cutting \sep Packing \sep 3D irregular packing \sep No-fit polytope \sep Guided local search \sep Linear programming
+\end{keyword}
+
+\end{frontmatter}
+
+% =====================================================================================================
+\section{Introduction}
+
+Three-dimensional irregular packing arises in additive manufacturing (packing parts in the build volume of a
+printer), in the loading of non-rectangular goods, and in the design of compact assemblies. In its open-dimension
+variant, the \emph{3D irregular strip packing problem}, a set of polyhedra must be placed without overlap inside
+a container with a fixed $W\times D$ base, and the height of the packing is to be minimized. We consider the
+translational version: pieces keep their orientation.
+
+The literature on this problem is small compared with its two-dimensional counterpart, and it is split by the
+representation of the geometry. Exact approaches use the polyhedra directly: phi-functions and nonlinear
+programming \citep{stoyan2004,stoyan2005,romanova2018}, the 3DNest local search of \citet{egeblad2009}, which
+minimizes the exact overlap volume along axis-parallel translations, constructive heuristics such as HAPE3D
+\citep{liu2015}, and, recently, mixed-integer models based on no-fit polyhedra that solve small convex instances
+to optimality \citep{tollenaere2026}. Approximate approaches discretize the pieces into voxels
+\citep{lamas2023}; voxels make overlap tests trivial and scale well, but they overestimate the pieces and the
+quality of the solutions depends on the resolution.
+
+In two dimensions, the most successful methods for irregular strip packing are overlap-minimization heuristics:
+the height (length) is decreased, the pieces are allowed to overlap, and a local search moves them until the
+overlap vanishes \citep{egeblad2007,umetani2009,imamichi2009,elkeran2013,gardeyn2025}. The key ingredients are a
+cheap and informative overlap measure, moves that can be optimized exactly or quickly, and guided local search
+(GLS) weights to escape local minima. This paper brings these ingredients to three-dimensional polyhedra with an
+exact representation.
+
+\paragraph{Contributions}
+\begin{enumerate}
+\item An exact and fast overlap-minimization move for polyhedra represented as unions of convex parts. Overlap
+is measured by the penetration depth in the NFP of each pair of convex parts; along an axis this function is
+concave on an interval and zero outside it, so the optimal position of a piece along an axis is attained at an
+interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
+\citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
+\citet{egeblad2009}.
+\item A global compaction by linear programming over NFP facets, in the spirit of \citet{gomes2006} in 2D,
+integrated in a strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and kicks.
+\item An ablation study showing which components matter. Speed of the separation is decisive, while elaborate
+construction (beam search, pseudo-blocks), destroy-and-repair, and LP separation do not help.
+\item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
+\citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest.
+\item Solutions with certified feasibility: a final compaction with soft margins and dyadic rounding produce
+layouts that are verified in exact rational arithmetic, without tolerances.
+\item An exact convex decomposition of the non-convex (prismatic) pieces of \citet{ikonen1997} used in the
+Merged instances, and the identification of inconsistencies in the public data.
+\end{enumerate}
+
+Section~\ref{sec:problem} defines the problem and the geometric tools. Section~\ref{sec:method} describes the
+algorithm, Section~\ref{sec:cert} the certification, and Section~\ref{sec:exp} the experiments.
+
+% =====================================================================================================
+\section{Problem and geometry}\label{sec:problem}
+
+\subsection{Problem}
+We are given a container base $W\times D$ and $n$ pieces $P_1,\dots,P_n$ (polyhedra, with multiplicities). Each
+piece is a union of convex polytopes, $P_i=\bigcup_{a\in\mathcal{A}_i}A_a$, expressed in a local frame where the
+minimum of its bounding box is the origin; $w_i,d_i,h_i$ denote its bounding-box dimensions. A solution is a
+vector of translations $t_i=(x_i,y_i,z_i)$ such that
+\begin{align}
+& 0\le x_i\le W-w_i,\quad 0\le y_i\le D-d_i,\quad z_i\ge 0, && i=1,\dots,n,\\
+& \operatorname{int}(P_i+t_i)\cap\operatorname{int}(P_j+t_j)=\emptyset, && i<j,
+\end{align}
+and the objective is to minimize $H=\max_i(z_i+h_i)$. A trivial lower bound is
+$H_0=\max\{\max_i h_i,\ \sum_i\operatorname{vol}(P_i)/(WD)\}$.
+
+\subsection{No-fit polytopes and penetration depth}
+For two convex parts $A$ and $B$ placed at $t_A$ and $t_B$, their interiors intersect if and only if the relative
+position $r=t_A-t_B$ lies in the interior of the no-fit polytope
+\begin{equation}
+N_{AB}=B\oplus(-A)=\operatorname{conv}\{b-a:\ a\in V(A),\ b\in V(B)\},
+\end{equation}
+where $V(\cdot)$ is the vertex set \citep{bennell2008}. We compute $N_{AB}$ once per pair of parts as the convex
+hull of the vertex differences and store it in H-representation, $N_{AB}=\{r:\ n_f\cdot r\le d_f,\ f\in F_{AB}\}$,
+with unit normals $\|n_f\|=1$.
+
+\begin{definition}
+The \emph{penetration} of $A$ and $B$ at relative position $r$ is
+$\delta_{AB}(r)=\max\{0,\ \min_{f\in F_{AB}}(d_f-n_f\cdot r)\}$.
+\end{definition}
+
+For $r$ inside $N_{AB}$, $\delta_{AB}(r)$ is the Euclidean distance from $r$ to the boundary of $N_{AB}$, i.e.,
+the length of the shortest translation that separates $A$ and $B$ (the translational penetration depth). It is
+zero if and only if the parts do not overlap. For two pieces we use
+$\delta_{ij}(t_i-t_j)=\sum_{a\in\mathcal{A}_i}\sum_{b\in\mathcal{A}_j}\delta_{ab}(t_i-t_j)$, where only pairs of parts
+whose bounding boxes intersect are evaluated.
+
+\subsection{Exact minimization along an axis}
+Let all pieces but $i$ be fixed, and let $i$ move along axis $e_k$, $t_i(s)=t_i+(s-t_{ik})e_k$, with
+$s\in[0,U_k]$ (the container limits, using the current height $H$ for the vertical axis). The weighted overlap
+of $i$ is
+\begin{equation}\label{eq:obj}
+\phi(s)=\sum_{j\ne i}w_{ij}\,\delta_{ij}\big(t_i(s)-t_j\big),
+\end{equation}
+with GLS weights $w_{ij}\ge 1$.
+
+\begin{proposition}\label{prop:axis}
+Each term $\delta_{ab}(t_i(s)-t_j)$ is zero outside an interval $(L_{ab},U_{ab})$ and concave inside it. Hence
+$\phi$ is concave on every interval between consecutive points of
+$\mathcal{B}=\{0,U_k\}\cup\{L_{ab},U_{ab}\}$, and a minimizer of $\phi$ on $[0,U_k]$ is attained at a point of
+$\mathcal{B}$.
+\end{proposition}
+\begin{proof}
+Along the line, $d_f-n_f\cdot r(s)=c_f-n_{fk}s$ is affine. The set where all of them are positive is the open
+interval $(L_{ab},U_{ab})$ with $L_{ab}=\max_{n_{fk}<0}c_f/n_{fk}$ and $U_{ab}=\min_{n_{fk}>0}c_f/n_{fk}$
+(facets with $n_{fk}=0$ only decide whether the interval is empty). Inside it, $\delta_{ab}$ is a minimum of
+affine functions, hence concave; outside it is zero. Between consecutive points of $\mathcal{B}$ every term is
+either concave or identically zero, so $\phi$ is concave there and attains its minimum at an endpoint.
+\end{proof}
+
+The move evaluates $\phi$ at the points of $\mathcal{B}$ only. With the interval of each term known, a term is
+evaluated only at the candidates inside it: sorting the candidates, each term contributes to a contiguous range
+found by binary search. Facets are stored as $(c_f,n_{fk})$ in contiguous arrays, so evaluating a term costs one
+fused multiply-add per facet. Ties are broken towards the smaller coordinate (gravity and walls).
+
+% =====================================================================================================
+\section{Algorithm}\label{sec:method}
+
+Algorithm~\ref{alg:main} summarizes the method: a greedy construction, a compaction, and a strategic oscillation
+of the height that alternates separation attempts and kicks until the time limit.
+
+\begin{algorithm}[t]
+\caption{Overview}\label{alg:main}
+$S\gets$ \textsc{Greedy}(); $S\gets$ \textsc{Compact}($S$); $H\gets H(S)$\;
+$h\gets(1-\rho)H$; $T\gets$ positions of $S$ clamped to height $h$; $w\gets 1$\;
+\While{time remains}{
+  \eIf{\textsc{MinimizeOverlap}($T,h,w$)}{
+    $T\gets$ \textsc{Compact}($T$)\;
+    \lIf{$H(T)<H$}{$S\gets T$; $H\gets H(T)$}
+    $h\gets(1-\rho)H$; $T\gets$ positions of $S$ clamped to $h$; $w\gets 1$\;
+  }{
+    $h\gets h+\rho H/4$\;
+    \If{$h\ge H$}{
+      $T\gets$ positions of $S$ clamped to $h\gets(1-\rho)H$; reinsert a random piece of $T$ (kick); $w\gets 1$\;
+    }
+  }
+}
+\textsc{SeparateWithMargin}($S$); \Return $S$\;
+\end{algorithm}
+
+\subsection{Greedy construction}
+Pieces are placed one at a time on top of the current load. For a piece, $g\times g$ starting points ($g=4$) on
+the base are lifted to the current height and each descends by a sequence of small linear programs in the three
+translation variables: for every nearby placed part one NFP facet satisfied at the current point is selected
+(the one that allows the longest step in the descent direction), and $z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$
+is minimized within a trust region; the procedure repeats until no improvement. Among all pieces and resulting
+positions, the greedy chooses the one maximizing
+$\alpha\log(V/V_{\max})-\beta z/H_0-\gamma\max(0,z+h-H_{\text{cur}})/H_0$, which favors large pieces placed low
+without increasing the height. Parameters ($\alpha=1$, $\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned
+with Optuna.
+
+\subsection{Overlap minimization}
+\textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
+axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. The pairwise penetrations are
+kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
+the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
+multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
+procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
+Weights persist along the oscillation and are reset after a successful separation or a kick.
+
+\subsection{Strategic oscillation and kicks}
+After a successful separation the target height is decreased by $\rho=1\%$ of the best height; after a failure it
+is increased by $\rho/4$ and the search continues from the overlapping layout. When the target reaches the best
+height, a kick restarts from the best solution at height $(1-\rho)H$ and reinserts a random piece at the lowest
+free position (if none exists, it swaps two pieces of different types). This scheme follows
+\citet{egeblad2009} and \citet{umetani2009}.
+
+\subsection{Global LP compaction}
+\textsc{Compact} solves a sequence of linear programs over all translations. Given the current layout, for every
+pair of parts that can touch within a trust region (each coordinate may move at most $\Delta$, half of the
+smallest piece dimension) one NFP facet $f$ satisfied by the current relative position is selected and the
+constraint $n_f\cdot(t_i-t_j)\ge d_f$ is imposed. The LP
+\begin{equation}
+\begin{aligned}
+\min\ & H+\epsilon\sum_i z_i\\
+\text{s.t.}\ & z_i+h_i\le H,\quad \|t_i-t_i^0\|_\infty\le\Delta, && i=1,\dots,n,\\
+& \text{container bounds on } t_i, && i=1,\dots,n,\\
+& n_f\cdot(t_i-t_j)\ge d_f, && \text{selected pairs of parts},
+\end{aligned}
+\end{equation}
+has a convex feasible region that contains the current layout. The facets are re-selected and the LP is
+solved again while $H$ decreases. A solution is accepted only if it is feasible (the LP solution is checked for
+bounds and overlap). Compaction alternates with a local improvement in which every piece descends again with
+the others fixed and the pieces that define the height are tried at other positions.
+
+% =====================================================================================================
+\section{Certified feasibility}\label{sec:cert}
+
+LP solvers and floating-point NFPs leave overlaps of order $10^{-14}$ between touching pieces; tolerant
+verifiers accept them, but in exact arithmetic the pieces overlap. Note that safe bounds for linear programs
+\citep{neumaier2004} certify the optimal value of the LP, not the feasibility of the point returned by the
+solver, so we certify the final layout instead.
+
+\textsc{SeparateWithMargin} solves a last compaction LP in which each pair constraint becomes
+$n_f\cdot(t_i-t_j)\ge d_f+m_k$ and each container bound $x_i+u_i\le W-w_i$ (and likewise in $y$), with slacks
+$m_k,u_i\in[0,\mu]$ ($\mu=10^{-7}$, well above the LP tolerances) that are maximized while the height is kept.
+The slacks must be soft: rows of pieces that exactly fill the width of the container leave no room for a margin.
+In those rows the contact positions are typically sums of piece dimensions, which are representable; we then
+round every coordinate to the nearest multiple of $2^{-30}$, an exact operation in binary floating point whose
+error is far smaller than $\mu$.
+
+The certificate is computed with rational arithmetic: vertices and translations are binary floating-point
+numbers, hence exact rationals. For containment all vertices are checked against the container; for every pair
+of convex parts with intersecting bounding boxes a separating axis is searched among the face normals of both
+parts and the cross products of their edges (computed exactly), accepting it if $\max_A n\cdot a\le\min_B n\cdot b$.
+\prov{In 22 test runs (11 instances, 2 seeds, 20 s) all solutions were certified; the height increases by
+$10^{-7}$--$10^{-6}$.}
+
+% =====================================================================================================
+\section{Computational experiments}\label{sec:exp}
+
+\subsection{Setting}
+The method is implemented in C++ on top of the Metasolver framework; LPs are solved with SoPlex
+\citep{wunderling1996} through the ibex library \citep{ibex}. Experiments ran on an Intel Xeon at 2.8~GHz, one
+thread per run, four runs in parallel. \prov{Each configuration was run with 3 seeds (10 in the final version).}
+
+\paragraph{Instances}
+We use the 3D instances of the ESICUP repository \citep{esicup}:
+\begin{itemize}
+\item \emph{Stoyan 2005}, Examples 1--3 (7, 12 and 25 convex pieces) \citep{stoyan2005}. In the public data, one
+piece (polytope7) has faces that use only 9 of its 10 vertices; we use its convex hull (volume 192.5), which
+matches the volume reported by \citet{egeblad2009}.
+\item \emph{Stoyan 2004}, Examples 1--5 (20--50 non-convex pieces) \citep{stoyan2004}, each defined as a union of
+convex polytopes, which we use directly as the decomposition.
+\item \emph{Merged1--5} \citep{egeblad2009}: $i$ copies of 15 pieces, the 7 convex pieces of Stoyan 2005 and the
+8 pieces of \citet{ikonen1997} scaled by 4, in a container whose base is such that a layout with 50\%
+utilization is a cube. Six Ikonen pieces are non-convex prisms; we decompose them exactly by triangulating the
+base polygon, merging triangles into convex polygons \citep{hertel1983}, and extruding (a frame is split into
+four boxes; two pieces have polygons touching at a vertex). The volumes of the parts match those of the meshes.
+\end{itemize}
+
+\paragraph{References}
+3DNest \citep{egeblad2009} uses the same exact geometry; its average and maximum utilization over 10 runs of
+600 s (one core of a 2.16~GHz Core Duo) are converted to heights. \citet{lamas2023} report best and average heights
+of a voxel VNS; their voxelization overestimates the pieces (by 15\% in volume for Merged1, as they note), so
+their heights are not directly comparable. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
+
+\subsection{Component analysis}
+Table~\ref{tab:ablation} summarizes how the method evolved and which components matter, on the seven hardest
+instances (Stoyan 2004 Examples 1--5, Stoyan 2005 Examples 2--3; 120 s, 3 seeds). The full version included a
+beam search guided by the greedy \citep{araya2014} for the construction, pseudo-blocks (pairs of pieces in a
+compact relative position placed as a single shape), a destroy-and-repair step solving a fixed-height knapsack
+variant with beam search, and LP separation. Removing all of them gives the same or better results; what
+matters is the separation and its speed.
+
+\begin{table}[t]
+\centering\small
+\caption{Mean gap of the height with respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan
+2005 Examples 2--3; 120 s, mean of 3 seeds). Negative is better.}\label{tab:ablation}
+\begin{tabular}{p{0.6\textwidth}rr}
+\toprule
+Configuration & Stoyan 2004 & Stoyan 2005\\
+\midrule
+Axis moves and LP separation, additive GLS weights (earlier version) & \prov{$+2.9\%$} & \prov{$-2.3\%$}\\
+\quad + multiplicative GLS weights & \prov{$+0.6\%$} & \prov{$-2.8\%$}\\
+\quad + 5$\times$ faster moves, 500 passes (full version) & \prov{$-2.5\%$} & \prov{$-3.3\%$}\\
+\midrule
+Full version without pseudo-blocks & \prov{$-0.8\%$} & \prov{$-3.0\%$}\\
+Full version without LP separation & \prov{$-2.0\%$} & \prov{$-3.2\%$}\\
+Full version without destroy-and-repair & \prov{$-2.6\%$} & \prov{$-3.0\%$}\\
+Full version with greedy instead of beam search & \prov{$-2.5\%$} & \prov{$-3.3\%$}\\
+\textbf{Core} (greedy, axis moves, oscillation, LP compaction) & \prov{$\mathbf{-3.5\%}$} & \prov{$-3.3\%$}\\
+Core without LP compaction & \prov{$-2.2\%$} & \prov{$-3.5\%$}\\
+\midrule
+\multicolumn{3}{p{0.9\textwidth}}{\emph{Ideas from the 2D literature that did not help (on top of the earlier version)}}\\
+Return to the best overlapping layout after 5 stalled passes \citep{gardeyn2025} & \prov{$+6.0\%$} & \prov{$-1.0\%$}\\
+Exploration without height increase, 0.5\% steps \citep{gardeyn2025} & \prov{$+4.4\%$} & \prov{$+0.4\%$}\\
+Final compression phase \citep{gardeyn2025} & \prov{$+3.7\%$} & \prov{$-1.5\%$}\\
+Swap kicks \citep{imamichi2009,gardeyn2025} & \prov{$+2.2\%$} & \prov{$-3.2\%$}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\todo{rehacer la tabla con la version final (10 semillas); las filas de la evolucion provienen de versiones
+intermedias del codigo}
+
+\subsection{Comparison with the literature}
+Table~\ref{tab:results} compares the core method with the literature. On the instances that share the exact
+geometry of 3DNest (Stoyan 2005 Examples 2--3 and Merged1--5), the method obtains lower heights in six of seven
+cases; the exception is Stoyan 2005 Example 2 (19.13 versus 19.01). The improvement grows with the size of the
+instance: on Merged3--5 our best heights are \prov{8--9\%} below the best known values, obtained by the
+voxel VNS with the finest resolution and four hours. On Stoyan 2004, the method improves the exact reference by
+a wide margin and the voxel heights on three of four instances.
+
+\begin{table}[t]
+\centering\small
+\caption{Heights (lower is better). Exact: 3DNest \citep{egeblad2009} (best and mean of 10 runs of 600 s),
+optimum of \citet{tollenaere2026} for Stoyan 2005 Example 1, and \citet{stoyan2004} (St04). Voxels: VNS of
+\citet{lamas2023} (best: standard resolution and 10 runs of 1 h for Stoyan, extra-fine resolution and 4 h for
+Merged; mean: standard resolution). Ours: mean (best) of 3 seeds, 120 s for Stoyan and 600 s for Merged.}
+\label{tab:results}
+\begin{tabular}{lrrrrrr}
+\toprule
+& & \multicolumn{2}{c}{Exact} & \multicolumn{2}{c}{Voxels} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Instance & $n$ & best & mean & best & mean & Ours\\
+\midrule
+Stoyan 2005 Ex1 & 7 & 17.46 (opt.) & -- & -- & -- & \prov{17.48 (17.46)}\\
+Stoyan 2005 Ex2 & 12 & \textbf{19.01} & 19.83 & 21.23 & 21.70 & \prov{19.13 (19.13)}\\
+Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \prov{\textbf{27.52 (27.00)}}\\
+Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & \textbf{28.47} & 29.40 & \prov{29.00 (29.00)}\\
+Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \prov{\textbf{40.15 (40.00)}}\\
+Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \prov{\textbf{52.69 (50.91)}}\\
+Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \prov{\textbf{67.21 (66.54)}}\\
+Merged1 & 15 & 17.00 & 17.45 & 17.13 & 18.67 & \prov{\textbf{16.60 (16.55)}}\\
+Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \prov{\textbf{21.00 (21.00)}}\\
+Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \prov{\textbf{22.07 (22.00)}}\\
+Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \prov{\textbf{24.47 (24.01)}}\\
+Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \prov{\textbf{27.04 (27.00)}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
+of pieces \citep{liu2015}. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
+a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
+optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/solutions.pdf}
+\caption{Best solutions found for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
+\end{figure}
+
+\subsection{Time-matched comparison}
+Hardware differs by about fifteen years. Figure~\ref{fig:time} compares the mean utilization over time with that
+of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 6 seconds (the greedy
+construction and compaction), and at 10 seconds our mean utilization already exceeds the mean utilization of
+3DNest at 600 seconds on all five instances. Even assuming that our machine is five times faster per core, the
+advantage holds at equal effective time.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/merged_time.pdf}
+\caption{Mean utilization over time on the Merged instances, compared with 3DNest \citep[Table 3]{egeblad2009}.}
+\label{fig:time}
+\end{figure}
+
+\subsection{Discussion}
+The results support a conclusion that agrees with recent 2D work \citep{gardeyn2025}: the quality of an
+overlap-minimization heuristic is driven by how many separation attempts fit in the time budget, and therefore
+by the cost of evaluating and optimizing the overlap. The NFP-based penetration depth gives an exact, cheap and
+informative measure for unions of convex parts. The global LP compaction complements the axis moves, which
+cannot produce coordinated or diagonal displacements.
+
+\paragraph{Limitations}
+Rotations are not considered. The method requires a convex decomposition of each piece; for the instances used
+here it is exact and small, but general meshes may need many parts, and approximate decompositions lose the
+exactness of the geometry. \todo{instancias adicionales (Tollenaere et al., 2026) y mas grandes}
+
+% =====================================================================================================
+\section{Conclusions}
+We presented an overlap-minimization heuristic for 3D irregular strip packing that works with the exact geometry
+of polyhedra given as unions of convex parts. Its key element is an exact axis move based on penetration depths
+in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and LP compaction.
+A simple core of these components outperforms the previous methods, with exact and voxel geometry, on the
+classical benchmarks, and its solutions can be certified in exact arithmetic. Future work includes rotations,
+larger instances from additive manufacturing, and certified lower bounds.
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{refs}
+
+\end{document}
