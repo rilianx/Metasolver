@@ -188,10 +188,10 @@ Comparación con la literatura (30 s, media de 3 semillas, versión con oscilaci
 | Instancia | Ítems | Mejor conocida | BSG_PLP (30 s) |
 |---|---|---|---|
 | Stoyan 2005 Example1 | 7 | 17.46 (óptimo, Tollenaere et al. 2026) | 17.46 |
-| Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 20.50 (+7.8%) |
-| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | 29.95 (+0.6%; mejor 29.86) |
+| Stoyan 2005 Example2 | 12 | 19.01 (Egeblad et al. 2009) | 20.11 (+5.8%) |
+| Stoyan 2005 Example3 | 25 | 29.76 (Lamas-Fernández et al. 2023) | 30.63 (+2.9%); con 120 s 28.98, mejor 28.01 (`results/largo.md`) |
 | Stoyan 2004 Example2–5 | 20–50 | 28.47 / 41.30 / 54.83 / 72.33 (Lamas-Fernández et al. 2023) | 31.89 / 47.55 / 63.79 / 75.99 (+5% a +16%) |
-| Tollenaere 2025 (66 instancias) | 2–20 | MILP, 1 h | 10 s: mejor que el MILP en 27, 19 de 27 óptimos |
+| Tollenaere 2025 (66 instancias) | 2–20 | MILP, 1 h | 10 s: mejor que el MILP en 27 (STOYAN_2005 corregido: 7 de 19) |
 
 Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
 

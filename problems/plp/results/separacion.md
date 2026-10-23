@@ -1,5 +1,8 @@
 # Separación por LP
 
+> **Corrección:** las filas de Stoyan 2005 y de Tollenaere STOYAN_2005 de este archivo usaban `polytope7` con 9 de sus
+> 10 vértices (pieza más pequeña) y no son válidas; ver `largo.md` para los resultados corregidos.
+
 Separación por LP (commit `9ec385e`) contra la misma versión sin separación (`--no_separate`). 3 semillas, 30 s (clásicas) y 10 s (Tollenaere 2025), parámetros por defecto (Optuna) y pseudobloques. Todas las soluciones fueron verificadas.
 
 Tollenaere 2025 (mejor de 3 semillas): supera la mejor solución del MILP (1 h) en 15 instancias (14 sin separación) y alcanza 17 de los 27 óptimos probados (15 sin separación).
