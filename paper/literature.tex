@@ -38,12 +38,14 @@ each ULD to balance the aircraft, sometimes with several pickup and delivery poi
 Constraints on the CoG of the load arise in container loading \citep{Davies1999}, in pallet
 loading and in air cargo \citep{Chan2006,Paquay2016}, and they have also been studied in the
 three-dimensional knapsack problem \citep{Baldi2012} and in the load-balanced bin packing
-problem \citep{Trivella2016}. Most heuristics handle them in a post-processing step, for
+problem \citep{Trivella2016}. Many heuristics handle them in a post-processing step, for
 instance by reordering and mirroring the walls of the load after the packing has been built
 \citep{Davies1999} or by shifting and repacking boxes \citep{Paquay2018b}, or with a score that trades the weight balance against the volume
-utilization \citep{Hessler2025}. In our algorithm the CoG is taken into account during the
-construction of every solution, in the evaluation of the blocks and in the value of the partial
-solutions, and the load is also translated at the end.
+utilization \citep{Hessler2025}. \citet{Paquay2018b} also consider the CoG during the
+construction, with a merit function that selects the extreme point that keeps the CoG closest to
+the center of the ULD. In our algorithm the CoG is taken into account in the evaluation of every
+candidate block and in the value of the partial solutions that guides the beam search, and the
+load is also translated at the end.
 
 \paragraph{Heuristics for three-dimensional packing.}
 Most heuristics for three-dimensional bin packing build the packing by placing one box at a

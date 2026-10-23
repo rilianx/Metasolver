@@ -3,7 +3,9 @@
 # y las valida con validate_uld.py.
 #
 # uso: run_uld.sh <configuracion> <salida> [opciones de BSG_ULD...]
-#   configuracion: paquay   (instancias de Paquay et al., comparar con --table 8)
+#   configuracion: paquay   (instancias de Paquay et al. con la desviacion del CoG de
+#                            Hessler et al.: 5% de las semidimensiones; --table 8)
+#                  paquay_file (instancias de Paquay et al. con las desviaciones del archivo)
 #                  adapted  (borde, soporte por area, CoG relativo; --table 10)
 #                  one      (adapted con un ULD de cada tipo; --table 12)
 # Variables: BIN (binario, por defecto build/BSG_ULD), JOBS (procesos en paralelo, 4)
@@ -17,7 +19,8 @@ BIN=${BIN:-$ROOT/build/BSG_ULD}
 JOBS=${JOBS:-4}
 ADAPTED="--edge 10 --edge_offset 10 --min_overlap 0.9 --padding 10 --cog_rel 0.1"
 case $CONF in
-	paquay)  ARGS=""; VARGS="";;
+	paquay)  ARGS="--cog_rel 0.05"; VARGS="--cog_rel 0.05";;
+	paquay_file) ARGS=""; VARGS="";;
 	adapted) ARGS="$ADAPTED"; VARGS="$ADAPTED";;
 	one)     ARGS="$ADAPTED --uld_count 1"; VARGS="$ADAPTED --allow_unloaded";;
 	*) echo "configuracion desconocida: $CONF"; exit 1;;

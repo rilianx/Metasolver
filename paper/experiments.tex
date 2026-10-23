@@ -56,8 +56,10 @@ processors (8 cores each, 2.1\,GHz, 3.0\,GHz in turbo mode, hyper-threading disa
 According to the single-thread rating of PassMark \citep{PassMark}, one core of the Apple M2 Pro
 used by \citet{Hessler2025} is about 2.5 times faster than one core of our processor (4105
 against 1624).
-The time limit $t$ is the search time per ULD (excluding block generation); we report results
-for $t = 0.1$\,s and $t = 1$\,s. The code, the instances, the solutions and the scripts that
+The time limit $t$ is the time of each run of BSG, excluding the generation of the blocks; we
+report results for $t = 0.1$\,s and $t = 1$\,s. Since a ULD can be loaded several times (with
+and without the substructure, in the grouped reload and in the improvement phases), the total
+time per instance is several times larger, and we report it separately. The code, the instances, the solutions and the scripts that
 produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}.
 
 \paragraph{Parameter tuning.}
@@ -81,7 +83,7 @@ Parameter & Description & Range & Value \\
 \midrule
 $\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 12.66 \\
 $\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 0.599 \\
-\texttt{max\_bl} & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 500 \\
+$N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 500 \\
 $\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 1.234 \\
 $\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 0.239 \\
 $\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.224 \\

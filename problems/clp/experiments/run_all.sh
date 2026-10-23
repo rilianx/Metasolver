@@ -7,6 +7,8 @@
 # y un resumen en <salida>/summary.txt.
 #
 # uso: problems/clp/experiments/run_all.sh <salida> [JOBS]
+#   SETTINGS: escenarios a correr (por defecto "paquay adapted one"); la curva de tiempo solo
+#   se corre si incluye paquay
 #   JOBS: procesos en paralelo (por defecto: nucleos fisicos - 2). Como el limite de tiempo es
 #   por reloj de CPU de cada proceso, conviene no usar mas procesos que nucleos fisicos.
 # Requiere: cmake, g++, python3 (scipy opcional, solo para compare_hessler.py).
@@ -39,11 +41,12 @@ run(){ # run <nombre> <escenario> <opciones...>
 	echo "$(date -u +%H:%M) $name"
 }
 
-for r in 1 2 3 4 5; do for t in 0.1 1; do for v in paquay adapted one; do
+SETTINGS=${SETTINGS:-paquay adapted one}
+for r in 1 2 3 4 5; do for t in 0.1 1; do for v in $SETTINGS; do
 	run final_${v}_t${t}_r$r $v -t $t
 done; done; done
 
-for v in paquay adapted one; do
+for v in $SETTINGS; do
 	for cfg in "nocoggreedy:--cog_greedy 0" "nocogpen:--cog_penalty 0" "notranslate:--no_translate" \
 			"noregroup:--no_regroup" "noelim:--no_eliminate" "nosub:--no_substructure" \
 			"base:--cog_greedy 0 --no_regroup --no_eliminate --no_substructure"; do
@@ -54,12 +57,13 @@ for v in paquay adapted one; do
 	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.1 --cog_penalty $lam; done
 done
 
-for t in 0.02 0.05 0.2 0.5 2; do run curve_t$t paquay -t $t; done
+case " $SETTINGS " in *" paquay "*) for t in 0.02 0.05 0.2 0.5 2; do run curve_t$t paquay -t $t; done;; esac
 
 # resumen
 {
 	for v in paquay:8 adapted:10 one:12; do
 		n=${v%%:*}; tb=${v#*:}
+		case " $SETTINGS " in *" $n "*) ;; *) continue;; esac
 		for t in 0.1 1; do
 			echo "== final $n t=$t"
 			python3 $S --table $tb $OUT/final_${n}_t${t}_r*
@@ -69,7 +73,9 @@ for t in 0.02 0.05 0.2 0.5 2; do run curve_t$t paquay -t $t; done
 		echo "== cog_penalty $n (t=0.1)"
 		for d in $OUT/lambda*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 	done
-	echo "== curva de tiempo (paquay)"
-	for d in $OUT/curve_t* ; do echo "-- $(basename $d)"; python3 $S --table 8 $d | sed -n 2,3p; done
+	case " $SETTINGS " in *" paquay "*)
+		echo "== curva de tiempo (paquay)"
+		for d in $OUT/curve_t* ; do echo "-- $(basename $d)"; python3 $S --table 8 $d | sed -n 2,3p; done;;
+	esac
 } > $OUT/summary.txt
 echo "listo: $OUT/summary.txt"
