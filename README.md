@@ -162,15 +162,18 @@ height (Paquay et al. 2016, not considered by Hessler et al.).
 
 | instances | -t (per ULD) | ULDs | boxes not loaded | better / worse | CoG xy | CoG z | avg time |
 |---|---|---|---|---|---|---|---|
-| paquay  | 0.1 s | 614.8 ± 0.8 | 0 | 93.2 / 0 | 0 | 0 | 0.60 s |
-| paquay  | 1 s   | 595.4 ± 0.5 | 0 | 113.6 / 1 | 1 | 0 | 5.4 s |
-| adapted | 0.1 s | 591.0 ± 0.7 | 0 | 62.0 / 0 | 1 | 0 | 1.1 s |
-| adapted | 1 s   | 572.6 ± 0.5 | 0 | 80.4 / 0 | 2 | 0 | 10.2 s |
-| one     | 0.1 s | 698.0 ± 1.2 | 26.0 ± 1.4 | 45.2 / 18.8 | 3 | 0.8 | 1.5 s |
-| one     | 1 s   | 663.2 ± 0.4 | 27.0 | 76.2 / 16.2 | 4 | 1 | 12.5 s |
+| paquay  | 0.1 s | 617.0 ± 0.0 | 0 | 91.0 / 0 | 0 | 0 | 0.62 s |
+| paquay  | 1 s   | 597.8 ± 0.4 | 0 | 111.2 / 1 | 1 | 0 | 5.4 s |
+| adapted | 0.1 s | 598.0 ± 0.0 | 0 | 56.0 / 1 | 2 | 0 | 1.2 s |
+| adapted | 1 s   | 576.0 ± 0.0 | 0 | 77.0 / 0 | 1 | 0 | 10.3 s |
+| one     | 0.1 s | 706.0 ± 0.0 | 22.0 ± 0.0 | 42.0 / 22.0 | 3 | 0 | 1.6 s |
+| one     | 1 s   | 675.8 ± 0.4 | 21.0 ± 0.0 | 64.4 / 20.2 | 2 | 1 | 13.0 s |
+
+Machine: two Intel Xeon E5-2620 v4 (2.1 GHz, 8 cores each), 14 runs in parallel
+(`problems/clp/experiments/run_all.sh`; results in `results/server`).
 
 Lower bound (`lower_bound_uld.py`: total volume / largest ULD, total weight / largest capacity,
-cliques of incompatible boxes): the number of ULDs is proven optimal in 143 (0.1 s) and 160
+cliques of incompatible boxes): the number of ULDs is proven optimal in 140 (0.1 s) and 157
 (1 s) of the 300 paquay instances (Hessler et al.: 80).
 
 Ablation (0.1 s per ULD, one run, one component turned off; ULDs and ULDs with the CoG out of
@@ -178,14 +181,14 @@ range in x or y):
 
 | without | paquay | adapted | one (ULDs, boxes not loaded) |
 |---|---|---|---|
-| (complete algorithm) | 614 / 0 | 590 / 1 | 699, 25 |
-| CoG in the evaluation of the blocks (`--cog_greedy 0`) | 621 / 1 | 600 / 4 | 703, 24 |
-| CoG penalty in the value (`--cog_penalty 0`) | 610 / 178 | 589 / 300 | 674, 13 (349 CoG) |
-| translation of the load (`--no_translate`) | 618 / 81 | 597 / 85 | 706, 22 (146 CoG) |
-| grouped reload (`--no_regroup`) | 624 / 20 | 592 / 29 | 724, 26 |
-| elimination of ULDs (`--no_eliminate`) | 618 / 0 | 595 / 1 | 712, 24 |
-| substructure (`--no_substructure`) | - | 606 / 2 | 723, 24 |
-| all the previous except the CoG penalty and the translation | 626 / 21 | 627 / 54 | 777, 34 |
+| (complete algorithm) | 617 / 0 | 598 / 2 | 706, 22 |
+| CoG in the evaluation of the blocks (`--cog_greedy 0`) | 625 / 2 | 607 / 6 | 713, 29 |
+| CoG penalty in the value (`--cog_penalty 0`) | 615 / 193 | 590 / 296 | 679, 17 (353 CoG) |
+| translation of the load (`--no_translate`) | 624 / 84 | 602 / 84 | 723, 28 (158 CoG) |
+| grouped reload (`--no_regroup`) | 622 / 25 | 604 / 31 | 726, 39 |
+| elimination of ULDs (`--no_eliminate`) | 620 / 0 | 599 / 2 | 719, 22 |
+| substructure (`--no_substructure`) | - | 618 / 1 | 731, 28 |
+| all the previous except the CoG penalty and the translation | 630 / 26 | 634 / 61 | 804, 39 |
 
 ```
 ./BSG_ULD {OPTIONS} [instance]

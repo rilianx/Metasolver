@@ -67,8 +67,8 @@ for ax, v in zip(axes, ('paquay', 'adapted', 'one')):
 			label(ax, xi, yi, f"$\\lambda$=0{extra}", dx=-4, dy=6, ha='right')
 		elif abs(lam - 12.6619) < 1e-3:
 			label(ax, xi, yi, f"$\\lambda$=12.7{extra}", dx=6, dy=-3)
-		elif v == 'one' and lam == 2.0:
-			label(ax, xi, yi, f"$\\lambda$=2{extra}", dx=6, dy=-8)
+		elif v == 'one' and lam == 0.5:
+			label(ax, xi, yi, f"$\\lambda$=0.5{extra}", dx=6, dy=-8)
 	h = HESSLER[v]
 	ax.plot([h[1]], [h[0]], 's', color=THEIRS, ms=5.5, mec='white', mew=0.8, label='RGS', zorder=3)
 	label(ax, h[1], h[0], 'RGS' + (f' ({h[2]})' if v == 'one' else ''), dx=5, dy=-10)
