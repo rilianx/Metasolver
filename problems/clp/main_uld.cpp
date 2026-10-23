@@ -511,6 +511,52 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
  * Intenta eliminar un ULD (de menor a mayor utilizacion): se liberan sus cajas y se insertan
  * en los otros ULDs (ver insert). Retorna true si se elimino alguno.
  */
+/**
+ * Reduccion del volumen de los ULDs (--reduce): se saca un ULD (de mayor a menor volumen
+ * perdido), sus cajas se insertan en los otros ULDs (ver insert) y, si sobran, se cargan en un
+ * ULD nuevo del tipo de menor volumen posible, siempre menor que el del ULD sacado (sin dejar
+ * el CoG fuera de rango si no lo estaba). Generaliza la eliminacion (no sobran cajas) y el
+ * cambio a un ULD mas pequeno (no se inserta ninguna). Retorna true si se hizo un cambio.
+ */
+static bool reduce_volume(vector<Load>& loads, const Params& P){
+	vector<int> order(loads.size());
+	for(size_t i=0; i<order.size(); i++) order[i]=i;
+	auto waste=[&](int i){ return loads[i].uld->volume - loads[i].volume; };
+	sort(order.begin(), order.end(), [&](int a, int b){ return waste(a) > waste(b); });
+	for(int target : order){
+		const Load& tg=loads[target];
+		vector<int> pool=tg.boxes;
+		vector<Load> others;
+		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
+		if(!others.empty()) insert(others, pool, P);
+		if(none(pool)){ loads=others; return true; }
+		//sobrante: ULD del tipo de menor volumen posible
+		double pv=volume_of(pool), pw=0;
+		for(size_t t=0; t<pool.size(); t++) pw += pool[t]*clpState::types[t]->weight;
+		vector<int> ks;
+		for(size_t k=0; k<ulds.size(); k++){
+			bool own = ulds[k].type==tg.uld->type;
+			if(ulds[k].volume >= tg.uld->volume - 1e-6 || ulds[k].volume < pv || ulds[k].max_weight < pw) continue;
+			if(available[k]==0 && !own) continue;
+			bool all=true;
+			for(size_t t=0; t<pool.size() && all; t++) if(pool[t]>0 && !fits(*clpState::types[t], ulds[k])) all=false;
+			if(all) ks.push_back(k);
+		}
+		sort(ks.begin(), ks.end(), [&](int a, int b){ return ulds[a].volume < ulds[b].volume; });
+		for(int k : ks){
+			Load ld=load(ulds[k], pool, P);
+			if(ld.boxes!=pool || !ld.feasible || (tg.cog_ok() && !ld.cog_ok())) continue;
+			int kt=uld_index(*tg.uld);
+			if(available[kt]>=0) available[kt]++;
+			if(available[k]>0) available[k]--;
+			others.push_back(ld);
+			loads=others;
+			return true;
+		}
+	}
+	return false;
+}
+
 static bool eliminate_uld(vector<Load>& loads, const Params& P){
 	if(loads.size()<2) return false;
 	vector<int> order(loads.size());
@@ -686,6 +732,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _reassign_umax(parser, "double", "Reassignment: skip combinations that would need a utilization above this value. Default: 1", {"reassign_umax"});
 	args::ValueFlag<double> _reassign_tfrac(parser, "double", "Reassignment: time limit of BSG as a proportion of -t. Default: 1", {"reassign_tfrac"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
+	args::Flag _reduce(parser, "reduce", "Reduce the volume of the ULDs: remove a ULD, insert its boxes into the others and load the remaining ones into a smaller ULD (generalizes the elimination of ULDs)", {"reduce"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
@@ -899,9 +946,12 @@ int main(int argc, char** argv){
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
 	if(remaining()>0) insert(loads, left, P);
 
-	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros
-	if(!_no_eliminate && remaining()==0)
-		while(eliminate_uld(loads, P));
+	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros (con
+	//--reduce: reduccion del volumen, que generaliza la eliminacion)
+	if(!_no_eliminate && remaining()==0){
+		if(_reduce) while(reduce_volume(loads, P));
+		else while(eliminate_uld(loads, P));
+	}
 
 	//reasignacion para reducir el volumen de los ULDs (despues, se intenta eliminar de nuevo)
 	if(_reassign)
