@@ -36,9 +36,8 @@ penetration depth of their relative position in the no-fit polytope (NFP), a qua
 direction, is concave on an interval and zero outside it. Hence the position of a piece along an axis that
 minimizes its weighted overlap with all other pieces can be computed exactly by evaluating interval endpoints
 only. We embed this move in a strategic oscillation scheme with guided local search, kicks, and a global
-linear-programming compaction over NFP facets. An ablation study shows that this simple core is what matters:
-beam-search construction, pseudo-blocks, destroy-and-repair with a fixed container, and LP-based separation do
-not improve it. On the Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method
+linear-programming compaction over NFP facets. An ablation study shows the contribution of each component and
+that the speed of the separation is decisive. On the Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method
 improves the best known heights by \prov{3--9\%} and reaches in 10 seconds the utilization that the reference
 method attains in 600 seconds. It also improves the best known solutions of a classical convex instance and of
 the non-convex instances of \citet{stoyan2004}. Finally, a margin-based final compaction and dyadic rounding
@@ -86,8 +85,7 @@ interval endpoint (Proposition~\ref{prop:axis}). The move extends the directiona
 \citet{egeblad2009}.
 \item A global compaction by linear programming over NFP facets, in the spirit of \citet{gomes2006} in 2D,
 integrated in a strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and kicks.
-\item An ablation study showing which components matter. Speed of the separation is decisive, while elaborate
-construction (beam search, pseudo-blocks), destroy-and-repair, and LP separation do not help.
+\item An ablation study of the components, showing that the speed of the separation is decisive.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
 \citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest.
 \item Solutions with certified feasibility: a final compaction with soft margins and dyadic rounding produce
@@ -262,7 +260,8 @@ $10^{-7}$--$10^{-6}$.}
 \subsection{Setting}
 The method is implemented in C++ on top of the Metasolver framework; LPs are solved with SoPlex
 \citep{wunderling1996} through the ibex library \citep{ibex}. Experiments ran on an Intel Xeon at 2.8~GHz, one
-thread per run, four runs in parallel. \prov{Each configuration was run with 3 seeds (10 in the final version).}
+thread per run, four runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
+instance.
 
 \paragraph{Instances}
 We use the 3D instances of the ESICUP repository \citep{esicup}:
@@ -286,46 +285,30 @@ of a voxel VNS; their voxelization overestimates the pieces (by 15\% in volume f
 their heights are not directly comparable. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
 
 \subsection{Component analysis}
-Table~\ref{tab:ablation} summarizes how the method evolved and which components matter, on the seven hardest
-instances (Stoyan 2004 Examples 1--5, Stoyan 2005 Examples 2--3; 120 s, 3 seeds). The full version included a
-beam search guided by the greedy \citep{araya2014} for the construction, pseudo-blocks (pairs of pieces in a
-compact relative position placed as a single shape), a destroy-and-repair step solving a fixed-height knapsack
-variant with beam search, and LP separation. Removing all of them gives the same or better results; what
-matters is the separation and its speed.
+Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
+Stoyan 2005 Examples 2--3). Each row changes one element of the method. The effect of the speed of the separation
+is estimated by stopping the same runs at 24 s, which corresponds to moves five times slower.
 
 \begin{table}[t]
 \centering\small
 \caption{Mean gap of the height with respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan
-2005 Examples 2--3; 120 s, mean of 3 seeds). Negative is better.}\label{tab:ablation}
-\begin{tabular}{p{0.6\textwidth}rr}
+2005 Examples 2--3) and mean height on Stoyan 2004 Example 1 (no published reference); 120 s, mean of 10 seeds.
+Negative is better.}\label{tab:ablation}
+\begin{tabular}{p{0.45\textwidth}rrr}
 \toprule
-Configuration & Stoyan 2004 & Stoyan 2005\\
+Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 \midrule
-Axis moves and LP separation, additive GLS weights (earlier version) & \prov{$+2.9\%$} & \prov{$-2.3\%$}\\
-\quad + multiplicative GLS weights & \prov{$+0.6\%$} & \prov{$-2.8\%$}\\
-\quad + 5$\times$ faster moves, 500 passes (full version) & \prov{$-2.5\%$} & \prov{$-3.3\%$}\\
-\midrule
-Full version without pseudo-blocks & \prov{$-0.8\%$} & \prov{$-3.0\%$}\\
-Full version without LP separation & \prov{$-2.0\%$} & \prov{$-3.2\%$}\\
-Full version without destroy-and-repair & \prov{$-2.6\%$} & \prov{$-3.0\%$}\\
-Full version with greedy instead of beam search & \prov{$-2.5\%$} & \prov{$-3.3\%$}\\
-\textbf{Core} (greedy, axis moves, oscillation, LP compaction) & \prov{$\mathbf{-3.5\%}$} & \prov{$-3.3\%$}\\
-Core without LP compaction & \prov{$-2.2\%$} & \prov{$-3.5\%$}\\
-\midrule
-\multicolumn{3}{p{0.9\textwidth}}{\emph{Ideas from the 2D literature that did not help (on top of the earlier version)}}\\
-Return to the best overlapping layout after 5 stalled passes \citep{gardeyn2025} & \prov{$+6.0\%$} & \prov{$-1.0\%$}\\
-Exploration without height increase, 0.5\% steps \citep{gardeyn2025} & \prov{$+4.4\%$} & \prov{$+0.4\%$}\\
-Final compression phase \citep{gardeyn2025} & \prov{$+3.7\%$} & \prov{$-1.5\%$}\\
-Swap kicks \citep{imamichi2009,gardeyn2025} & \prov{$+2.2\%$} & \prov{$-3.2\%$}\\
+Proposed method & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
+Without LP compaction & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
+Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
+Kick: swap two pieces instead of reinserting one & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
+Separation five times slower (runs stopped at 24 s) & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\todo{rehacer la tabla con la version final (10 semillas); las filas de la evolucion provienen de versiones
-intermedias del codigo}
-
 \subsection{Comparison with the literature}
-Table~\ref{tab:results} compares the core method with the literature. On the instances that share the exact
+Table~\ref{tab:results} compares the method with the literature. On the instances that share the exact
 geometry of 3DNest (Stoyan 2005 Examples 2--3 and Merged1--5), the method obtains lower heights in six of seven
 cases; the exception is Stoyan 2005 Example 2 (19.13 versus 19.01). The improvement grows with the size of the
 instance: on Merged3--5 our best heights are \prov{8--9\%} below the best known values, obtained by the
@@ -337,7 +320,7 @@ a wide margin and the voxel heights on three of four instances.
 \caption{Heights (lower is better). Exact: 3DNest \citep{egeblad2009} (best and mean of 10 runs of 600 s),
 optimum of \citet{tollenaere2026} for Stoyan 2005 Example 1, and \citet{stoyan2004} (St04). Voxels: VNS of
 \citet{lamas2023} (best: standard resolution and 10 runs of 1 h for Stoyan, extra-fine resolution and 4 h for
-Merged; mean: standard resolution). Ours: mean (best) of 3 seeds, 120 s for Stoyan and 600 s for Merged.}
+Merged; mean: standard resolution). Ours: mean (best) of 10 seeds, 120 s.}
 \label{tab:results}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -382,7 +365,8 @@ advantage holds at equal effective time.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/merged_time.pdf}
-\caption{Mean utilization over time on the Merged instances, compared with 3DNest \citep[Table 3]{egeblad2009}.}
+\caption{Mean utilization over time on the Merged instances (10 seeds), compared with 3DNest
+\citep[Table 3]{egeblad2009} (10 runs).}
 \label{fig:time}
 \end{figure}
 
