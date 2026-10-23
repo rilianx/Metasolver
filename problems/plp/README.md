@@ -44,6 +44,12 @@ Ver `benchs/README_ESICUP.md` para las referencias y el formato JSON.
 
 1. `convex/polytope1.obj` tiene una cara corrupta; se usa la envolvente convexa de sus vértices
    (`benchs/decompositions/Stoyan et al. 2004/convex/polytope1.obj`).
+   Del mismo modo, las caras de `Stoyan et al. 2005/polytope7.obj` usan solo 9 de sus 10 vértices (falta
+   (−2,−5,2)); según la tabla 1 de Stoyan et al. (2005) P7 tiene 10 vértices, así que se usa la envolvente de
+   los 10 (volumen 192.5, igual a `Convex7.stl` de Egeblad et al. 2009):
+   `benchs/decompositions/Stoyan et al. 2005/polytope7.obj`. Afecta a Stoyan 2005 Example1–3 y a las
+   instancias STOYAN_2005 de Tollenaere; los resultados anteriores a esta corrección en esas instancias usaban
+   una pieza más pequeña y no son válidos.
 2. Las instancias usan las mallas `nonconvex/sanitized`; sus partes convexas se leen de
    `benchs/decompositions/...`, que son copias de `nonconvex/polytopeK.obj` (la unión de
    convexos descrita por Stoyan et al.). Algunas partes se solapan; el volumen de la pieza se
@@ -190,6 +196,11 @@ Comparación con la literatura (30 s, media de 3 semillas, versión con oscilaci
 Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
 
 ## Herramientas
+
+`tools/check_convex.py instancia.json solucion.json benchs [eps]` (Python, numpy y scipy): verificación
+independiente para piezas convexas (envolvente de todos los vértices del OBJ y un LP por par de piezas para el
+punto más profundo de la intersección). Detectó el error de `polytope7`, que `PLP_check` no podía ver porque
+compartía la lectura de las mallas.
 
 ```
 PLP_check <instance.json> [-s solution.json] [--eps 1e-6] [--partial] [-q] [--root dir]

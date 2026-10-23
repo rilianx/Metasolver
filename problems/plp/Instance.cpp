@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <cmath>
+#include <algorithm>
 #include "Instance.h"
 #include "Mesh.h"
 #include "Json.h"
@@ -54,6 +55,13 @@ Piece Piece::load(const string& file, const string& parts_file) {
 			ranges.push_back(make_pair(0, (int)M.faces.size()));
 		}
 	}
+
+	//vertices que no usa ninguna cara (p.ej., polytope7 de Stoyan et al. 2005: falta un vertice en las caras)
+	vector<bool> used(M.vertices.size(), false);
+	for(const vector<int>& f : M.faces) for(int k : f) used[k]=true;
+	int unused = count(used.begin(), used.end(), false);
+	if(unused > 0)
+		P.warnings.push_back(to_string(unused) + " vertice(s) del archivo no aparecen en las caras (se ignoran)");
 
 	Box3 bb;
 	for(const Vec3& v : M.vertices) bb.add(v);
