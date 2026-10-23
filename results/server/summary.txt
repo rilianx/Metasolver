@@ -1,0 +1,160 @@
+== final paquay t=0.1
+corridas 5  instancias 300  factibles 300/300
+ULDs 617.0 ± 0.0 (Hessler 708)  cajas no cargadas 0.0 ± 0.0 (Hessler 0)
+mejor 91.0 ± 0.0  peor 0.0 ± 0.0  CoG xy 0.0 ± 0.0  CoG z 0.0 ± 0.0  tiempo medio 0.62 ± 0.00 s  max 2.12 s
+== final paquay t=1
+corridas 5  instancias 300  factibles 300/300
+ULDs 597.8 ± 0.4 (Hessler 708)  cajas no cargadas 0.0 ± 0.0 (Hessler 0)
+mejor 111.2 ± 0.4  peor 1.0 ± 0.0  CoG xy 1.0 ± 0.0  CoG z 0.0 ± 0.0  tiempo medio 5.41 ± 0.02 s  max 24.40 s
+== ablacion paquay (t=0.1, sin...)
+-- abl_paquay_base
+ULDs 630.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 80.0  peor 2.0  CoG xy 26.0  CoG z 0.0  tiempo medio 0.28 s  max 0.73 s
+-- abl_paquay_nocoggreedy
+ULDs 625.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 83.0  peor 0.0  CoG xy 2.0  CoG z 0.0  tiempo medio 0.64 s  max 2.10 s
+-- abl_paquay_nocogpen
+ULDs 615.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 93.0  peor 0.0  CoG xy 193.0  CoG z 8.0  tiempo medio 0.54 s  max 1.59 s
+-- abl_paquay_noelim
+ULDs 620.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 88.0  peor 0.0  CoG xy 0.0  CoG z 0.0  tiempo medio 0.30 s  max 0.92 s
+-- abl_paquay_noregroup
+ULDs 622.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 87.0  peor 1.0  CoG xy 25.0  CoG z 0.0  tiempo medio 0.58 s  max 1.62 s
+-- abl_paquay_notranslate
+ULDs 624.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 84.0  peor 0.0  CoG xy 84.0  CoG z 0.0  tiempo medio 0.64 s  max 2.53 s
+== cog_penalty paquay (t=0.1)
+-- lambda0.5_paquay
+ULDs 618.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 90.0  peor 0.0  CoG xy 1.0  CoG z 1.0  tiempo medio 0.63 s  max 2.10 s
+-- lambda0_paquay
+ULDs 616.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 92.0  peor 0.0  CoG xy 192.0  CoG z 8.0  tiempo medio 0.55 s  max 1.59 s
+-- lambda1_paquay
+ULDs 619.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 89.0  peor 0.0  CoG xy 1.0  CoG z 0.0  tiempo medio 0.63 s  max 2.10 s
+-- lambda2_paquay
+ULDs 620.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 88.0  peor 0.0  CoG xy 0.0  CoG z 0.0  tiempo medio 0.63 s  max 2.10 s
+-- lambda30_paquay
+ULDs 617.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 91.0  peor 0.0  CoG xy 0.0  CoG z 0.0  tiempo medio 0.62 s  max 2.10 s
+-- lambda5_paquay
+ULDs 619.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 89.0  peor 0.0  CoG xy 0.0  CoG z 0.0  tiempo medio 0.62 s  max 2.10 s
+== final adapted t=0.1
+corridas 5  instancias 300  factibles 300/300
+ULDs 598.0 ± 0.0 (Hessler 653)  cajas no cargadas 0.0 ± 0.0 (Hessler 0)
+mejor 56.0 ± 0.0  peor 1.0 ± 0.0  CoG xy 2.0 ± 0.0  CoG z 0.0 ± 0.0  tiempo medio 1.18 ± 0.00 s  max 4.25 s
+== final adapted t=1
+corridas 5  instancias 300  factibles 300/300
+ULDs 576.0 ± 0.0 (Hessler 653)  cajas no cargadas 0.0 ± 0.0 (Hessler 0)
+mejor 77.0 ± 0.0  peor 0.0 ± 0.0  CoG xy 1.0 ± 0.0  CoG z 0.0 ± 0.0  tiempo medio 10.26 ± 0.00 s  max 49.68 s
+== ablacion adapted (t=0.1, sin...)
+-- abl_adapted_base
+ULDs 634.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 24.0  peor 5.0  CoG xy 61.0  CoG z 2.0  tiempo medio 0.27 s  max 0.64 s
+-- abl_adapted_nocoggreedy
+ULDs 607.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 49.0  peor 3.0  CoG xy 6.0  CoG z 1.0  tiempo medio 1.27 s  max 4.39 s
+-- abl_adapted_nocogpen
+ULDs 590.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 63.0  peor 0.0  CoG xy 296.0  CoG z 13.0  tiempo medio 1.03 s  max 4.20 s
+-- abl_adapted_noelim
+ULDs 599.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 55.0  peor 1.0  CoG xy 2.0  CoG z 0.0  tiempo medio 0.61 s  max 2.04 s
+-- abl_adapted_noregroup
+ULDs 604.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 54.0  peor 5.0  CoG xy 31.0  CoG z 2.0  tiempo medio 1.14 s  max 4.23 s
+-- abl_adapted_nosub
+ULDs 618.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 40.0  peor 5.0  CoG xy 1.0  CoG z 0.0  tiempo medio 0.63 s  max 2.42 s
+-- abl_adapted_notranslate
+ULDs 602.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 54.0  peor 3.0  CoG xy 84.0  CoG z 2.0  tiempo medio 1.22 s  max 5.20 s
+== cog_penalty adapted (t=0.1)
+-- lambda0.5_adapted
+ULDs 595.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 59.0  peor 1.0  CoG xy 9.0  CoG z 0.0  tiempo medio 1.22 s  max 4.55 s
+-- lambda0_adapted
+ULDs 591.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 62.0  peor 0.0  CoG xy 291.0  CoG z 13.0  tiempo medio 1.03 s  max 4.20 s
+-- lambda1_adapted
+ULDs 593.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 61.0  peor 1.0  CoG xy 6.0  CoG z 0.0  tiempo medio 1.19 s  max 4.20 s
+-- lambda2_adapted
+ULDs 597.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 57.0  peor 1.0  CoG xy 2.0  CoG z 0.0  tiempo medio 1.19 s  max 4.22 s
+-- lambda30_adapted
+ULDs 599.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 55.0  peor 1.0  CoG xy 2.0  CoG z 0.0  tiempo medio 1.19 s  max 4.22 s
+-- lambda5_adapted
+ULDs 598.0 (Hessler 653)  cajas no cargadas 0.0 (Hessler 0)
+mejor 56.0  peor 1.0  CoG xy 2.0  CoG z 0.0  tiempo medio 1.18 s  max 4.20 s
+== final one t=0.1
+corridas 5  instancias 300  factibles 300/300
+ULDs 706.0 ± 0.0 (Hessler 729)  cajas no cargadas 22.0 ± 0.0 (Hessler 24)
+mejor 42.0 ± 0.0  peor 22.0 ± 0.0  CoG xy 3.0 ± 0.0  CoG z 0.0 ± 0.0  tiempo medio 1.63 ± 0.00 s  max 5.94 s
+== final one t=1
+corridas 5  instancias 300  factibles 300/300
+ULDs 675.8 ± 0.4 (Hessler 729)  cajas no cargadas 21.0 ± 0.0 (Hessler 24)
+mejor 64.4 ± 0.5  peor 20.2 ± 0.4  CoG xy 2.0 ± 0.0  CoG z 1.0 ± 0.0  tiempo medio 12.96 ± 0.01 s  max 41.39 s
+== ablacion one (t=0.1, sin...)
+-- abl_one_base
+ULDs 804.0 (Hessler 729)  cajas no cargadas 39.0 (Hessler 24)
+mejor 17.0  peor 72.0  CoG xy 54.0  CoG z 5.0  tiempo medio 0.46 s  max 3.64 s
+-- abl_one_nocoggreedy
+ULDs 713.0 (Hessler 729)  cajas no cargadas 29.0 (Hessler 24)
+mejor 39.0  peor 24.0  CoG xy 2.0  CoG z 0.0  tiempo medio 1.71 s  max 5.44 s
+-- abl_one_nocogpen
+ULDs 679.0 (Hessler 729)  cajas no cargadas 17.0 (Hessler 24)
+mejor 63.0  peor 17.0  CoG xy 353.0  CoG z 141.0  tiempo medio 1.32 s  max 5.58 s
+-- abl_one_noelim
+ULDs 719.0 (Hessler 729)  cajas no cargadas 22.0 (Hessler 24)
+mejor 37.0  peor 28.0  CoG xy 4.0  CoG z 0.0  tiempo medio 0.81 s  max 4.92 s
+-- abl_one_noregroup
+ULDs 726.0 (Hessler 729)  cajas no cargadas 39.0 (Hessler 24)
+mejor 37.0  peor 37.0  CoG xy 20.0  CoG z 3.0  tiempo medio 1.51 s  max 5.26 s
+-- abl_one_nosub
+ULDs 731.0 (Hessler 729)  cajas no cargadas 28.0 (Hessler 24)
+mejor 28.0  peor 32.0  CoG xy 6.0  CoG z 3.0  tiempo medio 0.91 s  max 3.46 s
+-- abl_one_notranslate
+ULDs 723.0 (Hessler 729)  cajas no cargadas 28.0 (Hessler 24)
+mejor 39.0  peor 33.0  CoG xy 158.0  CoG z 2.0  tiempo medio 1.70 s  max 6.52 s
+== cog_penalty one (t=0.1)
+-- lambda0.5_one
+ULDs 699.0 (Hessler 729)  cajas no cargadas 20.0 (Hessler 24)
+mejor 48.0  peor 19.0  CoG xy 19.0  CoG z 23.0  tiempo medio 1.82 s  max 7.91 s
+-- lambda0_one
+ULDs 679.0 (Hessler 729)  cajas no cargadas 19.0 (Hessler 24)
+mejor 63.0  peor 17.0  CoG xy 351.0  CoG z 142.0  tiempo medio 1.32 s  max 5.58 s
+-- lambda1_one
+ULDs 704.0 (Hessler 729)  cajas no cargadas 25.0 (Hessler 24)
+mejor 46.0  peor 24.0  CoG xy 12.0  CoG z 15.0  tiempo medio 1.73 s  max 5.72 s
+-- lambda2_one
+ULDs 704.0 (Hessler 729)  cajas no cargadas 27.0 (Hessler 24)
+mejor 42.0  peor 22.0  CoG xy 8.0  CoG z 8.0  tiempo medio 1.64 s  max 5.73 s
+-- lambda30_one
+ULDs 710.0 (Hessler 729)  cajas no cargadas 23.0 (Hessler 24)
+mejor 39.0  peor 23.0  CoG xy 3.0  CoG z 0.0  tiempo medio 1.62 s  max 5.93 s
+-- lambda5_one
+ULDs 705.0 (Hessler 729)  cajas no cargadas 22.0 (Hessler 24)
+mejor 42.0  peor 22.0  CoG xy 3.0  CoG z 1.0  tiempo medio 1.64 s  max 5.92 s
+== curva de tiempo (paquay)
+-- curve_t0.02
+ULDs 638.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 71.0  peor 1.0  CoG xy 4.0  CoG z 0.0  tiempo medio 0.16 s  max 0.52 s
+-- curve_t0.05
+ULDs 621.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 87.0  peor 0.0  CoG xy 1.0  CoG z 0.0  tiempo medio 0.34 s  max 1.11 s
+-- curve_t0.2
+ULDs 615.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 93.0  peor 0.0  CoG xy 0.0  CoG z 0.0  tiempo medio 1.19 s  max 4.95 s
+-- curve_t0.5
+ULDs 602.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 107.0  peor 1.0  CoG xy 0.0  CoG z 0.0  tiempo medio 2.76 s  max 10.20 s
+-- curve_t2
+ULDs 596.0 (Hessler 708)  cajas no cargadas 0.0 (Hessler 0)
+mejor 113.0  peor 1.0  CoG xy 1.0  CoG z 0.0  tiempo medio 10.46 s  max 38.75 s
