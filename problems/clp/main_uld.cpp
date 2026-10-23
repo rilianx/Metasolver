@@ -11,10 +11,8 @@
 #include <fstream>
 #include <sstream>
 #include <map>
-#include <set>
 #include <algorithm>
 #include <cmath>
-#include <functional>
 #include "args.hxx"
 #include "clpState.h"
 #include "VCS_Function.h"
@@ -124,7 +122,7 @@ static int uld_index(const ULD& u){
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=NULL){
+static const ULD* select_uld(const vector<int>& left){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
@@ -146,7 +144,6 @@ static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=
 			if(nf==m) candidate=true;
 		}
 		if(!candidate) continue;
-		if(cands) cands->push_back(&ulds[u]);
 		if(vol>best_vol || (vol==best_vol && ulds[u].volume>best->volume)){ best=&ulds[u]; best_vol=vol; }
 	}
 	return best;
@@ -259,13 +256,10 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	//la salida de la busqueda se descarta
 	streambuf* buf=cout.rdbuf(NULL);
 	State* s_copy = s0->clone();
-	//con P.time=0 solo se ejecuta el greedy (una completacion)
-	if(P.time>0) de->run(*s_copy, P.time, begin_time);
-	else gr->run(*s_copy, 0.0, begin_time);
+	de->run(*s_copy, P.time, begin_time);
 	cout.rdbuf(buf);
 
-	clpState* best = (P.time>0)? (de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL)
-			: static_cast<clpState*>(s_copy->clone());
+	clpState* best = de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL;
 	if(best){
 		//se desplaza la carga para centrar el centro de gravedad
 		long dx, dy;
@@ -424,7 +418,7 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 //resultado de cada intento de la reduccion de volumen
 static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0;
 //etapas de la insercion de cajas (ablacion)
-static bool stage_scratch=true, stage_fixed=false, stage_priority=true, stage_ruin=true;
+static bool stage_scratch=true, stage_priority=true, stage_ruin=true;
 
 static double volume_of(const vector<int>& b){
 	double v=0;
@@ -478,14 +472,6 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 			if(improves(loads[i], ld)){ take(i, ld, avail); st_scratch++; }
 		}
 
-	if(stage_fixed)
-		for(int i : by_free_volume(loads)){
-			if(none(pool)) return;
-			vector<int> avail=with_pool(loads[i]);
-			Load ld=load_more(loads[i], pool, P);
-			if(improves(loads[i], ld)) take(i, ld, avail);
-		}
-
 	if(stage_priority)
 		for(int i : by_free_volume(loads)){
 			if(none(pool)) return;
@@ -512,28 +498,13 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 }
 
 /**
- * Intenta eliminar un ULD (de menor a mayor utilizacion): se liberan sus cajas y se insertan
- * en los otros ULDs (ver insert). Retorna true si se elimino alguno.
+ * Reduccion del volumen de los ULDs: se saca un ULD (de mayor a menor volumen perdido), sus
+ * cajas se insertan en los otros ULDs (ver insert) y, si sobran, se cargan en 1 a reduce_new
+ * ULDs nuevos de menor volumen total que el sacado (sin dejar el CoG fuera de rango si no lo
+ * estaba). Generaliza la eliminacion de ULDs (no sobran cajas) y el cambio a ULDs mas pequenos.
+ * Retorna true si se hizo un cambio (que siempre reduce el volumen total de los ULDs).
  */
-/**
- * Reduccion del volumen de los ULDs (--reduce): se saca un ULD (de mayor a menor volumen
- * perdido), sus cajas se insertan en los otros ULDs (ver insert) y, si sobran, se cargan en un
- * ULD nuevo del tipo de menor volumen posible, siempre menor que el del ULD sacado (sin dejar
- * el CoG fuera de rango si no lo estaba). Generaliza la eliminacion (no sobran cajas) y el
- * cambio a un ULD mas pequeno (no se inserta ninguna). Retorna true si se hizo un cambio.
- */
-static int reduce_new=1;
-//reduccion: memoria de intentos fallidos (--reduce_memo) y utilizacion maxima estimada
-//(--reduce_umax: se omiten los intentos y combinaciones que la exigirian)
-static bool reduce_memo=false;
-static double reduce_umax=1.0;
-static set<uint64_t> reduce_failed;
-static long st_skip=0, st_prune=0;
-static uint64_t load_key(const Load& l){
-	uint64_t h=0xcbf29ce484222325ull ^ (uint64_t) l.uld->type;
-	for(size_t t=0; t<l.boxes.size(); t++){ h ^= (uint64_t) l.boxes[t] + 0x9e3779b97f4a7c15ull + (h<<6) + (h>>2); h *= 0x100000001b3ull; }
-	return h;
-}
+static int reduce_new=2;
 static bool reduce_volume(vector<Load>& loads, const Params& P){
 	vector<int> order(loads.size());
 	for(size_t i=0; i<order.size(); i++) order[i]=i;
@@ -542,17 +513,6 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 	st_pass++;
 	for(int target : order){
 		const Load& tg=loads[target];
-		//con --reduce_memo, en una barrida no se reintenta un ULD que ya fallo y no cambio
-		uint64_t key=load_key(tg);
-		if(reduce_memo && reduce_failed.count(key)){ st_skip++; continue; }
-		//poda: los otros ULDs no pueden recibir mas que hasta umax de su volumen, y los nuevos
-		//suman menos que el sacado
-		if(reduce_umax < 1.0){
-			double room=0;
-			for(size_t i=0; i<loads.size(); i++)
-				if((int)i!=target) room += max(0.0, reduce_umax*loads[i].uld->volume - loads[i].volume);
-			if(tg.volume > room + reduce_umax*tg.uld->volume){ st_prune++; continue; }
-		}
 		st_try++;
 		vector<int> pool=tg.boxes;
 		vector<Load> others;
@@ -581,7 +541,7 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 		for(const vector<int>& C : combos){
 			double vc=cvol(C), wc=0;
 			if(vc >= tg.uld->volume - 1e-6) break;
-			if(vc*reduce_umax < pv){ if(reduce_umax<1.0) st_prune++; continue; }
+			if(vc < pv) continue;
 			vector<int> a2=av; bool ok=true;
 			for(int k : C){ wc+=ulds[k].max_weight; if(a2[k]==0) ok=false; else if(a2[k]>0) a2[k]--; }
 			if(!ok || wc < pw) continue;
@@ -611,11 +571,14 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 			return true;
 		}
 		st_fail++;
-		if(reduce_memo) reduce_failed.insert(key);
 	}
 	return false;
 }
 
+/**
+ * Ablacion (--eliminate_only): solo eliminacion de ULDs; se sacan los ULDs (de menor a mayor
+ * utilizacion) y sus cajas se insertan en los otros. Retorna true si se elimino alguno.
+ */
 static bool eliminate_uld(vector<Load>& loads, const Params& P){
 	if(loads.size()<2) return false;
 	vector<int> order(loads.size());
@@ -627,126 +590,6 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
 		insert(others, pool, P);
 		if(none(pool)){ loads=others; return true; }
-	}
-	return false;
-}
-
-/**
- * Reasignacion para reducir el volumen total de los ULDs (el volumen perdido): se toman 1 o 2
- * ULDs (de mayor a menor volumen perdido) y se intenta cargar sus cajas en 1 a max_new ULDs
- * (tipos disponibles) de menor volumen total, probando las combinaciones de menor a mayor
- * volumen (de mayor a menor ULD, cada uno con las cajas que no cargaron los anteriores). Se acepta el primer cambio que carga todas las cajas sin aumentar la cantidad
- * de ULDs con el CoG fuera de rango. Retorna true si se hizo un cambio.
- */
-static int max_new=3;
-//seleccion del siguiente ULD entre los candidatos: theta>=0 maximiza (volumen cargado) -
-//theta*(volumen del ULD) (theta<0: regla de Hessler et al.); con rollout, se completa la
-//solucion con una construccion rapida y se elige el de menor volumen total
-static double theta=-1.0;
-static bool rollout=false;
-static double rollout_time=0.01;
-//conjuntos de cajas candidatos (--subsets): proporciones del volumen del ULD
-static vector<double> subset_rhos;
-
-/**
- * Completa la carga de las cajas left con la construccion secuencial (regla de Hessler et al.,
- * sin fases de mejora) y P.time=rollout_time; los ULDs disponibles se restauran al final.
- * Retorna el volumen sin cargar, el volumen de los ULDs y la cantidad de ULDs.
- */
-struct Estimate { double unloaded, volume; int n; };
-static Estimate complete(vector<int> left, const Params& P0){
-	Params P=P0; P.time=rollout_time;
-	vector<int> av=available;
-	Estimate e{0, 0, 0};
-	while(!none(left)){
-		const ULD* u=select_uld(left);
-		if(!u) break;
-		Load ld=load(*u, left, P);
-		if(none(ld.boxes)) break;
-		for(size_t t=0; t<left.size(); t++) left[t]-=ld.boxes[t];
-		e.volume+=u->volume; e.n++;
-		int k=uld_index(*u); if(available[k]>0) available[k]--;
-	}
-	e.unloaded=volume_of(left);
-	available=av;
-	return e;
-}
-//reasignacion: utilizacion maxima exigible a una combinacion y tiempo de BSG (proporcion de t)
-static double reassign_umax=1.0, reassign_tfrac=1.0;
-static bool reassign(vector<Load>& loads, const Params& P0){
-	Params P=P0; P.time=P0.time*reassign_tfrac;
-	int n=loads.size(), nt=ulds.size();
-	//conjuntos de 1 o 2 ULDs, de mayor a menor volumen perdido
-	vector< vector<int> > sets;
-	for(int i=0; i<n; i++) sets.push_back({i});
-	for(int i=0; i<n; i++) for(int j=i+1; j<n; j++) sets.push_back({i, j});
-	auto waste=[&](const vector<int>& S){
-		double w=0;
-		for(int i : S) w += loads[i].uld->volume - loads[i].volume;
-		return w;
-	};
-	stable_sort(sets.begin(), sets.end(), [&](const vector<int>& a, const vector<int>& b){ return waste(a) > waste(b); });
-	//combinaciones de 1 a max_new tipos (indices en ulds), de mayor a menor volumen
-	vector<int> idx(nt);
-	for(int k=0; k<nt; k++) idx[k]=k;
-	sort(idx.begin(), idx.end(), [&](int a, int b){ return ulds[a].volume > ulds[b].volume; });
-	vector< vector<int> > combos;
-	vector<int> cur;
-	function<void(int)> gen=[&](int from){
-		if(!cur.empty()) combos.push_back(cur);
-		if((int)cur.size()==max_new) return;
-		for(int p=from; p<nt; p++){ cur.push_back(idx[p]); gen(p); cur.pop_back(); }
-	};
-	gen(0);
-	auto cvol=[&](const vector<int>& C){ double v=0; for(int k : C) v+=ulds[k].volume; return v; };
-	stable_sort(combos.begin(), combos.end(), [&](const vector<int>& a, const vector<int>& b){ return cvol(a) < cvol(b); });
-
-	for(const vector<int>& S : sets){
-		vector<int> boxes(clpState::types.size(), 0);
-		double vS=0, bvol=0, bw=0; int cogS=0;
-		for(int i : S){
-			for(size_t t=0; t<boxes.size(); t++) boxes[t]+=loads[i].boxes[t];
-			vS+=loads[i].uld->volume; bvol+=loads[i].volume; bw+=loads[i].weight; cogS+=!loads[i].cog_ok();
-		}
-		for(const vector<int>& C : combos){
-			double vC=cvol(C);
-			if(vC >= vS - 1e-6) break;
-			if(vC*reassign_umax < bvol) continue;
-			//disponibilidad (se liberan los ULDs de S)
-			vector<int> av=available;
-			for(int i : S){ int k=uld_index(*loads[i].uld); if(av[k]>=0) av[k]++; }
-			bool ok=true; double cw=0;
-			for(int k : C){ if(av[k]==0) ok=false; else if(av[k]>0) av[k]--; cw+=ulds[k].max_weight; }
-			if(!ok || cw < bw) continue;
-			//cada caja cabe en algun tipo de C
-			for(size_t t=0; t<boxes.size() && ok; t++){
-				if(!boxes[t]) continue;
-				bool any=false;
-				for(int k : C) any = any || fits(*clpState::types[t], ulds[k]);
-				ok=any;
-			}
-			if(!ok) continue;
-			vector<Load> nl;
-			vector<int> rest=boxes;
-			for(int k : C){
-				if(none(rest)) break;
-				Load ld=load(ulds[k], rest, P);
-				if(!ld.feasible || none(ld.boxes)){ ok=false; break; }
-				for(size_t t=0; t<rest.size(); t++) rest[t]-=ld.boxes[t];
-				nl.push_back(ld);
-			}
-			if(!ok || !none(rest)) continue;
-			int cogC=0; for(const Load& ld : nl) cogC+=!ld.cog_ok();
-			if(cogC > cogS) continue;
-			//se reemplazan los ULDs de S por los de C
-			vector<Load> res;
-			for(int i=0; i<n; i++) if(find(S.begin(), S.end(), i)==S.end()) res.push_back(loads[i]);
-			for(const Load& ld : nl) res.push_back(ld);
-			available=av;
-			for(size_t k=0; k<C.size(); k++) if(k>=nl.size()){ int kk=C[k]; if(available[kk]>=0) available[kk]++; }
-			loads=res;
-			return true;
-		}
 	}
 	return false;
 }
@@ -779,23 +622,12 @@ int main(int argc, char** argv){
 	args::Flag _no_regroup(parser, "no_regroup", "Ablation (with --corner_anchor): do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _no_scratch(parser, "no_scratch", "Ablation: insertion of boxes without the reload from scratch", {"no_scratch"});
-	args::Flag _fixed(parser, "fixed", "Ablation: insertion of boxes with a reload with fixed boxes", {"fixed"});
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
-	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
-	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (0: maximum loaded volume, 1: minimum lost volume). Default: rule of Hessler et al.", {"theta"});
-	args::Flag _rollout(parser, "rollout", "Select the next ULD type among the candidates by completing the solution with a fast construction (see --rollout_time) and minimizing the total volume of the ULDs", {"rollout"});
-	args::ValueFlag<string> _subsets(parser, "string", "Candidate sets of boxes for each ULD, evaluated with the rollout: the largest boxes (or the boxes that fit in fewer ULD types, then the largest) up to rho times the volume of the ULD, for each rho in the comma-separated list", {"subsets"});
-	args::ValueFlag<double> _rollout_time(parser, "double", "Time limit of each run of BSG in the rollout (0: only the greedy). Default: 0.01", {"rollout_time"});
-	args::ValueFlag<double> _reassign_umax(parser, "double", "Reassignment: skip combinations that would need a utilization above this value. Default: 1", {"reassign_umax"});
-	args::ValueFlag<double> _reassign_tfrac(parser, "double", "Reassignment: time limit of BSG as a proportion of -t. Default: 1", {"reassign_tfrac"});
-	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
-	args::Flag _reduce(parser, "reduce", "Reduce the volume of the ULDs: remove a ULD, insert its boxes into the others and load the remaining ones into a smaller ULD (generalizes the elimination of ULDs)", {"reduce"});
-	args::Flag _reduce_memo(parser, "reduce_memo", "Reduction of the volume: do not repeat attempts that failed with the same ULDs", {"reduce_memo"});
-	args::ValueFlag<double> _reduce_umax(parser, "double", "Reduction of the volume: skip attempts and combinations that would need a utilization above this value. Default: 1", {"reduce_umax"});
-	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the remaining boxes (1 or 2). Default: 1", {"reduce_new"});
-	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
+	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
+	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
+	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
@@ -860,16 +692,7 @@ int main(int argc, char** argv){
 	}
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
-	if(_max_new) max_new=_max_new.Get();
 	if(_reduce_new) reduce_new=_reduce_new.Get();
-	reduce_memo=_reduce_memo;
-	if(_reduce_umax) reduce_umax=_reduce_umax.Get();
-	if(_reassign_umax) reassign_umax=_reassign_umax.Get();
-	if(_reassign_tfrac) reassign_tfrac=_reassign_tfrac.Get();
-	if(_theta) theta=_theta.Get();
-	rollout=_rollout;
-	if(_rollout_time) rollout_time=_rollout_time.Get();
-	if(_subsets){ stringstream ss(_subsets.Get()); string tok; while(getline(ss, tok, ',')) subset_rhos.push_back(atof(tok.c_str())); }
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -894,85 +717,10 @@ int main(int argc, char** argv){
 	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
-		vector<const ULD*> cands;
-		const ULD* u = select_uld(left, &cands);
+		const ULD* u = select_uld(left);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
-		//eleccion entre los tipos candidatos (--theta, --rollout): se carga cada uno; no se
-		//elige uno que deje el CoG fuera de rango si otro no
-		if((theta>=0 || rollout) && cands.size()>1){
-			auto est=[&](const Load& l){
-				vector<int> rest=left;
-				for(size_t t=0; t<rest.size(); t++) rest[t]-=l.boxes[t];
-				int k=uld_index(*l.uld);
-				if(available[k]>0) available[k]--;
-				Estimate e=complete(rest, P);
-				if(available[k]>=0 && available[k]!=-1) available[k]++;
-				e.volume+=l.uld->volume; e.n++;
-				return e;
-			};
-			auto better_est=[](const Estimate& a, const Estimate& b){
-				if(fabs(a.unloaded-b.unloaded)>1e6) return a.unloaded<b.unloaded;
-				if(fabs(a.volume-b.volume)>1e6) return a.volume<b.volume;
-				return a.n<b.n;
-			};
-			Estimate e0; if(rollout) e0=est(ld);
-			auto score=[&](const Load& l){ return l.volume - theta*l.uld->volume; };
-			for(const ULD* c : cands){
-				if(c->type==u->type) continue;
-				Load ld2 = load(*c, left, P);
-				if(!ld2.feasible || none(ld2.boxes) || (ld.cog_ok() && !ld2.cog_ok())) continue;
-				bool take=(!ld.cog_ok() && ld2.cog_ok());
-				if(!take && rollout){
-					Estimate e2=est(ld2);
-					if(better_est(e2, e0)){ take=true; e0=e2; }
-				}else if(!take) take = score(ld2) > score(ld);
-				else if(rollout) e0=est(ld2);
-				if(take){ ld=ld2; u=c; }
-			}
-		}
-		//conjuntos de cajas candidatos para este ULD (--subsets): las mas grandes (o las que caben
-		//en menos tipos y luego las mas grandes) hasta rho veces el volumen del ULD, para cada
-		//rho; se elige con rollout la carga de menor volumen total estimado
-		if(!subset_rhos.empty()){
-			auto est=[&](const Load& l){
-				vector<int> rest=left;
-				for(size_t t=0; t<rest.size(); t++) rest[t]-=l.boxes[t];
-				int k=uld_index(*l.uld);
-				if(available[k]>0) available[k]--;
-				Estimate e=complete(rest, P);
-				if(available[k]>=0) available[k]++;
-				e.volume+=l.uld->volume; e.n++;
-				return e;
-			};
-			auto better_est=[](const Estimate& a, const Estimate& b){
-				if(fabs(a.unloaded-b.unloaded)>1e6) return a.unloaded<b.unloaded;
-				if(fabs(a.volume-b.volume)>1e6) return a.volume<b.volume;
-				return a.n<b.n;
-			};
-			Estimate e0=est(ld);
-			vector<int> ord;
-			for(size_t t=0; t<left.size(); t++) if(left[t]>0 && fits(*clpState::types[t], *u)) ord.push_back(t);
-			auto nfit=[&](int t){ int c=0; for(size_t k=0; k<ulds.size(); k++) c += available[k]!=0 && fits(*clpState::types[t], ulds[k]); return c; };
-			for(int hard=0; hard<2; hard++){
-				vector<int> o=ord;
-				stable_sort(o.begin(), o.end(), [&](int a, int b){
-					if(hard && nfit(a)!=nfit(b)) return nfit(a)<nfit(b);
-					return clpState::types[a]->getVolume() > clpState::types[b]->getVolume(); });
-				for(double rho : subset_rhos){
-					vector<int> sub(left.size(), 0);
-					double v=0;
-					for(int t : o)
-						for(int c=0; c<left[t] && v < rho*u->volume; c++){ sub[t]++; v+=clpState::types[t]->getVolume(); }
-					if(sub==left) continue;
-					Load ls=load(*u, sub, P);
-					if(!ls.feasible || none(ls.boxes) || (ld.cog_ok() && !ls.cog_ok())) continue;
-					Estimate e=est(ls);
-					if(better_est(e, e0)){ e0=e; ld=ls; }
-				}
-			}
-		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
@@ -1006,51 +754,16 @@ int main(int argc, char** argv){
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
 
-	stage_scratch=!_no_scratch; stage_fixed=_fixed; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
+	stage_scratch=!_no_scratch; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
 
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
 	if(remaining()>0) insert(loads, left, P);
 
-	//si se cargaron todas las cajas, se eliminan ULDs insertando sus cajas en los otros (con
-	//--reduce: reduccion del volumen, que generaliza la eliminacion)
-	if(!_no_eliminate && remaining()==0){
-		//barridas: dentro de una, los ULDs que fallaron y no cambiaron no se reintentan; termina
-		//cuando una barrida completa no logra ningun cambio
-		if(_reduce)
-			for(bool changed=true; changed; ){
-				changed=false;
-				reduce_failed.clear();
-				while(reduce_volume(loads, P)) changed=true;
-				if(!reduce_memo) break;
-			}
-		else while(eliminate_uld(loads, P));
-	}
-
-	//reasignacion para reducir el volumen de los ULDs (despues, se intenta eliminar de nuevo)
-	if(_reassign)
-		while(reassign(loads, P))
-			if(!_no_eliminate && remaining()==0) while(eliminate_uld(loads, P));
-
-	//se intenta recargar las cajas del ULD menos utilizado en el ULD mas pequeno posible
-	Load& worst = *min_element(loads.begin(), loads.end(),
-			[](const Load& a, const Load& b){ return a.utilization() < b.utilization(); });
-	vector<const ULD*> smaller;
-	for(size_t i=0; i<ulds.size(); i++)
-		if(ulds[i].volume < worst.uld->volume && available[i]!=0) smaller.push_back(&ulds[i]);
-	sort(smaller.begin(), smaller.end(), [](const ULD* a, const ULD* b){ return a->volume < b->volume; });
-	for(const ULD* u : smaller){
-		const vector<int>& boxes=worst.boxes;
-		bool all_fit=true;
-		for(size_t t=0; t<boxes.size(); t++)
-			if(boxes[t]>0 && !fits(*clpState::types[t], *u)) all_fit=false;
-		if(!all_fit) continue;
-		Load ld = load(*u, boxes, P);
-		if(ld.boxes==boxes && (ld.cog_ok() || !worst.cog_ok())){
-			if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
-			if(available[uld_index(*worst.uld)]>=0) available[uld_index(*worst.uld)]++;
-			worst=ld;
-			break;
-		}
+	//reduccion del volumen de los ULDs (con --eliminate_only, solo eliminacion de ULDs, y solo
+	//si se cargaron todas las cajas)
+	if(!_no_eliminate){
+		if(_eliminate_only){ if(remaining()==0) while(eliminate_uld(loads, P)); }
+		else while(reduce_volume(loads, P));
 	}
 
 	double time=double(clock()-begin_time)/double(CLOCKS_PER_SEC);
@@ -1091,7 +804,7 @@ int main(int argc, char** argv){
 	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
 		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
 		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
-		<< " new2 " << st_new2 << " fail " << st_fail << " skip " << st_skip << " prune " << st_prune << endl;
+		<< " new2 " << st_new2 << " fail " << st_fail << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
