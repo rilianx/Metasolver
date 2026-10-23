@@ -211,6 +211,17 @@ esas soluciones están en `results/solutions/`, verificadas con `PLP_check` y `t
 
 Ablación de los componentes (la versión mínima rinde igual): `results/ablacion.md`.
 
+Instancias Merged de Egeblad et al. (2009), 600 s (`results/merged.md`; piezas de Ikonen descompuestas de forma
+exacta con `tools/decompose_prism.py`):
+
+| Instancia | Ítems | 3DNest (Egeblad et al. 2009) | Lamas-Fernández et al., 4 h | BSG_PLP mínima: media (mejor) |
+|---|---|---|---|---|
+| Merged1 | 15 | 17.00 | 17.13 | **16.60 (16.55)** |
+| Merged2 | 30 | 21.98 | 22.06 | **21.00 (21.00)** |
+| Merged3 | 45 | 24.04 | 24.32 | **22.07 (22.00)** |
+| Merged4 | 60 | 27.81 | 26.47 | **24.47 (24.01)** |
+| Merged5 | 75 | 30.13 | 29.24 | **27.04 (27.00)**; completa: 26.40 |
+
 Lamas-Fernández et al. (2023) usan piezas voxelizadas (algo más grandes) y reportan el mejor de 10 corridas de 1 h.
 
 Resultados iniciales sin ibex: `results/bsg_plp_v1.md`.
