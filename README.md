@@ -144,20 +144,48 @@ and it can be checked with an independent validator:
 
      python3 problems/clp/validate_uld.py <instance.csv> problems/clp/benchs/ULD/uld.csv <solution> [--support corners|full|none]
 
-Results on the 300 final instances (30 per size, 10 to 100 boxes), validated with
-`validate_uld.py`. Comparison instance by instance with Hessler et al. (2024)
-(`benchs/ULD/hessler2024_table8.json`, 708 ULDs, 11.2% of the ULDs with the center of gravity
-out of the allowed deviation in x or y; Paquay et al. 2018: 1010 ULDs) with
-`compare_hessler.py`. CoG z: center of gravity above the maximum height (Paquay et al. 2016),
-not considered by Hessler et al.
+Results on the 300 final instances of Paquay et al. (2018) (30 per size, 10 to 100 boxes),
+5 runs per configuration (mean ± standard deviation), all the solutions validated with
+`validate_uld.py`, scripts in `problems/clp/experiments` (`run_uld.sh`, `summarize.py`).
+Comparison instance by instance with Hessler et al. (2024) (`benchs/ULD/hessler2024_table*.json`):
+better means more boxes loaded or, with the same boxes, fewer ULDs.
 
-| -t (per ULD) | run | ULDs | better / equal / worse | Wilcoxon p | CoG xy | CoG z | avg time |
+* paquay: instances of Paquay et al. (Hessler et al.: 708 ULDs, 11.2% of the ULDs with the
+  CoG out of range; Paquay et al. 2018: 1010 ULDs);
+* adapted: edge of 10 mm with vertical offset 10 mm (substructure allowed), support by area
+  (min overlap 0.9, padding 10 mm), CoG deviation 10% of the half dimensions (Hessler et al.:
+  653 ULDs);
+* one: adapted with one ULD of each type (Hessler et al.: 729 ULDs, 24 boxes not loaded).
+
+CoG xy: ULDs with the CoG out of the allowed deviation in x or y; CoG z: CoG above the maximum
+height (Paquay et al. 2016, not considered by Hessler et al.).
+
+| instances | -t (per ULD) | ULDs | boxes not loaded | better / worse | CoG xy | CoG z | avg time |
 |---|---|---|---|---|---|---|---|
-| 0.1 s | 1 | 634 | 76 / 222 / 2 | 5e-17 | 2 | 0 | 0.61 s |
-| 0.1 s | 2 | 632 | 78 / 220 / 2 | 2e-17 | 1 | 0 | 0.61 s |
-| 0.1 s | 3 | 631 | 79 / 219 / 2 | 1e-17 | 2 | 0 | 0.62 s |
-| 1 s   | 1 | 605 | 104 / 195 / 1 | 9e-24 | 0 | 0 | 5.4 s |
-| 1 s   | 2 | 606 | 103 / 196 / 1 | 2e-23 | 0 | 0 | 5.4 s |
+| paquay  | 0.1 s | 614.8 ± 0.8 | 0 | 93.2 / 0 | 0 | 0 | 0.60 s |
+| paquay  | 1 s   | 595.4 ± 0.5 | 0 | 113.6 / 1 | 1 | 0 | 5.4 s |
+| adapted | 0.1 s | 591.0 ± 0.7 | 0 | 62.0 / 0 | 1 | 0 | 1.1 s |
+| adapted | 1 s   | 572.6 ± 0.5 | 0 | 80.4 / 0 | 2 | 0 | 10.2 s |
+| one     | 0.1 s | 698.0 ± 1.2 | 26.0 ± 1.4 | 45.2 / 18.8 | 3 | 0.8 | 1.5 s |
+| one     | 1 s   | 663.2 ± 0.4 | 27.0 | 76.2 / 16.2 | 4 | 1 | 12.5 s |
+
+Lower bound (`lower_bound_uld.py`: total volume / largest ULD, total weight / largest capacity,
+cliques of incompatible boxes): with 1 s per ULD about half of the paquay instances are solved
+to optimality (proven by the bound).
+
+Ablation (0.1 s per ULD, one run, one component turned off; ULDs and ULDs with the CoG out of
+range in x or y):
+
+| without | paquay | adapted | one (ULDs, boxes not loaded) |
+|---|---|---|---|
+| (complete algorithm) | 614 / 0 | 590 / 1 | 699, 25 |
+| CoG in the evaluation of the blocks (`--cog_greedy 0`) | 621 / 1 | 600 / 4 | 703, 24 |
+| CoG penalty in the value (`--cog_penalty 0`) | 610 / 178 | 589 / 300 | 674, 13 (349 CoG) |
+| translation of the load (`--no_translate`) | 618 / 81 | 597 / 85 | 706, 22 (146 CoG) |
+| grouped reload (`--no_regroup`) | 624 / 20 | 592 / 29 | 724, 26 |
+| elimination of ULDs (`--no_eliminate`) | 618 / 0 | 595 / 1 | 712, 24 |
+| substructure (`--no_substructure`) | - | 606 / 2 | 723, 24 |
+| all the previous except the CoG penalty and the translation | 626 / 21 | 627 / 54 | 777, 34 |
 
 ```
 ./BSG_ULD {OPTIONS} [instance]
