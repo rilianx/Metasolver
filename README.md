@@ -119,7 +119,7 @@ Constraints:
   is exceeded, the ULD is loaded again anchoring all the spaces at the origin
   (the load is grouped and it can be centered); this is also tried when the ULD is less than
   50% utilized and boxes remain. In the evaluation of the blocks, the VCS value is divided by
-  1 + `--cog_greedy` (default 1) * the deviation of the center of gravity after placing the
+  1 + `--cog_greedy` (default 0.5987) * the deviation of the center of gravity after placing the
   block (and translating the load).
 
 With a limited number of ULDs (`--uld_count`), the boxes that were not loaded are inserted
@@ -135,8 +135,8 @@ to the next ULD. The ULD is eliminated if all the freed boxes are loaded.
 Parameters: tuned with irace (`problems/clp/tuning`) on 150 preliminary instances of Paquay
 et al. (`benchs/ULD/training`, different from the final ones), 0.1 s per ULD, minimizing
 the number of ULDs + 5 * the ULDs with the center of gravity out of range:
-subset_ratio=2.331, cog_penalty=5.928, cog_greedy=1.346, max_bl=1000 and the VCS parameters
-alpha=0.6054, beta=0.4103, gamma=0.4637, p=0.0196.
+cog_penalty=12.6619, cog_greedy=0.5987, max_bl=500 and the VCS parameters alpha=1.2335,
+beta=0.2389, gamma=0.2243, p=0.0574.
 
 The solutions are verified box by box. With `-o file` the solution is written (one line
 per box: ULD, ULD type, item (line of the instance file, from 0), position and dimensions)
@@ -164,9 +164,9 @@ not considered by Hessler et al.
 
       -t[double]                        Timelimit of the search in each ULD
                                         (seconds, without the block generation). Default: 1
-      --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 10
+      --cog_penalty=[double]            Penalty p of the deviation of the center of gravity. Default: 12.66
       --support=[string]                corners, full or none. Default: corners
-      --max_bl=[int]                    Maximum number of blocks. Default: 1000
+      --max_bl=[int]                    Maximum number of blocks. Default: 500
       --no_eliminate                    Do not try to eliminate ULDs
       --uld=[string]                    ULD file (default: uld.csv in the parent directory of the instance)
       -o[string], --output=[string]     Write the solution to this file
