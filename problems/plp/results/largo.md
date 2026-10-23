@@ -53,3 +53,35 @@ Stoyan 2005 Example2, desde la mejor solución (20.29); se optimizan las k pieza
 
 La solución es localmente óptima para ventanas de hasta 8 de las 12 piezas: la mejor conocida (19.01) requiere
 cambiar también las piezas de abajo.
+
+## Movimientos de mínimo solapamiento (`--sep_method`)
+
+120 s, 3 semillas, media (mejor). `lp`: solo el LP de separación (versión anterior); `axis`: solo los movimientos de
+mínimo solapamiento por los ejes con búsqueda local guiada; `both`: ambos (por defecto).
+
+verificadas 63 (check_solution.py), infactibles 0
+
+| Instancia | Mejor conocida | solo LP | solo ejes | ambos |
+|---|---|---|---|---|
+| Stoyan 2004 Example1 | — | 54.19 (53.68) | 55.37 (54.54) | 52.43 (52.01) |
+| Stoyan 2004 Example2 | 28.47 | 31.28 (29.80) | 29.29 (29.00) | 29.88 (29.00) |
+| Stoyan 2004 Example3 | 41.30 | 48.02 (48.00) | 42.23 (41.00) | 42.09 (41.84) |
+| Stoyan 2004 Example4 | 54.83 | 63.38 (62.22) | 57.99 (56.73) | 56.52 (55.55) |
+| Stoyan 2004 Example5 | 72.33 | 74.31 (72.42) | 72.02 (69.98) | 72.68 (71.25) |
+| Stoyan 2005 Example2 | 19.01 | 20.49 (20.00) | 19.13 (19.13) | 19.13 (19.13) |
+| Stoyan 2005 Example3 | 29.76 | 29.97 (29.18) | 28.49 (28.08) | 28.34 (28.00) |
+| Brecha media | | +8.8% | +1.1% | +1.0% |
+
+Mejores soluciones (`solutions/`, verificadas con `tools/check_solution.py` y `PLP_check` con eps = 1e-9):
+
+| Instancia | Mejor publicada | Nuestra mejor |
+|---|---|---|
+| Stoyan 2004 Example1 | — | 52.01 |
+| Stoyan 2004 Example2 | 28.47 | 29.00 |
+| Stoyan 2004 Example3 | 41.30 | **41.00** |
+| Stoyan 2004 Example4 | 54.83 | 55.55 |
+| Stoyan 2004 Example5 | 72.33 | **69.98** |
+| Stoyan 2005 Example2 | 19.01 | 19.13 |
+| Stoyan 2005 Example3 | 29.76 | **28.00** |
+
+Las mejores publicadas de Stoyan 2004 y de Stoyan 2005 Ex3 son de Lamas-Fernández et al. (2023), con piezas voxelizadas (algo más grandes) y el mejor de 10 corridas de 1 h; la de Stoyan 2005 Ex2 es de Egeblad et al. (2009).
