@@ -123,7 +123,7 @@ static int uld_index(const ULD& u){
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<int>& left){
+static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=NULL){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
@@ -145,6 +145,7 @@ static const ULD* select_uld(const vector<int>& left){
 			if(nf==m) candidate=true;
 		}
 		if(!candidate) continue;
+		if(cands) cands->push_back(&ulds[u]);
 		if(vol>best_vol || (vol==best_vol && ulds[u].volume>best->volume)){ best=&ulds[u]; best_vol=vol; }
 	}
 	return best;
@@ -527,6 +528,8 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
  * de ULDs con el CoG fuera de rango. Retorna true si se hizo un cambio.
  */
 static int max_new=3;
+//seleccion del siguiente ULD con anticipacion (0: regla de Hessler et al.)
+static double lookahead=0.0;
 static bool reassign(vector<Load>& loads, const Params& P){
 	int n=loads.size(), nt=ulds.size();
 	//conjuntos de 1 o 2 ULDs, de mayor a menor volumen perdido
@@ -637,6 +640,7 @@ int main(int argc, char** argv){
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
+	args::ValueFlag<double> _lookahead(parser, "double", "Select the next ULD type among the candidates by loading each one and maximizing loaded volume / u - ULD volume (u: expected utilization). Default: 0 (rule of Hessler et al.)", {"lookahead"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
@@ -704,6 +708,7 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_max_new) max_new=_max_new.Get();
+	if(_lookahead) lookahead=_lookahead.Get();
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -728,10 +733,23 @@ int main(int argc, char** argv){
 	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
-		const ULD* u = select_uld(left);
+		vector<const ULD*> cands;
+		const ULD* u = select_uld(left, &cands);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
+		//seleccion con anticipacion (--lookahead u*): se carga cada tipo candidato y se elige el
+		//que minimiza el volumen estimado de la solucion, V_k + (volumen restante)/u*, es decir,
+		//el que maximiza (volumen cargado)/u* - V_k (sin dejar el CoG fuera de rango si otro no)
+		if(lookahead>0){
+			auto score=[&](const Load& l){ return l.volume/lookahead - l.uld->volume; };
+			for(const ULD* c : cands){
+				if(c->type==u->type) continue;
+				Load ld2 = load(*c, left, P);
+				if(!ld2.feasible || none(ld2.boxes) || (ld.cog_ok() && !ld2.cog_ok())) continue;
+				if(score(ld2) > score(ld) || (!ld.cog_ok() && ld2.cog_ok())){ ld=ld2; u=c; }
+			}
+		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
