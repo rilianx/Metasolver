@@ -213,7 +213,9 @@ int main(int argc, char** argv){
 			sep_calls++;
 			return placer.minimize_overlap(ps, ts, h, gls_iter, w, rng, gls=="mult", strikes, 3, _fls);
 		};
-		while(!_greedy && strip_time < 1.0 && elapsed() < t_explore && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
+		//la separacion por los ejes no requiere LP (sin LP se omiten la compactacion y la separacion por LP)
+		bool can_sep = !_no_separate && (lp || sep_method != "lp");
+		while(!_greedy && strip_time < 1.0 && elapsed() < t_explore && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && can_sep))){
 			double hmax = max(lb, H*(1-step));
 			double tl = min(t_explore, elapsed() + slice);
 
@@ -222,7 +224,7 @@ int main(int argc, char** argv){
 			//se vuelve a bajar; si no, se sube un poco la altura (sep_step/4) y se sigue desde la solucion solapada.
 			//Cuando la altura vuelve a la de la mejor solucion, kick: se intercambian dos piezas de la mejor solucion.
 			//La fase termina tras max_kicks kicks seguidos sin mejora; luego un intento de reparacion con BSG.
-			if(lp && !_no_separate && need_sep){
+			if(can_sep && need_sep){
 				need_sep = false;
 				int sep_iter = (_sep_iter)? _sep_iter.Get() : 50;
 				vector<int> ps;
@@ -246,7 +248,7 @@ int main(int argc, char** argv){
 				while(kicks < max_kicks && elapsed() < t_explore && H > lb*(1+1e-6)){
 					bool sep_ok = false;
 					if(sep_method != "lp") sep_ok = min_overlap(ps, ts, hc, weights);
-					if(!sep_ok && sep_method != "axis") sep_ok = placer.separate(ps, ts, hc, *lp, sep_iter, &weights);
+					if(!sep_ok && lp && sep_method != "axis") sep_ok = placer.separate(ps, ts, hc, *lp, sep_iter, &weights);
 					if(sep_ok){
 						double H2 = (_no_improve)? hc : polish(ps, ts);
 						if(H2 < H - 1e-9*H){
