@@ -177,20 +177,21 @@ whereas the non-final ULDs of our solutions are about 70\% full.
 \subsection{Running time}
 \label{sec:exp-time}
 
-\citet{Hessler2025} solve each instance in at most 0.5\,s (Paquay setting) on an Apple M2 Pro.
-Our algorithm needs 0.60\,s per instance on average with $t = 0.1$\,s, on a different machine.
-To compare the methods at similar running times, Figure~\ref{fig:time} shows the number of ULDs
-as a function of the time limit per ULD. With the version of the algorithm described in a
-preliminary experiment, $t = 0.02$\,s (0.16\,s per instance on average) already yields 661 ULDs,
-7\% fewer than the RGS.
-\todo{repetir la curva ($t \in \{0.02, 0.05, 0.1, 0.2, 0.5, 1, 2\}$\,s) con la version final y
-normalizar el tiempo con un benchmark de un nucleo.}
+\citet{Hessler2025} solve each instance in 0.19\,s on average (at most 0.5\,s) in the Paquay
+setting, on an Apple M2 Pro. Figure~\ref{fig:time} shows the number of ULDs obtained by our
+algorithm as a function of the mean time per instance, for time limits per ULD between 0.02\,s
+and 2\,s. With $t = 0.02$\,s (0.14\,s per instance on average, at most 0.45\,s) our algorithm
+uses 629 ULDs, 11\% fewer than the RGS, and it is not worse in any instance. Increasing the
+time limit keeps reducing the number of ULDs: 615 ULDs in 0.6\,s, 601 in 1.1\,s and 594 in
+10.6\,s.
+\todo{normalizar el tiempo con un benchmark de un nucleo (servidor local vs. Apple M2 Pro).}
 
 \begin{figure}[htbp]
 \centering
-\todo{figura: ULDs (eje y) vs. tiempo medio por instancia (eje x, log), con la linea horizontal
-de \citet{Hessler2025} (708) y de \citet{Paquay2018b} (1010).}
-\caption{Number of ULDs (Paquay setting) as a function of the mean time per instance.}
+\includegraphics[width=0.62\textwidth]{figures/time.pdf}
+\caption{Number of ULDs in the 300 instances of the Paquay setting as a function of the mean
+time per instance (the labels are the time limits per ULD; mean of five runs for 0.1\,s and
+1\,s, one run otherwise), and the RGS of \citet{Hessler2025} (different machine).}
 \label{fig:time}
 \end{figure}
 
@@ -241,14 +242,26 @@ and the weight balance in the score of a solution with weights $1 - I_w$ and $I_
 $I_w = 0.5$ in the adapted settings, whereas our penalty $\lambda$ makes the CoG almost a hard
 constraint. As the ablation shows, relaxing it reduces the number of ULDs and of unloaded boxes
 at the price of many CoG violations. To compare the methods independently of this choice,
-Figure~\ref{fig:tradeoff} shows the number of ULDs (and of unloaded boxes) against the
-percentage of ULDs with the CoG out of range for several values of $\lambda$.
-\todo{barrer $\lambda \in \{0, 0.5, 1, 2, 5, 12.66, 30\}$ en los tres escenarios y ubicar el
-punto de \citet{Hessler2025}.}
+Figure~\ref{fig:tradeoff} shows the number of ULDs against the percentage of ULDs with the CoG
+out of range for $\lambda \in \{0, 0.5, 1, 2, 5, 12.66, 30\}$ ($t = 0.1$\,s).
+In the Paquay and adapted settings the number of ULDs is almost insensitive to $\lambda$ as
+long as $\lambda \geq 0.5$ (612--615 and 588--591 ULDs, with at most 7 ULDs out of range); only
+$\lambda = 0$, which ignores the CoG in the value of the solutions, saves a few more ULDs (608
+and 588) with 31\% and 51\% of the ULDs out of range. In both settings every value $\lambda \geq 0.5$
+dominates the RGS, which uses more ULDs and has more violations.
+In the setting with one ULD of each type the trade-off is stronger: with $\lambda = 2$ our
+algorithm uses 688 ULDs and leaves 22 boxes unloaded with 0.9\% of the ULDs out of range,
+which dominates the RGS (729 ULDs, 24 unloaded boxes, 10.1\% out of range) in the three
+criteria; the tuned value $\lambda = 12.66$ almost eliminates the violations (0.4\%) at the
+price of 26 unloaded boxes. With $\lambda = 0$ only 12 boxes remain unloaded, but half of the
+ULDs violate the CoG constraint.
 
 \begin{figure}[htbp]
 \centering
-\todo{figura: ULDs vs. porcentaje de ULDs con el CoG fuera de rango, una curva por escenario.}
-\caption{Trade-off between the number of ULDs and the weight distribution.}
+\includegraphics[width=\textwidth]{figures/tradeoff.pdf}
+\caption{Number of ULDs against the percentage of ULDs with the CoG out of range in the length
+or width direction, for several values of the penalty $\lambda$ ($t = 0.1$\,s), and the RGS of
+\citet{Hessler2025}. In the setting with one ULD of each type the number of unloaded boxes is
+given in parentheses.}
 \label{fig:tradeoff}
 \end{figure}
