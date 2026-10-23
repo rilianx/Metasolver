@@ -15,7 +15,7 @@ from scipy.spatial import ConvexHull
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BENCHS = os.path.join(HERE, '..', 'benchs')
-SOLS = os.path.join(HERE, '..', 'results', 'solutions')
+SOLS = os.path.join(HERE, '..', 'results', 'solutions_final')
 OUT = os.path.join(HERE, 'figures')
 
 OURS, OTHER = '#2a78d6', '#eb6834'
@@ -29,14 +29,14 @@ V1 = 1687.3255
 EGEBLAD = {1: (23.44, 37.29, 39.68, 42.38, 42.97), 2: (23.62, 30.23, 39.77, 42.80, 42.92),
            3: (24.58, 27.02, 35.49, 42.23, 43.32), 4: (24.80, 26.09, 31.61, 40.06, 41.99),
            5: (26.17, 26.66, 29.63, 37.99, 40.96)}
-EG_T = (1, 10, 60, 300, 600)   # el valor "0 s" se dibuja en 1 s (escala logaritmica)
+EG_T = (0.1, 10, 60, 300, 600)   # el valor "0 s" se dibuja en 0.1 s (escala logaritmica)
 
 
 def merged_time():
     traj = {}
     for r in csv.DictReader(open(os.path.join(HERE, 'data', 'merged_trajectories.csv'))):
         traj.setdefault(int(r['instance'][6:]), {}).setdefault(int(r['seed']), []).append((float(r['time_s']), float(r['height'])))
-    grid = np.logspace(np.log10(6.5), np.log10(600), 200)
+    grid = np.logspace(-1, np.log10(120), 200)
     fig, axs = plt.subplots(1, 5, figsize=(7.2, 2.1), sharey=True)
     for k, i in enumerate(range(1, 6)):
         W = json.load(open(os.path.join(BENCHS, 'Egeblad et al. 2009', 'Merged%d.json' % i)))['container']['size-x']
@@ -45,14 +45,14 @@ def merged_time():
         for seed, pts in traj[i].items():
             u = []
             for t in grid:
-                h = min(h for (s, h) in pts if s <= t)
-                u.append(100*V/(W*W*h))
+                hs = [h for (s, h) in pts if s <= t]
+                u.append(100*V/(W*W*min(hs)) if hs else np.nan)
             us.append(u)
         ax = axs[k]
-        ax.plot(grid, np.mean(us, axis=0), color=OURS, lw=1.5, label='This work (mean of 3)')
+        ax.plot(grid, np.mean(us, axis=0), color=OURS, lw=1.5, label='This work (mean of 10, 120 s)')
         ax.plot(EG_T, EGEBLAD[i], color=OTHER, lw=1.2, ls='--', marker='o', ms=3.5, label='3DNest (mean of 10)')
         ax.set_xscale('log')
-        ax.set_xticks([1, 10, 100, 600]); ax.set_xticklabels(['0', '10', '100', '600'])
+        ax.set_xticks([0.1, 1, 10, 600]); ax.set_xticklabels(['0', '1', '10', '600'])
         ax.set_title('Merged%d (%d items)' % (i, 15*i), fontsize=8, color=INK)
         ax.grid(axis='y', color='#e4e3df', lw=0.6)
         ax.set_xlabel('time (s)')
@@ -138,9 +138,9 @@ def draw(ax, inst, sol, title):
 def solutions():
     fig = plt.figure(figsize=(7.2, 3.6))
     ax1 = fig.add_subplot(1, 2, 1, projection='3d')
-    draw(ax1, 'Stoyan et al. 2005/Example3.json', 'Stoyan2005_Example3_26.91.json', 'Stoyan 2005 Example 3')
+    draw(ax1, 'Stoyan et al. 2005/Example3.json', 'Stoyan2005_Example3_27.00.json', 'Stoyan 2005 Example 3')
     ax2 = fig.add_subplot(1, 2, 2, projection='3d')
-    draw(ax2, 'Egeblad et al. 2009/Merged5.json', 'Egeblad2009_Merged5_26.40.json', 'Merged5')
+    draw(ax2, 'Egeblad et al. 2009/Merged5.json', 'Egeblad2009_Merged5_27.00.json', 'Merged5')
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
     fig.savefig(os.path.join(OUT, 'solutions.pdf'))
 

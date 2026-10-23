@@ -35,13 +35,14 @@ are represented exactly as unions of convex polytopes. Overlap between two conve
 penetration depth of their relative position in the no-fit polytope (NFP), a quantity that, along any axis
 direction, is concave on an interval and zero outside it. Hence the position of a piece along an axis that
 minimizes its weighted overlap with all other pieces can be computed exactly by evaluating interval endpoints
-only. We embed this move in a strategic oscillation scheme with guided local search, kicks, and a global
-linear-programming compaction over NFP facets. An ablation study shows the contribution of each component and
-that the speed of the separation is decisive. On the Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method
-improves the best known heights by \prov{3--9\%} and reaches in 10 seconds the utilization that the reference
-method attains in 600 seconds. It also improves the best known solutions of a classical convex instance and of
-the non-convex instances of \citet{stoyan2004}. Finally, a margin-based final compaction and dyadic rounding
-yield solutions whose feasibility is certified in exact rational arithmetic.
+only. We embed this move in a strategic oscillation scheme with multiplicative guided local search weights and
+kicks. An ablation study shows that the weights and, above all, the speed of the separation are decisive. On the
+Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method improves the best known
+heights by 2.5--9\% within 120 seconds, and after 10 seconds its mean utilization exceeds that of the reference
+method after 600 seconds. It also improves the best known solutions of a classical convex instance and of the
+non-convex instances of \citet{stoyan2004}, one of which is solved to optimality. Finally, a linear-programming
+compaction over no-fit polytope facets with soft margins, followed by dyadic rounding, yields solutions whose
+feasibility is certified in exact rational arithmetic.
 \end{abstract}
 
 \begin{keyword}
@@ -83,12 +84,12 @@ concave on an interval and zero outside it, so the optimal position of a piece a
 interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
 \citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
 \citet{egeblad2009}.
-\item A global compaction by linear programming over NFP facets, in the spirit of \citet{gomes2006} in 2D,
-integrated in a strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and kicks.
-\item An ablation study of the components, showing that the speed of the separation is decisive.
+\item A strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and kicks, and an ablation
+study showing that the weights and the speed of the separation are decisive, whereas a global LP compaction over
+NFP facets, in the spirit of \citet{gomes2006} in 2D, has no measurable effect on the quality.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
 \citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest.
-\item Solutions with certified feasibility: a final compaction with soft margins and dyadic rounding produce
+\item Solutions with certified feasibility: a final LP compaction with soft margins and dyadic rounding produce
 layouts that are verified in exact rational arithmetic, without tolerances.
 \item An exact convex decomposition of the non-convex (prismatic) pieces of \citet{ikonen1997} used in the
 Merged instances, and the identification of inconsistencies in the public data.
@@ -251,8 +252,9 @@ The certificate is computed with rational arithmetic: vertices and translations 
 numbers, hence exact rationals. For containment all vertices are checked against the container; for every pair
 of convex parts with intersecting bounding boxes a separating axis is searched among the face normals of both
 parts and the cross products of their edges (computed exactly), accepting it if $\max_A n\cdot a\le\min_B n\cdot b$.
-\prov{In 22 test runs (11 instances, 2 seeds, 20 s) all solutions were certified; the height increases by
-$10^{-7}$--$10^{-6}$.}
+Of the 130 solutions of Table~\ref{tab:results} (13 instances, 10 seeds), 129 were certified; in the remaining
+one (Stoyan 2004 Example 3) three pairs of parts in forced contact overlap by at most $1.7\times10^{-15}$. The
+height increases by $10^{-7}$--$10^{-6}$.
 
 % =====================================================================================================
 \section{Computational experiments}\label{sec:exp}
@@ -289,6 +291,14 @@ Table~\ref{tab:ablation} evaluates the components on the seven hardest instances
 Stoyan 2005 Examples 2--3). Each row changes one element of the method. The effect of the speed of the separation
 is estimated by stopping the same runs at 24 s, which corresponds to moves five times slower.
 
+The multiplicative weights and the speed of the separation are the decisive elements: with additive weights the
+mean heights increase on Stoyan 2004 Examples 3--5 and Stoyan 2005 Example 3 (e.g., from 53.20 to 55.04 on
+Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. Swapping two pieces in the kick
+gives the same results as reinserting one. The LP compaction has no measurable effect: the differences are
+within one standard error on every instance. It is therefore not needed for the quality of the solutions, and
+the method can run without an LP solver; we keep a single LP at the end to obtain certifiable solutions
+(Section~\ref{sec:cert}).
+
 \begin{table}[t]
 \centering\small
 \caption{Mean gap of the height with respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan
@@ -298,11 +308,11 @@ Negative is better.}\label{tab:ablation}
 \toprule
 Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 \midrule
-Proposed method & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
-Without LP compaction & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
-Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
-Kick: swap two pieces instead of reinserting one & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
-Separation five times slower (runs stopped at 24 s) & \prov{TBD} & \prov{TBD} & \prov{TBD}\\
+Proposed method & $-3.2\%$ & $-2.0\%$ & 52.95\\
+Without LP compaction & $-3.0\%$ & $-2.1\%$ & 52.87\\
+Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.3\%$ & $-1.0\%$ & 53.23\\
+Kick: swap two pieces instead of reinserting one & $-3.2\%$ & $-2.0\%$ & 53.02\\
+Separation five times slower (runs stopped at 24 s) & $-0.5\%$ & $-1.0\%$ & 54.33\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -311,8 +321,8 @@ Separation five times slower (runs stopped at 24 s) & \prov{TBD} & \prov{TBD} & 
 Table~\ref{tab:results} compares the method with the literature. On the instances that share the exact
 geometry of 3DNest (Stoyan 2005 Examples 2--3 and Merged1--5), the method obtains lower heights in six of seven
 cases; the exception is Stoyan 2005 Example 2 (19.13 versus 19.01). The improvement grows with the size of the
-instance: on Merged3--5 our best heights are \prov{8--9\%} below the best known values, obtained by the
-voxel VNS with the finest resolution and four hours. On Stoyan 2004, the method improves the exact reference by
+instance: on Merged3--5 our best heights are 8--9\% below the best known values, obtained by the voxel VNS
+with the finest resolution and four hours, and our mean heights after 120 s are lower than those best values. On Stoyan 2004, the method improves the exact reference by
 a wide margin, and on Example 2 it reaches the optimum.
 
 \begin{table}[t]
@@ -330,18 +340,18 @@ public data.}
 \cmidrule(lr){3-4}\cmidrule(lr){5-6}
 Instance & $n$ & best & mean & best & mean & Ours\\
 \midrule
-Stoyan 2005 Ex1 & 7 & 17.46 (opt.) & -- & -- & -- & \prov{17.48 (17.46)}\\
-Stoyan 2005 Ex2 & 12 & \textbf{19.01} & 19.83 & 21.23 & 21.70 & \prov{19.13 (19.13)}\\
-Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \prov{\textbf{27.52 (27.00)}}\\
-Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & 28.47$^\dagger$ & 29.40 & \prov{\textbf{29.00 (29.00)}}$^*$\\
-Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \prov{\textbf{40.15 (40.00)}}\\
-Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \prov{\textbf{52.69 (50.91)}}\\
-Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \prov{\textbf{67.21 (66.54)}}\\
-Merged1 & 15 & 17.00 & 17.45 & 17.13 & 18.67 & \prov{\textbf{16.60 (16.55)}}\\
-Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \prov{\textbf{21.00 (21.00)}}\\
-Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \prov{\textbf{22.07 (22.00)}}\\
-Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \prov{\textbf{24.47 (24.01)}}\\
-Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \prov{\textbf{27.04 (27.00)}}\\
+Stoyan 2005 Ex1 & 7 & 17.46 (opt.) & -- & -- & -- & 17.47 (17.46)\\
+Stoyan 2005 Ex2 & 12 & \textbf{19.01} & 19.83 & 21.23 & 21.70 & 19.13 (19.13)\\
+Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \textbf{27.48 (27.00)}\\
+Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & 28.47$^\dagger$ & 29.40 & \textbf{29.00 (29.00)}$^*$\\
+Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \textbf{39.95 (38.65)}\\
+Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \textbf{53.20 (52.46)}\\
+Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \textbf{66.33 (64.96)}\\
+Merged1 & 15 & 17.00 & 17.45 & 17.13 & 18.67 & \textbf{16.66 (16.57)}\\
+Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \textbf{21.01 (21.00)}\\
+Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \textbf{22.38 (22.00)}\\
+Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \textbf{25.00 (24.10)}\\
+Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \textbf{27.91 (27.00)}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -355,14 +365,15 @@ optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/solutions.pdf}
-\caption{Best solutions found for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
+\caption{Best solutions of the final runs (certified) for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
 \end{figure}
 
 \subsection{Time-matched comparison}
 Hardware differs by about fifteen years. Figure~\ref{fig:time} compares the mean utilization over time with that
-of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 6 seconds (the greedy
-construction and compaction), and at 10 seconds our mean utilization already exceeds the mean utilization of
-3DNest at 600 seconds on all five instances. Even assuming that our machine is five times faster per core, the
+of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after less than 0.4 seconds (the
+greedy construction and compaction), and at 10 seconds our mean utilization already exceeds the mean utilization
+of 3DNest at 600 seconds on all five instances (44.5, 43.5, 45.5, 45.2 and 43.4\% versus 43.0, 42.9, 43.3, 42.0
+and 41.0\%). Even assuming that our machine is five times faster per core, the
 advantage holds at equal effective time.
 
 \begin{figure}[t]
