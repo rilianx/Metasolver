@@ -8,7 +8,8 @@
 #                  paquay_file (instancias de Paquay et al. con las desviaciones del archivo)
 #                  adapted  (borde, soporte por area, CoG relativo; --table 10)
 #                  one      (adapted con un ULD de cada tipo; --table 12)
-# Variables: BIN (binario, por defecto build/BSG_ULD), JOBS (procesos en paralelo, 4)
+# Variables: BIN (binario, por defecto build/BSG_ULD), JOBS (procesos en paralelo, 4),
+#   INSTANCES (directorio de instancias en benchs/ULD, por defecto Final_instances)
 #
 # ejemplo: problems/clp/experiments/run_uld.sh paquay /tmp/pq -t 0.1
 #          python3 problems/clp/compare_hessler.py --table 8 /tmp/pq
@@ -27,7 +28,7 @@ case $CONF in
 esac
 mkdir -p $OUT
 export ROOT BIN OUT ARGS VARGS EXTRA="$*"
-ls $ROOT/problems/clp/benchs/ULD/Final_instances/*.csv | xargs -P$JOBS -I{} sh -c '
+ls $ROOT/problems/clp/benchs/ULD/${INSTANCES:-Final_instances}/*.csv | xargs -P$JOBS -I{} sh -c '
 	f={}; b=$(basename $f .csv)
 	$BIN $f $ARGS $EXTRA -v -o $OUT/$b.sol > $OUT/$b.out 2>&1
 	python3 $ROOT/problems/clp/validate_uld.py $f $ROOT/problems/clp/benchs/ULD/uld.csv $OUT/$b.sol $VARGS > $OUT/$b.val 2>&1 || true'

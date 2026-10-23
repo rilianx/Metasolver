@@ -210,6 +210,9 @@ static bool check_boxes(const clpState& s, const ULD& u){
 	return true;
 }
 
+static bool none(const vector<int>& b);
+static double volume_of(const vector<int>& b);
+
 struct Params {
 	double alpha, beta, gamma, p, delta, min_fr, time;
 	int max_bl;
@@ -528,8 +531,36 @@ static bool eliminate_uld(vector<Load>& loads, const Params& P){
  * de ULDs con el CoG fuera de rango. Retorna true si se hizo un cambio.
  */
 static int max_new=3;
-//seleccion del siguiente ULD con anticipacion (0: regla de Hessler et al.)
-static double lookahead=0.0;
+//seleccion del siguiente ULD entre los candidatos: theta>=0 maximiza (volumen cargado) -
+//theta*(volumen del ULD) (theta<0: regla de Hessler et al.); con rollout, se completa la
+//solucion con una construccion rapida y se elige el de menor volumen total
+static double theta=-1.0;
+static bool rollout=false;
+static double rollout_time=0.01;
+
+/**
+ * Completa la carga de las cajas left con la construccion secuencial (regla de Hessler et al.,
+ * sin fases de mejora) y P.time=rollout_time; los ULDs disponibles se restauran al final.
+ * Retorna el volumen sin cargar, el volumen de los ULDs y la cantidad de ULDs.
+ */
+struct Estimate { double unloaded, volume; int n; };
+static Estimate complete(vector<int> left, const Params& P0){
+	Params P=P0; P.time=rollout_time;
+	vector<int> av=available;
+	Estimate e{0, 0, 0};
+	while(!none(left)){
+		const ULD* u=select_uld(left);
+		if(!u) break;
+		Load ld=load(*u, left, P);
+		if(none(ld.boxes)) break;
+		for(size_t t=0; t<left.size(); t++) left[t]-=ld.boxes[t];
+		e.volume+=u->volume; e.n++;
+		int k=uld_index(*u); if(available[k]>0) available[k]--;
+	}
+	e.unloaded=volume_of(left);
+	available=av;
+	return e;
+}
 static bool reassign(vector<Load>& loads, const Params& P){
 	int n=loads.size(), nt=ulds.size();
 	//conjuntos de 1 o 2 ULDs, de mayor a menor volumen perdido
@@ -640,7 +671,9 @@ int main(int argc, char** argv){
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
-	args::ValueFlag<double> _lookahead(parser, "double", "Select the next ULD type among the candidates by loading each one and maximizing loaded volume / u - ULD volume (u: expected utilization). Default: 0 (rule of Hessler et al.)", {"lookahead"});
+	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (0: maximum loaded volume, 1: minimum lost volume). Default: rule of Hessler et al.", {"theta"});
+	args::Flag _rollout(parser, "rollout", "Select the next ULD type among the candidates by completing the solution with a fast construction (see --rollout_time) and minimizing the total volume of the ULDs", {"rollout"});
+	args::ValueFlag<double> _rollout_time(parser, "double", "Time limit of each run of BSG in the rollout. Default: 0.01", {"rollout_time"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
@@ -708,7 +741,9 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_max_new) max_new=_max_new.Get();
-	if(_lookahead) lookahead=_lookahead.Get();
+	if(_theta) theta=_theta.Get();
+	rollout=_rollout;
+	if(_rollout_time) rollout_time=_rollout_time.Get();
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -738,16 +773,37 @@ int main(int argc, char** argv){
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
-		//seleccion con anticipacion (--lookahead u*): se carga cada tipo candidato y se elige el
-		//que minimiza el volumen estimado de la solucion, V_k + (volumen restante)/u*, es decir,
-		//el que maximiza (volumen cargado)/u* - V_k (sin dejar el CoG fuera de rango si otro no)
-		if(lookahead>0){
-			auto score=[&](const Load& l){ return l.volume/lookahead - l.uld->volume; };
+		//eleccion entre los tipos candidatos (--theta, --rollout): se carga cada uno; no se
+		//elige uno que deje el CoG fuera de rango si otro no
+		if((theta>=0 || rollout) && cands.size()>1){
+			auto est=[&](const Load& l){
+				vector<int> rest=left;
+				for(size_t t=0; t<rest.size(); t++) rest[t]-=l.boxes[t];
+				int k=uld_index(*l.uld);
+				if(available[k]>0) available[k]--;
+				Estimate e=complete(rest, P);
+				if(available[k]>=0 && available[k]!=-1) available[k]++;
+				e.volume+=l.uld->volume; e.n++;
+				return e;
+			};
+			auto better_est=[](const Estimate& a, const Estimate& b){
+				if(fabs(a.unloaded-b.unloaded)>1e6) return a.unloaded<b.unloaded;
+				if(fabs(a.volume-b.volume)>1e6) return a.volume<b.volume;
+				return a.n<b.n;
+			};
+			Estimate e0; if(rollout) e0=est(ld);
+			auto score=[&](const Load& l){ return l.volume - theta*l.uld->volume; };
 			for(const ULD* c : cands){
 				if(c->type==u->type) continue;
 				Load ld2 = load(*c, left, P);
 				if(!ld2.feasible || none(ld2.boxes) || (ld.cog_ok() && !ld2.cog_ok())) continue;
-				if(score(ld2) > score(ld) || (!ld.cog_ok() && ld2.cog_ok())){ ld=ld2; u=c; }
+				bool take=(!ld.cog_ok() && ld2.cog_ok());
+				if(!take && rollout){
+					Estimate e2=est(ld2);
+					if(better_est(e2, e0)){ take=true; e0=e2; }
+				}else if(!take) take = score(ld2) > score(ld);
+				else if(rollout) e0=est(ld2);
+				if(take){ ld=ld2; u=c; }
 			}
 		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
