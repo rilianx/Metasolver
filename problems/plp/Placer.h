@@ -159,10 +159,12 @@ public:
 	 * se suma 1 al peso de los pares solapados.
 	 * strike_iter > 0: se guarda la mejor disposicion (menor penetracion total sin pesos); tras strike_iter pasadas
 	 * sin mejorarla se vuelve a ella (strike) y tras max_strikes se termina. Al fallar, t queda en la mejor disposicion.
+	 * fls: busqueda local rapida; una pieza se desactiva cuando sus movimientos no mejoran y se activa cuando una pieza
+	 * que la solapa (antes o despues) se mueve; el minimo local es cuando no quedan piezas solapadas activas.
 	 */
 	bool minimize_overlap(const std::vector<int>& pieces, std::vector<Vec3>& t, double H, int max_iter,
 			std::map< std::pair<int,int>, double >& weights, std::mt19937& rng, bool mult=false,
-			int strike_iter=0, int max_strikes=3);
+			int strike_iter=0, int max_strikes=3, bool fls=false);
 
 	/**
 	 * Intercambio de las piezas i y j (Imamichi et al. 2009; Gardeyn et al. 2025): cada una toma el centro de la caja
@@ -213,6 +215,8 @@ private:
 	std::vector<Block> blocks;
 
 	std::map< std::pair<int,int>, ConvexPolytope > nfps;
+	//acceso directo a los NFP ya calculados: nfp_idx[a][b] (filas creadas al usarse)
+	std::vector< std::vector<const ConvexPolytope*> > nfp_idx;
 
 	SmallLP lp;
 

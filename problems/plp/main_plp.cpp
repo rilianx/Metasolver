@@ -37,6 +37,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _kick_size(parser, "int", "Kick: maximum number of pieces reinserted (uniform between 1 and this value). Default: 1", {"kick_size"});
 	args::ValueFlag<int> _kicks(parser, "int", "Separation phase: consecutive kicks without improvement before trying the BSG repair. Default: 30", {"kicks"});
 	args::ValueFlag<string> _gls(parser, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
+	args::Flag _fls(parser, "fls", "Fast local search in the minimum-overlap search: only the pieces whose neighborhood changed are moved", {"fls"});
 	args::ValueFlag<int> _strikes(parser, "int", "Minimum-overlap search: passes without improving the best overlapped layout before going back to it (0: never); 3 strikes end the search. Default: 0", {"strikes"});
 	args::ValueFlag<double> _sep_inc(parser, "double", "Height increase after a failed separation (proportion of sep_step; 0: kick directly). Default: 0.25", {"sep_inc"});
 	args::ValueFlag<string> _kick(parser, "reinsert|swap|mix", "Kick: reinsert pieces in the free space, swap two pieces of different type and similar volume, or either (1/2 each). Default: reinsert", {"kick"});
@@ -207,8 +208,10 @@ int main(int argc, char** argv){
 		double compress = (_compress)? _compress.Get() : 0.0;
 		//fin de la exploracion (el resto del tiempo es para la compresion)
 		double t_explore = maxtime*(1-compress);
+		long sep_calls = 0;
 		auto min_overlap = [&](const vector<int>& ps, vector<Vec3>& ts, double h, map< pair<int,int>, double >& w) {
-			return placer.minimize_overlap(ps, ts, h, gls_iter, w, rng, gls=="mult", strikes);
+			sep_calls++;
+			return placer.minimize_overlap(ps, ts, h, gls_iter, w, rng, gls=="mult", strikes, 3, _fls);
 		};
 		while(!_greedy && strip_time < 1.0 && elapsed() < t_explore && H > lb*(1+1e-6) && (step > 1e-4 || (need_sep && lp && !_no_separate))){
 			double hmax = max(lb, H*(1-step));
@@ -374,6 +377,7 @@ int main(int argc, char** argv){
 
 		double time = double(clock()-begin_time)/CLOCKS_PER_SEC;
 		Report r = S.verify();
+		cout << "separations: " << sep_calls << endl;
 		cout << "time: " << time << endl;
 		cout << r;
 		if(_out) S.save(_out.Get());
