@@ -258,10 +258,13 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	//la salida de la busqueda se descarta
 	streambuf* buf=cout.rdbuf(NULL);
 	State* s_copy = s0->clone();
-	de->run(*s_copy, P.time, begin_time);
+	//con P.time=0 solo se ejecuta el greedy (una completacion)
+	if(P.time>0) de->run(*s_copy, P.time, begin_time);
+	else gr->run(*s_copy, 0.0, begin_time);
 	cout.rdbuf(buf);
 
-	clpState* best = de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL;
+	clpState* best = (P.time>0)? (de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL)
+			: static_cast<clpState*>(s_copy->clone());
 	if(best){
 		//se desplaza la carga para centrar el centro de gravedad
 		long dx, dy;
@@ -673,7 +676,7 @@ int main(int argc, char** argv){
 	args::Flag _reassign(parser, "reassign", "Reduce the total volume of the ULDs by loading the boxes of 1 or 2 ULDs into 1 to --max_new ULDs of smaller total volume", {"reassign"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (0: maximum loaded volume, 1: minimum lost volume). Default: rule of Hessler et al.", {"theta"});
 	args::Flag _rollout(parser, "rollout", "Select the next ULD type among the candidates by completing the solution with a fast construction (see --rollout_time) and minimizing the total volume of the ULDs", {"rollout"});
-	args::ValueFlag<double> _rollout_time(parser, "double", "Time limit of each run of BSG in the rollout. Default: 0.01", {"rollout_time"});
+	args::ValueFlag<double> _rollout_time(parser, "double", "Time limit of each run of BSG in the rollout (0: only the greedy). Default: 0.01", {"rollout_time"});
 	args::ValueFlag<int> _max_new(parser, "int", "Reassignment: maximum number of new ULDs. Default: 3", {"max_new"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Do not try to eliminate ULDs by distributing their boxes into the other ULDs", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
