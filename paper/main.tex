@@ -1,0 +1,26 @@
+% Documento principal del paper (borrador). Compilar con: latexmk -pdf main.tex
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[round]{natbib}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{A beam search for the air cargo palletization problem\\with weight distribution constraints}
+\author{\todo{autores}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\input{experiments}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{document}

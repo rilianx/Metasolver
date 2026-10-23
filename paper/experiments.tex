@@ -1,5 +1,6 @@
 % Borrador de la seccion de experimentos (BSG para carga aerea en ULDs).
 % Requiere: booktabs, multirow, siunitx (opcional). \todo{...} marca lo pendiente.
+% (\todo se define en main.tex)
 \providecommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 \section{Computational experiments}
@@ -68,6 +69,7 @@ parameters.
 
 \begin{table}[htbp]
 \centering
+\small\setlength{\tabcolsep}{4pt}
 \caption{Parameters tuned with irace (training instances, Paquay setting, $t = 0.1$\,s).}
 \label{tab:params}
 \begin{tabular}{llll}
@@ -126,6 +128,7 @@ because in most ULDs the search ends before the time limit.
 
 \begin{table}[htbp]
 \centering
+\small\setlength{\tabcolsep}{4pt}
 \caption{Results on the 300 final instances (mean $\pm$ standard deviation over five runs).
 Better/worse: number of instances in which our solution is better/worse than the RGS of
 \citet{Hessler2025}. CoG$_{xy}$, CoG$_z$: number of ULDs with the CoG out of range. Time: mean
@@ -207,6 +210,7 @@ penalty and the translation increases the number of ULDs by 12 (Paquay), 37 (ada
 
 \begin{table}[htbp]
 \centering
+\small\setlength{\tabcolsep}{4pt}
 \caption{Ablation ($t = 0.1$\,s, one run): number of ULDs and number of ULDs with the CoG out
 of range in the length or width direction (in the setting \emph{One}, also the number of
 unloaded boxes).}
