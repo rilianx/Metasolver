@@ -145,37 +145,120 @@ which is within range in the three ULDs.}
 
 \begin{table}[htbp]
 \centering
-\small\setlength{\tabcolsep}{4pt}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
 \caption{Results on the 300 final instances (mean $\pm$ standard deviation over five runs).
 Better/worse: number of instances in which our solution is better/worse than the RGS of
-\citet{Hessler2025}. CoG$_{xy}$, CoG$_z$: number of ULDs with the CoG out of range. Time: mean
-time per instance (all ULDs).}
+\citet{Hessler2025}. Vol.: total volume of the ULDs. CoG$_{xy}$, CoG$_z$: number of ULDs with the CoG out of range.
+Time: mean time per instance (all ULDs).}
 \label{tab:results}
-\begin{tabular}{llrrrrrr}
+\begin{tabular}{llrrrrrrr}
 \toprule
-Setting & Method & ULDs & Unloaded & Better/worse & CoG$_{xy}$ & CoG$_z$ & Time (s) \\
+Setting & Method & ULDs & Vol.\ (m$^3$) & Unloaded & Better/worse & CoG$_{xy}$ & CoG$_z$ & Time (s) \\
 \midrule
 \multirow{4}{*}{Paquay}
- & \citet{Paquay2018b} & 1010 & 0 & & 12.9\% & -- & $\le 12$ \\
- & RGS \citep{Hessler2025} & 708 & 0 & & 11.2\% & -- & $\le 0.5$ \\
- & BSG, $t = 0.1$\,s & 617.0 $\pm$ 0.0 & 0 & 91.0 / 0 & 0 & 0 & 0.62 \\
- & BSG, $t = 1$\,s & 597.8 $\pm$ 0.4 & 0 & 111.2 / 1 & 1 & 0 & 5.4 \\
+ & \citet{Paquay2018b} & 1010 & -- & 0 & & 12.9\% & -- & $\le 12$ \\
+ & RGS \citep{Hessler2025} & 708 & 18\,648 & 0 & & 11.2\% & -- & $\le 0.5$ \\
+ & BSG, $t = 0.1$\,s & 617.0 $\pm$ 0.0 & 17\,875 & 0 & 91.0 / 0 & 0 & 0 & 0.62 \\
+ & BSG, $t = 1$\,s & 597.8 $\pm$ 0.4 & 17\,239 & 0 & 111.2 / 1 & 1 & 0 & 5.4 \\
 \midrule
 \multirow{3}{*}{Adapted}
- & RGS \citep{Hessler2025} & 653 & 0 & & 7.2\% & -- & $\le 1.3$ \\
- & BSG, $t = 0.1$\,s & 598.0 $\pm$ 0.0 & 0 & 56.0 / 1 & 2 & 0 & 1.2 \\
- & BSG, $t = 1$\,s & 576.0 $\pm$ 0.0 & 0 & 77.0 / 0 & 1 & 0 & 10.3 \\
+ & RGS \citep{Hessler2025} & 653 & 16\,843 & 0 & & 7.2\% & -- & $\le 1.3$ \\
+ & BSG, $t = 0.1$\,s & 598.0 $\pm$ 0.0 & 17\,128 & 0 & 56.0 / 1 & 2 & 0 & 1.2 \\
+ & BSG, $t = 1$\,s & 576.0 $\pm$ 0.0 & 16\,332 & 0 & 77.0 / 0 & 1 & 0 & 10.3 \\
 \midrule
 \multirow{3}{*}{One}
- & RGS \citep{Hessler2025} & 729 & 24 & & 10.1\% & -- & $\le 1.1$ \\
- & BSG, $t = 0.1$\,s & 706.0 $\pm$ 0.0 & 22.0 $\pm$ 0.0 & 42.0 / 22.0 & 3 & 0 & 1.6 \\
- & BSG, $t = 1$\,s & 675.8 $\pm$ 0.4 & 21.0 $\pm$ 0.0 & 64.4 / 20.2 & 2 & 1 & 13.0 \\
+ & RGS \citep{Hessler2025} & 729 & 16\,166 & 24 & & 10.1\% & -- & $\le 1.1$ \\
+ & BSG, $t = 0.1$\,s & 706.0 $\pm$ 0.0 & 16\,050 & 22.0 $\pm$ 0.0 & 42.0 / 22.0 & 3 & 0 & 1.6 \\
+ & BSG, $t = 1$\,s & 675.8 $\pm$ 0.4 & 15\,671 & 21.0 $\pm$ 0.0 & 64.4 / 20.2 & 2 & 1 & 13.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\todo{tabla por grupo de tamano ($|I| = 10, \dots, 100$): ULDs y utilizacion mediana, como la
-Tabla 6 de \citet{Hessler2025}; costo total y volumen total de los ULDs.}
+\paragraph{Volume and cost of the ULDs.}
+Since the objective of \citet{Paquay2016} and \citet{Hessler2025} is the total volume of the
+ULDs rather than their number, Table~\ref{tab:results} also reports the total volume of the ULDs
+(for the RGS, computed from the type of each ULD in Tables 9, 11 and 13 of their appendix). In
+the Paquay setting our solutions use 4.1\% ($t = 0.1$\,s) and 7.6\% ($t = 1$\,s) less ULD volume
+than the RGS, and with one ULD of each type 0.7\% and 3.1\% less, while loading more boxes. In
+the adapted setting with $t = 0.1$\,s, however, they use 1.7\% more volume than the RGS in spite
+of using 8.4\% fewer ULDs, because they use more ULDs of the largest type; with $t = 1$\,s they use
+3.0\% less volume. The total cost of the ULDs given in the instance files behaves in the same way
+(3.9\% and 7.2\% less than the RGS in the Paquay setting, 2.1\% more and 2.6\% less in the adapted
+setting, 0.7\% and 2.9\% less with one ULD of each type). Our algorithm minimizes the number of
+ULDs; giving priority to the volume would require changing the selection of the next ULD type
+and the comparison of solutions in the elimination phase.
+
+\paragraph{Results by instance size.}
+Table~\ref{tab:size} reports the results of the Paquay setting by instance size, in the format of
+Table~6 of \citet{Hessler2025}: number of ULDs and median utilization of the ULDs of each group.
+Our algorithm uses the same number of ULDs as the RGS for $|I| = 10$, where every instance
+needs one ULD, and fewer ULDs in every other group; the difference grows with the number of
+boxes, from 3 ULDs (9\%) for $|I| = 20$ to 20.6 ULDs (18\%) for $|I| = 100$ with $t = 1$\,s, and
+the median utilization for $|I| = 100$ increases from 53.0\% to 70.4\%. Table~\ref{tab:size2}
+reports the number of ULDs by instance size in the adapted settings. With one ULD of each type,
+the RGS leaves 23 of its 24 unloaded boxes in the instances with 100 boxes, where our algorithm
+leaves 16 ($t = 0.1$\,s) and 13 ($t = 1$\,s) with 1 and 14 fewer ULDs, whereas it leaves a few more
+boxes unloaded in the instances with 60--90 boxes (up to 4, against 1 for the RGS).
+
+\begin{table}[htbp]
+\centering
+\small\setlength{\tabcolsep}{4pt}
+\caption{Results by instance size in the Paquay setting (30 instances per size): lower bound
+(LB, Section~\ref{sec:exp-bound}), number of ULDs ($|C|$), median utilization of the ULDs
+($u_{\mathrm{med}}$, \%) and, for the RGS, number of ULDs with the CoG out of range
+($G_{\mathrm{vio}}$). The results of \citet{Paquay2018b} and the RGS are taken from Table~6 of
+\citet{Hessler2025}; BSG: mean of five runs.}
+\label{tab:size}
+\begin{tabular}{rrrrrrrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{\citet{Paquay2018b}} & \multicolumn{3}{c}{RGS} & \multicolumn{2}{c}{BSG, $t = 0.1$\,s} & \multicolumn{2}{c}{BSG, $t = 1$\,s} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+$|I|$ & LB & $|C|$ & $u_{\mathrm{med}}$ & $|C|$ & $u_{\mathrm{med}}$ & $G_{\mathrm{vio}}$ & $|C|$ & $u_{\mathrm{med}}$ & $|C|$ & $u_{\mathrm{med}}$ \\
+\midrule
+10 & 30 & 47 & 33.2 & 30 & 34.3 & 0 & 30 & 34.3 & 30 & 34.3 \\
+20 & 30 & 54 & 34.6 & 35 & 42.1 & 3 & 32 & 46.3 & 32 & 47.0 \\
+30 & 30 & 72 & 36.6 & 47 & 44.7 & 6 & 41 & 52.4 & 35.2 & 57.5 \\
+40 & 30 & 83 & 37.9 & 60 & 46.5 & 4 & 53 & 53.4 & 48 & 59.6 \\
+50 & 39 & 90 & 42.2 & 66 & 47.5 & 5 & 59 & 54.8 & 58 & 56.8 \\
+60 & 52 & 108 & 41.5 & 80 & 49.6 & 10 & 63 & 57.1 & 64 & 52.8 \\
+70 & 58 & 126 & 45.7 & 82 & 54.0 & 6 & 77 & 58.7 & 75 & 56.8 \\
+80 & 60 & 129 & 47.0 & 93 & 54.5 & 12 & 79 & 61.9 & 76.2 & 63.6 \\
+90 & 60 & 141 & 47.5 & 102 & 53.5 & 13 & 88 & 62.1 & 87 & 64.3 \\
+100 & 63 & 160 & 50.2 & 113 & 53.0 & 20 & 95 & 67.1 & 92.4 & 70.4 \\
+\midrule
+Total & 452 & 1010 & & 708 & & 79 & 617 & & 597.8 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small\setlength{\tabcolsep}{4pt}
+\caption{Number of ULDs by instance size in the adapted settings (30 instances per size; in the
+setting with one ULD of each type, number of unloaded boxes in parentheses). BSG: mean of five
+runs.}
+\label{tab:size2}
+\begin{tabular}{rrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Adapted} & \multicolumn{3}{c}{One} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+$|I|$ & RGS & BSG, $t = 0.1$\,s & BSG, $t = 1$\,s & RGS & BSG, $t = 0.1$\,s & BSG, $t = 1$\,s \\
+\midrule
+10 & 30 & 30 & 30 & 30 (0) & 30 (0) & 30 (0) \\
+20 & 33 & 32 & 32 & 33 (0) & 32 (0) & 32 (0) \\
+30 & 45 & 37 & 32 & 45 (0) & 37 (0) & 32 (0) \\
+40 & 57 & 51 & 48 & 57 (0) & 52 (0) & 49 (0) \\
+50 & 60 & 58 & 56 & 62 (0) & 61 (0) & 59 (0) \\
+60 & 72 & 63 & 61 & 77 (0) & 77 (0) & 72.2 (1) \\
+70 & 78 & 72 & 70 & 85 (0) & 83 (0) & 81 (0) \\
+80 & 86 & 75 & 73 & 97 (0) & 94 (2) & 94 (3) \\
+90 & 92 & 87 & 84 & 109 (1) & 107 (4) & 106.6 (4) \\
+100 & 100 & 93 & 90 & 134 (23) & 133 (16) & 120 (13) \\
+\midrule
+Total & 653 & 598 & 576 & 729 (24) & 706 (22) & 675.8 (21) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Comparison with a lower bound}
 \label{sec:exp-bound}
@@ -189,7 +272,18 @@ in 140 ($t = 0.1$\,s) and 157 ($t = 1$\,s) of the 300 instances of the Paquay se
 80 for the RGS. In the remaining instances our solutions use at most two ULDs more than the
 bound, but the bound is weak: it assumes that the boxes fill the largest ULD completely,
 whereas the non-final ULDs of our solutions are about 70\% full.
-\todo{cota mas fuerte o resolver las instancias pequenas con el modelo de \citet{Paquay2016}.}
+We also tried a stronger relaxation, solved with the CP-SAT solver of OR-Tools: an assignment of
+the boxes to ULDs of any type that respects, in each ULD, the volume and the weight capacity,
+that every box fits in the ULD type and every pair of boxes fits together in its bounding box,
+and that the boxes that are longer than half of the ULD along some axis in all their
+orientations do not overlap in the projection along that axis (so the sum of their smallest
+projections does not exceed the area of the corresponding face of the ULD). This relaxation is
+solved in less than a second per instance, but it does not improve the bound in any instance.
+The remaining gaps occur in the instances whose total box volume exceeds an integer multiple of
+the volume of the largest ULD by more than about 60\% of it: closing them requires proving that
+the boxes cannot be packed with such a density, a three-dimensional feasibility question that
+volume and pairwise arguments cannot answer. The 136 instances in which our best solution uses
+one ULD more than the bound remain open.
 
 \subsection{Running time}
 \label{sec:exp-time}
