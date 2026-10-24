@@ -1,10 +1,11 @@
 #!/bin/bash
 # irace: target-runner <configuracion> <instancia id> <semilla> <instancia> <parametros...>
-# costo = numero de ULDs + 5 * ULDs con el CoG fuera de rango + (1 - utilizacion total)/2
+# costo = 100 / utilizacion total (proporcional al volumen de los ULDs) + 5 * ULDs con el CoG
+# fuera de rango (+ 1000 * cajas no cargadas)
 # BSG_ULD y sus opciones fijas se toman de las variables BSG_ULD y ULD_ARGS
 CONFIG=$1; INST=$4; shift 4
 BIN=${BSG_ULD:-../../../build/BSG_ULD}
 OUT=$($BIN $INST $ULD_ARGS "$@" 2>&1)
 LINE=$(echo "$OUT" | grep "^n_ulds")
 if [ -z "$LINE" ] || echo "$OUT" | grep -q ERROR; then echo "1000"; exit 0; fi
-echo "$LINE" | awk '{for(i=1;i<NF;i++) v[$i]=$(i+1); print v["n_ulds"] + 5*v["cog_violations"] + (1-v["total_util"]/100)/2}'
+echo "$LINE" | awk '{for(i=1;i<NF;i++) v[$i]=$(i+1); print 100/v["total_util"] + 5*v["cog_violations"] + 1000*v["unloaded"]}'

@@ -1,7 +1,8 @@
 ## irace: ajuste de BSG_ULD (instancias de entrenamiento, distintas de las finales)
-## uso (desde este directorio): BSG_ULD=<binario> ULD_ARGS="-t 0.1" irace
+## uso (desde este directorio): BSG_ULD=<binario> ULD_ARGS="-t 0.1 --cog_rel 0.05" irace
 parameterFile = "parameters.txt"
 configurationsFile = "default.txt"
+trainInstancesDir = "."
 trainInstancesFile = "instances.txt"
 targetRunner = "./target-runner"
 maxExperiments = 3000
