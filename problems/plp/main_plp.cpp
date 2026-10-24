@@ -52,7 +52,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _gls(improvement, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
 	args::Flag _sep_lp(improvement, "sep_lp", "If the moves along the axes fail, try the LP separation (requires ibex)", {"sep_lp"});
 	args::ValueFlag<int> _sep_iter(improvement, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
-	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each). Default: reinsert", {"kick"});
+	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each). Default: mix", {"kick"});
 	args::Flag _no_compact(improvement, "no_compact", "Do not use the global LP compaction (requires ibex)", {"no_compact"});
 	args::ValueFlag<double> _margin(improvement, "double", "Final compaction with this separation between neighboring parts, so that the solution can be certified in exact arithmetic (tools/certify_solution.py; requires ibex; 0: no). Default: 1e-7", {"margin"});
 	args::Flag _repair(improvement, "repair", "After --kicks kicks without improvement, try to repair the best solution with the BSG in a lower container", {"repair"});
@@ -88,7 +88,7 @@ int main(int argc, char** argv){
 	int beams = (_beams)? _beams.Get() : 4;
 	string init = (_init)? _init.Get() : "greedy";
 	if(init!="greedy" && init!="bsg") { cerr << "--init debe ser greedy o bsg" << endl; return 1; }
-	string kick = (_kick)? _kick.Get() : "reinsert";
+	string kick = (_kick)? _kick.Get() : "mix";
 	if(kick!="reinsert" && kick!="swap" && kick!="random" && kick!="mix") { cerr << "--kick debe ser reinsert, swap, random o mix" << endl; return 1; }
 	string gls = (_gls)? _gls.Get() : "mult";
 	if(gls!="add" && gls!="mult") { cerr << "--gls debe ser add o mult" << endl; return 1; }
