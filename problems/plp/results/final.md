@@ -105,3 +105,22 @@ TETRAHEDRONS  20  ref 43.81 (UB; LB 10.00)  nuestra 40.68 (40.54)  -7.1% (-7.5%)
 
 Certificación exacta de las 130 soluciones `full`: 129 certificadas; la restante (Merged5, semilla 4) tiene un par
 en contacto con solapamiento 3.7e-10. Mejores soluciones certificadas: `solutions_final/`.
+
+## Liu et al. (2015), Experiment1 (36 piezas; prismas descompuestos de forma exacta)
+
+120 s, semillas 1–10: media 30.08, mejor 29.58 (certificada), peor 30.95. Referencias: Lamas-Fernández et al.
+(vóxeles, 10 × 1 h): ILS 36.40 / 38.58, TS 34.13 / 35.12, VNS 34.27 / 35.37 (mejor / media); HAPE3D (Liu et al.
+2015) 31.2 con 8 rotaciones permitidas.
+
+## Chess (Lamas-Fernández et al.), descomposición conservadora (CoACD + escalado)
+
+| Configuración | Tiempo | Altura (semilla 1; semilla 2) |
+|---|---|---|
+| umbral 0.05 (+4–12 % de volumen) | 1200 s | 147.24; 149.20 |
+| umbral 0.10 (+6–28 %) | 1200 s | 153.71; 152.73 |
+| umbral 0.20 + k-DOP (+38–78 %) | 1200 s | 151.31 |
+| multirresolución (umbral 0.20 + k-DOP 900 s, luego umbral 0.05 300 s) | 1200 s | 147.85; 152.74 |
+| umbral 0.20 + k-DOP + pseudobloques | 300 s | 156.98 (5 bloques), 157.43 (20) |
+| Lamas-Fernández et al., VNS (vóxeles de 1 unidad) | 3600 s | 131 (mejor), 135.10 (media) |
+
+Con piezas curvas los NFP entre partes tienen cientos de facetas y cada separación toma 20–35 s (umbral 0.05).
