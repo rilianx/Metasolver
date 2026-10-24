@@ -108,7 +108,8 @@ en contacto con solapamiento 3.7e-10. Mejores soluciones certificadas: `solution
 
 ## Liu et al. (2015), Experiment1 (36 piezas; prismas descompuestos de forma exacta)
 
-120 s, semillas 1–10: media 30.08, mejor 29.58 (certificada), peor 30.95. Referencias: Lamas-Fernández et al.
+120 s, semillas 1–10, versión del paper (la misma de las demás tablas): media 29.94, mejor 29.41 (certificada), peor
+30.15. Con la versión posterior (Qhull, fusión de caras casi coplanares): media 30.08, mejor 29.58, peor 30.95. Referencias: Lamas-Fernández et al.
 (vóxeles, 10 × 1 h): ILS 36.40 / 38.58, TS 34.13 / 35.12, VNS 34.27 / 35.37 (mejor / media); HAPE3D (Liu et al.
 2015) 31.2 con 8 rotaciones permitidas.
 

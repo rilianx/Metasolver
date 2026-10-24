@@ -42,7 +42,7 @@ heights by 2.5--9\% within 120 seconds, and after 10 seconds its mean utilizatio
 method after 600 seconds. It also improves the best known solutions of a classical convex instance and of the
 non-convex instances of \citet{stoyan2004}, one of which is solved to optimality, and on the small instances of
 \citet{tollenaere2026} it matches 26 of the 27 proven optima and improves the best known solution of 32 of the
-39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 12\% below the best voxel result. Finally, a linear-programming
+39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 13\% below the best voxel result. Finally, a linear-programming
 compaction over no-fit polytope facets with soft margins, followed by dyadic rounding, yields solutions whose
 feasibility is certified in exact rational arithmetic.
 \end{abstract}
@@ -360,7 +360,7 @@ Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \textbf{21.01 (21.00)}\\
 Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \textbf{22.62 (22.04)}\\
 Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \textbf{25.06 (24.00)}\\
 Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \textbf{27.89 (27.20)}\\
-Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{30.08 (29.58)}\\
+Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{29.94 (29.41)}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -368,7 +368,7 @@ Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{30.08 (29.58)}\
 On Stoyan 2004 Example 2 our height, 29, equals the lower bound $H_0$ given by the tallest piece, so it is
 optimal for the public data. Stoyan 2004 Example 1 (80 pieces) has no published reference and is not included;
 the instance called Experiment 1 by \citet{lamas2023} is the one of \citet{liu2015}, where our mean height is
-12\% below the best voxel height and also below that of HAPE3D, which allows rotations. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
+13\% below the best voxel height and also below that of HAPE3D, which allows rotations. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 
@@ -437,7 +437,8 @@ instances.
 \paragraph{Realistic meshes}
 The cost of a move grows with the number of facets of the NFPs, so pieces with curved surfaces are the hard case.
 We tested the Chess instance of \citet{lamas2023} (32 pieces, meshes of 700--2900 triangles). Since an exact
-convex decomposition of such meshes is impractical, we use a conservative one: CoACD \citep{wei2022} cuts the
+convex decomposition of such meshes is impractical, we use a conservative one (these runs use a version of the
+code extended with Qhull \citep{barber1996} for the large convex hulls of the NFPs): CoACD \citep{wei2022} cuts the
 mesh and takes the convex hull of each piece; the small gaps it leaves between parts are covered by scaling
 each part from its centroid, and containment is checked with interior sample points. With concavity threshold
 0.05 (6--20 parts per piece) the union exceeds the volume of the piece by 4--12\%, and with 0.2 (1--4 parts,
