@@ -69,7 +69,8 @@ public:
 	 * Si existe root/decompositions/<ruta de la pieza con extension .obj>, las partes
 	 * convexas de la pieza se leen de ese archivo.
 	 */
-	static Instance load(const std::string& file, const std::string& root="");
+	/** dec: carpeta (bajo root) con las descomposiciones convexas de las piezas */
+	static Instance load(const std::string& file, const std::string& root="", const std::string& dec="decompositions");
 
 	int n_items() const;
 

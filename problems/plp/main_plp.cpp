@@ -33,6 +33,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<unsigned> _seed(parser, "int", "Seed (0: no perturbation of the starting points). Default: 0", {"seed"});
 	args::ValueFlag<string> _out(parser, "file", "Output solution (ESICUP JSON)", {'o', "output"});
 	args::ValueFlag<string> _root(parser, "dir", "Root folder of the piece paths", {"root"});
+	args::ValueFlag<string> _dec(parser, "dir", "Folder (under the root) with the convex decompositions of the pieces. Default: decompositions", {"dec"});
 	args::Group construction(parser, "Construction:");
 	args::ValueFlag<string> _init(construction, "greedy|bsg", "Initial solution: greedy or BSG (beam search guided by the greedy). Default: greedy", {"init"});
 	args::ValueFlag<double> _bsg_time(construction, "double", "--init bsg: proportion of the time for the BSG. Default: 0.3", {"bsg_time"});
@@ -101,7 +102,7 @@ int main(int argc, char** argv){
 	auto elapsed = [&]() { return double(clock()-begin_time)/CLOCKS_PER_SEC; };
 
 	try{
-		Instance inst = Instance::load(_file.Get(), (_root)? _root.Get() : "");
+		Instance inst = Instance::load(_file.Get(), (_root)? _root.Get() : "", (_dec)? _dec.Get() : "decompositions");
 		cout << "instance: " << inst.name << endl;
 		cout << "items: " << inst.n_items() << endl;
 		cout << "height_lb: " << inst.height_lower_bound() << endl;

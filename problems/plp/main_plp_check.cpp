@@ -21,6 +21,7 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<string> _sol(parser, "file", "Solution to verify (ESICUP JSON)", {'s', "solution"});
 	args::ValueFlag<string> _root(parser, "dir", "Root folder of the piece paths (default: searched from the instance folder)", {"root"});
+	args::ValueFlag<string> _dec(parser, "dir", "Folder (under the root) with the convex decompositions of the pieces. Default: decompositions", {"dec"});
 	args::ValueFlag<double> _eps(parser, "double", "Tolerance for overlaps and containment. Default: 1e-6", {"eps"});
 	args::Flag _partial(parser, "partial", "Do not require all the items to be placed", {"partial"});
 	args::Flag _quiet(parser, "quiet", "Do not print the pieces", {'q', "quiet"});
@@ -44,7 +45,7 @@ int main(int argc, char** argv){
 	double eps = (_eps)? _eps.Get() : 1e-6;
 
 	try{
-		Instance inst = Instance::load(_file.Get(), (_root)? _root.Get() : "");
+		Instance inst = Instance::load(_file.Get(), (_root)? _root.Get() : "", (_dec)? _dec.Get() : "decompositions");
 
 		cout << setprecision(8);
 		cout << "instance: " << inst.name << endl;

@@ -114,7 +114,7 @@ Piece Piece::load(const string& file, const string& parts_file) {
 	return P;
 }
 
-Instance Instance::load(const string& file, const string& root) {
+Instance Instance::load(const string& file, const string& root, const string& dec) {
 	Json J = Json::parse_file(file);
 
 	Instance I;
@@ -146,7 +146,7 @@ Instance Instance::load(const string& file, const string& root) {
 		if(!loaded.count(t.path)){
 			loaded[t.path] = I.pieces.size();
 			//descomposicion en partes convexas (si existe)
-			string parts = I.root + "/decompositions/" + t.path.substr(0, t.path.find_last_of('.')) + ".obj";
+			string parts = I.root + "/" + dec + "/" + t.path.substr(0, t.path.find_last_of('.')) + ".obj";
 			I.pieces.push_back(Piece::load(I.root + "/" + t.path, exists(parts)? parts : ""));
 		}
 		t.piece = loaded[t.path];
