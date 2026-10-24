@@ -31,7 +31,8 @@ public:
 	 * Los puntos a distancia menor que eps*diametro se consideran coplanares.
 	 * Lanza std::runtime_error si los puntos no generan un solido.
 	 */
-	static ConvexPolytope hull(const std::vector<Vec3>& points, double eps=1e-9);
+	/** edges: calcular las direcciones de las aristas (para penetration_depth; no se necesitan en los NFP) */
+	static ConvexPolytope hull(const std::vector<Vec3>& points, double eps=1e-9, bool edges=true);
 
 	/** v' = R v + t (R es una rotacion) */
 	ConvexPolytope transformed(const Mat3& R, const Vec3& t) const;

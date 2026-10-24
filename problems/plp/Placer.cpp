@@ -44,7 +44,7 @@ const ConvexPolytope& Placer::nfp(int a, int b) {
 		for(const Vec3& vb : parts[b]->get_vertices())
 			for(const Vec3& va : parts[a]->get_vertices())
 				pts.push_back(vb - va);
-		it = nfps.insert(make_pair(make_pair(a,b), ConvexPolytope::hull(pts))).first;
+		it = nfps.insert(make_pair(make_pair(a,b), ConvexPolytope::hull(pts, 1e-9, false))).first;
 	}
 	row[b] = &it->second;
 	return it->second;

@@ -41,6 +41,16 @@ target_include_directories(plp PUBLIC problems/plp metasolver metasolver/strateg
 
 # compactacion global por LP con ibex (SoPlex o CLP), opcional:
 #   cmake .. -DIBEX_DIR=<prefijo de instalacion de ibex>
+# Qhull (opcional): envolventes convexas robustas para conjuntos grandes de puntos (NFP de partes de mallas reales)
+find_path(QHULL_INCLUDE_DIR libqhull_r/libqhull_r.h)
+find_library(QHULL_LIBRARY qhull_r)
+if(QHULL_INCLUDE_DIR AND QHULL_LIBRARY)
+  target_compile_definitions(plp PUBLIC PLP_WITH_QHULL)
+  target_include_directories(plp PUBLIC ${QHULL_INCLUDE_DIR})
+  target_link_libraries(plp PUBLIC ${QHULL_LIBRARY})
+  message(STATUS "PLP: Qhull (${QHULL_LIBRARY})")
+endif()
+
 set(IBEX_DIR "" CACHE PATH "Installation prefix of ibex (optional, for the LP compaction of PLP)")
 if(IBEX_DIR)
   find_package(PkgConfig REQUIRED)

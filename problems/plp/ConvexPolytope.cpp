@@ -3,9 +3,16 @@
  */
 
 #include <map>
+#include <tuple>
+#include <cmath>
 #include <algorithm>
 #include <random>
 #include "ConvexPolytope.h"
+#ifdef PLP_WITH_QHULL
+extern "C" {
+#include <libqhull_r/qhull_ra.h>
+}
+#endif
 
 using namespace std;
 
@@ -42,11 +49,47 @@ void add_direction(vector<Vec3>& dirs, const Vec3& d, double tol) {
 
 }
 
-ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
+#ifdef PLP_WITH_QHULL
+/** caras (triangulos) de la envolvente con Qhull (opciones Qt: triangulada, con fusion de caras casi coplanares) */
+static bool qhull_faces(const vector<Vec3>& p, vector<HullFace>& faces) {
+	vector<coordT> pts(3*p.size());
+	for(size_t i=0; i<p.size(); i++) { pts[3*i]=p[i].x; pts[3*i+1]=p[i].y; pts[3*i+2]=p[i].z; }
+	qhT qh_qh;
+	qhT* qh = &qh_qh;
+	QHULL_LIB_CHECK
+	qh_zero(qh, NULL);
+	char opts[] = "qhull Qt";
+	int exitcode = qh_new_qhull(qh, 3, p.size(), pts.data(), False, opts, NULL, NULL);
+	if(!exitcode){
+		facetT* facet;
+		FORALLfacets {
+			vertexT *vertex, **vertexp;
+			int k=0;
+			HullFace f;
+			FOREACHvertex_(facet->vertices) { if(k<3) f.v[k] = qh_pointid(qh, vertex->point); k++; }
+			if(k!=3) continue;
+			f.n = Vec3(facet->normal[0], facet->normal[1], facet->normal[2]);
+			f.d = -facet->offset;
+			f.alive = true;
+			//orientacion de los vertices segun la normal
+			if(dot(cross(p[f.v[1]]-p[f.v[0]], p[f.v[2]]-p[f.v[0]]), f.n) < 0) swap(f.v[1], f.v[2]);
+			faces.push_back(f);
+		}
+	}
+	qh_freeqhull(qh, !qh_ALL);
+	int curlong, totlong;
+	qh_memfreeshort(qh, &curlong, &totlong);
+	return !exitcode && !faces.empty();
+}
+#endif
+
+ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps, bool edges) {
 	if(points.size() < 4) throw runtime_error("hull: se requieren al menos 4 puntos");
 
 	//muchos puntos (p. ej., NFP de partes con muchos vertices): se descartan los puntos interiores a la envolvente
 	//de una muestra (los extremos en 26 direcciones y puntos al azar); no pueden ser vertices de la envolvente
+	//(sin Qhull; con Qhull los conjuntos grandes se resuelven directamente)
+#ifndef PLP_WITH_QHULL
 	if(points.size() > 4000){
 		Box3 bb0;
 		for(const Vec3& q : points) bb0.add(q);
@@ -63,23 +106,31 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 		uniform_int_distribution<int> u(0, points.size()-1);
 		for(int k=0; k<1500; k++) sample.push_back(points[u(rng0)]);
 		try{
-			ConvexPolytope S = hull(sample, eps);
+			ConvexPolytope S = hull(sample, eps, false);
 			vector<Vec3> keep = S.vertices;
 			for(const Vec3& q : points){
 				bool out=false;
 				for(const Plane& f : S.facets) if(dot(f.n, q) - f.d > tol0) { out=true; break; }
 				if(out) keep.push_back(q);
 			}
-			if(keep.size() < points.size()) return hull(keep, eps);
+			if(keep.size() < points.size()) return hull(keep, eps, edges);
 		}catch(exception&){ }
 	}
+#endif
 
 	Box3 bb;
 	for(const Vec3& p : points) bb.add(p);
 	double tol = eps * max(bb.extent().norm(), 1e-300);
 
-	//tetraedro inicial
 	const vector<Vec3>& p = points;
+	vector<HullFace> faces;
+#ifdef PLP_WITH_QHULL
+	bool done = points.size() >= 2000 && qhull_faces(points, faces);
+#else
+	bool done = false;
+#endif
+	if(!done){
+	//tetraedro inicial
 	int i0=0;
 	for(int i=1; i<(int)p.size(); i++) if(p[i].x < p[i0].x) i0=i;
 	int i1=-1; double best=tol;
@@ -93,7 +144,6 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 	for(int i=0; i<(int)p.size(); i++) { double d=fabs(dot(base.n,p[i])-base.d); if(d>best) {best=d; i3=i;} }
 	if(i3<0) throw runtime_error("hull: puntos coplanares");
 
-	vector<HullFace> faces;
 	if(dot(base.n, p[i3]) - base.d > 0) swap(i1,i2);
 	faces.push_back(make_face(p, i0, i1, i2));
 	faces.push_back(make_face(p, i0, i3, i1));
@@ -124,6 +174,7 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 			faces.push_back(make_face(p, e.first.first, e.first.second, i));
 		}
 	}
+	}
 
 	ConvexPolytope P;
 
@@ -142,23 +193,38 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 	for(const HullFace& f : faces)
 		if(f.alive) P.volume += dot(p[f.v[0]]-c, cross(p[f.v[1]]-c, p[f.v[2]]-c)) / 6.0;
 
-	//fusion de facetas coplanares
+	//fusion de facetas coplanares: caras casi coplanares (p. ej., NFP de partes con muchas caras pequenas) se
+	//fusionan en el plano mas externo (el politopo queda apenas mas grande, del lado seguro); se agrupan por la normal
+	//cuantizada (tabla hash), y una cara se compara tambien con los planos de las celdas vecinas
 	vector<int> plane_of(faces.size(), -1);
-	for(int j=0; j<(int)faces.size(); j++){
-		const HullFace& f=faces[j];
-		if(!f.alive) continue;
-		//caras casi coplanares (p. ej., NFP de partes con muchas caras pequenas) se fusionan en el plano mas externo:
-		//el politopo queda apenas mas grande (del lado seguro) y con muchas menos facetas
-		for(int k=0; k<(int)P.facets.size(); k++)
-			if((P.facets[k].n - f.n).norm() <= 1e-6 && fabs(P.facets[k].d - f.d) <= max(tol, 1e-6*bb.extent().norm())){
-				plane_of[j]=k;
-				for(int q=0; q<3; q++) P.facets[k].d = max(P.facets[k].d, dot(P.facets[k].n, p[f.v[q]]));
-				break;
+	{
+		const double q = 1e-6;
+		map< tuple<long long,long long,long long>, vector<int> > cell;
+		double dtol = max(tol, 1e-6*bb.extent().norm());
+		for(int j=0; j<(int)faces.size(); j++){
+			const HullFace& f=faces[j];
+			if(!f.alive) continue;
+			long long cx=llround(f.n.x/q), cy=llround(f.n.y/q), cz=llround(f.n.z/q);
+			for(long long dx=-1; dx<=1 && plane_of[j]<0; dx++)
+				for(long long dy=-1; dy<=1 && plane_of[j]<0; dy++)
+					for(long long dz=-1; dz<=1 && plane_of[j]<0; dz++){
+						auto it = cell.find(make_tuple(cx+dx, cy+dy, cz+dz));
+						if(it==cell.end()) continue;
+						for(int k : it->second)
+							if((P.facets[k].n - f.n).norm() <= q && fabs(P.facets[k].d - f.d) <= dtol){ plane_of[j]=k; break; }
+					}
+			if(plane_of[j]<0){
+				plane_of[j]=P.facets.size();
+				P.facets.push_back(Plane(f.n, f.d));
+				cell[make_tuple(cx,cy,cz)].push_back(plane_of[j]);
 			}
-		if(plane_of[j]<0) { plane_of[j]=P.facets.size(); P.facets.push_back(Plane(f.n, f.d)); }
+			Plane& pl = P.facets[plane_of[j]];
+			for(int k=0; k<3; k++) pl.d = max(pl.d, dot(pl.n, p[f.v[k]]));
+		}
 	}
 
 	//aristas entre facetas distintas
+	if(edges){
 	map<pair<int,int>, int> edge_face;
 	for(int j=0; j<(int)faces.size(); j++){
 		if(!faces[j].alive) continue;
@@ -171,6 +237,7 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 		if(twin!=edge_face.end() && plane_of[twin->second]==plane_of[e.second]) continue;
 		Vec3 d = p[b]-p[a];
 		add_direction(P.edge_dirs, d/d.norm(), 1e-9);
+	}
 	}
 
 	P.update_bbox();
