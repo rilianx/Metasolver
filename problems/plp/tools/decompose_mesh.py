@@ -7,7 +7,8 @@ Escribe benchs/<carpeta>/<pieza sin extension>.obj (por defecto benchs/decomposi
 1. CoACD (Wei et al. 2022) corta la malla con planos y toma la envolvente convexa de cada trozo. --threshold
    controla la concavidad admitida (mayor: menos partes, mas gruesas). Entre partes vecinas quedan huecos muy
    pequenos (hasta ~6e-5 de la diagonal en las piezas del ajedrez); --offset desplaza las caras de cada parte hacia
-   afuera (por defecto 2e-4 de la diagonal) para cubrirlos.
+   afuera al menos --offset (por defecto 2e-4 de la diagonal) para cubrirlos: escalando la parte desde su centroide
+   (--cover scale, conserva vertices y caras) o desplazando cada cara (--cover offset, mas ajustado).
 2. --kdop k (0: no): cada envolvente se reemplaza por su k-DOP, la interseccion de los semiespacios
    d.x <= max_v d.v para k direcciones fijas (6: caja; 14: + diagonales de vertices; 26: + diagonales de aristas),
    si tiene menos caras. El k-DOP contiene a la envolvente.
@@ -60,6 +61,15 @@ def offset(P, delta):
     return V
 
 
+def scale_cover(P, delta):
+    """escala conv(P) desde su centroide para que cada cara se aleje al menos delta (mismos vertices y caras)"""
+    h = ConvexHull(P)
+    c = P[h.vertices].mean(axis=0)
+    dist = -(h.equations[:, :3] @ c + h.equations[:, 3])      # distancia del centroide a cada cara (> 0)
+    s = 1 + delta/max(dist.min(), 1e-12)
+    return c + s*(P[h.vertices]-c)
+
+
 def union_volume(parts, n=200000, seed=0):
     allv = np.vstack(parts); lo, hi = allv.min(0), allv.max(0)
     pts = np.random.default_rng(seed).uniform(lo, hi, (n, 3))
@@ -86,6 +96,7 @@ def main():
     ap.add_argument('--threshold', type=float, default=0.1)
     ap.add_argument('--kdop', type=int, default=26)
     ap.add_argument('--offset', type=float, default=2e-4, help='desplazamiento de las caras hacia afuera, como fraccion de la diagonal de la pieza (cubre los huecos de CoACD entre partes)')
+    ap.add_argument('--cover', choices=['scale', 'offset'], default='scale', help='como se agranda cada parte: escalado desde el centroide (mismos vertices) o desplazamiento de caras (mas ajustado, mas vertices)')
     ap.add_argument('--hullfaces', type=int, default=0, help='k-DOP: normales adicionales de las m caras mas grandes de la envolvente')
     ap.add_argument('--dec', default='decompositions', help='carpeta de salida bajo benchs (para guardar varias resoluciones)')
     a = ap.parse_args()
@@ -97,7 +108,7 @@ def main():
         parts = [np.asarray(p[0], float) for p in res]
         if a.offset > 0:
             diag = np.linalg.norm(mesh.bounds[1]-mesh.bounds[0])
-            parts = [offset(P, a.offset*diag) for P in parts]
+            parts = [offset(P, a.offset*diag) if a.cover == 'offset' else scale_cover(P, a.offset*diag) for P in parts]
         if a.kdop:
             parts = [Q if len(ConvexHull(Q).simplices) < len(ConvexHull(P).simplices) else P for P, Q in ((P, kdop(P, a.kdop, a.hullfaces)) for P in parts)]
         nf = [len(ConvexHull(P).simplices) for P in parts]
