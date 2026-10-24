@@ -45,6 +45,35 @@ void add_direction(vector<Vec3>& dirs, const Vec3& d, double tol) {
 ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 	if(points.size() < 4) throw runtime_error("hull: se requieren al menos 4 puntos");
 
+	//muchos puntos (p. ej., NFP de partes con muchos vertices): se descartan los puntos interiores a la envolvente
+	//de una muestra (los extremos en 26 direcciones y puntos al azar); no pueden ser vertices de la envolvente
+	if(points.size() > 4000){
+		Box3 bb0;
+		for(const Vec3& q : points) bb0.add(q);
+		double tol0 = eps * max(bb0.extent().norm(), 1e-300);
+		vector<Vec3> sample;
+		for(int dx=-1; dx<=1; dx++) for(int dy=-1; dy<=1; dy++) for(int dz=-1; dz<=1; dz++){
+			if(!dx && !dy && !dz) continue;
+			Vec3 d(dx, dy, dz);
+			int bi=0;
+			for(int i=1; i<(int)points.size(); i++) if(dot(d, points[i]) > dot(d, points[bi])) bi=i;
+			sample.push_back(points[bi]);
+		}
+		mt19937 rng0(54321);
+		uniform_int_distribution<int> u(0, points.size()-1);
+		for(int k=0; k<1500; k++) sample.push_back(points[u(rng0)]);
+		try{
+			ConvexPolytope S = hull(sample, eps);
+			vector<Vec3> keep = S.vertices;
+			for(const Vec3& q : points){
+				bool out=false;
+				for(const Plane& f : S.facets) if(dot(f.n, q) - f.d > tol0) { out=true; break; }
+				if(out) keep.push_back(q);
+			}
+			if(keep.size() < points.size()) return hull(keep, eps);
+		}catch(exception&){ }
+	}
+
 	Box3 bb;
 	for(const Vec3& p : points) bb.add(p);
 	double tol = eps * max(bb.extent().norm(), 1e-300);
