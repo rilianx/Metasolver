@@ -112,6 +112,9 @@ static bool use_substructure=false;
 static bool origin_only=true;
 //ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
 static bool regroup=true;
+//seleccion del siguiente ULD entre los candidatos (--theta): theta>=0 carga cada uno y maximiza
+//(volumen cargado) - theta*(volumen del ULD); theta<0: regla de Hessler et al.
+static double theta=-1.0;
 
 static int uld_index(const ULD& u){
 	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
@@ -122,7 +125,7 @@ static int uld_index(const ULD& u){
  * Siguiente ULD (Hessler et al. 2024): entre los ULDs en que caben las cajas que caben
  * en menos tipos de ULD, el de mayor volumen de cajas que caben en el (desempate: mayor volumen)
  */
-static const ULD* select_uld(const vector<int>& left){
+static const ULD* select_uld(const vector<int>& left, vector<const ULD*>* cands=NULL){
 	int m=ulds.size()+1;
 	vector< vector<bool> > F(clpState::types.size(), vector<bool>(ulds.size()));
 	for(const BoxShape* b : clpState::types){
@@ -144,6 +147,7 @@ static const ULD* select_uld(const vector<int>& left){
 			if(nf==m) candidate=true;
 		}
 		if(!candidate) continue;
+		if(cands) cands->push_back(&ulds[u]);
 		if(vol>best_vol || (vol==best_vol && ulds[u].volume>best->volume)){ best=&ulds[u]; best_vol=vol; }
 	}
 	return best;
@@ -625,6 +629,7 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
+	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates by loading each one and maximizing loaded volume - theta * ULD volume. Default: rule of Hessler et al.", {"theta"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
@@ -693,6 +698,7 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_reduce_new) reduce_new=_reduce_new.Get();
+	if(_theta) theta=_theta.Get();
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -717,10 +723,21 @@ int main(int argc, char** argv){
 	bool limited = (_uld_count && _uld_count.Get()>0);
 
 	while(remaining()>0){
-		const ULD* u = select_uld(left);
+		vector<const ULD*> cands;
+		const ULD* u = select_uld(left, &cands);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
 		Load ld = load(*u, left, P);
+		//eleccion entre los candidatos (--theta): no se elige uno que deje el CoG fuera de rango si otro no
+		if(theta>=0 && cands.size()>1){
+			auto score=[&](const Load& l){ return l.volume - theta*l.uld->volume; };
+			for(const ULD* c : cands){
+				if(c->type==u->type) continue;
+				Load ld2 = load(*c, left, P);
+				if(!ld2.feasible || none(ld2.boxes) || (ld.cog_ok() && !ld2.cog_ok())) continue;
+				if((!ld.cog_ok() && ld2.cog_ok()) || score(ld2) > score(ld)){ ld=ld2; u=c; }
+			}
+		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles), se carga el ULD priorizando esas cajas
 		if(limited){
