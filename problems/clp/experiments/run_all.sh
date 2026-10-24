@@ -33,8 +33,8 @@ cp $ROOT/build/BSG_ULD $BIN
 	g++ --version | head -1
 } > $OUT/environment.txt
 
-#commit del codigo: un directorio terminado con otro commit (u otro binario) se vuelve a correr
-COMMIT=$(cd $ROOT && git rev-parse HEAD)-$(md5sum $BIN | cut -c1-8)
+#version del codigo (huella del binario): un directorio terminado con otra version se vuelve a correr
+COMMIT=$(md5sum $BIN | cut -c1-32)
 run(){ # run <nombre> <escenario> <opciones...>
 	local name=$1 conf=$2; shift 2
 	[ -f $OUT/$name/.done ] && [ "$(cat $OUT/$name/.done)" = "$COMMIT" ] && return
