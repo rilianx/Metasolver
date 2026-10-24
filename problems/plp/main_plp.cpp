@@ -50,6 +50,7 @@ int main(int argc, char** argv){
 	args::Group improvement(parser, "Improvement:");
 	args::ValueFlag<double> _sep_step(improvement, "double", "Height decrease after a successful separation (proportion); on failure the height grows a quarter of it. Default: 0.01", {"sep_step"});
 	args::ValueFlag<int> _gls_iter(improvement, "int", "Maximum passes of the minimum-overlap local search. Default: 500", {"gls_iter"});
+	args::ValueFlag<double> _axis_window(improvement, "double", "Moves along the axes: a piece moves at most this multiple of its extent along the axis (0: the whole container). Default: 0", {"axis_window"});
 	args::ValueFlag<string> _gls(improvement, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
 	args::Flag _sep_lp(improvement, "sep_lp", "If the moves along the axes fail, try the LP separation (requires ibex)", {"sep_lp"});
 	args::ValueFlag<int> _sep_iter(improvement, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
@@ -112,6 +113,7 @@ int main(int argc, char** argv){
 
 		Placer placer(inst, grid, slide);
 		if(_seed) placer.set_seed(_seed.Get());
+		if(_axis_window) placer.set_axis_window(_axis_window.Get());
 		int nblocks = (_blocks)? _blocks.Get() : 0;
 		if(nblocks > 0){
 			placer.generate_blocks(nblocks, (_block_pair)? _block_pair.Get() : 2, (_block_waste)? _block_waste.Get() : 0.07);

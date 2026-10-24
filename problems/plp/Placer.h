@@ -84,6 +84,9 @@ public:
 	 */
 	void set_seed(unsigned seed) { this->seed = seed; rng.seed(seed); }
 
+	/** axis_move: la pieza se mueve a lo mas w veces su extension en el eje (0: todo el contenedor) */
+	void set_axis_window(double w) { axis_window = w; }
+
 	int n_pieces() const { return inst.pieces.size(); }
 
 	int n_shapes() const { return shape_parts.size(); }
@@ -218,6 +221,7 @@ private:
 
 	SmallLP lp;
 
+	double axis_window = 0;
 	unsigned seed;
 	std::mt19937 rng;
 };

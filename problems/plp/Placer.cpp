@@ -635,6 +635,12 @@ double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int 
 	Vec3 e = inst.pieces[pieces[i]].bbox.extent();
 	double up[3] = { max(0.0, inst.W-e.x), max(0.0, inst.D-e.y), max(0.0, H-e.z) };
 	double lo = 0, hi = up[axis], s0 = t[i][axis];
+	//ventana: la pieza se mueve a lo mas axis_window veces su extension (0: todo el contenedor)
+	if(axis_window > 0){
+		lo = max(lo, s0 - axis_window*e[axis]);
+		hi = min(hi, s0 + axis_window*e[axis]);
+		if(hi < lo) hi = lo;
+	}
 
 	//terminos relevantes (pares de partes cuyo NFP corta la recta). Dentro del intervalo (L,U) la penetracion es
 	//min(cap, min_f (C_f - K_f s)): las facetas con K_f = n_f[axis] != 0 se guardan en C y K (desde off, len)
@@ -651,6 +657,7 @@ double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int 
 		bool cross=true;
 		for(int c=0; c<3 && cross; c++)
 			if(c!=axis) cross = rel[c] > bj.lo[c]-bi.hi[c] && rel[c] < bj.hi[c]-bi.lo[c];
+			else cross = rel[c]+(hi-s0) > bj.lo[c]-bi.hi[c] && rel[c]+(lo-s0) < bj.hi[c]-bi.lo[c];
 		if(!cross) continue;
 		auto it = w.find(make_pair(min(i,j), max(i,j)));
 		double wij = 1.0 + ((it==w.end())? 0.0 : it->second);
@@ -662,6 +669,7 @@ double Placer::axis_move(const vector<int>& pieces, vector<Vec3>& t, int i, int 
 				bool near=true;
 				for(int c=0; c<3 && near; c++)
 					if(c!=axis) near = rel[c] > bb.lo[c]-ab.hi[c] && rel[c] < bb.hi[c]-ab.lo[c];
+					else near = rel[c]+(hi-s0) > bb.lo[c]-ab.hi[c] && rel[c]+(lo-s0) < bb.hi[c]-ab.lo[c];
 				if(!near) continue;
 				//intervalo de s en que rel esta dentro del NFP: n.rel(s) <= d para todas las facetas
 				const ConvexPolytope& N = nfp(a, b);
