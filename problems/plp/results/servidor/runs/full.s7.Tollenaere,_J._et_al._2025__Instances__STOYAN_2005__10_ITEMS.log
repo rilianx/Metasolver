@@ -1,0 +1,20 @@
+instance: STOYAN_2005_10_ITEMS
+items: 10
+height_lb: 16
+construction_height (greedy, 0.005829 s): 45.041212
+compaction_height (soplex): 38
+[separacion] (0.015764 s): altura 30 (kicks 0)
+[separacion] (0.103923 s): altura 29.489655 (kicks 0)
+[separacion] (0.131462 s): altura 28.353377 (kicks 0)
+[separacion] (0.228515 s): altura 27.967794 (kicks 0)
+[separacion] (0.406386 s): altura 26.19654 (kicks 1)
+margin_height (1e-07): 26.196541
+separations: 768
+rejected: 0
+time: 30.037168
+feasible: yes
+items: 10
+height: 26.196541
+density: 0.45839385
+max_overlap: 0
+max_outside: 0

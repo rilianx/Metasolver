@@ -1,0 +1,22 @@
+instance: STOYAN_2004_12_ITEMS
+items: 12
+height_lb: 21
+construction_height (greedy, 0.008211 s): 46.603333
+compaction_height (soplex): 37
+[separacion] (0.026536 s): altura 36.534489 (kicks 0)
+[separacion] (0.044864 s): altura 34.921572 (kicks 0)
+[separacion] (0.058483 s): altura 34.166556 (kicks 0)
+[separacion] (0.491521 s): altura 33.930263 (kicks 2)
+[separacion] (1.248186 s): altura 33.653638 (kicks 3)
+[separacion] (1.743915 s): altura 33.029246 (kicks 2)
+[separacion] (2.671502 s): altura 32.782241 (kicks 3)
+margin_height (1e-07): 32.782241
+separations: 488
+rejected: 0
+time: 30.00585
+feasible: yes
+items: 12
+height: 32.782241
+density: 0.43371598
+max_overlap: 0
+max_outside: 0

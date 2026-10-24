@@ -1,0 +1,23 @@
+instance: DIAMONDS_09_ITEMS
+items: 9
+height_lb: 6.6962374
+construction_height (greedy, 1.408063 s): 20.065829
+compaction_height (soplex): 20.034448
+[separacion] (2.119265 s): altura 19.511087 (kicks 0)
+[separacion] (2.476007 s): altura 19.171535 (kicks 0)
+[separacion] (2.929905 s): altura 18.196879 (kicks 0)
+[separacion] (3.419828 s): altura 17.92141 (kicks 0)
+[separacion] (3.723618 s): altura 17.576323 (kicks 0)
+[separacion] (5.94304 s): altura 17.521559 (kicks 1)
+[separacion] (6.538214 s): altura 17.403214 (kicks 0)
+[separacion] (14.052426 s): altura 17.150666 (kicks 6)
+margin_height (1e-07): 17.150666
+separations: 100
+rejected: 0
+time: 30.257001
+feasible: yes
+items: 9
+height: 17.150666
+density: 0.39043599
+max_overlap: 0
+max_outside: 0

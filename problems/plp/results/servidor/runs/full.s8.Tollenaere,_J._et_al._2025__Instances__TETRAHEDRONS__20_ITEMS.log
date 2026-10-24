@@ -1,0 +1,19 @@
+instance: TETRAHEDRONS_20_ITEMS
+items: 20
+height_lb: 10
+construction_height (greedy, 0.001641 s): 45.538753
+compaction_height (soplex): 45.538753
+[separacion] (0.087209 s): altura 44.848181 (kicks 0)
+[separacion] (0.106004 s): altura 44.333689 (kicks 0)
+[separacion] (0.130423 s): altura 43.421627 (kicks 0)
+[separacion] (0.359547 s): altura 40.538753 (kicks 0)
+margin_height (1e-07): 40.538756
+separations: 328
+rejected: 0
+time: 30.057134
+feasible: yes
+items: 20
+height: 40.538756
+density: 0.17802511
+max_overlap: 0
+max_outside: 0

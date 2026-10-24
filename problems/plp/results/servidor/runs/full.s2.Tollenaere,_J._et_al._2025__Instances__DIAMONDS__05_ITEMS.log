@@ -1,0 +1,19 @@
+instance: DIAMONDS_05_ITEMS
+items: 5
+height_lb: 6.19
+construction_height (greedy, 0.304448 s): 12.279302
+compaction_height (soplex): 12.279302
+[separacion] (1.014606 s): altura 11.57759 (kicks 0)
+[separacion] (1.837377 s): altura 11.054558 (kicks 0)
+[separacion] (2.130863 s): altura 10.816133 (kicks 0)
+[separacion] (3.482789 s): altura 10.705012 (kicks 2)
+margin_height (1e-07): 10.705012
+separations: 261
+rejected: 0
+time: 30.231371
+feasible: yes
+items: 5
+height: 10.705012
+density: 0.35562758
+max_overlap: 0
+max_outside: 0
