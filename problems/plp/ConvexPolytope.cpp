@@ -125,7 +125,7 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps, bool
 	const vector<Vec3>& p = points;
 	vector<HullFace> faces;
 #ifdef PLP_WITH_QHULL
-	bool done = points.size() >= 2000 && qhull_faces(points, faces);
+	bool done = points.size() >= 500 && qhull_faces(points, faces);
 #else
 	bool done = false;
 #endif

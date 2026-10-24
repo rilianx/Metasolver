@@ -46,9 +46,14 @@ def kdop(P, k, m=0):
     hs = np.hstack([D, -h[:, None]])      # D.x - h <= 0
     c = P.mean(axis=0)
     V = HalfspaceIntersection(hs, c).intersections
-    #envolvente junto con P: la contiene aunque la interseccion de semiespacios tenga errores numericos
-    Q = np.vstack([V, P])
-    return Q[ConvexHull(Q).vertices]
+    V = V[ConvexHull(V).vertices]
+    #comprobacion: los vertices de P dentro de conv(V); si no (errores numericos), se agranda V un poco
+    F = ConvexHull(V).equations
+    viol = (P @ F[:, :3].T + F[:, 3]).max()
+    if viol > 0:
+        ctr = V.mean(axis=0)
+        V = ctr + (V - ctr)*(1 + 2*viol/max(1e-12, np.linalg.norm(V - ctr, axis=1).min()))
+    return V
 
 
 def offset(P, delta):
