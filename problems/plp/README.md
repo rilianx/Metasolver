@@ -18,7 +18,7 @@ Egeblad et al. (2009), Lamas-Fernández et al. (2022) y Tollenaere et al. (2025)
 Sin rotaciones, la no-superposición entre dos partes convexas `C` y `C'` con un hiperplano
 separador de normal `a` fija es lineal en las traslaciones `t`, `t'` y el término `b`:
 `a·(v + t) <= b` para los vértices `v` de `C` y `a·(w + t') >= b` para los vértices `w` de `C'`.
-Esto permite compactar soluciones con programación lineal (p.ej., SoPlex/CLP vía ibex).
+Esto permite compactar soluciones con programación lineal (SoPlex).
 
 Extensiones previstas: rotaciones ortogonales (24 orientaciones, cada una se trata como otra
 pieza) y la variante knapsack (altura fija, maximizar el volumen cargado).
@@ -108,12 +108,12 @@ Componentes:
   `slide` 0.065, `grid` 4.
 * **Mejora local** (`Placer::improve`): cada pieza (con las demás fijas) vuelve a descender por LP, y las piezas
   que definen la altura se prueban en otras posiciones; se repite mientras la altura baje.
-* **Compactación global por LP** (`Placer::compact`, requiere ibex; `--no_compact` la desactiva): un LP con las
+* **Compactación global por LP** (`Placer::compact`, requiere SoPlex; `--no_compact` la desactiva): un LP con las
   traslaciones de todas las piezas y la altura `H` como variables (minimiza `H`). Para cada par de partes que
   pueden tocarse dentro de la región de confianza (cada pieza se mueve a lo más la mitad de la menor dimensión de
-  las piezas, por eje) se fija una faceta de su NFP: `n·(t_i − t_j) >= d`. Se resuelve con `ibex::LPSolver`
-  (SoPlex o CLP), se eligen de nuevo las facetas y se repite mientras `H` baje. Se alterna con la mejora local.
-  Sin ibex el algoritmo funciona casi igual (~1 % peor en Stoyan 2004).
+  las piezas, por eje) se fija una faceta de su NFP: `n·(t_i − t_j) >= d`. Se resuelve con SoPlex,
+  se eligen de nuevo las facetas y se repite mientras `H` baje. Se alterna con la mejora local.
+  Sin LP el algoritmo funciona casi igual (~1 % peor en Stoyan 2004).
 * **Movimientos de mínimo solapamiento** (`Placer::axis_move`, `Placer::minimize_overlap`; Egeblad et al. 2009,
   Umetani et al. 2009): una pieza se traslada a lo largo de un eje a la posición que minimiza la suma ponderada de
   penetraciones con las demás (con los NFP: `max(0, min_f (d_f − n_f·rel))`, cóncava en un intervalo y cero fuera;
@@ -123,7 +123,7 @@ Componentes:
   solapado se multiplica por 1.2–2.0 según la severidad y el de los demás decae ×0.95; `--gls add` suma 1).
   Los pesos persisten durante la oscilación y se borran tras una separación exitosa o un kick.
 * Una nueva mejor solución se acepta solo si `Solution::verify` la declara factible.
-* **Separación final con margen** (`--margin`, 1e-7; requiere ibex): una última compactación por LP con
+* **Separación final con margen** (`--margin`, 1e-7; requiere SoPlex): una última compactación por LP con
   `n·(t_i − t_j) ≥ d + m_k` y `x_i + w_i ≤ W − e_x` (lo mismo en y), con holguras `m_k, w_i ∈ [0, margin]` que se
   maximizan sin subir la altura (sube ~1e-7). Deja una separación real, mayor que las tolerancias del LP, entre
   las partes cercanas y respecto de las paredes, para que la solución se pueda certificar en aritmética exacta.
@@ -147,19 +147,18 @@ Opciones (desactivadas por defecto; no mejoraron en las instancias evaluadas):
 * Evaluadas y eliminadas (`results/papers.md`): volver a la mejor disposición solapada (strikes), exploración sin
   subir la altura, compresión final, búsqueda local rápida y kicks de varias piezas.
 
-### Compilación con ibex (opcional)
+### Compilación con SoPlex (opcional)
 
-ibex con SoPlex (rama `dfb-sc-paper` de https://github.com/rilianx/ibex-lib; necesita `flex` y `bison`):
+SoPlex (https://github.com/scipopt/soplex, licencia Apache 2.0), solo la biblioteca:
 
 ```
-git clone -b dfb-sc-paper https://github.com/rilianx/ibex-lib.git
-mkdir ibex-lib/build && cd ibex-lib/build
-cmake .. -DLP_LIB=soplex -DCMAKE_INSTALL_PREFIX=$HOME/ibex
-make -j4 ibex && make install
+git clone --depth 1 -b v8.1.0 https://github.com/scipopt/soplex.git
+cmake -S soplex -B soplex/build -DCMAKE_BUILD_TYPE=Release -DZLIB=off -DGMP=off -DBOOST=off -DMPFR=off -DPAPILO=off -DCMAKE_INSTALL_PREFIX=$HOME/soplex
+cmake --build soplex/build -j4 && cmake --install soplex/build
 ```
 
-y luego, en Metasolver: `cmake .. -DIBEX_DIR=$HOME/ibex`. Sin `IBEX_DIR` todo compila igual, pero sin la
-compactación global.
+y luego, en Metasolver: `cmake .. -DSOPLEX_DIR=$HOME/soplex`. Sin SoPlex todo compila igual, pero sin la
+compactación global ni la separación final con margen. `repro/setup.sh` hace todo esto automáticamente.
 
 ```
 ./BSG_PLP "problems/plp/benchs/Stoyan et al. 2005/Example1.json" -t 30 -o sol.json
@@ -269,4 +268,4 @@ envolvente parta en el origen (`"itemOrigin": "AlignToMinimum"`).
 * `SmallLP`: LP en 3 variables (conjunto activo, todos los iterados son factibles).
 * `Placer`: NFPs, descenso por LP, posiciones candidatas y mejora de soluciones.
 * `plpState`: estado, acción y evaluador para el BSG, y `CompactGreedy`; `main_plp.cpp`: `BSG_PLP`.
-* `LPBackend`: interfaz para LPs grandes; implementación con `ibex::LPSolver` si se compila con `IBEX_DIR`.
+* `LPBackend`: interfaz para LPs grandes; implementación con SoPlex si se compila con `SOPLEX_DIR`.

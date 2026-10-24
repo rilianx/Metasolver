@@ -6,9 +6,9 @@ Scripts para correr todos los experimentos del paper (`problems/plp/paper`) en o
 
 ```bash
 # 0. dependencias del sistema (Debian/Ubuntu)
-sudo apt install build-essential cmake git flex bison pkg-config libqhull-dev python3-venv
+sudo apt install build-essential cmake git libqhull-dev python3-venv
 
-# 1. ibex + BSG_PLP + entorno Python + instancia Chess y sus descomposiciones + prueba rápida (~15 min)
+# 1. SoPlex + BSG_PLP + entorno Python + instancia Chess y sus descomposiciones + prueba rápida (~15 min)
 JOBS=14 problems/plp/repro/setup.sh
 
 # 2. (opcional) prueba de todo el flujo con los tiempos divididos por 60 (~10 min)
@@ -43,6 +43,7 @@ Total ≈ 22 h de CPU, ≈ 1.7 h con 14 procesos.
 * `hardware.sh` guarda en `out/hardware.txt` la CPU (`lscpu`), núcleos físicos y lógicos, frecuencias, memoria,
   sistema operativo, compiladores y el commit del repositorio; `analyze.py` copia el modelo de CPU a `results.md`
   para la sección experimental del paper.
+* El LP (compactación y compactación final con márgenes) se resuelve con SoPlex 8.1, llamado directamente.
 * Todas las corridas usan el código actual (con Qhull para envolventes de muchos puntos y soluciones en el sistema
   de coordenadas de la malla original, ESICUP); en las instancias poliédricas del paper Qhull no se activa.
 * `data/tollenaere2025_reference.csv`: mejores cotas superior e inferior de los modelos MILP de Tollenaere et al.

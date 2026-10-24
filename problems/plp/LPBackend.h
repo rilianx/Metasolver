@@ -2,7 +2,7 @@
  * LPBackend.h
  *
  * Interfaz minima para resolver programas lineales con una libreria externa
- * (ibex con SoPlex o CLP). Si el proyecto se compila sin ibex, create() retorna NULL.
+ * (SoPlex). Si el proyecto se compila sin SoPlex, create() retorna NULL.
  */
 
 #ifndef PLP_LPBACKEND_H_
@@ -35,7 +35,7 @@ public:
 
 	virtual std::string name() const = 0;
 
-	/** backend disponible (NULL si se compilo sin ibex) */
+	/** backend disponible (NULL si se compilo sin SoPlex) */
 	static LPBackend* create(double timeout=60.0);
 };
 

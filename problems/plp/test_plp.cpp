@@ -158,7 +158,7 @@ static void test_greedy(const string& benchs) {
 
 static void test_compact(const string& benchs) {
 	LPBackend* lp = LPBackend::create();
-	if(!lp) { cout << "(sin ibex: no se prueba la compactacion)" << endl; return; }
+	if(!lp) { cout << "(sin SoPlex: no se prueba la compactacion)" << endl; return; }
 	Instance inst = Instance::load(benchs + "/Stoyan et al. 2005/Example3.json");
 	Placer placer(inst);
 	PLP_Function f(placer);

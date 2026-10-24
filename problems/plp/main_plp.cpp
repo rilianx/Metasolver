@@ -53,11 +53,11 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _gls_iter(improvement, "int", "Maximum passes of the minimum-overlap local search. Default: 500", {"gls_iter"});
 	args::ValueFlag<double> _axis_window(improvement, "double", "Moves along the axes: a piece moves at most this multiple of its extent along the axis (0: the whole container). Default: 0", {"axis_window"});
 	args::ValueFlag<string> _gls(improvement, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
-	args::Flag _sep_lp(improvement, "sep_lp", "If the moves along the axes fail, try the LP separation (requires ibex)", {"sep_lp"});
+	args::Flag _sep_lp(improvement, "sep_lp", "If the moves along the axes fail, try the LP separation (requires SoPlex)", {"sep_lp"});
 	args::ValueFlag<int> _sep_iter(improvement, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each). Default: mix", {"kick"});
-	args::Flag _no_compact(improvement, "no_compact", "Do not use the global LP compaction (requires ibex)", {"no_compact"});
-	args::ValueFlag<double> _margin(improvement, "double", "Final compaction with this separation between neighboring parts, so that the solution can be certified in exact arithmetic (tools/certify_solution.py; requires ibex; 0: no). Default: 1e-7", {"margin"});
+	args::Flag _no_compact(improvement, "no_compact", "Do not use the global LP compaction (requires SoPlex)", {"no_compact"});
+	args::ValueFlag<double> _margin(improvement, "double", "Final compaction with this separation between neighboring parts, so that the solution can be certified in exact arithmetic (tools/certify_solution.py; requires SoPlex; 0: no). Default: 1e-7", {"margin"});
 	args::Flag _repair(improvement, "repair", "After --kicks kicks without improvement, try to repair the best solution with the BSG in a lower container", {"repair"});
 	args::ValueFlag<int> _kicks(improvement, "int", "--repair: consecutive kicks without improvement before the repair. Default: 30", {"kicks"});
 	args::ValueFlag<double> _step(improvement, "double", "--repair: height decrease (proportion). Default: 0.03", {"step"});
@@ -123,7 +123,7 @@ int main(int argc, char** argv){
 		PLP_Function f(placer, alpha, beta, gamma);
 		double lb = inst.height_lower_bound();
 		LPBackend* lp = (_no_compact)? NULL : LPBackend::create();
-		if(_sep_lp && !lp) cout << "WARNING: --sep_lp requiere compilar con ibex" << endl;
+		if(_sep_lp && !lp) cout << "WARNING: --sep_lp requiere compilar con SoPlex" << endl;
 		mt19937 rng((_seed)? _seed.Get() : 0);
 
 		//BSG con un contenedor de altura hmax (infinito: altura abierta) a partir de las piezas keep ya ubicadas;

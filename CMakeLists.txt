@@ -39,8 +39,8 @@ add_library(plp
 )
 target_include_directories(plp PUBLIC problems/plp metasolver metasolver/strategies)
 
-# compactacion global por LP con ibex (SoPlex o CLP), opcional:
-#   cmake .. -DIBEX_DIR=<prefijo de instalacion de ibex>
+# compactacion global por LP con SoPlex (opcional; https://github.com/scipopt/soplex):
+#   cmake .. -DSOPLEX_DIR=<prefijo de instalacion de SoPlex>
 # Qhull (opcional): envolventes convexas robustas para conjuntos grandes de puntos (NFP de partes de mallas reales)
 find_path(QHULL_INCLUDE_DIR libqhull_r/libqhull_r.h)
 find_library(QHULL_LIBRARY qhull_r)
@@ -51,16 +51,13 @@ if(QHULL_INCLUDE_DIR AND QHULL_LIBRARY)
   message(STATUS "PLP: Qhull (${QHULL_LIBRARY})")
 endif()
 
-set(IBEX_DIR "" CACHE PATH "Installation prefix of ibex (optional, for the LP compaction of PLP)")
-if(IBEX_DIR)
-  find_package(PkgConfig REQUIRED)
-  set(ENV{PKG_CONFIG_PATH} "${IBEX_DIR}/share/pkgconfig:${IBEX_DIR}/lib/pkgconfig")
-  pkg_check_modules(IBEX REQUIRED ibex)
-  target_compile_definitions(plp PUBLIC PLP_WITH_IBEX)
-  target_include_directories(plp PUBLIC ${IBEX_INCLUDE_DIRS})
-  target_compile_options(plp PUBLIC ${IBEX_CFLAGS_OTHER})
-  target_link_libraries(plp PUBLIC ${IBEX_LDFLAGS})
-  message(STATUS "PLP: compactacion por LP con ibex (${IBEX_DIR})")
+set(SOPLEX_DIR "" CACHE PATH "Installation prefix of SoPlex (optional, for the LP compaction of PLP)")
+find_package(soplex CONFIG QUIET HINTS ${SOPLEX_DIR} ${SOPLEX_DIR}/lib/cmake/soplex)
+if(soplex_FOUND OR SOPLEX_FOUND)
+  target_compile_definitions(plp PUBLIC PLP_WITH_SOPLEX)
+  target_include_directories(plp PUBLIC ${SOPLEX_INCLUDE_DIRS})
+  target_link_libraries(plp PUBLIC ${SOPLEX_LIBRARIES})
+  message(STATUS "PLP: compactacion por LP con SoPlex (${soplex_DIR})")
 endif()
 
 add_executable(PLP_check problems/plp/main_plp_check.cpp)

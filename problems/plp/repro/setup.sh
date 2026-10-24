@@ -1,12 +1,12 @@
 #!/bin/bash
 # Prepara todo lo necesario para reproducir los experimentos del paper:
-#   1. ibex (rama dfb-sc-paper, con SoPlex incluido) en repro/deps/ibex-install
-#   2. BSG_PLP y PLP_check (con ibex y Qhull) en <repo>/build-repro
+#   1. SoPlex (v8.1.0, solo la biblioteca, sin GMP/Boost/zlib) en repro/deps/soplex-install
+#   2. BSG_PLP y PLP_check (con SoPlex y Qhull) en <repo>/build-repro
 #   3. entorno Python en repro/deps/venv (numpy, scipy, trimesh, rtree, coacd, matplotlib)
 #   4. instancia Chess (ESICUP) y sus descomposiciones conservadoras (decompositions_t05 y decompositions_C)
 #   5. prueba rapida
 # uso: JOBS=14 problems/plp/repro/setup.sh
-# requiere (Debian/Ubuntu): sudo apt install build-essential cmake git flex bison pkg-config libqhull-dev python3-venv
+# requiere (Debian/Ubuntu): sudo apt install build-essential cmake git libqhull-dev python3-venv
 set -e
 JOBS=${JOBS:-14}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -17,33 +17,32 @@ mkdir -p "$DEPS" "$HERE/out"
 
 echo "== 0. dependencias del sistema"
 miss=""
-for c in g++ cmake make git flex bison pkg-config python3; do command -v $c >/dev/null || miss="$miss $c"; done
+for c in g++ cmake make git python3; do command -v $c >/dev/null || miss="$miss $c"; done
 [ -f /usr/include/libqhull_r/libqhull_r.h ] || miss="$miss libqhull-dev"
 python3 -c 'import venv, ensurepip' 2>/dev/null || miss="$miss python3-venv"
 if [ -n "$miss" ]; then
   echo "faltan:$miss"
-  echo "instalar con: sudo apt install build-essential cmake git flex bison pkg-config libqhull-dev python3-venv"
+  echo "instalar con: sudo apt install build-essential cmake git libqhull-dev python3-venv"
   exit 1
 fi
 "$HERE/hardware.sh" "$HERE/out/hardware.txt"
 
-echo "== 1. ibex"
-IBEX_SRC=$DEPS/ibex-lib; IBEX=$DEPS/ibex-install
-IBEX_COMMIT=45877fd4
-if [ ! -f "$IBEX/share/pkgconfig/ibex.pc" ] && [ ! -f "$IBEX/lib/pkgconfig/ibex.pc" ]; then
-  [ -d "$IBEX_SRC" ] || git clone -b dfb-sc-paper https://github.com/rilianx/ibex-lib.git "$IBEX_SRC"
-  git -C "$IBEX_SRC" checkout -q $IBEX_COMMIT
-  cmake -S "$IBEX_SRC" -B "$DEPS/ibex-build" -DCMAKE_BUILD_TYPE=Release -DLP_LIB=soplex -DINTERVAL_LIB=gaol \
-        -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX="$IBEX" > "$DEPS/ibex-cmake.log"
-  cmake --build "$DEPS/ibex-build" -j $JOBS > "$DEPS/ibex-build.log"
-  cmake --install "$DEPS/ibex-build" > /dev/null
+echo "== 1. SoPlex"
+SPX=$DEPS/soplex-install
+SOPLEX_TAG=v8.1.0
+if [ ! -f "$SPX/lib/cmake/soplex/soplex-config.cmake" ]; then
+  [ -d "$DEPS/soplex" ] || git clone -q --depth 1 -b $SOPLEX_TAG https://github.com/scipopt/soplex.git "$DEPS/soplex"
+  cmake -S "$DEPS/soplex" -B "$DEPS/soplex-build" -DCMAKE_BUILD_TYPE=Release -DZLIB=off -DGMP=off -DBOOST=off \
+        -DMPFR=off -DPAPILO=off -DQUADMATH=off -DCMAKE_INSTALL_PREFIX="$SPX" > "$DEPS/soplex-cmake.log"
+  cmake --build "$DEPS/soplex-build" -j $JOBS > "$DEPS/soplex-build.log"
+  cmake --install "$DEPS/soplex-build" > /dev/null
 fi
-echo "ibex en $IBEX"
+echo "SoPlex en $SPX"
 
 echo "== 2. BSG_PLP"
-cmake -S "$REPO" -B "$REPO/build-repro" -DCMAKE_BUILD_TYPE=Release -DIBEX_DIR="$IBEX" | grep -E 'PLP|Qhull|qhull' || true
+cmake -S "$REPO" -B "$REPO/build-repro" -DCMAKE_BUILD_TYPE=Release -DSOPLEX_DIR="$SPX" | grep -E 'PLP|Qhull|qhull' || true
 cmake --build "$REPO/build-repro" -j $JOBS --target BSG_PLP PLP_check > "$DEPS/metasolver-build.log"
-grep -q PLP_WITH_IBEX "$REPO/build-repro/CMakeFiles/plp.dir/flags.make" || { echo "BSG_PLP compilado sin ibex"; exit 1; }
+grep -q PLP_WITH_SOPLEX "$REPO/build-repro/CMakeFiles/plp.dir/flags.make" || { echo "BSG_PLP compilado sin SoPlex"; exit 1; }
 grep -q PLP_WITH_QHULL "$REPO/build-repro/CMakeFiles/plp.dir/flags.make" || { echo "BSG_PLP compilado sin Qhull"; exit 1; }
 echo "binarios en $REPO/build-repro"
 
