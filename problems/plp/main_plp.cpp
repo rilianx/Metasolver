@@ -46,6 +46,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _blocks(construction, "int", "Maximum number of pseudo-blocks (pairs of pieces in a compact relative position). Default: 0", {"blocks"});
 	args::ValueFlag<int> _block_pair(construction, "int", "Pseudo-blocks per pair of item types. Default: 2", {"block_pair"});
 	args::ValueFlag<double> _block_waste(construction, "double", "Maximum added waste of a pseudo-block (convex hull of the block - convex hulls of the pieces) / volume of the pieces. Default: 0.07", {"block_waste"});
+	args::ValueFlag<string> _start(construction, "file", "Start from this solution (ESICUP JSON) instead of the construction; e.g., a solution found with a coarser decomposition (--dec)", {"start"});
 	args::Flag _greedy(construction, "greedy", "Only the construction (and the compaction)", {"greedy"});
 	args::Group improvement(parser, "Improvement:");
 	args::ValueFlag<double> _sep_step(improvement, "double", "Height decrease after a successful separation (proportion); on failure the height grows a quarter of it. Default: 0.01", {"sep_step"});
@@ -165,9 +166,12 @@ int main(int argc, char** argv){
 			return H;
 		};
 
-		//1. construccion (altura abierta)
+		//1. construccion (altura abierta), o solucion inicial dada
 		plpState* best = NULL;
-		if(init=="bsg"){
+		if(_start){
+			//se carga como un estado completo (las posiciones se reemplazan despues)
+			best = new plpState(inst);
+		}else if(init=="bsg"){
 			best = search(numeric_limits<double>::infinity(), ((_bsg_time)? _bsg_time.Get() : 0.3)*maxtime, vector<Placement>());
 			if(!best || best->get_n_left()>0){
 				cout << "WARNING: el BSG no completo una solucion; se usa el greedy" << endl;
@@ -180,18 +184,36 @@ int main(int argc, char** argv){
 			CompactGreedy gr(&f, NULL);
 			gr.run(*best, 0.0);
 		}
-		if(best->get_n_left()>0){
+		if(!_start && best->get_n_left()>0){
 			cerr << "ERROR: no se encontro una solucion completa" << endl;
 			return 1;
 		}
-		Solution S = best->get_solution();
+		Solution S = (_start)? Solution::load(_start.Get(), inst) : best->get_solution();
 		delete best;
 		vector<int> ps;
 		vector<Vec3> ts;
 		for(const Placement& p : S.items) { ps.push_back(inst.types[p.type].piece); ts.push_back(p.t); }
 		int n = ps.size();
+		if(_start && (int)inst.n_items() != n) { cerr << "ERROR: la solucion inicial no tiene todos los items" << endl; return 1; }
 		double H = S.height();
-		cout << "construction_height (" << init << ", " << elapsed() << " s): " << H << endl;
+		if(_start && !S.verify().feasible){
+			//con otra descomposicion la solucion puede tener solapamientos pequenos: se separa subiendo la altura
+			map< pair<int,int>, double > w0;
+			double h = H;
+			for(int k=0; k<50; k++, h *= 1.005){
+				vector<Vec3> t2 = ts;
+				for(int i=0; i<n; i++) t2[i].z = min(t2[i].z, max(0.0, h - inst.pieces[ps[i]].bbox.extent().z));
+				if(placer.minimize_overlap(ps, t2, h, gls_iter, w0, rng, gls=="mult")){
+					Solution S2 = S;
+					for(int i=0; i<n; i++) S2.items[i].t = t2[i];
+					if(S2.verify().feasible) { S.items = S2.items; ts = t2; break; }
+				}
+			}
+			if(!S.verify().feasible) { cerr << "ERROR: no se pudo separar la solucion inicial" << endl; return 1; }
+			H = S.height();
+			cout << "start_separated_height: " << H << endl;
+		}
+		cout << "construction_height (" << ((_start)? "start" : init) << ", " << elapsed() << " s): " << H << endl;
 		auto set_best = [&](const vector<Vec3>& t, double H2) {
 			Solution S2 = S;
 			for(int i=0; i<n; i++) S2.items[i].t = t[i];

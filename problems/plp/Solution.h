@@ -42,6 +42,9 @@ public:
 
 	void save(const std::string& file) const;
 
+	/** traslacion de la malla original (posicion ESICUP, itemOrigin = AlignToMinimum) del item p */
+	Vec3 mesh_translation(const Placement& p) const;
+
 	/**
 	 * Verifica que cada pieza este dentro del contenedor (z >= 0), que las piezas
 	 * no se solapen (profundidad de penetracion mayor que eps) y que se ubiquen

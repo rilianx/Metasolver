@@ -88,8 +88,12 @@ Piece Piece::load(const string& file, const string& parts_file) {
 		for(size_t j=i+1; j<P.parts.size() && !overlap; j++)
 			overlap = penetration_depth(P.parts[i], P.parts[j], tol) > tol;
 
+	P.mesh_min = bb.lo;
 	if(!parts_file.empty()){
 		Mesh O = Mesh::load(file);
+		Box3 ob;
+		for(const Vec3& v : O.vertices) ob.add(v);
+		P.mesh_min = ob.lo;
 		double vol = fabs(O.volume(0, O.faces.size()));
 		if(overlap) P.volume = vol;
 		else if(fabs(vol - P.volume) > 1e-6*vol){

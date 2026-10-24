@@ -6,7 +6,7 @@ No usa el codigo C++ del proyecto. Cada pieza es una union de partes convexas (e
 * si existe benchs/decompositions/<ruta de la pieza>.obj, las partes son sus cascarones cerrados consecutivos
   (o sus grupos o/g);
 * si no, la pieza es la envolvente convexa de TODOS los vertices de su archivo (OBJ o STL).
-La pieza se alinea al minimo de sus vertices (itemOrigin = AlignToMinimum). Para cada par de partes de piezas
+La pieza se alinea al minimo de los vertices de su malla original (itemOrigin = AlignToMinimum). Para cada par de partes de piezas
 distintas se resuelve un LP que busca el punto mas profundo de su interseccion (max delta s.a.
 A1 x + delta <= b1, A2 x + delta <= b2, con normales unitarias); si delta > eps las piezas se solapan.
 
@@ -66,7 +66,10 @@ def load_parts(rel):
         elif rel.lower().endswith('.obj'): V, F, _ = read_obj(root + '/' + rel)
         else: sys.exit('formato no soportado: ' + rel)
         parts = [V]
-    lo = np.min([P.min(axis=0) for P in parts], axis=0)
+    #la posicion ESICUP (AlignToMinimum) se refiere al minimo de la malla original
+    if rel.lower().endswith('.stl'): M = read_stl_vertices(root + '/' + rel)
+    else: M = read_obj(root + '/' + rel)[0]
+    lo = M.min(axis=0)
     return [P - lo for P in parts]
 
 pieces = {}

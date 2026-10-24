@@ -83,7 +83,9 @@ def load_parts(rel):
         edges = sorted({tuple(sorted((t[a], t[(a+1) % 3]))) for t in tris for a in range(3)})
         out.append((P[idx], tris, edges))
     #alineacion al minimo (itemOrigin = AlignToMinimum), en racionales
-    lo = [min(Fraction(float(x)) for P, _, _ in out for x in P[:, c]) for c in range(3)]
+    #la posicion ESICUP (AlignToMinimum) se refiere al minimo de la malla original
+    M = read_stl_vertices(root + '/' + rel) if rel.lower().endswith('.stl') else read_obj(root + '/' + rel)[0]
+    lo = [Fraction(float(M[:, c].min())) for c in range(3)]
     return [([tuple(Fraction(float(v[c])) - lo[c] for c in range(3)) for v in P], tris, edges) for P, tris, edges in out]
 
 

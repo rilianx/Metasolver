@@ -67,9 +67,17 @@ Solution Solution::load(const string& file, const Instance& inst) {
 			const Json& pos = T["position"];
 			for(int c=0;c<3;c++) p.t[c] = pos[c].as_number();
 		}
+		//la traslacion del archivo ubica la malla original; t ubica la caja de las partes
+		const Piece& P = inst.pieces[inst.types[p.type].piece];
+		p.t = p.t - (P.mesh_min - P.offset);
 		S.items.push_back(p);
 	}
 	return S;
+}
+
+Vec3 Solution::mesh_translation(const Placement& p) const {
+	const Piece& P = inst.pieces[inst.types[p.type].piece];
+	return p.t + (P.mesh_min - P.offset);
 }
 
 void Solution::save(const string& file) const {
@@ -84,12 +92,13 @@ void Solution::save(const string& file) const {
 		it.set("name", basename(inst.types[p.type].path));
 		Json T = Json::object();
 		Json pos = Json::array();
-		for(int c=0;c<3;c++) pos.push_back(p.t[c]);
+		Vec3 tm = mesh_translation(p);
+		for(int c=0;c<3;c++) pos.push_back(tm[c]);
 		T.set("position", pos);
 		Json M = Json::array();
 		for(int r=0;r<4;r++){
 			Json row = Json::array();
-			for(int c=0;c<3;c++) row.push_back((r<3)? p.R.m[c][r] : p.t[c]);
+			for(int c=0;c<3;c++) row.push_back((r<3)? p.R.m[c][r] : tm[c]);
 			row.push_back((r<3)? 0.0 : 1.0);
 			M.push_back(row);
 		}

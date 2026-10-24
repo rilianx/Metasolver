@@ -48,8 +48,12 @@ public:
 
 	Box3 bbox;
 
-	//esquina minima de la caja envolvente en las coordenadas del archivo
+	//esquina minima de la caja envolvente (de las partes) en las coordenadas del archivo
 	Vec3 offset;
+
+	//esquina minima de la malla original (la posicion ESICUP, itemOrigin = AlignToMinimum, se refiere a ella); con
+	//una descomposicion conservadora (las partes contienen a la malla) es >= offset
+	Vec3 mesh_min;
 
 	std::vector<std::string> warnings;
 };
