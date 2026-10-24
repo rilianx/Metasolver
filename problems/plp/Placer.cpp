@@ -114,7 +114,11 @@ Vec3 Placer::descend(int p, Vec3 t, const Vec3& c, const vector<PlacedPart>& pla
 		}
 
 		Vec3 t2 = lp.minimize(c, t);
-		if(dot(c, t2) >= dot(c, t) - tol) break;
+		//con filas activas casi dependientes el LP puede devolver un punto fuera de su region (sin descenso valido)
+		bool inside = true;
+		for(int k=0; k<3; k++)
+			inside = inside && std::isfinite(t2[k]) && t2[k] >= R.lo[k] - 1e3*tol && t2[k] <= R.hi[k] + 1e3*tol;
+		if(!inside || dot(c, t2) >= dot(c, t) - tol) break;
 		t = t2;
 	}
 	return t;
