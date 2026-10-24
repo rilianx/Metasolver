@@ -42,7 +42,7 @@ heights by 2.5--9\% within 120 seconds, and after 10 seconds its mean utilizatio
 method after 600 seconds. It also improves the best known solutions of a classical convex instance and of the
 non-convex instances of \citet{stoyan2004}, one of which is solved to optimality, and on the small instances of
 \citet{tollenaere2026} it matches 26 of the 27 proven optima and improves the best known solution of 32 of the
-39 open instances. Finally, a linear-programming
+39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 12\% below the best voxel result. Finally, a linear-programming
 compaction over no-fit polytope facets with soft margins, followed by dyadic rounding, yields solutions whose
 feasibility is certified in exact rational arithmetic.
 \end{abstract}
@@ -284,6 +284,8 @@ convex polytopes, which we use directly as the decomposition.
 utilization is a cube. Six Ikonen pieces are non-convex prisms; we decompose them exactly by triangulating the
 base polygon, merging triangles into convex polygons \citep{hertel1983}, and extruding (a frame is split into
 four boxes; two pieces have polygons touching at a vertex). The volumes of the parts match those of the meshes.
+\item \emph{Liu Experiment 1} \citep{liu2015}: 36 pieces (8 tetrahedra, 8 cubes, 8 stars, 8 arrows and 4 rings)
+in a $20\times20$ container; the stars, arrows and rings are prisms and are decomposed exactly in the same way.
 \end{itemize}
 
 \paragraph{References}
@@ -338,7 +340,7 @@ optimum of \citet{tollenaere2026} for Stoyan 2005 Example 1, and \citet{stoyan20
 \citet{lamas2023} (best: standard resolution and 10 runs of 1 h for Stoyan, extra-fine resolution and 4 h for
 Merged; mean: standard resolution). Ours: mean (best) of 10 seeds, 120 s. $^*$Optimal (equal to the lower bound
 $H_0$). $^\dagger$Value reported by \citet{lamas2023}; it is below the height of the tallest piece (29) in the
-public data.}
+public data. $^\ddagger$HAPE3D \citep{liu2015}, allowing 8 rotations.}
 \label{tab:results}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -358,13 +360,15 @@ Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \textbf{21.01 (21.00)}\\
 Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \textbf{22.62 (22.04)}\\
 Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \textbf{25.06 (24.00)}\\
 Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \textbf{27.89 (27.20)}\\
+Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{30.08 (29.58)}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 On Stoyan 2004 Example 2 our height, 29, equals the lower bound $H_0$ given by the tallest piece, so it is
-optimal for the public data. Stoyan 2004 Example 1 is not included: the instance used by \citet{lamas2023} under that name is a different set
-of pieces \citep{liu2015}. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
+optimal for the public data. Stoyan 2004 Example 1 (80 pieces) has no published reference and is not included;
+the instance called Experiment 1 by \citet{lamas2023} is the one of \citet{liu2015}, where our mean height is
+12\% below the best voxel height and also below that of HAPE3D, which allows rotations. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 
@@ -427,22 +431,40 @@ advantage holds at equal effective time.
 The results support a conclusion that agrees with recent 2D work \citep{gardeyn2025}: the quality of an
 overlap-minimization heuristic is driven by how many separation attempts fit in the time budget, and therefore
 by the cost of evaluating and optimizing the overlap. The NFP-based penetration depth gives an exact, cheap and
-informative measure for unions of convex parts. The global LP compaction complements the axis moves, which
-cannot produce coordinated or diagonal displacements.
+informative measure for unions of convex parts with few facets, which is the case of all the benchmark
+instances.
+
+\paragraph{Realistic meshes}
+The cost of a move grows with the number of facets of the NFPs, so pieces with curved surfaces are the hard case.
+We tested the Chess instance of \citet{lamas2023} (32 pieces, meshes of 700--2900 triangles). Since an exact
+convex decomposition of such meshes is impractical, we use a conservative one: CoACD \citep{wei2022} cuts the
+mesh and takes the convex hull of each piece; the small gaps it leaves between parts are covered by scaling
+each part from its centroid, and containment is checked with interior sample points. With concavity threshold
+0.05 (6--20 parts per piece) the union exceeds the volume of the piece by 4--12\%, and with 0.2 (1--4 parts,
+reduced to at most 42 facet directions) by 38--78\%. The solutions remain feasible for the real geometry.
+However, the NFPs between parts have hundreds of facets and a separation takes 20--35 s instead of a fraction of
+a second. In 20 minutes the best heights are 147.2 (fine decomposition), 151.3 (coarse) and 147.8 (coarse search
+followed by refinement with the fine decomposition), against 131 (best of 10 runs of 1 h) and 135.1 (mean) for
+the voxel VNS of \citet{lamas2023}, whose cost does not depend on the complexity of the surface. Pseudo-blocks of
+two pieces did not help. Voxels and the proposed method are thus complementary: the latter is faster and exact
+on polyhedral pieces with few facets, the former scales better to curved meshes.
 
 \paragraph{Limitations}
-Rotations are not considered. The method requires a convex decomposition of each piece; for the instances used
-here it is exact and small, but general meshes may need many parts, and approximate decompositions lose the
-exactness of the geometry. \todo{instancias adicionales (Tollenaere et al., 2026) y mas grandes}
+Rotations are not considered. The method requires a convex decomposition of each piece; for the benchmark
+instances it is exact and small, while for curved meshes a conservative decomposition overestimates the pieces
+and, above all, makes the moves expensive. Reducing the cost of the NFPs of curved parts (e.g., hierarchical
+filtering with the hull of each piece, or conservative simplification of the NFPs) is left for future work.
 
 % =====================================================================================================
 \section{Conclusions}
 We presented an overlap-minimization heuristic for 3D irregular strip packing that works with the exact geometry
 of polyhedra given as unions of convex parts. Its key element is an exact axis move based on penetration depths
-in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and LP compaction.
-A simple core of these components outperforms the previous methods, with exact and voxel geometry, on the
-classical benchmarks, and its solutions can be certified in exact arithmetic. Future work includes rotations,
-larger instances from additive manufacturing, and certified lower bounds.
+in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and kicks; a final
+LP compaction with margins makes the solutions certifiable in exact arithmetic. This simple method outperforms
+the previous methods, with exact and voxel geometry, on the benchmarks of polyhedral pieces, and matches almost
+all the proven optima of the small instances. On curved meshes, which require conservative decompositions with
+many facets, it remains behind voxel-based search. Future work includes cheaper NFP computations for curved
+parts, rotations, larger instances from additive manufacturing, and certified lower bounds.
 
 \bibliographystyle{elsarticle-harv}
 \bibliography{refs}
