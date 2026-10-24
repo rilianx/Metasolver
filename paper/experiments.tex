@@ -69,15 +69,21 @@ produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}
 \paragraph{Parameter tuning.}
 The parameters of the algorithm were tuned once with irace \citep{LopezIbanez2016}, as
 \citet{Paquay2018b} did for their heuristic, on a separate training set, and are used unchanged
-in the three settings and for both time limits. \todo{el ajuste se hizo con una version
-preliminar (espacios anclados en la esquina mas cercana, CoG del archivo); decidir si se
-re-ajusta con la version final.}
+in the three settings and for both time limits. Re-tuning them with the final version of the
+algorithm, on the training instances of each setting or of the three together, did not improve
+on them. \todo{el ajuste original se hizo con una version preliminar; los re-ajustes (mixto y
+por escenario, 3000 corridas) se validaron en las finales con una corrida y fueron peores o
+iguales; decidir si se menciona asi o se omite.}
 The training set consists of 150 preliminary instances of \citet{Paquay2018b} (30 instances
 with 30, 40, 50, 60 and 100 boxes), disjoint from the final ones, in the Paquay setting with
 $t = 0.1$\,s and a budget of 3000 runs. The cost of a run is the number of ULDs plus five times
 the number of ULDs whose CoG is out of range, plus $(1 - u)/2$, where $u$ is the total
 utilization, to break ties in favour of smaller ULDs. Table~\ref{tab:params} lists the tuned
-parameters.
+parameters. The parameter $\theta$ of the choice of the ULD type ($^*$) was added afterwards and
+chosen with the other parameters fixed, on the training instances of the three settings: among
+the values in the table and the rule of \citet{Hessler2025} alone, $\theta = 0.1$ was the best
+in the volume of the ULDs summed over the settings and in the volume left unloaded in the one
+setting.
 
 \begin{table}[htbp]
 \centering
@@ -95,6 +101,7 @@ $\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 1.234 \\
 $\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 0.239 \\
 $\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.224 \\
 $p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.057 \\
+$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type$^*$ & $\{0.1, 0.2, 0.3, 0.6\}$ & 0.1 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -118,7 +125,8 @@ the RGS is computed from the type of each ULD (Tables 9, 11 and 13 of their appe
 setting \emph{One}, its unloaded volume from the utilization of each ULD, which is rounded to
 0.1\%; we therefore consider two loaded volumes equal if they differ by less than 0.05\,m$^3$.
 Each configuration is run five times; we report the mean and the standard deviation.
-\todo{en adapted y one con $t = 1$\,s hay 4 corridas; completar con results/final.}
+\todo{las tablas son de results/final con la version sin $\theta$ (regla de Hessler);
+actualizar con la nueva campana del servidor ($\theta = 0.1$, 5 corridas).}
 
 \subsection{Results}
 \label{sec:exp-results}
@@ -275,19 +283,41 @@ single-thread rating of PassMark \citep{PassMark}.
 
 \todo{tabla de ablacion con results/final: sin CoG en la evaluacion de los bloques, sin
 penalizacion, sin traslacion, espacios anclados en las esquinas, sin subestructura, reduccion
-con un solo ULD nuevo, solo eliminacion, sin reduccion, y sin cada etapa de Insert.}
+con un solo ULD nuevo, solo eliminacion, sin reduccion, regla de Hessler sin $\theta$, y sin
+cada etapa de Insert.}
 
 \paragraph{Choosing the type of each ULD.}
-Before designing the reduction of the volume, we tried to reduce the volume during the
-construction, by choosing among the candidate types of the next ULD the one that maximizes
-$L - \theta V$, where $L$ is the loaded volume and $V$ the volume of the ULD ($\theta = 0$
-maximizes the loaded volume, as the rule of \citet{Hessler2025}, and $\theta = 1$ minimizes the
-lost volume). On the 150 training instances (Paquay setting, $t = 0.1$\,s, without the
-reduction phase), the best value, $\theta = 0.2$, reduced the volume by only 0.4\% with 7\% more
-ULDs, and larger values increased both. Evaluating each candidate type by completing the
-solution with a fast construction (a rollout) reduced the volume by 1.4\%. Local criteria for
-the choice of each ULD do not anticipate which boxes remain for the next ULDs, whereas the
-reduction phase changes the complete solution.
+Table~\ref{tab:theta} shows the effect of choosing the type of each ULD with $\theta$ instead
+of the rule of \citet{Hessler2025} alone, on the training instances ($t = 0.1$\,s). With an
+unlimited number of ULDs the effect is small: a poor choice during the construction is
+corrected later by the reduction phase. With one ULD of each type the reduction has few
+alternatives, and choosing a smaller type when it loads almost the same volume reduces the
+volume by about 2\%. Larger values of $\theta$ add ULDs without reducing the volume further.
+In an earlier version without the reduction phase, the same rule, as well as evaluating each
+candidate by completing the solution with a fast construction (a rollout), reduced the volume
+by less than 1.5\% in the Paquay setting: local choices do not anticipate which boxes remain
+for the next ULDs, which the reduction phase handles.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Choice of the ULD type on the 150 training instances ($t = 0.1$\,s, one run): volume
+of the ULDs (m$^3$), number of ULDs and, in the one setting, volume left unloaded (m$^3$).}
+\label{tab:theta}
+\begin{tabular}{lrrrrrrr}
+\toprule
+& \multicolumn{2}{c}{Paquay} & \multicolumn{2}{c}{Adapted} & \multicolumn{3}{c}{One} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-8}
+Rule & Vol. & ULDs & Vol. & ULDs & Vol. & ULDs & Unl. \\
+\midrule
+\citet{Hessler2025} & 9131.7 & 373 & 8500.2 & 352 & 8163.1 & 387 & 14.12 \\
+$\theta = 0.1$ & 9095.1 & 374 & 8529.9 & 351 & 8006.8 & 388 & 12.46 \\
+$\theta = 0.2$ & 9182.7 & 376 & 8451.7 & 353 & 7983.4 & 394 & 15.93 \\
+$\theta = 0.3$ & 9187.2 & 385 & 8506.6 & 357 & 8030.1 & 403 & 12.71 \\
+$\theta = 0.6$ & 9248.6 & 413 & 8708.1 & 389 & 8024.8 & 412 & 12.29 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Volume of the ULDs versus weight distribution}
 \label{sec:exp-tradeoff}

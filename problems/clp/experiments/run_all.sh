@@ -53,8 +53,8 @@ for v in $SETTINGS; do
 	for cfg in "nocoggreedy:--cog_greedy 0" "nocogpen:--cog_penalty 0" "notranslate:--no_translate" \
 			"corner:--corner_anchor" "nosub:--no_substructure" \
 			"reduce1:--reduce_new 1" "elimonly:--eliminate_only" "noreduce:--no_eliminate" \
-			"noscratch:--no_scratch" "nopriority:--no_priority" "noruin:--no_ruin" \
-			"base:--cog_greedy 0 --corner_anchor --no_regroup --no_eliminate --no_substructure"; do
+			"hessler:--theta -1" "noscratch:--no_scratch" "nopriority:--no_priority" "noruin:--no_ruin" \
+			"base:--theta -1 --cog_greedy 0 --corner_anchor --no_regroup --no_eliminate --no_substructure"; do
 		n=${cfg%%:*}; a=${cfg#*:}
 		[ $n = nosub ] && [ $v = paquay ] && continue
 		run abl_${v}_$n $v -t 0.1 $a

@@ -17,8 +17,9 @@ our algorithm uses 3.6--7.2\% less ULD volume than the RGS of \citet{Hessler2025
 setting, 2.6--5.3\% less in the adapted one and 2.1--4.9\% less with one ULD of each type, where
 it also leaves fewer boxes unloaded, and almost none of its ULDs violates the CoG constraint. The
 experiments also show that the choice of the objective matters: minimizing the number of ULDs
-leads to fewer but larger ULDs, and the volume is only reduced by moves that look at the whole
-solution, not by choosing the type of each ULD with a local criterion.
+leads to fewer but larger ULDs, and the volume is mainly reduced by moves that look at the
+whole solution; preferring smaller ULD types during the construction only matters when the
+number of ULDs is limited.
 
 These results show that the ideas that made block-based tree search successful in container
 loading, namely building the load with blocks of boxes, evaluating them with the VCS function

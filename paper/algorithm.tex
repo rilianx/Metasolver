@@ -188,7 +188,12 @@ that reduces the total volume of the ULDs, the objective of the problem.
 The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
 as in \citet{Hessler2025}: among the ULD types into which the boxes that fit in the fewest
 available types fit, the type with the largest total volume of the remaining boxes that fit in
-it is selected (ties are broken by the larger ULD volume). A box fits in a ULD type if its
+it is selected (ties are broken by the larger ULD volume). When this rule leaves several
+candidate types (those that contain the boxes with the fewest options), each candidate is
+loaded and the one that maximizes $L - \theta V$ is kept, where $L$ is the loaded volume and $V$
+the volume of the ULD, unless it leaves the CoG out of range and another candidate does not.
+With $\theta = 0$ this is the type that loads the most volume; a small $\theta > 0$ prefers a
+smaller ULD when it loads almost the same volume. A box fits in a ULD type if its
 weight does not exceed the capacity and, in some allowed orientation, it can be placed alone on
 the floor inside the edge or on the substructure. When the number of ULDs is limited, some boxes
 may only fit in the selected type among the ULDs still available. If the loading of the ULD

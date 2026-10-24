@@ -112,9 +112,10 @@ static bool use_substructure=false;
 static bool origin_only=true;
 //ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
 static bool regroup=true;
-//seleccion del siguiente ULD entre los candidatos (--theta): theta>=0 carga cada uno y maximiza
-//(volumen cargado) - theta*(volumen del ULD); theta<0: regla de Hessler et al.
-static double theta=-1.0;
+//seleccion del siguiente ULD entre los candidatos de la regla de Hessler et al. (--theta):
+//theta>=0 carga cada uno y maximiza (volumen cargado) - theta*(volumen del ULD); theta<0: la
+//regla de Hessler et al. sola
+static double theta=0.1;
 
 static int uld_index(const ULD& u){
 	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
@@ -629,7 +630,7 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
-	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates by loading each one and maximizing loaded volume - theta * ULD volume. Default: rule of Hessler et al.", {"theta"});
+	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.1", {"theta"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
