@@ -202,7 +202,13 @@ int main(int argc, char** argv){
 			double h = H;
 			for(int k=0; k<50; k++, h *= 1.005){
 				vector<Vec3> t2 = ts;
-				for(int i=0; i<n; i++) t2[i].z = min(t2[i].z, max(0.0, h - inst.pieces[ps[i]].bbox.extent().z));
+				//todas las piezas dentro del contenedor (con otra descomposicion pueden sobresalir un poco)
+				for(int i=0; i<n; i++){
+					Vec3 e = inst.pieces[ps[i]].bbox.extent();
+					t2[i].x = min(max(t2[i].x, 0.0), max(0.0, inst.W-e.x));
+					t2[i].y = min(max(t2[i].y, 0.0), max(0.0, inst.D-e.y));
+					t2[i].z = min(max(t2[i].z, 0.0), max(0.0, h-e.z));
+				}
 				if(placer.minimize_overlap(ps, t2, h, gls_iter, w0, rng, gls=="mult")){
 					Solution S2 = S;
 					for(int i=0; i<n; i++) S2.items[i].t = t2[i];
