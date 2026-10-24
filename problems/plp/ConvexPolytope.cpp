@@ -147,8 +147,14 @@ ConvexPolytope ConvexPolytope::hull(const vector<Vec3>& points, double eps) {
 	for(int j=0; j<(int)faces.size(); j++){
 		const HullFace& f=faces[j];
 		if(!f.alive) continue;
+		//caras casi coplanares (p. ej., NFP de partes con muchas caras pequenas) se fusionan en el plano mas externo:
+		//el politopo queda apenas mas grande (del lado seguro) y con muchas menos facetas
 		for(int k=0; k<(int)P.facets.size(); k++)
-			if((P.facets[k].n - f.n).norm() <= 1e-9 && fabs(P.facets[k].d - f.d) <= tol) { plane_of[j]=k; break; }
+			if((P.facets[k].n - f.n).norm() <= 1e-6 && fabs(P.facets[k].d - f.d) <= max(tol, 1e-6*bb.extent().norm())){
+				plane_of[j]=k;
+				for(int q=0; q<3; q++) P.facets[k].d = max(P.facets[k].d, dot(P.facets[k].n, p[f.v[q]]));
+				break;
+			}
 		if(plane_of[j]<0) { plane_of[j]=P.facets.size(); P.facets.push_back(Plane(f.n, f.d)); }
 	}
 

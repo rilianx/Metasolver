@@ -9,7 +9,10 @@ Escribe benchs/<carpeta>/<pieza sin extension>.obj (por defecto benchs/decomposi
    pequenos (hasta ~6e-5 de la diagonal en las piezas del ajedrez); --offset desplaza las caras de cada parte hacia
    afuera al menos --offset (por defecto 2e-4 de la diagonal) para cubrirlos: escalando la parte desde su centroide
    (--cover scale, conserva vertices y caras) o desplazando cada cara (--cover offset, mas ajustado).
-2. --kdop k (0: no): cada envolvente se reemplaza por su k-DOP, la interseccion de los semiespacios
+2. --merge a: en cada parte, las caras con normales a menos de a grados se fusionan en una (normal media,
+   desplazada hasta el vertice mas alejado); la parte resultante contiene a la original y tiene muchas menos caras
+   (las caras casi coplanares de CoACD generan NFP con miles de facetas).
+3. --kdop k (0: no): cada envolvente se reemplaza por su k-DOP, la interseccion de los semiespacios
    d.x <= max_v d.v para k direcciones fijas (6: caja; 14: + diagonales de vertices; 26: + diagonales de aristas),
    si tiene menos caras. El k-DOP contiene a la envolvente.
 Se informa el volumen de la union (por muestreo) respecto del de la malla y se verifica, con puntos interiores de la
@@ -70,6 +73,32 @@ def scale_cover(P, delta):
     return c + s*(P[h.vertices]-c)
 
 
+def merge_faces(P, angle):
+    """politopo que contiene a conv(P), con las caras de normales a menos de `angle` grados fusionadas: cada grupo
+    usa su normal media (ponderada por area) desplazada hasta el vertice mas alejado"""
+    h = ConvexHull(P)
+    tri = P[h.simplices]
+    area = np.linalg.norm(np.cross(tri[:, 1]-tri[:, 0], tri[:, 2]-tri[:, 0]), axis=1)
+    N = h.equations[:, :3]
+    order = np.argsort(-area)
+    cos = np.cos(np.radians(angle))
+    groups = []                              # (normal acumulada, area)
+    for k in order:
+        for g in groups:
+            if np.dot(g[0]/np.linalg.norm(g[0]), N[k]) >= cos:
+                g[0] += area[k]*N[k]; g[1] += area[k]; break
+        else:
+            groups.append([area[k]*N[k].copy(), area[k]])
+    D = np.array([g[0]/np.linalg.norm(g[0]) for g in groups])
+    hgt = np.max(P @ D.T, axis=0)
+    V = HalfspaceIntersection(np.hstack([D, -hgt[:, None]]), P[h.vertices].mean(axis=0)).intersections
+    V = V[ConvexHull(V).vertices]
+    F = ConvexHull(V).equations
+    if (P @ F[:, :3].T + F[:, 3]).max() > 1e-9:
+        Q = np.vstack([V, P]); V = Q[ConvexHull(Q).vertices]
+    return V
+
+
 def union_volume(parts, n=200000, seed=0):
     allv = np.vstack(parts); lo, hi = allv.min(0), allv.max(0)
     pts = np.random.default_rng(seed).uniform(lo, hi, (n, 3))
@@ -96,6 +125,7 @@ def main():
     ap.add_argument('--threshold', type=float, default=0.1)
     ap.add_argument('--kdop', type=int, default=26)
     ap.add_argument('--offset', type=float, default=2e-4, help='desplazamiento de las caras hacia afuera, como fraccion de la diagonal de la pieza (cubre los huecos de CoACD entre partes)')
+    ap.add_argument('--merge', type=float, default=3.0, help='fusiona las caras de cada parte con normales a menos de este angulo (grados; 0: no); la parte resultante contiene a la original')
     ap.add_argument('--cover', choices=['scale', 'offset'], default='scale', help='como se agranda cada parte: escalado desde el centroide (mismos vertices) o desplazamiento de caras (mas ajustado, mas vertices)')
     ap.add_argument('--hullfaces', type=int, default=0, help='k-DOP: normales adicionales de las m caras mas grandes de la envolvente')
     ap.add_argument('--dec', default='decompositions', help='carpeta de salida bajo benchs (para guardar varias resoluciones)')
@@ -106,6 +136,8 @@ def main():
         mesh = trimesh.load(os.path.join(a.root, path), force='mesh')
         res = coacd.run_coacd(coacd.Mesh(mesh.vertices, mesh.faces), threshold=a.threshold, preprocess_mode='off')
         parts = [np.asarray(p[0], float) for p in res]
+        if a.merge > 0:
+            parts = [merge_faces(P, a.merge) for P in parts]
         if a.offset > 0:
             diag = np.linalg.norm(mesh.bounds[1]-mesh.bounds[0])
             parts = [offset(P, a.offset*diag) if a.cover == 'offset' else scale_cover(P, a.offset*diag) for P in parts]
