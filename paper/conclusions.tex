@@ -5,23 +5,20 @@
 We have adapted the block-based beam search BSG, originally designed for the single container
 loading problem, to the palletization of air cargo into ULDs with non-cuboid shapes, a floor
 edge and a substructure, weight capacities, fragile boxes, support constraints and CoG
-constraints. The ULD constraints are handled in the generation and placement of the blocks, the
-CoG constraint in the evaluation of the blocks, in the value of the solutions, with a final
-translation of the load, which is kept grouped by the anchoring of the spaces, and the ULDs are
-loaded sequentially and
-improved by eliminating ULDs and, when the number of ULDs is limited, by inserting the unloaded
-boxes with ruin and recreate.
+constraints. The ULD constraints are handled in the generation and placement of the blocks, and
+the CoG constraint in the evaluation of the blocks, in the value of the solutions and with a final
+translation of the load, which is kept grouped by anchoring the free spaces at one corner of the
+ULD. The ULDs are loaded sequentially, and the total volume of the ULDs is then reduced with a
+single move that removes a ULD, inserts its boxes into the others and loads the rest into at most
+two smaller ULDs.
 
 On the 300 instances of \citet{Paquay2018b}, and with the same parameters in all the settings,
-our algorithm uses 12.9--15.6\% fewer ULDs than the RGS of \citet{Hessler2025} in the original
-setting and 8.4--11.8\% fewer in the adapted one, and it is worse than the RGS in at most one
-instance, while almost none of its ULDs violates the CoG constraint. Its solutions reach a
-simple volume bound, and are therefore optimal, in up to 157 of the 300 original instances,
-against 80 for the RGS. With one ULD
-of each type, it loads more boxes with fewer ULDs and almost no CoG violation. With a time limit of
-only 0.02\,s per ULD it already uses 9.9\% fewer ULDs than the RGS and is worse in only one
-instance, and the trade-off
-between the number of ULDs and the CoG violations can be controlled with a single parameter.
+our algorithm uses 3.6--7.2\% less ULD volume than the RGS of \citet{Hessler2025} in the original
+setting, 2.6--5.3\% less in the adapted one and 2.1--4.9\% less with one ULD of each type, where
+it also leaves fewer boxes unloaded, and almost none of its ULDs violates the CoG constraint. The
+experiments also show that the choice of the objective matters: minimizing the number of ULDs
+leads to fewer but larger ULDs, and the volume is only reduced by moves that look at the whole
+solution, not by choosing the type of each ULD with a local criterion.
 
 These results show that the ideas that made block-based tree search successful in container
 loading, namely building the load with blocks of boxes, evaluating them with the VCS function

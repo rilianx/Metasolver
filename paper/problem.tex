@@ -58,14 +58,8 @@ CoG constraint as a soft constraint, since their solutions contain ULDs with the
 range; we report the number of such ULDs for all the methods.
 
 \paragraph{Objective.}
-When the number of ULDs is unlimited, all the boxes must be loaded and the objective is to
-minimize the number of ULDs. When it is limited, some boxes may be left unloaded, and the
-objective is first to maximize the loaded volume and then to minimize the number of ULDs, as in
-\citet{Hessler2025}. These are the criteria of the instance-by-instance comparison of
-Section~\ref{sec:experiments}.
-\citet{Paquay2016} formulate the objective as the minimization of the unused volume, that is,
-of the total volume of the used ULDs, and \citet{Hessler2025} maximize the loaded volume and then
-minimize the total volume of the ULDs. Our algorithm minimizes the number of ULDs, and at the end
-it tries to move the boxes of its least utilized ULD into a smaller one
-(Section~\ref{sec:alg-multi}).
-Section~\ref{sec:exp-results} also reports the total volume and cost of the ULDs.
+Following \citet{Paquay2016} and \citet{Hessler2025}, the objective is to minimize the total
+volume of the used ULDs, that is, the unused volume. When the number of ULDs is limited, some
+boxes may be left unloaded, and the objective is first to maximize the loaded volume and then to
+minimize the total volume of the ULDs \citep{Hessler2025}. Since \citet{Paquay2018b} and
+\citet{Hessler2025} also report the number of ULDs, we report it as a secondary measure.

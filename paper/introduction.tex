@@ -51,18 +51,20 @@ following:
 	excess of the CoG deviation over the allowed one, and the final load of each ULD is translated
 	as a whole to center its CoG. To leave room for this translation, all the free spaces are
 	anchored at the corner closest to the origin of the ULD, which keeps the load grouped.
-\item We embed the single-ULD algorithm into a sequential multi-ULD framework with a
-	post-optimization phase that tries to eliminate ULDs by redistributing their boxes into the
-	other ULDs and, when the number of ULDs is limited, a ruin-and-recreate phase that inserts the
-	boxes left unloaded into the loaded ULDs.
+\item We embed the single-ULD algorithm into a sequential multi-ULD framework and reduce the total
+	volume of the ULDs, the objective of the problem, with a single move that generalizes the
+	elimination of ULDs: a ULD is removed, its boxes are inserted into the other ULDs and the
+	remaining ones are loaded into at most two smaller ULDs. When the number of ULDs is limited,
+	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure.
 \item We tune the parameters once with irace on a separate training set and evaluate the
 	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
 	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
-	8--16\% fewer ULDs than the RGS in the settings with an unlimited number of ULDs, where it is
-	better in up to 111 of the 300 instances and worse in at most one; with one ULD of each type,
-	it leaves fewer boxes unloaded and uses 3--7\% fewer ULDs. Almost none of its ULDs violates the CoG constraint,
-	against 7--11\% of the ULDs of the RGS. All the solutions are checked by an independent
-	validator, and the code, the solutions and the scripts are publicly available.
+	3.6--7.2\% less ULD volume than the RGS in the original setting, 2.6--5.3\% less in the
+	adapted one and 2.1--4.9\% less with one ULD of each type, where it also leaves fewer boxes
+	unloaded; the differences are significant in all the settings. Almost none of its ULDs
+	violates the CoG constraint, against 7--11\% of the ULDs of the RGS. All the solutions are
+	checked by an independent validator, and the code, the solutions and the scripts are
+	publicly available.
 \end{itemize}
 
 The remainder of the paper is organized as follows. Section~\ref{sec:problem} defines the

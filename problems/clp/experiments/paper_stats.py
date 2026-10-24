@@ -103,6 +103,8 @@ for s in range(10, 101, 10):
     res['size'][s] = dict(ulds=round(st.mean(sum(R[n]['ulds'] for n in ns) for R in runs), 1),
                           un=round(st.mean(sum(R[n]['un'] for n in ns) for R in runs), 1),
                           umed=round(st.median([u for R in runs for n in ns for u in R[n]['util']]), 1),
+                          vol=round(st.mean(sum(R[n]['vol'] for n in ns) for R in runs), 1),
+                          hvol=round(sum(hvi[n] for n in ns) * 1e-9, 1),
                           hulds=sum(H[n]['C'] for n in ns), hun=sum(size(n) - H[n].get('L', size(n)) for n in ns),
                           humed=round(st.median([u['u'] for n in ns for u in HU[n]]), 1))
 print(json.dumps(res, indent=1))

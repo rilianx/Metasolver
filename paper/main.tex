@@ -26,22 +26,21 @@
 
 \begin{abstract}
 We address the palletization of air cargo into unit load devices (ULDs): a set of heterogeneous
-boxes must be loaded into as few ULDs as possible, where the ULDs have bevelled corners to fit
-the fuselage, a weight capacity and a floor edge for the cargo net locks, the boxes have allowed
-orientations and may be fragile, every box must be supported, and the center of gravity of each
-ULD must lie in a given area around its geometric center. We adapt a block-based beam search
-guided by a greedy algorithm (BSG), originally designed for the container loading problem, to
-this problem. The blocks are generated and placed so that the support and fragility constraints
-are met, blocks that cross a bevelled side are shifted to the nearest feasible position, and the
-center of gravity is taken into account in the evaluation of the blocks and of the solutions,
-with a final translation of the load, which is kept grouped by anchoring the free spaces at one
-corner of the ULD. The ULDs are loaded sequentially, and the solution is improved by eliminating ULDs
-and by inserting the unloaded boxes with ruin and recreate. On the 300 benchmark instances of
-Paquay et al.\ and with the same parameters in all the settings, the algorithm uses 8--16\% fewer
-ULDs than the state of the art when the number of ULDs is unlimited, being worse in at most one
-instance; with one ULD of each type, it leaves fewer boxes unloaded with fewer ULDs. Almost none of its
-ULDs violates the center of gravity constraint, against 7--11\% of the ULDs of the previous
-method.
+boxes must be loaded into ULDs of minimum total volume, where the ULDs have bevelled corners to
+fit the fuselage, a weight capacity and a floor edge for the cargo net locks, the boxes have
+allowed orientations and may be fragile, every box must be supported, and the center of gravity
+of each ULD must lie in a given area around its geometric center. We adapt a block-based beam
+search guided by a greedy algorithm (BSG), originally designed for the container loading problem,
+to this problem. The blocks are generated and placed so that the support and fragility
+constraints are met, blocks that cross a bevelled side are shifted to the nearest feasible
+position, and the center of gravity is taken into account in the evaluation of the blocks and of
+the solutions, with a final translation of the load. The ULDs are loaded sequentially, and the
+total volume is then reduced by removing a ULD, inserting its boxes into the others and loading
+the rest into at most two smaller ULDs. On the 300 benchmark instances of Paquay et al.\ and with
+the same parameters in all the settings, the algorithm uses 2--7\% less ULD volume than the state
+of the art, with significant differences in all the settings, leaves fewer boxes unloaded when
+the number of ULDs is limited, and almost none of its ULDs violates the center of gravity
+constraint, against 7--11\% of the ULDs of the previous method.
 
 \medskip\noindent\textbf{Keywords:} packing; air transport; three-dimensional bin packing;
 beam search; weight distribution
