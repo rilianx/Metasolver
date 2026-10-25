@@ -38,11 +38,11 @@ minimizes its weighted overlap with all other pieces can be computed exactly by 
 only. We embed this move in a strategic oscillation scheme with multiplicative guided local search weights and
 kicks. An ablation study shows that the weights and, above all, the speed of the separation are decisive. On the
 Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method improves the best known
-heights by 2.5--9\% within 120 seconds, and after 10 seconds its mean utilization exceeds that of the reference
+heights by 4.5--9.6\% within 120 seconds, and after 10 seconds its mean utilization exceeds that of the reference
 method after 600 seconds. It also improves the best known solutions of a classical convex instance and of the
 non-convex instances of \citet{stoyan2004}, one of which is solved to optimality, and on the small instances of
 \citet{tollenaere2026} it matches 26 of the 27 proven optima and improves the best known solution of 32 of the
-39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 13\% below the best voxel result. Finally, a linear-programming
+39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 12\% below the best voxel result. Finally, a linear-programming
 compaction over no-fit polytope facets with soft margins, followed by dyadic rounding, yields solutions whose
 feasibility is certified in exact rational arithmetic.
 \end{abstract}
@@ -258,8 +258,8 @@ The certificate is computed with rational arithmetic: vertices and translations 
 numbers, hence exact rationals. For containment all vertices are checked against the container; for every pair
 of convex parts with intersecting bounding boxes a separating axis is searched among the face normals of both
 parts and the cross products of their edges (computed exactly), accepting it if $\max_A n\cdot a\le\min_B n\cdot b$.
-Of the 130 solutions of Table~\ref{tab:results} (13 instances, 10 seeds), 129 were certified; in the remaining
-one (Merged5) one pair of parts in contact overlaps by $3.7\times10^{-10}$. The
+Of the 140 solutions of Table~\ref{tab:results} (14 instances, 10 seeds), 139 were certified; in the remaining
+one (Stoyan 2005 Example 3) one pair of parts in contact overlaps by $1.2\times10^{-10}$. The
 height increases by $10^{-7}$--$10^{-6}$.
 
 % =====================================================================================================
@@ -267,8 +267,8 @@ height increases by $10^{-7}$--$10^{-6}$.
 
 \subsection{Setting}
 The method is implemented in C++ on top of the Metasolver framework; LPs are solved with SoPlex 8.1
-\citep{wunderling1996}. Experiments ran on an Intel Xeon at 2.8~GHz, one
-thread per run, four runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
+\citep{wunderling1996}. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
+g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
 instance.
 
 \paragraph{Instances}
@@ -300,10 +300,11 @@ Stoyan 2005 Examples 2--3). Each row changes one element of the method. The effe
 is estimated by stopping the same runs at 24 s, which corresponds to moves five times slower.
 
 The multiplicative weights and the speed of the separation are the decisive elements: with additive weights the
-mean heights increase on Stoyan 2004 Examples 3--5 and Stoyan 2005 Example 3 (e.g., from 52.83 to 55.01 on
+mean heights increase on Stoyan 2004 Examples 3--5 and Stoyan 2005 Example 3 (e.g., from 53.60 to 55.27 on
 Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. On these instances, kicks that
-only reinsert pieces give the same results as the mixed kicks. The LP compaction has no systematic effect: it is
-better on some instances and worse on others, by about one or two standard errors. It is therefore not needed for the quality of the solutions, and
+only reinsert pieces are as good as the mixed kicks or slightly better; the random moves are needed on small
+instances (Section~\ref{sec:t2025}). The LP compaction has no significant effect: the
+differences are of about one standard error, slightly in favour of the variant without LP on Stoyan 2004. It is therefore not needed for the quality of the solutions, and
 the method can run without an LP solver; we keep a single LP at the end to obtain certifiable solutions
 (Section~\ref{sec:cert}).
 
@@ -316,11 +317,11 @@ Negative is better.}\label{tab:ablation}
 \toprule
 Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 \midrule
-Proposed method & $-2.9\%$ & $-2.1\%$ & 53.22\\
-Without LP compaction & $-3.0\%$ & $-2.0\%$ & 53.02\\
-Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.7\%$ & $-1.5\%$ & 53.12\\
-Kick: reinsertion only (no random moves) & $-3.1\%$ & $-2.0\%$ & 52.95\\
-Separation five times slower (runs stopped at 24 s) & $-0.2\%$ & $-1.1\%$ & 54.33\\
+Proposed method & $-2.8\%$ & $-2.0\%$ & 53.41\\
+Without LP compaction & $-3.3\%$ & $-1.9\%$ & 53.30\\
+Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.3\%$ & $-1.5\%$ & 53.15\\
+Kick: reinsertion only (no random moves) & $-3.5\%$ & $-1.9\%$ & 53.50\\
+Separation five times slower (runs stopped at 24 s) & $-0.1\%$ & $-0.9\%$ & 54.82\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -329,7 +330,7 @@ Separation five times slower (runs stopped at 24 s) & $-0.2\%$ & $-1.1\%$ & 54.3
 Table~\ref{tab:results} compares the method with the literature. On the instances that share the exact
 geometry of 3DNest (Stoyan 2005 Examples 2--3 and Merged1--5), the method obtains lower heights in six of seven
 cases; the exception is Stoyan 2005 Example 2 (19.13 versus 19.01). The improvement grows with the size of the
-instance: on Merged3--5 our best heights are 7--9\% below the best known values, obtained by the voxel VNS
+instance: on Merged3--5 our best heights are 8--10\% below the best known values, obtained by the voxel VNS
 with the finest resolution and four hours, and our mean heights after 120 s are lower than those best values. On Stoyan 2004, the method improves the exact reference by
 a wide margin, and on Example 2 it reaches the optimum.
 
@@ -350,17 +351,17 @@ Instance & $n$ & best & mean & best & mean & Ours\\
 \midrule
 Stoyan 2005 Ex1 & 7 & 17.46 (opt.) & -- & -- & -- & 17.47 (17.46)\\
 Stoyan 2005 Ex2 & 12 & \textbf{19.01} & 19.83 & 21.23 & 21.70 & 19.13 (19.13)\\
-Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \textbf{27.46 (26.45)}\\
+Stoyan 2005 Ex3 & 25 & 28.83 & 29.82 & 29.76 & 31.53 & \textbf{27.50 (27.22)}\\
 Stoyan 2004 Ex2 & 20 & 32 (St04) & -- & 28.47$^\dagger$ & 29.40 & \textbf{29.00 (29.00)}$^*$\\
-Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \textbf{40.38 (40.00)}\\
-Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \textbf{52.83 (50.64)}\\
-Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \textbf{66.73 (64.85)}\\
-Merged1 & 15 & 17.00 & 17.45 & 17.13 & 18.67 & \textbf{16.69 (16.58)}\\
-Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \textbf{21.01 (21.00)}\\
-Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \textbf{22.62 (22.04)}\\
-Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \textbf{25.06 (24.00)}\\
-Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \textbf{27.89 (27.20)}\\
-Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{29.94 (29.41)}\\
+Stoyan 2004 Ex3 & 30 & 49 (St04) & -- & 41.30 & 42.65 & \textbf{39.90 (39.00)}\\
+Stoyan 2004 Ex4 & 40 & 63.21 (St04) & -- & 54.83 & 59.52 & \textbf{53.60 (52.35)}\\
+Stoyan 2004 Ex5 & 50 & 78.7 (St04) & -- & 72.33 & 76.81 & \textbf{66.81 (64.97)}\\
+Merged1 & 15 & 17.00 & 17.45 & 17.13 & 18.67 & \textbf{16.54 (16.04)}\\
+Merged2 & 30 & 21.98 & 22.02 & 22.06 & 22.64 & \textbf{21.04 (21.00)}\\
+Merged3 & 45 & 24.04 & 24.97 & 24.32 & 26.26 & \textbf{22.53 (22.02)}\\
+Merged4 & 60 & 27.81 & 28.35 & 26.47 & 29.44 & \textbf{25.31 (24.40)}\\
+Merged5 & 75 & 30.13 & 31.31 & 29.24 & 31.12 & \textbf{27.88 (26.44)}\\
+Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{30.11 (29.52)}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -368,7 +369,7 @@ Liu Exp.~1 & 36 & 31.2$^\ddagger$ & -- & 34.27 & 35.37 & \textbf{29.94 (29.41)}\
 On Stoyan 2004 Example 2 our height, 29, equals the lower bound $H_0$ given by the tallest piece, so it is
 optimal for the public data. Stoyan 2004 Example 1 (80 pieces) has no published reference and is not included;
 the instance called Experiment 1 by \citet{lamas2023} is the one of \citet{liu2015}, where our mean height is
-13\% below the best voxel height and also below that of HAPE3D, which allows rotations. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
+12\% below the best voxel height and also below that of HAPE3D, which allows rotations. For Stoyan 2005 Example 1, the utilization reported by \citet{egeblad2009} converts to
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 
@@ -383,8 +384,8 @@ optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 Stoyan 2004, of diamonds and of tetrahedra) with mixed-integer models based on no-fit polyhedra, with a time limit
 of one hour per model; they prove optimality for 27 of the 66 instances and report upper and lower bounds for the
 others. Table~\ref{tab:t2025} summarizes our results (10 seeds, 30 s per instance). The method finds 26 of the 27
-proven optima in its best run, 24 of them in every run; the exception is the 10-item instance of the Stoyan 2005
-series (26.20 versus 26.05). On the 39 open instances it improves the best upper bound in 32 cases, by 4\% on
+proven optima in its best run, 20 of them in every run; the exception is the 10-item instance of the Stoyan 2005
+series (26.20 versus 26.05). On the 39 open instances it improves the best upper bound in 32 cases, by 5\% on
 average, and matches it in most of the others. Before adding random moves to the kicks, the method missed the
 optimum of two 2-item instances (by 17\% and 28\%): the greedy places the larger piece on the floor, the optimum
 needs the opposite arrangement, and neither the GLS weights (a single pair) nor reinsertion could escape.
@@ -401,21 +402,21 @@ height is below the best upper bound of the models, and mean gap of our mean hei
 \cmidrule(lr){3-5}\cmidrule(lr){6-7}
 Series & $n$ & proven & best run & all runs & improved & gap\\
 \midrule
-Diamonds & 9 & 4 & 4 & 4 & 5 of 5 & $-4.2\%$\\
-Stoyan 2004 & 19 & 9 & 9 & 7 & 9 of 10 & $-5.0\%$\\
-Stoyan 2005 & 19 & 9 & 8 & 8 & 9 of 10 & $-4.8\%$\\
+Diamonds & 9 & 4 & 4 & 2 & 5 of 5 & $-4.5\%$\\
+Stoyan 2004 & 19 & 9 & 9 & 6 & 9 of 10 & $-5.0\%$\\
+Stoyan 2005 & 19 & 9 & 8 & 7 & 9 of 10 & $-4.7\%$\\
 Tetrahedra & 19 & 5 & 5 & 5 & 9 of 14 & $-1.7\%$\\
 \midrule
-Total & 66 & 27 & 26 & 24 & 32 of 39 & \\
+Total & 66 & 27 & 26 & 20 & 32 of 39 & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Time-matched comparison}
-Hardware differs by about fifteen years. Figure~\ref{fig:time} compares the mean utilization over time with that
-of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after less than 0.25 seconds (the
+Hardware differs by about ten years. Figure~\ref{fig:time} compares the mean utilization over time with that
+of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 0.3 seconds (the
 greedy construction and compaction), and at 10 seconds our mean utilization already exceeds the mean utilization
-of 3DNest at 600 seconds on all five instances (44.5, 43.7, 45.4, 44.8 and 43.5\% versus 43.0, 42.9, 43.3, 42.0
+of 3DNest at 600 seconds on all five instances (44.3, 43.4, 45.1, 44.7 and 43.2\% versus 43.0, 42.9, 43.3, 42.0
 and 41.0\%). Even assuming that our machine is five times faster per core, the
 advantage holds at equal effective time.
 
@@ -437,15 +438,15 @@ instances.
 \paragraph{Realistic meshes}
 The cost of a move grows with the number of facets of the NFPs, so pieces with curved surfaces are the hard case.
 We tested the Chess instance of \citet{lamas2023} (32 pieces, meshes of 700--2900 triangles). Since an exact
-convex decomposition of such meshes is impractical, we use a conservative one (these runs use a version of the
-code extended with Qhull \citep{barber1996} for the large convex hulls of the NFPs): CoACD \citep{wei2022} cuts the
+convex decomposition of such meshes is impractical, we use a conservative one (the large convex hulls of the NFPs are computed with Qhull \citep{barber1996}): CoACD \citep{wei2022} cuts the
 mesh and takes the convex hull of each piece; the small gaps it leaves between parts are covered by scaling
 each part from its centroid, and containment is checked with interior sample points. With concavity threshold
 0.05 (6--20 parts per piece) the union exceeds the volume of the piece by 4--12\%, and with 0.2 (1--4 parts,
 reduced to at most 42 facet directions) by 38--78\%. The solutions remain feasible for the real geometry.
 However, the NFPs between parts have hundreds of facets and a separation takes 20--35 s instead of a fraction of
-a second. In 20 minutes the best heights are 147.2 (fine decomposition), 151.3 (coarse) and 147.8 (coarse search
-followed by refinement with the fine decomposition), against 131 (best of 10 runs of 1 h) and 135.1 (mean) for
+a second. In 20 minutes (5 seeds) the best (mean) heights are 143.6 (150.5) with the fine decomposition, 151.2 (152.5) with
+the coarse one and 139.2 (145.0) with 15 minutes of coarse search followed by 5 minutes of refinement with the
+fine decomposition, against 131 (best of 10 runs of 1 h) and 135.1 (mean) for
 the voxel VNS of \citet{lamas2023}, whose cost does not depend on the complexity of the surface. Pseudo-blocks of
 two pieces did not help. Voxels and the proposed method are thus complementary: the latter is faster and exact
 on polyhedral pieces with few facets, the former scales better to curved meshes.

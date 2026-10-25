@@ -1,5 +1,7 @@
 # Resultados finales (paper)
 
+> **Resultados definitivos del paper:** `servidor/results.md` (corridas en el servidor, 2× Xeon E5-2620 v4, SoPlex 8.1, 14 procesos, commit 5e61fde) y `solutions_final/`. Lo que sigue corresponde a la versión anterior (ibex, 4 procesos).
+
 Versión por defecto (kick mixto), 120 s, semillas 1–10, 4 corridas en paralelo (Xeon 2.8 GHz).
 Brechas respecto de la mejor altura publicada (tabla del paper). 'reinsert': kick solo por reinserción.
 
