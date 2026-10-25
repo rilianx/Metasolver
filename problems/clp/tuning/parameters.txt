@@ -1,7 +1,6 @@
 # irace: parametros de BSG_ULD
 cog_penalty    "--cog_penalty "   r,log (1.0, 50.0)
 cog_greedy     "--cog_greedy "    r (0.0, 5.0)
-max_bl         "--max_bl "        c (500, 1000, 2000, 4000)
 alpha          "--alpha "         r (0.0, 5.0)
 beta           "--beta "          r (0.0, 5.0)
 gamma          "--gamma "         r (0.0, 1.0)

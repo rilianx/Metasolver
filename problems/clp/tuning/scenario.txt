@@ -1,6 +1,6 @@
 ## irace: ajuste final de BSG_ULD en los tres escenarios (instancias de entrenamiento, distintas
 ## de las finales); cada instancia aparece en los tres escenarios seguidos (bloques de 3)
-## uso (desde este directorio): BSG_ULD=<binario> ULD_ARGS="-t 0.1" irace
+## uso (desde este directorio): BSG_ULD=<binario> ULD_ARGS="-t 0.1 --max_bl 500" irace
 parameterFile = "parameters.txt"
 configurationsFile = "default.txt"
 trainInstancesDir = "."

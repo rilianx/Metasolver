@@ -72,7 +72,8 @@ The parameters of the algorithm were tuned once with irace \citep{LopezIbanez201
 in the three settings and for both time limits. The training set consists of 150 preliminary
 instances of \citet{Paquay2018b} (30 instances with 30, 40, 50, 60 and 100 boxes), disjoint
 from the final ones, each one in the three settings (450 runs, presented to irace in blocks of
-the three settings of an instance), with $t = 0.1$\,s and a budget of 6000 runs; no
+the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks (fixed, to bound the time per ULD) and a budget of
+6000 runs; no
 configuration is discarded before 21 instances. The cost of a run is
 \[
 \frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
@@ -81,9 +82,9 @@ where $V_{\mathrm{ULD}}$ is the volume of the ULDs, $V_{\mathrm{unl}}$ the volum
 $n_{\mathrm{CoG}}$ the number of ULDs whose CoG is out of range and $V_{\mathrm{boxes}}$ the
 volume of the boxes of the instance, so that loading all the boxes comes first, then the
 CoG and then the volume of the ULDs. The values of a preliminary tuning were the initial
-configuration. Table~\ref{tab:params} lists the tuned parameters; the five elite
-configurations returned by irace agree on $N_{\max} = 4000$, a small $\alpha$, a large
-$\beta$ and $\theta \approx 0.1$.
+configuration. Table~\ref{tab:params} lists the parameters; the four elite
+configurations returned by irace agree on a small $\alpha$, a large $\beta$, $p \approx 0.09$
+and $\theta < 0.1$.
 
 \begin{table}[htbp]
 \centering
@@ -94,14 +95,14 @@ $\beta$ and $\theta \approx 0.1$.
 \toprule
 Parameter & Description & Range & Value \\
 \midrule
-$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 2.912 \\
-$\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 1.140 \\
-$N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 4000 \\
-$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 0.252 \\
-$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 4.321 \\
-$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.890 \\
-$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.053 \\
-$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type & $[0, 0.6]$ & 0.087 \\
+$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 4.042 \\
+$\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 0.476 \\
+$N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & fixed & 500 \\
+$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 0.112 \\
+$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 2.803 \\
+$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.456 \\
+$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.090 \\
+$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type & $[0, 0.6]$ & 0.074 \\
 \bottomrule
 \end{tabular}
 \end{table}
