@@ -1,11 +1,14 @@
 #!/bin/bash
-# irace: target-runner <configuracion> <instancia id> <semilla> <instancia> <parametros...>
-# costo = 100 / utilizacion total (proporcional al volumen de los ULDs) + 5 * ULDs con el CoG
-# fuera de rango (+ 1000 * cajas no cargadas)
+# irace: target-runner <configuracion> <instancia id> <semilla> <instancia> [opciones del escenario] <parametros...>
+# costo = (volumen de los ULDs + 100 * volumen sin cargar + 150 m3 * ULDs con el CoG fuera de
+# rango) / volumen de las cajas de la instancia
 # BSG_ULD y sus opciones fijas se toman de las variables BSG_ULD y ULD_ARGS
 CONFIG=$1; INST=$4; shift 4
 BIN=${BSG_ULD:-../../../build/BSG_ULD}
-OUT=$($BIN $INST $ULD_ARGS "$@" 2>&1)
-LINE=$(echo "$OUT" | grep "^n_ulds")
-if [ -z "$LINE" ] || echo "$OUT" | grep -q ERROR; then echo "1000"; exit 0; fi
-echo "$LINE" | awk '{for(i=1;i<NF;i++) v[$i]=$(i+1); print 100/v["total_util"] + 5*v["cog_violations"] + 1000*v["unloaded"]}'
+ULDS=$(dirname $INST)/../uld.csv
+OUT=$($BIN $INST $ULD_ARGS "$@" -v 2>&1)
+if ! echo "$OUT" | grep -q "^n_ulds" || echo "$OUT" | grep -q ERROR; then echo "1000"; exit 0; fi
+awk -F';' 'FNR==NR { if(NF>=22) V[$22+0]=$21/1e9; next } FILENAME==ARGV[2] { if($1!="") B+=$1*$2*$3/1e9; next }
+  /^ULD [0-9]+ type/ { split($0,w," "); t=w[4]+0; u=$0; sub(/.*utilization /,"",u); sub(/%.*/,"",u); U+=V[t]; L+=u/100*V[t] }
+  /^n_ulds/ { split($0,a," "); for(i=1;i<length(a);i++) v[a[i]]=a[i+1] }
+  END { printf "%.6f\n", (U + 100*(B-L) + 150*v["cog_violations"])/B }' $ULDS $INST <(echo "$OUT")

@@ -8,7 +8,7 @@ violaciones del CoG segun cog_penalty, en los tres escenarios).
 """
 import sys, os, re, glob, statistics as st
 
-DEFAULT_LAMBDA = 12.6619
+DEFAULT_LAMBDA = 2.9119
 
 def run(d):
     """ULDs, cajas no cargadas, ULDs con el CoG fuera de rango (xy, z) y tiempo medio de una corrida"""

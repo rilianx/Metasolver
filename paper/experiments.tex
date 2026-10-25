@@ -69,39 +69,39 @@ produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}
 \paragraph{Parameter tuning.}
 The parameters of the algorithm were tuned once with irace \citep{LopezIbanez2016}, as
 \citet{Paquay2018b} did for their heuristic, on a separate training set, and are used unchanged
-in the three settings and for both time limits. Re-tuning them with the final version of the
-algorithm, on the training instances of each setting or of the three together, did not improve
-on them. \todo{el ajuste original se hizo con una version preliminar; los re-ajustes (mixto y
-por escenario, 3000 corridas) se validaron en las finales con una corrida y fueron peores o
-iguales; decidir si se menciona asi o se omite.}
-The training set consists of 150 preliminary instances of \citet{Paquay2018b} (30 instances
-with 30, 40, 50, 60 and 100 boxes), disjoint from the final ones, in the Paquay setting with
-$t = 0.1$\,s and a budget of 3000 runs. The cost of a run is the number of ULDs plus five times
-the number of ULDs whose CoG is out of range, plus $(1 - u)/2$, where $u$ is the total
-utilization, to break ties in favour of smaller ULDs. Table~\ref{tab:params} lists the tuned
-parameters. The parameter $\theta$ of the choice of the ULD type ($^*$) was added afterwards and
-chosen with the other parameters fixed, on the training instances of the three settings: among
-the values in the table and the rule of \citet{Hessler2025} alone, $\theta = 0.1$ was the best
-in the volume of the ULDs summed over the settings and in the volume left unloaded in the one
-setting.
+in the three settings and for both time limits. The training set consists of 150 preliminary
+instances of \citet{Paquay2018b} (30 instances with 30, 40, 50, 60 and 100 boxes), disjoint
+from the final ones, each one in the three settings (450 runs, presented to irace in blocks of
+the three settings of an instance), with $t = 0.1$\,s and a budget of 6000 runs; no
+configuration is discarded before 21 instances. The cost of a run is
+\[
+\frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
+\]
+where $V_{\mathrm{ULD}}$ is the volume of the ULDs, $V_{\mathrm{unl}}$ the volume left unloaded,
+$n_{\mathrm{CoG}}$ the number of ULDs whose CoG is out of range and $V_{\mathrm{boxes}}$ the
+volume of the boxes of the instance, so that loading all the boxes comes first, then the
+CoG and then the volume of the ULDs. The values of a preliminary tuning were the initial
+configuration. Table~\ref{tab:params} lists the tuned parameters; the five elite
+configurations returned by irace agree on $N_{\max} = 4000$, a small $\alpha$, a large
+$\beta$ and $\theta \approx 0.1$.
 
 \begin{table}[htbp]
 \centering
 \small\setlength{\tabcolsep}{4pt}
-\caption{Parameters tuned with irace (training instances, Paquay setting, $t = 0.1$\,s).}
+\caption{Parameters tuned with irace (training instances of the three settings, $t = 0.1$\,s).}
 \label{tab:params}
 \begin{tabular}{llll}
 \toprule
 Parameter & Description & Range & Value \\
 \midrule
-$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 12.66 \\
-$\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 0.599 \\
-$N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 500 \\
-$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 1.234 \\
-$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 0.239 \\
-$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.224 \\
-$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.057 \\
-$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type$^*$ & $\{0.1, 0.2, 0.3, 0.6\}$ & 0.1 \\
+$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 2.912 \\
+$\mu$ (\texttt{cog\_greedy}) & penalty of the CoG excess in the evaluation of a block & $[0, 5]$ & 1.140 \\
+$N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & $\{500, 1000, 2000, 4000\}$ & 4000 \\
+$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 0.252 \\
+$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 4.321 \\
+$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.890 \\
+$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.053 \\
+$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type & $[0, 0.6]$ & 0.087 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -287,37 +287,19 @@ con un solo ULD nuevo, solo eliminacion, sin reduccion, regla de Hessler sin $\t
 cada etapa de Insert.}
 
 \paragraph{Choosing the type of each ULD.}
-Table~\ref{tab:theta} shows the effect of choosing the type of each ULD with $\theta$ instead
-of the rule of \citet{Hessler2025} alone, on the training instances ($t = 0.1$\,s). With an
-unlimited number of ULDs the effect is small: a poor choice during the construction is
-corrected later by the reduction phase. With one ULD of each type the reduction has few
-alternatives, and choosing a smaller type when it loads almost the same volume reduces the
-volume by about 2\%. Larger values of $\theta$ add ULDs without reducing the volume further.
-In an earlier version without the reduction phase, the same rule, as well as evaluating each
-candidate by completing the solution with a fast construction (a rollout), reduced the volume
-by less than 1.5\% in the Paquay setting: local choices do not anticipate which boxes remain
-for the next ULDs, which the reduction phase handles.
-
-\begin{table}[htbp]
-\centering
-\small
-\caption{Choice of the ULD type on the 150 training instances ($t = 0.1$\,s, one run): volume
-of the ULDs (m$^3$), number of ULDs and, in the one setting, volume left unloaded (m$^3$).}
-\label{tab:theta}
-\begin{tabular}{lrrrrrrr}
-\toprule
-& \multicolumn{2}{c}{Paquay} & \multicolumn{2}{c}{Adapted} & \multicolumn{3}{c}{One} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-8}
-Rule & Vol. & ULDs & Vol. & ULDs & Vol. & ULDs & Unl. \\
-\midrule
-\citet{Hessler2025} & 9131.7 & 373 & 8500.2 & 352 & 8163.1 & 387 & 14.12 \\
-$\theta = 0.1$ & 9095.1 & 374 & 8529.9 & 351 & 8006.8 & 388 & 12.46 \\
-$\theta = 0.2$ & 9182.7 & 376 & 8451.7 & 353 & 7983.4 & 394 & 15.93 \\
-$\theta = 0.3$ & 9187.2 & 385 & 8506.6 & 357 & 8030.1 & 403 & 12.71 \\
-$\theta = 0.6$ & 9248.6 & 413 & 8708.1 & 389 & 8024.8 & 412 & 12.29 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\todo{numeros de la ablacion ``hessler'' ($\theta < 0$) de results/final.} Choosing the type of
+each ULD with $\theta$ instead of the rule of \citet{Hessler2025} alone has a small effect
+with an unlimited number of ULDs, since a poor choice during the construction is corrected
+later by the reduction phase. With one ULD of each type the reduction has few alternatives,
+and choosing a smaller type when it loads almost the same volume reduces the volume of the
+ULDs. In a preliminary experiment on the training instances, with the parameters of the
+preliminary tuning, $\theta = 0.1$ reduced the volume by 1.9\% and the unloaded volume by
+12\% in the one setting, and changed it by less than 0.5\% in the other two; larger values
+of $\theta$ added ULDs without reducing the volume further. Without the reduction phase, the
+same rule, as well as evaluating each candidate by completing the solution with a fast
+construction (a rollout), reduced the volume by less than 1.5\% in the Paquay setting: local
+choices do not anticipate which boxes remain for the next ULDs, which the reduction phase
+handles.
 
 \subsection{Volume of the ULDs versus weight distribution}
 \label{sec:exp-tradeoff}
