@@ -50,13 +50,14 @@ for r in 1 2 3 4 5; do for t in 0.1 1; do for v in $SETTINGS; do
 done; done; done
 
 for v in $SETTINGS; do
-	for cfg in "nocoggreedy:--cog_greedy 0" "nocogpen:--cog_penalty 0" "notranslate:--no_translate" \
+	for cfg in "coggreedy:--cog_greedy 0.5" "nocogpen:--cog_penalty 0" "notranslate:--no_translate" \
 			"corner:--corner_anchor" "nosub:--no_substructure" \
 			"reduce1:--reduce_new 1" "elimonly:--eliminate_only" "noreduce:--no_eliminate" \
-			"hessler:--theta -1" "noscratch:--no_scratch" "nopriority:--no_priority" "noruin:--no_ruin" \
-			"base:--theta -1 --cog_greedy 0 --corner_anchor --no_regroup --no_eliminate --no_substructure"; do
+			"hessler:--theta -1" "norestart:--restarts 0" "noscratch:--no_scratch" "nopriority:--no_priority" "noruin:--no_ruin" \
+			"base:--theta -1 --restarts 0 --corner_anchor --no_regroup --no_eliminate --no_substructure"; do
 		n=${cfg%%:*}; a=${cfg#*:}
 		[ $n = nosub ] && [ $v = paquay ] && continue
+		[ $n = norestart ] && [ $v != one ] && continue
 		run abl_${v}_$n $v -t 0.1 $a
 	done
 	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.1 --cog_penalty $lam; done

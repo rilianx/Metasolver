@@ -116,6 +116,8 @@ static bool regroup=true;
 //theta>=0 carga cada uno y maximiza (volumen cargado) - theta*(volumen del ULD); theta<0: la
 //regla de Hessler et al. sola
 static double theta=0.0744;
+//reinicios de la construccion con ULDs limitados (--restarts)
+static int restarts=3, n_restart_useful=0;
 
 static int uld_index(const ULD& u){
 	for(size_t i=0; i<ulds.size(); i++) if(ulds[i].type==u.type) return i;
@@ -607,7 +609,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion)", {"min_fr"});
 	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 500", {"max_bl"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
-	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks. Default: 0.4762", {"cog_greedy"});
+	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks (ablation). Default: 0", {"cog_greedy"});
 	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 4.0423", {"cog_penalty"});
 	args::ValueFlag<string> _support(parser, "string", "Support of the boxes: corners (the four bottom corners rest on non-fragile boxes or on the floor, as in Paquay et al. 2018), full (the whole base) or none. Default: corners", {"support"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 0.1122", {"alpha"});
@@ -631,6 +633,7 @@ int main(int argc, char** argv){
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.0744", {"theta"});
+	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
@@ -680,7 +683,7 @@ int main(int argc, char** argv){
 	clpState::support=(support!="none");
 	clpState::corner_support=(support=="corners");
 	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 4.0423;
-	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 0.4762;
+	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 0.0;
 
 	clpState::min_overlap=(_min_overlap)? _min_overlap.Get() : 0.0;
 	clpState::padding=(_padding)? _padding.Get() : 0;
@@ -700,6 +703,7 @@ int main(int argc, char** argv){
 	regroup = !_no_regroup;
 	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_theta) theta=_theta.Get();
+	if(_restarts) restarts=_restarts.Get();
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -722,7 +726,13 @@ int main(int argc, char** argv){
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
+	stage_scratch=!_no_scratch; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
 
+	//construccion secuencial e insercion de las cajas no cargadas; prio: cajas que se cargan
+	//primero en el primer ULD en que caben (ademas de las que solo caben en ese ULD)
+	const vector<int> left0=left, available0=available;
+	auto construct=[&](const vector<int>& prio){
+	left=left0; available=available0; loads.clear();
 	while(remaining()>0){
 		vector<const ULD*> cands;
 		const ULD* u = select_uld(left, &cands);
@@ -740,9 +750,11 @@ int main(int argc, char** argv){
 			}
 		}
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
-		//disponibles), se carga el ULD priorizando esas cajas
+		//disponibles) o cajas prioritarias, se carga el ULD priorizando esas cajas
 		if(limited){
 			vector<int> must=only_in(left, *u);
+			for(size_t t=0; t<must.size(); t++)
+				if(fits(*clpState::types[t], *u)) must[t]=max(must[t], min(prio[t], left[t]));
 			double must_vol=0, loaded_must=0;
 			for(size_t t=0; t<must.size(); t++){
 				must_vol += (double) must[t]*clpState::types[t]->getVolume();
@@ -765,17 +777,32 @@ int main(int argc, char** argv){
 		int n=0; for(int x : ld.boxes) n+=x;
 		if(n==0){
 			cerr << "ERROR: no box was loaded in ULD " << u->type << endl;
-			return 1;
+			exit(1);
 		}
 		for(size_t t=0; t<left.size(); t++) left[t]-=ld.boxes[t];
 		loads.push_back(ld);
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
-
-	stage_scratch=!_no_scratch; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
-
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
 	if(remaining()>0) insert(loads, left, P);
+	};
+
+	vector<int> prio(left.size(), 0);
+	construct(prio);
+	//reinicios (ULDs limitados): si quedan cajas fuera, se construye de nuevo priorizando las
+	//cajas que quedaron fuera en las construcciones anteriores; se queda la mejor solucion
+	//(menos volumen sin cargar, luego menos volumen de ULDs)
+	auto unl_vol=[&](){ double v=0; for(size_t t=0; t<left.size(); t++) v+=(double) left[t]*clpState::types[t]->getVolume(); return v; };
+	auto uld_vol=[&](){ double v=0; for(const Load& l : loads) v+=l.uld->volume; return v; };
+	for(int r=0; r<restarts && limited && remaining()>0; r++){
+		for(size_t t=0; t<left.size(); t++) prio[t]=max(prio[t], left[t]);
+		vector<Load> bl=loads; vector<int> bleft=left, bav=available;
+		double bu=unl_vol(), bv=uld_vol();
+		construct(prio);
+		double u2=unl_vol(), v2=uld_vol();
+		if(u2 < bu-1e6 || (u2 <= bu+1e6 && v2 < bv)) n_restart_useful++;
+		else { loads=bl; left=bleft; available=bav; }
+	}
 
 	//reduccion del volumen de los ULDs (con --eliminate_only, solo eliminacion de ULDs, y solo
 	//si se cargaron todas las cajas)
@@ -822,7 +849,7 @@ int main(int argc, char** argv){
 	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
 		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
 		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
-		<< " new2 " << st_new2 << " fail " << st_fail << endl;
+		<< " new2 " << st_new2 << " fail " << st_fail << " useful_restarts " << n_restart_useful << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
