@@ -6,7 +6,7 @@ We have adapted the block-based beam search BSG, originally designed for the sin
 loading problem, to the palletization of air cargo into ULDs with non-cuboid shapes, a floor
 edge and a substructure, weight capacities, fragile boxes, support constraints and CoG
 constraints. The ULD constraints are handled in the generation and placement of the blocks, and
-the CoG constraint in the evaluation of the blocks, in the value of the solutions and with a final
+the CoG constraint in the value of the solutions and with a final
 translation of the load, which is kept grouped by anchoring the free spaces at one corner of the
 ULD. The ULDs are loaded sequentially, and the total volume of the ULDs is then reduced with a
 single move that removes a ULD, inserts its boxes into the others and loads the rest into at most

@@ -117,7 +117,7 @@ because of the support, the space is discarded or, with an edge, kept dormant.
 \subsection{Center of gravity}
 \label{sec:alg-cog}
 
-The CoG constraint is taken into account in three ways, besides the anchoring of the spaces at
+The CoG constraint is taken into account in two ways, besides the anchoring of the spaces at
 the origin.
 
 \paragraph{Translation of the load.}
@@ -151,13 +151,11 @@ non-empty loading positive, so that an unbalanced loading is still preferred to 
 With a large $\lambda$, the CoG constraint becomes almost a hard constraint; with
 $\lambda = 0$, it is ignored.
 
-\paragraph{Evaluation of the blocks.}
-To guide the construction towards balanced loads, the VCS evaluation \eqref{eq:vcs} of a block
-is divided by $1 + \mu\,\varepsilon'$, where $\varepsilon'$ is the CoG excess of the partial
-loading after placing the block, including the best feasible translation, and $\mu \ge 0$ is a
-parameter. The weight and the moments of the partial loading and its interval of feasible
-translations are stored in each state, so that $\varepsilon'$ is computed in constant time for
-each candidate block.
+The weight and the moments of the partial loading and its interval of feasible translations
+are stored in each state, so that the CoG excess of a greedy completion is computed in constant
+time per placed block. We also tried to penalize the CoG excess in the evaluation of each
+candidate block, but it increased the volume of the ULDs without reducing the number of
+violations noticeably (Section~\ref{sec:exp-ablation}), and it is not used.
 
 Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 
@@ -198,7 +196,13 @@ weight does not exceed the capacity and, in some allowed orientation, it can be 
 the floor inside the edge or on the substructure. When the number of ULDs is limited, some boxes
 may only fit in the selected type among the ULDs still available. If the loading of the ULD
 leaves some of them out, the ULD is loaded again with these boxes first, and the load is then
-completed with the other boxes, keeping the first ones at their positions.
+completed with the other boxes, keeping the first ones at their positions. If, after the
+insertion of the unloaded boxes into the loaded ULDs (see below), some boxes are still left
+out, the construction is restarted, and the boxes left out in the previous constructions are
+also loaded first, into the first ULD in which they fit. This handles boxes that fit in several
+types but conflict with each other, for instance two large boxes that fit only in the largest
+types and cannot share a ULD. The solution with the smallest unloaded volume is kept, with at
+most three restarts.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 Both phases after the construction rely on the same procedure, \textsc{Insert}, which inserts a pool of
