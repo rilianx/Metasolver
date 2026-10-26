@@ -250,18 +250,23 @@ one ULD is replaced by two smaller ones.
 \caption{Multi-ULD framework.}
 \label{alg:multi}
 \begin{algorithmic}[1]
-\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
-\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
-	\State $k \gets$ next ULD type for $B$ \citep{Hessler2025}
-	\State $S \gets \textsc{LoadULD}(k, B)$
-	\If{the ULDs are limited and $S$ leaves out boxes that only fit in type $k$}
-		\State load these boxes first and complete $S$ with the other boxes of $B$
+\State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
+\Repeat
+	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
+	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
+		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025}
+		\State $S \gets$ the loading $\textsc{LoadULD}(k, B)$, $k \in K$, that maximizes $L - \theta V$
+		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type}
+			\State load these boxes first and complete $S$ with the other boxes of $B$
+		\EndIf
+		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
+	\EndWhile
+	\If{$B \neq \emptyset$}
+		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)}
 	\EndIf
-	\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
-\EndWhile
-\If{$B \neq \emptyset$}
-	\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)}
-\EndIf
+	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$
+\Until{$B = \emptyset$ or three restarts}
+\State $(\mathcal{S}, B) \gets$ the kept solution
 \Repeat \Comment{reduction of the volume}
 	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
 		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$

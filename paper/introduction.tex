@@ -54,13 +54,14 @@ following:
 	volume of the ULDs, the objective of the problem, with a single move that generalizes the
 	elimination of ULDs: a ULD is removed, its boxes are inserted into the other ULDs and the
 	remaining ones are loaded into at most two smaller ULDs. When the number of ULDs is limited,
-	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure.
+	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure,
+	and the construction is restarted loading first the boxes that were left out.
 \item We tune the parameters once with irace on a separate training set and evaluate the
 	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
 	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
-	3.6--7.2\% less ULD volume than the RGS in the original setting, 2.6--5.3\% less in the
-	adapted one and 2.1--4.9\% less with one ULD of each type, where it also leaves fewer boxes
-	unloaded; the differences are significant in all the settings. Almost none of its ULDs
+	4.5--7.2\% less ULD volume than the RGS in the original setting, 3.6--6.4\% less in the
+	adapted one and 4.8--8.0\% less with one ULD of each type, where it also leaves less than
+	half of the volume unloaded; the differences are significant in all the settings. Almost none of its ULDs
 	violates the CoG constraint, against 7--11\% of the ULDs of the RGS. All the solutions are
 	checked by an independent validator, and the code, the solutions and the scripts are
 	publicly available.
