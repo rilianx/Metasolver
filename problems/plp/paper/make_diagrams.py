@@ -679,41 +679,49 @@ def halfplane_clip(poly, a, b):
     return np.array(out) if len(out) >= 2 else None
 
 
-def fig_descend():
-    """un Descend paso a paso en una escena con una pendiente: en el espacio libre cada LP lleva la pieza a la esquina
-    de su region de confianza (baja y se acerca a la pared); al tocar la pendiente, la faceta elegida acota la region
-    y la pieza desliza por ella"""
-    W = 6.0
-    pieces = [Piece([[(0, 0), (4, 0), (4, 3)]]), Piece([[(0, 0), (0.7, 0), (0.7, 0.7), (0, 0.7)]])]
-    ty = [0, 1]
-    t = np.array([[0.0, 0.0], [2.5, 2.9]])
+def descend_scene(yl, yr, W=6.0, x0=4.2, z0=3.9):
+    """plataforma con la cara superior inclinada (de yl a yr), una pendiente apoyada en ella y un cuadrado que cae"""
+    yB = lambda x: yl + (yr - yl)*x/W
+    B = [(0, 0), (W, 0), (W, yr), (0, yl)]
+    A = [(2.6, yB(2.6)), (W, yr), (W, yr + 2.6)]
+    sq = [(0, 0), (0.7, 0), (0.7, 0.7), (0, 0.7)]
+    pieces = [Piece([B]), Piece([A]), Piece([sq])]
+    t = np.array([[0, 0], [2.6, min(yB(2.6), yr)], [x0, z0]], float)
     NFP.clear()
-    tr = descend_trace(1, ty, t, [0], pieces, W)
-    P = pieces[1]
-    xl, yl = (-0.25, 3.75), (-0.2, 3.75)
-    show = [0, 2, 3]                       # LP en el espacio libre, LP que toca la pendiente, LP que desliza
-    fig, axs = plt.subplots(1, 4, figsize=(7.2, 2.35))
+    return pieces, t, descend_trace(2, [0, 1, 2], t, [0, 1], pieces, W)
 
-    def scene(ax):
-        ax.plot([0, 0, xl[1]], [yl[1], 0, 0], color=INK, lw=0.8)
-        ax.add_patch(MplPolygon(pieces[0].parts[0], closed=True, facecolor=COLORS[0], edgecolor=INK, lw=0.6))
-        ax.set_xlim(*xl); ax.set_ylim(*yl); ax.set_aspect('equal'); ax.axis('off')
 
-    # (a) trayectoria completa
-    ax = axs[0]; scene(ax)
-    pts = [tr[0]['x']] + [R['x2'] for R in tr if R['improved']]
-    for k, q in enumerate(pts):
-        ax.add_patch(MplPolygon(P.parts[0] + q, closed=True, facecolor=COLORS[1] if k == len(pts)-1 else 'none',
-                                edgecolor=INK if k == len(pts)-1 else MUTED, lw=0.7 if k == len(pts)-1 else 0.5,
-                                ls='-' if k in (0, len(pts)-1) else (0, (2, 1.5)), zorder=4))
-    pts = np.array(pts)
-    ax.plot(pts[:, 0], pts[:, 1], '-o', color=ACCENT, ms=3, lw=1.0, zorder=6)
-    for k, q in enumerate(pts[:-1]):
-        ax.text(*(q + np.array([0.12, 0.05])), str(k), fontsize=6.5, color=ACCENT, zorder=7)
-    ax.set_title('(a) descent: %d LPs' % len(tr), fontsize=8, color=INK)
+def fig_descend():
+    """un Descend paso a paso: el cuadrado cae, desliza por una pendiente y llega a una plataforma con inclinacion leve
+    en el mismo sentido (sigue deslizando hasta la pared) o en sentido contrario (se detiene en la V)"""
+    W = 6.0
+    FCOL = {0: '#5b8c3a', 1: ACCENT2}           # color de las facetas de la plataforma y de la pendiente
+    SCOL = {0: '#d9d6cc', 1: COLORS[0]}
+    fig, axs = plt.subplots(2, 3, figsize=(7.2, 5.0))
+    xl, yl_ = (-0.15, W + 0.15), (-0.15, 4.75)
 
-    for k, (ax, r) in enumerate(zip(axs[1:], show)):
-        R = tr[r]; scene(ax)
+    def base(ax, pieces, t):
+        ax.plot([0, 0, W, W], [yl_[1], 0, 0, yl_[1]], color=INK, lw=0.8)
+        for j in (0, 1):
+            ax.add_patch(MplPolygon(pieces[j].parts[0] + t[j], closed=True, facecolor=SCOL[j], edgecolor=INK, lw=0.6))
+        ax.set_xlim(*xl); ax.set_ylim(*yl_); ax.set_aspect('equal', adjustable='box'); ax.axis('off')
+
+    def traj(ax, pieces, t, tr, title):
+        base(ax, pieces, t)
+        P = pieces[2]
+        pts = [tr[0]['x']] + [R['x2'] for R in tr if R['improved']]
+        for k, q in enumerate(pts):
+            last = k == len(pts) - 1
+            ax.add_patch(MplPolygon(P.parts[0] + q, closed=True, facecolor=COLORS[1] if last else 'none',
+                                    edgecolor=INK if last or k == 0 else MUTED, lw=0.6,
+                                    ls='-' if last or k == 0 else (0, (2, 1.5)), zorder=4))
+        pts = np.array(pts)
+        ax.plot(pts[:, 0], pts[:, 1], '-o', color=ACCENT, ms=2.5, lw=1.0, zorder=6)
+        ax.set_title(title, fontsize=8, color=INK)
+
+    def lp(ax, pieces, t, R, k, title):
+        base(ax, pieces, t)
+        P = pieces[2]
         box = np.array([R['lo'], [R['hi'][0], R['lo'][1]], R['hi'], [R['lo'][0], R['hi'][1]]])
         reg = box
         for (a_, b_, j) in R['cons']:
@@ -723,27 +731,43 @@ def fig_descend():
             ax.add_patch(MplPolygon(reg, closed=True, facecolor=ACCENT, alpha=0.3, edgecolor=ACCENT, lw=0.9, zorder=6))
         for (a_, b_, j) in R['cons']:
             nrm = a_/np.linalg.norm(a_); p0 = nrm*(b_/np.linalg.norm(a_)); dv = np.array([-nrm[1], nrm[0]])
-            seg = np.array([p0 - 10*dv, p0 + 10*dv])
-            ax.plot(seg[:, 0], seg[:, 1], color=ACCENT2, lw=1.2, zorder=7)
+            seg = np.array([p0 - 12*dv, p0 + 12*dv])
+            active = abs(b_ - a_ @ R['x2']) < 1e-6
+            ax.plot(seg[:, 0], seg[:, 1], color=FCOL[j], lw=1.5 if active else 0.9, ls='-' if active else (0, (4, 2)),
+                    zorder=7)
         ax.add_patch(MplPolygon(P.parts[0] + R['x'], closed=True, facecolor='none', edgecolor=INK, lw=0.9, zorder=8))
-        ax.add_patch(MplPolygon(P.parts[0] + R['x2'], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.1, zorder=8))
-        ax.plot(*R['x'], 'o', ms=3.2, color=INK, zorder=11)
-        ax.plot(*R['x2'], 'o', ms=3.2, color=ACCENT, zorder=11)
-        ax.add_patch(FancyArrowPatch(R['x'], R['x2'], arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0,
-                                     zorder=10, shrinkA=2, shrinkB=2))
-        ax.text(*(R['x'] + np.array([0.08, 0.08])), '$t$', fontsize=8, zorder=12)
-        ax.text(*(R['x2'] + np.array([-0.08, -0.08])), "$t'$", fontsize=8, color=ACCENT, ha='right', va='top', zorder=12)
-        lab = ['free space', 'reaches the slope', 'slides along the slope'][k]
-        ax.set_title('(%s) LP %d: %s' % ('bcd'[k], r+1, lab), fontsize=8, color=INK)
-    # direccion -c
-    c = tr[0]['c']; o = np.array([3.2, 3.5])
-    axs[0].add_patch(FancyArrowPatch(o, o - 0.6*c/np.linalg.norm(c), arrowstyle='-|>', mutation_scale=7, color=INK,
-                                     lw=0.8, zorder=9))
-    axs[0].text(*(o + np.array([0.12, -0.25])), '$-c$', fontsize=8, ha='left')
-    fig.tight_layout(pad=0.3, w_pad=0.4)
+        if R['improved']:
+            ax.add_patch(MplPolygon(P.parts[0] + R['x2'], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.1,
+                                    zorder=8))
+            ax.add_patch(FancyArrowPatch(R['x'], R['x2'], arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0,
+                                         zorder=10, shrinkA=2, shrinkB=2))
+            ax.plot(*R['x2'], 'o', ms=3, color=ACCENT, zorder=11)
+        ax.plot(*R['x'], 'o', ms=3, color=INK, zorder=11)
+        ax.set_title('(%s) LP %d: %s' % (k, title[0], title[1]), fontsize=8, color=INK)
+        # zoom alrededor de la region de confianza
+        c0 = 0.5*(R['lo'] + R['hi']) + np.array([0.35, 0.3]); half = 1.45
+        ax.set_xlim(c0[0] - half, c0[0] + half); ax.set_ylim(max(c0[1] - half, -0.15), c0[1] + half)
+        ax.set_aspect('equal', adjustable='box')
+        for ln in ax.lines: ln.set_clip_on(True)
+
+    pieces, t, tr = descend_scene(0.4, 1.0)
+    traj(axs[0, 0], pieces, t, tr, '(a) same inclination: %d LPs' % len(tr))
+    land = next(k for k, R in enumerate(tr) if any(j == 0 and abs(b_ - a_ @ R['x2']) < 1e-6 for a_, b_, j in R['cons']))
+    lp(axs[0, 1], pieces, t, tr[land - 1], 'b', (land, 'along the slope'))
+    lp(axs[0, 2], pieces, t, tr[land + 1], 'c', (land + 2, 'along the platform'))
+    pieces, t, tr = descend_scene(1.0, 0.4)
+    traj(axs[1, 0], pieces, t, tr, '(d) opposite inclination: %d LPs' % len(tr))
+    v = next(k for k, R in enumerate(tr) if sum(abs(b_ - a_ @ R['x2']) < 1e-6 for a_, b_, j in R['cons']) >= 2)
+    lp(axs[1, 1], pieces, t, tr[v], 'e', (v + 1, 'reaches the V'))
+    lp(axs[1, 2], pieces, t, tr[-1], 'f', (len(tr), 'stop'))
+    c = tr[0]['c']; o = np.array([0.6, 4.4])
+    axs[0, 0].add_patch(FancyArrowPatch(o, o - 0.6*c/np.linalg.norm(c), arrowstyle='-|>', mutation_scale=7, color=INK,
+                                        lw=0.8, zorder=9))
+    axs[0, 0].text(*(o + np.array([0.15, -0.3])), '$-c$', fontsize=8)
+    fig.tight_layout(pad=0.3, w_pad=0.4, h_pad=0.6)
+    fig.subplots_adjust(top=0.95, hspace=0.18)
     fig.savefig(os.path.join(OUT, 'descend.pdf'))
     fig.savefig(os.path.join(OUT, 'descend.png'), dpi=200)
-    print('descend: rondas', len(tr), [len(R['cons']) for R in tr])
 
 
 def fig_overlap(pieces, ty, W, t, H):

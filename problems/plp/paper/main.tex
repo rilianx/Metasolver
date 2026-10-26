@@ -305,15 +305,19 @@ positions of the other starts; blue: descent and position chosen by the greedy c
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/descend.pdf}
-\caption{One \textsc{Descend} step by step: a square falls onto a slope (a 2D example). Each LP of
-Algorithm~\ref{alg:greedy}, line~14, is drawn in the space of the reference point of the square (the corner of
-its bounding box): $t$ is the current point, the dashed box the trust region (the point may not go up), the
-orange line the selected facet of the NFP of the square with respect to the triangle (above it the parts do not
-overlap), the shaded region the feasible region of the LP, and $t'$ its optimum along $-c$ (down and, with weight
-$\sigma$, towards the nearest wall). (a) The whole descent: 4 LPs move the square and a fifth one finds no
-improvement. (b) In free space the optimum is a corner of the trust region: the square moves down and towards
-the wall. (c) The square reaches the slope. (d) With the facet active, it slides along the slope down to the
-wall. The result is a bottom-left placement in which gravity has priority.}
+\caption{\textsc{Descend} step by step on a 2D example: a square falls onto a slope that ends on a platform
+whose top is slightly inclined, (a)--(c) in the same direction as the slope, (d)--(f) in the opposite direction.
+(a), (d) The whole descent: each dot is the reference point of the square (the corner of its bounding box) after
+one LP, and the dotted boxes are the trust regions. In free space the optimum of the LP is a corner of the trust
+region, so the square moves down and towards the nearest wall; once it touches the slope it slides along it.
+(b), (c), (e), (f) Single LPs (Algorithm~\ref{alg:greedy}, line~14) in the space of the reference point: $t$ is
+the current point, the dashed box the trust region (the point may not go up), each line the facet selected for
+a placed part (orange: slope; green: platform; solid if active at the optimum), the shaded region the feasible
+region, and the arrow the move to the optimum along $-c$. (b) The square slides along the slope; the facet of the
+platform is already selected but not active yet. (c) On the platform, the facet of the platform is active and
+the square keeps sliding, down the slight incline, to the wall. (e) With the opposite inclination, the square
+reaches the V between the slope and the platform. (f) Both facets are active and no direction decreases
+$c\cdot t$: the descent stops. Gravity has priority over the wall term, so the piece slides down any incline.}
 \label{fig:descend}
 \end{figure}
 
