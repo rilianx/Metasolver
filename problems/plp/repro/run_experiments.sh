@@ -1,10 +1,12 @@
 #!/bin/bash
 # Corre todos los experimentos del paper, con JOBS procesos en paralelo (uno por nucleo; un hilo por corrida).
 # uso: JOBS=14 problems/plp/repro/run_experiments.sh [grupos...]
-#   grupos (por defecto todos): chess main ablation kicks sens tollenaere liu
+#   grupos (por defecto todos): chess main ablation simple kicks sens tollenaere liu
 #   main        13 instancias (Stoyan 2004/2005, Merged1-5) x 10 semillas x 120 s        130 corridas
 #   ablation    7 instancias dificiles x 3 variantes (sin LP, pesos aditivos, solo reinsercion) x 10 x 120 s
 #   kicks       7 instancias dificiles x 4 kicks (none, mix, top, topbest) x 10 x 120 s (por defecto: random)
+#   simple      7 instancias dificiles x (sin Improve, greedy por volumen, sin termino de pared, minima: sin LP ni lo anterior)
+#               x 10 x 120 s
 #   sens        7 instancias dificiles x (rho 0.5 %, 2 %; 100 y 2000 pasadas) x 10 x 120 s
 #   tollenaere  66 instancias de Tollenaere et al. 2025 x 10 semillas x 30 s
 #   liu         Liu et al. 2015 Experiment1 x 10 semillas x 120 s
@@ -19,7 +21,7 @@ PLP=$(cd "$HERE/.." && pwd)
 REPO=$(cd "$PLP/../.." && pwd)
 BIN=${BIN:-$REPO/build-repro/BSG_PLP}
 OUT=${OUT:-$HERE/out/runs}
-GROUPS_=${*:-chess main ablation kicks sens tollenaere liu}
+GROUPS_=${*:-chess main ablation simple kicks sens tollenaere liu}
 [ -x "$BIN" ] || { echo "no existe $BIN (correr repro/setup.sh)"; exit 1; }
 mkdir -p "$OUT"
 phys=$(lscpu -p=Core,Socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
@@ -66,6 +68,10 @@ if has ablation; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
 done; done; fi
 if has kicks; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
   for k in none mix top topbest; do echo "kick_$k|$s|120|$f|--kick $k"; done
+done; done; fi
+if has simple; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
+  echo "noimprove|$s|120|$f|--no_improve"; echo "volgreedy|$s|120|$f|--alpha 1000 --beta 1 --gamma 0"
+  echo "slide0|$s|120|$f|--slide 0"; echo "minimal|$s|120|$f|--no_compact --no_improve --alpha 1000 --beta 1 --gamma 0 --slide 0"
 done; done; fi
 if has sens; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
   echo "rho05|$s|120|$f|--sep_step 0.005"; echo "rho2|$s|120|$f|--sep_step 0.02"

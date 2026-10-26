@@ -79,6 +79,9 @@ for name, cfg, T in (('Propuesto', 'full', None), ('Sin LP', 'nolp', None), ('Pe
                      ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: mixto (reinsercion o aleatorio)', 'kick_mix', None),
                      ('Kick: pieza superior, aleatoria', 'kick_top', None),
                      ('Kick: pieza superior, menor penetracion de 20', 'kick_topbest', None),
+                     ('Sin Improve', 'noimprove', None), ('Greedy: pieza mas grande primero', 'volgreedy', None),
+                     ('Descend sin termino de pared (sigma = 0)', 'slide0', None),
+                     ('Minima: sin LP, sin Improve, greedy por volumen, sigma = 0', 'minimal', None),
                      ('rho = 0.5 %', 'rho05', None), ('rho = 2 %', 'rho2', None),
                      ('100 pasadas', 'pass100', None), ('2000 pasadas', 'pass2000', None)):
     g = {'2004': [], '2005': []}; ok = True
