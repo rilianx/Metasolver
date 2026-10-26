@@ -82,6 +82,7 @@ for name, cfg, T in (('Propuesto', 'full', None), ('Sin LP', 'nolp', None), ('Pe
                      ('Sin Improve', 'noimprove', None), ('Greedy: pieza mas grande primero', 'volgreedy', None),
                      ('Descend sin termino de pared (sigma = 0)', 'slide0', None),
                      ('Minima: sin LP, sin Improve, greedy por volumen, sigma = 0', 'minimal', None),
+                     ('Simple: sin LP, sin Improve, sigma = 0 (greedy actual)', 'simple2', None),
                      ('rho = 0.5 %', 'rho05', None), ('rho = 2 %', 'rho2', None),
                      ('100 pasadas', 'pass100', None), ('2000 pasadas', 'pass2000', None)):
     g = {'2004': [], '2005': []}; ok = True
