@@ -54,7 +54,7 @@ for v in $SETTINGS; do
 	for cfg in "coggreedy:--cog_greedy 0.5" "nocogpen:--cog_penalty 0" "notranslate:--no_translate" \
 			"corner:--corner_anchor" "nosub:--no_substructure" \
 			"reduce1:--reduce_new 1" "elimonly:--eliminate_only" "noreduce:--no_eliminate" \
-			"hessler:--theta -1" "norestart:--restarts 0" "noscratch:--no_scratch" "nopriority:--no_priority" "noruin:--no_ruin" \
+			"hessler:--theta -1" "norestart:--restarts 0" "scratch:--scratch" "priority:--priority" "noruin:--no_ruin" \
 			"base:--theta -1 --restarts 0 --corner_anchor --no_regroup --no_eliminate --no_substructure"; do
 		n=${cfg%%:*}; a=${cfg#*:}
 		[ $n = nosub ] && [ $v = paquay ] && continue

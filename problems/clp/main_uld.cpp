@@ -423,11 +423,15 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 
 //contadores (linea "stats" de la salida): cambios aceptados en cada etapa de insert, y
 //resultado de cada intento de la reduccion de volumen
-static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0;
+static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0, st_newload=0;
 //etapas de la insercion de cajas (ablacion)
-static bool stage_scratch=true, stage_priority=true, stage_ruin=true;
+static bool stage_scratch=false, stage_priority=false, stage_ruin=true;
+//tiempo (s de CPU) de la reduccion: insercion en los otros ULDs y carga de los ULDs nuevos
+static double tm_insert=0, tm_new=0;
 //proporciones de la ruina (--ruin_full agrega 1: recarga desde cero en la misma etapa)
 static vector<double> ruin_rhos={0.3, 0.6, 0.9};
+//experimental: una sola ronda de ruina (--ruin_once)
+static bool ruin_once=false;
 
 static double volume_of(const vector<int>& b){
 	double v=0;
@@ -499,7 +503,7 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 		}
 
 	if(stage_ruin)
-		for(bool progress=true; progress && !none(pool); ){
+		for(bool progress=true, first=true; progress && !none(pool) && (first || !ruin_once); first=false){
 			progress=false;
 			for(double p : ruin_rhos)
 				if(!none(pool) && ruin_recreate(loads, pool, p, P)){ progress=true; st_ruin++; }
@@ -527,7 +531,9 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 		vector<Load> others;
 		for(size_t i=0; i<loads.size(); i++) if((int)i!=target) others.push_back(loads[i]);
 		long s0=st_scratch, s1=st_priority, s2=st_ruin;
+		clock_t c0=clock();
 		if(!others.empty()) insert(others, pool, P);
+		tm_insert+=double(clock()-c0)/CLOCKS_PER_SEC;
 		//etapas de insert que aportaron a un cambio aceptado
 		auto useful=[&](){ su_scratch+=st_scratch-s0; su_priority+=st_priority-s1; su_ruin+=st_ruin-s2; };
 		if(none(pool)){ loads=others; st_elim++; useful(); return true; }
@@ -564,7 +570,9 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 			vector<Load> nl; vector<int> rest=pool;
 			for(int k : C){
 				if(none(rest)) break;
+				clock_t c1=clock();
 				Load ld=load(ulds[k], rest, P);
+				tm_new+=double(clock()-c1)/CLOCKS_PER_SEC; st_newload++;
 				if(!ld.feasible || none(ld.boxes) || (tg.cog_ok() && !ld.cog_ok())){ ok=false; break; }
 				for(size_t t=0; t<rest.size(); t++) rest[t]-=ld.boxes[t];
 				nl.push_back(ld);
@@ -630,12 +638,14 @@ int main(int argc, char** argv){
 	args::Flag _corner_anchor(parser, "corner_anchor", "Ablation: anchor each space at its closest corner of the ULD (instead of the origin) and, if the center of gravity is out of range, load the ULD again with the spaces anchored at the origin", {"corner_anchor"});
 	args::Flag _no_regroup(parser, "no_regroup", "Ablation (with --corner_anchor): do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
-	args::Flag _no_scratch(parser, "no_scratch", "Ablation: insertion of boxes without the reload from scratch", {"no_scratch"});
+	args::Flag _scratch(parser, "scratch", "Ablation: insertion of boxes also with a reload from scratch of each ULD", {"scratch"});
 
-	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
+	args::Flag _priority(parser, "priority", "Ablation: insertion of boxes also with a reload of each ULD giving priority to the boxes to insert", {"priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
+	args::Flag _ruin_once(parser, "ruin_once", "Ruin and recreate: a single round of the proportions (experimental)", {"ruin_once"});
+	args::ValueFlag<double> _ruin_rho(parser, "double", "Ruin and recreate with this single proportion (experimental)", {"ruin_rho"});
 	args::Flag _ruin_full(parser, "ruin_full", "Ruin and recreate also with the proportion 1 (experimental)", {"ruin_full"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
@@ -709,6 +719,8 @@ int main(int argc, char** argv){
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
 	if(_ruin_full) ruin_rhos.push_back(1.0);
+	if(_ruin_rho) ruin_rhos={_ruin_rho.Get()};
+	ruin_once=_ruin_once;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -731,7 +743,7 @@ int main(int argc, char** argv){
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
-	stage_scratch=!_no_scratch; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
+	stage_scratch=_scratch; stage_priority=_priority; stage_ruin=!_no_ruin;
 	//fases de mejora (Insert y reduccion): tiempo de BSG por ULD = improve_time * t
 	Params Pi=P; Pi.time=P.time*((_improve_time)? _improve_time.Get() : 0.1);
 
@@ -856,7 +868,7 @@ int main(int argc, char** argv){
 	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
 		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
 		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
-		<< " new2 " << st_new2 << " fail " << st_fail << " useful_restarts " << n_restart_useful << endl;
+		<< " new2 " << st_new2 << " fail " << st_fail << " useful_restarts " << n_restart_useful << " t_insert " << tm_insert << " t_new " << tm_new << " new_loads " << st_newload << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());
