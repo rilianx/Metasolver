@@ -901,15 +901,6 @@ def fig_passes(pieces, ty, W, t, H):
                                         zorder=6))
             ax.add_patch(FancyArrowPatch(R['before'][i] + ref, R['after'][i] + ref, arrowstyle='-|>', mutation_scale=5,
                                          color=ACCENT, lw=0.8, zorder=7, shrinkA=0, shrinkB=0))
-        # pesos GLS > 1: linea entre los centros de las piezas, mas gruesa cuanto mayor el peso
-        for (i, j), wv in R['w'].items():
-            if wv <= 1.0 + 1e-9: continue
-            ci = R['after'][i] + np.array([pieces[ty[i]].w/2, pieces[ty[i]].h/2])
-            cj = R['after'][j] + np.array([pieces[ty[j]].w/2, pieces[ty[j]].h/2])
-            ax.plot([ci[0], cj[0]], [ci[1], cj[1]], color=ACCENT2, lw=0.6 + 1.6*(wv - 1), alpha=0.9, zorder=8,
-                    solid_capstyle='round')
-            ax.text(*((ci + cj)/2), '$w=%.1f$' % wv, fontsize=5.5, color=ACCENT2, zorder=9, ha='center', va='center',
-                    bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.9))
         lab = 'start' if R['it'] == 0 else 'pass %d' % R['it']
         if R['it'] == 0:
             l2 = '$\\sum w\\delta=%.2f$' % R['wtot']

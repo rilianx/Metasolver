@@ -455,10 +455,11 @@ below $h$.}
 \includegraphics[width=\textwidth]{figures/passes.pdf}
 \caption{All the passes of \textsc{MinimizeOverlap} in Figure~\ref{fig:overlap}(c)--(e). In each pass, the pieces
 that overlap are moved along the axes; the pieces actually moved are outlined in blue (dashed: position before
-the pass). Overlaps are in red, and the orange segments join the pairs whose GLS weight $w$ is above 1. Each title
+the pass), and overlaps are in red. Each title
 gives the unweighted overlap $\sum\delta$ and the weighted overlap $\sum w\delta$, which is the one minimized:
 no move increases it. Pass~2 does not reduce it (a local minimum), so the weight of the overlapping pair of
-triangles is increased to 2 and $\sum w\delta$ jumps from 0.36 to 0.71. Pass~3 then moves the small triangle onto
+triangles is increased from 1 to 2 and $\sum w\delta$ jumps from 0.36 to 0.71; the weights change the objective,
+not the layout, and the next pass starts from the same positions. Pass~3 then moves the small triangle onto
 the other one: $\sum w\delta$ decreases to 0.54, although $\sum\delta$ increases. The triangle is moved down in
 pass~4. The same happens with the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the
 layout is feasible.}
