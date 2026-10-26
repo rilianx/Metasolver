@@ -5,6 +5,7 @@ Reimplementa en 2D (ejes x y z) los mismos pasos de BSG_PLP sobre un ejemplo peq
   figures/construction.pdf   construccion greedy paso a paso (descenso por LP con facetas de NFP) y compactacion
                              global por LP
   figures/nfp.pdf            NFP de dos partes (deslizamiento, suma de Minkowski) y penetracion
+  figures/axis.pdf           Proposicion 1: penetracion a lo largo de un eje (cero fuera de un intervalo, concava dentro)
   figures/overlap.pdf        movimiento exacto a lo largo de un eje (funcion phi concava por
                              tramos); minimizacion del solapamiento con pesos GLS hasta separar
 
@@ -460,6 +461,102 @@ def fig_nfp(pieces):
     fig.savefig(os.path.join(OUT, 'nfp.png'), dpi=200)
 
 
+def fig_axis(pieces):
+    """Proposicion 1: (a) recta r(s) que cruza N_AB; (b) d_f - n_f.r(s) por faceta (afines), su minimo y
+    delta_AB(s) = max(0, min): cero fuera de (L, U) y concava dentro; (c) suma ponderada de dos terminos: concava
+    entre puntos de quiebre consecutivos, minimo en un punto de quiebre"""
+    A, B = pieces[4].parts[0], pieces[2].parts[0]
+    V, n, d = nfp(A, B)
+    y0 = 0.55
+    fcol = plt.get_cmap('tab10')
+    nf = len(d)
+    fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.5), gridspec_kw={'width_ratios': [0.9, 1.1, 1.1]})
+
+    # intervalo (L, U) sobre la recta r(s) = (s, y0)
+    c = d - n[:, 1]*y0; nk = n[:, 0]
+    L = max(c[f]/nk[f] for f in range(nf) if nk[f] < -1e-12)
+    U = min(c[f]/nk[f] for f in range(nf) if nk[f] > 1e-12)
+    S = np.linspace(V[:, 0].min() - 0.5, V[:, 0].max() + 0.5, 600)
+
+    # (a)
+    ax = axs[0]
+    ax.add_patch(MplPolygon(V, closed=True, facecolor='#eef3fb', edgecolor='none'))
+    for f in range(nf):
+        # arista de la faceta f: vertices con n_f.v = d_f
+        on = V[np.abs(V @ n[f] - d[f]) < 1e-9]
+        if len(on) >= 2: ax.plot(on[:, 0], on[:, 1], color=fcol(f), lw=1.6, solid_capstyle='round')
+    ax.plot([S[0], S[-1]], [y0, y0], color=INK, lw=0.8)
+    ax.annotate('', (S[-1], y0), (S[-1] - 0.01, y0), arrowprops=dict(arrowstyle='-|>', color=INK, lw=0.8))
+    ax.text(S[-1], y0 + 0.08, '$r(s)$', fontsize=8, ha='right', va='bottom')
+    for v, lab in ((L, '$L$'), (U, '$U$')):
+        ax.plot(v, y0, 'o', ms=3.5, color=INK, mfc='white', zorder=5)
+        ax.text(v, y0 - 0.12, lab, fontsize=8, ha='center', va='top')
+    sm = 0.35*L + 0.65*U
+    rm = np.array([sm, y0])
+    gap = d - n @ rm; f0 = int(np.argmin(gap))
+    ax.plot(*rm, 'o', ms=3, color=RED, zorder=6)
+    ax.add_patch(FancyArrowPatch(rm, rm + gap[f0]*n[f0], arrowstyle='-|>', mutation_scale=6, color=RED, lw=1.0,
+                                 zorder=6, shrinkA=0, shrinkB=0))
+    ax.text(*(rm + 0.5*gap[f0]*n[f0] + np.array([0.08, 0.0])), r'$\delta$', color=RED, fontsize=8, va='center')
+    ax.text(*(V.mean(0) + np.array([-0.1, -0.45])), '$N_{AB}$', color=ACCENT, fontsize=9, ha='center')
+    ax.set_xlim(S[0], S[-1] + 0.05); ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title('(a) $r$ moves along $x$', fontsize=8, color=INK)
+
+    # (b)
+    ax = axs[1]
+    G = np.array([c[f] - nk[f]*S for f in range(nf)])
+    for f in range(nf):
+        ax.plot(S, G[f], color=fcol(f), lw=0.8, alpha=0.9)
+    m = G.min(0)
+    ax.plot(S, np.maximum(0, m), color=INK, lw=1.8)
+    ax.fill_between(S, 0, np.maximum(0, m), color=GRID, alpha=0.8)
+    ax.axhline(0, color=MUTED, lw=0.6)
+    for v, lab in ((L, '$L$'), (U, '$U$')):
+        ax.axvline(v, color=MUTED, lw=0.6, ls=':')
+        ax.text(v, -0.52, lab, fontsize=8, ha='center', va='top')
+    ax.set_ylim(-0.5, 1.25); ax.set_xlim(S[0], S[-1])
+    ax.set_xticks([]); ax.set_xlabel('$s$'); ax.set_yticks([0])
+    ax.text(S[-1] - 0.05, -0.45, r'thin: $d_f-n_f\cdot r(s)$, one per facet', fontsize=6.5, color=MUTED,
+            ha='right', va='bottom')
+    ax.text(0.5*(L + U), 0.9, r'$\delta_{AB}(r(s))$', fontsize=8, ha='center', va='bottom',
+            bbox=dict(facecolor='white', edgecolor='none', pad=0.5, alpha=0.85))
+    ax.set_title('(b) zero outside $(L,U)$, concave inside', fontsize=8, color=INK)
+
+    # (c) dos terminos (dos piezas fijas) con pesos, en el rango del contenedor [0, U_k]: phi concava entre puntos
+    # de quiebre consecutivos y minimo en uno de ellos
+    ax = axs[2]
+    off2 = np.array([1.9, 0.25]); w1, w2 = 1.0, 1.6
+    def term(off, Ss):
+        dd = d + n @ off; cc = dd - n[:, 1]*y0
+        dl = np.maximum(0, np.min(cc[:, None] - nk[:, None]*Ss[None, :], axis=0))
+        Lx = max(cc[f]/nk[f] for f in range(nf) if nk[f] < -1e-12)
+        Ux = min(cc[f]/nk[f] for f in range(nf) if nk[f] > 1e-12)
+        return dl, Lx, Ux
+    _, L1, U1 = term(np.zeros(2), S[:1]); _, L2, U2 = term(off2, S[:1])
+    s0, s1 = L1 + 0.5*(U1 - L1), L2 + 0.6*(U2 - L2)        # limites del contenedor para la pieza movil
+    pad = 0.12*(s1 - s0)
+    S2 = np.linspace(s0 - pad, s1 + pad, 800)
+    d1 = term(np.zeros(2), S2)[0]; d2 = term(off2, S2)[0]
+    inside = (S2 >= s0) & (S2 <= s1)
+    ax.axvspan(S2[0], s0, color=GRID, alpha=0.6, lw=0); ax.axvspan(s1, S2[-1], color=GRID, alpha=0.6, lw=0)
+    ax.plot(S2, w1*d1, color=ACCENT, lw=0.9, label=r'$w_1\delta_1$')
+    ax.plot(S2, w2*d2, color=ACCENT2, lw=0.9, label=r'$w_2\delta_2$')
+    ax.plot(S2[inside], (w1*d1 + w2*d2)[inside], color=INK, lw=1.8, label=r'$\phi$')
+    bps = sorted([s0, s1] + [b for b in (L1, U1, L2, U2) if s0 < b < s1])
+    vals = [w1*term(np.zeros(2), np.array([b]))[0][0] + w2*term(off2, np.array([b]))[0][0] for b in bps]
+    for b in bps: ax.axvline(b, color=MUTED, lw=0.6, ls=':', zorder=0)
+    ax.plot(bps, vals, 'o', ms=3, color=INK, zorder=5)
+    k = int(np.argmin(vals))
+    ax.plot([bps[k]], [vals[k]], '*', ms=9, color=ACCENT, zorder=6)
+    ax.set_xticks([s0, s1]); ax.set_xticklabels(['$0$', '$U_k$'])
+    ax.set_xlabel('$s$'); ax.set_ylim(0, max(vals)*1.45); ax.set_xlim(S2[0], S2[-1])
+    ax.legend(fontsize=7, frameon=False, loc='upper center', ncol=3, handlelength=1.2, columnspacing=0.8)
+    ax.set_title(r'(c) $\phi$: minimum at a breakpoint', fontsize=8, color=INK)
+    fig.tight_layout(pad=0.3, w_pad=0.8)
+    fig.savefig(os.path.join(OUT, 'axis.pdf'))
+    fig.savefig(os.path.join(OUT, 'axis.png'), dpi=200)
+
+
 def fig_overlap(pieces, ty, W, t, H):
     NFP.clear()
     fig = plt.figure(figsize=(7.2, 4.6))
@@ -551,4 +648,5 @@ if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     pieces, ty, W, t, H = fig_construction()
     fig_nfp(pieces)
+    fig_axis(pieces)
     fig_overlap(pieces, ty, W, t, H)

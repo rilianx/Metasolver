@@ -171,6 +171,21 @@ affine functions, hence concave; outside it is zero. Between consecutive points 
 either concave or identically zero, so $\phi$ is concave there and attains its minimum at an endpoint.
 \end{proof}
 
+Figure~\ref{fig:axis} illustrates the proposition in two dimensions.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/axis.pdf}
+\caption{Proposition~\ref{prop:axis} in 2D, with the NFP of Figure~\ref{fig:nfp}. (a) When piece $i$ moves along
+$x$, the relative position $r(s)$ moves along a line that enters $N_{AB}$ at $L$ and leaves it at $U$. (b) For each
+facet (same colors), $d_f-n_f\cdot r(s)$ is affine in $s$; the penetration is the lower envelope of these lines
+clipped at zero: zero outside $(L,U)$ and concave inside. (c) The weighted overlap $\phi$ with two fixed pieces
+on the container range $[0,U_k]$: between consecutive breakpoints (dotted: $0$, $U_k$ and the $L$, $U$ of each
+term) $\phi$ is a sum of concave functions, so its minimum (star) is at a breakpoint, and only these points are
+evaluated.}
+\label{fig:axis}
+\end{figure}
+
 The move evaluates $\phi$ at the points of $\mathcal{B}$ only. With the interval of each term known, a term is
 evaluated only at the candidates inside it: sorting the candidates, each term contributes to a contiguous range
 found by binary search. Facets are stored as $(c_f,n_{fk})$ in contiguous arrays, so evaluating a term costs one
