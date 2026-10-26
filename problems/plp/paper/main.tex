@@ -199,7 +199,17 @@ is minimized within a trust region; the procedure repeats until no improvement. 
 positions, the greedy chooses the one maximizing
 $\alpha\log(V/V_{\max})-\beta z/H_0-\gamma\max(0,z+h-H_{\text{cur}})/H_0$, which favors large pieces placed low
 without increasing the height. Parameters ($\alpha=1$, $\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned
-with Optuna.
+with Optuna. Figure~\ref{fig:construction} illustrates the construction in two dimensions.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/construction.pdf}
+\caption{Greedy construction on a 2D example (10 pieces, one of them a union of two convex parts), computed with a
+2D version of the method. In each step, a piece starts from $g=4$ points on top of the current load (dots) and
+descends by a sequence of LPs over NFP facets, towards the floor and the nearest wall; dotted outlines: final
+positions of the other starts; blue: descent and position chosen by the greedy criterion.}
+\label{fig:construction}
+\end{figure}
 
 \subsection{Overlap minimization}
 \textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
@@ -209,6 +219,23 @@ the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weig
 multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
 procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
 Weights persist along the oscillation and are reset after a successful separation or a kick.
+Figure~\ref{fig:overlap} shows the penetration, an axis move and a complete separation followed by the LP
+compaction (Section~\ref{sec:compact}) on the 2D example.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/overlap.pdf}
+\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a) NFP of a part $A$ with
+respect to $B$ (dashed): $A$ overlaps $B$ when its reference point $r$ lies inside $N_{AB}$, and the penetration
+$\delta_{AB}(r)$ is the distance to the nearest facet, i.e., the shortest translation that separates them.
+(b)--(c) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
+outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
+chosen (it reduces the overlap but does not remove it). (d)--(f) \textsc{MinimizeOverlap} on the greedy layout
+squeezed to the target height $h=0.9H$ (overlaps in red): after 9 passes, with GLS weights, the layout is
+feasible. (g) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
+below $h$.}
+\label{fig:overlap}
+\end{figure}
 
 \subsection{Strategic oscillation and kicks}
 After a successful separation the target height is decreased by $\rho=1\%$ of the best height; after a failure it
@@ -220,7 +247,7 @@ scheme follows \citet{egeblad2009} and \citet{umetani2009}. The random moves are
 two pieces there is a single pair, so the GLS weights have no effect, and reinsertion alone keeps returning to
 the layout produced by the greedy order (Section~\ref{sec:t2025}).
 
-\subsection{Global LP compaction}
+\subsection{Global LP compaction}\label{sec:compact}
 \textsc{Compact} solves a sequence of linear programs over all translations. Given the current layout, for every
 pair of parts that can touch within a trust region (each coordinate may move at most $\Delta$, half of the
 smallest piece dimension) one NFP facet $f$ satisfied by the current relative position is selected and the
@@ -378,7 +405,7 @@ the instance called Experiment 1 by \citet{lamas2023} is the one of \citet{liu20
 a height below the proven optimum with our data, so the instance seems to differ and we only compare with the
 optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 
-\begin{figure}[t]
+\begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/solutions.pdf}
 \caption{Best solutions of the final runs (certified) for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
@@ -425,7 +452,7 @@ of 3DNest at 600 seconds on all five instances (44.3, 43.4, 45.1, 44.7 and 43.2\
 and 41.0\%). Even assuming that our machine is five times faster per core, the
 advantage holds at equal effective time.
 
-\begin{figure}[t]
+\begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/merged_time.pdf}
 \caption{Mean utilization over time on the Merged instances (10 seeds), compared with 3DNest
