@@ -512,9 +512,13 @@ is estimated by stopping the same runs at 24 s, which corresponds to moves five 
 
 The multiplicative weights and the speed of the separation are the decisive elements: with additive weights the
 mean heights increase on Stoyan 2004 Examples 3--5 and Stoyan 2005 Example 3 (e.g., from 53.60 to 55.27 on
-Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. On these instances, kicks that
-only reinsert pieces are as good as the mixed kicks or slightly better; the random moves are needed on small
-instances (Section~\ref{sec:t2025}). The LP compaction has no significant effect: the
+Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. The kick has no measurable effect
+on these instances: all the variants in the lower part of the table, including restarting from the best solution
+without moving any piece, give the same results within one or two standard errors. A top piece is one that
+exceeds the target height; moving it to the least overlapped of 20 random positions gives a slightly lower mean
+on Stoyan 2004 Example 1 but not on the others. The diversification thus comes mainly from the restart itself,
+with reset weights and a new random order of the moves. The random moves are needed only on small instances
+(Section~\ref{sec:t2025}). The LP compaction has no significant effect: the
 differences are of about one standard error, slightly in favour of the variant without LP on Stoyan 2004. It is therefore not needed for the quality of the solutions, and
 the method can run without an LP solver.
 
@@ -530,8 +534,13 @@ Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 Proposed method & $-2.8\%$ & $-2.0\%$ & 53.41\\
 Without LP compaction & $-3.3\%$ & $-1.9\%$ & 53.30\\
 Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.3\%$ & $-1.5\%$ & 53.15\\
-Kick: reinsertion only (no random moves) & $-3.5\%$ & $-1.9\%$ & 53.50\\
 Separation five times slower (runs stopped at 24 s) & $-0.1\%$ & $-0.9\%$ & 54.82\\
+\midrule
+Kick: reinsertion only & $-3.5\%$ & $-1.9\%$ & 53.50\\
+Kick: random position only & $-3.1\%$ & $-1.9\%$ & 53.60\\
+Kick: a top piece to a random position & $-3.0\%$ & $-1.9\%$ & 53.16\\
+Kick: a top piece to the least overlapped of 20 random positions & $-2.8\%$ & $-2.1\%$ & 53.09\\
+No kick (restart from the best solution only) & $-2.8\%$ & $-2.0\%$ & 53.66\\
 \bottomrule
 \end{tabular}
 \end{table}
