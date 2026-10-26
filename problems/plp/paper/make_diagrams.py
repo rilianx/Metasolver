@@ -470,10 +470,10 @@ def fig_axis(pieces):
     y0 = 0.55
     fcol = plt.get_cmap('tab10')
     nf = len(d)
-    fig = plt.figure(figsize=(7.2, 4.5))
-    top, bot = fig.subfigures(2, 1, height_ratios=[1, 1], hspace=0.02)
+    fig = plt.figure(figsize=(7.2, 4.9))
+    top, bot = fig.subfigures(2, 1, height_ratios=[1, 1.2], hspace=0.02)
     ax_p, ax_n, ax_d = top.subplots(1, 3, gridspec_kw={'width_ratios': [1.0, 0.9, 1.0]})
-    ax_g, ax_phi = bot.subplots(1, 2, gridspec_kw={'width_ratios': [1.2, 1.0]})
+    ax_g, ax_phi = bot.subplots(1, 2, gridspec_kw={'width_ratios': [1.45, 1.0]})
     axs = [ax_n, ax_d, ax_g, ax_phi]
 
     # intervalo (L, U) sobre la recta r(s) = (s, y0)
@@ -582,24 +582,51 @@ def fig_axis(pieces):
     ax = axs[2]
     for off, lab in ((np.zeros(2), '$j=1$'), (off2, '$j=2$')):
         ax.add_patch(MplPolygon(B + off, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.5, zorder=2))
-        ax.text(*(B.mean(0) + off + np.array([0.0, -0.35])), lab, fontsize=7, ha='center', va='center', zorder=7)
-    for sv in (s0, s1):
-        ax.add_patch(MplPolygon(A + np.array([sv, y0]), closed=True, facecolor='none', edgecolor=MUTED, lw=0.5,
-                                ls=(0, (2, 1.2)), zorder=3))
+        ax.text(B.mean(0)[0] + off[0], B[:, 1].min() + off[1] + 0.22, lab, fontsize=7, ha='center', va='center',
+                zorder=7)
+    # puntos de quiebre (los mismos de (e)) sobre la recta del punto de referencia de A
+    ax.plot([s0, s1], [y0, y0], color=INK, lw=0.6, ls=':', zorder=6)
+    ax.plot(bps, [y0]*len(bps), 'o', ms=3, color=INK, zorder=8)
+    ax.plot([smin], [y0], '*', ms=9, color=ACCENT, zorder=9)
+
+    def pen_vec(off, r):
+        """vector de separacion minima de A en r respecto de la pieza fija en off (cero si no se solapan)"""
+        dd = d + n @ off
+        g = dd - n @ r
+        f = int(np.argmin(g))
+        return max(0.0, g[f])*n[f]
+
+    # A en la mejor posicion (estrella): solapa solo a j=1; flecha delta_1
     pa = A + np.array([smin, y0])
-    ax.add_patch(MplPolygon(pa, closed=True, facecolor=COLORS[4], edgecolor=ACCENT, lw=1.0, zorder=4))
+    ax.add_patch(MplPolygon(pa, closed=True, facecolor=COLORS[4], edgecolor=INK, lw=0.8, zorder=4))
     for off in (np.zeros(2), off2):
         I = clip(pa, B + off)
         if I is not None: ax.add_patch(MplPolygon(I, closed=True, facecolor=RED, edgecolor='none', zorder=5))
+    r = np.array([smin, y0])
+    v1 = pen_vec(np.zeros(2), r)
+    ax.add_patch(FancyArrowPatch(r, r + v1, arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.2, zorder=10,
+                                 shrinkA=0, shrinkB=0))
+    ax.text(*(r + v1 + np.array([0.04, 0.02])), r'$\delta_1$', color=ACCENT, fontsize=9, ha='left', va='bottom',
+            zorder=10, bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.8))
+    # A en otro punto de quiebre (U del termino 1): solapa solo a j=2; flecha delta_2
+    s_alt = min(b for b in bps if b > smin + 1e-9)
+    r2 = np.array([s_alt, y0])
+    pb = A + r2
+    ax.add_patch(MplPolygon(pb, closed=True, facecolor='none', edgecolor=ACCENT2, lw=0.8, ls=(0, (2, 1.2)), zorder=6))
+    v2 = pen_vec(off2, r2)
+    ax.add_patch(FancyArrowPatch(r2, r2 + v2, arrowstyle='-|>', mutation_scale=7, color=ACCENT2, lw=1.2, zorder=10,
+                                 shrinkA=0, shrinkB=0))
+    ax.text(*(r2 + 0.5*v2 + np.array([0.0, -0.08])), r'$\delta_2$', color=ACCENT2, fontsize=9, ha='center',
+            va='top', zorder=10, bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.8))
     yb = min(B[:, 1].min(), (B + off2)[:, 1].min()) - 0.12
     ax.annotate('', (s1, yb), (s0, yb), arrowprops=dict(arrowstyle='<->', color=INK, lw=0.6))
     ax.text(0.5*(s0 + s1), yb - 0.05, 'range of the reference point of $A$ ($0\\ldots U_k$)', fontsize=6.5,
             ha='center', va='top')
-    ax.text(*(A[2] + np.array([smin, y0]) + np.array([-0.12, -0.15])), '$A$', fontsize=8, ha='right', zorder=7)
+    ax.text(*(A[2] + np.array([smin, y0]) + np.array([-0.08, -0.05])), '$A$', fontsize=8, ha='right', zorder=7)
     allp = np.vstack([B, B + off2, A + np.array([s0, y0]), A + np.array([s1, y0])])
     ax.set_xlim(allp[:, 0].min() - 0.05, allp[:, 0].max() + 0.05); ax.set_ylim(yb - 0.3, allp[:, 1].max() + 0.05)
     ax.set_aspect('equal'); ax.axis('off')
-    ax.set_title('(d) $A$ between two fixed pieces (at the best $s$)', fontsize=8, color=INK)
+    ax.set_title('(d) $A$ between two fixed pieces', fontsize=8, color=INK)
     fig.savefig(os.path.join(OUT, 'axis.pdf'), bbox_inches='tight')
     fig.savefig(os.path.join(OUT, 'axis.png'), dpi=200, bbox_inches='tight')
 
