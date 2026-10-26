@@ -15,26 +15,27 @@ JOBS=14 problems/plp/repro/setup.sh
 JOBS=14 TDIV=60 OUT=$PWD/problems/plp/repro/out/test/runs problems/plp/repro/run_experiments.sh
 OUT=$PWD/problems/plp/repro/out/test/runs problems/plp/repro/analyze.sh
 
-# 3. experimentos completos (~1.7 h con 14 procesos; conviene dentro de tmux/screen o con nohup)
+# 3. experimentos completos (~3 h con 14 procesos; conviene dentro de tmux/screen o con nohup)
 JOBS=14 nohup problems/plp/repro/run_experiments.sh > problems/plp/repro/out/run.log 2>&1 &
 
 # 4. certificación exacta y tablas -> problems/plp/repro/out/results.md
 JOBS=14 problems/plp/repro/analyze.sh            # con --paper: copia las trayectorias y regenera las figuras
 ```
 
-`run_experiments.sh` acepta grupos (`chess main ablation kicks tollenaere liu`) y omite las corridas ya terminadas, así
+`run_experiments.sh` acepta grupos (`chess main ablation kicks sens tollenaere liu`) y omite las corridas ya terminadas, así
 que puede relanzarse si se interrumpe.
 
 | Grupo | Corridas | Tiempo por corrida | Tiempo de CPU |
 |---|---|---|---|
 | main: Stoyan 2004/2005, Merged1–5 | 13 × 10 semillas | 120 s | 4.3 h |
 | ablation: 7 instancias × (sin LP, pesos aditivos, solo reinserción) | 210 | 120 s | 7 h |
-| kicks: 7 instancias × (ninguno, aleatorio, pieza superior, pieza superior con menor penetración) | 280 | 120 s | 9.3 h |
+| kicks: 7 instancias × (ninguno, mixto, pieza superior, pieza superior con menor penetración) | 280 | 120 s | 9.3 h |
+| sens: 7 instancias × (ρ = 0.5 %, 2 %; 100 y 2000 pasadas) | 280 | 120 s | 9.3 h |
 | tollenaere: Tollenaere et al. 2025 | 66 × 10 | 30 s | 5.5 h |
 | liu: Liu et al. 2015 Experiment1 | 10 | 120 s | 0.3 h |
 | chess: fina, gruesa, gruesa + fina | 3 × 5 semillas | 1200 s | 5 h |
 
-Total ≈ 22 h de CPU, ≈ 1.7 h con 14 procesos.
+Total ≈ 40 h de CPU, ≈ 3 h con 14 procesos.
 
 ## Notas
 

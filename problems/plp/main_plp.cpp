@@ -55,7 +55,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<string> _gls(improvement, "add|mult", "Guided local search weights: +1 for the overlapping pairs (add) or multiplicative by severity with decay (mult). Default: mult", {"gls"});
 	args::Flag _sep_lp(improvement, "sep_lp", "If the moves along the axes fail, try the LP separation (requires SoPlex)", {"sep_lp"});
 	args::ValueFlag<int> _sep_iter(improvement, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
-	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix|none|top|topbest", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each); none: only restart from the best solution; top: move one of the pieces that exceed the target height to a random position; topbest: the same, at the position of least penetration among --kick_samples random positions. Default: mix", {"kick"});
+	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix|none|top|topbest", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each, the default in earlier versions); none: only restart from the best solution; top: move one of the pieces that exceed the target height to a random position; topbest: the same, at the position of least penetration among --kick_samples random positions. Default: random", {"kick"});
 	args::ValueFlag<int> _kick_samples(improvement, "int", "--kick topbest: number of random positions. Default: 20", {"kick_samples"});
 	args::Flag _no_compact(improvement, "no_compact", "Do not use the global LP compaction (requires SoPlex)", {"no_compact"});
 	args::ValueFlag<double> _margin(improvement, "double", "Final compaction with this separation between neighboring parts, so that the solution can be certified in exact arithmetic (tools/certify_solution.py; requires SoPlex; 0: no). Default: 1e-7", {"margin"});
@@ -92,7 +92,7 @@ int main(int argc, char** argv){
 	int beams = (_beams)? _beams.Get() : 4;
 	string init = (_init)? _init.Get() : "greedy";
 	if(init!="greedy" && init!="bsg") { cerr << "--init debe ser greedy o bsg" << endl; return 1; }
-	string kick = (_kick)? _kick.Get() : "mix";
+	string kick = (_kick)? _kick.Get() : "random";
 	if(kick!="reinsert" && kick!="swap" && kick!="random" && kick!="mix" && kick!="none" && kick!="top" && kick!="topbest") {
 		cerr << "--kick debe ser reinsert, swap, random, mix, none, top o topbest" << endl; return 1;
 	}
@@ -158,15 +158,23 @@ int main(int argc, char** argv){
 		};
 
 		//mejora local y compactacion global por LP
+		long polish_calls = 0, polish_limit_hits = 0;
+		int polish_max_iters = 0;
 		auto polish = [&](const vector<int>& pieces, vector<Vec3>& t) -> double {
 			double H = placer.improve(pieces, t);
 			if(lp)
-				for(int k=0; k<20; k++){
+			{
+				int k;
+				for(k=0; k<20; k++){
 					placer.compact(pieces, t, *lp);
 					double H2 = placer.improve(pieces, t);
 					if(H2 >= H - 1e-6*H) { H = min(H, H2); break; }
 					H = H2;
 				}
+				polish_calls++;
+				if(k == 20) polish_limit_hits++;
+				polish_max_iters = max(polish_max_iters, (k < 20)? k+1 : k);
+			}
 			return H;
 		};
 
@@ -379,6 +387,8 @@ int main(int argc, char** argv){
 		Report r = S.verify();
 		cout << "separations: " << separations << endl;
 		cout << "rejected: " << rejected << endl;
+		cout << "limits: compact " << polish_limit_hits << "/" << polish_calls << " (max " << polish_max_iters << " of 20)"
+		     << ", lp " << placer.lp_limit_hits << "/" << placer.lp_calls << " (max " << placer.lp_max_iters << " of 30)" << endl;
 		cout << "time: " << elapsed() << endl;
 		cout << r;
 		if(_out) S.save(_out.Get());

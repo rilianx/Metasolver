@@ -75,10 +75,12 @@ print('## Ablacion (brecha media respecto de la referencia; Stoyan 2004 Ex1: alt
 print('| Variante | Stoyan 2004 | Stoyan 2005 | S2004 Ex1 | n |')
 print('|---|---|---|---|---|')
 for name, cfg, T in (('Propuesto', 'full', None), ('Sin LP', 'nolp', None), ('Pesos aditivos', 'add', None),
-                     ('Solo reinsercion', 'reinsert', None), ('5x mas lento (24 s)', 'full', 24),
-                     ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: solo aleatorio', 'kick_random', None),
+                     ('Kick: solo reinsercion', 'reinsert', None), ('5x mas lento (24 s)', 'full', 24),
+                     ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: mixto (reinsercion o aleatorio)', 'kick_mix', None),
                      ('Kick: pieza superior, aleatoria', 'kick_top', None),
-                     ('Kick: pieza superior, menor penetracion de 20', 'kick_topbest', None)):
+                     ('Kick: pieza superior, menor penetracion de 20', 'kick_topbest', None),
+                     ('rho = 0.5 %', 'rho05', None), ('rho = 2 %', 'rho2', None),
+                     ('100 pasadas', 'pass100', None), ('2000 pasadas', 'pass2000', None)):
     g = {'2004': [], '2005': []}; ok = True
     for inst, ref in REF.items():
         R = runs(cfg, key(inst))
@@ -107,6 +109,16 @@ for i, inst in enumerate(MER, 1):
             if h < best: best = h; traj.append('Merged%d,%d,%.3f,%.6f' % (i, r['seed'], t, h))
 with open(os.path.join(D, '..', 'merged_trajectories.csv'), 'w') as f:
     f.write('instance,seed,time_s,height\n' + '\n'.join(traj) + '\n')
+
+print('\n## Limites de iteraciones (todas las corridas)\n')
+lim = [0, 0, 0, 0, 0, 0]
+for f in glob.glob(D + '/*.log'):
+    m = re.search(r'^limits: compact (\d+)/(\d+) \(max (\d+) of 20\), lp (\d+)/(\d+) \(max (\d+) of 30\)', open(f).read(), re.M)
+    if not m: continue
+    v = [int(x) for x in m.groups()]
+    lim = [lim[0] + v[0], lim[1] + v[1], max(lim[2], v[2]), lim[3] + v[3], lim[4] + v[4], max(lim[5], v[5])]
+print('- Compact: %d de %d llamadas alcanzan el limite de 20 iteraciones (maximo usado: %d)' % (lim[0], lim[1], lim[2]))
+print('- LPCompact: %d de %d llamadas alcanzan el limite de 30 iteraciones (maximo usado: %d)' % (lim[3], lim[4], lim[5]))
 
 ref = {}
 for row in csv.DictReader(open(os.path.join(HERE, 'data', 'tollenaere2025_reference.csv'))):

@@ -53,6 +53,10 @@ struct Block {
 
 class Placer {
 public:
+	//estadisticas de la compactacion por LP: llamadas, llamadas que alcanzan el limite de iteraciones y maximo de iteraciones
+	long lp_calls = 0, lp_limit_hits = 0;
+	int lp_max_iters = 0;
+
 
 	/**
 	 * @param grid numero de puntos de partida por eje (x,y) en la cara superior de la carga

@@ -1,14 +1,15 @@
 #!/bin/bash
 # Corre todos los experimentos del paper, con JOBS procesos en paralelo (uno por nucleo; un hilo por corrida).
 # uso: JOBS=14 problems/plp/repro/run_experiments.sh [grupos...]
-#   grupos (por defecto todos): chess main ablation kicks tollenaere liu
+#   grupos (por defecto todos): chess main ablation kicks sens tollenaere liu
 #   main        13 instancias (Stoyan 2004/2005, Merged1-5) x 10 semillas x 120 s        130 corridas
 #   ablation    7 instancias dificiles x 3 variantes (sin LP, pesos aditivos, solo reinsercion) x 10 x 120 s
-#   kicks       7 instancias dificiles x 4 kicks (none, random, top, topbest) x 10 x 120 s
+#   kicks       7 instancias dificiles x 4 kicks (none, mix, top, topbest) x 10 x 120 s (por defecto: random)
+#   sens        7 instancias dificiles x (rho 0.5 %, 2 %; 100 y 2000 pasadas) x 10 x 120 s
 #   tollenaere  66 instancias de Tollenaere et al. 2025 x 10 semillas x 30 s
 #   liu         Liu et al. 2015 Experiment1 x 10 semillas x 120 s
 #   chess       Chess x 5 semillas: fina 1200 s, gruesa 1200 s, gruesa 900 s + fina 300 s (multirresolucion)
-# Tiempo total con 14 procesos: ~1.7 h. Las corridas ya terminadas (log con "height:") se omiten, asi que el script
+# Tiempo total con 14 procesos: ~2.5 h. Las corridas ya terminadas (log con "height:") se omiten, asi que el script
 # se puede relanzar si se interrumpe. TDIV=n divide todos los tiempos por n (prueba rapida; usar otro OUT).
 # Resultados en repro/out/runs (OUT=... para cambiarlo); luego repro/analyze.sh.
 set -e
@@ -18,7 +19,7 @@ PLP=$(cd "$HERE/.." && pwd)
 REPO=$(cd "$PLP/../.." && pwd)
 BIN=${BIN:-$REPO/build-repro/BSG_PLP}
 OUT=${OUT:-$HERE/out/runs}
-GROUPS_=${*:-chess main ablation kicks tollenaere liu}
+GROUPS_=${*:-chess main ablation kicks sens tollenaere liu}
 [ -x "$BIN" ] || { echo "no existe $BIN (correr repro/setup.sh)"; exit 1; }
 mkdir -p "$OUT"
 phys=$(lscpu -p=Core,Socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
@@ -64,7 +65,11 @@ if has ablation; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
   echo "nolp|$s|120|$f|--no_compact"; echo "add|$s|120|$f|--gls add"; echo "reinsert|$s|120|$f|--kick reinsert"
 done; done; fi
 if has kicks; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
-  for k in none random top topbest; do echo "kick_$k|$s|120|$f|--kick $k"; done
+  for k in none mix top topbest; do echo "kick_$k|$s|120|$f|--kick $k"; done
+done; done; fi
+if has sens; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
+  echo "rho05|$s|120|$f|--sep_step 0.005"; echo "rho2|$s|120|$f|--sep_step 0.02"
+  echo "pass100|$s|120|$f|--gls_iter 100"; echo "pass2000|$s|120|$f|--gls_iter 2000"
 done; done; fi
 if has tollenaere; then for s in $(seq 1 10); do for f in "Tollenaere, J. et al. 2025"/Instances/*/*.json; do
   echo "full|$s|30|$f|"; done; done; fi

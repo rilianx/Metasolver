@@ -342,7 +342,8 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 	double H = height();
 	double wall = margin;
 	vector<PlacedPart> placed;
-	for(int it=0; it<max_iter; it++){
+	int it;
+	for(it=0; it<max_iter; it++){
 		//pares de partes cercanas: una faceta del NFP por par
 		struct PairRow { int i, j; Vec3 n; double d; };
 		vector<PairRow> rows;
@@ -450,6 +451,8 @@ double Placer::compact(const vector<int>& pieces, vector<Vec3>& t, LPBackend& lp
 		if(H2 >= H - 1e-6*H) { H = H2; break; }
 		H = H2;
 	}
+	//estadisticas: el bucle termina por el limite de iteraciones solo si it == max_iter
+	if(margin <= 0) { lp_calls++; if(it == max_iter) lp_limit_hits++; lp_max_iters = max(lp_max_iters, (it < max_iter)? it+1 : it); }
 	return H;
 }
 
