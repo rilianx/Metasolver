@@ -3,7 +3,8 @@
 Datos de las figuras del paper a partir de los resultados de run_all.sh.
 
 uso: collect.py <resultados> <directorio de salida>
-escribe time.csv (curva del volumen de los ULDs segun el tiempo, escenario paquay) y
+escribe time.csv (curva del volumen de los ULDs segun el tiempo, escenario paquay, con las
+fases de mejora a 0.1 t y a t) y
 tradeoff.csv (volumen, ULDs y violaciones del CoG segun cog_penalty, en los tres escenarios).
 """
 import sys, os, re, glob, statistics as st
@@ -38,15 +39,17 @@ res, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
 
 with open(os.path.join(out, 'time.csv'), 'w') as f:
-    f.write('t,vol,ulds,time\n')
-    pts = {}
-    for d in glob.glob(res + '/curve_t*'):
-        pts[float(d.split('curve_t')[1])] = run(d)
-    for t in (0.1, 1):
-        dirs = sorted(glob.glob(f"{res}/final_paquay_t{t}_r*"))
-        if dirs: pts[t] = mean_runs(dirs)
-    for t in sorted(pts):
-        f.write(f"{t},{pts[t]['vol']:.1f},{pts[t]['ulds']:.1f},{pts[t]['time']:.3f}\n")
+    f.write('improve,t,vol,ulds,time\n')
+    for imp, pref in (('0.1', 'curve_t'), ('1', 'curvefull_t')):
+        pts = {}
+        for d in glob.glob(f'{res}/{pref}*'):
+            pts[float(d.split(pref)[1])] = run(d)
+        if imp == '0.1':
+            for t in (0.1, 1):
+                dirs = sorted(glob.glob(f"{res}/final_paquay_t{t}_r*"))
+                if dirs: pts[t] = mean_runs(dirs)
+        for t in sorted(pts):
+            f.write(f"{imp},{t},{pts[t]['vol']:.1f},{pts[t]['ulds']:.1f},{pts[t]['time']:.3f}\n")
 
 with open(os.path.join(out, 'tradeoff.csv'), 'w') as f:
     f.write('setting,lambda,vol,ulds,unloaded,cog_xy,cog_z\n')

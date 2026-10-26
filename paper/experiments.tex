@@ -60,8 +60,10 @@ processors (8 cores each, 2.1\,GHz, 3.0\,GHz in turbo mode, hyper-threading disa
 According to the single-thread rating of PassMark \citep{PassMark}, one core of the Apple M2 Pro
 used by \citet{Hessler2025} is about 2.5 times faster than one core of our processor (4105
 against 1624).
-The time limit $t$ is the time of each run of BSG, excluding the generation of the blocks; we
-report results for $t = 0.1$\,s and $t = 1$\,s. Since a ULD can be loaded several times (with
+The time limit $t$ is the time of each run of BSG in the construction, excluding the generation
+of the blocks; in the improvement phases (\textsc{Insert} and the reduction), which load many ULDs
+again, each run of BSG is limited to $0.1\,t$ (Section~\ref{sec:exp-time} compares it with
+$t$). We report results for $t = 0.1$\,s and $t = 1$\,s. Since a ULD can be loaded several times (with
 and without the substructure and in the improvement phases), the total
 time per instance is several times larger, and we report it separately. The code, the instances, the solutions and the scripts that
 produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}.
@@ -125,6 +127,8 @@ the RGS is computed from the type of each ULD (Tables 9, 11 and 13 of their appe
 setting \emph{One}, its unloaded volume from the utilization of each ULD, which is rounded to
 0.1\%; we therefore consider two loaded volumes equal if they differ by less than 0.05\,m$^3$.
 Each configuration is run five times; we report the mean and the standard deviation.
+
+\todo{tablas, figuras y textos de resultados: actualizar con la campana con las fases de mejora a $0.1\,t$.}
 
 \subsection{Results}
 \label{sec:exp-results}

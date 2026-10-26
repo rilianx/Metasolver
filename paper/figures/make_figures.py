@@ -36,11 +36,15 @@ def label(ax, x, y, text, dx=6, dy=4, ha='left'):
 
 # --- volumen de los ULDs segun el tiempo (paquay) ---
 rows = read('time.csv')
-t = [float(r['t']) for r in rows]; v = [float(r['vol']) for r in rows]; s = [float(r['time']) for r in rows]
 fig, ax = plt.subplots(figsize=(4.6, 3.0))
-ax.plot(s, v, '-o', color=OURS, lw=1.5, ms=5, mec='white', mew=1, label='BSG (this work)', zorder=3)
-for ti, si, vi in zip(t, s, v):
-	label(ax, si, vi, f'{ti:g} s', dx=5, dy=5)
+for imp, style, name in (('0.1', dict(ls='-', marker='o', mfc=OURS), 'BSG, improvement at 0.1$t$'),
+                         ('1', dict(ls=':', marker='o', mfc='white'), 'BSG, improvement at $t$')):
+	pts = [r for r in rows if r['improve'] == imp]
+	t = [float(r['t']) for r in pts]; v = [float(r['vol']) for r in pts]; s = [float(r['time']) for r in pts]
+	ax.plot(s, v, color=OURS, lw=1.5, ms=5, mec=OURS if imp == '1' else 'white', mew=1, label=name, zorder=3, **style)
+	if imp == '0.1':
+		for ti, si, vi in zip(t, s, v):
+			label(ax, si, vi, f'{ti:g} s', dx=5, dy=5)
 h = HESSLER['paquay']
 SPEED = 4105 / 1624   # tiempo del RGS escalado a nuestra maquina (PassMark single thread)
 ax.axhline(h[0], color=THEIRS, lw=0.8, ls='--', zorder=1)

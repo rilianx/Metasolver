@@ -244,7 +244,9 @@ all the boxes, without leaving a CoG out of range when the CoG of $S$ was not, r
 otherwise the changes made by \textsc{Insert} are undone and the next ULD is tried. After every
 change the phase starts again, and it stops when no ULD can be changed. Every change reduces the
 total volume of the ULDs, so the phase terminates; a change may increase the number of ULDs, when
-one ULD is replaced by two smaller ones.
+one ULD is replaced by two smaller ones. Since \textsc{Insert} and the reduction load many ULDs
+again, BSG is given a shorter time limit in these phases than in the construction ($0.1\,t$ in
+our experiments).
 
 \begin{algorithm}[htbp]
 \caption{Multi-ULD framework.}
