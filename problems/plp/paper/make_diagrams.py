@@ -289,6 +289,7 @@ def minimize_overlap(ty, t, h, W, pieces, rng, passes=200, snap=(), record=None)
                 gain += phi(old, terms) - phi(s_, terms)
                 t[i][k] = s_
         tot = total_pen(ty, t, pieces)
+        wtot = sum(w.get((i, j), 1.0)*pair_pen(i, j, ty, t, pieces) for i in range(n) for j in range(i+1, n))
         if it in snap: snaps.append((it, t.copy(), tot))
         wupd = gain <= 1e-9
         if wupd:
@@ -297,7 +298,8 @@ def minimize_overlap(ty, t, h, W, pieces, rng, passes=200, snap=(), record=None)
             for key, p in ov.items():
                 w[key] = w.get(key, 1.0)*(1.2 + 0.8*p/mx) if p > TOL else max(1.0, w.get(key, 1.0)*0.95)
         if record is not None:
-            record.append(dict(it=it, before=before, after=t.copy(), tot=tot, wupd=wupd, w=dict(w),
+            wnew = sum(w.get((i, j), 1.0)*pair_pen(i, j, ty, t, pieces) for i in range(n) for j in range(i+1, n))
+            record.append(dict(it=it, before=before, after=t.copy(), tot=tot, wtot=wtot, wnew=wnew, wupd=wupd, w=dict(w),
                                moved=[i for i in range(n) if np.linalg.norm(t[i] - before[i]) > 1e-9]))
     snaps.append((it, t.copy(), total_pen(ty, t, pieces)))
     return t, snaps
@@ -878,7 +880,8 @@ def fig_passes(pieces, ty, W, t, H):
     rng = np.random.default_rng(3)
     rec = []
     minimize_overlap(ty, tt, h, W, pieces, rng, record=rec)
-    panels = [dict(it=0, after=tt, tot=total_pen(ty, tt, pieces), moved=[], wupd=False, w={})] + rec
+    t0 = total_pen(ty, tt, pieces)
+    panels = [dict(it=0, after=tt, tot=t0, wtot=t0, wnew=t0, moved=[], wupd=False, w={})] + rec
     ncol = 5
     nrow = int(np.ceil(len(panels)/ncol))
     fig, axs = plt.subplots(nrow, ncol, figsize=(7.2, 2.05*nrow))
@@ -908,9 +911,13 @@ def fig_passes(pieces, ty, W, t, H):
             ax.text(*((ci + cj)/2), '$w=%.1f$' % wv, fontsize=5.5, color=ACCENT2, zorder=9, ha='center', va='center',
                     bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.9))
         lab = 'start' if R['it'] == 0 else 'pass %d' % R['it']
-        extra = '' if R['it'] == 0 else ('\nlocal min.: weights updated' if R['wupd'] else
-                                          '\n%d piece%s moved' % (len(R['moved']), '' if len(R['moved']) == 1 else 's'))
-        ax.set_title('%s: $\\sum\\delta=%.2f$%s' % (lab, R['tot'], extra), fontsize=6.5, color=INK)
+        if R['it'] == 0:
+            l2 = '$\\sum w\\delta=%.2f$' % R['wtot']
+        elif R['wupd']:
+            l2 = 'no gain: $w$ updated, $\\sum w\\delta$: %.2f$\\to$%.2f' % (R['wtot'], R['wnew'])
+        else:
+            l2 = '%d moved, $\\sum w\\delta=%.2f$' % (len(R['moved']), R['wtot'])
+        ax.set_title('%s (%s)\n%s' % (lab, '$\\sum\\delta=%.2f$' % R['tot'], l2), fontsize=6.3, color=INK)
     fig.tight_layout(pad=0.2, w_pad=0.2, h_pad=0.4)
     fig.savefig(os.path.join(OUT, 'passes.pdf'))
     fig.savefig(os.path.join(OUT, 'passes.png'), dpi=200)

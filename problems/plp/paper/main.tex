@@ -39,7 +39,7 @@ parts. Its main ingredient is an exact axis move. The overlap of two parts is me
 of their relative position in their no-fit polytope; along any axis this function is zero outside an interval
 and concave inside it, so the best position of a piece along an axis is found by evaluating a few breakpoints
 only. The move is embedded in a strategic oscillation of the container height with guided local search weights
-and kicks, starting from a greedy construction and a linear-programming compaction. On the benchmarks of
+and restarts, starting from a greedy construction and a linear-programming compaction. On the benchmarks of
 polyhedral pieces, the method improves the best known heights of 11 of 13 instances within two minutes, reaches
 in 10 seconds the quality that the previous exact local search attains in 600 seconds, and matches 26 of the 27
 known optima of small instances. An ablation study shows that the speed of the move and the guided local search
@@ -85,7 +85,7 @@ concave on an interval and zero outside it, so the optimal position of a piece a
 interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
 \citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
 \citet{egeblad2009}.
-\item A strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and kicks, and an ablation
+\item A strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and restarts, and an ablation
 study showing that the weights and the speed of the separation are decisive, whereas a global LP compaction over
 NFP facets, in the spirit of \citet{gomes2006} in 2D, has no measurable effect on the quality.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
@@ -204,7 +204,7 @@ positions of $S$ are \emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,
 exceeds $h$ down until its top is at $h$, regardless of the other pieces. This is where overlaps appear, and
 \textsc{MinimizeOverlap} tries to remove them. If it succeeds, the layout is feasible again: it is compacted, it
 becomes the new best solution, and the target is lowered; otherwise the target is raised slightly and, when it
-reaches $H$, a kick perturbs the best solution.
+reaches $H$, the search restarts from the best solution.
 
 \begin{algorithm}[t]
 \caption{Overview}\label{alg:main}
@@ -219,7 +219,7 @@ $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appe
   }{
     $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps}
     \If{$h\ge H$}{
-      $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); kick: move a random piece of $T$; $w\gets 1$\;
+      $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); move a random piece of $T$; $w\gets 1$\tcp*{restart}
     }
   }
 }
@@ -231,7 +231,7 @@ line~2 creates the first overlapping layout. Each iteration of the loop is a sep
 (Section~\ref{sec:minover}). On success (lines~5--7) the separated layout is compacted, possibly becomes the new
 best solution, and the target is lowered again from the best height. On failure (lines~9--11) the target is raised
 by a quarter of the step and the search continues from the current overlapping layout with the current weights;
-once the target is back at the best height, the search restarts from the best solution with a perturbation
+once the target is back at the best height, the search restarts from the best solution
 (Section~\ref{sec:kicks}).
 
 \subsection{Greedy construction}\label{sec:greedy}
@@ -398,7 +398,7 @@ kept in a matrix and only the row of a moved piece is recomputed. When a pass do
 the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
 multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
 procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
-Weights persist along the oscillation and are reset after a successful separation or a kick.
+Weights persist along the oscillation and are reset after a successful separation or a restart.
 
 In Algorithm~\ref{alg:minover}, line~2 computes the penetrations of all pairs, and each iteration of the loop is
 a pass. Only the pieces involved in an overlapping pair are moved (line~7), each along the three axes with the
@@ -455,22 +455,24 @@ below $h$.}
 \includegraphics[width=\textwidth]{figures/passes.pdf}
 \caption{All the passes of \textsc{MinimizeOverlap} in Figure~\ref{fig:overlap}(c)--(e). In each pass, the pieces
 that overlap are moved along the axes; the pieces actually moved are outlined in blue (dashed: position before
-the pass). Overlaps are in red, and the orange segments join the pairs whose GLS weight is above 1. Pass~2 does
-not reduce the weighted overlap: it is a local minimum, and the weight of the overlapping pair of triangles is
-increased to 2. With this weight, moving the small triangle onto the other one is preferred in pass~3, although
-the unweighted overlap $\sum\delta$ increases; the triangle is then moved down in pass~4. The same happens with
-the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the layout is feasible.}
+the pass). Overlaps are in red, and the orange segments join the pairs whose GLS weight $w$ is above 1. Each title
+gives the unweighted overlap $\sum\delta$ and the weighted overlap $\sum w\delta$, which is the one minimized:
+no move increases it. Pass~2 does not reduce it (a local minimum), so the weight of the overlapping pair of
+triangles is increased to 2 and $\sum w\delta$ jumps from 0.36 to 0.71. Pass~3 then moves the small triangle onto
+the other one: $\sum w\delta$ decreases to 0.54, although $\sum\delta$ increases. The triangle is moved down in
+pass~4. The same happens with the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the
+layout is feasible.}
 \label{fig:passes}
 \end{figure}
 
-\subsection{Kicks}\label{sec:kicks}
-When the target reaches the best height, a kick restarts from the best solution clamped to $(1-\rho)H$ and moves
-a random piece: with probability 1/2 it is reinserted at the lowest of the positions generated as in the greedy
-construction, below the target height (if there is none, it is swapped with a piece of a different type), and
-otherwise it is moved to a random position in the container, leaving the overlap to the separation. The random
-moves are needed on small instances: with two pieces there is a single pair, so the GLS weights have no effect,
-and reinsertion alone keeps returning to the layout produced by the greedy order (Section~\ref{sec:t2025}).
-
+\subsection{Restarts}\label{sec:kicks}
+When the target reaches the best height, the search restarts from the best solution clamped to $(1-\rho)H$, with
+the weights reset, after moving one random piece (a kick): to a random position or, with probability 1/2, to the
+lowest of the positions generated as in the greedy construction. On the larger instances the kick itself has no
+measurable effect (Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and
+a new random order of the moves. The random positions are needed on small instances: with two pieces there is a
+single pair, so the weights have no effect, and the search keeps returning to the layout produced by the greedy
+order (Section~\ref{sec:t2025}).
 
 % =====================================================================================================
 \section{Computational experiments}\label{sec:exp}
@@ -610,7 +612,7 @@ of one hour per model; they prove optimality for 27 of the 66 instances and repo
 others. Table~\ref{tab:t2025} summarizes our results (10 seeds, 30 s per instance). The method finds 26 of the 27
 proven optima in its best run, 20 of them in every run; the exception is the 10-item instance of the Stoyan 2005
 series (26.20 versus 26.05). On the 39 open instances it improves the best upper bound in 32 cases, by 5\% on
-average, and matches it in most of the others. Before adding random moves to the kicks, the method missed the
+average, and matches it in most of the others. Before adding random moves to the restarts, the method missed the
 optimum of two 2-item instances (by 17\% and 28\%): the greedy places the larger piece on the floor, the optimum
 needs the opposite arrangement, and neither the GLS weights (a single pair) nor reinsertion could escape.
 
@@ -686,7 +688,7 @@ filtering with the hull of each piece, or conservative simplification of the NFP
 \section{Conclusions}
 We presented an overlap-minimization heuristic for 3D irregular strip packing that works with the exact geometry
 of polyhedra given as unions of convex parts. Its key element is an exact axis move based on penetration depths
-in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and kicks. This simple method outperforms
+in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and restarts. This simple method outperforms
 the previous methods, with exact and voxel geometry, on the benchmarks of polyhedral pieces, and matches almost
 all the proven optima of the small instances. On curved meshes, which require conservative decompositions with
 many facets, it remains behind voxel-based search. Future work includes cheaper NFP computations for curved
