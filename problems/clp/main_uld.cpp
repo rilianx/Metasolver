@@ -115,7 +115,7 @@ static bool regroup=true;
 //seleccion del siguiente ULD entre los candidatos de la regla de Hessler et al. (--theta):
 //theta>=0 carga cada uno y maximiza (volumen cargado) - theta*(volumen del ULD); theta<0: la
 //regla de Hessler et al. sola
-static double theta=0.0744;
+static double theta=0.2316;
 //reinicios de la construccion con ULDs limitados (--restarts)
 static int restarts=3, n_restart_useful=0;
 
@@ -610,13 +610,13 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 500", {"max_bl"});
 	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each ULD (seconds, without the block generation). Default: 1", {'t', "timelimit"});
 	args::ValueFlag<double> _cog_greedy(parser, "double", "Penalty of the deviation of the center of gravity in the evaluation of the blocks (ablation). Default: 0", {"cog_greedy"});
-	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 4.0423", {"cog_penalty"});
+	args::ValueFlag<double> _cog_penalty(parser, "double", "Penalty of the deviation of the center of gravity (relative to the allowed one) in the evaluation of the solutions. Default: 1.4035", {"cog_penalty"});
 	args::ValueFlag<string> _support(parser, "string", "Support of the boxes: corners (the four bottom corners rest on non-fragile boxes or on the floor, as in Paquay et al. 2018), full (the whole base) or none. Default: corners", {"support"});
-	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 0.1122", {"alpha"});
-	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 2.803", {"beta"});
-	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.4563", {"gamma"});
+	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 0.5139", {"alpha"});
+	args::ValueFlag<double> _beta(parser, "double", "Beta parameter. Default: 4.7497", {"beta"});
+	args::ValueFlag<double> _gamma(parser, "double", "Gamma parameter. Default: 0.7727", {"gamma"});
 	args::ValueFlag<double> _delta(parser, "double", "Delta parameter", {"delta"});
-	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0902", {'p'});
+	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.088", {'p'});
 	args::Flag _fix_knapsack(parser, "fix_knapsack", "Volume loss: consider the lengths of all the allowed orientations of the boxes", {"fix_knapsack"});
 	args::ValueFlag<long> _edge(parser, "int", "Width of the edge of the ULD floor on which loading is not allowed below the height of the vertical edge offset (Hessler et al. 2024). Default: 0", {"edge"});
 	args::ValueFlag<long> _edge_offset(parser, "int", "Vertical edge offset (with an edge, a substructure of this height can also be used). Default: 0", {"edge_offset"});
@@ -632,7 +632,7 @@ int main(int argc, char** argv){
 
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
-	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.0744", {"theta"});
+	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -665,7 +665,7 @@ int main(int argc, char** argv){
 	}
 
 	Params P;
-	P.alpha=0.1122; P.beta=2.803; P.gamma=0.4563; P.delta=1.0; P.p=0.0902;
+	P.alpha=0.5139; P.beta=4.7497; P.gamma=0.7727; P.delta=1.0; P.p=0.088;
 	if(_alpha) P.alpha=_alpha.Get();
 	if(_beta) P.beta=_beta.Get();
 	if(_gamma) P.gamma=_gamma.Get();
@@ -682,7 +682,7 @@ int main(int argc, char** argv){
 	}
 	clpState::support=(support!="none");
 	clpState::corner_support=(support=="corners");
-	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 4.0423;
+	clpState::cog_penalty=(_cog_penalty)? _cog_penalty.Get() : 1.4035;
 	clpState::cog_greedy=(_cog_greedy)? _cog_greedy.Get() : 0.0;
 
 	clpState::min_overlap=(_min_overlap)? _min_overlap.Get() : 0.0;

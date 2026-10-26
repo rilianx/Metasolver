@@ -1,5 +1,5 @@
-## resultado del ajuste (irace 3.5, seed 1, 6000 corridas, max_bl fijo en 500; configuraciones elite, de mejor a peor)
-183  --cog_penalty 4.0423 --cog_greedy 0.4762 --alpha 0.1122 --beta 2.803 --gamma 0.4563 -p 0.0902 --theta 0.0744
-159  --cog_penalty 2.6219 --cog_greedy 0.106 --alpha 0.0802 --beta 3.6716 --gamma 0.2359 -p 0.0889 --theta 0.0761
-189  --cog_penalty 3.0334 --cog_greedy 0.5575 --alpha 0.2269 --beta 4.0936 --gamma 0.9346 -p 0.0912 --theta 0.0305
-218  --cog_penalty 1.9413 --cog_greedy 0.1252 --alpha 0.5552 --beta 2.9584 --gamma 0.1672 -p 0.0906 --theta 0.0319
+## resultado del ajuste (irace 3.5, seed 1, 6000 corridas, max_bl fijo en 500, sin cog_greedy; configuraciones elite, de mejor a peor)
+155  --cog_penalty 1.4035 --alpha 0.5139 --beta 4.7497 --gamma 0.7727 -p 0.088 --theta 0.2316
+211  --cog_penalty 1.663 --alpha 0.1688 --beta 1.7325 --gamma 0.9497 -p 0.0598 --theta 0.2802
+213  --cog_penalty 1.6019 --alpha 0.0241 --beta 4.7719 --gamma 0.7859 -p 0.0786 --theta 0.1759
+210  --cog_penalty 1.0489 --alpha 0.2908 --beta 4.132 --gamma 0.9704 -p 0.0836 --theta 0.3205

@@ -83,8 +83,8 @@ $n_{\mathrm{CoG}}$ the number of ULDs whose CoG is out of range and $V_{\mathrm{
 volume of the boxes of the instance, so that loading all the boxes comes first, then the
 CoG and then the volume of the ULDs. The values of a preliminary tuning were the initial
 configuration. Table~\ref{tab:params} lists the parameters; the four elite
-configurations returned by irace agree on a small $\alpha$, a large $\beta$, $p \approx 0.09$
-and $\theta < 0.1$.
+configurations returned by irace agree on a small $\lambda$ (1.0--1.7), a large $\gamma$
+(0.77--0.97) and $\theta$ between 0.18 and 0.32.
 
 \begin{table}[htbp]
 \centering
@@ -95,13 +95,13 @@ and $\theta < 0.1$.
 \toprule
 Parameter & Description & Range & Value \\
 \midrule
-$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 4.042 \\
+$\lambda$ (\texttt{cog\_penalty}) & penalty of the CoG excess in the value of a solution & $[1, 50]$ & 1.404 \\
 $N_{\max}$ (\texttt{max\_bl}) & maximum number of blocks & fixed & 500 \\
-$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 0.112 \\
-$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 2.803 \\
-$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.456 \\
-$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.090 \\
-$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type & $[0, 0.6]$ & 0.074 \\
+$\alpha$ & exponent of the contact surface (VCS) & $[0, 5]$ & 0.514 \\
+$\beta$ & exponent of the volume loss (VCS) & $[0, 5]$ & 4.750 \\
+$\gamma$ & exponent of the number of boxes (VCS) & $[0, 1]$ & 0.773 \\
+$p$ & tolerance of the pseudo contact surface (VCS) & $[0, 0.1]$ & 0.088 \\
+$\theta$ (\texttt{theta}) & weight of the ULD volume in the choice of the type & $[0, 0.6]$ & 0.232 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -126,7 +126,7 @@ setting \emph{One}, its unloaded volume from the utilization of each ULD, which 
 0.1\%; we therefore consider two loaded volumes equal if they differ by less than 0.05\,m$^3$.
 Each configuration is run five times; we report the mean and the standard deviation.
 \todo{las tablas son de results/final con la version sin $\theta$ (regla de Hessler);
-actualizar con la nueva campana del servidor ($\theta = 0.1$, 5 corridas).}
+actualizar con la nueva campana del servidor (parametros finales sin $\mu$, con reinicios, 5 corridas).}
 
 \subsection{Results}
 \label{sec:exp-results}
