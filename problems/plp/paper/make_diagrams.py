@@ -7,6 +7,7 @@ Reimplementa en 2D (ejes x y z) los mismos pasos de BSG_PLP sobre un ejemplo peq
   figures/nfp.pdf            NFP de dos partes (deslizamiento, suma de Minkowski) y penetracion
   figures/axis.pdf           Proposicion 1: penetracion a lo largo de un eje (cero fuera de un intervalo, concava dentro)
   figures/descend.pdf        un descenso paso a paso: region de confianza, facetas elegidas y solucion de cada LP
+  figures/passes.pdf         todas las pasadas de MinimizeOverlap de overlap.pdf (piezas movidas y pesos GLS)
   figures/overlap.pdf        movimiento exacto a lo largo de un eje (funcion phi concava por
                              tramos); minimizacion del solapamiento con pesos GLS hasta separar
 
@@ -263,32 +264,41 @@ def total_pen(ty, t, pieces):
     return sum(pair_pen(i, j, ty, t, pieces) for i in range(n) for j in range(i+1, n))
 
 
-def minimize_overlap(ty, t, h, W, pieces, rng, passes=200, snap=()):
+def minimize_overlap(ty, t, h, W, pieces, rng, passes=200, snap=(), record=None):
+    """como Placer::minimize_overlap: pasadas sobre las piezas solapadas (orden aleatorio, ejes en orden aleatorio, movimiento
+    exacto); si una pasada no reduce el solapamiento ponderado, se actualizan los pesos GLS. record: lista donde se
+    guarda cada pasada (posiciones antes y despues, piezas movidas, solapamiento, pesos)"""
     n = len(ty)
     t = t.copy()
     w = {}
-    best = np.inf
     snaps = [(0, t.copy(), total_pen(ty, t, pieces))]
     for it in range(1, passes+1):
         pen = np.zeros((n, n))
         for i in range(n):
             for j in range(i+1, n): pen[i, j] = pen[j, i] = pair_pen(i, j, ty, t, pieces)
         over = [i for i in range(n) if pen[i].sum() > TOL]
-        if not over: break
+        if not over: it -= 1; break       # it: pasadas completadas
+        before = t.copy()
         rng.shuffle(over)
+        gain = 0.0
         for i in over:
             for k in rng.permutation(2):
                 U = (W - pieces[ty[i]].w) if k == 0 else (h - pieces[ty[i]].h)
-                t[i][k], _, _, _ = axis_move(i, k, ty, t, w, pieces, U)
+                old = t[i][k]
+                s_, terms, _, _ = axis_move(i, k, ty, t, w, pieces, U)
+                gain += phi(old, terms) - phi(s_, terms)
+                t[i][k] = s_
         tot = total_pen(ty, t, pieces)
         if it in snap: snaps.append((it, t.copy(), tot))
-        if tot < best - 1e-12: best = tot; continue
-        mx = max(pair_pen(i, j, ty, t, pieces) for i in range(n) for j in range(i+1, n))
-        for i in range(n):
-            for j in range(i+1, n):
-                p = pair_pen(i, j, ty, t, pieces)
-                key = (i, j)
+        wupd = gain <= 1e-9
+        if wupd:
+            ov = {(i, j): pair_pen(i, j, ty, t, pieces) for i in range(n) for j in range(i+1, n)}
+            mx = max(ov.values())
+            for key, p in ov.items():
                 w[key] = w.get(key, 1.0)*(1.2 + 0.8*p/mx) if p > TOL else max(1.0, w.get(key, 1.0)*0.95)
+        if record is not None:
+            record.append(dict(it=it, before=before, after=t.copy(), tot=tot, wupd=wupd, w=dict(w),
+                               moved=[i for i in range(n) if np.linalg.norm(t[i] - before[i]) > 1e-9]))
     snaps.append((it, t.copy(), total_pen(ty, t, pieces)))
     return t, snaps
 
@@ -857,6 +867,56 @@ def fig_overlap(pieces, ty, W, t, H):
           % (H, h, snaps[-1][0], snaps[-1][2], Hc))
 
 
+def fig_passes(pieces, ty, W, t, H):
+    """todas las pasadas de MinimizeOverlap de la figura overlap: piezas movidas (antes punteado, flecha), solapamientos y
+    pesos GLS de los pares (lineas entre centros, grosor segun el peso)"""
+    NFP.clear()
+    h = 0.9*H
+    tt = t.copy()
+    for i in range(len(ty)):
+        tt[i][1] = min(tt[i][1], h - pieces[ty[i]].h)
+    rng = np.random.default_rng(3)
+    rec = []
+    minimize_overlap(ty, tt, h, W, pieces, rng, record=rec)
+    panels = [dict(it=0, after=tt, tot=total_pen(ty, tt, pieces), moved=[], wupd=False, w={})] + rec
+    ncol = 5
+    nrow = int(np.ceil(len(panels)/ncol))
+    fig, axs = plt.subplots(nrow, ncol, figsize=(7.2, 2.05*nrow))
+    axs = np.atleast_2d(axs)
+    for k, ax in enumerate(axs.flat):
+        if k >= len(panels): ax.axis('off'); continue
+        R = panels[k]
+        strip(ax, W, h + 0.3, h, None)
+        ax.set_xlim(-0.2, W + 0.2)
+        draw_layout(ax, ty, R['after'], pieces, W, overlap=True)
+        for i in R['moved']:
+            P = pieces[ty[i]]; ref = np.array([P.w/2, P.h/2])
+            for Q in P.parts:
+                ax.add_patch(MplPolygon(Q + R['before'][i], closed=True, facecolor='none', edgecolor=ACCENT, lw=0.6,
+                                        ls=(0, (2, 1.2)), zorder=6))
+                ax.add_patch(MplPolygon(Q + R['after'][i], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.0,
+                                        zorder=6))
+            ax.add_patch(FancyArrowPatch(R['before'][i] + ref, R['after'][i] + ref, arrowstyle='-|>', mutation_scale=5,
+                                         color=ACCENT, lw=0.8, zorder=7, shrinkA=0, shrinkB=0))
+        # pesos GLS > 1: linea entre los centros de las piezas, mas gruesa cuanto mayor el peso
+        for (i, j), wv in R['w'].items():
+            if wv <= 1.0 + 1e-9: continue
+            ci = R['after'][i] + np.array([pieces[ty[i]].w/2, pieces[ty[i]].h/2])
+            cj = R['after'][j] + np.array([pieces[ty[j]].w/2, pieces[ty[j]].h/2])
+            ax.plot([ci[0], cj[0]], [ci[1], cj[1]], color=ACCENT2, lw=0.6 + 1.6*(wv - 1), alpha=0.9, zorder=8,
+                    solid_capstyle='round')
+            ax.text(*((ci + cj)/2), '$w=%.1f$' % wv, fontsize=5.5, color=ACCENT2, zorder=9, ha='center', va='center',
+                    bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.9))
+        lab = 'start' if R['it'] == 0 else 'pass %d' % R['it']
+        extra = '' if R['it'] == 0 else ('\nlocal min.: weights updated' if R['wupd'] else
+                                          '\n%d piece%s moved' % (len(R['moved']), '' if len(R['moved']) == 1 else 's'))
+        ax.set_title('%s: $\\sum\\delta=%.2f$%s' % (lab, R['tot'], extra), fontsize=6.5, color=INK)
+    fig.tight_layout(pad=0.2, w_pad=0.2, h_pad=0.4)
+    fig.savefig(os.path.join(OUT, 'passes.pdf'))
+    fig.savefig(os.path.join(OUT, 'passes.png'), dpi=200)
+    print('pasadas:', len(rec), ['%d:%s%.2f' % (R['it'], 'W' if R['wupd'] else '', R['tot']) for R in rec])
+
+
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     pieces, ty, W, t, H = fig_construction()
@@ -864,3 +924,4 @@ if __name__ == '__main__':
     fig_nfp(pieces)
     fig_axis(pieces)
     fig_overlap(pieces, ty, W, t, H)
+    fig_passes(pieces, ty, W, t, H)

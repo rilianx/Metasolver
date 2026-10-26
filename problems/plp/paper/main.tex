@@ -444,10 +444,23 @@ compaction on the 2D example.
 \caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a)--(b) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
 outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
 chosen (it reduces the overlap but does not remove it). (c)--(e) \textsc{MinimizeOverlap} on the greedy layout
-squeezed to the target height $h=0.9H$ (overlaps in red): after 9 passes, with GLS weights, the layout is
-feasible. (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
+squeezed to the target height $h=0.9H$ (overlaps in red): after 8 passes, with GLS weights, the layout is
+feasible (all passes are shown in Figure~\ref{fig:passes}). (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
 below $h$.}
 \label{fig:overlap}
+\end{figure}
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/passes.pdf}
+\caption{All the passes of \textsc{MinimizeOverlap} in Figure~\ref{fig:overlap}(c)--(e). In each pass, the pieces
+that overlap are moved along the axes; the pieces actually moved are outlined in blue (dashed: position before
+the pass). Overlaps are in red, and the orange segments join the pairs whose GLS weight is above 1. Pass~2 does
+not reduce the weighted overlap: it is a local minimum, and the weight of the overlapping pair of triangles is
+increased to 2. With this weight, moving the small triangle onto the other one is preferred in pass~3, although
+the unweighted overlap $\sum\delta$ increases; the triangle is then moved down in pass~4. The same happens with
+the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the layout is feasible.}
+\label{fig:passes}
 \end{figure}
 
 \subsection{Kicks}\label{sec:kicks}
