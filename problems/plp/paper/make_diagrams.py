@@ -680,79 +680,70 @@ def halfplane_clip(poly, a, b):
 
 
 def fig_descend():
-    pieces, ty, W = example()
+    """un Descend paso a paso en una escena con una pendiente: en el espacio libre cada LP lleva la pieza a la esquina
+    de su region de confianza (baja y se acerca a la pared); al tocar la pendiente, la faceta elegida acota la region
+    y la pieza desliza por ella"""
+    W = 6.0
+    pieces = [Piece([[(0, 0), (4, 0), (4, 3)]]), Piece([[(0, 0), (0.7, 0), (0.7, 0.7), (0, 0.7)]])]
+    ty = [0, 1]
+    t = np.array([[0.0, 0.0], [2.5, 2.9]])
     NFP.clear()
-    _, steps = construct(ty, pieces, W, record=(4,))
-    step, paths, i, tt, placed = steps[0]
-    # el descenso con mas rondas entre los de la pieza elegida en ese paso
-    path = max((p for p in paths), key=lambda p: len(p[1]))[1]
-    t0 = tt.copy(); t0[i] = path[0]
-    tr = descend_trace(i, ty, t0, placed, pieces, W)
-    P = pieces[ty[i]]
-    Hcur = max(tt[j][1] + pieces[ty[j]].h for j in placed)
-    fig, axs = plt.subplots(1, len(tr), figsize=(7.2, 2.9))
-    for k, (ax, R) in enumerate(zip(axs, tr)):
-        strip(ax, W, Hcur + P.h + 0.3)
-        draw_layout(ax, ty, tt, pieces, W, idx=placed, alpha=0.9)
-        # region factible del LP para el punto de referencia: caja de confianza (z no sube) y facetas elegidas
+    tr = descend_trace(1, ty, t, [0], pieces, W)
+    P = pieces[1]
+    xl, yl = (-0.25, 3.75), (-0.2, 3.75)
+    show = [0, 2, 3]                       # LP en el espacio libre, LP que toca la pendiente, LP que desliza
+    fig, axs = plt.subplots(1, 4, figsize=(7.2, 2.35))
+
+    def scene(ax):
+        ax.plot([0, 0, xl[1]], [yl[1], 0, 0], color=INK, lw=0.8)
+        ax.add_patch(MplPolygon(pieces[0].parts[0], closed=True, facecolor=COLORS[0], edgecolor=INK, lw=0.6))
+        ax.set_xlim(*xl); ax.set_ylim(*yl); ax.set_aspect('equal'); ax.axis('off')
+
+    # (a) trayectoria completa
+    ax = axs[0]; scene(ax)
+    pts = [tr[0]['x']] + [R['x2'] for R in tr if R['improved']]
+    for k, q in enumerate(pts):
+        ax.add_patch(MplPolygon(P.parts[0] + q, closed=True, facecolor=COLORS[1] if k == len(pts)-1 else 'none',
+                                edgecolor=INK if k == len(pts)-1 else MUTED, lw=0.7 if k == len(pts)-1 else 0.5,
+                                ls='-' if k in (0, len(pts)-1) else (0, (2, 1.5)), zorder=4))
+    pts = np.array(pts)
+    ax.plot(pts[:, 0], pts[:, 1], '-o', color=ACCENT, ms=3, lw=1.0, zorder=6)
+    for k, q in enumerate(pts[:-1]):
+        ax.text(*(q + np.array([0.12, 0.05])), str(k), fontsize=6.5, color=ACCENT, zorder=7)
+    ax.set_title('(a) descent: %d LPs' % len(tr), fontsize=8, color=INK)
+
+    for k, (ax, r) in enumerate(zip(axs[1:], show)):
+        R = tr[r]; scene(ax)
         box = np.array([R['lo'], [R['hi'][0], R['lo'][1]], R['hi'], [R['lo'][0], R['hi'][1]]])
         reg = box
-        for (a, b, j) in R['cons']:
-            if reg is not None: reg = halfplane_clip(reg, a, b)
-        ax.add_patch(MplPolygon(box, closed=True, facecolor='none', edgecolor=MUTED, lw=0.7, ls=(0, (3, 2)), zorder=6))
-        if reg is not None:
-            area = 0.5*abs(cross2(reg[1:-1] - reg[0], reg[2:] - reg[0]).sum()) if len(reg) >= 3 else 0.0
-            if area > 1e-4:
-                ax.add_patch(MplPolygon(reg, closed=True, facecolor=ACCENT, alpha=0.35, edgecolor=ACCENT, lw=0.9,
-                                        zorder=9))
-            else:      # region degenerada (un segmento): la pieza solo puede deslizar
-                ax.plot([reg[:, 0].min(), reg[:, 0].max()], [reg[:, 1].min(), reg[:, 1].max()], color=ACCENT, lw=3.0,
-                        alpha=0.6, solid_capstyle='round', zorder=9)
-        # recta de cada faceta elegida (borde del semiplano), con el color de la pieza que la genera
-        L = 2*W
-        clipbox = np.array([R['lo'] - 0.35, [R['hi'][0] + 0.35, R['lo'][1] - 0.35], R['hi'] + 0.35,
-                            [R['lo'][0] - 0.35, R['hi'][1] + 0.35]])
-        for (a, b, j) in R['cons']:
-            nrm = a/np.linalg.norm(a); p0 = nrm*(b/np.linalg.norm(a)); dvec = np.array([-nrm[1], nrm[0]])
-            seg = np.array([p0 - L*dvec, p0 + L*dvec])
-            # tramo de la recta dentro de la caja de confianza ampliada
-            ts_ = []
-            for kk in range(4):
-                q0, q1 = clipbox[kk], clipbox[(kk+1) % 4]
-                M_ = np.array([seg[1]-seg[0], q0-q1]).T
-                if abs(np.linalg.det(M_)) < 1e-12: continue
-                uv = np.linalg.solve(M_, q0-seg[0])
-                if 0 <= uv[1] <= 1: ts_.append(uv[0])
-            if len(ts_) < 2: continue
-            seg = np.array([seg[0] + min(ts_)*(seg[1]-seg[0]), seg[0] + max(ts_)*(seg[1]-seg[0])])
-            ax.plot(seg[:, 0], seg[:, 1], color=COLORS[ty[j] % len(COLORS)], lw=1.4, zorder=7,
-                    path_effects=None)
-            ax.plot(seg[:, 0], seg[:, 1], color=INK, lw=0.4, ls=(0, (1, 1.5)), zorder=7)
-        # pieza en el punto actual y en la solucion del LP
-        for Q in P.parts:
-            ax.add_patch(MplPolygon(Q + R['x'], closed=True, facecolor='none', edgecolor=INK, lw=0.9, zorder=8))
-            if R['improved']:
-                ax.add_patch(MplPolygon(Q + R['x2'], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.2, zorder=8))
-        ax.plot(*R['x'], 'o', ms=3.5, color=INK, zorder=11)
-        ax.text(*(R['x'] + np.array([-0.06, 0.06])), '$t$', fontsize=8, ha='right', va='bottom', zorder=10)
-        if R['improved']:
-            ax.plot(*R['x2'], 'o', ms=3.5, color=ACCENT, zorder=11)
-            ax.text(*(R['x2'] + np.array([0.08, -0.05])), "$t'$", fontsize=8, color=ACCENT, ha='left', va='top', zorder=10)
-            ax.add_patch(FancyArrowPatch(R['x'], R['x2'], arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0,
-                                         zorder=9, shrinkA=2, shrinkB=2))
-        # direccion de descenso -c
-        c = R['c']; o = np.array([W + 0.35, Hcur + P.h - 0.2])
-        ax.add_patch(FancyArrowPatch(o, o - 0.8*c/np.linalg.norm(c), arrowstyle='-|>', mutation_scale=7, color=INK,
+        for (a_, b_, j) in R['cons']:
+            if reg is not None: reg = halfplane_clip(reg, a_, b_)
+        ax.add_patch(MplPolygon(box, closed=True, facecolor='none', edgecolor=MUTED, lw=0.7, ls=(0, (3, 2)), zorder=5))
+        if reg is not None and len(reg) >= 3:
+            ax.add_patch(MplPolygon(reg, closed=True, facecolor=ACCENT, alpha=0.3, edgecolor=ACCENT, lw=0.9, zorder=6))
+        for (a_, b_, j) in R['cons']:
+            nrm = a_/np.linalg.norm(a_); p0 = nrm*(b_/np.linalg.norm(a_)); dv = np.array([-nrm[1], nrm[0]])
+            seg = np.array([p0 - 10*dv, p0 + 10*dv])
+            ax.plot(seg[:, 0], seg[:, 1], color=ACCENT2, lw=1.2, zorder=7)
+        ax.add_patch(MplPolygon(P.parts[0] + R['x'], closed=True, facecolor='none', edgecolor=INK, lw=0.9, zorder=8))
+        ax.add_patch(MplPolygon(P.parts[0] + R['x2'], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.1, zorder=8))
+        ax.plot(*R['x'], 'o', ms=3.2, color=INK, zorder=11)
+        ax.plot(*R['x2'], 'o', ms=3.2, color=ACCENT, zorder=11)
+        ax.add_patch(FancyArrowPatch(R['x'], R['x2'], arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0,
+                                     zorder=10, shrinkA=2, shrinkB=2))
+        ax.text(*(R['x'] + np.array([0.08, 0.08])), '$t$', fontsize=8, zorder=12)
+        ax.text(*(R['x2'] + np.array([-0.08, -0.08])), "$t'$", fontsize=8, color=ACCENT, ha='right', va='top', zorder=12)
+        lab = ['free space', 'reaches the slope', 'slides along the slope'][k]
+        ax.set_title('(%s) LP %d: %s' % ('bcd'[k], r+1, lab), fontsize=8, color=INK)
+    # direccion -c
+    c = tr[0]['c']; o = np.array([3.2, 3.5])
+    axs[0].add_patch(FancyArrowPatch(o, o - 0.6*c/np.linalg.norm(c), arrowstyle='-|>', mutation_scale=7, color=INK,
                                      lw=0.8, zorder=9))
-        ax.text(*(o + np.array([0.05, 0.12])), '$-c$', fontsize=8, ha='center', va='bottom')
-        ax.set_xlim(-0.3, W + 0.8); ax.set_ylim(-0.2, Hcur + P.h + 0.35)
-        ttl = ('(%s) LP %d: %d facets' % ('abcd'[k], k+1, len(R['cons']))) if R['improved'] else \
-              ('(%s) LP %d: no improvement, stop' % ('abcd'[k], k+1))
-        ax.set_title(ttl, fontsize=8, color=INK)
-    fig.tight_layout(pad=0.3, w_pad=0.5)
+    axs[0].text(*(o + np.array([0.12, -0.25])), '$-c$', fontsize=8, ha='left')
+    fig.tight_layout(pad=0.3, w_pad=0.4)
     fig.savefig(os.path.join(OUT, 'descend.pdf'))
     fig.savefig(os.path.join(OUT, 'descend.png'), dpi=200)
-    print('descend: pieza', i+1, 'rondas', len(tr), [len(R['cons']) for R in tr])
+    print('descend: rondas', len(tr), [len(R['cons']) for R in tr])
 
 
 def fig_overlap(pieces, ty, W, t, H):
