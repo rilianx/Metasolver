@@ -8,7 +8,7 @@ Reimplementa en 2D (ejes x y z) los mismos pasos de BSG_PLP sobre un ejemplo peq
   figures/axis.pdf           Proposicion 1: penetracion a lo largo de un eje (cero fuera de un intervalo, concava dentro)
   figures/descend.pdf        un descenso paso a paso: region de confianza, facetas elegidas y solucion de cada LP
   figures/passes.pdf         todas las pasadas de MinimizeOverlap de overlap.pdf (piezas movidas y pesos GLS)
-  figures/overlap.pdf        movimiento exacto a lo largo de un eje (funcion phi concava por
+  (fig_overlap: version anterior, ya no se usa en el paper) movimiento exacto a lo largo de un eje (funcion phi concava por
                              tramos); minimizacion del solapamiento con pesos GLS hasta separar
 
 uso (desde problems/plp/paper): python make_diagrams.py
@@ -879,15 +879,32 @@ def fig_passes(pieces, ty, W, t, H):
         tt[i][1] = min(tt[i][1], h - pieces[ty[i]].h)
     rng = np.random.default_rng(3)
     rec = []
-    minimize_overlap(ty, tt, h, W, pieces, rng, record=rec)
+    t_end, _ = minimize_overlap(ty, tt, h, W, pieces, rng, record=rec)
+    tc, _, _ = compact(ty, t_end, pieces, W)
     t0 = total_pen(ty, tt, pieces)
     panels = [dict(it=0, after=tt, tot=t0, wtot=t0, wnew=t0, moved=[], wupd=False, w={})] + rec
     ncol = 5
-    nrow = int(np.ceil(len(panels)/ncol))
+    nrow = int(np.ceil((len(panels) + 1)/ncol))
     fig, axs = plt.subplots(nrow, ncol, figsize=(7.2, 2.05*nrow))
     axs = np.atleast_2d(axs)
     for k, ax in enumerate(axs.flat):
-        if k >= len(panels): ax.axis('off'); continue
+        if k == len(panels):
+            # compactacion por LP de la capa separada
+            strip(ax, W, h + 0.3, h, None)
+            ax.set_xlim(-0.2, W + 0.2)
+            draw_layout(ax, ty, t_end, pieces, W, fill=False, edge=MUTED, lw=0.5)
+            draw_layout(ax, ty, tc, pieces, W)
+            for i in range(len(ty)):
+                P = pieces[ty[i]]; ref = np.array([P.w/2, P.h/2])
+                if np.linalg.norm(tc[i] - t_end[i]) > 0.04:
+                    ax.add_patch(FancyArrowPatch(t_end[i] + ref, tc[i] + ref, arrowstyle='-|>', mutation_scale=5,
+                                                 color=ACCENT, lw=0.8, zorder=6, shrinkA=0, shrinkB=0))
+            Hc = height(ty, tc, pieces)
+            ax.axhline(Hc, color=ACCENT, lw=0.8, ls='--')
+            ax.set_title('LP compaction\nheight %.2f $\\to$ %.2f' % (height(ty, t_end, pieces), Hc), fontsize=6.3,
+                         color=INK)
+            continue
+        if k > len(panels): ax.axis('off'); continue
         R = panels[k]
         strip(ax, W, h + 0.3, h, None)
         ax.set_xlim(-0.2, W + 0.2)
@@ -921,5 +938,4 @@ if __name__ == '__main__':
     fig_descend()
     fig_nfp(pieces)
     fig_axis(pieces)
-    fig_overlap(pieces, ty, W, t, H)
     fig_passes(pieces, ty, W, t, H)

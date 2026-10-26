@@ -435,25 +435,14 @@ decay, which changes $\phi$ and lets the next pass move the pieces out of the lo
 }
 \end{algorithm}
 
-Figure~\ref{fig:overlap} shows an axis move and a complete separation, from a clamped layout, followed by the LP
-compaction on the 2D example.
-
-\begin{figure}[!tbp]
-\centering
-\includegraphics[width=\textwidth]{figures/overlap.pdf}
-\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a)--(b) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
-outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
-chosen (it reduces the overlap but does not remove it). (c)--(e) \textsc{MinimizeOverlap} on the greedy layout
-squeezed to the target height $h=0.9H$ (overlaps in red): after 8 passes, with GLS weights, the layout is
-feasible (all passes are shown in Figure~\ref{fig:passes}). (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
-below $h$.}
-\label{fig:overlap}
-\end{figure}
+Figure~\ref{fig:passes} shows all the passes on the 2D example, from a clamped layout, followed by the LP
+compaction.
 
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/passes.pdf}
-\caption{All the passes of \textsc{MinimizeOverlap} in Figure~\ref{fig:overlap}(c)--(e). In each pass, the pieces
+\caption{\textsc{MinimizeOverlap} on the 2D example: the greedy layout of Figure~\ref{fig:construction} is clamped
+to the target height $h=0.9H$ (dashed line), and every pass is shown. In each pass, the pieces
 that overlap are moved along the axes; the pieces actually moved are outlined in blue (dashed: position before
 the pass), and overlaps are in red. Each title
 gives the unweighted overlap $\sum\delta$ and the weighted overlap $\sum w\delta$, which is the one minimized:
@@ -462,7 +451,8 @@ triangles is increased from 1 to 2 and $\sum w\delta$ jumps from 0.36 to 0.71; t
 not the layout, and the next pass starts from the same positions. Pass~3 then moves the small triangle onto
 the other one: $\sum w\delta$ decreases to 0.54, although $\sum\delta$ increases. The triangle is moved down in
 pass~4. The same happens with the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the
-layout is feasible.}
+layout is feasible. The last panel shows the LP compaction that follows (gray: before), which moves all pieces
+simultaneously and lowers the height below $h$.}
 \label{fig:passes}
 \end{figure}
 
