@@ -32,22 +32,18 @@
 % TODO: coautores y afiliaciones
 
 \begin{abstract}
-We address the three-dimensional irregular strip packing problem: a set of polyhedra, possibly non-convex, must
-be placed by translation in a container with a fixed rectangular base so that the height is minimized. Pieces
-are represented exactly as unions of convex polytopes. Overlap between two convex parts is measured by the
-penetration depth of their relative position in the no-fit polytope (NFP), a quantity that, along any axis
-direction, is concave on an interval and zero outside it. Hence the position of a piece along an axis that
-minimizes its weighted overlap with all other pieces can be computed exactly by evaluating interval endpoints
-only. We embed this move in a strategic oscillation scheme with multiplicative guided local search weights and
-kicks. An ablation study shows that the weights and, above all, the speed of the separation are decisive. On the
-Merged instances of \citet{egeblad2009}, which use the same exact geometry, the method improves the best known
-heights by 4.5--9.6\% within 120 seconds, and after 10 seconds its mean utilization exceeds that of the reference
-method after 600 seconds. It also improves the best known solutions of a classical convex instance and of the
-non-convex instances of \citet{stoyan2004}, one of which is solved to optimality, and on the small instances of
-\citet{tollenaere2026} it matches 26 of the 27 proven optima and improves the best known solution of 32 of the
-39 open instances. On the 36-piece instance of \citet{liu2015} its mean height is 12\% below the best voxel result. Finally, a linear-programming
-compaction over no-fit polytope facets with soft margins, followed by dyadic rounding, yields solutions whose
-feasibility is certified in exact rational arithmetic.
+We address the three-dimensional irregular strip packing problem: polyhedra, possibly non-convex, must be placed
+by translation in a container with a fixed rectangular base so that the height is minimized. We propose an
+overlap-minimization heuristic that works with the exact geometry of the pieces, represented as unions of convex
+parts. Its main ingredient is an exact axis move. The overlap of two parts is measured by the penetration depth
+of their relative position in their no-fit polytope; along any axis this function is zero outside an interval
+and concave inside it, so the best position of a piece along an axis is found by evaluating a few breakpoints
+only. The move is embedded in a strategic oscillation of the container height with guided local search weights
+and kicks, starting from a greedy construction and a linear-programming compaction. On the benchmarks of
+polyhedral pieces, the method improves the best known heights of 11 of 13 instances within two minutes, reaches
+in 10 seconds the quality that the previous exact local search attains in 600 seconds, and matches 26 of the 27
+known optima of small instances. An ablation study shows that the speed of the move and the guided local search
+weights are the decisive components.
 \end{abstract}
 
 \begin{keyword}
@@ -95,14 +91,12 @@ NFP facets, in the spirit of \citet{gomes2006} in 2D, has no measurable effect o
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
 \citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest, and a comparison
 with the optimal values and bounds of the mixed-integer models of \citet{tollenaere2026}.
-\item Solutions with certified feasibility: a final LP compaction with soft margins and dyadic rounding produce
-layouts that are verified in exact rational arithmetic, without tolerances.
 \item An exact convex decomposition of the non-convex (prismatic) pieces of \citet{ikonen1997} used in the
-Merged instances, and the identification of inconsistencies in the public data.
+Merged instances.
 \end{enumerate}
 
 Section~\ref{sec:problem} defines the problem and the geometric tools. Section~\ref{sec:method} describes the
-algorithm, Section~\ref{sec:cert} the certification, and Section~\ref{sec:exp} the experiments.
+algorithm, and Section~\ref{sec:exp} the experiments.
 
 % =====================================================================================================
 \section{Problem and geometry}\label{sec:problem}
@@ -116,7 +110,8 @@ vector of translations $t_i=(x_i,y_i,z_i)$ such that
 & 0\le x_i\le W-w_i,\quad 0\le y_i\le D-d_i,\quad z_i\ge 0, && i=1,\dots,n,\\
 & \operatorname{int}(P_i+t_i)\cap\operatorname{int}(P_j+t_j)=\emptyset, && i<j,
 \end{align}
-and the objective is to minimize $H=\max_i(z_i+h_i)$. A trivial lower bound is
+where $\operatorname{int}(\cdot)$ denotes the interior of a set (pieces may touch but not overlap), and the
+objective is to minimize $H=\max_i(z_i+h_i)$. A trivial lower bound is
 $H_0=\max\{\max_i h_i,\ \sum_i\operatorname{vol}(P_i)/(WD)\}$.
 
 \subsection{No-fit polytopes and penetration depth}
@@ -135,7 +130,8 @@ $\delta_{AB}(r)=\max\{0,\ \min_{f\in F_{AB}}(d_f-n_f\cdot r)\}$.
 \end{definition}
 
 For $r$ inside $N_{AB}$, $\delta_{AB}(r)$ is the Euclidean distance from $r$ to the boundary of $N_{AB}$, i.e.,
-the length of the shortest translation that separates $A$ and $B$ (the translational penetration depth). It is
+the length of the shortest translation that separates $A$ and $B$, known as the translational penetration
+depth \citep{cameron1986,agarwal2000}. It is
 zero if and only if the parts do not overlap. For two pieces we use
 $\delta_{ij}(t_i-t_j)=\sum_{a\in\mathcal{A}_i}\sum_{b\in\mathcal{A}_j}\delta_{ab}(t_i-t_j)$, where only pairs of parts
 whose bounding boxes intersect are evaluated. Figure~\ref{fig:nfp} illustrates both definitions in two dimensions.
@@ -158,7 +154,9 @@ of $i$ is
 \begin{equation}\label{eq:obj}
 \phi(s)=\sum_{j\ne i}w_{ij}\,\delta_{ij}\big(t_i(s)-t_j\big),
 \end{equation}
-with GLS weights $w_{ij}\ge 1$.
+where the weights $w_{ij}\ge 1$ (initially 1) are the penalties of guided local search (GLS)
+\citep{voudouris1999}: they are increased for the pairs that remain overlapping at local minima, so that the
+search focuses on them (Section~\ref{sec:minover}).
 
 \begin{proposition}\label{prop:axis}
 Each term $\delta_{ab}(t_i(s)-t_j)$ is zero outside an interval $(L_{ab},U_{ab})$ and concave inside it. Hence
@@ -225,21 +223,45 @@ $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appe
     }
   }
 }
-\textsc{SeparateWithMargin}($S$); \Return $S$\;
+\Return $S$\;
 \end{algorithm}
 
-\subsection{Greedy construction}
-Pieces are placed one at a time on top of the current load. For a piece, $g\times g$ starting points ($g=4$) on
-the base are lifted to the current height and each descends by a sequence of small linear programs in the three
-translation variables: for every nearby placed part one NFP facet satisfied at the current point is selected
-(the one that allows the longest step in the descent direction), and $z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$
-is minimized within a trust region; the procedure repeats until no improvement. Among all pieces and resulting
-positions, the greedy chooses the one maximizing
-$\alpha\log(V/V_{\max})-\beta z/H_0-\gamma\max(0,z+h-H_{\text{cur}})/H_0$. For a given piece the criterion
-decreases with $z$, so the lowest of its positions is always preferred; the criterion thus decides which piece
-is placed, favoring large pieces placed low without increasing the height. Parameters ($\alpha=1$,
-$\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned with Optuna. Figure~\ref{fig:construction} illustrates
-the construction in two dimensions, and Algorithm~\ref{alg:greedy} gives the pseudocode.
+In Algorithm~\ref{alg:main}, line~1 builds the first solution (Sections~\ref{sec:greedy} and~\ref{sec:compact}) and
+line~2 creates the first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
+(Section~\ref{sec:minover}). On success (lines~5--7) the separated layout is compacted, possibly becomes the new
+best solution, and the target is lowered again from the best height. On failure (lines~9--11) the target is raised
+by a quarter of the step and the search continues from the current overlapping layout with the current weights;
+once the target is back at the best height, the search restarts from the best solution with a perturbation
+(Section~\ref{sec:kicks}).
+
+\subsection{Greedy construction}\label{sec:greedy}
+Pieces are placed one at a time on top of the current load (Algorithm~\ref{alg:greedy}). For each type of piece
+still to be placed, $g\times g$ starting points ($g=4$) are taken on a regular grid of the base, at the current
+height $H_{\text{cur}}$ of the load, and from each of them the piece descends (\textsc{Descend}, lines~9--18).
+The descent is a sequence of small linear programs in the three translation variables of the piece. At the
+current point $t$, for every placed part $b$ that the part $a$ of the piece may meet within a trust region (a box
+of half side $\Delta$, the largest dimension of the piece), one facet of $N_{ab}$ satisfied at $t$ is selected:
+the one that allows the longest step in the descent direction (line~13). The selected facets define a convex
+region of positions where the piece does not overlap the placed parts, and the LP of line~14 minimizes
+$c\cdot u=z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$ in it: the piece goes down and, with a small weight $\sigma$,
+towards the nearest walls in $x$ and $y$. The facets are re-selected at the new point and the procedure stops
+when the objective no longer decreases.
+
+Among all piece types and resulting positions, the greedy places the pair $(k,t)$ that maximizes (line~6)
+\begin{equation}\label{eq:greedy}
+\mathit{val}(k,t)=\alpha\log\frac{V_k}{V_{\max}}-\beta\,\frac{z}{H_0}-\gamma\,\frac{\max(0,\,z+h_k-H_{\text{cur}})}{H_0},
+\end{equation}
+where $V_k$ is the volume of the piece, $V_{\max}$ the largest volume, $z$ the height of the position and
+$H_{\text{cur}}$ the current height of the load. The first term favors large pieces, as the classical orderings by
+decreasing volume, but on a logarithmic scale, so that a smaller piece is preferred when it fits clearly lower.
+The second term favors low positions, i.e., filling the gaps of the load before building on top of it, and the
+third penalizes positions that raise the height of the load. Normalizing by the lower bound $H_0$ makes the
+parameters independent of the scale of the instance. For a given piece the score decreases with $z$, so the
+lowest of its positions is always preferred; the score thus decides which piece is placed next: a large piece
+if it fits in a low gap, and a smaller one if the large pieces would raise the height. The parameters
+($\alpha=1$, $\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned with Optuna on 16 training instances, for an
+earlier version of the method that relied more on the construction. Figure~\ref{fig:construction} illustrates
+the construction in two dimensions.
 
 \begin{algorithm}[!htb]
 \caption{Greedy construction}\label{alg:greedy}
@@ -249,7 +271,7 @@ the construction in two dimensions, and Algorithm~\ref{alg:greedy} gives the pse
   \While{some piece is not placed}{
     \ForEach{type $k$ with pieces left \KwSty{and} each of $g\times g$ grid points $(x,y)$ of the base}{
       $t\gets$ \textsc{Descend}($k,(x,y,H_{\text{cur}}),\mathcal{L}$)\;
-      $\mathit{val}\gets\alpha\log(V_k/V_{\max})-\beta z/H_0-\gamma\max(0,z+h_k-H_{\text{cur}})/H_0$\;
+      $\mathit{val}\gets\mathit{val}(k,t)$ of Eq.~\eqref{eq:greedy}\;
     }
     place the pair $(k,t)$ of largest $\mathit{val}$ in $\mathcal{L}$; $H_{\text{cur}}\gets\max(H_{\text{cur}},z+h_k)$\;
   }
@@ -296,8 +318,16 @@ constraint $n_f\cdot(t_i-t_j)\ge d_f$ is imposed. The LP
 \end{equation}
 has a convex feasible region that contains the current layout. The facets are re-selected and the LP is
 solved again while $H$ decreases. A solution is accepted only if it is feasible (the LP solution is checked for
-bounds and overlap). Compaction alternates with a local improvement in which every piece descends again with
-the others fixed and the pieces that define the height are tried at other positions (Algorithm~\ref{alg:compact}).
+bounds and overlap).
+
+Algorithm~\ref{alg:compact} shows how the LP is used. \textsc{LPCompact} (lines~7--15) re-selects the facets
+around each new layout, so that the pieces can slide along each other over several LPs, and stops when the height
+no longer decreases. The facet chosen for a pair (line~10) is the one that lets the higher of the two pieces
+descend the most with respect to the other. \textsc{Compact} alternates the LP with a local improvement
+(\textsc{Improve}, lines~16--21) in which, from bottom to top, every piece descends again with the others fixed
+(as in the greedy), and the pieces that define the height are moved to the lowest position generated as in
+\textsc{Greedy}, if it is lower. The LP moves all pieces simultaneously but only within the trust region, while
+\textsc{Improve} moves one piece at a time but can relocate it anywhere.
 
 \begin{algorithm}[!htb]
 \caption{Compaction of a feasible layout}\label{alg:compact}
@@ -342,15 +372,23 @@ which creates overlaps among the pieces near the top. After a failure the target
 increased by $\rho/4$ and the search continues from the overlapping layout, with the GLS weights of the previous
 attempt. This scheme follows \citet{egeblad2009} and \citet{umetani2009}.
 
-\subsection{Overlap minimization}
+\subsection{Overlap minimization}\label{sec:minover}
 \textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
 axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. The pairwise penetrations are
 kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
 the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
 multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
 procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
-Weights persist along the oscillation and are reset after a successful separation or a kick
-(Algorithm~\ref{alg:minover}).
+Weights persist along the oscillation and are reset after a successful separation or a kick.
+
+In Algorithm~\ref{alg:minover}, line~2 computes the penetrations of all pairs, and each iteration of the loop is
+a pass. Only the pieces involved in an overlapping pair are moved (line~7), each along the three axes with the
+exact move of Proposition~\ref{prop:axis} (line~9), in which the weighted overlap $\phi$ of
+Eq.~\eqref{eq:obj} is evaluated at the breakpoints and the best one is taken; since the current position is a
+candidate, a move never increases $\phi$. After moving a piece, only its row of the penetration matrix is
+recomputed (line~11). A pass without gain (line~12) is a local minimum of the weighted overlap; the weights of
+the pairs that still overlap are then increased in proportion to their penetration, and those of the other pairs
+decay, which changes $\phi$ and lets the next pass move the pieces out of the local minimum.
 
 \begin{algorithm}[!htb]
 \caption{Overlap minimization}\label{alg:minover}
@@ -393,7 +431,7 @@ below $h$.}
 \label{fig:overlap}
 \end{figure}
 
-\subsection{Kicks}
+\subsection{Kicks}\label{sec:kicks}
 When the target reaches the best height, a kick restarts from the best solution clamped to $(1-\rho)H$ and moves
 a random piece: with probability 1/2 it is reinserted at the lowest of the positions generated as in the greedy
 construction, below the target height (if there is none, it is swapped with a piece of a different type), and
@@ -401,43 +439,6 @@ otherwise it is moved to a random position in the container, leaving the overlap
 moves are needed on small instances: with two pieces there is a single pair, so the GLS weights have no effect,
 and reinsertion alone keeps returning to the layout produced by the greedy order (Section~\ref{sec:t2025}).
 
-% =====================================================================================================
-\section{Certified feasibility}\label{sec:cert}
-
-LP solvers and floating-point NFPs leave overlaps of order $10^{-14}$ between touching pieces; tolerant
-verifiers accept them, but in exact arithmetic the pieces overlap. Note that safe bounds for linear programs
-\citep{neumaier2004} certify the optimal value of the LP, not the feasibility of the point returned by the
-solver, so we certify the final layout instead.
-
-\textsc{SeparateWithMargin} solves a last compaction LP in which each pair constraint becomes
-$n_f\cdot(t_i-t_j)\ge d_f+m_k$ and each container bound $x_i+u_i\le W-w_i$ (and likewise in $y$), with slacks
-$m_k,u_i\in[0,\mu]$ ($\mu=10^{-7}$, well above the LP tolerances) that are maximized while the height is kept.
-The slacks must be soft: rows of pieces that exactly fill the width of the container leave no room for a margin.
-In those rows the contact positions are typically sums of piece dimensions, which are representable; we then
-round every coordinate to the nearest multiple of $2^{-30}$, an exact operation in binary floating point whose
-error is far smaller than $\mu$ (Algorithm~\ref{alg:margin}).
-
-\begin{algorithm}[!htb]
-\caption{Final separation with margins}\label{alg:margin}
-\SetCommentSty{textit}
-\Fn{\textsc{SeparateWithMargin}($S$)}{
-  select one facet per pair of nearby parts as in \textsc{LPCompact}\;
-  solve $\min H-\frac{\epsilon'}{\mu}\big(\sum_k m_k+\sum_i(u_i+v_i)\big)$ s.t.\ the constraints of LP~\eqref{eq:lp},
-  with $n_f\cdot(t_i-t_j)\ge d_f+m_k$, $x_i+u_i\le W-w_i$, $y_i+v_i\le D-d_i$, $m_k,u_i,v_i\in[0,\mu]$ and a small $\epsilon'>0$\;
-  \lIf{the solution is feasible and $H$ increases by at most $10^{-4}H$}{$S\gets$ solution}
-  $S'\gets S$ with every coordinate rounded to the nearest multiple of $2^{-30}$\;
-  \lIf{$S'$ is feasible and $H(S')\le(1+10^{-6})H(S)$}{$S\gets S'$}
-  \Return $S$\tcp*{then certified in rational arithmetic}
-}
-\end{algorithm}
-
-The certificate is computed with rational arithmetic: vertices and translations are binary floating-point
-numbers, hence exact rationals. For containment all vertices are checked against the container; for every pair
-of convex parts with intersecting bounding boxes a separating axis is searched among the face normals of both
-parts and the cross products of their edges (computed exactly), accepting it if $\max_A n\cdot a\le\min_B n\cdot b$.
-Of the 140 solutions of Table~\ref{tab:results} (14 instances, 10 seeds), 139 were certified; in the remaining
-one (Stoyan 2005 Example 3) one pair of parts in contact overlaps by $1.2\times10^{-10}$. The
-height increases by $10^{-7}$--$10^{-6}$.
 
 % =====================================================================================================
 \section{Computational experiments}\label{sec:exp}
@@ -446,7 +447,8 @@ height increases by $10^{-7}$--$10^{-6}$.
 The method is implemented in C++ on top of the Metasolver framework; LPs are solved with SoPlex 8.1
 \citep{wunderling1996}. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
 g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
-instance.
+instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
+for a separating axis.
 
 \paragraph{Instances}
 We use the 3D instances of the ESICUP repository \citep{esicup}:
@@ -482,8 +484,7 @@ Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. 
 only reinsert pieces are as good as the mixed kicks or slightly better; the random moves are needed on small
 instances (Section~\ref{sec:t2025}). The LP compaction has no significant effect: the
 differences are of about one standard error, slightly in favour of the variant without LP on Stoyan 2004. It is therefore not needed for the quality of the solutions, and
-the method can run without an LP solver; we keep a single LP at the end to obtain certifiable solutions
-(Section~\ref{sec:cert}).
+the method can run without an LP solver.
 
 \begin{table}[t]
 \centering\small
@@ -558,7 +559,7 @@ optimum. Figure~\ref{fig:solutions} shows two of the best solutions.
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/solutions.pdf}
-\caption{Best solutions of the final runs (certified) for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
+\caption{Best solutions of the final runs for Stoyan 2005 Example 3 and Merged5.}\label{fig:solutions}
 \end{figure}
 
 \subsection{Comparison with exact models}\label{sec:t2025}
@@ -644,12 +645,11 @@ filtering with the hull of each piece, or conservative simplification of the NFP
 \section{Conclusions}
 We presented an overlap-minimization heuristic for 3D irregular strip packing that works with the exact geometry
 of polyhedra given as unions of convex parts. Its key element is an exact axis move based on penetration depths
-in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and kicks; a final
-LP compaction with margins makes the solutions certifiable in exact arithmetic. This simple method outperforms
+in no-fit polytopes, combined with multiplicative guided local search, strategic oscillation and kicks. This simple method outperforms
 the previous methods, with exact and voxel geometry, on the benchmarks of polyhedral pieces, and matches almost
 all the proven optima of the small instances. On curved meshes, which require conservative decompositions with
 many facets, it remains behind voxel-based search. Future work includes cheaper NFP computations for curved
-parts, rotations, larger instances from additive manufacturing, and certified lower bounds.
+parts, rotations, larger instances from additive manufacturing, and lower bounds.
 
 \bibliographystyle{elsarticle-harv}
 \bibliography{refs}
