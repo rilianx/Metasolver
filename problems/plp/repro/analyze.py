@@ -75,7 +75,10 @@ print('## Ablacion (brecha media respecto de la referencia; Stoyan 2004 Ex1: alt
 print('| Variante | Stoyan 2004 | Stoyan 2005 | S2004 Ex1 | n |')
 print('|---|---|---|---|---|')
 for name, cfg, T in (('Propuesto', 'full', None), ('Sin LP', 'nolp', None), ('Pesos aditivos', 'add', None),
-                     ('Solo reinsercion', 'reinsert', None), ('5x mas lento (24 s)', 'full', 24)):
+                     ('Solo reinsercion', 'reinsert', None), ('5x mas lento (24 s)', 'full', 24),
+                     ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: solo aleatorio', 'kick_random', None),
+                     ('Kick: pieza superior, aleatoria', 'kick_top', None),
+                     ('Kick: pieza superior, menor penetracion de 20', 'kick_topbest', None)):
     g = {'2004': [], '2005': []}; ok = True
     for inst, ref in REF.items():
         R = runs(cfg, key(inst))

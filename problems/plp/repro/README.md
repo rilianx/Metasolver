@@ -22,13 +22,14 @@ JOBS=14 nohup problems/plp/repro/run_experiments.sh > problems/plp/repro/out/run
 JOBS=14 problems/plp/repro/analyze.sh            # con --paper: copia las trayectorias y regenera las figuras
 ```
 
-`run_experiments.sh` acepta grupos (`chess main ablation tollenaere liu`) y omite las corridas ya terminadas, así
+`run_experiments.sh` acepta grupos (`chess main ablation kicks tollenaere liu`) y omite las corridas ya terminadas, así
 que puede relanzarse si se interrumpe.
 
 | Grupo | Corridas | Tiempo por corrida | Tiempo de CPU |
 |---|---|---|---|
 | main: Stoyan 2004/2005, Merged1–5 | 13 × 10 semillas | 120 s | 4.3 h |
 | ablation: 7 instancias × (sin LP, pesos aditivos, solo reinserción) | 210 | 120 s | 7 h |
+| kicks: 7 instancias × (ninguno, aleatorio, pieza superior, pieza superior con menor penetración) | 280 | 120 s | 9.3 h |
 | tollenaere: Tollenaere et al. 2025 | 66 × 10 | 30 s | 5.5 h |
 | liu: Liu et al. 2015 Experiment1 | 10 | 120 s | 0.3 h |
 | chess: fina, gruesa, gruesa + fina | 3 × 5 semillas | 1200 s | 5 h |
