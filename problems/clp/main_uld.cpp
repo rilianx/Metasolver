@@ -428,10 +428,6 @@ static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0,
 static bool stage_scratch=false, stage_priority=false, stage_ruin=true;
 //tiempo (s de CPU) de la reduccion: insercion en los otros ULDs y carga de los ULDs nuevos
 static double tm_insert=0, tm_new=0;
-//proporciones de la ruina (--ruin_full agrega 1: recarga desde cero en la misma etapa)
-static vector<double> ruin_rhos={0.3, 0.6, 0.9};
-//experimental: una sola ronda de ruina (--ruin_once)
-static bool ruin_once=false;
 
 static double volume_of(const vector<int>& b){
 	double v=0;
@@ -456,14 +452,11 @@ static vector<int> by_free_volume(const vector<Load>& loads){
 }
 
 /**
- * Inserta las cajas de pool en los ULDs cargados (sin agregar ULDs). En cada etapa se recorren
- * los ULDs de mayor a menor volumen libre y la nueva carga de un ULD se acepta si carga mas
- * volumen (ver improves); las cajas que el ULD deja de cargar vuelven a pool:
- *  1. desde cero: se carga el ULD con sus cajas y las de pool;
- *  2. con sus cajas fijas en sus posiciones y las de pool;
- *  3. con prioridad: se carga el ULD solo con las cajas de pool que caben en su tipo y se
- *     completa con sus cajas y el resto de pool;
- *  4. ruina y reconstruccion (ver ruin_recreate), mientras disminuya el volumen sin cargar.
+ * Inserta las cajas de pool en los ULDs cargados (sin agregar ULDs) con ruina y reconstruccion
+ * (ver ruin_recreate), una vez con cada proporcion 0.3, 0.6 y 0.9. Ablacion (--scratch,
+ * --priority), antes: recarga desde cero de cada ULD con sus cajas y las de pool, y recarga
+ * dando prioridad a las cajas de pool; se recorren los ULDs de mayor a menor volumen libre y la
+ * nueva carga se acepta si carga mas volumen (ver improves).
  * pool queda con las cajas que no se insertaron.
  */
 static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
@@ -503,11 +496,8 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 		}
 
 	if(stage_ruin)
-		for(bool progress=true, first=true; progress && !none(pool) && (first || !ruin_once); first=false){
-			progress=false;
-			for(double p : ruin_rhos)
-				if(!none(pool) && ruin_recreate(loads, pool, p, P)){ progress=true; st_ruin++; }
-		}
+		for(double p : {0.3, 0.6, 0.9})
+			if(!none(pool) && ruin_recreate(loads, pool, p, P)) st_ruin++;
 }
 
 /**
@@ -644,9 +634,6 @@ int main(int argc, char** argv){
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
-	args::Flag _ruin_once(parser, "ruin_once", "Ruin and recreate: a single round of the proportions (experimental)", {"ruin_once"});
-	args::ValueFlag<double> _ruin_rho(parser, "double", "Ruin and recreate with this single proportion (experimental)", {"ruin_rho"});
-	args::Flag _ruin_full(parser, "ruin_full", "Ruin and recreate also with the proportion 1 (experimental)", {"ruin_full"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -718,9 +705,6 @@ int main(int argc, char** argv){
 	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
-	if(_ruin_full) ruin_rhos.push_back(1.0);
-	if(_ruin_rho) ruin_rhos={_ruin_rho.Get()};
-	ruin_once=_ruin_once;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;

@@ -206,25 +206,18 @@ most three restarts.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 Both phases after the construction rely on the same procedure, \textsc{Insert}, which inserts a pool of
-boxes into the ULDs already loaded, without adding ULDs. It applies three stages, each of which
-visits the ULDs in decreasing order of free volume; the new loading of a ULD is accepted if it
-loads more volume and its CoG is not out of range when the old one was not, and the boxes that
-the ULD no longer loads return to the pool:
-\begin{enumerate}
-\item \emph{Reload from scratch}: the ULD is loaded again with \textsc{LoadULD} with its boxes
-	and the boxes of the pool.
-\item \emph{Reload with priority}: the ULD is first loaded only with the boxes of the pool that fit
-	in its type, and the load is then completed with its own boxes and the rest of the pool. This
-	stage gives a chance to large boxes that do not fit in the free space left by the current load.
-\item \emph{Ruin and recreate} \citep{Schrimpf2000}: for $\rho \in \{0.3, 0.6, 0.9\}$, a proportion
-	$\rho$ of the loaded volume of each ULD is removed, taking the boxes with nothing on top of them
-	from the highest one down, so that the remaining load is still feasible; then the ULDs are
-	completed with the removed boxes and the pool, keeping the remaining boxes at their
-	positions. The new
-	solution is accepted if the volume of the pool decreases, and the stage is repeated while it
-	decreases.
-\end{enumerate}
-The procedure stops as soon as the pool is empty.
+boxes into the ULDs already loaded, without adding ULDs, by ruin and recreate
+\citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$, in this order, a proportion $\rho$ of the
+loaded volume of each ULD is removed, taking the boxes with nothing on top of them from the
+highest one down, so that the remaining load is still feasible; then the ULDs, in decreasing
+order of free volume, are completed with \textsc{LoadULD} with the removed boxes and the pool,
+keeping the remaining boxes at their positions. A ULD whose new loading has the CoG out of range
+when the old one had not keeps its old loading. The new solution is accepted if the volume of the
+pool decreases, and the procedure stops as soon as the pool is empty. We also tried two
+additional stages before the ruin, which reload each ULD from scratch with its boxes and the
+pool, or giving priority to the boxes of the pool, and repeating the ruin while the pool
+decreased; they did not improve the results at the same running time
+(Section~\ref{sec:exp-ablation}).
 
 \paragraph{Unloaded boxes.}
 When the number of ULDs is limited and some boxes remain unloaded after the construction,
