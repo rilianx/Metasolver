@@ -580,13 +580,17 @@ def fig_axis(pieces):
 
     # (c) las piezas: dos fijas (j = 1, 2) y la pieza movil A en la posicion elegida; limites del contenedor
     ax = axs[2]
-    for off, lab in ((np.zeros(2), '$j=1$'), (off2, '$j=2$')):
+    for off, lab in ((np.zeros(2), '$j=1$, $w_1=%g$' % w1), (off2, '$j=2$, $w_2=%g$' % w2)):
         ax.add_patch(MplPolygon(B + off, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.5, zorder=2))
-        ax.text(B.mean(0)[0] + off[0], B[:, 1].min() + off[1] + 0.22, lab, fontsize=7, ha='center', va='center',
+        ax.text(B.mean(0)[0] + off[0], B[:, 1].min() + off[1] - 0.04, lab, fontsize=7, ha='center', va='top',
                 zorder=7)
     # puntos de quiebre (los mismos de (e)) sobre la recta del punto de referencia de A
     ax.plot([s0, s1], [y0, y0], color=INK, lw=0.6, ls=':', zorder=6)
     ax.plot(bps, [y0]*len(bps), 'o', ms=3, color=INK, zorder=8)
+    for bpt, val in zip(bps, vals):        # phi = w1 delta1 + w2 delta2 en cada punto (los mismos valores de (e))
+        ax.text(bpt, y0 - 0.07, r'$\phi=%.2f$' % val, fontsize=6.5, ha='center', va='top', zorder=11,
+                color=ACCENT if abs(bpt - smin) < 1e-9 else INK,
+                bbox=dict(facecolor='white', edgecolor='none', pad=0.2, alpha=0.85))
     ax.plot([smin], [y0], '*', ms=9, color=ACCENT, zorder=9)
 
     def pen_vec(off, r):
@@ -609,7 +613,7 @@ def fig_axis(pieces):
                                          shrinkA=0, shrinkB=0))
             ax.text(*(r + v + 0.07*v/np.linalg.norm(v)), lab, color=col, fontsize=8, ha='center', va='center',
                     zorder=11, bbox=dict(facecolor='white', edgecolor='none', pad=0.2, alpha=0.8))
-    yb = min(B[:, 1].min(), (B + off2)[:, 1].min()) - 0.12
+    yb = min(B[:, 1].min(), (B + off2)[:, 1].min()) - 0.32
     ax.annotate('', (s1, yb), (s0, yb), arrowprops=dict(arrowstyle='<->', color=INK, lw=0.6))
     ax.text(0.5*(s0 + s1), yb - 0.05, 'range of the reference point of $A$ ($0\\ldots U_k$)', fontsize=6.5,
             ha='center', va='top')
