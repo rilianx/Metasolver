@@ -1,28 +1,29 @@
 instance: STOYAN_2005_EXAMPLE_2
 items: 12
 height_lb: 16
-construction_height (greedy, 0.008913 s): 31.714286
+construction_height (greedy, 0.008944 s): 31.714286
 compaction_height (soplex): 30.956249
-[separacion] (0.023315 s): altura 27.221826 (kicks 0)
-[separacion] (0.035066 s): altura 26.739082 (kicks 0)
-[separacion] (0.043255 s): altura 26.433543 (kicks 0)
-[separacion] (0.051994 s): altura 25 (kicks 0)
-[separacion] (0.054961 s): altura 24.505639 (kicks 0)
-[separacion] (0.062457 s): altura 23 (kicks 0)
-[separacion] (0.107723 s): altura 22.779817 (kicks 0)
-[separacion] (0.110897 s): altura 22.409091 (kicks 0)
-[separacion] (0.147511 s): altura 22 (kicks 0)
-[separacion] (0.154803 s): altura 21.578684 (kicks 0)
-[separacion] (0.160634 s): altura 21 (kicks 0)
-[separacion] (0.420844 s): altura 20.780365 (kicks 1)
-[separacion] (0.637151 s): altura 20.4 (kicks 1)
-[separacion] (1.037124 s): altura 20 (kicks 2)
-[separacion] (3.447234 s): altura 19.833333 (kicks 11)
-[separacion] (4.081173 s): altura 19.127509 (kicks 3)
+[separacion] (0.023366 s): altura 27.221826 (kicks 0)
+[separacion] (0.034943 s): altura 26.739082 (kicks 0)
+[separacion] (0.043127 s): altura 26.433543 (kicks 0)
+[separacion] (0.051875 s): altura 25 (kicks 0)
+[separacion] (0.054858 s): altura 24.505639 (kicks 0)
+[separacion] (0.062351 s): altura 23 (kicks 0)
+[separacion] (0.107355 s): altura 22.779817 (kicks 0)
+[separacion] (0.110531 s): altura 22.409091 (kicks 0)
+[separacion] (0.146927 s): altura 22 (kicks 0)
+[separacion] (0.154215 s): altura 21.578684 (kicks 0)
+[separacion] (0.160056 s): altura 21 (kicks 0)
+[separacion] (0.369989 s): altura 20.593787 (kicks 1)
+[separacion] (0.571283 s): altura 20.358696 (kicks 1)
+[separacion] (0.576569 s): altura 20 (kicks 0)
+[separacion] (4.398922 s): altura 19.833333 (kicks 18)
+[separacion] (5.039537 s): altura 19.127509 (kicks 3)
 margin_height (1e-07): 19.127509
-separations: 2012
+separations: 2045
 rejected: 0
-time: 120.02956
+limits: compact 0/17 (max 4 of 20), lp 0/33 (max 5 of 30)
+time: 120.05949
 feasible: yes
 items: 12
 height: 19.127509

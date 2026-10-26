@@ -1,36 +1,35 @@
 instance: STOYAN_2004_EXAMPLE_2
 items: 20
 height_lb: 29
-construction_height (greedy, 0.076319 s): 48.159701
+construction_height (greedy, 0.079097 s): 48.159701
 compaction_height (soplex): 48.159701
-[separacion] (0.148829 s): altura 45 (kicks 0)
-[separacion] (0.183006 s): altura 42.584222 (kicks 0)
-[separacion] (0.205178 s): altura 41.139183 (kicks 0)
-[separacion] (0.237674 s): altura 39.401537 (kicks 0)
-[separacion] (0.278562 s): altura 38 (kicks 0)
-[separacion] (0.308023 s): altura 36.5 (kicks 0)
-[separacion] (0.333244 s): altura 36 (kicks 0)
-[separacion] (0.357448 s): altura 35.517241 (kicks 0)
-[separacion] (0.382306 s): altura 34.929577 (kicks 0)
-[separacion] (0.433746 s): altura 34 (kicks 0)
-[separacion] (0.711269 s): altura 33.380282 (kicks 0)
-[separacion] (1.636102 s): altura 33.0385 (kicks 1)
-[separacion] (1.770928 s): altura 32.5 (kicks 0)
-[separacion] (1.833744 s): altura 32 (kicks 0)
-[separacion] (1.869111 s): altura 31.555556 (kicks 0)
-[separacion] (6.471001 s): altura 31.333333 (kicks 4)
-[separacion] (7.677556 s): altura 30.985948 (kicks 1)
-[separacion] (7.70587 s): altura 30.523075 (kicks 0)
-[separacion] (7.859325 s): altura 30 (kicks 0)
-[separacion] (8.023348 s): altura 29.6 (kicks 0)
-[separacion] (8.638609 s): altura 29 (kicks 0)
-margin_height (1e-07): 29.000001
-separations: 52
+[separacion] (0.153501 s): altura 45 (kicks 0)
+[separacion] (0.189047 s): altura 42.584222 (kicks 0)
+[separacion] (0.212331 s): altura 41.139183 (kicks 0)
+[separacion] (0.245597 s): altura 39.401537 (kicks 0)
+[separacion] (0.286532 s): altura 38 (kicks 0)
+[separacion] (0.315699 s): altura 36.5 (kicks 0)
+[separacion] (0.341471 s): altura 36 (kicks 0)
+[separacion] (0.36599 s): altura 35.517241 (kicks 0)
+[separacion] (0.391534 s): altura 34.929577 (kicks 0)
+[separacion] (0.445179 s): altura 34 (kicks 0)
+[separacion] (0.725055 s): altura 33.380282 (kicks 0)
+[separacion] (2.424291 s): altura 32.81508 (kicks 2)
+[separacion] (2.784376 s): altura 32.458436 (kicks 0)
+[separacion] (3.030849 s): altura 32 (kicks 0)
+[separacion] (3.079747 s): altura 31.009346 (kicks 0)
+[separacion] (3.225609 s): altura 30 (kicks 0)
+[separacion] (3.941852 s): altura 29.6 (kicks 0)
+[separacion] (5.360564 s): altura 29.2 (kicks 1)
+[separacion] (23.09951 s): altura 29 (kicks 20)
+margin_height (1e-07): 29
+separations: 101
 rejected: 0
-time: 8.646637
+limits: compact 0/20 (max 5 of 20), lp 0/46 (max 4 of 30)
+time: 23.107933
 feasible: yes
 items: 20
-height: 29.000001
+height: 29
 density: 0.26561006
 max_overlap: 0
 max_outside: 0

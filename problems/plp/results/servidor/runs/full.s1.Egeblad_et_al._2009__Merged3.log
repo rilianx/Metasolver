@@ -1,38 +1,39 @@
 instance: EGEBLAD_2009_MERGED_3
 items: 45
 height_lb: 16
-construction_height (greedy, 0.130821 s): 40
+construction_height (greedy, 0.134953 s): 40
 compaction_height (soplex): 40
-[separacion] (0.160075 s): altura 38 (kicks 0)
-[separacion] (0.170218 s): altura 37 (kicks 0)
-[separacion] (0.260929 s): altura 34.820095 (kicks 0)
-[separacion] (0.284292 s): altura 34 (kicks 0)
-[separacion] (0.293728 s): altura 33.4 (kicks 0)
-[separacion] (0.305 s): altura 33 (kicks 0)
-[separacion] (0.336602 s): altura 32.544469 (kicks 0)
-[separacion] (0.392221 s): altura 32.142355 (kicks 0)
-[separacion] (0.44661 s): altura 31 (kicks 0)
-[separacion] (0.503725 s): altura 30 (kicks 0)
-[separacion] (0.756624 s): altura 29 (kicks 0)
-[separacion] (0.825943 s): altura 28.4 (kicks 0)
-[separacion] (0.866097 s): altura 28 (kicks 0)
-[separacion] (1.184764 s): altura 27.083816 (kicks 0)
-[separacion] (1.429834 s): altura 26.4 (kicks 0)
-[separacion] (1.671047 s): altura 26.094408 (kicks 0)
-[separacion] (1.953342 s): altura 25.456386 (kicks 0)
-[separacion] (3.491842 s): altura 25.2 (kicks 1)
-[separacion] (3.873562 s): altura 24.761787 (kicks 0)
-[separacion] (3.976006 s): altura 24.159133 (kicks 0)
-[separacion] (4.316854 s): altura 23.602017 (kicks 0)
-[separacion] (6.484994 s): altura 23.4 (kicks 1)
-[separacion] (18.16544 s): altura 23.004099 (kicks 6)
-margin_height (1e-07): 23.0041
-separations: 258
+[separacion] (0.164216 s): altura 38 (kicks 0)
+[separacion] (0.174357 s): altura 37 (kicks 0)
+[separacion] (0.265507 s): altura 34.820095 (kicks 0)
+[separacion] (0.288992 s): altura 34 (kicks 0)
+[separacion] (0.298414 s): altura 33.4 (kicks 0)
+[separacion] (0.309937 s): altura 33 (kicks 0)
+[separacion] (0.341587 s): altura 32.544469 (kicks 0)
+[separacion] (0.397233 s): altura 32.142355 (kicks 0)
+[separacion] (0.45261 s): altura 31 (kicks 0)
+[separacion] (0.510446 s): altura 30 (kicks 0)
+[separacion] (0.763796 s): altura 29 (kicks 0)
+[separacion] (0.833027 s): altura 28.4 (kicks 0)
+[separacion] (0.87376 s): altura 28 (kicks 0)
+[separacion] (1.193164 s): altura 27.083816 (kicks 0)
+[separacion] (1.441982 s): altura 26.4 (kicks 0)
+[separacion] (1.684203 s): altura 26.094408 (kicks 0)
+[separacion] (1.967179 s): altura 25.456386 (kicks 0)
+[separacion] (3.483782 s): altura 25 (kicks 1)
+[separacion] (3.565893 s): altura 24 (kicks 0)
+[separacion] (12.332919 s): altura 23.351578 (kicks 6)
+[separacion] (12.541904 s): altura 23 (kicks 0)
+[separacion] (52.159853 s): altura 22.848656 (kicks 19)
+[separacion] (58.211752 s): altura 22.620815 (kicks 3)
+margin_height (1e-07): 22.620821
+separations: 276
 rejected: 0
-time: 120.2602
+limits: compact 0/24 (max 6 of 20), lp 0/52 (max 10 of 30)
+time: 120.23569
 feasible: yes
 items: 45
-height: 23.0041
-density: 0.47019867
+height: 22.620821
+density: 0.47816557
 max_overlap: 0
 max_outside: 0

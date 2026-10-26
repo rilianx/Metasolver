@@ -1,23 +1,27 @@
 instance: STOYAN_2004_EXAMPLE_1
 items: 80
 height_lb: 24.460905
-construction_height (greedy, 0.104659 s): 64.240171
+construction_height (greedy, 0.10633 s): 64.240171
 compaction_height (soplex): 60.932497
-[separacion] (1.619088 s): altura 59.416447 (kicks 0)
-[separacion] (1.986787 s): altura 58.222424 (kicks 0)
-[separacion] (2.570488 s): altura 57.438156 (kicks 0)
-[separacion] (5.037496 s): altura 56 (kicks 1)
-[separacion] (7.120764 s): altura 55.289488 (kicks 0)
-[separacion] (9.33879 s): altura 54.375 (kicks 0)
-[separacion] (31.91706 s): altura 54 (kicks 8)
-[separacion] (36.791342 s): altura 53.196921 (kicks 1)
-margin_height (1e-07): 53.196922
-separations: 176
+[separacion] (1.631567 s): altura 59.416447 (kicks 0)
+[separacion] (2.001847 s): altura 58.222424 (kicks 0)
+[separacion] (2.586995 s): altura 57.438156 (kicks 0)
+[separacion] (5.699321 s): altura 56.039559 (kicks 1)
+[separacion] (7.221416 s): altura 55.257101 (kicks 0)
+[separacion] (11.934037 s): altura 55 (kicks 1)
+[separacion] (13.002439 s): altura 54.313978 (kicks 0)
+[separacion] (15.559577 s): altura 54 (kicks 0)
+[separacion] (18.339922 s): altura 53.388853 (kicks 0)
+[separacion] (28.146032 s): altura 53.057131 (kicks 3)
+[separacion] (33.875769 s): altura 52.27166 (kicks 1)
+margin_height (1e-07): 52.271661
+separations: 159
 rejected: 0
-time: 120.82241
+limits: compact 0/12 (max 11 of 20), lp 0/53 (max 4 of 30)
+time: 120.13211
 feasible: yes
 items: 80
-height: 53.196922
-density: 0.45981806
+height: 52.271661
+density: 0.4679573
 max_overlap: 0
 max_outside: 0

@@ -1,30 +1,30 @@
 instance: STOYAN_2004_EXAMPLE_4
 items: 40
 height_lb: 29
-construction_height (greedy, 0.207799 s): 77.127083
+construction_height (greedy, 0.218207 s): 77.127083
 compaction_height (soplex): 75.598115
-[separacion] (0.523532 s): altura 69.586707 (kicks 0)
-[separacion] (0.575896 s): altura 68 (kicks 0)
-[separacion] (0.654017 s): altura 66 (kicks 0)
-[separacion] (0.725137 s): altura 65.222222 (kicks 0)
-[separacion] (0.861402 s): altura 64.2 (kicks 0)
-[separacion] (0.986998 s): altura 62.659168 (kicks 0)
-[separacion] (1.162672 s): altura 61.75 (kicks 0)
-[separacion] (1.664572 s): altura 60.293808 (kicks 0)
-[separacion] (2.234121 s): altura 59.650658 (kicks 0)
-[separacion] (9.835629 s): altura 59.022597 (kicks 2)
-[separacion] (13.075138 s): altura 58.041667 (kicks 1)
-[separacion] (15.421358 s): altura 57.671776 (kicks 0)
-[separacion] (24.904993 s): altura 57.117615 (kicks 3)
-[separacion] (27.987271 s): altura 56.318731 (kicks 1)
-[separacion] (47.423591 s): altura 55.83648 (kicks 6)
-margin_height (1e-07): 55.836482
-separations: 170
+[separacion] (0.53825 s): altura 69.586707 (kicks 0)
+[separacion] (0.591849 s): altura 68 (kicks 0)
+[separacion] (0.67255 s): altura 66 (kicks 0)
+[separacion] (0.744157 s): altura 65.222222 (kicks 0)
+[separacion] (0.881138 s): altura 64.2 (kicks 0)
+[separacion] (1.008975 s): altura 62.659168 (kicks 0)
+[separacion] (1.187689 s): altura 61.75 (kicks 0)
+[separacion] (1.690294 s): altura 60.293808 (kicks 0)
+[separacion] (2.261694 s): altura 59.650658 (kicks 0)
+[separacion] (12.789422 s): altura 58.304538 (kicks 3)
+[separacion] (13.00301 s): altura 57.46433 (kicks 0)
+[separacion] (25.082675 s): altura 56.970239 (kicks 4)
+[separacion] (40.64656 s): altura 55.369827 (kicks 5)
+[separacion] (44.254126 s): altura 54.920114 (kicks 1)
+margin_height (1e-07): 54.920116
+separations: 155
 rejected: 0
-time: 121.11366
+limits: compact 0/15 (max 5 of 20), lp 0/38 (max 6 of 30)
+time: 121.10001
 feasible: yes
 items: 40
-height: 55.836482
-density: 0.27590176
+height: 54.920116
+density: 0.2805053
 max_overlap: 0
 max_outside: 0

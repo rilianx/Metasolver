@@ -1,31 +1,33 @@
 instance: STOYAN_2004_EXAMPLE_4
 items: 40
 height_lb: 29
-construction_height (greedy, 0.207547 s): 77.109695
+construction_height (greedy, 0.21641 s): 77.109695
 compaction_height (soplex): 76.137282
-[separacion] (0.545768 s): altura 73.415962 (kicks 0)
-[separacion] (0.626084 s): altura 70.771104 (kicks 0)
-[separacion] (0.766063 s): altura 68.499045 (kicks 0)
-[separacion] (1.001104 s): altura 66.823086 (kicks 0)
-[separacion] (1.192202 s): altura 65.790866 (kicks 0)
-[separacion] (1.45876 s): altura 64.666667 (kicks 0)
-[separacion] (1.584738 s): altura 63.410256 (kicks 0)
-[separacion] (1.963595 s): altura 62.333333 (kicks 0)
-[separacion] (2.887222 s): altura 62 (kicks 0)
-[separacion] (8.483141 s): altura 60.335047 (kicks 2)
-[separacion] (10.277717 s): altura 59.75685 (kicks 0)
-[separacion] (10.779423 s): altura 58.860829 (kicks 0)
-[separacion] (14.723351 s): altura 57.759845 (kicks 1)
-[separacion] (16.022666 s): altura 56.881188 (kicks 0)
-[separacion] (16.23033 s): altura 56.237624 (kicks 0)
-[separacion] (86.009117 s): altura 56 (kicks 20)
-margin_height (1e-07): 56
-separations: 154
+[separacion] (0.566245 s): altura 73.415962 (kicks 0)
+[separacion] (0.64718 s): altura 70.771104 (kicks 0)
+[separacion] (0.787651 s): altura 68.499045 (kicks 0)
+[separacion] (1.02345 s): altura 66.823086 (kicks 0)
+[separacion] (1.214511 s): altura 65.790866 (kicks 0)
+[separacion] (1.482427 s): altura 64.666667 (kicks 0)
+[separacion] (1.611904 s): altura 63.410256 (kicks 0)
+[separacion] (1.996108 s): altura 62.333333 (kicks 0)
+[separacion] (2.92434 s): altura 62 (kicks 0)
+[separacion] (5.848727 s): altura 60.557661 (kicks 1)
+[separacion] (8.755494 s): altura 59.644882 (kicks 1)
+[separacion] (15.70462 s): altura 59.060872 (kicks 2)
+[separacion] (25.452693 s): altura 58.25 (kicks 3)
+[separacion] (28.822811 s): altura 57.577449 (kicks 1)
+[separacion] (36.045742 s): altura 56.840337 (kicks 2)
+[separacion] (36.630566 s): altura 56.164493 (kicks 0)
+[separacion] (83.282922 s): altura 55.573119 (kicks 16)
+margin_height (1e-07): 55.573122
+separations: 180
 rejected: 0
-time: 120.05254
+limits: compact 0/18 (max 5 of 20), lp 0/49 (max 4 of 30)
+time: 120.11764
 feasible: yes
 items: 40
-height: 56
-density: 0.27509614
-max_overlap: 0
+height: 55.573122
+density: 0.27720926
+max_overlap: 3.978975e-08
 max_outside: 0

@@ -1,29 +1,30 @@
 instance: STOYAN_2004_EXAMPLE_4
 items: 40
 height_lb: 29
-construction_height (greedy, 0.207519 s): 77.127083
+construction_height (greedy, 0.214718 s): 77.127083
 compaction_height (soplex): 75.598115
-[separacion] (0.570356 s): altura 74.357092 (kicks 0)
-[separacion] (0.688899 s): altura 69.859445 (kicks 0)
-[separacion] (0.846235 s): altura 68.837674 (kicks 0)
-[separacion] (1.147909 s): altura 65.79744 (kicks 0)
-[separacion] (1.545846 s): altura 63.402074 (kicks 0)
-[separacion] (2.041774 s): altura 62.636289 (kicks 0)
-[separacion] (2.13001 s): altura 61.764118 (kicks 0)
-[separacion] (2.628614 s): altura 60.283142 (kicks 0)
-[separacion] (2.764543 s): altura 59.141758 (kicks 0)
-[separacion] (3.122432 s): altura 58.184811 (kicks 0)
-[separacion] (3.222243 s): altura 57.049425 (kicks 0)
-[separacion] (4.830593 s): altura 56.611697 (kicks 0)
-[separacion] (12.996566 s): altura 55.923814 (kicks 2)
-[separacion] (18.242936 s): altura 55.418977 (kicks 1)
-[separacion] (18.948087 s): altura 54.777785 (kicks 0)
-[separacion] (45.326777 s): altura 54.099486 (kicks 7)
-[separacion] (94.517258 s): altura 53.6 (kicks 12)
+[separacion] (0.583834 s): altura 74.357092 (kicks 0)
+[separacion] (0.707004 s): altura 69.859445 (kicks 0)
+[separacion] (0.868259 s): altura 68.837674 (kicks 0)
+[separacion] (1.178416 s): altura 65.79744 (kicks 0)
+[separacion] (1.588567 s): altura 63.402074 (kicks 0)
+[separacion] (2.077399 s): altura 62.636289 (kicks 0)
+[separacion] (2.168237 s): altura 61.764118 (kicks 0)
+[separacion] (2.676567 s): altura 60.283142 (kicks 0)
+[separacion] (2.817085 s): altura 59.141758 (kicks 0)
+[separacion] (3.178067 s): altura 58.184811 (kicks 0)
+[separacion] (3.279709 s): altura 57.049425 (kicks 0)
+[separacion] (4.897958 s): altura 56.611697 (kicks 0)
+[separacion] (13.106794 s): altura 55.923814 (kicks 2)
+[separacion] (18.395662 s): altura 55.418977 (kicks 1)
+[separacion] (19.10464 s): altura 54.777785 (kicks 0)
+[separacion] (45.71017 s): altura 54.099486 (kicks 7)
+[separacion] (95.291813 s): altura 53.6 (kicks 12)
 margin_height (1e-07): 53.6
-separations: 140
+separations: 139
 rejected: 0
-time: 120.04248
+limits: compact 0/18 (max 6 of 20), lp 0/54 (max 4 of 30)
+time: 120.21618
 feasible: yes
 items: 40
 height: 53.6

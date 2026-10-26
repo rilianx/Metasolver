@@ -1,26 +1,29 @@
 instance: STOYAN_2005_EXAMPLE_2
 items: 12
 height_lb: 16
-construction_height (greedy, 0.008867 s): 31.714286
+construction_height (greedy, 0.010306 s): 31.714286
 compaction_height (soplex): 30.956249
-[separacion] (0.023269 s): altura 27.221826 (kicks 0)
-[separacion] (0.036638 s): altura 25.817308 (kicks 0)
-[separacion] (0.054188 s): altura 25.191559 (kicks 0)
-[separacion] (0.070916 s): altura 24.576235 (kicks 0)
-[separacion] (0.083266 s): altura 23.587059 (kicks 0)
-[separacion] (0.102164 s): altura 23 (kicks 0)
-[separacion] (0.129135 s): altura 22.515337 (kicks 0)
-[separacion] (0.135913 s): altura 21.411835 (kicks 0)
-[separacion] (0.174203 s): altura 21 (kicks 0)
-[separacion] (0.842537 s): altura 20.309851 (kicks 3)
-[separacion] (0.863173 s): altura 20.022208 (kicks 0)
-[separacion] (73.576318 s): altura 19.928728 (kicks 376)
-[separacion] (75.675183 s): altura 19.75 (kicks 13)
-[separacion] (75.882049 s): altura 19.127509 (kicks 1)
+[separacion] (0.026963 s): altura 27.221826 (kicks 0)
+[separacion] (0.040817 s): altura 25.817308 (kicks 0)
+[separacion] (0.058469 s): altura 25.191559 (kicks 0)
+[separacion] (0.075496 s): altura 24.576235 (kicks 0)
+[separacion] (0.087961 s): altura 23.587059 (kicks 0)
+[separacion] (0.107085 s): altura 23 (kicks 0)
+[separacion] (0.134191 s): altura 22.515337 (kicks 0)
+[separacion] (0.141036 s): altura 21.411835 (kicks 0)
+[separacion] (0.180084 s): altura 21 (kicks 0)
+[separacion] (1.420213 s): altura 20.649148 (kicks 6)
+[separacion] (2.276008 s): altura 20.478937 (kicks 5)
+[separacion] (2.889813 s): altura 20.333333 (kicks 3)
+[separacion] (5.094289 s): altura 20 (kicks 13)
+[separacion] (12.370937 s): altura 19.928728 (kicks 38)
+[separacion] (20.283049 s): altura 19.75 (kicks 50)
+[separacion] (20.305634 s): altura 19.127509 (kicks 0)
 margin_height (1e-07): 19.127509
-separations: 2417
+separations: 2317
 rejected: 0
-time: 120.05464
+limits: compact 0/17 (max 4 of 20), lp 0/36 (max 5 of 30)
+time: 120.01571
 feasible: yes
 items: 12
 height: 19.127509

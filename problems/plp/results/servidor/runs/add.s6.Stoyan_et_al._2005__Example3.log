@@ -1,28 +1,33 @@
 instance: STOYAN_2005_EXAMPLE_3
 items: 25
 height_lb: 16
-construction_height (greedy, 0.014924 s): 42.666667
+construction_height (greedy, 0.015268 s): 42.666667
 compaction_height (soplex): 42.5
-[separacion] (0.028184 s): altura 41.4 (kicks 0)
-[separacion] (0.032041 s): altura 40 (kicks 0)
-[separacion] (0.035499 s): altura 39.214286 (kicks 0)
-[separacion] (0.053626 s): altura 37 (kicks 0)
-[separacion] (0.083392 s): altura 34 (kicks 0)
-[separacion] (0.091736 s): altura 32.777778 (kicks 0)
-[separacion] (0.102683 s): altura 32 (kicks 0)
-[separacion] (0.143884 s): altura 31.513595 (kicks 0)
-[separacion] (0.223074 s): altura 31 (kicks 0)
-[separacion] (0.950214 s): altura 30.161824 (kicks 1)
-[separacion] (0.982387 s): altura 29.655468 (kicks 0)
-[separacion] (1.240809 s): altura 28.959178 (kicks 0)
-[separacion] (2.946489 s): altura 28.654588 (kicks 3)
-margin_height (1e-07): 28.65459
-separations: 839
+[separacion] (0.028609 s): altura 41.4 (kicks 0)
+[separacion] (0.032612 s): altura 40 (kicks 0)
+[separacion] (0.036114 s): altura 39.214286 (kicks 0)
+[separacion] (0.054575 s): altura 37 (kicks 0)
+[separacion] (0.086066 s): altura 34 (kicks 0)
+[separacion] (0.094502 s): altura 32.777778 (kicks 0)
+[separacion] (0.105709 s): altura 32 (kicks 0)
+[separacion] (0.149768 s): altura 31.513595 (kicks 0)
+[separacion] (0.234511 s): altura 31 (kicks 0)
+[separacion] (1.154317 s): altura 30.726245 (kicks 2)
+[separacion] (2.312918 s): altura 30.256399 (kicks 2)
+[separacion] (2.568167 s): altura 30.016234 (kicks 0)
+[separacion] (2.611048 s): altura 29.52381 (kicks 0)
+[separacion] (4.384898 s): altura 29.340767 (kicks 3)
+[separacion] (6.398266 s): altura 29.142857 (kicks 4)
+[separacion] (9.677099 s): altura 29 (kicks 5)
+[separacion] (9.74837 s): altura 28.031497 (kicks 0)
+margin_height (1e-07): 28.031498
+separations: 712
 rejected: 0
-time: 120.0278
+limits: compact 0/18 (max 3 of 20), lp 0/36 (max 5 of 30)
+time: 120.1271
 feasible: yes
 items: 25
-height: 28.65459
-density: 0.46948073
+height: 28.031498
+density: 0.47991647
 max_overlap: 0
 max_outside: 0

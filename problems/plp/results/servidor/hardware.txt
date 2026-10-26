@@ -1,4 +1,4 @@
-# fecha: 2026-10-24T23:18:59-03:00
+# fecha: 2026-10-26T17:50:27-03:00
 # host: servidor-ignacio
 
 ## CPU (lscpu)
@@ -54,31 +54,31 @@ logicos (nproc): 16
 fisicos (core,socket distintos): 16
 
 ## frecuencias por nucleo (MHz, ahora)
-      1 1199.683
-      1 1199.933
-      1 1199.974
-      1 1199.976
+      1 1199.829
+      1 1199.965
+      1 1199.977
       2 1200.000
-      1 1200.008
-      1 1209.562
-      1 1344.269
-      1 1578.615
-      1 1580.943
-      1 1899.642
-      1 1935.522
-      1 2000.000
-      1 2290.146
-      1 2302.952
+      1 1249.420
+      1 1335.463
+      1 1538.845
+      1 1630.281
+      1 1899.964
+      1 1900.000
+      1 1999.602
+      1 2293.555
+      1 2297.467
+      1 2297.613
+      1 2299.949
 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor: schedutil
 /sys/devices/system/cpu/intel_pstate/no_turbo: 0
 
 ## memoria
 MemTotal:       65845920 kB
-MemFree:        38631532 kB
-MemAvailable:   57685400 kB
+MemFree:        39218428 kB
+MemAvailable:   58863044 kB
                total        used        free      shared  buff/cache   available
-Mem:            62Gi       7.8Gi        36Gi        22Mi        19Gi        55Gi
-Swap:          8.0Gi       329Mi       7.7Gi
+Mem:            62Gi       6.7Gi        37Gi        22Mi        19Gi        56Gi
+Swap:          8.0Gi       227Mi       7.8Gi
 
 ## sistema
 PRETTY_NAME="Ubuntu 24.04.1 LTS"
@@ -86,7 +86,7 @@ VERSION="24.04.1 LTS (Noble Numbat)"
 Linux servidor-ignacio 6.17.0-35-generic #35~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 19:30:42 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 
 ## carga actual
- 23:18:59 up 116 days,  4:53, 17 users,  load average: 0.67, 0.32, 0.11
+ 17:50:27 up 117 days, 23:25, 16 users,  load average: 0.11, 4.02, 9.27
 
 ## compiladores y herramientas
 g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
@@ -94,14 +94,5 @@ cmake version 3.28.3
 Python 3.12.3
 
 ## repositorio
-5e61fdee587b401602418befc96a51ed036bb9e9 plp: descend descarta puntos del LP 3D fuera de su region (Merged5 semilla 10 quedaba atascada rechazando soluciones)
- D ../results/servidor/cert_jobs.txt
- D ../results/servidor/hardware.txt
- D ../results/servidor/jobs.txt
- D ../results/servidor/merged_trajectories.csv
- D ../results/servidor/python-packages.txt
- D ../results/servidor/results.md
- D ../results/servidor/runs/add.s1.Stoyan_et_al._2004__Example1.log
- D ../results/servidor/runs/add.s1.Stoyan_et_al._2004__Example1.sol
- D ../results/servidor/runs/add.s1.Stoyan_et_al._2004__Example2.log
- D ../results/servidor/runs/add.s1.Stoyan_et_al._2004__Example2.sol
+5a5e40fa8db9fd505aab951f6a57c3cc5b4ea46e plp: grupo simple2 (sin LP, sin Improve, sigma 0, greedy actual)
+?? ../../../resultados_plp.tgz

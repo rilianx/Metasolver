@@ -1,32 +1,33 @@
 instance: Merged2
 items: 30
 height_lb: 16
-construction_height (greedy, 0.079158 s): 36
+construction_height (greedy, 0.08091 s): 36
 compaction_height (soplex): 36
-[separacion] (0.125171 s): altura 32 (kicks 0)
-[separacion] (0.143778 s): altura 31.044463 (kicks 0)
-[separacion] (0.152758 s): altura 30.4 (kicks 0)
-[separacion] (0.163352 s): altura 30 (kicks 0)
-[separacion] (0.186891 s): altura 28.663007 (kicks 0)
-[separacion] (0.193136 s): altura 28.203667 (kicks 0)
-[separacion] (0.208453 s): altura 26.6 (kicks 0)
-[separacion] (0.220362 s): altura 26 (kicks 0)
-[separacion] (0.228242 s): altura 25.2 (kicks 0)
-[separacion] (0.246126 s): altura 24.4 (kicks 0)
-[separacion] (0.271331 s): altura 24 (kicks 0)
-[separacion] (0.352013 s): altura 23.4 (kicks 0)
-[separacion] (0.39627 s): altura 22.4 (kicks 0)
-[separacion] (1.335321 s): altura 22 (kicks 1)
-[separacion] (19.658651 s): altura 21.7055 (kicks 16)
-[separacion] (22.143003 s): altura 21.36923 (kicks 2)
-[separacion] (25.377596 s): altura 21.022293 (kicks 3)
-margin_height (1e-07): 21.022294
-separations: 391
+[separacion] (0.127312 s): altura 32 (kicks 0)
+[separacion] (0.146541 s): altura 31.044463 (kicks 0)
+[separacion] (0.155817 s): altura 30.4 (kicks 0)
+[separacion] (0.166435 s): altura 30 (kicks 0)
+[separacion] (0.189748 s): altura 28.663007 (kicks 0)
+[separacion] (0.195979 s): altura 28.203667 (kicks 0)
+[separacion] (0.210301 s): altura 26.6 (kicks 0)
+[separacion] (0.222149 s): altura 26 (kicks 0)
+[separacion] (0.230157 s): altura 25.2 (kicks 0)
+[separacion] (0.24828 s): altura 24.4 (kicks 0)
+[separacion] (0.274113 s): altura 24 (kicks 0)
+[separacion] (0.353584 s): altura 23.4 (kicks 0)
+[separacion] (0.397413 s): altura 22.4 (kicks 0)
+[separacion] (1.39532 s): altura 22.052377 (kicks 1)
+[separacion] (2.010486 s): altura 21.676938 (kicks 0)
+[separacion] (2.053567 s): altura 21.235346 (kicks 0)
+[separacion] (2.105461 s): altura 21 (kicks 0)
+margin_height (1e-07): 21
+separations: 398
 rejected: 0
-time: 120.28598
+limits: compact 0/18 (max 3 of 20), lp 0/32 (max 7 of 30)
+time: 120.27594
 feasible: yes
 items: 30
-height: 21.022294
-density: 0.44947901
+height: 21
+density: 0.44995619
 max_overlap: 0
 max_outside: 0
