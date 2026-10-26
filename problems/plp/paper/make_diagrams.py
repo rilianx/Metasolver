@@ -470,7 +470,11 @@ def fig_axis(pieces):
     y0 = 0.55
     fcol = plt.get_cmap('tab10')
     nf = len(d)
-    fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.5), gridspec_kw={'width_ratios': [0.9, 1.1, 1.1]})
+    fig = plt.figure(figsize=(7.2, 4.5))
+    top, bot = fig.subfigures(2, 1, height_ratios=[1, 1], hspace=0.02)
+    ax_p, ax_n, ax_d = top.subplots(1, 3, gridspec_kw={'width_ratios': [1.0, 0.9, 1.0]})
+    ax_g, ax_phi = bot.subplots(1, 2, gridspec_kw={'width_ratios': [1.2, 1.0]})
+    axs = [ax_n, ax_d, ax_g, ax_phi]
 
     # intervalo (L, U) sobre la recta r(s) = (s, y0)
     c = d - n[:, 1]*y0; nk = n[:, 0]
@@ -500,7 +504,27 @@ def fig_axis(pieces):
     ax.text(*(rm + 0.5*gap[f0]*n[f0] + np.array([0.08, 0.0])), r'$\delta$', color=RED, fontsize=8, va='center')
     ax.text(*(V.mean(0) + np.array([-0.1, -0.45])), '$N_{AB}$', color=ACCENT, fontsize=9, ha='center')
     ax.set_xlim(S[0], S[-1] + 0.05); ax.set_aspect('equal'); ax.axis('off')
-    ax.set_title('(a) $r$ moves along $x$', fontsize=8, color=INK)
+
+    # piezas: B fija y A con su punto de referencia en r(L), r(s) y r(U) (A toca a B en L y en U)
+    ax = ax_p
+    ax.add_patch(MplPolygon(B, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.6, zorder=2))
+    ax.text(*(B.mean(0) + np.array([0.0, -0.45])), '$B$', fontsize=9, ha='center', va='center', zorder=7)
+    for v, lab in ((L, '$s=L$'), (U, '$s=U$')):
+        ax.add_patch(MplPolygon(A + np.array([v, y0]), closed=True, facecolor='none', edgecolor=INK, lw=0.6,
+                                ls=(0, (2, 1.2)), zorder=3))
+        ax.text(*(A.max(0) + np.array([v, y0]) + np.array([-0.15, 0.06])), lab, fontsize=7, ha='center', zorder=7)
+    ax.add_patch(MplPolygon(A + rm, closed=True, facecolor=COLORS[4], edgecolor=INK, lw=0.6, zorder=3))
+    I = clip(A + rm, B)
+    if I is not None: ax.add_patch(MplPolygon(I, closed=True, facecolor=RED, edgecolor='none', zorder=4))
+    ax.text(*(A.max(0) + rm + np.array([0.05, 0.06])), '$A$', fontsize=9, zorder=7)
+    ax.plot([S[0], S[-1]], [y0, y0], color=INK, lw=0.6, ls=':')
+    for v in (L, U): ax.plot(v, y0, 'o', ms=3, color=INK, mfc='white', zorder=6)
+    ax.plot(*rm, 'o', ms=3, color=RED, zorder=6)
+    allp = np.vstack([B, A + np.array([L, y0]), A + np.array([U, y0])])
+    ax.set_xlim(S[0], S[-1]); ax.set_ylim(allp[:, 1].min() - 0.1, allp[:, 1].max() + 0.25)
+    ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title('(a) $A$ moves along $x$, $B$ fixed', fontsize=8, color=INK)
+    ax_n.set_title('(b) $r(s)$ crosses $N_{AB}$', fontsize=8, color=INK)
 
     # (b)
     ax = axs[1]
@@ -520,11 +544,11 @@ def fig_axis(pieces):
             ha='right', va='bottom')
     ax.text(0.5*(L + U), 0.9, r'$\delta_{AB}(r(s))$', fontsize=8, ha='center', va='bottom',
             bbox=dict(facecolor='white', edgecolor='none', pad=0.5, alpha=0.85))
-    ax.set_title('(b) zero outside $(L,U)$, concave inside', fontsize=8, color=INK)
+    ax.set_title('(c) $\\delta_{AB}$ along the line', fontsize=8, color=INK)
 
     # (c) dos terminos (dos piezas fijas) con pesos, en el rango del contenedor [0, U_k]: phi concava entre puntos
     # de quiebre consecutivos y minimo en uno de ellos
-    ax = axs[2]
+    ax = axs[3]
     off2 = np.array([1.9, 0.25]); w1, w2 = 1.0, 1.6
     def term(off, Ss):
         dd = d + n @ off; cc = dd - n[:, 1]*y0
@@ -551,10 +575,33 @@ def fig_axis(pieces):
     ax.set_xticks([s0, s1]); ax.set_xticklabels(['$0$', '$U_k$'])
     ax.set_xlabel('$s$'); ax.set_ylim(0, max(vals)*1.45); ax.set_xlim(S2[0], S2[-1])
     ax.legend(fontsize=7, frameon=False, loc='upper center', ncol=3, handlelength=1.2, columnspacing=0.8)
-    ax.set_title(r'(c) $\phi$: minimum at a breakpoint', fontsize=8, color=INK)
-    fig.tight_layout(pad=0.3, w_pad=0.8)
-    fig.savefig(os.path.join(OUT, 'axis.pdf'))
-    fig.savefig(os.path.join(OUT, 'axis.png'), dpi=200)
+    ax.set_title(r'(e) $\phi$: minimum at a breakpoint', fontsize=8, color=INK)
+    smin = bps[k]
+
+    # (c) las piezas: dos fijas (j = 1, 2) y la pieza movil A en la posicion elegida; limites del contenedor
+    ax = axs[2]
+    for off, lab in ((np.zeros(2), '$j=1$'), (off2, '$j=2$')):
+        ax.add_patch(MplPolygon(B + off, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.5, zorder=2))
+        ax.text(*(B.mean(0) + off + np.array([0.0, -0.35])), lab, fontsize=7, ha='center', va='center', zorder=7)
+    for sv in (s0, s1):
+        ax.add_patch(MplPolygon(A + np.array([sv, y0]), closed=True, facecolor='none', edgecolor=MUTED, lw=0.5,
+                                ls=(0, (2, 1.2)), zorder=3))
+    pa = A + np.array([smin, y0])
+    ax.add_patch(MplPolygon(pa, closed=True, facecolor=COLORS[4], edgecolor=ACCENT, lw=1.0, zorder=4))
+    for off in (np.zeros(2), off2):
+        I = clip(pa, B + off)
+        if I is not None: ax.add_patch(MplPolygon(I, closed=True, facecolor=RED, edgecolor='none', zorder=5))
+    yb = min(B[:, 1].min(), (B + off2)[:, 1].min()) - 0.12
+    ax.annotate('', (s1, yb), (s0, yb), arrowprops=dict(arrowstyle='<->', color=INK, lw=0.6))
+    ax.text(0.5*(s0 + s1), yb - 0.05, 'range of the reference point of $A$ ($0\\ldots U_k$)', fontsize=6.5,
+            ha='center', va='top')
+    ax.text(*(A[2] + np.array([smin, y0]) + np.array([-0.12, -0.15])), '$A$', fontsize=8, ha='right', zorder=7)
+    allp = np.vstack([B, B + off2, A + np.array([s0, y0]), A + np.array([s1, y0])])
+    ax.set_xlim(allp[:, 0].min() - 0.05, allp[:, 0].max() + 0.05); ax.set_ylim(yb - 0.3, allp[:, 1].max() + 0.05)
+    ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title('(d) $A$ between two fixed pieces (at the best $s$)', fontsize=8, color=INK)
+    fig.savefig(os.path.join(OUT, 'axis.pdf'), bbox_inches='tight')
+    fig.savefig(os.path.join(OUT, 'axis.png'), dpi=200, bbox_inches='tight')
 
 
 def fig_overlap(pieces, ty, W, t, H):
