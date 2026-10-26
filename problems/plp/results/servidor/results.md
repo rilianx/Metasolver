@@ -36,6 +36,10 @@ Certificadas en total: 139 de 140
 | Pesos aditivos | -1.3% | -1.5% | 53.15 | 10 |
 | Solo reinsercion | -3.5% | -1.9% | 53.50 | 10 |
 | 5x mas lento (24 s) | -0.1% | -0.9% | 54.82 | 10 |
+| Kick: ninguno (solo reinicio) | -2.8% | -2.0% | 53.66 | 10 |
+| Kick: solo aleatorio | -3.1% | -1.9% | 53.60 | 10 |
+| Kick: pieza superior, aleatoria | -3.0% | -1.9% | 53.16 | 10 |
+| Kick: pieza superior, menor penetracion de 20 | -2.8% | -2.1% | 53.09 | 10 |
 
 ## Merged: utilizacion media en el tiempo (3DNest a 600 s: 43.0, 42.9, 43.3, 42.0, 41.0 %)
 
