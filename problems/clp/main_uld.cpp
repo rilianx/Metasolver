@@ -426,6 +426,8 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0;
 //etapas de la insercion de cajas (ablacion)
 static bool stage_scratch=true, stage_priority=true, stage_ruin=true;
+//proporciones de la ruina (--ruin_full agrega 1: recarga desde cero en la misma etapa)
+static vector<double> ruin_rhos={0.3, 0.6, 0.9};
 
 static double volume_of(const vector<int>& b){
 	double v=0;
@@ -499,7 +501,7 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
 	if(stage_ruin)
 		for(bool progress=true; progress && !none(pool); ){
 			progress=false;
-			for(double p : {0.3, 0.6, 0.9})
+			for(double p : ruin_rhos)
 				if(!none(pool) && ruin_recreate(loads, pool, p, P)){ progress=true; st_ruin++; }
 		}
 }
@@ -634,6 +636,7 @@ int main(int argc, char** argv){
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
+	args::Flag _ruin_full(parser, "ruin_full", "Ruin and recreate also with the proportion 1 (experimental)", {"ruin_full"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -705,6 +708,7 @@ int main(int argc, char** argv){
 	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
+	if(_ruin_full) ruin_rhos.push_back(1.0);
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
