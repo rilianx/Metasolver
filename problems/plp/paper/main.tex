@@ -245,7 +245,7 @@ the one that allows the longest step in the descent direction (line~13). The sel
 region of positions where the piece does not overlap the placed parts, and the LP of line~14 minimizes
 $c\cdot u=z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$ in it: the piece goes down and, with a small weight $\sigma$,
 towards the nearest walls in $x$ and $y$. The facets are re-selected at the new point and the procedure stops
-when the objective no longer decreases.
+when the objective no longer decreases. Figure~\ref{fig:descend} shows the LPs of one descent.
 
 Among all piece types and resulting positions, the greedy places the pair $(k,t)$ that maximizes (line~6)
 \begin{equation}\label{eq:greedy}
@@ -300,6 +300,20 @@ the construction in two dimensions.
 descends by a sequence of LPs over NFP facets, towards the floor and the nearest wall; dotted outlines: final
 positions of the other starts; blue: descent and position chosen by the greedy criterion.}
 \label{fig:construction}
+\end{figure}
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/descend.pdf}
+\caption{One \textsc{Descend} of Figure~\ref{fig:construction} step by step (the rectangle placed fifth). Each
+panel is one LP of Algorithm~\ref{alg:greedy}, line~14, in the space of the reference point of the piece (the
+corner of its bounding box): $t$ is the current point and the dashed box the trust region (the point may not go
+up). Each colored line is the facet selected for a nearby placed part (color of that piece): the reference point
+must stay on the side of the line where the parts do not overlap. The shaded region is the feasible region of
+the LP, and $t'$ its optimum along $-c$ (down and, with weight $\sigma$, towards the nearest wall). (a) The piece
+drops onto the pentagon below. (b) With the facets re-selected at the new point, it can only slide, and moves to
+the wall. (c) The LP finds no better point and the descent stops.}
+\label{fig:descend}
 \end{figure}
 
 \subsection{Global LP compaction}\label{sec:compact}

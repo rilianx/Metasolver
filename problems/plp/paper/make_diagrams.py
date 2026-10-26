@@ -6,6 +6,7 @@ Reimplementa en 2D (ejes x y z) los mismos pasos de BSG_PLP sobre un ejemplo peq
                              global por LP
   figures/nfp.pdf            NFP de dos partes (deslizamiento, suma de Minkowski) y penetracion
   figures/axis.pdf           Proposicion 1: penetracion a lo largo de un eje (cero fuera de un intervalo, concava dentro)
+  figures/descend.pdf        un descenso paso a paso: region de confianza, facetas elegidas y solucion de cada LP
   figures/overlap.pdf        movimiento exacto a lo largo de un eje (funcion phi concava por
                              tramos); minimizacion del solapamiento con pesos GLS hasta separar
 
@@ -627,6 +628,133 @@ def fig_axis(pieces):
     fig.savefig(os.path.join(OUT, 'axis.png'), dpi=200, bbox_inches='tight')
 
 
+def descend_trace(i, ty, t, placed, pieces, W, slide=0.065, rounds=50):
+    """como descend, pero registra cada ronda: punto, region de confianza, restricciones (a.u <= b, pieza j) y
+    solucion del LP"""
+    P = pieces[ty[i]]
+    X = W - P.w
+    x = t[i].copy()
+    c = np.array([slide if x[0] <= X/2 else -slide, 1.0])
+    g = -c/np.linalg.norm(c)
+    delta = max(P.w, P.h)
+    out = []
+    for _ in range(rounds):
+        lo = np.array([max(0, x[0]-delta), max(0, x[1]-delta)]); hi = np.array([min(X, x[0]+delta), x[1]])
+        cons = []
+        for j in placed:
+            for a in range(len(P.parts)):
+                for b in range(len(pieces[ty[j]].parts)):
+                    V, n, d = nfp_c(ty[i], a, ty[j], b, pieces)
+                    # region de confianza (cajas): la parte puede tocar a b?
+                    if np.any(V.max(0) + t[j] < lo - 1e-9) or np.any(V.min(0) + t[j] > hi + 1e-9): continue
+                    rel = x - t[j]
+                    sl = n @ rel - d
+                    best, bs, bg = -1, -1, 0
+                    for f in range(len(d)):
+                        if sl[f] < -1e-9: continue
+                        ng = n[f] @ g
+                        step = np.inf if ng >= -1e-12 else max(0, sl[f])/(-ng)
+                        if step > bs or (step == bs and ng > bg): best, bs, bg = f, step, ng
+                    if best < 0: best = int(np.argmax(sl))
+                    cons.append((-n[best], -d[best] - n[best] @ t[j], j))
+        res = linprog(c, A_ub=np.array([q[0] for q in cons]) if cons else None,
+                      b_ub=np.array([q[1] for q in cons]) if cons else None, bounds=list(zip(lo, hi)), method='highs')
+        x2 = res.x if res.status == 0 else x
+        improved = c @ x2 < c @ x - 1e-9
+        out.append(dict(x=x.copy(), lo=lo, hi=hi, cons=cons, x2=x2.copy(), improved=improved, c=c))
+        if not improved: break
+        x = x2
+    return out
+
+
+def halfplane_clip(poly, a, b):
+    """{u in poly : a.u <= b}"""
+    out = []
+    m = len(poly)
+    for k in range(m):
+        p, q = poly[k], poly[(k+1) % m]
+        fp, fq = a @ p - b, a @ q - b
+        if fp <= 0: out.append(p)
+        if fp*fq < 0: out.append(p + (q - p)*fp/(fp - fq))
+    return np.array(out) if len(out) >= 2 else None
+
+
+def fig_descend():
+    pieces, ty, W = example()
+    NFP.clear()
+    _, steps = construct(ty, pieces, W, record=(4,))
+    step, paths, i, tt, placed = steps[0]
+    # el descenso con mas rondas entre los de la pieza elegida en ese paso
+    path = max((p for p in paths), key=lambda p: len(p[1]))[1]
+    t0 = tt.copy(); t0[i] = path[0]
+    tr = descend_trace(i, ty, t0, placed, pieces, W)
+    P = pieces[ty[i]]
+    Hcur = max(tt[j][1] + pieces[ty[j]].h for j in placed)
+    fig, axs = plt.subplots(1, len(tr), figsize=(7.2, 2.9))
+    for k, (ax, R) in enumerate(zip(axs, tr)):
+        strip(ax, W, Hcur + P.h + 0.3)
+        draw_layout(ax, ty, tt, pieces, W, idx=placed, alpha=0.9)
+        # region factible del LP para el punto de referencia: caja de confianza (z no sube) y facetas elegidas
+        box = np.array([R['lo'], [R['hi'][0], R['lo'][1]], R['hi'], [R['lo'][0], R['hi'][1]]])
+        reg = box
+        for (a, b, j) in R['cons']:
+            if reg is not None: reg = halfplane_clip(reg, a, b)
+        ax.add_patch(MplPolygon(box, closed=True, facecolor='none', edgecolor=MUTED, lw=0.7, ls=(0, (3, 2)), zorder=6))
+        if reg is not None:
+            area = 0.5*abs(cross2(reg[1:-1] - reg[0], reg[2:] - reg[0]).sum()) if len(reg) >= 3 else 0.0
+            if area > 1e-4:
+                ax.add_patch(MplPolygon(reg, closed=True, facecolor=ACCENT, alpha=0.35, edgecolor=ACCENT, lw=0.9,
+                                        zorder=9))
+            else:      # region degenerada (un segmento): la pieza solo puede deslizar
+                ax.plot([reg[:, 0].min(), reg[:, 0].max()], [reg[:, 1].min(), reg[:, 1].max()], color=ACCENT, lw=3.0,
+                        alpha=0.6, solid_capstyle='round', zorder=9)
+        # recta de cada faceta elegida (borde del semiplano), con el color de la pieza que la genera
+        L = 2*W
+        clipbox = np.array([R['lo'] - 0.35, [R['hi'][0] + 0.35, R['lo'][1] - 0.35], R['hi'] + 0.35,
+                            [R['lo'][0] - 0.35, R['hi'][1] + 0.35]])
+        for (a, b, j) in R['cons']:
+            nrm = a/np.linalg.norm(a); p0 = nrm*(b/np.linalg.norm(a)); dvec = np.array([-nrm[1], nrm[0]])
+            seg = np.array([p0 - L*dvec, p0 + L*dvec])
+            # tramo de la recta dentro de la caja de confianza ampliada
+            ts_ = []
+            for kk in range(4):
+                q0, q1 = clipbox[kk], clipbox[(kk+1) % 4]
+                M_ = np.array([seg[1]-seg[0], q0-q1]).T
+                if abs(np.linalg.det(M_)) < 1e-12: continue
+                uv = np.linalg.solve(M_, q0-seg[0])
+                if 0 <= uv[1] <= 1: ts_.append(uv[0])
+            if len(ts_) < 2: continue
+            seg = np.array([seg[0] + min(ts_)*(seg[1]-seg[0]), seg[0] + max(ts_)*(seg[1]-seg[0])])
+            ax.plot(seg[:, 0], seg[:, 1], color=COLORS[ty[j] % len(COLORS)], lw=1.4, zorder=7,
+                    path_effects=None)
+            ax.plot(seg[:, 0], seg[:, 1], color=INK, lw=0.4, ls=(0, (1, 1.5)), zorder=7)
+        # pieza en el punto actual y en la solucion del LP
+        for Q in P.parts:
+            ax.add_patch(MplPolygon(Q + R['x'], closed=True, facecolor='none', edgecolor=INK, lw=0.9, zorder=8))
+            if R['improved']:
+                ax.add_patch(MplPolygon(Q + R['x2'], closed=True, facecolor='none', edgecolor=ACCENT, lw=1.2, zorder=8))
+        ax.plot(*R['x'], 'o', ms=3.5, color=INK, zorder=11)
+        ax.text(*(R['x'] + np.array([-0.06, 0.06])), '$t$', fontsize=8, ha='right', va='bottom', zorder=10)
+        if R['improved']:
+            ax.plot(*R['x2'], 'o', ms=3.5, color=ACCENT, zorder=11)
+            ax.text(*(R['x2'] + np.array([0.08, -0.05])), "$t'$", fontsize=8, color=ACCENT, ha='left', va='top', zorder=10)
+            ax.add_patch(FancyArrowPatch(R['x'], R['x2'], arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0,
+                                         zorder=9, shrinkA=2, shrinkB=2))
+        # direccion de descenso -c
+        c = R['c']; o = np.array([W + 0.35, Hcur + P.h - 0.2])
+        ax.add_patch(FancyArrowPatch(o, o - 0.8*c/np.linalg.norm(c), arrowstyle='-|>', mutation_scale=7, color=INK,
+                                     lw=0.8, zorder=9))
+        ax.text(*(o + np.array([0.05, 0.12])), '$-c$', fontsize=8, ha='center', va='bottom')
+        ax.set_xlim(-0.3, W + 0.8); ax.set_ylim(-0.2, Hcur + P.h + 0.35)
+        ttl = ('(%s) LP %d: %d facets' % ('abcd'[k], k+1, len(R['cons']))) if R['improved'] else \
+              ('(%s) LP %d: no improvement, stop' % ('abcd'[k], k+1))
+        ax.set_title(ttl, fontsize=8, color=INK)
+    fig.tight_layout(pad=0.3, w_pad=0.5)
+    fig.savefig(os.path.join(OUT, 'descend.pdf'))
+    fig.savefig(os.path.join(OUT, 'descend.png'), dpi=200)
+    print('descend: pieza', i+1, 'rondas', len(tr), [len(R['cons']) for R in tr])
+
+
 def fig_overlap(pieces, ty, W, t, H):
     NFP.clear()
     fig = plt.figure(figsize=(7.2, 4.6))
@@ -717,6 +845,7 @@ def fig_overlap(pieces, ty, W, t, H):
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     pieces, ty, W, t, H = fig_construction()
+    fig_descend()
     fig_nfp(pieces)
     fig_axis(pieces)
     fig_overlap(pieces, ty, W, t, H)
