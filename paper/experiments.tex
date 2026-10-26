@@ -185,6 +185,22 @@ Setting & Method & Vol.\ (m$^3$) & vs RGS & B/W & ULDs & Unloaded & CoG$_{xy}$ &
 \end{tabular}
 \end{table}
 
+Figure~\ref{fig:loading} shows a solution in the setting with one ULD of each type: our
+algorithm uses four ULDs instead of the three of the RGS, but their total volume is smaller,
+since besides the ULDs of types 5 and 6 it uses two lower-deck containers of types 3 and 2
+(17.8\,m$^3$) instead of a main-deck ULD of type 4 (20.0\,m$^3$).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/loading.pdf}
+\caption{Solution of the instance with 80 boxes number 4 in the setting with one ULD of each
+type ($t = 0.1$\,s): four ULDs (number of boxes and volume utilization) with a total volume of
+72.8\,m$^3$, against 75.0\,m$^3$ for the three ULDs (types 5, 6 and 4) of the RGS. Types 5 and 2
+have bevelled corners. The load of each ULD has been translated to center its CoG, which is
+within range in the four ULDs.}
+\label{fig:loading}
+\end{figure}
+
 \paragraph{Results by instance size.}
 Tables~\ref{tab:size} and~\ref{tab:size2} report the total volume and the number of ULDs by
 instance size. With $t = 1$\,s our algorithm uses less volume than the RGS in every group of
@@ -278,7 +294,19 @@ phase, which loads many ULDs again. Table~\ref{tab:time} shows how the results c
 time limit in the Paquay setting. With $t = 0.02$\,s the mean time per instance is 1.0\,s,
 about 0.4\,s on the processor of \citet{Hessler2025}, comparable to the RGS, and the volume is
 0.5\% smaller than that of the RGS (not significant); from $t = 0.05$\,s on, the difference is
-significant and it grows with the time limit up to 7.5\% with $t = 2$\,s.
+significant and it grows with the time limit up to 7.5\% with $t = 2$\,s. Figure~\ref{fig:time} shows the same curve
+against the mean time per instance, with the time of the RGS on its machine and scaled to ours.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\textwidth]{figures/time.pdf}
+\caption{Total volume of the ULDs in the 300 instances of the Paquay setting as a function of the
+mean time per instance (the labels are the time limits per ULD; mean of five runs for 0.1\,s and
+1\,s, one run otherwise), and the RGS of \citet{Hessler2025}: time on their machine (filled
+square) and scaled to ours by the single-thread speed ratio of 2.5 (empty square); the dashed
+line marks its volume.}
+\label{fig:time}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
