@@ -596,33 +596,25 @@ def fig_axis(pieces):
         f = int(np.argmin(g))
         return max(0.0, g[f])*n[f]
 
-    # A en la mejor posicion (estrella): solapa solo a j=1; flecha delta_1
-    pa = A + np.array([smin, y0])
-    ax.add_patch(MplPolygon(pa, closed=True, facecolor=COLORS[4], edgecolor=INK, lw=0.8, zorder=4))
-    for off in (np.zeros(2), off2):
-        I = clip(pa, B + off)
-        if I is not None: ax.add_patch(MplPolygon(I, closed=True, facecolor=RED, edgecolor='none', zorder=5))
-    r = np.array([smin, y0])
-    v1 = pen_vec(np.zeros(2), r)
-    ax.add_patch(FancyArrowPatch(r, r + v1, arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.2, zorder=10,
-                                 shrinkA=0, shrinkB=0))
-    ax.text(*(r + v1 + np.array([0.04, 0.02])), r'$\delta_1$', color=ACCENT, fontsize=9, ha='left', va='bottom',
-            zorder=10, bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.8))
-    # A en otro punto de quiebre (U del termino 1): solapa solo a j=2; flecha delta_2
-    s_alt = min(b for b in bps if b > smin + 1e-9)
-    r2 = np.array([s_alt, y0])
-    pb = A + r2
-    ax.add_patch(MplPolygon(pb, closed=True, facecolor='none', edgecolor=ACCENT2, lw=0.8, ls=(0, (2, 1.2)), zorder=6))
-    v2 = pen_vec(off2, r2)
-    ax.add_patch(FancyArrowPatch(r2, r2 + v2, arrowstyle='-|>', mutation_scale=7, color=ACCENT2, lw=1.2, zorder=10,
-                                 shrinkA=0, shrinkB=0))
-    ax.text(*(r2 + 0.5*v2 + np.array([0.0, -0.08])), r'$\delta_2$', color=ACCENT2, fontsize=9, ha='center',
-            va='top', zorder=10, bbox=dict(facecolor='white', edgecolor='none', pad=0.3, alpha=0.8))
+    # A en cada punto de quiebre (sin relleno) y su penetracion respecto de cada pieza que solapa
+    for bpt in bps:
+        r = np.array([bpt, y0])
+        best = abs(bpt - smin) < 1e-9
+        ax.add_patch(MplPolygon(A + r, closed=True, facecolor='none', edgecolor=ACCENT if best else INK,
+                                lw=1.1 if best else 0.6, ls='-' if best else (0, (2.5, 1.5)), zorder=7))
+        for off, col, lab in ((np.zeros(2), ACCENT, r'$\delta_1$'), (off2, ACCENT2, r'$\delta_2$')):
+            v = pen_vec(off, r)
+            if np.linalg.norm(v) < 1e-9: continue
+            ax.add_patch(FancyArrowPatch(r, r + v, arrowstyle='-|>', mutation_scale=7, color=col, lw=1.2, zorder=10,
+                                         shrinkA=0, shrinkB=0))
+            ax.text(*(r + v + 0.07*v/np.linalg.norm(v)), lab, color=col, fontsize=8, ha='center', va='center',
+                    zorder=11, bbox=dict(facecolor='white', edgecolor='none', pad=0.2, alpha=0.8))
     yb = min(B[:, 1].min(), (B + off2)[:, 1].min()) - 0.12
     ax.annotate('', (s1, yb), (s0, yb), arrowprops=dict(arrowstyle='<->', color=INK, lw=0.6))
     ax.text(0.5*(s0 + s1), yb - 0.05, 'range of the reference point of $A$ ($0\\ldots U_k$)', fontsize=6.5,
             ha='center', va='top')
-    ax.text(*(A[2] + np.array([smin, y0]) + np.array([-0.08, -0.05])), '$A$', fontsize=8, ha='right', zorder=7)
+    ax.text(*(A[2] + np.array([smin, y0]) + np.array([-0.06, -0.02])), '$A$', fontsize=8, ha='right', color=ACCENT,
+            zorder=7)
     allp = np.vstack([B, B + off2, A + np.array([s0, y0]), A + np.array([s1, y0])])
     ax.set_xlim(allp[:, 0].min() - 0.05, allp[:, 0].max() + 0.05); ax.set_ylim(yb - 0.3, allp[:, 1].max() + 0.05)
     ax.set_aspect('equal'); ax.axis('off')
