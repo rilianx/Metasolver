@@ -4,7 +4,8 @@ Diagramas 2D del metodo (requiere numpy, scipy, matplotlib).
 Reimplementa en 2D (ejes x y z) los mismos pasos de BSG_PLP sobre un ejemplo pequeno, y dibuja lo que hacen:
   figures/construction.pdf   construccion greedy paso a paso (descenso por LP con facetas de NFP) y compactacion
                              global por LP
-  figures/overlap.pdf        NFP y penetracion; movimiento exacto a lo largo de un eje (funcion phi concava por
+  figures/nfp.pdf            NFP de dos partes (deslizamiento, suma de Minkowski) y penetracion
+  figures/overlap.pdf        movimiento exacto a lo largo de un eje (funcion phi concava por
                              tramos); minimizacion del solapamiento con pesos GLS hasta separar
 
 uso (desde problems/plp/paper): python make_diagrams.py
@@ -374,14 +375,56 @@ def fig_construction():
     return pieces, ty, W, t, Hg
 
 
-def fig_overlap(pieces, ty, W, t, H):
-    NFP.clear()
-    fig = plt.figure(figsize=(7.2, 4.6))
-    top, bot = fig.subfigures(2, 1, height_ratios=[1.05, 1], hspace=0.04)
-    ax_a, ax_b, ax_c = top.subplots(1, 3, gridspec_kw={'width_ratios': [1.0, 1.05, 1.15]})
+def fig_nfp(pieces):
+    """N_AB: (a) lugar del punto de referencia de A al deslizar A alrededor de B; (b) N_AB = B + (-A);
+    (c) penetracion"""
+    fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.7))
+    A, B = pieces[4].parts[0], pieces[2].parts[0]
+    tB = np.zeros(2)
+    V, n, d = nfp(A, B)
+    allc = np.vstack([A + v for v in V] + [B])
+    lo = allc.min(0) - 0.1; hi = allc.max(0) + 0.1
+
+    # (a) A desliza alrededor de B tocandolo; su punto de referencia (vertice inferior izquierdo) recorre N_AB
+    ax = axs[0]
+    ax.add_patch(MplPolygon(V, closed=True, facecolor='#eef3fb', edgecolor='none'))
+    ax.add_patch(MplPolygon(B, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.6, zorder=2))
+    for k, v in enumerate(V):
+        ax.add_patch(MplPolygon(A + v, closed=True, facecolor=COLORS[4], edgecolor=MUTED, lw=0.4, alpha=0.35, zorder=3))
+    for k in range(len(V)):
+        p, q = V[k], V[(k+1) % len(V)]
+        ax.add_patch(FancyArrowPatch(p, q, arrowstyle='-|>', mutation_scale=6, color=ACCENT, lw=1.0, zorder=5,
+                                     shrinkA=2, shrinkB=2))
+    ax.plot(V[:, 0], V[:, 1], 'o', ms=3, color=ACCENT, zorder=6)
+    k0 = int(np.argmin(V[:, 1]))
+    ax.add_patch(MplPolygon(A + V[k0], closed=True, facecolor=COLORS[4], edgecolor=INK, lw=0.8, zorder=4))
+    ax.text(*(V[k0] + A.mean(0) + np.array([0.0, -0.05])), '$A$', fontsize=8, ha='center', va='center', zorder=7)
+    ax.annotate('reference\npoint of $A$', V[k0], V[k0] + np.array([0.75, -0.25]), fontsize=7, color=INK,
+                va='center', arrowprops=dict(arrowstyle='-', lw=0.5, color=INK))
+    ax.text(*(B.mean(0) + np.array([0.0, 0.05])), '$B$', fontsize=9, ha='center', va='center', zorder=7)
+    vl = V[np.argmin(V[:, 0])]
+    ax.text(*(vl + np.array([0.12, 0.35])), r'$N_{AB}$', color=ACCENT, fontsize=9)
+    ax.set_xlim(lo[0], hi[0] + 0.3); ax.set_ylim(lo[1] - 0.35, hi[1]); ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title('(a) $A$ slides around $B$', fontsize=8, color=INK)
+
+    # (b) N_AB = B + (-A): -A en cada vertice de B; la envolvente es N_AB
+    ax = axs[1]
+    ax.add_patch(MplPolygon(V, closed=True, facecolor='#eef3fb', edgecolor=ACCENT, lw=0.9, ls='--'))
+    ax.add_patch(MplPolygon(B, closed=True, facecolor=COLORS[2], edgecolor=INK, lw=0.6, zorder=2))
+    for b in B:
+        ax.add_patch(MplPolygon(b - A, closed=True, facecolor=ACCENT2, alpha=0.12, edgecolor='none', zorder=3))
+        ax.add_patch(MplPolygon(b - A, closed=True, facecolor='none', edgecolor=ACCENT2, lw=0.7, zorder=3))
+        ax.plot(*b, 'o', ms=2.2, color=INK, zorder=4)
+    ax.text(*(B.mean(0) + np.array([0.0, 0.05])), '$B$', fontsize=9, ha='center', va='center')
+    bb = B[np.argmax(B[:, 1] - B[:, 0])]
+    ax.text(*(bb - A.mean(0) + np.array([-0.12, 0.1])), '$-A$', fontsize=8, color=ACCENT2, ha='center',
+            va='center', bbox=dict(facecolor='white', edgecolor='none', pad=0.5, alpha=0.8), zorder=8)
+    ax.text(*(vl + np.array([0.12, 0.35])), r'$N_{AB}$', color=ACCENT, fontsize=9)
+    ax.set_xlim(lo[0], hi[0] + 0.3); ax.set_ylim(lo[1] - 0.35, hi[1]); ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title(r'(b) $N_{AB}=B\oplus(-A)$', fontsize=8, color=INK)
 
     # (a) NFP y penetracion: el triangulo A (movil) solapa el pentagono B (fijo)
-    ax = ax_a
+    ax = axs[2]
     A, B = pieces[4].parts[0], pieces[2].parts[0]
     tB = np.array([0.0, 0.0]); tA = np.array([0.5, 0.9])
     V, n, d = nfp(A, B)
@@ -399,17 +442,29 @@ def fig_overlap(pieces, ty, W, t, H):
     ax.add_patch(FancyArrowPatch(tA, sep, arrowstyle='-|>', mutation_scale=7, color=RED, lw=1.1, zorder=7,
                                  shrinkA=0, shrinkB=1))
     mid = tA + 0.5*delta*n[f]
-    ax.text(*(mid + np.array([-0.07, 0.0])), r'$\delta_{AB}(r)$', color=RED, fontsize=8, ha='right', va='center')
+    ax.text(*(mid + np.array([-0.1, 0.05])), r'$\delta_{AB}(r)$', color=RED, fontsize=8, ha='right', va='center',
+            bbox=dict(facecolor='white', edgecolor='none', pad=0.5, alpha=0.8), zorder=8)
     ax.text(*(tA + np.array([0.06, -0.1])), r'$r$', fontsize=8, ha='left', va='top')
     ax.text(*(B.mean(0) + tB + np.array([0.15, -0.35])), '$B$', fontsize=9)
     ax.text(*(A.max(0) + tA + np.array([-0.15, 0.08])), '$A$', fontsize=9)
-    ax.text(*(sep + np.array([0.05, 1.0])), 'separated', fontsize=7, color=MUTED, ha='right')
+    ax.text(*(sep + np.array([0.0, 0.85])), '$A$ separated', fontsize=7, color=MUTED, ha='right')
     vl = (V + tB)[np.argmin((V + tB)[:, 0])]
     ax.text(*(vl + np.array([0.08, 0.3])), r'$N_{AB}$', color=ACCENT, fontsize=9)
     allp = np.vstack([V + tB, A + tA, A + sep])
     lo = allp.min(0) - 0.15; hi = allp.max(0) + 0.15
     ax.set_xlim(lo[0], hi[0]); ax.set_ylim(lo[1], hi[1]); ax.set_aspect('equal'); ax.axis('off')
-    ax.set_title('(a) NFP and penetration', fontsize=8, color=INK)
+    ax.set_title('(c) penetration', fontsize=8, color=INK)
+
+    fig.tight_layout(pad=0.3, w_pad=0.6)
+    fig.savefig(os.path.join(OUT, 'nfp.pdf'))
+    fig.savefig(os.path.join(OUT, 'nfp.png'), dpi=200)
+
+
+def fig_overlap(pieces, ty, W, t, H):
+    NFP.clear()
+    fig = plt.figure(figsize=(7.2, 4.6))
+    top, bot = fig.subfigures(2, 1, height_ratios=[1.05, 1], hspace=0.04)
+    ax_b, ax_c = top.subplots(1, 2, gridspec_kw={'width_ratios': [1.0, 1.25]})
 
     # capa solapada: la solucion greedy con la altura objetivo reducida (como en la oscilacion)
     h = 0.9*H
@@ -440,7 +495,7 @@ def fig_overlap(pieces, ty, W, t, H):
     ax.add_patch(FancyArrowPatch((tt[i][0] + 0.5*pieces[ty[i]].w, ymid), (s_new + 0.5*pieces[ty[i]].w, ymid),
                                  arrowstyle='-|>', mutation_scale=7, color=ACCENT, lw=1.0, zorder=6))
     ax.text(tt[i][0] + 0.75*pieces[ty[i]].w, tt[i][1] + 0.6*pieces[ty[i]].h, '$i$', fontsize=9, zorder=7)
-    ax.set_title('(b) move of piece $i$ along $x$', fontsize=8, color=INK)
+    ax.set_title('(a) move of piece $i$ along $x$', fontsize=8, color=INK)
 
     # (c) phi(s): suma de terminos concavos en intervalos; se evalua solo en los extremos
     ax = ax_c
@@ -457,7 +512,7 @@ def fig_overlap(pieces, ty, W, t, H):
     ax.set_xlabel('$s$ (position of $i$ along $x$)'); ax.set_ylabel('weighted penetration')
     ax.set_ylim(0, max(vals)*1.55)
     ax.legend(fontsize=6, frameon=False, loc='upper left', handlelength=1.4, ncol=2, columnspacing=0.8)
-    ax.set_title('(c) overlap of $i$ along $x$', fontsize=8, color=INK)
+    ax.set_title('(b) overlap of $i$ along $x$', fontsize=8, color=INK)
 
     # (d)-(g) minimizacion del solapamiento hasta separar, y compactacion por LP
     rng = np.random.default_rng(3)
@@ -472,7 +527,7 @@ def fig_overlap(pieces, ty, W, t, H):
         ax.axhline(H, color=MUTED, lw=0.6, ls=':')
         draw_layout(ax, ty, ts, pieces, W, overlap=True)
         lab = 'start' if it == 0 else ('after pass %d' % it)
-        ax.set_title('(%s) %s\n$\\sum\\delta=%.2f$' % ('def'[k], lab, tot), fontsize=8, color=INK)
+        ax.set_title('(%s) %s\n$\\sum\\delta=%.2f$' % ('cde'[k], lab, tot), fontsize=8, color=INK)
         if k == 0: ax.text(W, H, ' $H$', color=MUTED, fontsize=7, va='center')
     ax = axs[3]
     strip(ax, W, H + 0.3, h, '$h$')
@@ -485,7 +540,7 @@ def fig_overlap(pieces, ty, W, t, H):
             ax.add_patch(FancyArrowPatch(t_end[i] + ref, tc[i] + ref, arrowstyle='-|>', mutation_scale=6, color=ACCENT,
                                          lw=0.8, zorder=6, shrinkA=0, shrinkB=0))
     ax.axhline(Hc, color=ACCENT, lw=0.8, ls='--')
-    ax.set_title('(g) LP compaction\nheight %.2f $\\to$ %.2f' % (height(ty, t_end, pieces), Hc), fontsize=8, color=INK)
+    ax.set_title('(f) LP compaction\nheight %.2f $\\to$ %.2f' % (height(ty, t_end, pieces), Hc), fontsize=8, color=INK)
     fig.savefig(os.path.join(OUT, 'overlap.pdf'), bbox_inches='tight')
     fig.savefig(os.path.join(OUT, 'overlap.png'), dpi=200, bbox_inches='tight')
     print('altura greedy %.3f, objetivo %.3f, pasadas %d, solapamiento final %.2g, altura compactada %.3f'
@@ -495,4 +550,5 @@ def fig_overlap(pieces, ty, W, t, H):
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     pieces, ty, W, t, H = fig_construction()
+    fig_nfp(pieces)
     fig_overlap(pieces, ty, W, t, H)

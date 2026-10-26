@@ -135,7 +135,18 @@ For $r$ inside $N_{AB}$, $\delta_{AB}(r)$ is the Euclidean distance from $r$ to 
 the length of the shortest translation that separates $A$ and $B$ (the translational penetration depth). It is
 zero if and only if the parts do not overlap. For two pieces we use
 $\delta_{ij}(t_i-t_j)=\sum_{a\in\mathcal{A}_i}\sum_{b\in\mathcal{A}_j}\delta_{ab}(t_i-t_j)$, where only pairs of parts
-whose bounding boxes intersect are evaluated.
+whose bounding boxes intersect are evaluated. Figure~\ref{fig:nfp} illustrates both definitions in two dimensions.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/nfp.pdf}
+\caption{No-fit polytope and penetration in 2D. (a) When $A$ slides around $B$ keeping contact, its reference
+point (the minimum of its bounding box) traces the boundary of $N_{AB}$; the shaded copies of $A$ touch $B$ at the
+vertices of $N_{AB}$. (b) Equivalently, $N_{AB}=B\oplus(-A)$ is the convex hull of the copies of $-A$ placed at the
+vertices of $B$. (c) If $r$ lies inside $N_{AB}$ the parts overlap (red), and $\delta_{AB}(r)$ is the distance
+from $r$ to the nearest facet: the shortest translation of $A$ that separates the parts (dotted).}
+\label{fig:nfp}
+\end{figure}
 
 \subsection{Exact minimization along an axis}
 Let all pieces but $i$ be fixed, and let $i$ move along axis $e_k$, $t_i(s)=t_i+(s-t_{ik})e_k$, with
@@ -219,20 +230,17 @@ the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weig
 multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
 procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
 Weights persist along the oscillation and are reset after a successful separation or a kick.
-Figure~\ref{fig:overlap} shows the penetration, an axis move and a complete separation followed by the LP
-compaction (Section~\ref{sec:compact}) on the 2D example.
+Figure~\ref{fig:overlap} shows an axis move and a complete separation followed by the LP compaction
+(Section~\ref{sec:compact}) on the 2D example.
 
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/overlap.pdf}
-\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a) NFP of a part $A$ with
-respect to $B$ (dashed): $A$ overlaps $B$ when its reference point $r$ lies inside $N_{AB}$, and the penetration
-$\delta_{AB}(r)$ is the distance to the nearest facet, i.e., the shortest translation that separates them.
-(b)--(c) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
+\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a)--(b) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
 outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
-chosen (it reduces the overlap but does not remove it). (d)--(f) \textsc{MinimizeOverlap} on the greedy layout
+chosen (it reduces the overlap but does not remove it). (c)--(e) \textsc{MinimizeOverlap} on the greedy layout
 squeezed to the target height $h=0.9H$ (overlaps in red): after 9 passes, with GLS weights, the layout is
-feasible. (g) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
+feasible. (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
 below $h$.}
 \label{fig:overlap}
 \end{figure}
