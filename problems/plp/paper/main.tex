@@ -197,22 +197,28 @@ fused multiply-add per facet. Ties are broken towards the smaller coordinate (gr
 % =====================================================================================================
 \section{Algorithm}\label{sec:method}
 
-Algorithm~\ref{alg:main} summarizes the method: a greedy construction, a compaction, and a strategic oscillation
-of the height that alternates separation attempts and kicks until the time limit.
+Algorithm~\ref{alg:main} summarizes the method. A greedy construction and an LP compaction give a first feasible
+solution $S$ of height $H$. The search then tries to fit the pieces in a slightly lower container: the
+positions of $S$ are \emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,h$) moves every piece that
+exceeds $h$ down until its top is at $h$, regardless of the other pieces. This is where overlaps appear, and
+\textsc{MinimizeOverlap} tries to remove them. If it succeeds, the layout is feasible again: it is compacted, it
+becomes the new best solution, and the target is lowered; otherwise the target is raised slightly and, when it
+reaches $H$, a kick perturbs the best solution.
 
 \begin{algorithm}[t]
 \caption{Overview}\label{alg:main}
+\SetCommentSty{textit}
 $S\gets$ \textsc{Greedy}(); $S\gets$ \textsc{Compact}($S$); $H\gets H(S)$\;
-$h\gets(1-\rho)H$; $T\gets$ positions of $S$ clamped to height $h$; $w\gets 1$\;
+$h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appear}
 \While{time remains}{
-  \eIf{\textsc{MinimizeOverlap}($T,h,w$)}{
+  \eIf(\tcp*[f]{$T$ is feasible}){\textsc{MinimizeOverlap}($T,h,w$)}{
     $T\gets$ \textsc{Compact}($T$)\;
     \lIf{$H(T)<H$}{$S\gets T$; $H\gets H(T)$}
-    $h\gets(1-\rho)H$; $T\gets$ positions of $S$ clamped to $h$; $w\gets 1$\;
+    $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\;
   }{
-    $h\gets h+\rho H/4$\;
+    $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps}
     \If{$h\ge H$}{
-      $T\gets$ positions of $S$ clamped to $h\gets(1-\rho)H$; move a random piece of $T$ (kick); $w\gets 1$\;
+      $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); kick: move a random piece of $T$; $w\gets 1$\;
     }
   }
 }
@@ -226,9 +232,11 @@ translation variables: for every nearby placed part one NFP facet satisfied at t
 (the one that allows the longest step in the descent direction), and $z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$
 is minimized within a trust region; the procedure repeats until no improvement. Among all pieces and resulting
 positions, the greedy chooses the one maximizing
-$\alpha\log(V/V_{\max})-\beta z/H_0-\gamma\max(0,z+h-H_{\text{cur}})/H_0$, which favors large pieces placed low
-without increasing the height. Parameters ($\alpha=1$, $\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned
-with Optuna. Figure~\ref{fig:construction} illustrates the construction in two dimensions.
+$\alpha\log(V/V_{\max})-\beta z/H_0-\gamma\max(0,z+h-H_{\text{cur}})/H_0$. For a given piece the criterion
+decreases with $z$, so the lowest of its positions is always preferred; the criterion thus decides which piece
+is placed, favoring large pieces placed low without increasing the height. Parameters ($\alpha=1$,
+$\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned with Optuna. Figure~\ref{fig:construction} illustrates
+the construction in two dimensions.
 
 \begin{figure}[!tbp]
 \centering
@@ -240,41 +248,9 @@ positions of the other starts; blue: descent and position chosen by the greedy c
 \label{fig:construction}
 \end{figure}
 
-\subsection{Overlap minimization}
-\textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
-axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. The pairwise penetrations are
-kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
-the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
-multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
-procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
-Weights persist along the oscillation and are reset after a successful separation or a kick.
-Figure~\ref{fig:overlap} shows an axis move and a complete separation followed by the LP compaction
-(Section~\ref{sec:compact}) on the 2D example.
-
-\begin{figure}[!tbp]
-\centering
-\includegraphics[width=\textwidth]{figures/overlap.pdf}
-\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a)--(b) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
-outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
-chosen (it reduces the overlap but does not remove it). (c)--(e) \textsc{MinimizeOverlap} on the greedy layout
-squeezed to the target height $h=0.9H$ (overlaps in red): after 9 passes, with GLS weights, the layout is
-feasible. (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
-below $h$.}
-\label{fig:overlap}
-\end{figure}
-
-\subsection{Strategic oscillation and kicks}
-After a successful separation the target height is decreased by $\rho=1\%$ of the best height; after a failure it
-is increased by $\rho/4$ and the search continues from the overlapping layout. When the target reaches the best
-height, a kick restarts from the best solution at height $(1-\rho)H$ and moves a random piece: with probability
-1/2 it is reinserted at the lowest free position (if none exists, it is swapped with a piece of a different type),
-and otherwise it is moved to a random position in the container, leaving the overlap to the separation. This
-scheme follows \citet{egeblad2009} and \citet{umetani2009}. The random moves are needed on small instances: with
-two pieces there is a single pair, so the GLS weights have no effect, and reinsertion alone keeps returning to
-the layout produced by the greedy order (Section~\ref{sec:t2025}).
-
 \subsection{Global LP compaction}\label{sec:compact}
-\textsc{Compact} solves a sequence of linear programs over all translations. Given the current layout, for every
+\textsc{Compact} is applied to feasible layouts: after the construction and after each successful separation.
+It solves a sequence of linear programs over all translations. Given the current layout, for every
 pair of parts that can touch within a trust region (each coordinate may move at most $\Delta$, half of the
 smallest piece dimension) one NFP facet $f$ satisfied by the current relative position is selected and the
 constraint $n_f\cdot(t_i-t_j)\ge d_f$ is imposed. The LP
@@ -290,6 +266,43 @@ has a convex feasible region that contains the current layout. The facets are re
 solved again while $H$ decreases. A solution is accepted only if it is feasible (the LP solution is checked for
 bounds and overlap). Compaction alternates with a local improvement in which every piece descends again with
 the others fixed and the pieces that define the height are tried at other positions.
+
+\subsection{Strategic oscillation}
+After a successful separation the target height is decreased by $\rho=1\%$ of the best height and the best
+solution is clamped to it, which creates overlaps among the pieces near the top. After a failure the target is
+increased by $\rho/4$ and the search continues from the overlapping layout, with the GLS weights of the previous
+attempt. This scheme follows \citet{egeblad2009} and \citet{umetani2009}.
+
+\subsection{Overlap minimization}
+\textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
+axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. The pairwise penetrations are
+kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
+the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
+multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
+procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
+Weights persist along the oscillation and are reset after a successful separation or a kick.
+Figure~\ref{fig:overlap} shows an axis move and a complete separation, from a clamped layout, followed by the LP
+compaction on the 2D example.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/overlap.pdf}
+\caption{Overlap minimization on the 2D example of Figure~\ref{fig:construction}. (a)--(b) Exact move of the most overlapped piece $i$ along $x$: each term of $\phi$ (colored by piece) is zero
+outside an interval and concave inside it, so $\phi$ is evaluated only at the breakpoints and the best one is
+chosen (it reduces the overlap but does not remove it). (c)--(e) \textsc{MinimizeOverlap} on the greedy layout
+squeezed to the target height $h=0.9H$ (overlaps in red): after 9 passes, with GLS weights, the layout is
+feasible. (f) The LP compaction that follows (gray: before) moves all pieces simultaneously and lowers the height
+below $h$.}
+\label{fig:overlap}
+\end{figure}
+
+\subsection{Kicks}
+When the target reaches the best height, a kick restarts from the best solution clamped to $(1-\rho)H$ and moves
+a random piece: with probability 1/2 it is reinserted at the lowest of the positions generated as in the greedy
+construction, below the target height (if there is none, it is swapped with a piece of a different type), and
+otherwise it is moved to a random position in the container, leaving the overlap to the separation. The random
+moves are needed on small instances: with two pieces there is a single pair, so the GLS weights have no effect,
+and reinsertion alone keeps returning to the layout produced by the greedy order (Section~\ref{sec:t2025}).
 
 % =====================================================================================================
 \section{Certified feasibility}\label{sec:cert}
