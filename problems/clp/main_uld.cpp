@@ -633,6 +633,7 @@ int main(int argc, char** argv){
 	args::Flag _no_priority(parser, "no_priority", "Ablation: insertion of boxes without the reload with priority", {"no_priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
+	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 1", {"improve_time"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -727,6 +728,8 @@ int main(int argc, char** argv){
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
 	stage_scratch=!_no_scratch; stage_priority=!_no_priority; stage_ruin=!_no_ruin;
+	//fases de mejora (Insert y reduccion): tiempo de BSG por ULD = improve_time * t
+	Params Pi=P; Pi.time=P.time*((_improve_time)? _improve_time.Get() : 1.0);
 
 	//construccion secuencial e insercion de las cajas no cargadas; prio: cajas que se cargan
 	//primero en el primer ULD en que caben (ademas de las que solo caben en ese ULD)
@@ -784,7 +787,7 @@ int main(int argc, char** argv){
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
-	if(remaining()>0) insert(loads, left, P);
+	if(remaining()>0) insert(loads, left, Pi);
 	};
 
 	vector<int> prio(left.size(), 0);
@@ -807,8 +810,8 @@ int main(int argc, char** argv){
 	//reduccion del volumen de los ULDs (con --eliminate_only, solo eliminacion de ULDs, y solo
 	//si se cargaron todas las cajas)
 	if(!_no_eliminate){
-		if(_eliminate_only){ if(remaining()==0) while(eliminate_uld(loads, P)); }
-		else while(reduce_volume(loads, P));
+		if(_eliminate_only){ if(remaining()==0) while(eliminate_uld(loads, Pi)); }
+		else while(reduce_volume(loads, Pi));
 	}
 
 	double time=double(clock()-begin_time)/double(CLOCKS_PER_SEC);
