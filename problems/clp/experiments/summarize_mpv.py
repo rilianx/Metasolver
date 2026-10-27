@@ -16,21 +16,28 @@ def headers(c, n):
         k, a, b = map(int, rows[r]); res[k] = (a, b); r += 2 + int(rows[r + 1][0])
     return res
 
+lit = {(int(r["class"]), int(r["n"])): r for r in csv.DictReader(
+    l for l in open(os.path.join(root, "..", "literature_goncalves2013.csv")) if not l.startswith("#"))}
+LIT = ["BRKGA_aNB", "GVND", "TS2P", "GLS"]
+
 data = {f: {r["instance"]: r for r in csv.DictReader(open(f))} for f in sys.argv[1:]}
 keys = sorted({(int(r["class"]), int(r["n"])) for d in data.values() for r in d.values()})
-print("%6s %5s %6s %6s" % ("class", "n", "LB", "H") + "".join("%14s" % os.path.basename(f)[:13] for f in data))
+print("%6s %5s %6s %6s" % ("class", "n", "LB", "H") + "".join("%7s" % k[:6] for k in LIT) + "".join("%14s" % os.path.basename(f)[:13] for f in data))
 tot = defaultdict(int)
 for c, n in keys:
     h = headers(c, n)
     lb = sum(a for a, b in h.values()); hb = sum(b for a, b in h.values())
     tot["LB"] += lb; tot["H"] += hb
     line = "%6d %5d %6d %6d" % (c, n, lb, hb)
+    for k in LIT:
+        v = lit[(c, n)][k]; v = round(10 * float(v)) if v else 0
+        tot[k] += v; line += "%7d" % v
     for f, d in data.items():
         s = sum(int(r["bins"]) for k, r in d.items() if r["class"] == str(c) and r["n"] == str(n))
         tot[f] += s
         line += "%14d" % s
     print(line)
-print("%6s %5s %6d %6d" % ("total", "", tot["LB"], tot["H"]) + "".join("%14d" % tot[f] for f in data))
+print("%6s %5s %6d %6d" % ("total", "", tot["LB"], tot["H"]) + "".join("%7d" % tot[k] for k in LIT) + "".join("%14d" % tot[f] for f in data))
 for f, d in data.items():
     bad = [k for k, r in d.items() if r["valid"].strip() != r["bins"].strip()]
     lbne = [k for k, r in d.items() if int(r["lb"]) != headers(int(r["class"]), int(r["n"]))[int(k.split("_")[2])][0]]
