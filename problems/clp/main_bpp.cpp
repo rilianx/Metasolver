@@ -400,6 +400,7 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _swo_frac(parser, "double", "Proportion of the total time for the squeaky wheel optimization. Default: 0.5", {"swo_frac"});
 	args::ValueFlag<double> _swo_rate(parser, "double", "Increase of the profit of the boxes of the least loaded bins. Default: 0.3", {"swo_rate"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance in files with several instances (from 1). Default: 1", {'i'});
+	args::ValueFlag<string> _columns(parser, "string", "Write the bins generated in the construction and the squeaky wheel optimization (boxes of each type) to this file", {"columns"});
 	args::Flag _rot(parser, "rot", "The boxes can be rotated (6 orientations). Default: fixed orientation", {"rot"});
 	args::Flag _corner_anchor(parser, "corner_anchor", "Anchor each space at its closest corner of the bin (default: at the origin)", {"corner_anchor"});
 	args::Flag _scratch(parser, "scratch", "Insertion of boxes also with a reload from scratch of each bin", {"scratch"});
@@ -480,6 +481,9 @@ int main(int argc, char** argv){
 
 	vector<Load> loads=construct();
 	int n_constr=loads.size();
+	//contenedores generados (para --columns)
+	vector< vector<int> > columns;
+	for(const Load& l : loads) columns.push_back(l.boxes);
 
 	//squeaky wheel optimization (Joslin y Clements 1999): se repite la construccion aumentando
 	//el beneficio de los tipos de caja de los contenedores menos cargados
@@ -502,6 +506,7 @@ int main(int argc, char** argv){
 			}
 			cur=construct();
 			st_swo++;
+			for(const Load& l : cur) columns.push_back(l.boxes);
 			if(better_sol(cur, loads)){
 				loads=cur;
 				if(_verbose) cout << "swo " << elapsed() << " bins " << loads.size() << endl;
@@ -510,6 +515,13 @@ int main(int argc, char** argv){
 		clpState::box_profit=base_profit;
 	}
 	int n_swo=loads.size();
+	if(_columns){
+		ofstream out(_columns.Get().c_str());
+		out << total.size() << " " << lb;
+		for(int x : total) out << " " << x;
+		out << endl;
+		for(auto& c : columns){ for(int x : c) out << x << " "; out << endl; }
+	}
 	double t_constr=elapsed();
 
 	//mejora: se vacian los contenedores, del menos al mas cargado. Cuando una pasada completa no

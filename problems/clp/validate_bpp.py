@@ -3,7 +3,8 @@
 Validador independiente de soluciones del 3D-BPP (no comparte codigo con BSG_BPP).
 Revisa: cada caja de la instancia cargada exactamente una vez, dimensiones de una orientacion
 permitida (fija, o las 6 con --rot), dentro del contenedor y sin intersecciones.
-uso: validate_bpp.py <instancia> <solucion> [--rot]
+uso: validate_bpp.py <instancia> <solucion> [--rot] [-i k]
+(-i: instancia k, desde 1, en los archivos de Martello, Pisinger y Vigo con varias instancias)
 Imprime el numero de contenedores o termina con error.
 """
 import sys
@@ -12,9 +13,13 @@ from itertools import permutations
 def main():
     inst, sol = sys.argv[1], sys.argv[2]
     rot = "--rot" in sys.argv
-    tok = open(inst).read().split()
-    n, L, W, H = map(int, tok[:4])
-    boxes = [tuple(map(int, tok[4 + 3 * i: 7 + 3 * i])) for i in range(n)]
+    k = int(sys.argv[sys.argv.index("-i") + 1]) if "-i" in sys.argv else 1
+    rows = [list(map(int, l.split())) for l in open(inst) if l.strip()]
+    r = 0
+    while len(rows[r]) != 4 or (r > 0 and len(rows[r - 1]) == 3 and rows[r - 1][0] != k):
+        r += 1 + (rows[r][0] if len(rows[r]) == 4 else 0)
+    n, L, W, H = rows[r]
+    boxes = [tuple(rows[r + 1 + i]) for i in range(n)]
     lines = open(sol).read().strip().split("\n")[1:]
     seen = [False] * n
     bins = {}
