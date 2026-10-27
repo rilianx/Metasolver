@@ -198,22 +198,22 @@ fused multiply-add per facet. Ties are broken towards the smaller coordinate (gr
 % =====================================================================================================
 \section{Algorithm}\label{sec:method}
 
-Algorithm~\ref{alg:main} summarizes the method. A greedy construction gives a first feasible solution $S$ of
-height $H$. The search then tries to fit the pieces in a slightly lower container: the positions of $S$ are
+Algorithm~\ref{alg:main} summarizes the method. A greedy construction, followed by a local improvement, gives a
+first feasible solution $S$ of height $H$. The search then tries to fit the pieces in a slightly lower container: the positions of $S$ are
 \emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,h$) moves every piece that exceeds $h$ down until its
 top is at $h$, regardless of the other pieces. This is where overlaps appear, and \textsc{MinimizeOverlap} tries
-to remove them. If it succeeds, the layout is feasible, fits in height $h$, and becomes the new best solution, and
-the target is lowered again; otherwise the target is raised slightly and, when it reaches $H$, the search
+to remove them. If it succeeds, the layout is feasible and fits in height $h$; it is improved locally and becomes
+the new best solution, and the target is lowered again; otherwise the target is raised slightly and, when it reaches $H$, the search
 restarts from the best solution.
 
 \begin{algorithm}[t]
 \caption{Overview}\label{alg:main}
 \SetCommentSty{textit}
-$S\gets$ \textsc{Greedy}(); $H\gets H(S)$\;
+$S\gets$ \textsc{Improve}(\textsc{Greedy}()); $H\gets H(S)$\;
 $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appear}
 \While{time remains}{
   \eIf(\tcp*[f]{$T$ is feasible}){\textsc{MinimizeOverlap}($T,h,w$)}{
-    $S\gets T$; $H\gets H(T)$\tcp*{new best solution, $H\le h$}
+    $S\gets$ \textsc{Improve}($T$); $H\gets H(S)$\tcp*{new best solution, $H\le h$}
     $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\;
   }{
     $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps}
@@ -225,13 +225,13 @@ $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appe
 \Return $S$\;
 \end{algorithm}
 
-In Algorithm~\ref{alg:main}, line~1 builds the first solution (Section~\ref{sec:greedy}) and line~2 creates the
-first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
-(Section~\ref{sec:minover}). On success (lines~5--6) the separated layout becomes the new best solution and the
-target is lowered again. On failure (lines~8--10) the target is raised by a quarter of the step and the search
+In Algorithm~\ref{alg:main}, line~1 builds the first solution (Sections~\ref{sec:greedy}
+and~\ref{sec:improve}) and line~2 creates the first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
+(Section~\ref{sec:minover}). On success (lines~5--6) the separated layout is improved, becomes the new best
+solution, and the target is lowered again. On failure (lines~8--10) the target is raised by a quarter of the step and the search
 continues from the current overlapping layout with the current weights; once the target is back at the best
 height, the search restarts from the best solution (Section~\ref{sec:kicks}). The method needs no LP solver
-besides the three-variable LPs of the construction.
+besides the three-variable LPs of \textsc{Descend}.
 
 \subsection{Greedy construction}\label{sec:greedy}
 Pieces are placed one at a time on top of the current load (Algorithm~\ref{alg:greedy}). For each type of piece
@@ -320,7 +320,17 @@ $c\cdot t$: the descent stops. Gravity has priority over the wall term, so the p
 \label{fig:descend}
 \end{figure}
 
-\subsection{Strategic oscillation}
+\subsection{Local improvement}\label{sec:improve}
+\textsc{Improve} is applied to the feasible layouts: after the construction and after each successful separation.
+Taking the pieces in increasing order of $z$, every piece descends again with \textsc{Descend}, with the other
+pieces fixed, and each piece that defines the height is moved to the lowest of the positions generated as in the
+greedy construction, if it is lower. The pass is repeated while the height decreases. Without this step the
+height of the best solution could only decrease in the discrete steps of the oscillation (Section~\ref{sec:osc}),
+since a separated layout fits in the target height but its pieces are not pushed down; with it, the pieces settle
+onto each other and, for instance, the optima of the small instances are reached exactly
+(Section~\ref{sec:t2025}).
+
+\subsection{Strategic oscillation}\label{sec:osc}
 After a successful separation the target height is decreased by $\rho=1\%$ of the best height and the best
 solution is clamped to it,
 \begin{equation}
@@ -440,14 +450,14 @@ their heights are not directly comparable. For Stoyan 2004 the only exact refere
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
 Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 \begin{itemize}
-\item \emph{+ LP compaction}: after the construction and after each successful separation, a linear program over
+\item \emph{+ LP compaction}: after the construction and after each successful separation, alternating with
+\textsc{Improve}, a linear program over
 the translations of all pieces lowers the height, in the spirit of \citet{gomes2006} in 2D: for every pair of
 parts that may meet within a trust region, one facet of their NFP satisfied at the current layout is imposed as
 the constraint $n_f\cdot(t_i-t_j)\ge d_f$, the height is minimized, and the facets are re-selected and the LP
 solved again while the height decreases (SoPlex 8.1).
-\item \emph{+ Improve}: at the same points, every piece descends again with the others fixed (as in
-\textsc{Descend}), and the pieces that define the height are moved to the lowest position generated as in the
-greedy construction, if it is lower.
+\item \emph{Without Improve}: no local improvement after the construction and the separations
+(Section~\ref{sec:improve}).
 \item \emph{$\sigma=0$}: \textsc{Descend} without the wall term (gravity only).
 \item \emph{Greedy by volume}: the largest piece first, at its lowest position ($\alpha$ large, $\gamma=0$), instead
 of the tuned criterion~\eqref{eq:greedy}.
@@ -461,9 +471,10 @@ overlapped of 20 random positions.
 \textsc{MinimizeOverlap}.
 \end{itemize}
 
-\todo{Results of the final runs. Preliminary runs: the LP compaction, \textsc{Improve} and the kick variants have no
-significant effect (Wilcoxon $p\ge0.25$); additive weights ($+1.7\%$, $p<0.001$) and slower moves are clearly
-worse; $\sigma=0$ is significantly worse on Stoyan 2004 Example 4.}
+\todo{Results of the final runs. Preliminary runs: the LP compaction and the kick variants have no significant
+effect; without both the LP compaction and \textsc{Improve} the heights are about 0.5\% higher and 7 optima of
+the small instances are missed by 0.03--0.14\%; additive weights ($+1.7\%$, $p<0.001$) and slower moves are
+clearly worse; $\sigma=0$ is significantly worse on Stoyan 2004 Example 4.}
 
 \begin{table}[t]
 \centering\small
@@ -476,7 +487,7 @@ Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 \midrule
 Proposed method & \prov{--} & \prov{--} & \prov{--}\\
 + LP compaction & \prov{--} & \prov{--} & \prov{--}\\
-+ Improve & \prov{--} & \prov{--} & \prov{--}\\
+Without Improve & \prov{--} & \prov{--} & \prov{--}\\
 $\sigma=0$ (no wall term in \textsc{Descend}) & \prov{--} & \prov{--} & \prov{--}\\
 Greedy by volume & \prov{--} & \prov{--} & \prov{--}\\
 Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & \prov{--} & \prov{--} & \prov{--}\\
