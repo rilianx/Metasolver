@@ -57,8 +57,10 @@ int main(int argc, char** argv){
 	args::ValueFlag<int> _sep_iter(improvement, "int", "Maximum iterations of the LP separation. Default: 50", {"sep_iter"});
 	args::ValueFlag<string> _kick(improvement, "reinsert|swap|random|mix|none|top|topbest", "Kick: reinsert a piece in the free space, swap two pieces of different type and similar volume, move a piece to a random position (the separation resolves the overlap), or reinsert/random (1/2 each, the default in earlier versions); none: only restart from the best solution; top: move one of the pieces that exceed the target height to a random position; topbest: the same, at the position of least penetration among --kick_samples random positions. Default: random", {"kick"});
 	args::ValueFlag<int> _kick_samples(improvement, "int", "--kick topbest: number of random positions. Default: 20", {"kick_samples"});
-	args::Flag _no_compact(improvement, "no_compact", "Do not use the global LP compaction (requires SoPlex)", {"no_compact"});
-	args::Flag _no_improve(improvement, "no_improve", "Do not use the local improvement (each piece descends again; the pieces that define the height are moved to lower positions) after the construction and after each separation", {"no_improve"});
+	args::Flag _lp_compact(improvement, "lp_compact", "Global LP compaction after the construction and after each separation (requires SoPlex; off by default: no measurable effect)", {"lp_compact"});
+	args::Flag _improve(improvement, "improve", "Local improvement after the construction and after each separation: each piece descends again and the pieces that define the height are moved to lower positions (off by default: no measurable effect)", {"improve"});
+	args::Flag _no_compact(improvement, "no_compact", "(obsolete: the LP compaction is off by default)", {"no_compact"});
+	args::Flag _no_improve(improvement, "no_improve", "(obsolete: the local improvement is off by default)", {"no_improve"});
 	args::ValueFlag<double> _margin(improvement, "double", "Final compaction with this separation between neighboring parts, so that the solution can be certified in exact arithmetic (tools/certify_solution.py; requires SoPlex; 0: no). Default: 1e-7", {"margin"});
 	args::Flag _repair(improvement, "repair", "After --kicks kicks without improvement, try to repair the best solution with the BSG in a lower container", {"repair"});
 	args::ValueFlag<int> _kicks(improvement, "int", "--repair: consecutive kicks without improvement before the repair. Default: 30", {"kicks"});
@@ -127,7 +129,9 @@ int main(int argc, char** argv){
 		}
 		PLP_Function f(placer, alpha, beta, gamma);
 		double lb = inst.height_lower_bound();
-		LPBackend* lp = (_no_compact)? NULL : LPBackend::create();
+		//SoPlex solo si se pide la compactacion por LP, la separacion por LP o la separacion final con margen
+		bool want_lp = (_lp_compact || _sep_lp || _margin) && !_no_compact;
+		LPBackend* lp = want_lp? LPBackend::create() : NULL;
 		if(_sep_lp && !lp) cout << "WARNING: --sep_lp requiere compilar con SoPlex" << endl;
 		mt19937 rng((_seed)? _seed.Get() : 0);
 
@@ -161,16 +165,16 @@ int main(int argc, char** argv){
 		//mejora local y compactacion global por LP
 		long polish_calls = 0, polish_limit_hits = 0;
 		int polish_max_iters = 0;
-		//mejora local (o solo la altura, con --no_improve)
+		//mejora local (--improve) o solo la altura
 		auto improve = [&](const vector<int>& pieces, vector<Vec3>& t) -> double {
-			if(!_no_improve) return placer.improve(pieces, t);
+			if(_improve && !_no_improve) return placer.improve(pieces, t);
 			double h = 0;
 			for(size_t i=0; i<pieces.size(); i++) h = max(h, t[i].z + inst.pieces[pieces[i]].bbox.extent().z);
 			return h;
 		};
 		auto polish = [&](const vector<int>& pieces, vector<Vec3>& t) -> double {
 			double H = improve(pieces, t);
-			if(lp)
+			if(lp && _lp_compact)
 			{
 				int k;
 				for(k=0; k<20; k++){

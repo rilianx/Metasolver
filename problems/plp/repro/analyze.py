@@ -74,15 +74,13 @@ print('\nCertificadas en total: %d de %d\n' % (ncert, ntot))
 print('## Ablacion (brecha media respecto de la referencia; Stoyan 2004 Ex1: altura media)\n')
 print('| Variante | Stoyan 2004 | Stoyan 2005 | S2004 Ex1 | n |')
 print('|---|---|---|---|---|')
-for name, cfg, T in (('Propuesto', 'full', None), ('Sin LP', 'nolp', None), ('Pesos aditivos', 'add', None),
-                     ('Kick: solo reinsercion', 'reinsert', None), ('5x mas lento (24 s)', 'full', 24),
+for name, cfg, T in (('Propuesto', 'full', None), ('5x mas lento (24 s)', 'full', 24),
+                     ('+ compactacion por LP', 'withlp', None), ('+ Improve', 'withimprove', None),
+                     ('Pesos aditivos', 'add', None), ('Descend sin termino de pared (sigma = 0)', 'slide0', None),
+                     ('Greedy: pieza mas grande primero', 'volgreedy', None),
                      ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: mixto (reinsercion o aleatorio)', 'kick_mix', None),
-                     ('Kick: pieza superior, aleatoria', 'kick_top', None),
+                     ('Kick: solo reinsercion', 'kick_reinsert', None), ('Kick: pieza superior, aleatoria', 'kick_top', None),
                      ('Kick: pieza superior, menor penetracion de 20', 'kick_topbest', None),
-                     ('Sin Improve', 'noimprove', None), ('Greedy: pieza mas grande primero', 'volgreedy', None),
-                     ('Descend sin termino de pared (sigma = 0)', 'slide0', None),
-                     ('Minima: sin LP, sin Improve, greedy por volumen, sigma = 0', 'minimal', None),
-                     ('Simple: sin LP, sin Improve, sigma = 0 (greedy actual)', 'simple2', None),
                      ('rho = 0.5 %', 'rho05', None), ('rho = 2 %', 'rho2', None),
                      ('100 pasadas', 'pass100', None), ('2000 pasadas', 'pass2000', None)):
     g = {'2004': [], '2005': []}; ok = True
