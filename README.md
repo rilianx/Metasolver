@@ -207,3 +207,36 @@ range in x or y):
 Example:
 
      ./build/BSG_ULD problems/clp/benchs/ULD/Final_instances/n50sample0.csv -t 1 -v
+
+3D bin packing with identical bins (BSG_BPP)
+-------
+`BSG_BPP` (branch `bsg-bpp`) solves the three-dimensional bin packing problem (all the boxes must be
+loaded into the minimum number of identical bins, fixed orientation by default, `--rot` for the 6
+orientations). It reuses the BSG of `BSG_ULD` (a ULD without cuts, weight limit or CoG):
+
+* sequential construction: the bins are loaded one at a time with BSG (`-t`, default 0.02 s per bin);
+* profit of the boxes: the value of a loading and the VCS evaluation of the blocks use the profit
+  v^kappa of the boxes instead of their volume (`--kappa`, default 2), so the large boxes are loaded first;
+* squeaky wheel optimization (default, `--no_swo` for the ablation): the construction is repeated during
+  the whole time limit (`-T`), multiplying the profit of the box types of the 10% least loaded bins by 1.3
+  (`--swo_rate`) and by a small random factor; the best solution (fewer bins, then least loaded bin with
+  less volume) is kept;
+* optional (`--swo_frac` < 1): emptying of bins with ruin and recreate (Insert of `BSG_ULD`), accepting
+  partial transfers that increase the sum of the squared loads (Fleszar and Hindi 2002). It did not
+  improve the results on these instances;
+* lower bound: continuous, L1 and L2 of Martello, Pisinger and Vigo (2000).
+
+Instances: `problems/clp/benchs/MPV/original` (Martello, Pisinger and Vigo 2000, classes 1-8, files with
+10 instances, `-i` selects one; each instance header has the instance number, a lower bound and an
+upper bound) and `benchs/MPV/gen_mpv.py` (instances with the same distribution, used for exploration).
+Solutions (`-o`) are checked with the independent validator `validate_bpp.py`.
+
+Results (classes 1, 4-8, 240 instances, one run, `-T 30`, 4 runs in parallel; total number of bins;
+literature from Table 8 of Goncalves and Resende 2013, `benchs/MPV/literature_goncalves2013.csv`):
+
+| LB | TS2P | GLS | GVND | BRKGA | BSG construction (kappa=1) | BSG_BPP (30 s) |
+|---|---|---|---|---|---|---|
+| 6852 | 7298 | 7302 | 7286 | 7258 | 7608 | 7274 |
+
+     ./problems/clp/experiments/run_mpv.sh results/bpp/x.csv "1 4 5 6 7 8" "$(seq -s' ' 1 10)" 4 -- -T 30
+     python3 problems/clp/experiments/summarize_mpv.py results/bpp/x.csv
