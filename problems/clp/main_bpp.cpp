@@ -46,19 +46,33 @@ static ULD bin;
 static vector< vector<int> > type_items;
 
 /**
- * Lee la instancia: primera linea "n L W H" y luego una linea "l w h" por caja (formato de
- * las instancias generadas con el generador de Martello, Pisinger y Vigo 2000). Las cajas
- * identicas se agrupan en tipos. Con rot, las cajas se pueden rotar en las 6 orientaciones;
- * si no, la orientacion es fija.
+ * Lee la instancia: linea "n L W H" y luego una linea "l w h" por caja. Los archivos de las
+ * instancias de Martello, Pisinger y Vigo (2000) tienen varias instancias, cada una precedida
+ * por una linea de tres numeros (la primera es el numero de la instancia): se lee la
+ * instancia inst (desde 1). Las cajas identicas se agrupan en tipos. Con rot, las cajas se
+ * pueden rotar en las 6 orientaciones; si no, la orientacion es fija.
  */
-static vector<int> read_instance(const string& file, bool rot){
+static vector<int> read_instance(const string& file, bool rot, int inst){
 	ifstream in(file.c_str());
 	if(!in){
 		cerr << "No se pudo abrir el archivo " << file << endl;
 		exit(1);
 	}
-	int n;
-	in >> n >> bin.L >> bin.W >> bin.H;
+	int n=0;
+	string line;
+	while(getline(in, line)){
+		stringstream ss(line);
+		vector<long> f; long x;
+		while(ss >> x) f.push_back(x);
+		if(f.size()==4){ n=f[0]; bin.L=f[1]; bin.W=f[2]; bin.H=f[3]; break; }
+		if(f.size()==3 && f[0]!=inst){
+			//se salta la instancia: linea "n L W H" y n cajas
+			getline(in, line);
+			stringstream s2(line); int m; s2 >> m;
+			for(int i=0; i<m; i++) getline(in, line);
+		}
+	}
+	if(n==0){ cerr << "Instancia no encontrada" << endl; exit(1); }
 	map<vector<long>, int> type;
 	vector<int> left;
 	for(int i=0; i<n; i++){
@@ -385,6 +399,7 @@ int main(int argc, char** argv){
 	args::Flag _swo(parser, "swo", "Squeaky wheel optimization: repeat the construction increasing the profit of the boxes of the least loaded bins", {"swo"});
 	args::ValueFlag<double> _swo_frac(parser, "double", "Proportion of the total time for the squeaky wheel optimization. Default: 0.5", {"swo_frac"});
 	args::ValueFlag<double> _swo_rate(parser, "double", "Increase of the profit of the boxes of the least loaded bins. Default: 0.3", {"swo_rate"});
+	args::ValueFlag<int> _inst(parser, "int", "Instance in files with several instances (from 1). Default: 1", {'i'});
 	args::Flag _rot(parser, "rot", "The boxes can be rotated (6 orientations). Default: fixed orientation", {"rot"});
 	args::Flag _corner_anchor(parser, "corner_anchor", "Anchor each space at its closest corner of the bin (default: at the origin)", {"corner_anchor"});
 	args::Flag _scratch(parser, "scratch", "Insertion of boxes also with a reload from scratch of each bin", {"scratch"});
@@ -434,7 +449,7 @@ int main(int argc, char** argv){
 	clock_t begin_time=clock();
 	auto elapsed=[&](){ return double(clock()-begin_time)/CLOCKS_PER_SEC; };
 
-	vector<int> left=read_instance(_file.Get(), _rot);
+	vector<int> left=read_instance(_file.Get(), _rot, (_inst)? _inst.Get() : 1);
 	const vector<int> total=left;
 	bin.type=0; bin.max_weight=HUGE_VAL; bin.cost=1;
 	bin.dev[0]=bin.L; bin.dev[1]=bin.W; bin.dev[2]=bin.H;
