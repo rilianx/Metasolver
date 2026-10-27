@@ -39,7 +39,7 @@ parts. Its main ingredient is an exact axis move. The overlap of two parts is me
 of their relative position in their no-fit polytope; along any axis this function is zero outside an interval
 and concave inside it, so the best position of a piece along an axis is found by evaluating a few breakpoints
 only. The move is embedded in a strategic oscillation of the container height with guided local search weights
-and restarts, starting from a greedy construction and a linear-programming compaction. On the benchmarks of
+and restarts, starting from a greedy construction. On the benchmarks of
 polyhedral pieces, the method improves the best known heights of 11 of 13 instances within two minutes, reaches
 in 10 seconds the quality that the previous exact local search attains in 600 seconds, and matches 26 of the 27
 known optima of small instances. An ablation study shows that the speed of the move and the guided local search
@@ -198,23 +198,22 @@ fused multiply-add per facet. Ties are broken towards the smaller coordinate (gr
 % =====================================================================================================
 \section{Algorithm}\label{sec:method}
 
-Algorithm~\ref{alg:main} summarizes the method. A greedy construction and an LP compaction give a first feasible
-solution $S$ of height $H$. The search then tries to fit the pieces in a slightly lower container: the
-positions of $S$ are \emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,h$) moves every piece that
-exceeds $h$ down until its top is at $h$, regardless of the other pieces. This is where overlaps appear, and
-\textsc{MinimizeOverlap} tries to remove them. If it succeeds, the layout is feasible again: it is compacted, it
-becomes the new best solution, and the target is lowered; otherwise the target is raised slightly and, when it
-reaches $H$, the search restarts from the best solution.
+Algorithm~\ref{alg:main} summarizes the method. A greedy construction gives a first feasible solution $S$ of
+height $H$. The search then tries to fit the pieces in a slightly lower container: the positions of $S$ are
+\emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,h$) moves every piece that exceeds $h$ down until its
+top is at $h$, regardless of the other pieces. This is where overlaps appear, and \textsc{MinimizeOverlap} tries
+to remove them. If it succeeds, the layout is feasible, fits in height $h$, and becomes the new best solution, and
+the target is lowered again; otherwise the target is raised slightly and, when it reaches $H$, the search
+restarts from the best solution.
 
 \begin{algorithm}[t]
 \caption{Overview}\label{alg:main}
 \SetCommentSty{textit}
-$S\gets$ \textsc{Greedy}(); $S\gets$ \textsc{Compact}($S$); $H\gets H(S)$\;
+$S\gets$ \textsc{Greedy}(); $H\gets H(S)$\;
 $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appear}
 \While{time remains}{
   \eIf(\tcp*[f]{$T$ is feasible}){\textsc{MinimizeOverlap}($T,h,w$)}{
-    $T\gets$ \textsc{Compact}($T$)\;
-    \lIf{$H(T)<H$}{$S\gets T$; $H\gets H(T)$}
+    $S\gets T$; $H\gets H(T)$\tcp*{new best solution, $H\le h$}
     $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\;
   }{
     $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps}
@@ -226,13 +225,13 @@ $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appe
 \Return $S$\;
 \end{algorithm}
 
-In Algorithm~\ref{alg:main}, line~1 builds the first solution (Sections~\ref{sec:greedy} and~\ref{sec:compact}) and
-line~2 creates the first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
-(Section~\ref{sec:minover}). On success (lines~5--7) the separated layout is compacted, possibly becomes the new
-best solution, and the target is lowered again from the best height. On failure (lines~9--11) the target is raised
-by a quarter of the step and the search continues from the current overlapping layout with the current weights;
-once the target is back at the best height, the search restarts from the best solution
-(Section~\ref{sec:kicks}).
+In Algorithm~\ref{alg:main}, line~1 builds the first solution (Section~\ref{sec:greedy}) and line~2 creates the
+first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
+(Section~\ref{sec:minover}). On success (lines~5--6) the separated layout becomes the new best solution and the
+target is lowered again. On failure (lines~8--10) the target is raised by a quarter of the step and the search
+continues from the current overlapping layout with the current weights; once the target is back at the best
+height, the search restarts from the best solution (Section~\ref{sec:kicks}). The method needs no LP solver
+besides the three-variable LPs of the construction.
 
 \subsection{Greedy construction}\label{sec:greedy}
 Pieces are placed one at a time on top of the current load (Algorithm~\ref{alg:greedy}). For each type of piece
@@ -321,65 +320,6 @@ $c\cdot t$: the descent stops. Gravity has priority over the wall term, so the p
 \label{fig:descend}
 \end{figure}
 
-\subsection{Global LP compaction}\label{sec:compact}
-\textsc{Compact} is applied to feasible layouts: after the construction and after each successful separation.
-It solves a sequence of linear programs over all translations. Given the current layout, for every
-pair of parts that can touch within a trust region (each coordinate may move at most $\Delta$, half of the
-smallest piece dimension) one NFP facet $f$ satisfied by the current relative position is selected and the
-constraint $n_f\cdot(t_i-t_j)\ge d_f$ is imposed. The LP
-\begin{equation}\label{eq:lp}
-\begin{aligned}
-\min\ & H+\epsilon\sum_i z_i\\
-\text{s.t.}\ & z_i+h_i\le H,\quad \|t_i-t_i^0\|_\infty\le\Delta, && i=1,\dots,n,\\
-& \text{container bounds on } t_i, && i=1,\dots,n,\\
-& n_f\cdot(t_i-t_j)\ge d_f, && \text{selected pairs of parts},
-\end{aligned}
-\end{equation}
-has a convex feasible region that contains the current layout. The facets are re-selected and the LP is
-solved again while $H$ decreases. A solution is accepted only if it is feasible (the LP solution is checked for
-bounds and overlap).
-
-Algorithm~\ref{alg:compact} shows how the LP is used. \textsc{LPCompact} (lines~7--15) re-selects the facets
-around each new layout, so that the pieces can slide along each other over several LPs, and stops when the height
-no longer decreases. The facet chosen for a pair (line~10) is the one that lets the higher of the two pieces
-descend the most with respect to the other. \textsc{Compact} alternates the LP with a local improvement
-(\textsc{Improve}, lines~16--21) in which, from bottom to top, every piece descends again with the others fixed
-(as in the greedy), and the pieces that define the height are moved to the lowest position generated as in
-\textsc{Greedy}, if it is lower. The LP moves all pieces simultaneously but only within the trust region, while
-\textsc{Improve} moves one piece at a time but can relocate it anywhere.
-
-\begin{algorithm}[!htb]
-\caption{Compaction of a feasible layout}\label{alg:compact}
-\SetCommentSty{textit}
-\Fn{\textsc{Compact}($T$)}{
-  $T\gets$ \textsc{Improve}($T$)\;
-  \Repeat{$H(T)$ does not decrease (at most 20 times)}{
-    $T\gets$ \textsc{Improve}(\textsc{LPCompact}($T$))\;
-  }
-  \Return $T$\;
-}
-\Fn{\textsc{LPCompact}($T$)}{
-  \Repeat{$H(T)$ does not decrease (at most 30 times)}{
-    \ForEach{pair of parts $a\in\mathcal{A}_i$, $b\in\mathcal{A}_j$ that may meet in the trust region}{
-      select the facet $f$ of $N_{ab}$ satisfied by $t_i-t_j$ that lets the higher piece descend the most\;
-    }
-    $T'\gets$ solution of LP~\eqref{eq:lp} with the selected facets\;
-    \lIf{$T'$ violates a bound or overlaps (LP tolerances)}{\Return $T$}
-    $T\gets T'$\;
-  }
-  \Return $T$\;
-}
-\Fn{\textsc{Improve}($T$)}{
-  \ForEach{piece $i$ in increasing order of $z_i$}{
-    $t_i\gets$ \textsc{Descend}($i,t_i,T\setminus\{i\}$)\tcp*{others fixed}
-    \If{$z_i+h_i=H(T)$}{
-      move $i$ to the lowest position generated as in \textsc{Greedy}, if it is lower\;
-    }
-  }
-  \Return $T$\;
-}
-\end{algorithm}
-
 \subsection{Strategic oscillation}
 After a successful separation the target height is decreased by $\rho=1\%$ of the best height and the best
 solution is clamped to it,
@@ -435,8 +375,7 @@ decay, which changes $\phi$ and lets the next pass move the pieces out of the lo
 }
 \end{algorithm}
 
-Figure~\ref{fig:passes} shows all the passes on the 2D example, from a clamped layout, followed by the LP
-compaction.
+Figure~\ref{fig:passes} shows all the passes on the 2D example, from a clamped layout.
 
 \begin{figure}[!tbp]
 \centering
@@ -451,15 +390,13 @@ triangles is increased from 1 to 2 and $\sum w\delta$ jumps from 0.36 to 0.71; t
 not the layout, and the next pass starts from the same positions. Pass~3 then moves the small triangle onto
 the other one: $\sum w\delta$ decreases to 0.54, although $\sum\delta$ increases. The triangle is moved down in
 pass~4. The same happens with the pentagon and the triangle at the bottom in passes~6--8, and after pass~8 the
-layout is feasible. The last panel shows the LP compaction that follows (gray: before), which moves all pieces
-simultaneously and lowers the height below $h$.}
+layout is feasible.}
 \label{fig:passes}
 \end{figure}
 
 \subsection{Restarts}\label{sec:kicks}
 When the target reaches the best height, the search restarts from the best solution clamped to $(1-\rho)H$, with
-the weights reset, after moving one random piece (a kick): to a random position or, with probability 1/2, to the
-lowest of the positions generated as in the greedy construction. On the larger instances the kick itself has no
+the weights reset, after moving one random piece (a kick) to a random position in the container. On the larger instances the kick itself has no
 measurable effect (Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and
 a new random order of the moves. The random positions are needed on small instances: with two pieces there is a
 single pair, so the weights have no effect, and the search keeps returning to the layout produced by the greedy
@@ -469,8 +406,9 @@ order (Section~\ref{sec:t2025}).
 \section{Computational experiments}\label{sec:exp}
 
 \subsection{Setting}
-The method is implemented in C++ on top of the Metasolver framework; LPs are solved with SoPlex 8.1
-\citep{wunderling1996}. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
+The method is implemented in C++ on top of the Metasolver framework. The three-variable LPs of \textsc{Descend}
+are solved with a dedicated active-set routine; SoPlex 8.1 \citep{wunderling1996} is used only for the LP
+compaction of the ablation study. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
 g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
 instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
 for a separating axis.
@@ -500,40 +438,58 @@ their heights are not directly comparable. For Stoyan 2004 the only exact refere
 
 \subsection{Component analysis}
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
-Stoyan 2005 Examples 2--3). Each row changes one element of the method. The effect of the speed of the separation
-is estimated by stopping the same runs at 24 s, which corresponds to moves five times slower.
+Stoyan 2005 Examples 2--3). Each row changes one element of the method:
+\begin{itemize}
+\item \emph{+ LP compaction}: after the construction and after each successful separation, a linear program over
+the translations of all pieces lowers the height, in the spirit of \citet{gomes2006} in 2D: for every pair of
+parts that may meet within a trust region, one facet of their NFP satisfied at the current layout is imposed as
+the constraint $n_f\cdot(t_i-t_j)\ge d_f$, the height is minimized, and the facets are re-selected and the LP
+solved again while the height decreases (SoPlex 8.1).
+\item \emph{+ Improve}: at the same points, every piece descends again with the others fixed (as in
+\textsc{Descend}), and the pieces that define the height are moved to the lowest position generated as in the
+greedy construction, if it is lower.
+\item \emph{$\sigma=0$}: \textsc{Descend} without the wall term (gravity only).
+\item \emph{Greedy by volume}: the largest piece first, at its lowest position ($\alpha$ large, $\gamma=0$), instead
+of the tuned criterion~\eqref{eq:greedy}.
+\item \emph{Additive weights}: $w_{ij}\gets w_{ij}+1$ for the overlapping pairs at local minima.
+\item \emph{Slower separation}: the same runs stopped at 24 s, which corresponds to moves five times slower.
+\item \emph{Kicks}: the random position of the restart replaced by no move at all, by the lowest position
+generated as in the greedy construction (reinsertion), by both with probability 1/2 (the kick of an earlier
+version), or by moving a piece that exceeds the target height (a top piece) to a random position or to the least
+overlapped of 20 random positions.
+\item \emph{Sensitivity}: step $\rho$ of the oscillation and maximum number of passes of
+\textsc{MinimizeOverlap}.
+\end{itemize}
 
-The multiplicative weights and the speed of the separation are the decisive elements: with additive weights the
-mean heights increase on Stoyan 2004 Examples 3--5 and Stoyan 2005 Example 3 (e.g., from 53.60 to 55.27 on
-Stoyan 2004 Example 4), and five times slower moves lose most of the advantage. The kick has no measurable effect
-on these instances: all the variants in the lower part of the table, including restarting from the best solution
-without moving any piece, give the same results within one or two standard errors. A top piece is one that
-exceeds the target height; moving it to the least overlapped of 20 random positions gives a slightly lower mean
-on Stoyan 2004 Example 1 but not on the others. The diversification thus comes mainly from the restart itself,
-with reset weights and a new random order of the moves. The random moves are needed only on small instances
-(Section~\ref{sec:t2025}). The LP compaction has no significant effect: the
-differences are of about one standard error, slightly in favour of the variant without LP on Stoyan 2004. It is therefore not needed for the quality of the solutions, and
-the method can run without an LP solver.
+\todo{Results of the final runs. Preliminary runs: the LP compaction, \textsc{Improve} and the kick variants have no
+significant effect (Wilcoxon $p\ge0.25$); additive weights ($+1.7\%$, $p<0.001$) and slower moves are clearly
+worse; $\sigma=0$ is significantly worse on Stoyan 2004 Example 4.}
 
 \begin{table}[t]
 \centering\small
 \caption{Mean gap of the height with respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan
 2005 Examples 2--3) and mean height on Stoyan 2004 Example 1 (no published reference); 120 s, mean of 10 seeds.
 Negative is better.}\label{tab:ablation}
-\begin{tabular}{p{0.45\textwidth}rrr}
+\begin{tabular}{p{0.52\textwidth}rrr}
 \toprule
 Configuration & Stoyan 2004 & Stoyan 2005 & S2004 Ex1\\
 \midrule
-Proposed method & $-2.8\%$ & $-2.0\%$ & 53.41\\
-Without LP compaction & $-3.3\%$ & $-1.9\%$ & 53.30\\
-Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.3\%$ & $-1.5\%$ & 53.15\\
-Separation five times slower (runs stopped at 24 s) & $-0.1\%$ & $-0.9\%$ & 54.82\\
+Proposed method & \prov{--} & \prov{--} & \prov{--}\\
++ LP compaction & \prov{--} & \prov{--} & \prov{--}\\
++ Improve & \prov{--} & \prov{--} & \prov{--}\\
+$\sigma=0$ (no wall term in \textsc{Descend}) & \prov{--} & \prov{--} & \prov{--}\\
+Greedy by volume & \prov{--} & \prov{--} & \prov{--}\\
+Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & \prov{--} & \prov{--} & \prov{--}\\
+Separation five times slower (runs stopped at 24 s) & \prov{--} & \prov{--} & \prov{--}\\
 \midrule
-Kick: reinsertion only & $-3.5\%$ & $-1.9\%$ & 53.50\\
-Kick: random position only & $-3.1\%$ & $-1.9\%$ & 53.60\\
-Kick: a top piece to a random position & $-3.0\%$ & $-1.9\%$ & 53.16\\
-Kick: a top piece to the least overlapped of 20 random positions & $-2.8\%$ & $-2.1\%$ & 53.09\\
-No kick (restart from the best solution only) & $-2.8\%$ & $-2.0\%$ & 53.66\\
+Kick: none (restart from the best solution only) & \prov{--} & \prov{--} & \prov{--}\\
+Kick: reinsertion & \prov{--} & \prov{--} & \prov{--}\\
+Kick: reinsertion or random position (1/2 each) & \prov{--} & \prov{--} & \prov{--}\\
+Kick: a top piece to a random position & \prov{--} & \prov{--} & \prov{--}\\
+Kick: a top piece to the least overlapped of 20 random positions & \prov{--} & \prov{--} & \prov{--}\\
+\midrule
+$\rho=0.5\%$ / $\rho=2\%$ (default 1\%) & \prov{--} & \prov{--} & \prov{--}\\
+100 / 2000 passes (default 500) & \prov{--} & \prov{--} & \prov{--}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -632,7 +588,7 @@ Total & 66 & 27 & 26 & 20 & 32 of 39 & \\
 \subsection{Time-matched comparison}
 Hardware differs by about ten years. Figure~\ref{fig:time} compares the mean utilization over time with that
 of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 0.3 seconds (the
-greedy construction and compaction), and at 10 seconds our mean utilization already exceeds the mean utilization
+greedy construction), and at 10 seconds our mean utilization already exceeds the mean utilization
 of 3DNest at 600 seconds on all five instances (44.3, 43.4, 45.1, 44.7 and 43.2\% versus 43.0, 42.9, 43.3, 42.0
 and 41.0\%). Even assuming that our machine is five times faster per core, the
 advantage holds at equal effective time.
