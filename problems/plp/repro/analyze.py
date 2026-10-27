@@ -75,7 +75,7 @@ print('## Ablacion (brecha media respecto de la referencia; Stoyan 2004 Ex1: alt
 print('| Variante | Stoyan 2004 | Stoyan 2005 | S2004 Ex1 | n |')
 print('|---|---|---|---|---|')
 for name, cfg, T in (('Propuesto', 'full', None), ('5x mas lento (24 s)', 'full', 24),
-                     ('+ compactacion por LP', 'withlp', None), ('+ Improve', 'withimprove', None),
+                     ('+ compactacion por LP', 'withlp', None), ('Sin Improve', 'noimprove', None),
                      ('Pesos aditivos', 'add', None), ('Descend sin termino de pared (sigma = 0)', 'slide0', None),
                      ('Greedy: pieza mas grande primero', 'volgreedy', None),
                      ('Kick: ninguno (solo reinicio)', 'kick_none', None), ('Kick: mixto (reinsercion o aleatorio)', 'kick_mix', None),

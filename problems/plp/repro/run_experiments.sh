@@ -3,7 +3,7 @@
 # uso: JOBS=14 problems/plp/repro/run_experiments.sh [grupos...]
 #   grupos (por defecto todos): chess main ablation kicks sens tollenaere liu
 #   main        13 instancias (Stoyan 2004/2005, Merged1-5) x 10 semillas x 120 s        130 corridas
-#   ablation    7 instancias dificiles x 5 variantes (+ LP compaction, + Improve, pesos aditivos, sigma = 0,
+#   ablation    7 instancias dificiles x 5 variantes (+ LP compaction, sin Improve, pesos aditivos, sigma = 0,
 #               greedy por volumen) x 10 x 120 s
 #   kicks       7 instancias dificiles x 5 kicks (none, mix, reinsert, top, topbest) x 10 x 120 s (por defecto: random)
 #   sens        7 instancias dificiles x (rho 0.5 %, 2 %; 100 y 2000 pasadas) x 10 x 120 s
@@ -63,7 +63,7 @@ done; fi
 if has main; then for s in $(seq 1 10); do for f in "${ALL[@]}"; do echo "full|$s|120|$f|"; done; done; fi
 if has liu; then for s in $(seq 1 10); do echo "full|$s|120|Liu et al. 2015/Experiment1.json|"; done; fi
 if has ablation; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do
-  echo "withlp|$s|120|$f|--lp_compact"; echo "withimprove|$s|120|$f|--improve"; echo "add|$s|120|$f|--gls add"
+  echo "withlp|$s|120|$f|--lp_compact"; echo "noimprove|$s|120|$f|--no_improve"; echo "add|$s|120|$f|--gls add"
   echo "slide0|$s|120|$f|--slide 0"; echo "volgreedy|$s|120|$f|--alpha 1000 --beta 1 --gamma 0"
 done; done; fi
 if has kicks; then for s in $(seq 1 10); do for f in "${HARD[@]}"; do

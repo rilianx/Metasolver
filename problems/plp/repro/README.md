@@ -28,7 +28,7 @@ que puede relanzarse si se interrumpe.
 | Grupo | Corridas | Tiempo por corrida | Tiempo de CPU |
 |---|---|---|---|
 | main: Stoyan 2004/2005, Merged1–5 | 13 × 10 semillas | 120 s | 4.3 h |
-| ablation: 7 instancias × (+ compactación por LP, + Improve, pesos aditivos, σ = 0, greedy por volumen) | 350 | 120 s | 11.7 h |
+| ablation: 7 instancias × (+ compactación por LP, sin Improve, pesos aditivos, σ = 0, greedy por volumen) | 350 | 120 s | 11.7 h |
 | kicks: 7 instancias × (ninguno, mixto, reinserción, pieza superior, pieza superior con menor penetración) | 350 | 120 s | 11.7 h |
 | sens: 7 instancias × (ρ = 0.5 %, 2 %; 100 y 2000 pasadas) | 280 | 120 s | 9.3 h |
 | tollenaere: Tollenaere et al. 2025 | 66 × 10 | 30 s | 5.5 h |
@@ -45,8 +45,8 @@ Total ≈ 47 h de CPU, ≈ 3.5 h con 14 procesos.
 * `hardware.sh` guarda en `out/hardware.txt` la CPU (`lscpu`), núcleos físicos y lógicos, frecuencias, memoria,
   sistema operativo, compiladores y el commit del repositorio; `analyze.py` copia el modelo de CPU a `results.md`
   para la sección experimental del paper.
-* El método final no usa LP (la compactación por LP y la mejora local están desactivadas por defecto: no tienen
-  efecto medible); SoPlex 8.1 solo se usa en la ablación (`--lp_compact`).
+* El método final no usa LP (la compactación por LP está desactivada por defecto: no tiene efecto medible si se
+  usa la mejora local); SoPlex 8.1 solo se usa en la ablación (`--lp_compact`).
 * Todas las corridas usan el código actual (con Qhull para envolventes de muchos puntos y soluciones en el sistema
   de coordenadas de la malla original, ESICUP); en las instancias poliédricas del paper Qhull no se activa.
 * `data/tollenaere2025_reference.csv`: mejores cotas superior e inferior de los modelos MILP de Tollenaere et al.
