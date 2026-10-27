@@ -227,6 +227,12 @@ struct Params {
 	bool fix_knapsack;
 };
 
+//experimental: fin de la busqueda al cargar todas las cajas (--early_stop) y evaluacion de los
+//candidatos de theta con el tiempo de las fases de mejora (--theta_fast)
+static bool early_stop=false, theta_fast=false;
+//tiempo (s de CPU) de la generacion de bloques y de la busqueda, y cantidad de cargas con BSG
+static double tm_gen=0, tm_search=0; static long n_bsg=0;
+
 /** carga el ULD u con las cajas left usando BSG (P.time segundos de busqueda) */
 static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 		const vector<Block::PlacedBox>* fixed=NULL, bool center=true){
@@ -238,7 +244,9 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	res.feasible=true;
 	res.value=0.0;
 
+	clock_t g0=clock();
 	clpState* s0 = new_state(u, left, P.min_fr, P.max_bl);
+	tm_gen+=double(clock()-g0)/CLOCKS_PER_SEC; n_bsg++;
 	if(s0->get_n_valid_blocks()==0){ delete s0; return res; }
 
 	//cajas fijas: se ubican como bloques de una caja antes de la busqueda
@@ -259,6 +267,12 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	Greedy* gr = new Greedy(vcs);
 	BSG* bsg = new BSG(vcs, *gr, 4);
 	DoubleEffort* de = new DoubleEffort(*bsg);
+	//(--early_stop) la busqueda termina si se cargan todas las cajas con el CoG en rango
+	if(early_stop){
+		double v=0;
+		for(size_t t=0; t<left.size(); t++) v += (double) left[t]*clpState::types[t]->getVolume();
+		de->set_target(v/((double) u.L*u.W*u.H));
+	}
 
 	//el tiempo limite es para la busqueda (sin la generacion de bloques)
 	clock_t begin_time=clock();
@@ -268,6 +282,7 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	State* s_copy = s0->clone();
 	de->run(*s_copy, P.time, begin_time);
 	cout.rdbuf(buf);
+	tm_search+=double(clock()-begin_time)/CLOCKS_PER_SEC;
 
 	clpState* best = de->get_best_state()? static_cast<clpState*>(de->get_best_state()->clone()) : NULL;
 	if(best){
@@ -429,8 +444,6 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0, st_newload=0;
 //etapas de la insercion de cajas (ablacion)
 static bool stage_scratch=false, stage_priority=false, stage_ruin=true;
-//insercion de las cajas no cargadas tambien con la recarga desde cero (--scratch_unloaded)
-static bool scratch_unloaded=false;
 //tiempo (s de CPU) de la reduccion: insercion en los otros ULDs y carga de los ULDs nuevos
 static double tm_insert=0, tm_new=0;
 
@@ -635,11 +648,12 @@ int main(int argc, char** argv){
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _scratch(parser, "scratch", "Ablation: insertion of boxes also with a reload from scratch of each ULD", {"scratch"});
 
-	args::Flag _scratch_unloaded(parser, "scratch_unloaded", "Insertion of the unloaded boxes (limited ULDs) also with a reload from scratch of each ULD", {"scratch_unloaded"});
 	args::Flag _priority(parser, "priority", "Ablation: insertion of boxes also with a reload of each ULD giving priority to the boxes to insert", {"priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
+	args::Flag _early_stop(parser, "early_stop", "Stop each BSG search as soon as all the boxes are loaded with the CoG in range (experimental)", {"early_stop"});
+	args::Flag _theta_fast(parser, "theta_fast", "Evaluate the candidate ULD types with the time of the improvement phases (experimental)", {"theta_fast"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -712,6 +726,7 @@ int main(int argc, char** argv){
 	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
+	early_stop=_early_stop; theta_fast=_theta_fast;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -734,7 +749,7 @@ int main(int argc, char** argv){
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
-	stage_scratch=_scratch; stage_priority=_priority; stage_ruin=!_no_ruin; scratch_unloaded=_scratch_unloaded;
+	stage_scratch=_scratch; stage_priority=_priority; stage_ruin=!_no_ruin;
 	//fases de mejora (Insert y reduccion): tiempo de BSG por ULD = improve_time * t
 	Params Pi=P; Pi.time=P.time*((_improve_time)? _improve_time.Get() : 0.1);
 
@@ -748,17 +763,22 @@ int main(int argc, char** argv){
 		const ULD* u = select_uld(left, &cands);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
-		Load ld = load(*u, left, P);
-		//eleccion entre los candidatos (--theta): no se elige uno que deje el CoG fuera de rango si otro no
-		if(theta>=0 && cands.size()>1){
+		//eleccion entre los candidatos (--theta): no se elige uno que deje el CoG fuera de rango si
+		//otro no; con --theta_fast los candidatos se cargan con el tiempo de las fases de mejora y
+		//el elegido se carga de nuevo con el tiempo completo
+		bool multi = theta>=0 && cands.size()>1;
+		const Params& Pc = (theta_fast && multi)? Pi : P;
+		Load ld = load(*u, left, Pc);
+		if(multi){
 			auto score=[&](const Load& l){ return l.volume - theta*l.uld->volume; };
 			for(const ULD* c : cands){
 				if(c->type==u->type) continue;
-				Load ld2 = load(*c, left, P);
+				Load ld2 = load(*c, left, Pc);
 				if(!ld2.feasible || none(ld2.boxes) || (ld.cog_ok() && !ld2.cog_ok())) continue;
 				if((!ld.cog_ok() && ld2.cog_ok()) || score(ld2) > score(ld)){ ld=ld2; u=c; }
 			}
 		}
+		if(theta_fast && multi) ld = load(*u, left, P);
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles) o cajas prioritarias, se carga el ULD priorizando esas cajas
 		if(limited){
@@ -794,12 +814,7 @@ int main(int argc, char** argv){
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
-	//(con --scratch_unloaded, tambien con la recarga desde cero de cada ULD)
-	if(remaining()>0){
-		bool sc=stage_scratch; stage_scratch = sc || scratch_unloaded;
-		insert(loads, left, Pi);
-		stage_scratch=sc;
-	}
+	if(remaining()>0) insert(loads, left, Pi);
 	};
 
 	auto unl_vol=[&](){ double v=0; for(size_t t=0; t<left.size(); t++) v+=(double) left[t]*clpState::types[t]->getVolume(); return v; };
@@ -870,7 +885,7 @@ int main(int argc, char** argv){
 	cout << "stats scratch " << st_scratch << " priority " << st_priority << " ruin " << st_ruin
 		<< " useful_scratch " << su_scratch << " useful_priority " << su_priority << " useful_ruin " << su_ruin
 		<< " passes " << st_pass << " tries " << st_try << " elim " << st_elim << " new1 " << st_new1
-		<< " new2 " << st_new2 << " fail " << st_fail << " useful_restarts " << n_restart_useful << " t_insert " << tm_insert << " t_new " << tm_new << " new_loads " << st_newload << endl;
+		<< " new2 " << st_new2 << " fail " << st_fail << " useful_restarts " << n_restart_useful << " t_insert " << tm_insert << " t_new " << tm_new << " new_loads " << st_newload << " bsg_loads " << n_bsg << " t_gen " << tm_gen << " t_search " << tm_search << endl;
 
 	if(_output){
 		ofstream out(_output.Get().c_str());

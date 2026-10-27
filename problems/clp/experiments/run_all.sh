@@ -3,8 +3,8 @@
 #   1. corridas finales: 3 escenarios x t in {0.05, 1} s x 5 repeticiones
 #   2. ablacion (t = 0.05 s)
 #   3. barrido de cog_penalty (t = 0.05 s)
-#   4. curva del volumen segun el tiempo (escenario paquay), con las fases de mejora a 0.1 t
-#      (por defecto) y a t
+#   4. curvas del volumen segun el tiempo (tres escenarios) y, en paquay, con las fases de
+#      mejora a t
 # y un resumen en <salida>/summary.txt.
 #
 # uso: problems/clp/experiments/run_all.sh <salida> [JOBS]
@@ -64,8 +64,8 @@ for v in $SETTINGS; do
 	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.05 --cog_penalty $lam; done
 done
 
+for v in $SETTINGS; do for t in 0.02 0.03 0.1 0.2 0.5 2; do run curve_${v}_t$t $v -t $t; done; done
 case " $SETTINGS " in *" paquay "*)
-	for t in 0.02 0.03 0.1 0.2 0.5 2; do run curve_t$t paquay -t $t; done
 	#fases de mejora con el mismo tiempo que la construccion
 	for t in 0.02 0.05 0.1 0.2 0.5 1; do run curvefull_t$t paquay -t $t --improve_time 1; done;;
 esac
@@ -81,12 +81,14 @@ esac
 		done
 		echo "== ablacion $n (t=0.05, sin...)"
 		for d in $OUT/abl_${n}_*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
+		echo "== curva de tiempo $n"
+		for d in $OUT/curve_${n}_t*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 		echo "== cog_penalty $n (t=0.05)"
 		for d in $OUT/lambda*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 	done
 	case " $SETTINGS " in *" paquay "*)
 		echo "== curva de tiempo (paquay)"
-		for d in $OUT/curve_t* $OUT/curvefull_t* ; do echo "-- $(basename $d)"; python3 $S --table 8 $d | sed -n 2,3p; done;;
+		for d in $OUT/curvefull_t* ; do echo "-- $(basename $d)"; python3 $S --table 8 $d | sed -n 2,3p; done;;
 	esac
 } > $OUT/summary.txt
 echo "listo: $OUT/summary.txt"

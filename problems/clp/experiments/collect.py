@@ -40,7 +40,7 @@ os.makedirs(out, exist_ok=True)
 
 with open(os.path.join(out, 'time.csv'), 'w') as f:
     f.write('improve,t,vol,ulds,time\n')
-    for imp, pref in (('0.1', 'curve_t'), ('1', 'curvefull_t')):
+    for imp, pref in (('0.1', 'curve_paquay_t'), ('1', 'curvefull_t')):
         pts = {}
         for d in glob.glob(f'{res}/{pref}*'):
             pts[float(d.split(pref)[1])] = run(d)
