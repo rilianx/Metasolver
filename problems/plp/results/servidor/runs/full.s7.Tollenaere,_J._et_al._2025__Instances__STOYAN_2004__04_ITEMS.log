@@ -1,0 +1,18 @@
+instance: STOYAN_2004_04_ITEMS
+items: 4
+height_lb: 16
+construction_height (greedy, 0.002344 s): 29
+compaction_height (sin LP): 29
+[separacion] (0.004062 s): altura 28 (kicks 0)
+[separacion] (0.004362 s): altura 27.72 (kicks 0)
+[separacion] (0.22771 s): altura 27.533333 (kicks 11)
+separations: 6322
+rejected: 0
+limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
+time: 30.002431
+feasible: yes
+items: 4
+height: 27.533333
+density: 0.40630885
+max_overlap: 0
+max_outside: 0

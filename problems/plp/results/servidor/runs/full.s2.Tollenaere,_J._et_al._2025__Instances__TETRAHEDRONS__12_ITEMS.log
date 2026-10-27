@@ -1,0 +1,27 @@
+instance: TETRAHEDRONS_12_ITEMS
+items: 12
+height_lb: 10
+construction_height (greedy, 0.001 s): 30.44656
+compaction_height (sin LP): 30.44656
+[separacion] (0.00213 s): altura 30.142094 (kicks 0)
+[separacion] (0.002527 s): altura 29.840673 (kicks 0)
+[separacion] (0.004205 s): altura 29.542266 (kicks 0)
+[separacion] (0.007996 s): altura 29.246844 (kicks 0)
+[separacion] (0.015596 s): altura 28.954375 (kicks 0)
+[separacion] (0.034964 s): altura 28.664832 (kicks 0)
+[separacion] (0.035792 s): altura 28.378183 (kicks 0)
+[separacion] (0.039251 s): altura 28.094401 (kicks 0)
+[separacion] (0.042886 s): altura 27.813457 (kicks 0)
+[separacion] (0.252522 s): altura 27.535323 (kicks 2)
+[separacion] (0.324099 s): altura 27.466485 (kicks 0)
+[separacion] (10.395568 s): altura 27.397818 (kicks 98)
+separations: 1175
+rejected: 0
+limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
+time: 30.004396
+feasible: yes
+items: 12
+height: 27.397818
+density: 0.15804726
+max_overlap: 8.1045175e-07
+max_outside: 0

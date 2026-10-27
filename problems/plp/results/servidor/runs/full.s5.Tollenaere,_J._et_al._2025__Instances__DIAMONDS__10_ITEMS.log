@@ -1,0 +1,32 @@
+instance: DIAMONDS_10_ITEMS
+items: 10
+height_lb: 7.1926746
+construction_height (greedy, 1.513694 s): 21.268467
+compaction_height (sin LP): 21.268467
+[separacion] (1.896152 s): altura 21.055782 (kicks 0)
+[separacion] (1.957677 s): altura 20.845224 (kicks 0)
+[separacion] (2.047346 s): altura 20.636772 (kicks 0)
+[separacion] (2.093945 s): altura 20.430404 (kicks 0)
+[separacion] (2.203325 s): altura 20.2261 (kicks 0)
+[separacion] (2.260003 s): altura 20.023839 (kicks 0)
+[separacion] (2.32773 s): altura 19.823601 (kicks 0)
+[separacion] (2.5477 s): altura 19.625365 (kicks 0)
+[separacion] (2.784827 s): altura 19.429111 (kicks 0)
+[separacion] (3.098666 s): altura 19.283393 (kicks 0)
+[separacion] (3.191567 s): altura 19.090559 (kicks 0)
+[separacion] (3.316853 s): altura 18.899653 (kicks 0)
+[separacion] (3.4648 s): altura 18.710657 (kicks 0)
+[separacion] (3.681431 s): altura 18.52355 (kicks 0)
+[separacion] (3.801647 s): altura 18.338315 (kicks 0)
+[separacion] (5.067561 s): altura 18.154932 (kicks 1)
+[separacion] (6.098865 s): altura 18.064157 (kicks 0)
+separations: 92
+rejected: 0
+limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
+time: 30.046877
+feasible: yes
+items: 10
+height: 18.064157
+density: 0.39817383
+max_overlap: 3.7061008e-07
+max_outside: 0

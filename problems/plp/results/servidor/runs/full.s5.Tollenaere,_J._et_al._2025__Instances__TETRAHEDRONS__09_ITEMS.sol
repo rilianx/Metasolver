@@ -1,0 +1,116 @@
+{
+    "instancePath": "Tollenaere, J. et al. 2025/Instances/TETRAHEDRONS/09_ITEMS.json",
+    "totalHeight": 20.359227504979646,
+    "itemOrigin": "AlignToMinimum",
+    "gap": 0,
+    "items": [
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [0, 0, 0],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [0, 8.6603000000000012, 0],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 8.6603000000000012, 0, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [10, 8.6602999999999994, 0],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [10, 8.6602999999999994, 0, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [10, 0, 4.4408920985006262e-16],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [10, 0, 4.4408920985006262e-16, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [5, 5.7735500000000002, 4.9999999999999991],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [5, 5.7735500000000002, 4.9999999999999991, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [0, 0, 10],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 10, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [10, 2.8868, 10],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [10, 2.8868, 10, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [10, 11.339700000000001, 10.359227504979646],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [10, 11.339700000000001, 10.359227504979646, 1]
+                ]
+            }
+        },
+        {
+            "name": "tetrahedron.obj",
+            "transformation": {
+                "position": [0, 11.339700000000001, 10.359227504979646],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 11.339700000000001, 10.359227504979646, 1]
+                ]
+            }
+        }
+    ]
+}

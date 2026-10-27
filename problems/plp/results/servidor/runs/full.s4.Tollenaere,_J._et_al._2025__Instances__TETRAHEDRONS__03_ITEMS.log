@@ -1,0 +1,18 @@
+instance: TETRAHEDRONS_03_ITEMS
+items: 3
+height_lb: 10
+construction_height (greedy, 0.000365 s): 17.499978
+compaction_height (sin LP): 17.499978
+[separacion] (0.000419 s): altura 17.324979 (kicks 0)
+[separacion] (0.000455 s): altura 17.151729 (kicks 0)
+[separacion] (0.04276 s): altura 17.024417 (kicks 3)
+separations: 9766
+rejected: 0
+limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
+time: 30.001121
+feasible: yes
+items: 3
+height: 17.024417
+density: 0.11304417
+max_overlap: 1.3322676e-15
+max_outside: 0
