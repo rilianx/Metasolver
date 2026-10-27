@@ -429,6 +429,8 @@ static bool ruin_recreate(vector<Load>& loads, vector<int>& freed, double p, con
 static long st_scratch=0, st_priority=0, st_ruin=0, su_scratch=0, su_priority=0, su_ruin=0, st_try=0, st_elim=0, st_new1=0, st_new2=0, st_fail=0, st_pass=0, st_newload=0;
 //etapas de la insercion de cajas (ablacion)
 static bool stage_scratch=false, stage_priority=false, stage_ruin=true;
+//insercion de las cajas no cargadas tambien con la recarga desde cero (--scratch_unloaded)
+static bool scratch_unloaded=false;
 //tiempo (s de CPU) de la reduccion: insercion en los otros ULDs y carga de los ULDs nuevos
 static double tm_insert=0, tm_new=0;
 
@@ -633,6 +635,7 @@ int main(int argc, char** argv){
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _scratch(parser, "scratch", "Ablation: insertion of boxes also with a reload from scratch of each ULD", {"scratch"});
 
+	args::Flag _scratch_unloaded(parser, "scratch_unloaded", "Insertion of the unloaded boxes (limited ULDs) also with a reload from scratch of each ULD", {"scratch_unloaded"});
 	args::Flag _priority(parser, "priority", "Ablation: insertion of boxes also with a reload of each ULD giving priority to the boxes to insert", {"priority"});
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
@@ -731,7 +734,7 @@ int main(int argc, char** argv){
 	vector<Load> loads;
 	auto remaining=[&](){ int n=0; for(int x : left) n+=x; return n; };
 	bool limited = (_uld_count && _uld_count.Get()>0);
-	stage_scratch=_scratch; stage_priority=_priority; stage_ruin=!_no_ruin;
+	stage_scratch=_scratch; stage_priority=_priority; stage_ruin=!_no_ruin; scratch_unloaded=_scratch_unloaded;
 	//fases de mejora (Insert y reduccion): tiempo de BSG por ULD = improve_time * t
 	Params Pi=P; Pi.time=P.time*((_improve_time)? _improve_time.Get() : 0.1);
 
@@ -791,7 +794,12 @@ int main(int argc, char** argv){
 		if(available[uld_index(*u)]>0) available[uld_index(*u)]--;
 	}
 	//cajas no cargadas (ULDs limitados): se insertan en los ULDs cargados
-	if(remaining()>0) insert(loads, left, Pi);
+	//(con --scratch_unloaded, tambien con la recarga desde cero de cada ULD)
+	if(remaining()>0){
+		bool sc=stage_scratch; stage_scratch = sc || scratch_unloaded;
+		insert(loads, left, Pi);
+		stage_scratch=sc;
+	}
 	};
 
 	auto unl_vol=[&](){ double v=0; for(size_t t=0; t<left.size(); t++) v+=(double) left[t]*clpState::types[t]->getVolume(); return v; };
