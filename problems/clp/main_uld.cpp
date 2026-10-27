@@ -227,9 +227,6 @@ struct Params {
 	bool fix_knapsack;
 };
 
-//experimental: fin de la busqueda al cargar todas las cajas (--early_stop) y evaluacion de los
-//candidatos de theta con el tiempo de las fases de mejora (--theta_fast)
-static bool early_stop=false, theta_fast=false;
 //tiempo (s de CPU) de la generacion de bloques y de la busqueda, y cantidad de cargas con BSG
 static double tm_gen=0, tm_search=0; static long n_bsg=0;
 
@@ -267,12 +264,10 @@ static Load load_bsg(const ULD& u, const vector<int>& left, const Params& P,
 	Greedy* gr = new Greedy(vcs);
 	BSG* bsg = new BSG(vcs, *gr, 4);
 	DoubleEffort* de = new DoubleEffort(*bsg);
-	//(--early_stop) la busqueda termina si se cargan todas las cajas con el CoG en rango
-	if(early_stop){
-		double v=0;
-		for(size_t t=0; t<left.size(); t++) v += (double) left[t]*clpState::types[t]->getVolume();
-		de->set_target(v/((double) u.L*u.W*u.H));
-	}
+	//la busqueda termina si se cargan todas las cajas con el CoG en rango (no se puede mejorar)
+	double vleft=0;
+	for(size_t t=0; t<left.size(); t++) vleft += (double) left[t]*clpState::types[t]->getVolume();
+	de->set_target(vleft/((double) u.L*u.W*u.H));
 
 	//el tiempo limite es para la busqueda (sin la generacion de bloques)
 	clock_t begin_time=clock();
@@ -652,8 +647,6 @@ int main(int argc, char** argv){
 	args::Flag _no_ruin(parser, "no_ruin", "Ablation: insertion of boxes without ruin and recreate", {"no_ruin"});
 	args::ValueFlag<double> _theta(parser, "double", "Select the next ULD type among the candidates (rule of Hessler et al.) by loading each one and maximizing loaded volume - theta * ULD volume (negative: rule of Hessler et al. alone). Default: 0.2316", {"theta"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
-	args::Flag _early_stop(parser, "early_stop", "Stop each BSG search as soon as all the boxes are loaded with the CoG in range (experimental)", {"early_stop"});
-	args::Flag _theta_fast(parser, "theta_fast", "Evaluate the candidate ULD types with the time of the improvement phases (experimental)", {"theta_fast"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
@@ -726,7 +719,6 @@ int main(int argc, char** argv){
 	if(_reduce_new) reduce_new=_reduce_new.Get();
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
-	early_stop=_early_stop; theta_fast=_theta_fast;
 	origin_only = !_corner_anchor;
 	Space::origin_anchor = origin_only;
 	clpState::translate_cog = !_no_translate;
@@ -763,11 +755,11 @@ int main(int argc, char** argv){
 		const ULD* u = select_uld(left, &cands);
 		//no quedan ULDs disponibles en que quepan las cajas restantes
 		if(!u) break;
-		//eleccion entre los candidatos (--theta): no se elige uno que deje el CoG fuera de rango si
-		//otro no; con --theta_fast los candidatos se cargan con el tiempo de las fases de mejora y
-		//el elegido se carga de nuevo con el tiempo completo
+		//eleccion entre los candidatos (--theta): cada candidato se carga con el tiempo de las fases
+		//de mejora y el elegido se carga de nuevo con el tiempo completo; no se elige uno que deje
+		//el CoG fuera de rango si otro no
 		bool multi = theta>=0 && cands.size()>1;
-		const Params& Pc = (theta_fast && multi)? Pi : P;
+		const Params& Pc = multi? Pi : P;
 		Load ld = load(*u, left, Pc);
 		if(multi){
 			auto score=[&](const Load& l){ return l.volume - theta*l.uld->volume; };
@@ -778,7 +770,7 @@ int main(int argc, char** argv){
 				if((!ld.cog_ok() && ld2.cog_ok()) || score(ld2) > score(ld)){ ld=ld2; u=c; }
 			}
 		}
-		if(theta_fast && multi) ld = load(*u, left, P);
+		if(multi) ld = load(*u, left, P);
 		//con ULDs limitados: si quedan fuera cajas que solo caben en este ULD (entre los
 		//disponibles) o cajas prioritarias, se carga el ULD priorizando esas cajas
 		if(limited){

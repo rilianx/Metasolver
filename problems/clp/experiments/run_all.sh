@@ -1,8 +1,8 @@
 #!/bin/bash
 # Campana completa de experimentos de BSG_ULD (instancias finales de Paquay et al. 2018):
-#   1. corridas finales: 3 escenarios x t in {0.05, 1} s x 5 repeticiones
-#   2. ablacion (t = 0.05 s)
-#   3. barrido de cog_penalty (t = 0.05 s)
+#   1. corridas finales: 3 escenarios x t in {0.1, 1} s x 5 repeticiones
+#   2. ablacion (t = 0.1 s)
+#   3. barrido de cog_penalty (t = 0.1 s)
 #   4. curvas del volumen segun el tiempo (tres escenarios) y, en paquay, con las fases de
 #      mejora a t
 # y un resumen en <salida>/summary.txt.
@@ -46,7 +46,7 @@ run(){ # run <nombre> <escenario> <opciones...>
 }
 
 SETTINGS=${SETTINGS:-paquay adapted one}
-for r in 1 2 3 4 5; do for t in 0.05 1; do for v in $SETTINGS; do
+for r in 1 2 3 4 5; do for t in 0.1 1; do for v in $SETTINGS; do
 	run final_${v}_t${t}_r$r $v -t $t
 done; done; done
 
@@ -59,12 +59,12 @@ for v in $SETTINGS; do
 		n=${cfg%%:*}; a=${cfg#*:}
 		[ $n = nosub ] && [ $v = paquay ] && continue
 		[ $n = norestart ] && [ $v != one ] && continue
-		run abl_${v}_$n $v -t 0.05 $a
+		run abl_${v}_$n $v -t 0.1 $a
 	done
-	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.05 --cog_penalty $lam; done
+	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.1 --cog_penalty $lam; done
 done
 
-for v in $SETTINGS; do for t in 0.02 0.03 0.1 0.2 0.5 2; do run curve_${v}_t$t $v -t $t; done; done
+for v in $SETTINGS; do for t in 0.02 0.05 0.2 0.5 2; do run curve_${v}_t$t $v -t $t; done; done
 case " $SETTINGS " in *" paquay "*)
 	#fases de mejora con el mismo tiempo que la construccion
 	for t in 0.02 0.05 0.1 0.2 0.5 1; do run curvefull_t$t paquay -t $t --improve_time 1; done;;
@@ -75,15 +75,15 @@ esac
 	for v in paquay:8 adapted:10 one:12; do
 		n=${v%%:*}; tb=${v#*:}
 		case " $SETTINGS " in *" $n "*) ;; *) continue;; esac
-		for t in 0.05 1; do
+		for t in 0.1 1; do
 			echo "== final $n t=$t"
 			python3 $S --table $tb $OUT/final_${n}_t${t}_r*
 		done
-		echo "== ablacion $n (t=0.05, sin...)"
+		echo "== ablacion $n (t=0.1, sin...)"
 		for d in $OUT/abl_${n}_*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 		echo "== curva de tiempo $n"
 		for d in $OUT/curve_${n}_t*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
-		echo "== cog_penalty $n (t=0.05)"
+		echo "== cog_penalty $n (t=0.1)"
 		for d in $OUT/lambda*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 	done
 	case " $SETTINGS " in *" paquay "*)
