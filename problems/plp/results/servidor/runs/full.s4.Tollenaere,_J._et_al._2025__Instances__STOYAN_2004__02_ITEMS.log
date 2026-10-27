@@ -1,20 +1,20 @@
 instance: STOYAN_2004_02_ITEMS
 items: 2
 height_lb: 12
-construction_height (greedy, 0.000744 s): 17.333333
+construction_height (greedy, 0.000783 s): 17.333333
 compaction_height (sin LP): 17.333333
-[separacion] (0.098761 s): altura 17.16 (kicks 9)
-[separacion] (0.098786 s): altura 16.9884 (kicks 0)
-[separacion] (0.098806 s): altura 16.818516 (kicks 0)
-[separacion] (0.09882 s): altura 16.650331 (kicks 0)
-[separacion] (0.098834 s): altura 16.483828 (kicks 0)
-[separacion] (0.098851 s): altura 16.318989 (kicks 0)
-[separacion] (0.098867 s): altura 16.155799 (kicks 0)
-[separacion] (0.101602 s): altura 16 (kicks 0)
-separations: 11062
+[separacion] (0.098394 s): altura 17.16 (kicks 9)
+[separacion] (0.09842 s): altura 16.9884 (kicks 0)
+[separacion] (0.098439 s): altura 16.818516 (kicks 0)
+[separacion] (0.098454 s): altura 16.650331 (kicks 0)
+[separacion] (0.098468 s): altura 16.483828 (kicks 0)
+[separacion] (0.098486 s): altura 16.318989 (kicks 0)
+[separacion] (0.098502 s): altura 16.155799 (kicks 0)
+[separacion] (0.101239 s): altura 16 (kicks 0)
+separations: 11129
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.000515
+time: 30.002412
 feasible: yes
 items: 2
 height: 16

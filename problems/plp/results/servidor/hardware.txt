@@ -1,4 +1,4 @@
-# fecha: 2026-10-27T08:32:48-03:00
+# fecha: 2026-10-27T14:55:11-03:00
 # host: servidor-ignacio
 
 ## CPU (lscpu)
@@ -16,7 +16,7 @@ Thread(s) per core:                      1
 Core(s) per socket:                      8
 Socket(s):                               2
 Stepping:                                1
-CPU(s) scaling MHz:                      51%
+CPU(s) scaling MHz:                      43%
 CPU max MHz:                             3000.0000
 CPU min MHz:                             1200.0000
 BogoMIPS:                                4199.91
@@ -54,30 +54,30 @@ logicos (nproc): 16
 fisicos (core,socket distintos): 16
 
 ## frecuencias por nucleo (MHz, ahora)
-      1 1196.428
-      1 1199.964
+      1 1199.660
+      1 1199.945
+      1 1199.977
       2 1200.000
-      1 1441.893
-      1 1658.508
-      1 1748.212
-      1 1891.389
+      1 1228.762
+      1 1646.101
+      1 1881.596
+      1 1899.511
       1 1900.000
-      1 1900.526
-      1 1999.561
-      1 2103.637
-      1 2191.709
-      1 2247.856
-      1 2248.757
-      1 2299.949
+      1 1900.998
+      1 1902.381
+      1 1999.200
+      1 2100.808
+      1 2288.302
+      1 2299.948
 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor: schedutil
 /sys/devices/system/cpu/intel_pstate/no_turbo: 0
 
 ## memoria
 MemTotal:       65845920 kB
-MemFree:        39450032 kB
-MemAvailable:   59333196 kB
+MemFree:        39355128 kB
+MemAvailable:   59401360 kB
                total        used        free      shared  buff/cache   available
-Mem:            62Gi       6.2Gi        37Gi        22Mi        19Gi        56Gi
+Mem:            62Gi       6.1Gi        37Gi        22Mi        20Gi        56Gi
 Swap:          8.0Gi       227Mi       7.8Gi
 
 ## sistema
@@ -86,7 +86,7 @@ VERSION="24.04.1 LTS (Noble Numbat)"
 Linux servidor-ignacio 6.17.0-35-generic #35~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 19:30:42 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 
 ## carga actual
- 08:32:48 up 118 days, 14:07, 14 users,  load average: 0.30, 0.09, 0.04
+ 14:55:11 up 118 days, 20:29, 14 users,  load average: 0.24, 0.18, 2.78
 
 ## compiladores y herramientas
 g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
@@ -94,5 +94,5 @@ cmake version 3.28.3
 Python 3.12.3
 
 ## repositorio
-86f0098263df09b20816688a986c6c80638b9d0c plp paper: metodo sin compactacion por LP ni Improve (pasan a la ablacion); Tabla 1 pendiente de la fase 2
+d9666b2857b4167d11f90e5fd7d018df3092cf5d plp: fase 2 (metodo final)
 ?? ../../../resultados_plp.tgz

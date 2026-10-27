@@ -1,28 +1,28 @@
 instance: TETRAHEDRONS_20_ITEMS
 items: 20
 height_lb: 10
-construction_height (greedy, 0.001652 s): 47.085691
+construction_height (greedy, 0.001649 s): 47.085691
 compaction_height (sin LP): 47.085691
-[separacion] (0.00294 s): altura 46.614834 (kicks 0)
-[separacion] (0.003151 s): altura 46.148685 (kicks 0)
-[separacion] (0.004738 s): altura 45.687198 (kicks 0)
-[separacion] (0.017162 s): altura 45.230326 (kicks 0)
-[separacion] (0.27719 s): altura 44.891099 (kicks 1)
-[separacion] (0.281699 s): altura 44.442188 (kicks 0)
-[separacion] (0.284226 s): altura 43.997766 (kicks 0)
-[separacion] (0.291577 s): altura 43.557788 (kicks 0)
-[separacion] (0.29639 s): altura 43.122211 (kicks 0)
-[separacion] (1.099995 s): altura 42.798794 (kicks 3)
-[separacion] (1.319696 s): altura 42.370806 (kicks 1)
-[separacion] (2.844245 s): altura 41.947098 (kicks 5)
-[separacion] (2.849468 s): altura 41.527627 (kicks 0)
-[separacion] (2.857232 s): altura 41.112351 (kicks 0)
-[separacion] (3.115454 s): altura 41.00957 (kicks 0)
-[separacion] (3.901717 s): altura 40.907046 (kicks 2)
-separations: 400
+[separacion] (0.002911 s): altura 46.614834 (kicks 0)
+[separacion] (0.00312 s): altura 46.148685 (kicks 0)
+[separacion] (0.004707 s): altura 45.687198 (kicks 0)
+[separacion] (0.017061 s): altura 45.230326 (kicks 0)
+[separacion] (0.276473 s): altura 44.891099 (kicks 1)
+[separacion] (0.280985 s): altura 44.442188 (kicks 0)
+[separacion] (0.283515 s): altura 43.997766 (kicks 0)
+[separacion] (0.290858 s): altura 43.557788 (kicks 0)
+[separacion] (0.295657 s): altura 43.122211 (kicks 0)
+[separacion] (1.097372 s): altura 42.798794 (kicks 3)
+[separacion] (1.317393 s): altura 42.370806 (kicks 1)
+[separacion] (2.835322 s): altura 41.947098 (kicks 5)
+[separacion] (2.840523 s): altura 41.527627 (kicks 0)
+[separacion] (2.848249 s): altura 41.112351 (kicks 0)
+[separacion] (3.105325 s): altura 41.00957 (kicks 0)
+[separacion] (3.889737 s): altura 40.907046 (kicks 2)
+separations: 401
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.013564
+time: 30.012195
 feasible: yes
 items: 20
 height: 40.907046

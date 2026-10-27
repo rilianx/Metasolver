@@ -1,14 +1,14 @@
 instance: TETRAHEDRONS_05_ITEMS
 items: 5
 height_lb: 10
-construction_height (greedy, 0.000471 s): 24.999957
+construction_height (greedy, 0.000459 s): 24.999957
 compaction_height (sin LP): 24.999957
-[separacion] (0.000703 s): altura 24.749957 (kicks 0)
-[separacion] (0.026362 s): altura 24.512108 (kicks 1)
-separations: 4983
+[separacion] (0.000691 s): altura 24.749957 (kicks 0)
+[separacion] (0.026266 s): altura 24.512108 (kicks 1)
+separations: 4984
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.00254
+time: 30.000534
 feasible: yes
 items: 5
 height: 24.512108
