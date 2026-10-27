@@ -387,7 +387,7 @@ int main(int argc, char** argv){
 	args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 	args::ValueFlag<double> _min_fr(parser, "double", "Minimum volume occupied by a block (proportion). Default: 0.98", {"min_fr"});
 	args::ValueFlag<int> _max_bl(parser, "int", "Maximum number of blocks. Default: 500", {"max_bl"});
-	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each bin in the construction (seconds, without the block generation). Default: 0.1", {'t', "timelimit"});
+	args::ValueFlag<double> _maxtime(parser, "double", "Timelimit of the search in each bin in the construction (seconds, without the block generation). Default: 0.02", {'t', "timelimit"});
 	args::ValueFlag<double> _improve_time(parser, "double", "Timelimit of BSG in the improvement phase, relative to -t. Default: 1", {"improve_time"});
 	args::ValueFlag<double> _total_time(parser, "double", "Total timelimit (seconds). Default: 60", {'T', "total_time"});
 	args::ValueFlag<double> _alpha(parser, "double", "Alpha parameter. Default: 2.4407", {"alpha"});
@@ -396,8 +396,8 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _p(parser, "double", "p parameter. Default: 0.0164", {'p'});
 	args::ValueFlag<double> _kappa(parser, "double", "Profit of each box: volume^kappa (relative to the bin), to load the large boxes first. Default: 2", {"kappa"});
 	args::Flag _accept_volume(parser, "accept_volume", "Insertion: accept the reload of a bin if it loads more volume (default: more profit)", {"accept_volume"});
-	args::Flag _swo(parser, "swo", "Squeaky wheel optimization: repeat the construction increasing the profit of the boxes of the least loaded bins", {"swo"});
-	args::ValueFlag<double> _swo_frac(parser, "double", "Proportion of the total time for the squeaky wheel optimization. Default: 0.5", {"swo_frac"});
+	args::Flag _no_swo(parser, "no_swo", "Ablation: without the squeaky wheel optimization (repetition of the construction increasing the profit of the boxes of the least loaded bins)", {"no_swo"});
+	args::ValueFlag<double> _swo_frac(parser, "double", "Proportion of the total time for the squeaky wheel optimization (the rest: emptying of bins with ruin and recreate). Default: 1", {"swo_frac"});
 	args::ValueFlag<double> _swo_rate(parser, "double", "Increase of the profit of the boxes of the least loaded bins. Default: 0.3", {"swo_rate"});
 	args::ValueFlag<int> _inst(parser, "int", "Instance in files with several instances (from 1). Default: 1", {'i'});
 	args::ValueFlag<string> _columns(parser, "string", "Write the bins generated in the construction and the squeaky wheel optimization (boxes of each type) to this file", {"columns"});
@@ -433,7 +433,7 @@ int main(int argc, char** argv){
 	P.p=(_p)? _p.Get() : 0.0164;
 	P.delta=1.0;
 	P.min_fr=(_min_fr)? _min_fr.Get() : 0.98;
-	P.time=(_maxtime)? _maxtime.Get() : 0.1;
+	P.time=(_maxtime)? _maxtime.Get() : 0.02;
 	P.max_bl=(_max_bl)? _max_bl.Get() : 500;
 	P.fix_knapsack=true;
 	double total_time=(_total_time)? _total_time.Get() : 60.0;
@@ -460,7 +460,8 @@ int main(int argc, char** argv){
 	vector<double> base_profit;
 	for(const BoxShape* b : clpState::types)
 		base_profit.push_back(bin.volume*pow(b->getVolume()/bin.volume, kappa));
-	if(kappa!=1.0 || _swo) clpState::box_profit=base_profit;
+	bool swo=!_no_swo && !_no_improve;
+	if(kappa!=1.0 || swo) clpState::box_profit=base_profit;
 
 	//construccion secuencial
 	auto construct=[&](){
@@ -487,8 +488,8 @@ int main(int argc, char** argv){
 
 	//squeaky wheel optimization (Joslin y Clements 1999): se repite la construccion aumentando
 	//el beneficio de los tipos de caja de los contenedores menos cargados
-	if(_swo){
-		double swo_time=total_time*((_swo_frac)? _swo_frac.Get() : 0.5);
+	if(swo){
+		double swo_time=total_time*((_swo_frac)? _swo_frac.Get() : 1.0);
 		double rate=(_swo_rate)? _swo_rate.Get() : 0.3;
 		vector<double> w(total.size(), 1.0);
 		vector<Load> cur=loads;
