@@ -83,6 +83,9 @@ static vector<int> read_items(const string& file){
  * la caja cabe sola en el ULD u: sobre el piso dentro del borde o, si el ULD tiene borde,
  * sobre la subestructura (apoyada en ella al menos en min_overlap de su base)
  */
+//uso de la subestructura (con borde; --no_substructure la desactiva)
+static bool use_substructure=false;
+
 static bool fits(const BoxShape& box, const ULD& u){
 	if(box.weight > u.max_weight) return false;
 	long e=u.edge;
@@ -93,7 +96,8 @@ static bool fits(const BoxShape& box, const ULD& u){
 			long x=e, z=0;
 			if(u.adjust(x, z, l, h, e, u.L-e-l, 0, u.H-h, !clpState::support)) return true;
 		}
-		if(e>0 && l<=u.L && w<=u.W && h<=u.H-u.delta){
+		//sobre la subestructura (si se usa), por encima del borde
+		if(e>0 && use_substructure && l<=u.L && w<=u.W && h<=u.H-u.delta){
 			long x=(u.L-l)/2, z=u.delta;
 			if(!u.adjust(x, z, l, h, 0, u.L-l, u.delta, u.H-h, false)) continue;
 			long y=(u.W-w)/2;
@@ -107,7 +111,6 @@ static bool fits(const BoxShape& box, const ULD& u){
 //ULDs (sin y con subestructura) y cantidad disponible de cada tipo (-1: ilimitada)
 static vector<ULD> ulds, ulds_sub;
 static vector<int> available;
-static bool use_substructure=false;
 //todos los espacios anclados en el origen (la carga queda agrupada y se puede centrar)
 static bool origin_only=true;
 //ablacion (con --corner_anchor): recarga con los espacios anclados en el origen (ver load_cog)
@@ -639,6 +642,7 @@ int main(int argc, char** argv){
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
 	args::ValueFlag<string> _output(parser, "string", "Write the solution to this file (one line per box: ULD, ULD type, substructure, item (line of the instance file, from 0), x, y, z, length, width, height)", {'o', "output"});
+	args::Flag _trace(parser, "trace", "Print the time, the volume of the ULDs and the unloaded volume (m3) of the best solution each time it changes", {"trace"});
 	args::Flag _verbose(parser, "verbose", "Print the loaded ULDs", {'v', "verbose"});
 	args::Positional<std::string> _file(parser, "instance", "Instance file (format of Paquay et al.)");
 
@@ -790,20 +794,26 @@ int main(int argc, char** argv){
 	if(remaining()>0) insert(loads, left, Pi);
 	};
 
+	auto unl_vol=[&](){ double v=0; for(size_t t=0; t<left.size(); t++) v+=(double) left[t]*clpState::types[t]->getVolume(); return v; };
+	auto uld_vol=[&](){ double v=0; for(const Load& l : loads) v+=l.uld->volume; return v; };
+	//traza de convergencia (--trace): tiempo, volumen de los ULDs y volumen sin cargar (m3) de la
+	//mejor solucion cada vez que cambia
+	auto trace=[&](){
+		if(_trace) cout << "trace " << double(clock()-begin_time)/CLOCKS_PER_SEC << " " << uld_vol()*1e-9 << " " << unl_vol()*1e-9 << endl;
+	};
 	vector<int> prio(left.size(), 0);
 	construct(prio);
+	trace();
 	//reinicios (ULDs limitados): si quedan cajas fuera, se construye de nuevo priorizando las
 	//cajas que quedaron fuera en las construcciones anteriores; se queda la mejor solucion
 	//(menos volumen sin cargar, luego menos volumen de ULDs)
-	auto unl_vol=[&](){ double v=0; for(size_t t=0; t<left.size(); t++) v+=(double) left[t]*clpState::types[t]->getVolume(); return v; };
-	auto uld_vol=[&](){ double v=0; for(const Load& l : loads) v+=l.uld->volume; return v; };
 	for(int r=0; r<restarts && limited && remaining()>0; r++){
 		for(size_t t=0; t<left.size(); t++) prio[t]=max(prio[t], left[t]);
 		vector<Load> bl=loads; vector<int> bleft=left, bav=available;
 		double bu=unl_vol(), bv=uld_vol();
 		construct(prio);
 		double u2=unl_vol(), v2=uld_vol();
-		if(u2 < bu-1e6 || (u2 <= bu+1e6 && v2 < bv)) n_restart_useful++;
+		if(u2 < bu-1e6 || (u2 <= bu+1e6 && v2 < bv)){ n_restart_useful++; trace(); }
 		else { loads=bl; left=bleft; available=bav; }
 	}
 
@@ -811,7 +821,7 @@ int main(int argc, char** argv){
 	//si se cargaron todas las cajas)
 	if(!_no_eliminate){
 		if(_eliminate_only){ if(remaining()==0) while(eliminate_uld(loads, Pi)); }
-		else while(reduce_volume(loads, Pi));
+		else while(reduce_volume(loads, Pi)) trace();
 	}
 
 	double time=double(clock()-begin_time)/double(CLOCKS_PER_SEC);
