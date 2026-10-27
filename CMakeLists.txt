@@ -27,6 +27,7 @@ set(CLP_SOURCES
 
 add_executable(BSG_CLP problems/clp/main_clp.cpp ${CLP_SOURCES})
 add_executable(BSG_ULD problems/clp/main_uld.cpp ${CLP_SOURCES})
+add_executable(BSG_BPP problems/clp/main_bpp.cpp ${CLP_SOURCES})
 
 enable_testing()
 add_test(NAME br7 COMMAND BSG_CLP ${CMAKE_CURRENT_SOURCE_DIR}/problems/clp/benchs/BR/BR7.txt -i 0 -t 2)

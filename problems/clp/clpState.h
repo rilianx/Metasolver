@@ -52,7 +52,7 @@ public:
 
 	clpState(const clpState& S) : State(S), cont(S.cont), left(S.left),
 		valid_blocks(S.valid_blocks), weight_left(S.weight_left),
-		cog(S.cog), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
+		profit(S.profit), cog(S.cog), min_l(S.min_l), min_w(S.min_w), min_h(S.min_h), hash(S.hash) { }
 
 	virtual State* clone() const{ return new clpState(*this); }
 
@@ -135,6 +135,17 @@ public:
 	//capacidad de peso restante
 	double weight_left;
 
+	//beneficio de cada tipo de caja (vacio: el volumen). Con beneficios, el valor de una
+	//solucion es la suma de los beneficios de las cajas cargadas (relativa al volumen del
+	//contenedor) y la evaluacion VCS de los bloques usa su beneficio en vez de su volumen
+	static vector<double> box_profit;
+
+	/** beneficio del bloque b (su volumen si no hay beneficios) */
+	static double block_profit(const Block& b);
+
+	//beneficio de las cajas cargadas
+	double profit;
+
 	//ULD (recortes y peso maximo) o NULL (contenedor sin restricciones adicionales)
 	static const ULD* uld;
 
@@ -188,7 +199,7 @@ protected:
 
 private:
 
-	clpState(long L, long W, long H) : cont(L, W, H), weight_left(HUGE_VAL),
+	clpState(long L, long W, long H) : cont(L, W, H), weight_left(HUGE_VAL), profit(0.0),
 		min_l(L), min_w(W), min_h(H), hash(0x9e3779b97f4a7c15ull) {
 		cog.w=cog.mx=cog.my=cog.mz=0.0;
 		cog.xlo=-L; cog.xhi=L; cog.ylo=-W; cog.yhi=W;

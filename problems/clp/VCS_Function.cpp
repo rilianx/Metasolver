@@ -37,7 +37,7 @@ VCS_Function::VCS_Function(const vector<const BoxShape*>& types, const vector<in
 	pow_vol.resize(max_id+1);
 	pow_n.resize(max_id+1);
 	for(const Block* b : blocks){
-		double vol=(delta>0.0)? (double) b->getOccupiedVolume(): 1.0;
+		double vol=(delta>0.0)? clpState::block_profit(*b) : 1.0;
 		double n=(gamma>0.0)? (1.0/(double) b->n_boxes) : 1.0;
 		pow_vol[b->id] = pow(vol, delta);
 		pow_n[b->id] = pow(n, gamma);

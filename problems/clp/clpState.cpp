@@ -70,6 +70,14 @@ static bool corners_supported(const Block& b, long x, long y, const vector<clpSt
 	return true;
 }
 double clpState::cog_penalty=0.0;
+vector<double> clpState::box_profit;
+
+double clpState::block_profit(const Block& b){
+	if(box_profit.empty()) return (double) b.getOccupiedVolume();
+	double p=0.0;
+	for(auto& q : b.boxes) p += box_profit[q.first]*q.second;
+	return p;
+}
 
 //bloques ubicados que pueden soportar a otros en la base del espacio actual
 static vector<const PlacedBlock*> support_tops;
@@ -261,6 +269,7 @@ void clpState::_transition(const Action& action) {
 	//se actualizan las cajas restantes
 	for(auto& p : b.boxes) left[p.first] -= p.second;
 	weight_left -= b.weight;
+	if(!box_profit.empty()) profit += block_profit(b);
 	if(uld){
 		cog.w += b.weight;
 		cog.mx += b.weight*(act.x+b.cog[0]);
@@ -418,7 +427,7 @@ void clpState::translate(long dx, long dy, int r){
 }
 
 double clpState::get_value() const{
-	double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+	double v = (box_profit.empty()? (double) cont.getOccupiedVolume() : profit) / (double) cont.getVolume();
 	if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
 		long dx, dy;
 		v /= 1.0 + cog_penalty*cog_violation(dx, dy);
