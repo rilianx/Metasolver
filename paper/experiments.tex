@@ -77,12 +77,9 @@ in the three settings and for both time limits. The training set consists of 150
 instances of \citet{Paquay2018b} (30 instances with 30, 40, 50, 60 and 100 boxes), disjoint
 from the final ones, each one in the three settings (450 runs, presented to irace in blocks of
 the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks and a budget of 6000 runs; no configuration is
-discarded before 21 instances. $N_{\max}$ was fixed before the tuning, because when irace could
-choose it, it chose the largest value and the running time grew. With the final parameters and
-$t = 0.1$\,s, no other value of $N_{\max}$ is better in the three settings: 1000 blocks reduce the
-volume of the ULDs by one point in the Paquay setting but increase it by one point in the adapted
-one, with 7--12\% more time, and 2000 blocks take 40--70\% more time without reducing it (one
-run with 250, 1000 and 2000 blocks). The cost of a run is the total volume of the ULDs plus two
+discarded before 21 instances. $N_{\max}$ was fixed before the tuning, since irace tends to choose
+the largest value, which increases the running time; with the final parameters, neither 250,
+1000 nor 2000 blocks is better in the three settings. The cost of a run is the total volume of the ULDs plus two
 penalties, divided by the volume of the boxes so that all the instances weigh the same:
 \[
 \frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
