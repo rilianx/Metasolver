@@ -461,17 +461,15 @@ compaction of \citet{li1995}, one piece at a time with \textsc{Descend}. Taking 
 $z$, every piece descends again with \textsc{Descend}, with the other pieces fixed, and each piece that defines
 the height is moved to the lowest of the positions generated as in the greedy construction, if it is lower. The
 pass is repeated while the height decreases (at most 50 passes). A pass can enable moves that were not
-possible in the previous one. The constraints of \textsc{Descend} are the NFP facets of the neighboring pieces,
-so when a piece moves, its neighbors face a different feasible region. With irregular pieces, the order by the
-bottom of the pieces is not the order in which they support each other: a piece can lean on the side of a piece
-whose bottom is higher, and when the latter moves down later in the pass, the former can only follow it in the
-next pass. In addition, once the pieces that defined the height have been moved lower, other pieces define it,
-and only in the next pass are they tried at the lowest candidate positions. In runs of 30 s on the 14 instances
-of Table~\ref{tab:results} (3 seeds), 29\% of the compactions after a separation lowered the height, and 6\%
-needed more than one pass (up to 7); these additional passes gave 19\% of the total decrease, and in 72\% of them
-no piece was moved to a new candidate position, i.e., the decrease came from the descents alone. \textsc{Compact} is applied to every feasible
+possible in the previous one, because the constraints of \textsc{Descend} are the NFP facets of the neighboring
+pieces, which change when those pieces move. With irregular pieces, the order by the bottom of the pieces is not
+the order in which they support each other. For example, a piece $A$ may lean on the inclined side of a wedge $B$
+whose narrow bottom is higher than the bottom of $A$; $A$ is processed first and cannot move, then $B$ descends
+into a gap below it, and only in the next pass can $A$ follow it down. Similarly, once the pieces that defined
+the height have been moved lower, other pieces define it, and they are tried at the lowest candidate positions
+in the next pass. \textsc{Compact} is applied to every feasible
 layout: after the construction, where it rarely changes anything (the greedy already leaves each piece at the end
-of a descent; in our runs it lowered the first solution of one instance out of 14), and after each successful
+of a descent), and after each successful
 separation, where it matters: without it, the height of the best solution would decrease only in the discrete
 steps $\rho$ of the oscillation; with it, the pieces settle onto each other and, for instance, the optima of the
 small instances are reached exactly (Section~\ref{sec:t2025}).
