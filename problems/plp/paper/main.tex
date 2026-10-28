@@ -92,8 +92,8 @@ each term only at the breakpoints inside its interval, the move is much cheaper 
 \citet{egeblad2009}, and this speed is what makes exact geometry practical in a 3D metaheuristic.
 \item A method built around this move with few components, adapted from known methods (a bottom-left
 construction with gravity, a strategic oscillation of the height, multiplicative GLS weights \citep{gardeyn2025},
-a local improvement and restarts), and an ablation study showing which elements matter: the GLS weights, the
-speed of the move and the effort spent in each separation are decisive, the local improvement is needed to reach
+a compaction of the feasible layouts and restarts), and an ablation study showing which elements matter: the GLS weights, the
+speed of the move and the effort spent in each separation are decisive, the compaction is needed to reach
 the optima, and the perturbation of the restarts and the tuned construction criterion have no significant
 effect.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
@@ -211,25 +211,29 @@ fused multiply-add per facet. Ties are broken towards the smaller coordinate (gr
 % =====================================================================================================
 \section{Algorithm}\label{sec:method}
 
-Algorithm~\ref{alg:main} summarizes the method. A greedy construction, followed by a local improvement, gives a
-first feasible solution $S$ of height $H$. The search then tries to fit the pieces in a slightly lower container: the positions of $S$ are
-\emph{clamped} to a target height $h<H$: \textsc{Clamp}($S,h$) moves every piece that exceeds $h$ down until its
-top is at $h$, regardless of the other pieces. This is where overlaps appear, and \textsc{MinimizeOverlap} tries
-to remove them. If it succeeds, the layout is feasible and fits in height $h$; it is improved locally and becomes
-the new best solution, and the target is lowered again; otherwise the target is raised slightly and, when it reaches $H$, the search
-restarts from the best solution.
+Algorithm~\ref{alg:main} summarizes the method. A greedy construction gives a first feasible solution $S$ of
+height $H$. The search then tries to fit the pieces in a slightly lower container of height $h<H$: the positions
+of $S$ are \emph{clamped} to $h$, which creates overlaps, and \textsc{MinimizeOverlap} moves the pieces to remove
+them. Each call of \textsc{MinimizeOverlap} is a \emph{separation attempt}. It \emph{succeeds} if it reaches a
+layout without overlap, which then fits in height $h$; it \emph{fails} if overlap remains after its maximum number
+of passes. After a success, the layout is compacted and becomes the new best solution, and the target is lowered
+again. After a failure, the target is raised slightly and the attempt continues from the overlapping layout; when
+the target reaches $H$, the search restarts from the best solution. The components are described in the order
+in which they are needed: the construction (Section~\ref{sec:greedy}), the overlap minimization
+(Section~\ref{sec:minover}), the oscillation of the target height and the restarts (Section~\ref{sec:osc}), and
+the compaction of the feasible layouts (Section~\ref{sec:improve}).
 
 \begin{algorithm}[t]
 \caption{Overview}\label{alg:main}
 \SetCommentSty{textit}
-$S\gets$ \textsc{Improve}(\textsc{Greedy}()); $H\gets H(S)$\;
+$S\gets$ \textsc{Compact}(\textsc{Greedy}()); $H\gets H(S)$\;
 $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appear}
 \While{time remains}{
-  \eIf(\tcp*[f]{$T$ is feasible}){\textsc{MinimizeOverlap}($T,h,w$)}{
-    $S\gets$ \textsc{Improve}($T$); $H\gets H(S)$\tcp*{new best solution, $H\le h$}
+  \eIf(\tcp*[f]{success: $T$ is feasible}){\textsc{MinimizeOverlap}($T,h,w$)}{
+    $S\gets$ \textsc{Compact}($T$); $H\gets H(S)$\tcp*{new best solution, $H\le h$}
     $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\;
-  }{
-    $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps}
+  }(\tcp*[f]{failure}){
+    $h\gets h+\rho H/4$; $T\gets$ \textsc{Clamp}($T,h$)\tcp*{keeps the overlaps and $w$}
     \If{$h\ge H$}{
       $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); move a random piece of $T$; $w\gets 1$\tcp*{restart}
     }
@@ -237,13 +241,6 @@ $h\gets(1-\rho)H$; $T\gets$ \textsc{Clamp}($S,h$); $w\gets 1$\tcp*{overlaps appe
 }
 \Return $S$\;
 \end{algorithm}
-
-In Algorithm~\ref{alg:main}, line~1 builds the first solution (Sections~\ref{sec:greedy}
-and~\ref{sec:improve}) and line~2 creates the first overlapping layout. Each iteration of the loop is a separation attempt at height $h$
-(Section~\ref{sec:minover}). On success (lines~5--6) the separated layout is improved, becomes the new best
-solution, and the target is lowered again. On failure (lines~8--10) the target is raised by a quarter of the step and the search
-continues from the current overlapping layout with the current weights; once the target is back at the best
-height, the search restarts from the best solution (Section~\ref{sec:kicks}).
 
 \subsection{Greedy construction}\label{sec:greedy}
 Pieces are placed one at a time on top of the current load (Algorithm~\ref{alg:greedy}). For each type of piece
@@ -277,19 +274,21 @@ layout by linear programs over NFP facets \citep{li1995,gomes2006}, here applied
 
 Among all piece types and resulting positions, the greedy places the pair $(k,t)$ that maximizes (line~6)
 \begin{equation}\label{eq:greedy}
-\mathit{val}(k,t)=\alpha\log\frac{V_k}{V_{\max}}-\beta\,\frac{z}{H_0}-\gamma\,\frac{\max(0,\,z+h_k-H_{\text{cur}})}{H_0},
+\begin{aligned}
+\mathit{val}(k,t)={}&\alpha\log\frac{V_k}{V_{\max}}-\beta\,\frac{z}{H_0}\\
+&-\gamma\,\frac{\max(0,\,z+h_k-H_{\text{cur}})}{H_0},
+\end{aligned}
 \end{equation}
-where $V_k$ is the volume of the piece, $V_{\max}$ the largest volume, $z$ the height of the position and
-$H_{\text{cur}}$ the current height of the load. The first term favors large pieces, as the classical orderings by
+where $V_k$ is the volume of the piece, $V_{\max}$ the largest volume, $z$ the height of the position, $h_k$ the
+height of the piece and $H_{\text{cur}}$ the current height of the load. The first term favors large pieces, as the classical orderings by
 decreasing volume, but on a logarithmic scale, so that a smaller piece is preferred when it fits clearly lower.
 The second term favors low positions, i.e., filling the gaps of the load before building on top of it, and the
 third penalizes positions that raise the height of the load. Normalizing by the lower bound $H_0$ makes the
 parameters independent of the scale of the instance. For a given piece the score decreases with $z$, so the
 lowest of its positions is always preferred; the score thus decides which piece is placed next: a large piece
-if it fits in a low gap, and a smaller one if the large pieces would raise the height. The parameters
-($\alpha=1$, $\beta=5.53$, $\gamma=0.77$, $\sigma=0.065$) were tuned with Optuna on 16 training instances, for an
-earlier version of the method that relied more on the construction. Figure~\ref{fig:construction} illustrates
-the construction in two dimensions.
+if it fits in a low gap, and a smaller one if the large pieces would raise the height (the values of the
+parameters are discussed in Section~\ref{sec:exp}). Figure~\ref{fig:construction} illustrates the construction
+in two dimensions.
 
 \begin{algorithm}[!htb]
 \caption{Greedy construction}\label{alg:greedy}
@@ -348,53 +347,31 @@ $c\cdot t$: the descent stops. Gravity has priority over the wall term, so the p
 \label{fig:descend}
 \end{figure}
 
-\subsection{Local improvement}\label{sec:improve}
-\textsc{Improve} is applied to the feasible layouts: after the construction and after each successful separation.
-It is a compaction of the layout in the sense of \citet{li1995}, performed one piece at a time with
-\textsc{Descend}.
-Taking the pieces in increasing order of $z$, every piece descends again with \textsc{Descend}, with the other
-pieces fixed, and each piece that defines the height is moved to the lowest of the positions generated as in the
-greedy construction, if it is lower. The pass is repeated while the height decreases (at most 50 passes). Without this step the
-height of the best solution could only decrease in the discrete steps of the oscillation (Section~\ref{sec:osc}),
-since a separated layout fits in the target height but its pieces are not pushed down; with it, the pieces settle
-onto each other and, for instance, the optima of the small instances are reached exactly
-(Section~\ref{sec:t2025}).
-
-\subsection{Strategic oscillation}\label{sec:osc}
-After a successful separation the target height is decreased by $\rho=1\%$ of the best height and the best
-solution is clamped to it,
-\begin{equation}
-\textsc{Clamp}(T,h):\quad z_i\gets\min\{z_i,\ h-h_i\}\ \ (\text{and } x_i,y_i \text{ projected onto the
-container}),\qquad i=1,\dots,n,
-\end{equation}
-which creates overlaps among the pieces near the top. After a failure the target is
-increased by $\rho/4$ and the search continues from the overlapping layout, with the GLS weights of the previous
-attempt. This scheme of shrinking the container, allowing overlap and separating the pieces comes from the 2D
-methods of \citet{egeblad2007}, \citet{umetani2009} and \citet{imamichi2009}, and was used in 3D by
-\citet{egeblad2009}; the clamp is the counterpart of moving the pieces that exceed the new strip length inside
-it.
-
 \subsection{Overlap minimization}\label{sec:minover}
-\textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
-axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. Moving one piece at a time
-along the axes to the position of minimum overlap is the neighborhood of \citet{egeblad2007,egeblad2009}, who
-minimize the overlap area or volume; \citet{umetani2009} and \citet{imamichi2009} measure the overlap of 2D
-polygons by the penetration depth in the NFP, which we use for 3D unions of convex parts. The pairwise penetrations are
-kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
-the weights of guided local search \citep{voudouris1999}, used for nesting by \citet{egeblad2007} and
-\citet{umetani2009}, are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
-multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
-procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
-Weights persist along the oscillation and are reset after a successful separation or a restart.
+Given a layout $T$ with overlaps in a container of height $h$, \textsc{MinimizeOverlap} minimizes the total
+overlap $\sum_{i<j}\delta_{ij}$ by moving one piece at a time along an axis. Moving one piece at a time along the
+axes to the position of minimum overlap is the neighborhood of \citet{egeblad2007,egeblad2009}, who minimize the
+overlap area or volume; \citet{umetani2009} and \citet{imamichi2009} measure the overlap of 2D polygons by the
+penetration depth in the NFP, which we use for 3D unions of convex parts.
+
+Such a local search soon reaches local minima, layouts in which no single move reduces the overlap. To escape
+them we use guided local search (GLS) \citep{voudouris1999}, as \citet{egeblad2007} and \citet{umetani2009} do
+for nesting. GLS changes the objective instead of the layout: each pair of pieces has a weight $w_{ij}\ge1$, the
+moves minimize the weighted overlap $\phi=\sum_{i<j}w_{ij}\,\delta_{ij}$ of Eq.~\eqref{eq:obj}, and at a local
+minimum the weights of the pairs that still overlap are increased. A persistent overlap thus becomes more
+expensive, and the next moves remove it even at the cost of creating smaller overlaps elsewhere, which in turn
+gain weight if they persist. We update the weights multiplicatively as in \citet{gardeyn2025}: the weight of
+every overlapping pair is multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor
+$0.95$ (minimum 1). All the weights start at 1.
 
 In Algorithm~\ref{alg:minover}, line~2 computes the penetrations of all pairs, and each iteration of the loop is
-a pass. Only the pieces involved in an overlapping pair are moved (line~7), each along the three axes with the
-exact move of Proposition~\ref{prop:axis} (line~9), in which the weighted overlap $\phi$ of
-Eq.~\eqref{eq:obj} is evaluated at the breakpoints and the best one is taken; since the current position is a
-candidate, a move never increases $\phi$. After moving a piece, only its row of the penetration matrix is
-recomputed (line~11). A pass without gain (line~12) is a local minimum of the weighted overlap; the weights of
-the pairs that still overlap are then increased in proportion to their penetration, and those of the other pairs
-decay, which changes $\phi$ and lets the next pass move the pieces out of the local minimum.
+a pass. Only the pieces involved in an overlapping pair are moved (line~7), in random order, each along the three
+axes in random order with the exact move of Proposition~\ref{prop:axis} (line~9): $\phi$ is evaluated at the
+breakpoints and the best one is taken; since the current position is a candidate, a move never increases $\phi$.
+After moving a piece, only its row of the penetration matrix is recomputed (line~11). A pass without gain
+(line~12) is a local minimum of $\phi$, and the weights are updated. The procedure succeeds when no overlap
+remains (then verified with a separating-axis test) and fails after 500 passes. Figure~\ref{fig:passes} shows all
+the passes on the 2D example, from a clamped layout.
 
 \begin{algorithm}[!htb]
 \caption{Overlap minimization}\label{alg:minover}
@@ -422,8 +399,6 @@ decay, which changes $\phi$ and lets the next pass move the pieces out of the lo
 }
 \end{algorithm}
 
-Figure~\ref{fig:passes} shows all the passes on the 2D example, from a clamped layout.
-
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/passes.pdf}
@@ -441,14 +416,42 @@ layout is feasible.}
 \label{fig:passes}
 \end{figure}
 
-\subsection{Restarts}\label{sec:kicks}
-When the target reaches the best height, the search restarts from the best solution clamped to $(1-\rho)H$, with
-the weights reset, after moving one random piece (a kick) to a random position in the container. This is the
-perturbation step of iterated local search \citep{lourenco2003}, which \citet{imamichi2009} applied to nesting. On the larger instances the kick itself has no
-measurable effect (Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and
-a new random order of the moves. The random positions are needed on small instances: with two pieces there is a
-single pair, so the weights have no effect, and the search keeps returning to the layout produced by the greedy
-order (Section~\ref{sec:t2025}).
+\subsection{Strategic oscillation and restarts}\label{sec:osc}
+The target height $h$ is set from the best height $H$ and clamped layouts,
+\begin{equation}
+\textsc{Clamp}(T,h):\quad z_i\gets\min\{z_i,\ h-h_i\},\qquad i=1,\dots,n,
+\end{equation}
+which moves every piece that exceeds $h$ down until its top is at $h$, regardless of the other pieces, and thus
+creates overlaps among the pieces near the top. After a success, the target is lowered to $(1-\rho)H$, with
+$\rho=1\%$, below the new best height, the best solution is clamped to it and the weights are reset. After a
+failure, the target is raised by $\rho H/4$ and the next attempt starts from the overlapping layout left by the
+failed one, with its weights, so that a few failures are allowed before giving up the current layout. This scheme
+of shrinking the container, allowing overlap and separating the pieces comes from the 2D methods of
+\citet{egeblad2007}, \citet{umetani2009} and \citet{imamichi2009}, and was used in 3D by \citet{egeblad2009}; the
+clamp is the counterpart of moving the pieces that exceed the new strip length inside it.
+
+When the target reaches the best height again, the search restarts from the best solution clamped to
+$(1-\rho)H$, with the weights reset, after moving one random piece (a kick) to a random position in the
+container. This is the perturbation step of iterated local search \citep{lourenco2003}, which
+\citet{imamichi2009} applied to nesting. On the larger instances the kick itself has no measurable effect
+(Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and a new random order
+of the moves. The random positions are needed on small instances: with two pieces there is a single pair, so the
+weights have no effect, and the search keeps returning to the layout produced by the greedy order
+(Section~\ref{sec:t2025}).
+
+\subsection{Compaction of feasible layouts}\label{sec:improve}
+\textsc{MinimizeOverlap} stops as soon as no overlap remains: the layout fits in the target height, but its
+pieces are where the last moves left them, often with free space below them, since a move along $z$ goes to the
+position of least overlap, not to the lowest one. \textsc{Compact} pushes the pieces down, in the sense of the
+compaction of \citet{li1995}, one piece at a time with \textsc{Descend}. Taking the pieces in increasing order of
+$z$, every piece descends again with \textsc{Descend}, with the other pieces fixed, and each piece that defines
+the height is moved to the lowest of the positions generated as in the greedy construction, if it is lower. The
+pass is repeated while the height decreases (at most 50 passes). \textsc{Compact} is applied to every feasible
+layout: after the construction, where it rarely changes anything (the greedy already leaves each piece at the end
+of a descent; in our runs it lowered the first solution of one instance out of 14), and after each successful
+separation, where it matters: without it, the height of the best solution would decrease only in the discrete
+steps $\rho$ of the oscillation; with it, the pieces settle onto each other and, for instance, the optima of the
+small instances are reached exactly (Section~\ref{sec:t2025}).
 
 % =====================================================================================================
 \section{Computational experiments}\label{sec:exp}
@@ -468,7 +471,7 @@ Table~\ref{tab:ablation}.
 \begin{table}[!tbp]
 \centering\small
 \caption{Parameters of the method.}\label{tab:params}
-\begin{tabular}{llp{0.36\textwidth}l}
+\begin{tabular}{lp{0.23\textwidth}p{0.25\textwidth}l}
 \toprule
 Parameter & Value & Role & Origin\\
 \midrule
@@ -478,8 +481,8 @@ $\sigma$ & 0.065 & wall term of \textsc{Descend} & tuned\\
 $\Delta$ & largest dimension of the piece & trust region of \textsc{Descend} & design\\
 $\rho$ & 1\% (raised by $\rho/4$) & step of the oscillation & Table~\ref{tab:ablation}\\
 passes & 500 & limit of \textsc{MinimizeOverlap} & Table~\ref{tab:ablation}\\
-GLS & $\times(1.2+0.8\,\delta_{ij}/\max\delta)$; decay 0.95 & weight update at local minima & \citet{gardeyn2025}\\
-\textsc{Improve} & at most 50 passes & local improvement & safeguard\\
+GLS & $\times(1.2+0.8\,\delta_{ij}/\max\delta)$, decay 0.95 & weight update at local minima & \citet{gardeyn2025}\\
+\textsc{Compact} & at most 50 passes & compaction of feasible layouts & safeguard\\
 kick & one random piece, random position & restart & Table~\ref{tab:ablation}\\
 \bottomrule
 \end{tabular}
@@ -512,7 +515,7 @@ their heights are not directly comparable. For Stoyan 2004 the only exact refere
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
 Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 \begin{itemize}
-\item \emph{Without Improve}: no local improvement after the construction and the separations
+\item \emph{Without \textsc{Compact}}: no compaction after the construction and the separations
 (Section~\ref{sec:improve}).
 \item \emph{$\sigma=0$}: \textsc{Descend} without the wall term (gravity only).
 \item \emph{Greedy by volume}: the largest piece first, at its lowest position ($\alpha$ large, $\gamma=0$), instead
@@ -536,7 +539,7 @@ heights increase by 2.3\% ($p<0.001$) and most of the advantage over the publish
 speed of the move is as important as its exactness. The number of passes of
 \textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 1.8\% ($p<0.001$), since
 separations that would succeed are abandoned, and with 2000 passes by 0.7\% ($p=0.008$), since the time is spent
-on hopeless ones. The local improvement is needed: without it the heights increase by 0.4\% ($p=0.10$) and, in a
+on hopeless ones. The compaction is needed: without it the heights increase by 0.4\% ($p=0.10$) and, in a
 separate run of all the instances, only 19 instead of 24 of the 27 optima of Section~\ref{sec:t2025} are found,
 because the height of the best solution then decreases only in the discrete steps of the oscillation. The other
 elements have no significant effect ($p\ge0.06$): the wall term ($\sigma=0$: $+0.5\%$), the tuned greedy criterion
@@ -559,8 +562,8 @@ higher, i.e., worse ($p$: Wilcoxon signed-rank test).}
 Configuration & S2004 Ex2--5 & S2005 Ex2--3 & Change ($p$)\\
 \midrule
 Proposed method & $-2.9\%$ & $-2.0\%$ & --\\
-Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & $+0.4\%$ (0.10)\\
-$\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & $+0.5\%$ (0.19)\\
+Without \textsc{Compact} & $-2.6\%$ & $-1.6\%$ & $+0.4\%$ (0.10)\\
+$\sigma=0$ (no wall term) & $-2.3\%$ & $-1.7\%$ & $+0.5\%$ (0.19)\\
 Greedy by volume & $-2.9\%$ & $-1.4\%$ & $+0.3\%$ (0.22)\\
 No kick (restarts only) & $-2.6\%$ & $-2.1\%$ & $+0.2\%$ (0.29)\\
 Additive GLS weights & $-1.4\%$ & $-0.8\%$ & $+1.4\%$ ($<$0.001)\\
