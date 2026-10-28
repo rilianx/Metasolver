@@ -219,26 +219,28 @@ had no consistent effect in our experiments, and it is not used.
 
 The components of Sections~\ref{sec:alg-bsg}--\ref{sec:alg-cog} are combined in
 \textsc{LoadULD} (Algorithm~\ref{alg:load}), which loads a ULD of type $k$ with the available boxes
-$B$. If the ULD has an edge, two loadings are built, one on the floor and one on the substructure
+$B$, with a time limit $\tau$ for BSG. Two optional arguments serve the multi-ULD phases of
+Section~\ref{sec:alg-multi}: a partial loading $F$ of the ULD, whose boxes are kept at their
+positions and completed with the boxes of $B$ (BSG starts from the state with the boxes of $F$
+placed), and a set $M \subseteq B$ of boxes with priority (Section~\ref{sec:alg-multi}); both are
+empty by default. If the ULD has an edge, two loadings are built, one on the floor and one on the substructure
 (line~\ref{a1:for}). For each of them, the blocks that fit in that space are generated
 (line~\ref{a1:gen}), BSG builds a loading within the time limit $\tau$ (line~\ref{a1:bsg}), the
 loading is translated to center its CoG (line~\ref{a1:tr}), and the one with the larger value
-$v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}). The procedure is also used to
-complete a partial loading, keeping its boxes at their positions, which the multi-ULD phases
-below need.
+$v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}). With a partial loading $F$, only
+the configuration of $F$ (floor or substructure) is considered.
 
 \begin{algorithm}[htbp]
-\caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$, with a time
-limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref{sec:alg-multi}).
-In \textsc{Construct}, a third argument $M \subseteq B$ gives priority to some boxes in BSG
-(Section~\ref{sec:alg-multi}).}
+\caption{\textsc{LoadULD}$(k, B, \tau, F = \emptyset, M = \emptyset)$: load a ULD of type $k$
+with the available boxes $B$ and the time limit $\tau$ for each run of BSG, completing the partial
+loading $F$ and giving priority to the boxes of $M \subseteq B$.}
 \label{alg:load}
 \begin{algorithmic}[1]
 \State $S^* \gets$ empty loading
 \For{$s \in \{\text{floor}, \text{substructure}\}$} \label{a1:for}
-	\Comment{the substructure only if the ULD has an edge}
+	\Comment{the substructure only with an edge; if $F \neq \emptyset$, only the $s$ of $F$}
 	\State generate the blocks of $B$ that fit in a ULD of type $k$ loaded on $s$ \label{a1:gen}
-	\State $S \gets \textsc{BSG}(k, s, B, \tau)$ \label{a1:bsg}
+	\State $S \gets \textsc{BSG}(k, s, B, \tau, F, M)$ \Comment{starting from $F$} \label{a1:bsg}
 	\State translate $S$ to center its CoG \label{a1:tr}
 	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf \label{a1:best}
 \EndFor
@@ -263,7 +265,7 @@ candidate types of a ULD are compared during the construction.
 \caption{Multi-ULD framework.}
 \label{alg:multi}
 \begin{algorithmic}[1]
-\State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
+\State $P \gets \emptyset$ \Comment{boxes with priority (restarts)}
 \Repeat
 	\State $(\mathcal{U}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
 	\If{$B \neq \emptyset$}
@@ -312,14 +314,14 @@ $\omega = 100$ were worse.
 \While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
 	\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{c:cand}
 	\If{$|K| > 1$}
-		\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B)$, time limit $0.1\,t$ \label{c:sel}
+		\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B, 0.1\,t)$ \label{c:sel}
 	\Else{} $k \gets$ the type in $K$
 	\EndIf
 	\If{the ULDs are limited}
 		\State $M \gets$ boxes of $B$ that fit in $k$ and are in $P$ or fit in no other available type \label{c:prio}
 	\Else{} $M \gets \emptyset$
 	\EndIf
-	\State $S \gets \textsc{LoadULD}(k, B, M)$ with time limit $t$ \Comment{priority to the boxes of $M$} \label{c:load}
+	\State $S \gets \textsc{LoadULD}(k, B, t, \emptyset, M)$ \Comment{priority to the boxes of $M$} \label{c:load}
 	\State $\mathcal{U} \gets \mathcal{U} \cup \{S\}$; $B \gets B \setminus S$
 \EndWhile
 \State \Return $(\mathcal{U}, B)$
@@ -333,7 +335,7 @@ adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ 
 order, a proportion $\rho$ of the loaded volume of each ULD is removed, taking the boxes with
 nothing on top of them from the highest one down, so that the remaining load is still feasible;
 then the ULDs, in decreasing order of free volume, are completed with \textsc{LoadULD} with the
-removed boxes and the pool, keeping the remaining boxes at their positions. A ULD whose new
+removed boxes and the pool, the remaining load being the partial loading $F$. A ULD whose new
 loading has the CoG out of range when the old one had not keeps its old loading. The new solution
 is accepted if the volume of the pool decreases, and the procedure stops as soon as the pool is
 empty. Reloading each ULD from scratch with its boxes and the pool, or giving priority to the
@@ -350,8 +352,7 @@ $\mathcal{U}$ by ruin and recreate.}
 	\For{$S \in \mathcal{U}'$ in decreasing order of free volume}
 		\State $R \gets$ boxes removed from $S$, from the highest uncovered one down, until
 			a proportion $\rho$ of its loaded volume is removed
-		\State $S^\circ \gets$ complete $S \setminus R$ with \textsc{LoadULD} on the boxes
-			$R \cup B'$ (time limit $0.1\,t$)
+		\State $S^\circ \gets \textsc{LoadULD}(k_S, R \cup B', 0.1\,t, S \setminus R)$ \Comment{$k_S$: type of $S$}
 		\If{$S^\circ$ is feasible \textbf{and} (the CoG of $S^\circ$ is in range \textbf{or} that of $S$ is not)}
 			\State $B' \gets (B' \cup R) \setminus S^\circ$; replace $S$ by $S^\circ$ in $\mathcal{U}'$
 		\EndIf
@@ -417,7 +418,7 @@ new ULDs of smaller total volume.}
 		some box of $B'$ fits in no type of $C$} \textbf{continue} \EndIf
 	\State $R \gets B'$; $\mathcal{N} \gets \emptyset$
 	\For{$k \in C$, the larger type first, while $R \neq \emptyset$}
-		\State $S_k \gets \textsc{LoadULD}(k, R)$ (time limit $0.1\,t$)
+		\State $S_k \gets \textsc{LoadULD}(k, R, 0.1\,t)$
 		\If{$S_k$ is empty or infeasible, or its CoG is out of range and that of $S$ is not}
 			\textbf{break} \EndIf
 		\State $R \gets R \setminus S_k$; $\mathcal{N} \gets \mathcal{N} \cup \{S_k\}$
