@@ -181,7 +181,11 @@ are stored in each state, so that the CoG excess of a greedy completion is compu
 time per placed block. Penalizing the CoG excess also in the evaluation of each candidate block
 had no consistent effect in our experiments, and it is not used.
 
-Algorithm~\ref{alg:load} summarizes how a ULD of type $k$ is loaded with the available boxes
+\subsection{Loading several ULDs}
+\label{sec:alg-multi}
+
+The components of Sections~\ref{sec:alg-bsg}--\ref{sec:alg-cog} are combined in
+\textsc{LoadULD} (Algorithm~\ref{alg:load}), which loads a ULD of type $k$ with the available boxes
 $B$. If the ULD has an edge, two loadings are built, one on the floor and one on the substructure
 (line~\ref{a1:for}). For each of them, the blocks that fit in that space are generated
 (line~\ref{a1:gen}), BSG builds a loading within the time limit $t$ (line~\ref{a1:bsg}), the
@@ -204,8 +208,6 @@ $v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}).
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Loading several ULDs}
-\label{sec:alg-multi}
 
 Algorithm~\ref{alg:multi} outlines the multi-ULD framework. It has a sequential construction
 phase, the insertion of the boxes left unloaded when the number of ULDs is limited, and a phase
