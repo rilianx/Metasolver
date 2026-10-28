@@ -32,10 +32,13 @@ the boxes that fit in the fewest ULD types. Their algorithm improves the results
 \citet{Paquay2018b} by about 30\% in a fraction of a second per instance. A related but
 different problem is the loading of the ULDs into the aircraft, which determines the position of
 each ULD to balance the aircraft, sometimes with several pickup and delivery points
-\citep{Lurkin2015,Mesquita2026}.
+\citep{Lurkin2015,Mesquita2026}; \citet{Zhao2023} integrated palletization and aircraft weight
+and balance in integer linear programs that maximize the loaded capacity and minimize the
+deviation of the aircraft CoG.
 
 \paragraph{Weight distribution.}
-Constraints on the CoG of the load arise in container loading \citep{Davies1999}, in pallet
+Constraints on the CoG of the load arise in container loading \citep{Davies1999}, in truck
+loading together with axle weight limits \citep{Lim2013,Alonso2017}, in pallet
 loading and in air cargo \citep{Chan2006,Paquay2016}, and they have also been studied in the
 three-dimensional knapsack problem \citep{Baldi2012} and in the load-balanced bin packing
 problem \citep{Trivella2016}. Many heuristics handle them in a post-processing step, for
@@ -44,7 +47,18 @@ instance by reordering and mirroring the walls of the load after the packing has
 utilization \citep{Hessler2025}. \citet{Paquay2018b} also consider the CoG during the
 construction, with a merit function that selects the extreme point that keeps the CoG closest to
 the center of the ULD. In our algorithm the CoG is taken into account in the value of the partial
-solutions that guides the beam search, and the whole load is translated at the end.
+solutions that guides the beam search, and the whole load is translated at the end. Penalizing
+a constraint in the evaluation instead of enforcing it during the construction is also the
+approach of \citet{BonetFilella2023}, who treat the unloading order in multi-drop container
+loading as a soft constraint.
+
+\paragraph{Stability.}
+Most container loading algorithms ensure the stability of the load with a minimum supported
+area or the support of the corners of each box, as in the problem considered here
+\citep{Paquay2016,Bortfeldt2013}. \citet{Ramos2016} replaced these rules by static mechanical
+equilibrium conditions and showed that full base support wastes space, and \citet{Gzara2020}
+considered vertical support and load bearing in a layer-based column generation algorithm for
+pallet loading.
 
 \paragraph{Heuristics for three-dimensional packing.}
 Most heuristics for three-dimensional bin packing build the packing by placing one box at a
@@ -65,7 +79,9 @@ container, the volume that the block makes unusable in the free space, and the n
 \citet{Araya2020} extended BSG to a biobjective container loading problem that also
 maximizes the profit of the loaded boxes, and \citet{Guesser2026} improved its implementation
 with cache-friendly data structures, the memoization of the greedy completions and a two-stage
-evaluation function, obtaining the best results to date on the classical instances.
+evaluation function, obtaining the best results to date on the classical instances. Beam search has also been used
+as the loading subroutine of richer problems, for instance when pallets and loose boxes are
+loaded together \citep{Tian2024}.
 \citet{Hessler2025} also tested the RGS on the container loading instances of
 \citet{Bischoff1995} and reported that it lags behind BSG with VCS \citep{Araya2017}, which they
 attribute to the much larger number of boxes per container in those instances. To the best of
@@ -75,7 +91,10 @@ constraints restrict the blocks that can be built and where they can be placed. 
 of this paper is to show how to handle these features and that, with them, block-based tree
 search also outperforms the state of the art on this problem.
 
-Finally, the reduction of the volume and the insertion of the unloaded boxes in our multi-ULD
+Finally, the selection of containers of different sizes to minimize their total cost has been
+addressed with set-cover formulations whose columns are single-container loadings
+\citep{Che2011}, and the volume of the containers is minimized with a decomposition embedded in
+a multi-phase local search by \citet{Toffolo2017}. The reduction of the volume and the insertion of the unloaded boxes in our multi-ULD
 framework are related to the local search heuristics that try to empty one bin at a time
 \citep{Faroe2003}, to the repacking of the contents of large bins into smaller ones in
 variable-sized bin packing \citep{Ortmann2010}, and to the ruin and recreate principle
