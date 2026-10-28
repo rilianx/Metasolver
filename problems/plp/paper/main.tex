@@ -663,22 +663,24 @@ average, and matches it in most of the others.
 
 \begin{table}[!tbp]
 \centering\small
-\caption{Instances of \citet{tollenaere2026} (10 seeds, 30 s). Optima: instances with proven optimum, and number
-of them found in the best run and in all runs. Open: instances without proven optimum, number in which our best
-height is below the best upper bound of the models, and mean gap of our mean height with respect to that bound.}
+\caption{Instances of \citet{tollenaere2026} (10 seeds, 30 s). Optima: number of instances with proven optimum,
+and number of them reached in the best run and in all runs. Open: number of instances without proven optimum, and
+number of them in which our best height is below the best upper bound of the models. Gap: mean gap of our mean
+height with respect to the best upper bound (the optimum, if proven), over all the instances of the series;
+negative is better.}
 \label{tab:t2025}
-\begin{tabular}{lrrrrrr}
+\begin{tabular}{lrrrrrrr}
 \toprule
-& & \multicolumn{3}{c}{Optima} & \multicolumn{2}{c}{Open}\\
+& & \multicolumn{3}{c}{Optima} & \multicolumn{2}{c}{Open} & \\
 \cmidrule(lr){3-5}\cmidrule(lr){6-7}
-Series & $n$ & proven & best run & all runs & improved & gap\\
+Series & $n$ & proven & best run & all runs & $n$ & improved & Gap\\
 \midrule
-Diamonds & 9 & 4 & 4 & 2 & 5 of 5 & $-4.5\%$\\
-Stoyan 2004 & 19 & 9 & 8 & 3 & 9 of 10 & $-4.8\%$\\
-Stoyan 2005 & 19 & 9 & 7 & 5 & 9 of 10 & $-4.7\%$\\
-Tetrahedra & 19 & 5 & 5 & 2 & 9 of 14 & $-1.7\%$\\
+Diamonds & 9 & 4 & 4 & 2 & 5 & 5 & $-2.5\%$\\
+Stoyan 2004 & 19 & 9 & 8 & 3 & 10 & 9 & $-2.5\%$\\
+Stoyan 2005 & 19 & 9 & 7 & 5 & 10 & 9 & $-2.4\%$\\
+Tetrahedra & 19 & 5 & 5 & 2 & 14 & 9 & $-1.2\%$\\
 \midrule
-Total & 66 & 27 & 24 & 12 & 32 of 39 & \\
+Total & 66 & 27 & 24 & 12 & 39 & 32 & $-2.1\%$\\
 \bottomrule
 \end{tabular}
 \end{table}
