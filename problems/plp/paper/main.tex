@@ -634,7 +634,7 @@ Hardware differs by about ten years: 3DNest ran on one core of a 2.16~GHz Intel 
 single-thread ratings of PassMark \citep{passmark} are 667 for that processor (Core Duo T2600) and 1624 for ours
 (Xeon E5-2620 v4), a factor of about 2.4 per core; this is rather an upper bound, since the rating uses the maximum
 turbo frequency and our runs share the processor. Figure~\ref{fig:time} compares the mean utilization over time with that
-of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 0.3 seconds (the
+of 3DNest at 10, 60, 300 and 600 seconds, converted to our machine. Our first solution is available after about 0.3 seconds (the
 greedy construction), and at 10 seconds our mean utilization already exceeds the mean utilization
 of 3DNest at 600 seconds on all five instances (44.1, 43.1, 44.9, 43.8 and 43.1\% versus 43.0, 42.9, 43.3, 42.0
 and 41.0\%). With the factor 2.4, our 10 seconds correspond to about 24 seconds on the machine of
@@ -645,7 +645,9 @@ effective time by more than an order of magnitude.
 \centering
 \includegraphics[width=\textwidth]{figures/merged_time.pdf}
 \caption{Mean utilization over time on the Merged instances (10 seeds), compared with 3DNest
-\citep[Table 3]{egeblad2009} (10 runs).}
+\citep[Table 3]{egeblad2009} (10 runs). The times of 3DNest (10, 60, 300 and 600 s) are divided by 2.4, the ratio
+of the single-thread performance of the two processors, so that both curves are on the time scale of our machine;
+the dotted line marks the 600 s of 3DNest (250 s).}
 \label{fig:time}
 \end{figure}
 

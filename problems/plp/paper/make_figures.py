@@ -30,6 +30,7 @@ EGEBLAD = {1: (23.44, 37.29, 39.68, 42.38, 42.97), 2: (23.62, 30.23, 39.77, 42.8
            3: (24.58, 27.02, 35.49, 42.23, 43.32), 4: (24.80, 26.09, 31.61, 40.06, 41.99),
            5: (26.17, 26.66, 29.63, 37.99, 40.96)}
 EG_T = (0.1, 10, 60, 300, 600)   # el valor "0 s" se dibuja en 0.1 s (escala logaritmica)
+CPU = 2.4                        # rendimiento por nucleo: Xeon E5-2620 v4 / Core Duo T2600 (PassMark)
 
 
 def merged_time():
@@ -50,12 +51,15 @@ def merged_time():
             us.append(u)
         ax = axs[k]
         ax.plot(grid, np.mean(us, axis=0), color=OURS, lw=1.5, label='This work (mean of 10, 120 s)')
-        ax.plot(EG_T, EGEBLAD[i], color=OTHER, lw=1.2, ls='--', marker='o', ms=3.5, label='3DNest (mean of 10)')
+        ax.plot([EG_T[0]] + [x/CPU for x in EG_T[1:]], EGEBLAD[i], color=OTHER, lw=1.2, ls='--', marker='o', ms=3.5,
+                label='3DNest (mean of 10), times divided by %.1f' % CPU)
         ax.set_xscale('log')
-        ax.set_xticks([0.1, 1, 10, 600]); ax.set_xticklabels(['0', '1', '10', '600'])
+        ax.set_xticks([0.1, 1, 10, 100, 250]); ax.set_xticklabels(['0', '1', '10', '100', '250'])
+        ax.axvline(600/CPU, color=MUTED, lw=0.5, ls=':')
         ax.set_title('Merged%d (%d items)' % (i, 15*i), fontsize=8, color=INK)
         ax.grid(axis='y', color='#e4e3df', lw=0.6)
-        ax.set_xlabel('time (s)')
+        ax.set_xlabel('time (s), our machine')
+        ax.set_xlim(0.08, 320)
         if k == 0: ax.set_ylabel('utilization (%)')
     axs[0].set_ylim(20, 52)
     h, l = axs[0].get_legend_handles_labels()
