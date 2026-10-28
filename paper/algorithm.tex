@@ -247,7 +247,8 @@ limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref
 \subsection{Loading several ULDs}
 \label{sec:alg-multi}
 
-Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential construction,
+In the pseudocode, a loading $S$ of a ULD is also identified with the set of boxes it contains, and
+$\mathcal{U}$ denotes the set of loaded ULDs. Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential construction,
 \textsc{Construct} (Algorithm~\ref{alg:construct}), loads one ULD at a time
 (line~\ref{a2:cons}); when the number of ULDs is limited, the boxes left out are inserted into
 the loaded ULDs and the construction may be restarted (lines~\ref{a2:ins}--\ref{a2:restart}); finally, a reduction phase lowers the total volume of the
@@ -318,7 +319,7 @@ more volume of $M$, even if it loads less volume in total.
 			\If{$S'$ loads more volume of $M$ than $S$} $S \gets S'$ \EndIf
 		\EndIf
 	\EndIf
-	\State $\mathcal{U} \gets \mathcal{U} \cup \{S\}$; $B \gets B \setminus B(S)$ \Comment{$B(S)$: boxes loaded in $S$}
+	\State $\mathcal{U} \gets \mathcal{U} \cup \{S\}$; $B \gets B \setminus S$
 \EndWhile
 \State \Return $(\mathcal{U}, B)$
 \end{algorithmic}
@@ -394,7 +395,7 @@ $\mathcal{U}$.}
 \begin{algorithmic}[1]
 \Repeat
 	\For{$S \in \mathcal{U}$ in decreasing order of lost volume}
-		\State $B' \gets B(S)$; $\textsc{Insert}(\mathcal{U} \setminus \{S\}, B')$ \label{r:ins}
+		\State $B' \gets S$; $\textsc{Insert}(\mathcal{U} \setminus \{S\}, B')$ \label{r:ins}
 		\If{$B' = \emptyset$} remove $S$ from $\mathcal{U}$; \textbf{break} \EndIf \label{r:elim}
 		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{r:new}
 		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$ in $\mathcal{U}$; \textbf{break} \EndIf
