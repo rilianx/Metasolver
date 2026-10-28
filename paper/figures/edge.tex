@@ -1,0 +1,61 @@
+% Corte x-z de un ULD con borde: espacios libres iniciales al cargar sobre el suelo (a, b)
+% y sobre la subestructura (c)
+\begin{tikzpicture}[
+	font=\small,
+	forb/.style={pattern=north east lines, pattern color=black!55, draw=black!70},
+	sub/.style={fill=black!25, draw=black!70},
+	sp/.style={draw=blue!70!black, thick, dashed, fill=blue!10},
+	box/.style={draw=black, fill=orange!35},
+	dim/.style={<->, black!70, >=stealth},
+]
+\def\L{4.2}\def\H{3}\def\e{0.55}\def\d{0.5}
+\newcommand{\uld}{%
+	\draw[forb] (0,0) rectangle (\e,\d);
+	\draw[forb] (\L-\e,0) rectangle (\L,\d);
+	\draw[thick] (0,0) rectangle (\L,\H);
+	\draw[dim] (\L+0.22,0) -- node[right] {$\delta$} (\L+0.22,\d);}
+% ---------- (a) S1 ----------
+\begin{scope}
+	\draw[sp] (\e,0) rectangle (\L-\e,\H);
+	\uld
+	\node[blue!70!black] at (\L/2,\H/2+0.3) {$S_1$};
+	\node[blue!70!black, font=\footnotesize] at (\L/2,\H/2-0.2) {$[e,L-e]\times[0,H]$};
+	\draw[dim] (0,-0.25) -- node[below] {$e$} (\e,-0.25);
+	\draw[dim] (\L-\e,-0.25) -- node[below] {$e$} (\L,-0.25);
+	\draw[dim] (0,-0.8) -- node[fill=white, inner sep=1pt] {$L$} (\L,-0.8);
+	\draw[dim] (-0.22,0) -- node[left] {$H$} (-0.22,\H);
+	\node[font=\footnotesize, align=center, anchor=north] at (\L/2,-1.05) {(a) Floor loading:\\ space inside the edge};
+\end{scope}
+% ---------- (b) S2 ----------
+\begin{scope}[xshift=5.6cm]
+	\draw[sp] (0,\d) rectangle (\L,\H);
+	\uld
+	\draw[box] (\e,0) rectangle (\e+1.2,\d);
+	\draw[box] (0.15,\d) rectangle (\e+1.2,\d+0.7);
+	\node[blue!70!black] at (\L/2+0.3,\H/2+0.5) {$S_2$};
+	\node[blue!70!black, font=\footnotesize] at (\L/2+0.3,\H/2) {$[0,L]\times[\delta,H]$};
+	\node[font=\footnotesize, align=center, anchor=north] at (\L/2,-1.05) {(b) Floor loading:\\ space above the edge};
+\end{scope}
+% ---------- (c) subestructura ----------
+\begin{scope}[xshift=11.2cm]
+	\draw[sp] (0,\d) rectangle (\L,\H);
+	\draw[sub] (\e,0) rectangle (\L-\e,\d);
+	\uld
+	\node[font=\footnotesize] at (\L/2,\d/2) {substructure};
+	\draw[box] (0.1,\d) rectangle (\L-0.25,\d+0.8);
+	\node[blue!70!black] at (\L/2,\H/2+0.5) {$S_2$};
+	\node[blue!70!black, font=\footnotesize] at (\L/2,\H/2) {$[0,L]\times[\delta,H]$};
+	\node[font=\footnotesize, align=center, anchor=north] at (\L/2,-1.05) {(c) Substructure loading:\\ the only initial space};
+\end{scope}
+% leyenda
+\begin{scope}[shift={(1.6,-2.4)}]
+	\draw[forb] (0,0) rectangle (0.5,0.3);
+	\node[anchor=west, font=\footnotesize] at (0.55,0.15) {edge: no box below $\delta$};
+	\draw[sp] (4.2,0) rectangle (4.7,0.3);
+	\node[anchor=west, font=\footnotesize] at (4.75,0.15) {initial free space};
+	\draw[sub] (7.9,0) rectangle (8.4,0.3);
+	\node[anchor=west, font=\footnotesize] at (8.45,0.15) {raised floor};
+	\draw[box] (10.9,0) rectangle (11.4,0.3);
+	\node[anchor=west, font=\footnotesize] at (11.45,0.15) {box};
+\end{scope}
+\end{tikzpicture}
