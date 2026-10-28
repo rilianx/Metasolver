@@ -330,18 +330,21 @@ $\omega = 100$ were worse.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 The phases after the construction rely on the same procedure, \textsc{Insert}
-(Algorithm~\ref{alg:insert}), which inserts a pool $B$ of boxes into the ULDs already loaded,
-without adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$,
-in this order (line~\ref{i:rho}), each ULD is visited in decreasing order of free volume. A
-proportion $\rho$ of its loaded volume is removed, taking the boxes with nothing on top of them
-from the highest one down, so that the remaining load is still feasible (line~\ref{i:ruin}); the
-ULD is then completed with \textsc{LoadULD} with the removed boxes and the pool, the remaining
-load being the partial loading $F$ (line~\ref{i:load}). A ULD whose new loading has the CoG out
-of range when the old one had not keeps its old loading (line~\ref{i:cog}). The new solution is
-accepted if the volume of the pool decreases (line~\ref{i:acc}), and the procedure stops as soon
-as the pool is empty (lines~\ref{i:stop} and~\ref{i:empty}). Reloading each ULD from scratch with its boxes
-and the pool, or giving priority to the boxes of the pool, did not improve the results at the
-same running time.
+(Algorithm~\ref{alg:insert}), which inserts a pool $B$ of boxes into the loaded ULDs
+$\mathcal{U}$, without adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For
+$\rho = 0.3$, $0.6$ and $0.9$, in this order (line~\ref{i:rho}), the loadings $S \in \mathcal{U}'$
+of a copy of the solution are visited in decreasing order of free volume, and $B'$ is the current
+pool. A set $R$ of boxes amounting to a proportion $\rho$ of the loaded volume of $S$ is removed,
+taking the boxes with nothing on top of them from the highest one down, so that $S \setminus R$ is
+still feasible (line~\ref{i:ruin}). Then
+$S' = \textsc{LoadULD}(k_S, R \cup B', 0.1\,t, S \setminus R)$ completes $S \setminus R$ with the
+boxes of $R \cup B'$ (line~\ref{i:load}). $S'$ replaces $S$ unless its CoG is out of range while
+that of $S$ is not (line~\ref{i:cog}), and the boxes of $R \cup B'$ that $S'$ does not contain form
+the new pool. The new solution $\mathcal{U}'$ is accepted if $V(B') < V(B)$
+(line~\ref{i:acc}), and the procedure stops as soon as the pool is empty
+(lines~\ref{i:stop} and~\ref{i:empty}). Reloading each ULD from scratch with its boxes and the
+pool, or giving priority to the boxes of the pool, did not improve the results at the same
+running time.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Insert}$(\mathcal{U}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
