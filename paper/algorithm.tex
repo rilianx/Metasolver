@@ -97,8 +97,9 @@ the floor inside the edge and the space above the height $\delta$ over the whole
 substructure, the only initial space is the one above $\delta$, and the floor inside the edge
 is raised to $\delta$. A space above the edge has no support until boxes have been loaded inside
 it; instead of discarding it, it is kept aside (\emph{dormant}) and reconsidered after the next
-block is placed. Each ULD is loaded twice, with and without the substructure, and the best of
-the two loadings is kept.
+block is placed. Each ULD with an edge is loaded twice, on its floor and on the substructure,
+and the best of the two loadings is kept; the blocks (single boxes and composite blocks) are
+generated for each of the two loadings, since the space in which they must fit is different.
 
 \paragraph{Support and fragility.}
 The support criterion of the problem (the four corners of the base, or the area criterion of
@@ -164,9 +165,9 @@ Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 \label{alg:load}
 \begin{algorithmic}[1]
 \State $S^* \gets$ empty loading
-\For{$s \in \{\text{without substructure}, \text{with substructure}\}$}
-	\Comment{only if the ULD has an edge}
-	\State generate the blocks for $B$ and a ULD of type $k$ with $s$
+\For{$s \in \{\text{floor}, \text{substructure}\}$}
+	\Comment{the substructure only if the ULD has an edge}
+	\State generate the blocks of $B$ that fit in a ULD of type $k$ loaded on $s$
 	\State $S \gets \textsc{BSG}(k, s, B, t)$
 	\State translate $S$ to center its CoG
 	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf
