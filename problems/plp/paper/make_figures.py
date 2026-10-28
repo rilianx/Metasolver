@@ -138,9 +138,9 @@ def draw(ax, inst, sol, title):
 def solutions():
     fig = plt.figure(figsize=(7.2, 3.6))
     ax1 = fig.add_subplot(1, 2, 1, projection='3d')
-    draw(ax1, 'Stoyan et al. 2005/Example3.json', 'Stoyan2005_Example3_27.22.json', 'Stoyan 2005 Example 3')
+    draw(ax1, 'Stoyan et al. 2005/Example3.json', 'Stoyan2005_Example3_27.05.json', 'Stoyan 2005 Example 3')
     ax2 = fig.add_subplot(1, 2, 2, projection='3d')
-    draw(ax2, 'Egeblad et al. 2009/Merged5.json', 'Egeblad2009_Merged5_26.44.json', 'Merged5')
+    draw(ax2, 'Egeblad et al. 2009/Merged5.json', 'Egeblad2009_Merged5_27.07.json', 'Merged5')
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
     fig.savefig(os.path.join(OUT, 'solutions.pdf'))
 
