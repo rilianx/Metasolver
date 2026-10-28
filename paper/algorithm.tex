@@ -44,14 +44,14 @@ does not exceed the remaining weight capacity of the ULD. A state of the
 search is a partial loading of the ULD, with its free spaces and the remaining boxes.
 
 \paragraph{Evaluation of the blocks.}
-The blocks that fit in the selected space are evaluated with the VCS function of
+Each block $b$ that fits in the selected space is evaluated with the VCS function of
 \citet{Araya2017}:
 \begin{equation}
 \label{eq:vcs}
 \mathrm{VCS}(b) = V(b)\,\bigl(1 - \mathrm{loss}(b)\bigr)^{\beta}\,\mathrm{CS}_p(b)^{\alpha}\,
 	n(b)^{-\gamma},
 \end{equation}
-where $V(b)$ is the volume of the boxes of the block, $\mathrm{loss}(b)$ is the proportion of
+where $V(b)$ is the volume of the boxes of $b$, $\mathrm{loss}(b)$ is the proportion of
 the volume of the free space that cannot be filled with the remaining boxes after placing the
 block (estimated with one-dimensional knapsack problems on each dimension of the space),
 $\mathrm{CS}_p(b)$ is the proportion of the surface of the block in contact with the placed
