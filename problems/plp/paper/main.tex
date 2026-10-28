@@ -449,11 +449,9 @@ clamp is the counterpart of moving the pieces that exceed the new strip length i
 When the target reaches the best height again, the search restarts from the best solution clamped to
 $(1-\rho)H$, with the weights reset, after moving one random piece (a kick) to a random position in the
 container. This is the perturbation step of iterated local search \citep{lourenco2003}, which
-\citet{imamichi2009} applied to nesting. On the larger instances the kick itself has no measurable effect
-(Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and a new random order
-of the moves. The random positions are needed on small instances: with two pieces there is a single pair, so the
-weights have no effect, and the search keeps returning to the layout produced by the greedy order
-(Section~\ref{sec:t2025}).
+\citet{imamichi2009} applied to nesting. The kick matters on small instances: with two pieces there is a single
+pair, so the weights have no effect, and without it the search keeps returning to the layout produced by the
+greedy order (Section~\ref{sec:t2025}).
 
 \subsection{Compaction of feasible layouts}\label{sec:improve}
 \textsc{MinimizeOverlap} stops as soon as no overlap remains: the layout fits in the target height, but its
