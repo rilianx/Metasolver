@@ -110,10 +110,11 @@ algorithm, and Section~\ref{sec:exp} the experiments.
 \section{Problem and geometry}\label{sec:problem}
 
 \subsection{Problem}
-We are given a container base $W\times D$ and $n$ pieces $P_1,\dots,P_n$ (polyhedra, with multiplicities). Each
-piece is a union of convex polytopes, $P_i=\bigcup_{a\in\mathcal{A}_i}A_a$, expressed in a local frame where the
-minimum of its bounding box is the origin; $w_i,d_i,h_i$ denote its bounding-box dimensions. A solution is a
-vector of translations $t_i=(x_i,y_i,z_i)$ such that
+We are given a container base of width $W>0$ and depth $D>0$, of unbounded height, and $n$ pieces
+$P_1,\dots,P_n\subset\mathbb{R}^3$ (polyhedra, with multiplicities). Each piece is a union of convex polytopes,
+$P_i=\bigcup_{a\in\mathcal{A}_i}A_a$, expressed in a local frame where the minimum of its bounding box is the
+origin; $w_i,d_i,h_i$ denote its bounding-box dimensions. A solution is a vector of translations
+$t_i=(x_i,y_i,z_i)\in\mathbb{R}^3$, $i=1,\dots,n$ (continuous positions; rotations are not allowed), such that
 \begin{align}
 & 0\le x_i\le W-w_i,\quad 0\le y_i\le D-d_i,\quad z_i\ge 0, && i=1,\dots,n,\\
 & \operatorname{int}(P_i+t_i)\cap\operatorname{int}(P_j+t_j)=\emptyset, && i<j,
