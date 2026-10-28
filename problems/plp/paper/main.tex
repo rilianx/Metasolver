@@ -243,21 +243,34 @@ and~\ref{sec:improve}) and line~2 creates the first overlapping layout. Each ite
 (Section~\ref{sec:minover}). On success (lines~5--6) the separated layout is improved, becomes the new best
 solution, and the target is lowered again. On failure (lines~8--10) the target is raised by a quarter of the step and the search
 continues from the current overlapping layout with the current weights; once the target is back at the best
-height, the search restarts from the best solution (Section~\ref{sec:kicks}). The method needs no LP solver
-besides the three-variable LPs of \textsc{Descend}.
+height, the search restarts from the best solution (Section~\ref{sec:kicks}).
 
 \subsection{Greedy construction}\label{sec:greedy}
 Pieces are placed one at a time on top of the current load (Algorithm~\ref{alg:greedy}). For each type of piece
 still to be placed, $g\times g$ starting points ($g=4$) are taken on a regular grid of the base, at the current
 height $H_{\text{cur}}$ of the load, and from each of them the piece descends (\textsc{Descend}, lines~9--18).
-The descent is a sequence of small linear programs in the three translation variables of the piece. At the
-current point $t$, for every placed part $b$ that the part $a$ of the piece may meet within a trust region (a box
-of half side $\Delta$, the largest dimension of the piece), one facet of $N_{ab}$ satisfied at $t$ is selected:
-the one that allows the longest step in the descent direction (line~13). The selected facets define a convex
-region of positions where the piece does not overlap the placed parts, and the LP of line~14 minimizes
-$c\cdot u=z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$ in it: the piece goes down and, with a small weight $\sigma$,
-towards the nearest walls in $x$ and $y$. The facets are re-selected at the new point and the procedure stops
-when the objective no longer decreases. Figure~\ref{fig:descend} shows the LPs of one descent. \textsc{Descend}
+The descent is a sequence of classical linear programs (LPs) in the three translation variables $u=(x,y,z)$ of the
+piece. At the current point $t$, for every placed part $b$ that the part $a$ of the piece may meet within a trust
+region (a box of half side $\Delta$, the largest dimension of the piece), one facet $n_f\cdot r\ge d_f$ of $N_{ab}$
+satisfied at $t$ is selected: the one that allows the longest step in the descent direction (line~13). Since
+$N_{ab}$ is convex, the half-space beyond any of its facets contains no overlapping position, so the selected
+facets define a convex region of positions where the piece does not overlap the placed parts. The LP of line~14
+is
+\begin{equation}\label{eq:descendlp}
+\begin{aligned}
+\min_{u}\ \ & c\cdot u\\
+\text{s.t.}\ \ & n_f\cdot(u-t_b)\ge d_f\quad\text{for every selected facet $f$ of $N_{ab}$},\\
+& \max(\ell,\,t-\Delta)\le u\le\min(\bar u,\,t+\Delta),\quad u_z\le t_z,
+\end{aligned}
+\end{equation}
+where $t_b$ is the position of the piece of $b$ and $[\ell,\bar u]$ are the positions that keep the piece inside the
+container. The objective $c=(\pm\sigma,\pm\sigma,1)$ moves the piece down and, with a small weight $\sigma$, towards
+the walls in $x$ and $y$ nearest to the starting point (the signs are fixed at the start, so the objective is linear).
+The current point $t$ is feasible, and every feasible point is a position without overlap, so each LP can only
+improve the position. With three variables and a few dozen constraints, the LP is solved by a small primal
+active-set method (a simplex method in the space of $u$) that starts at $t$ and keeps every iterate feasible; no
+external solver is needed. The facets are re-selected at the new point and the procedure stops when the
+objective no longer decreases. Figure~\ref{fig:descend} shows the LPs of one descent. \textsc{Descend}
 combines two classical ideas: bottom-left placement rules for irregular pieces \citep{jakobs1996}, here with
 priority to gravity, as the minimum potential energy principle of HAPE3D \citep{liu2015}, and the compaction of a
 layout by linear programs over NFP facets \citep{li1995,gomes2006}, here applied to a single piece.
@@ -298,8 +311,7 @@ the construction in two dimensions.
     \ForEach{part $a$ of $k$ and placed part $b$ of $\mathcal{L}$ that may meet $a$ in the trust region}{
       select the facet $f$ of $N_{ab}$ satisfied at $t$ that allows the longest step along $-c$\;
     }
-    $t'\gets\arg\min\{c\cdot u:\ n_f\cdot(u-t_b)\ge d_f\ \text{(selected)},\ \|u-t\|_\infty\le\Delta,\ u\
-      \text{in the container},\ u_z\le t_z\}$\;
+    $t'\gets$ optimal solution of the LP~\eqref{eq:descendlp} built at $t$\;
     \lIf{$c\cdot t'\ge c\cdot t$}{\Break}
     $t\gets t'$\;
   }
@@ -442,8 +454,7 @@ order (Section~\ref{sec:t2025}).
 \section{Computational experiments}\label{sec:exp}
 
 \subsection{Setting}
-The method is implemented in C++ on top of the Metasolver framework. The three-variable LPs of \textsc{Descend}
-are solved with a dedicated active-set routine; no external solver is needed. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
+The method is implemented in C++ on top of the Metasolver framework. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
 g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
 instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
 for a separating axis, with a tolerance of $10^{-6}$ on the penetration depth (the containers are 10 to 60 units
