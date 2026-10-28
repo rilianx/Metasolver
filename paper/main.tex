@@ -38,11 +38,11 @@ translation of the load. The ULDs are loaded sequentially, and the
 total volume is then reduced by removing a ULD, inserting its boxes into the others and loading
 the rest into at most two smaller ULDs. On the 300 benchmark instances of Paquay et al.\ and with
 the same parameters in all the settings, the algorithm improves on the state of the art in both
-volume and weight distribution: it uses 2.9--3.8\% less ULD volume at a comparable running time
-and 7.1--8.2\% less with a few seconds per instance, with significant differences in all the
-settings, and at most 1\% of its ULDs violate the center of gravity constraint, against 7--11\%
-of the ULDs of the previous method. It also leaves less volume unloaded when the number of ULDs
-is limited.
+volume and weight distribution. At a comparable running time, it uses 2.9--3.8\% less ULD volume
+and at most 1\% of its ULDs violate the center of gravity constraint, against 7--11\% of the ULDs
+of the previous method; with a few seconds per instance, it uses 7.1--8.2\% less ULD volume, with
+at most 0.5\% of its ULDs out of range. The differences in volume are significant in all the
+settings, and the algorithm also leaves less volume unloaded when the number of ULDs is limited.
 
 \medskip\noindent\textbf{Keywords:} packing; air transport; three-dimensional bin packing;
 beam search; weight distribution
