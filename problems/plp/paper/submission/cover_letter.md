@@ -23,7 +23,7 @@ instances within two minutes, reaches in 10 seconds the quality that the previou
 250 seconds (normalized to the same hardware), and matches 24 of the 27 proven optima of the small instances of
 recent mixed-integer models. We also report the limitations of the method on curved meshes, where voxel-based
 approaches remain superior. The source code, the solutions and the scripts that reproduce all the experiments are
-publicly available.
+publicly available at https://github.com/rilianx/poly3d-packing.
 
 We believe the paper fits the scope of the journal, which has published most of the recent work on irregular
 packing, including the references we compare with. The manuscript has not been published and is not under
