@@ -7,8 +7,8 @@ greedy algorithm, which builds the load with blocks of boxes placed in maximal f
 (Section~\ref{sec:alg-bsg}). The ULD-specific features (the bevelled corners, the edge and the
 substructure, and the support and fragility constraints) are handled in the generation and the
 placement of the blocks (Section~\ref{sec:alg-uld}), and the CoG constraint at several levels
-of the search (Section~\ref{sec:alg-cog}). Section~\ref{sec:alg-multi} describes the
-multi-ULD framework.
+of the search (Section~\ref{sec:alg-cog}). Section~\ref{sec:alg-load} puts these components
+together to load one ULD, and Section~\ref{sec:alg-multi} describes the multi-ULD framework.
 
 \subsection{Loading one ULD with BSG}
 \label{sec:alg-bsg}
@@ -181,8 +181,8 @@ are stored in each state, so that the CoG excess of a greedy completion is compu
 time per placed block. Penalizing the CoG excess also in the evaluation of each candidate block
 had no consistent effect in our experiments, and it is not used.
 
-\subsection{Loading several ULDs}
-\label{sec:alg-multi}
+\subsection{Loading a ULD}
+\label{sec:alg-load}
 
 The components of Sections~\ref{sec:alg-bsg}--\ref{sec:alg-cog} are combined in
 \textsc{LoadULD} (Algorithm~\ref{alg:load}), which loads a ULD of type $k$ with the available boxes
@@ -190,7 +190,9 @@ $B$. If the ULD has an edge, two loadings are built, one on the floor and one on
 (line~\ref{a1:for}). For each of them, the blocks that fit in that space are generated
 (line~\ref{a1:gen}), BSG builds a loading within the time limit $t$ (line~\ref{a1:bsg}), the
 loading is translated to center its CoG (line~\ref{a1:tr}), and the one with the larger value
-$v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}).
+$v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}). The procedure is also used to
+complete a partial loading, keeping its boxes at their positions, which the multi-ULD phases
+below need.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$.}
@@ -208,21 +210,19 @@ $v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}).
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Loading several ULDs}
+\label{sec:alg-multi}
 
-Algorithm~\ref{alg:multi} outlines the multi-ULD framework. It has a sequential construction
-phase, the insertion of the boxes left unloaded when the number of ULDs is limited, and a phase
-that reduces the total volume of the ULDs, the objective of the problem. The construction
-(lines~\ref{a2:cons}--\ref{a2:add}) loads one ULD at a time, choosing its type among the
-candidates of the rule of \citet{Hessler2025} (line~\ref{a2:cand}) and, when the ULDs are
-limited, loading first the boxes that would otherwise be left out (line~\ref{a2:prio}). The
-boxes that remain are inserted into the loaded ULDs (line~\ref{a2:ins}); if some are still
-unloaded, the construction is repeated with them in the set $P$ of boxes to load first, and the
-solution with the least unloaded volume is kept (lines~\ref{a2:keep}--\ref{a2:restart}).
-Finally, the reduction phase (lines~\ref{a2:red}--\ref{a2:undo}) tries to replace each ULD by
-inserting its boxes into the others (line~\ref{a2:rins}) and loading the rest into smaller ULDs
-(line~\ref{a2:new}). The three phases are detailed in the following paragraphs.
+Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential construction loads one
+ULD at a time (lines~\ref{a2:cons}--\ref{a2:add}); when the number of ULDs is limited, the boxes
+left out are inserted into the loaded ULDs and the construction may be restarted
+(lines~\ref{a2:ins}--\ref{a2:restart}); finally, a reduction phase lowers the total volume of the
+ULDs, the objective of the problem (lines~\ref{a2:red}--\ref{a2:undo}). The phases after the
+first loading of each ULD load many ULDs again, so BSG is given a shorter time limit in them:
+$0.1\,t$ in our experiments, both in \textsc{Insert} and in the reduction phase and when the
+candidate types of a ULD are compared during the construction.
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[t]
 \caption{Multi-ULD framework.}
 \label{alg:multi}
 \begin{algorithmic}[1]
@@ -257,40 +257,34 @@ inserting its boxes into the others (line~\ref{a2:rins}) and loading the rest in
 \end{algorithm}
 
 \paragraph{Sequential construction.}
-The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
-as in \citet{Hessler2025}: among the ULD types into which the boxes that fit in the fewest
-available types fit, the type with the largest total volume of the remaining boxes that fit in
-it is selected (ties are broken by the larger ULD volume). When this rule leaves several
-candidate types (those that contain the boxes with the fewest options), each candidate is
-loaded with the shorter time limit of the improvement phases (see below), the one that
-maximizes $L - \theta V$ is chosen and it is loaded again with the time limit $t$, where $L$ is the loaded volume and $V$
-the volume of the ULD, unless it leaves the CoG out of range and another candidate does not.
-With $\theta = 0$ this is the type that loads the most volume; a small $\theta > 0$ prefers a
-smaller ULD when it loads almost the same volume. A box fits in a ULD type if its
-weight does not exceed the capacity and, in some allowed orientation, it can be placed alone on
-the floor inside the edge or on the substructure. When the number of ULDs is limited, some boxes
-may only fit in the selected type among the ULDs still available. If the loading of the ULD
-leaves some of them out, the ULD is loaded again with these boxes first, and the load is then
-completed with the other boxes, keeping the first ones at their positions. If, after the
-insertion of the unloaded boxes into the loaded ULDs (see below), some boxes are still left
-out, the construction is restarted, and the boxes left out in the previous constructions are
-also loaded first, into the first ULD in which they fit. This handles boxes that fit in several
-types but conflict with each other, for instance two large boxes that fit only in the largest
-types and cannot share a ULD. The solution with the smallest unloaded volume is kept, with at
-most three restarts.
+The type of the next ULD is selected as in \citet{Hessler2025} (line~\ref{a2:cand}): among the
+ULD types into which the boxes that fit in the fewest available types fit, the type with the
+largest total volume of the remaining boxes that fit in it is selected, ties being broken by the
+larger ULD volume. A box fits in a ULD type if its weight does not exceed the capacity and, in
+some allowed orientation, it can be placed alone on the floor inside the edge or on the
+substructure. When this rule leaves several candidate types (those that contain the boxes with
+the fewest options), each candidate is loaded with \textsc{LoadULD} with the time limit
+$0.1\,t$, the one that maximizes $L - \theta V$ is chosen, where $L$ is the loaded volume and $V$
+the volume of the ULD, unless it leaves the CoG out of range and another candidate does not, and
+it is loaded again with the time limit $t$. With $\theta = 0$ this is the type that loads the
+most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
+When the number of ULDs is limited, some boxes may only fit in the selected type among the ULDs
+still available. If the loading leaves some of them out (line~\ref{a2:prio}), the ULD is loaded
+again with these boxes first, and the load is then completed with the other boxes, keeping the
+first ones at their positions.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
-Both phases after the construction rely on the same procedure, \textsc{Insert}, which inserts a pool of
-boxes into the ULDs already loaded, without adding ULDs, by ruin and recreate
-\citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$, in this order, a proportion $\rho$ of the
-loaded volume of each ULD is removed, taking the boxes with nothing on top of them from the
-highest one down, so that the remaining load is still feasible; then the ULDs, in decreasing
-order of free volume, are completed with \textsc{LoadULD} with the removed boxes and the pool,
-keeping the remaining boxes at their positions. A ULD whose new loading has the CoG out of range
-when the old one had not keeps its old loading. The new solution is accepted if the volume of the
-pool decreases, and the procedure stops as soon as the pool is empty
-(Algorithm~\ref{alg:insert}). Reloading each ULD from scratch with its boxes and the pool, or
-giving priority to the boxes of the pool, did not improve the results at the same running time.
+The phases after the construction rely on the same procedure, \textsc{Insert}
+(Algorithm~\ref{alg:insert}), which inserts a pool of boxes into the ULDs already loaded, without
+adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$, in this
+order, a proportion $\rho$ of the loaded volume of each ULD is removed, taking the boxes with
+nothing on top of them from the highest one down, so that the remaining load is still feasible;
+then the ULDs, in decreasing order of free volume, are completed with \textsc{LoadULD} with the
+removed boxes and the pool, keeping the remaining boxes at their positions. A ULD whose new
+loading has the CoG out of range when the old one had not keeps its old loading. The new solution
+is accepted if the volume of the pool decreases, and the procedure stops as soon as the pool is
+empty. Reloading each ULD from scratch with its boxes and the pool, or giving priority to the
+boxes of the pool, did not improve the results at the same running time.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Insert}$(\mathcal{S}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
@@ -315,28 +309,32 @@ $\mathcal{S}$ by ruin and recreate.}
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Unloaded boxes.}
-When the number of ULDs is limited and some boxes remain unloaded after the construction,
-\textsc{Insert} is applied to them.
+\paragraph{Unloaded boxes and restarts.}
+When the number of ULDs is limited and some boxes remain unloaded after the construction, they
+are inserted into the loaded ULDs with \textsc{Insert} (line~\ref{a2:ins}). If some are still
+left out, the construction is restarted, and the boxes left out in the previous constructions
+are also loaded first, into the first ULD in which they fit (the set $P$ in
+line~\ref{a2:prio}). This handles boxes that fit in several types but conflict with each other,
+for instance two large boxes that fit only in the largest types and cannot share a ULD. The
+solution with the smallest unloaded volume is kept (line~\ref{a2:keep}), with at most three
+restarts.
 
 \paragraph{Reduction of the volume.}
 The construction tends to use the largest ULDs, and its last ULDs are often far from full. The
 reduction phase replaces ULDs by cheaper ones with a single move that generalizes the elimination
 of ULDs. The ULDs are considered in decreasing order of lost volume (the volume of the ULD minus
 the volume of its boxes). The boxes of the selected ULD $S$ are freed and inserted into the other
-ULDs with \textsc{Insert}. If all of them are inserted, $S$ is eliminated. Otherwise, the remaining
-boxes are loaded into one or two new ULDs whose total volume is smaller than that of $S$: the
-combinations of one or two available types with enough volume and weight capacity, in which every
-remaining box fits, are tried in increasing order of total volume, loading the largest ULD first
-with all the remaining boxes and the second one with the rest (Algorithm~\ref{alg:newulds}). The
-first combination that loads all the boxes, without leaving a CoG out of range when the CoG of
-$S$ was not, replaces $S$; otherwise the changes made by \textsc{Insert} are undone and the next
-ULD is tried. After every
-change the phase starts again, and it stops when no ULD can be changed. Every change reduces the
-total volume of the ULDs, so the phase terminates; a change may increase the number of ULDs, when
-one ULD is replaced by two smaller ones. Since \textsc{Insert} and the reduction load many ULDs
-again, BSG is given a shorter time limit in these phases than in the construction ($0.1\,t$ in
-our experiments).
+ULDs with \textsc{Insert} (line~\ref{a2:rins}). If all of them are inserted, $S$ is eliminated.
+Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}) loads the remaining boxes into one or two
+new ULDs whose total volume is smaller than that of $S$: the combinations of one or two available
+types with enough volume and weight capacity, in which every remaining box fits, are tried in
+increasing order of total volume, loading the larger ULD first with all the remaining boxes and
+the second one with the rest. The first combination that loads all the boxes, without leaving a
+CoG out of range when the CoG of $S$ was not, replaces $S$; otherwise the changes made by
+\textsc{Insert} are undone and the next ULD is tried (line~\ref{a2:undo}). After every change the
+phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume
+of the ULDs, so the phase terminates; a change may increase the number of ULDs, when one ULD is
+replaced by two smaller ones.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{NewULDs}$(S, B')$: load the boxes $B'$ left over from the ULD $S$ into one or two
@@ -359,4 +357,3 @@ new ULDs of smaller total volume.}
 \State \Return failure
 \end{algorithmic}
 \end{algorithm}
-
