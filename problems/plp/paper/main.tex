@@ -85,9 +85,9 @@ concave on an interval and zero outside it, so the optimal position of a piece a
 interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
 \citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
 \citet{egeblad2009}.
-\item A strategic oscillation with multiplicative GLS weights \citep{gardeyn2025} and restarts, and an ablation
-study showing that the weights and the speed of the separation are decisive, whereas a global LP compaction over
-NFP facets, in the spirit of \citet{gomes2006} in 2D, has no measurable effect on the quality.
+\item A simple strategic oscillation with multiplicative GLS weights \citep{gardeyn2025}, a local improvement
+and restarts, and an ablation study showing that the weights and the effort spent in each separation are
+decisive.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
 \citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest, and a comparison
 with the optimal values and bounds of the mixed-integer models of \citet{tollenaere2026}.
@@ -417,8 +417,7 @@ order (Section~\ref{sec:t2025}).
 
 \subsection{Setting}
 The method is implemented in C++ on top of the Metasolver framework. The three-variable LPs of \textsc{Descend}
-are solved with a dedicated active-set routine; SoPlex 8.1 \citep{wunderling1996} is used only for the LP
-compaction of the ablation study. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
+are solved with a dedicated active-set routine; no external solver is needed. Experiments ran on two Intel Xeon E5-2620 v4 processors (2.1~GHz, 3.0~GHz turbo, 16 cores, 64~GB, Ubuntu 24.04,
 g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
 instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
 for a separating axis, with a tolerance of $10^{-6}$ on the penetration depth (the containers are 10 to 60 units
@@ -474,70 +473,58 @@ their heights are not directly comparable. For Stoyan 2004 the only exact refere
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
 Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 \begin{itemize}
-\item \emph{+ LP compaction}: after the construction and after each successful separation, alternating with
-\textsc{Improve}, a linear program over
-the translations of all pieces lowers the height, in the spirit of \citet{gomes2006} in 2D: for every pair of
-parts that may meet within a trust region, one facet of their NFP satisfied at the current layout is imposed as
-the constraint $n_f\cdot(t_i-t_j)\ge d_f$, the height is minimized, and the facets are re-selected and the LP
-solved again while the height decreases (SoPlex 8.1).
 \item \emph{Without Improve}: no local improvement after the construction and the separations
 (Section~\ref{sec:improve}).
 \item \emph{$\sigma=0$}: \textsc{Descend} without the wall term (gravity only).
 \item \emph{Greedy by volume}: the largest piece first, at its lowest position ($\alpha$ large, $\gamma=0$), instead
 of the tuned criterion~\eqref{eq:greedy}.
+\item \emph{No kick}: the restarts do not move any piece.
 \item \emph{Additive weights}: $w_{ij}\gets w_{ij}+1$ for the overlapping pairs at local minima.
 \item \emph{Slower separation}: the same runs stopped at 24 s, which corresponds to moves five times slower.
-\item \emph{Kicks}: the random position of the restart replaced by no move at all, by the lowest position
-generated as in the greedy construction (reinsertion), by both with probability 1/2 (the kick of an earlier
-version), or by moving a piece that exceeds the target height (a top piece) to a random position or to the least
-overlapped of 20 random positions.
 \item \emph{Sensitivity}: step $\rho$ of the oscillation and maximum number of passes of
 \textsc{MinimizeOverlap}.
 \end{itemize}
+For each variant, the last column of the table gives the mean relative change of the height with respect to the
+proposed method over the 70 runs (7 instances, 10 seeds), positive when the heights are higher (worse), and the
+$p$-value of a Wilcoxon signed-rank test that pairs the runs by instance and seed.
 
-For each variant, the effect is measured as the mean change of the height over the 70 runs (7 instances, 10 seeds)
-and tested with a Wilcoxon signed-rank test, pairing the runs by instance and seed. The decisive elements are the
-GLS weights and the effort spent in each separation. Additive weights increase the heights by 1.9\% ($p<0.001$),
-and moves five times slower lose most of the advantage. The number of passes of \textsc{MinimizeOverlap} also
-matters: with 100 passes the heights increase by 2.6\% ($p<0.001$), since separations that would succeed are
-abandoned, and with 2000 passes by 1.0\% ($p=0.004$), since the time is spent on hopeless ones. The local
-improvement is needed: without it the heights increase by 0.5\% ($p=0.07$) and, in a separate run of all the
-instances, only 19 instead of 24 of the 27 optima of Section~\ref{sec:t2025} are found, because the height of the
-best solution then decreases only in the discrete steps of the oscillation. The other elements have no
-significant effect ($p\ge0.09$): adding the LP compaction ($+0.04\%$), the wall term ($\sigma=0$: $+0.7\%$), the
-tuned greedy criterion (greedy by volume: $+0.4\%$), the step $\rho$ ($+0.1\%$ and $+0.6\%$), and the type of kick
-($-0.3\%$ to $+0.5\%$), including restarts without any move. On these instances the diversification thus comes
-from the restart itself, with reset weights and a new random order of the moves; the random move is needed only
-on small instances (Section~\ref{sec:t2025}).
+The decisive elements are the GLS weights and the effort spent in each separation. Additive weights increase
+the heights by 1.9\% ($p<0.001$), and moves five times slower by 3.2\% ($p<0.001$). The number of passes of
+\textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 2.6\% ($p<0.001$), since
+separations that would succeed are abandoned, and with 2000 passes by 1.0\% ($p=0.004$), since the time is spent
+on hopeless ones. The local improvement is needed: without it the heights increase by 0.5\% ($p=0.07$) and, in a
+separate run of all the instances, only 19 instead of 24 of the 27 optima of Section~\ref{sec:t2025} are found,
+because the height of the best solution then decreases only in the discrete steps of the oscillation. The other
+elements have no significant effect ($p\ge0.09$): the wall term ($\sigma=0$: $+0.7\%$), the tuned greedy criterion
+(greedy by volume: $+0.4\%$), the step $\rho$, and the kick (no kick: $+0.3\%$). On these instances the
+diversification thus comes from the restart itself, with reset weights and a new random order of the moves; the
+random move is needed only on small instances (Section~\ref{sec:t2025}).
 
 \begin{table}[!tbp]
 \centering\small
-\caption{Component analysis on the seven hardest instances: mean gap of the height with respect to the best
-published value (Stoyan 2004 Examples 2--5 and Stoyan 2005 Examples 2--3), mean height on Stoyan 2004 Example 1
-(no published reference), and mean change of the height with respect to the proposed method over the 70 runs
-($p$: Wilcoxon signed-rank test); 120 s, 10 seeds. Negative is better.}\label{tab:ablation}
-\begin{tabular}{p{0.42\textwidth}rrrr}
+\caption{Component analysis on the seven hardest instances (120 s, 10 seeds). Gap: mean gap of the height with
+respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan 2005 Examples 2--3); negative is
+better. Change: mean relative change of the height with respect to the proposed method over the 70 runs,
+including Stoyan 2004 Example 1; positive means higher, i.e., worse ($p$: Wilcoxon signed-rank test).}
+\label{tab:ablation}
+\begin{tabular}{lrrr}
 \toprule
-Configuration & S2004 & S2005 & S2004 Ex1 & $\Delta H$ ($p$)\\
+& \multicolumn{2}{c}{Gap} & \\
+\cmidrule(lr){2-3}
+Configuration & Stoyan 2004 & Stoyan 2005 & Change ($p$)\\
 \midrule
-Proposed method & $-2.9\%$ & $-2.0\%$ & 53.08 & \\
-+ LP compaction & $-3.1\%$ & $-1.9\%$ & 53.60 & $+0.0\%$ (1.00)\\
-Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & 53.26 & $+0.5\%$ (0.07)\\
-$\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & 53.42 & $+0.7\%$ (0.11)\\
-Greedy by volume & $-2.9\%$ & $-1.4\%$ & 53.49 & $+0.4\%$ (0.19)\\
-Additive GLS weights ($w_{ij}\gets w_{ij}+1$) & $-1.4\%$ & $-0.8\%$ & 53.53 & $+1.9\%$ ($<$0.001)\\
-Separation five times slower (stopped at 24 s) & $-0.1\%$ & $-1.2\%$ & 54.64 & \\
+Proposed method & $-2.9\%$ & $-2.0\%$ & --\\
+Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & $+0.5\%$ (0.07)\\
+$\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & $+0.7\%$ (0.11)\\
+Greedy by volume & $-2.9\%$ & $-1.4\%$ & $+0.4\%$ (0.19)\\
+No kick (restarts only) & $-2.6\%$ & $-2.1\%$ & $+0.3\%$ (0.32)\\
+Additive GLS weights & $-1.4\%$ & $-0.8\%$ & $+1.9\%$ ($<$0.001)\\
+Separation five times slower & $-0.1\%$ & $-1.2\%$ & $+3.2\%$ ($<$0.001)\\
 \midrule
-Kick: none (restart only) & $-2.6\%$ & $-2.1\%$ & 53.49 & $+0.3\%$ (0.32)\\
-Kick: reinsertion & $-2.8\%$ & $-1.7\%$ & 53.07 & $+0.2\%$ (0.57)\\
-Kick: reinsertion or random position & $-3.3\%$ & $-1.9\%$ & 53.30 & $-0.3\%$ (0.50)\\
-Kick: a top piece to a random position & $-2.5\%$ & $-1.6\%$ & 53.05 & $+0.5\%$ (0.11)\\
-Kick: a top piece, least overlapped of 20 positions & $-2.6\%$ & $-1.9\%$ & 52.65 & $+0.1\%$ (0.70)\\
-\midrule
-$\rho=0.5\%$ (default 1\%) & $-2.8\%$ & $-2.1\%$ & 53.17 & $+0.1\%$ (0.59)\\
-$\rho=2\%$ & $-2.2\%$ & $-1.5\%$ & 52.72 & $+0.6\%$ (0.09)\\
-100 passes (default 500) & $-1.1\%$ & $-1.1\%$ & 54.98 & $+2.6\%$ ($<$0.001)\\
-2000 passes & $-2.0\%$ & $-1.2\%$ & 52.89 & $+1.0\%$ (0.004)\\
+$\rho=0.5\%$ (default 1\%) & $-2.8\%$ & $-2.1\%$ & $+0.1\%$ (0.59)\\
+$\rho=2\%$ & $-2.2\%$ & $-1.5\%$ & $+0.6\%$ (0.09)\\
+100 passes (default 500) & $-1.1\%$ & $-1.1\%$ & $+2.6\%$ ($<$0.001)\\
+2000 passes & $-2.0\%$ & $-1.2\%$ & $+1.0\%$ (0.004)\\
 \bottomrule
 \end{tabular}
 \end{table}
