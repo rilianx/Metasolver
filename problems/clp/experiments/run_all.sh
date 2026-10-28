@@ -59,6 +59,7 @@ for v in $SETTINGS; do
 		n=${cfg%%:*}; a=${cfg#*:}
 		[ $n = nosub ] && [ $v = paquay ] && continue
 		[ $n = norestart ] && [ $v != one ] && continue
+		[ $n = nomust ] && [ $v != one ] && continue
 		run abl_${v}_$n $v -t 0.1 $a
 	done
 	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.1 --cog_penalty $lam; done
