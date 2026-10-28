@@ -12,10 +12,9 @@ compares it instance by instance with the randomized greedy search (RGS) of
 \citet{Hessler2025}, which, to the best of our knowledge, reports the best results on these
 instances. Section~\ref{sec:exp-setup} describes the instances, the implementation, the
 parameter tuning and the evaluation protocol. Section~\ref{sec:exp-results} reports the main
-results, Section~\ref{sec:exp-bound} compares them with a lower bound,
-Section~\ref{sec:exp-time} analyzes the running time, Section~\ref{sec:exp-ablation} studies
+results, Section~\ref{sec:exp-time} analyzes the running time, Section~\ref{sec:exp-ablation} studies
 the contribution of each component and Section~\ref{sec:exp-tradeoff} the trade-off between the
-number of ULDs and the weight distribution.
+volume of the ULDs and the weight distribution.
 
 \subsection{Experimental setup}
 \label{sec:exp-setup}
@@ -285,18 +284,6 @@ Table~\ref{tab:size}).}
 \bottomrule
 \end{tabular}
 \end{table}
-
-\subsection{Comparison with a lower bound}
-\label{sec:exp-bound}
-
-A lower bound on the total volume of the ULDs is the smallest total volume of a set of ULDs
-whose volume and weight capacity suffice for the boxes and in which every box fits in some ULD,
-computed with the CP-SAT solver of OR-Tools. It assumes that the ULDs can be completely filled,
-which is far from possible with these boxes: in the Paquay setting the bound is 10\,141\,m$^3$,
-against 17\,317\,m$^3$ for our solutions with $t = 1$\,s, whose ULDs are about 60\% full. A
-simple bound on the number of ULDs (the total volume of the boxes divided by the volume of the
-largest ULD) is reached by our solutions in 90 of the 300 instances with $t = 1$\,s, against
-80 for the RGS, although the number of ULDs is only a secondary measure here.
 
 \subsection{Running time}
 \label{sec:exp-time}
