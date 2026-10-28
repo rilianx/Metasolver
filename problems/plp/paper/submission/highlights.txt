@@ -1,0 +1,5 @@
+- Exact axis move for 3D polyhedra via penetration depth in no-fit polytopes
+- Optimal position along an axis found by evaluating a few breakpoints only
+- Simple overlap minimization with guided local search, exact 3D geometry
+- Best known heights improved on 11 of 13 classical 3D strip packing instances
+- Ablation: speed of the move and guided local search weights are decisive

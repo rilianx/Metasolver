@@ -629,9 +629,10 @@ others. Table~\ref{tab:t2025} summarizes our results (10 seeds, 30 s per instanc
 proven optima in its best run, 12 of them in every run. Two of the others are missed by 0.03\% (19.31 versus 19.30
 and 24.94 versus 24.93, the 3-item instance of the Stoyan 2004 series and the 9-item instance of the Stoyan 2005
 series), and the 10-item instance of the Stoyan 2005 series by 0.6\% (26.20 versus 26.05). On the 39 open instances it improves the best upper bound in 32 cases, by 5\% on
-average, and matches it in most of the others. Before adding random moves to the restarts, the method missed the
-optimum of two 2-item instances (by 17\% and 28\%): the greedy places the larger piece on the floor, the optimum
-needs the opposite arrangement, and neither the GLS weights (a single pair) nor reinsertion could escape.
+average, and matches it in most of the others. The random move of the restarts is needed here:
+in an earlier version, whose restarts only reinserted the moved piece at its lowest position, the optimum of two
+2-item instances was missed (by 17\% and 28\%), because the greedy places the larger piece on the floor, the
+optimum needs the opposite arrangement, and neither the GLS weights (a single pair) nor reinsertion can escape.
 
 \begin{table}[!tbp]
 \centering\small
@@ -716,6 +717,24 @@ the previous methods, with exact and voxel geometry, on the benchmarks of polyhe
 all the proven optima of the small instances. On curved meshes, which require conservative decompositions with
 many facets, it remains behind voxel-based search. Future work includes cheaper NFP computations for curved
 parts, rotations, larger instances from additive manufacturing, and lower bounds.
+
+% =====================================================================================================
+\section*{Acknowledgments}
+This work was supported by ANID FONDECYT project 1260159.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Ignacio Araya}: Conceptualization, Methodology, Software, Validation, Investigation, Writing -- original
+draft, Writing -- review \& editing, Funding acquisition.
+% TODO: roles de los coautores
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could
+have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+The source code, the convex decompositions of the pieces, the best solutions of Table~\ref{tab:results} and the
+scripts that reproduce all the experiments are available at \todo{URL of the repository}. The instances are
+available in the ESICUP repository \citep{esicup}.
 
 \bibliographystyle{elsarticle-harv}
 \bibliography{refs}
