@@ -83,12 +83,13 @@ exactly along an axis by evaluating a few breakpoints.
 
 \paragraph{Contributions}
 \begin{enumerate}
-\item An exact and fast overlap-minimization move for polyhedra represented as unions of convex parts. Overlap
-is measured by the penetration depth in the NFP of each pair of convex parts; along an axis this function is
-concave on an interval and zero outside it, so the optimal position of a piece along an axis is attained at an
-interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
-\citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
-\citet{egeblad2009}.
+\item A fast exact overlap-minimization move for 3D polyhedra represented as unions of convex parts. It brings
+the exact axis moves of \citet{umetani2009}, defined for 2D polygons with directional penetration depths, to 3D
+and non-convex pieces: the overlap is measured by the penetration depth in the NFP of each pair of convex parts,
+which along an axis is concave on an interval and zero outside it, so the optimal position of a piece along an
+axis is attained at an interval endpoint (Proposition~\ref{prop:axis}). With an implementation that evaluates
+each term only at the breakpoints inside its interval, the move is much cheaper than the exact overlap volume of
+\citet{egeblad2009}, and this speed is what makes exact geometry practical in a 3D metaheuristic.
 \item A method built around this move with few components, adapted from known methods (a bottom-left
 construction with gravity, a strategic oscillation of the height, multiplicative GLS weights \citep{gardeyn2025},
 a local improvement and restarts), and an ablation study showing which elements matter: the GLS weights, the
@@ -179,7 +180,11 @@ affine functions, hence concave; outside it is zero. Between consecutive points 
 either concave or identically zero, so $\phi$ is concave there and attains its minimum at an endpoint.
 \end{proof}
 
-Figure~\ref{fig:axis} illustrates the proposition in two dimensions.
+Proposition~\ref{prop:axis} is the counterpart, for the Euclidean penetration depth of convex parts in 3D, of
+the piecewise linear directional penetration depths of \citet{umetani2009} in 2D, which require a trapezoidal
+decomposition of each NFP and have no practical equivalent for 3D NFPs. With pieces decomposed into convex parts,
+every NFP is convex and each term reduces to a minimum of affine functions. Figure~\ref{fig:axis} illustrates the
+proposition in two dimensions.
 
 \begin{figure}[!tbp]
 \centering
