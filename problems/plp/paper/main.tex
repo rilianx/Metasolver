@@ -484,12 +484,9 @@ The method is implemented in C++ and needs no external solver. Experiments ran o
 g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run with 10 seeds and a time limit of 120 s per
 instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
 for a separating axis, with a tolerance of $10^{-6}$ on the penetration depth (the containers are 10 to 60 units
-wide). Table~\ref{tab:params} lists the parameters of the method. The parameters of the greedy
-construction were tuned with Optuna on 16 training instances for an earlier version of the method and were not
-re-tuned: replacing the tuned criterion by the largest piece first changes the final heights by only $+0.3\%$
-($p=0.22$, Table~\ref{tab:ablation}), so the final quality depends little on them; the weight
-update follows \citet{gardeyn2025}; the step $\rho$ and the number of passes are analyzed in
-Table~\ref{tab:ablation}.
+wide). Table~\ref{tab:params} lists the parameters of the method. Those of the construction were
+tuned with Optuna \citep{akiba2019} on 16 training instances, with an earlier version of the method; the weight update follows
+\citet{gardeyn2025}; the step $\rho$ and the number of passes are analyzed in Table~\ref{tab:ablation}.
 
 \begin{table}[!tbp]
 \centering\small
