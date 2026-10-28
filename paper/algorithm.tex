@@ -220,6 +220,40 @@ Finally, the reduction phase (lines~\ref{a2:red}--\ref{a2:undo}) tries to replac
 inserting its boxes into the others (line~\ref{a2:rins}) and loading the rest into smaller ULDs
 (line~\ref{a2:new}). The three phases are detailed in the following paragraphs.
 
+\begin{algorithm}[htbp]
+\caption{Multi-ULD framework.}
+\label{alg:multi}
+\begin{algorithmic}[1]
+\State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
+\Repeat
+	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
+	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$} \label{a2:cons}
+		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{a2:cand}
+		\State $S \gets$ the loading $\textsc{LoadULD}(k, B)$, $k \in K$, that maximizes $L - \theta V$
+		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{a2:prio}
+			\State load these boxes first and complete $S$ with the other boxes of $B$
+		\EndIf
+		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$ \label{a2:add}
+	\EndWhile
+	\If{$B \neq \emptyset$}
+		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
+	\EndIf
+	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
+\Until{$B = \emptyset$ or three restarts} \label{a2:restart}
+\State $(\mathcal{S}, B) \gets$ the kept solution
+\Repeat \Comment{reduction of the volume} \label{a2:red}
+	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
+		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{a2:rins}
+		\If{$B' = \emptyset$} remove $S$; \textbf{break} \EndIf
+		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{a2:new}
+		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$; \textbf{break} \EndIf
+		\State undo the changes of \textsc{Insert} \label{a2:undo}
+	\EndFor
+\Until{no ULD was changed}
+\State \Return $\mathcal{S}$, $B$
+\end{algorithmic}
+\end{algorithm}
+
 \paragraph{Sequential construction.}
 The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
 as in \citet{Hessler2025}: among the ULD types into which the boxes that fit in the fewest
@@ -252,9 +286,32 @@ highest one down, so that the remaining load is still feasible; then the ULDs, i
 order of free volume, are completed with \textsc{LoadULD} with the removed boxes and the pool,
 keeping the remaining boxes at their positions. A ULD whose new loading has the CoG out of range
 when the old one had not keeps its old loading. The new solution is accepted if the volume of the
-pool decreases, and the procedure stops as soon as the pool is empty. Reloading each ULD from
-scratch with its boxes and the pool, or giving priority to the boxes of the pool, did not improve
-the results at the same running time.
+pool decreases, and the procedure stops as soon as the pool is empty
+(Algorithm~\ref{alg:insert}). Reloading each ULD from scratch with its boxes and the pool, or
+giving priority to the boxes of the pool, did not improve the results at the same running time.
+
+\begin{algorithm}[htbp]
+\caption{\textsc{Insert}$(\mathcal{S}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
+$\mathcal{S}$ by ruin and recreate.}
+\label{alg:insert}
+\begin{algorithmic}[1]
+\For{$\rho \in \{0.3, 0.6, 0.9\}$}
+	\If{$B = \emptyset$} \Return \EndIf
+	\State $\mathcal{S}' \gets \mathcal{S}$; $B' \gets B$
+	\For{$S \in \mathcal{S}'$ in decreasing order of free volume}
+		\State $R \gets$ boxes removed from $S$, from the highest uncovered one down, until
+			a proportion $\rho$ of its loaded volume is removed
+		\State $S^\circ \gets$ complete $S \setminus R$ with \textsc{LoadULD} on the boxes
+			$R \cup B'$ (time limit $0.1\,t$)
+		\If{$S^\circ$ is feasible \textbf{and} (the CoG of $S^\circ$ is in range \textbf{or} that of $S$ is not)}
+			\State $B' \gets (B' \cup R) \setminus S^\circ$; replace $S$ by $S^\circ$ in $\mathcal{S}'$
+		\EndIf
+		\If{$B' = \emptyset$} \textbf{break} \EndIf
+	\EndFor
+	\If{$V(B') < V(B)$} $\mathcal{S} \gets \mathcal{S}'$; $B \gets B'$ \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 
 \paragraph{Unloaded boxes.}
 When the number of ULDs is limited and some boxes remain unloaded after the construction,
@@ -269,9 +326,10 @@ ULDs with \textsc{Insert}. If all of them are inserted, $S$ is eliminated. Other
 boxes are loaded into one or two new ULDs whose total volume is smaller than that of $S$: the
 combinations of one or two available types with enough volume and weight capacity, in which every
 remaining box fits, are tried in increasing order of total volume, loading the largest ULD first
-with all the remaining boxes and the second one with the rest. The first combination that loads
-all the boxes, without leaving a CoG out of range when the CoG of $S$ was not, replaces $S$;
-otherwise the changes made by \textsc{Insert} are undone and the next ULD is tried. After every
+with all the remaining boxes and the second one with the rest (Algorithm~\ref{alg:newulds}). The
+first combination that loads all the boxes, without leaving a CoG out of range when the CoG of
+$S$ was not, replaces $S$; otherwise the changes made by \textsc{Insert} are undone and the next
+ULD is tried. After every
 change the phase starts again, and it stops when no ULD can be changed. Every change reduces the
 total volume of the ULDs, so the phase terminates; a change may increase the number of ULDs, when
 one ULD is replaced by two smaller ones. Since \textsc{Insert} and the reduction load many ULDs
@@ -279,36 +337,24 @@ again, BSG is given a shorter time limit in these phases than in the constructio
 our experiments).
 
 \begin{algorithm}[htbp]
-\caption{Multi-ULD framework.}
-\label{alg:multi}
+\caption{\textsc{NewULDs}$(S, B')$: load the boxes $B'$ left over from the ULD $S$ into one or two
+new ULDs of smaller total volume.}
+\label{alg:newulds}
 \begin{algorithmic}[1]
-\State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
-\Repeat
-	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
-	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$} \label{a2:cons}
-		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{a2:cand}
-		\State $S \gets$ the loading $\textsc{LoadULD}(k, B)$, $k \in K$, that maximizes $L - \theta V$
-		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{a2:prio}
-			\State load these boxes first and complete $S$ with the other boxes of $B$
-		\EndIf
-		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$ \label{a2:add}
-	\EndWhile
-	\If{$B \neq \emptyset$}
-		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
-	\EndIf
-	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
-\Until{$B = \emptyset$ or three restarts} \label{a2:restart}
-\State $(\mathcal{S}, B) \gets$ the kept solution
-\Repeat \Comment{reduction of the volume} \label{a2:red}
-	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
-		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{a2:rins}
-		\If{$B' = \emptyset$} remove $S$; \textbf{break} \EndIf
-		\If{$B'$ fits in 1 or 2 new ULDs of smaller total volume than $S$} \label{a2:new}
-			\State replace $S$ by them; \textbf{break}
-		\EndIf
-		\State undo the changes of \textsc{Insert} \label{a2:undo}
+\For{each set $C$ of one or two available ULD types, in increasing order of total volume $V(C)$}
+	\If{$V(C) \ge V(S)$} \Return failure \EndIf
+	\If{$V(C) < V(B')$ \textbf{or} the capacity of $C$ is below the weight of $B'$ \textbf{or}
+		some box of $B'$ fits in no type of $C$} \textbf{continue} \EndIf
+	\State $R \gets B'$; $\mathcal{N} \gets \emptyset$
+	\For{$k \in C$, the larger type first, while $R \neq \emptyset$}
+		\State $S_k \gets \textsc{LoadULD}(k, R)$ (time limit $0.1\,t$)
+		\If{$S_k$ is empty or infeasible, or its CoG is out of range and that of $S$ is not}
+			\textbf{break} \EndIf
+		\State $R \gets R \setminus S_k$; $\mathcal{N} \gets \mathcal{N} \cup \{S_k\}$
 	\EndFor
-\Until{no ULD was changed}
-\State \Return $\mathcal{S}$, $B$
+	\If{$R = \emptyset$} \Return $\mathcal{N}$ \EndIf
+\EndFor
+\State \Return failure
 \end{algorithmic}
 \end{algorithm}
+

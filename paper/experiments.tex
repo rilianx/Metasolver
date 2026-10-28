@@ -83,8 +83,12 @@ the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks (
 \]
 where $V_{\mathrm{ULD}}$ is the volume of the ULDs, $V_{\mathrm{unl}}$ the volume left unloaded,
 $n_{\mathrm{CoG}}$ the number of ULDs whose CoG is out of range and $V_{\mathrm{boxes}}$ the
-volume of the boxes of the instance, so that loading all the boxes comes first, then the
-CoG and then the volume of the ULDs. The values of a preliminary tuning were the initial
+volume of the boxes of the instance. The two penalties are much larger than any change in the
+volume of the ULDs that the algorithm can make by changing one ULD (the largest ULD has
+31.8\,m$^3$): an unloaded box of 1\,m$^3$ costs as much as 100\,m$^3$ of ULDs and a ULD with the
+CoG out of range as much as 150\,m$^3$, so that irace does not trade boxes left out or CoG
+violations for volume, and the volume of the ULDs decides among configurations that load all
+the boxes with the CoG in range. The values of a preliminary tuning were the initial
 configuration. Table~\ref{tab:params} lists the parameters; the four elite
 configurations returned by irace agree on a small $\lambda$ (1.0--1.7), a large $\gamma$
 (0.77--0.97) and $\theta$ between 0.18 and 0.32. The tuning was carried out with an earlier version of the
