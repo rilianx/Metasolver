@@ -467,7 +467,9 @@ the order in which they support each other. For example, a piece $A$ may lean on
 whose narrow bottom is higher than the bottom of $A$; $A$ is processed first and cannot move, then $B$ descends
 into a gap below it, and only in the next pass can $A$ follow it down. Similarly, once the pieces that defined
 the height have been moved lower, other pieces define it, and they are tried at the lowest candidate positions
-in the next pass. \textsc{Compact} is applied to every feasible
+in the next pass. For example, in a run on Stoyan 2004 Example 2, after a separation at height 40.19, the
+successive passes lowered the height to 39.80, 38.71 and 38.24, by descents alone (7, 4 and 1 pieces moved
+down): most of the gain came after the first pass. \textsc{Compact} is applied to every feasible
 layout: after the construction, where it rarely changes anything (the greedy already leaves each piece at the end
 of a descent), and after each successful
 separation, where it matters: without it, the height of the best solution would decrease only in the discrete
