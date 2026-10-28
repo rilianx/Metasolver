@@ -37,9 +37,10 @@ position, and the center of gravity is taken into account in the value of the so
 translation of the load. The ULDs are loaded sequentially, and the
 total volume is then reduced by removing a ULD, inserting its boxes into the others and loading
 the rest into at most two smaller ULDs. On the 300 benchmark instances of Paquay et al.\ and with
-the same parameters in all the settings, the algorithm uses 3.6--8.0\% less ULD volume than the
-state of the art, with significant differences in all the settings, leaves less than half of the
-volume unloaded when the number of ULDs is limited, and almost none of its ULDs violates the center of gravity
+the same parameters in all the settings, the algorithm uses 2.4--3.8\% less ULD volume than the state
+of the art at a comparable running time and 5.9--8.2\% less with a few seconds per instance,
+with significant differences in all the settings, leaves less volume unloaded when the number
+of ULDs is limited, and almost none of its ULDs violates the center of gravity
 constraint, against 7--11\% of the ULDs of the previous method.
 
 \medskip\noindent\textbf{Keywords:} packing; air transport; three-dimensional bin packing;

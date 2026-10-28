@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Figura del paper a partir de time.csv (ver problems/clp/experiments/collect.py).
+Figura del paper (curvas de tiempo en los tres escenarios) a partir de time.csv (ver problems/clp/experiments/collect.py).
 
 uso: make_figures.py [directorio]   (por defecto, el directorio de este script)
 escribe time.pdf
@@ -34,30 +34,34 @@ def read(name):
 def label(ax, x, y, text, dx=6, dy=4, ha='left'):
 	ax.annotate(text, (x, y), xytext=(dx, dy), textcoords='offset points', fontsize=7.5, color=INK, ha=ha)
 
-# --- volumen de los ULDs segun el tiempo (paquay) ---
+# --- volumen de los ULDs segun el tiempo, relativo al RGS (tres escenarios) ---
 rows = read('time.csv')
-fig, ax = plt.subplots(figsize=(4.6, 3.0))
-for imp, style, name in (('0.1', dict(ls='-', marker='o', mfc=OURS), 'BSG, improvement at 0.1$t$'),
-                         ('1', dict(ls=':', marker='o', mfc='white'), 'BSG, improvement at $t$')):
-	pts = [r for r in rows if r['improve'] == imp]
-	t = [float(r['t']) for r in pts]; v = [float(r['vol']) for r in pts]; s = [float(r['time']) for r in pts]
-	ax.plot(s, v, color=OURS, lw=1.5, ms=5, mec=OURS if imp == '1' else 'white', mew=1, label=name, zorder=3, **style)
-	if imp == '0.1':
-		for ti, si, vi in zip(t, s, v):
-			label(ax, si, vi, f'{ti:g} s', dx=5, dy=5)
-h = HESSLER['paquay']
 SPEED = 4105 / 1624   # tiempo del RGS escalado a nuestra maquina (PassMark single thread)
-ax.axhline(h[0], color=THEIRS, lw=0.8, ls='--', zorder=1)
-ax.plot([h[3]], [h[0]], 's', color=THEIRS, ms=7, mec='white', mew=1, label='RGS (Heßler et al. 2025)', zorder=3)
-ax.plot([h[3]*SPEED], [h[0]], 's', mfc='white', mec=THEIRS, mew=1.4, ms=7, label='RGS, time scaled to our machine', zorder=3)
-ax.annotate('', xy=(h[3]*SPEED*0.92, h[0]), xytext=(h[3]*1.09, h[0]), arrowprops=dict(arrowstyle='->', color=THEIRS, lw=0.9))
-label(ax, h[3], h[0], f'RGS: {h[0]:,.0f} m$^3$', dx=-2, dy=-12)
-ax.set_xscale('log')
-ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, _: f'{x:g}'))
-ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda y, _: f'{y:,.0f}'))
-ax.set_xlabel('mean time per instance (s, log scale)')
-ax.set_ylabel('volume of the ULDs (m$^3$, 300 instances)')
-ax.set_ylim(17000, 18800)
-ax.legend(loc='lower left', fontsize=7.5)
-fig.tight_layout()
+TITLES = {'paquay': 'Paquay', 'adapted': 'Adapted', 'one': 'One ULD of each type'}
+fig, axes = plt.subplots(1, 3, figsize=(7.4, 3.1), sharey=True)
+for ax, v in zip(axes, ('paquay', 'adapted', 'one')):
+	h = HESSLER[v]
+	for imp, style, name in (('0.1', dict(ls='-', marker='o', mfc=OURS), 'BSG, improvement at 0.1$t$'),
+	                         ('1', dict(ls=':', marker='o', mfc='white'), 'BSG, improvement at $t$')):
+		pts = [r for r in rows if r['setting'] == v and r['improve'] == imp]
+		if not pts: continue
+		t = [float(r['t']) for r in pts]; s_ = [float(r['time']) for r in pts]
+		y = [100 * (float(r['vol']) / h[0] - 1) for r in pts]
+		ax.plot(s_, y, color=OURS, lw=1.4, ms=4.5, mec=OURS if imp == '1' else 'white', mew=0.8, label=name, zorder=3, **style)
+		if imp == '0.1':
+			for ti, si, yi in zip(t, s_, y):
+				if ti in (0.02, 0.1, 1, 2.0): label(ax, si, yi, f'{ti:g} s', dx=-3, dy=-11, ha='right')
+	ax.axhline(0, color=THEIRS, lw=0.8, ls='--', zorder=1)
+	ax.plot([h[3]], [0], 's', color=THEIRS, ms=6, mec='white', mew=0.8, label='RGS (Heßler et al. 2025)', zorder=4)
+	ax.plot([h[3]*SPEED], [0], 's', mfc='white', mec=THEIRS, mew=1.2, ms=6, label='RGS, time scaled to our machine', zorder=4)
+	ax.set_xscale('log')
+	ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, _: f'{x:g}'))
+	ax.set_title(TITLES[v], fontsize=9, color=INK)
+	ax.set_xlabel('mean time per instance (s)')
+	ax.set_xlim(0.12, 40)
+axes[0].set_ylabel('volume of the ULDs vs RGS (%)')
+axes[0].set_ylim(-9.5, 3)
+h_, l_ = axes[0].get_legend_handles_labels()
+fig.legend(h_, l_, loc='lower center', ncol=2, fontsize=7.5, frameon=False, bbox_to_anchor=(0.5, 0.0))
+fig.tight_layout(rect=(0, 0.14, 1, 1))
 fig.savefig(os.path.join(D, 'time.pdf'))

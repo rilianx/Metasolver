@@ -63,9 +63,11 @@ against 1624).
 The time limit $t$ is the time of each run of BSG in the construction, excluding the generation
 of the blocks; in the improvement phases (\textsc{Insert} and the reduction), which load many ULDs
 again, each run of BSG is limited to $0.1\,t$ (Section~\ref{sec:exp-time} compares it with
-$t$). We report results for $t = 0.1$\,s and $t = 1$\,s. Since a ULD can be loaded several times (with
-and without the substructure and in the improvement phases), the total
-time per instance is several times larger, and we report it separately. The code, the instances, the solutions and the scripts that
+$t$). A search also stops as soon as it loads all the available boxes with the CoG in range. We
+report results for $t = 0.1$\,s, whose total time per instance is about that of the RGS once the
+difference in processor speed is taken into account, and for $t = 1$\,s. Since a ULD is loaded
+several times (the candidate types, with and without the substructure, and in the improvement
+phases), the total time per instance is several times $t$, and we report it separately. The code, the instances, the solutions and the scripts that
 produce all the tables are available at \url{https://github.com/rilianx/bsg-uld}.
 
 \paragraph{Parameter tuning.}
@@ -128,30 +130,27 @@ setting \emph{One}, its unloaded volume from the utilization of each ULD, which 
 0.1\%; we therefore consider two loaded volumes equal if they differ by less than 0.05\,m$^3$.
 Each configuration is run five times; we report the mean and the standard deviation.
 
-\todo{tablas, figuras y textos de resultados: actualizar con la campana con las fases de mejora a $0.1\,t$.}
-
 \subsection{Results}
 \label{sec:exp-results}
 
 Table~\ref{tab:results} summarizes the results. In the three settings, our algorithm uses less
-ULD volume than the RGS of \citet{Hessler2025}: 4.5\% ($t = 0.1$\,s) and
-7.2\% ($t = 1$\,s) less in the Paquay setting, 3.6\% and 6.4\% less in the
-adapted one, and 4.8\% and 8.0\% less with one ULD of each type, where it also leaves less than
-half of the volume unloaded. Instance by instance, its solutions are better in 178.2 instances
-and worse in 60.8 in the Paquay setting with $t = 1$\,s (168.6 and 62.2 in the adapted one,
-176.4 and 27 with one ULD of each type), and the differences in volume are significant in all
-the cases (Wilcoxon signed-rank test, $p \le 3 \cdot 10^{-4}$ with $t = 0.1$\,s and
-$p < 10^{-7}$ with $t = 1$\,s). The total cost of the ULDs given in the instance files decreases
-in the same way (7.7\%, 7.0\% and 8.2\% with $t = 1$\,s). At most 1.4\% of our ULDs violate the
-CoG constraint in the length or width direction, whereas 7--11\% of the ULDs of the RGS have the
-CoG out of range.
+ULD volume than the RGS of \citet{Hessler2025}: with $t = 0.1$\,s, at a running time comparable
+to that of the RGS, 2.9\% less in the Paquay setting, 3.8\% less in the adapted one and 2.4\% less
+with one ULD of each type, where it also leaves less volume unloaded; with $t = 1$\,s, 7.1\%,
+8.2\% and 5.9\% less. Instance by instance, its solutions are better in 182.8 instances and
+worse in 51.8 in the Paquay setting with $t = 1$\,s (184 and 44.6 in the adapted one, 171 and 36
+with one ULD of each type), and the differences in volume are significant in all the cases
+(Wilcoxon signed-rank test, $p \le 1.2 \cdot 10^{-4}$ with $t = 0.1$\,s and $p < 10^{-12}$ with
+$t = 1$\,s). The total cost of the ULDs given in the instance files decreases in the same way
+(8.1\%, 10.0\% and 6.3\% with $t = 1$\,s). At most 2.2\% of our ULDs violate the CoG constraint
+in the length or width direction, and none in the Paquay and adapted settings with $t = 1$\,s,
+whereas 7--11\% of the ULDs of the RGS have the CoG out of range.
 
 Since the objective is the volume, our algorithm replaces large ULDs by smaller ones whenever
-this saves volume, even if it uses more ULDs. With $t = 1$\,s it still uses fewer ULDs than the RGS in
-the three settings (695.2, 639.0 and 709.4 against 708, 653 and 729, with more boxes loaded in
-the last one); with $t = 0.1$\,s it uses 1.7--4.3\% more ULDs. In the setting with one ULD of each type, it leaves 9 boxes (9.0\,m$^3$)
-unloaded with $t = 1$\,s and 12 boxes (10.4\,m$^3$) with $t = 0.1$\,s, against 24 boxes
-(25.9\,m$^3$) for the RGS.
+this saves volume, even if it uses more ULDs: with $t = 1$\,s it uses 2--6\% more ULDs than the
+RGS (732.6, 689.0 and 745.0 against 708, 653 and 729), and with $t = 0.1$\,s 7--11\% more. In the
+setting with one ULD of each type, it leaves 12 boxes (17.8\,m$^3$) unloaded with $t = 1$\,s and
+15.4 boxes (20.0\,m$^3$) with $t = 0.1$\,s, against 24 boxes (25.9\,m$^3$) for the RGS.
 
 The results are stable: the total volume of the five runs of each configuration varies by less
 than 0.2\%. The running time is discussed in Section~\ref{sec:exp-time}.
@@ -173,44 +172,44 @@ Setting & Method & Vol.\ (m$^3$) & vs RGS & B/W & ULDs & Unloaded & CoG$_{xy}$ &
 \multirow{4}{*}{Paquay}
  & TPH & -- & -- & -- & 1010 & 0 & 130 (12.9\%) & -- & $\le 12$ \\
  & RGS & 18\,648 & & & 708 & 0 & 79 (11.2\%) & -- & $\le 0.5$ \\
- & BSG, $t = 0.1$\,s & 17\,804 $\pm$ 34 & $-$4.5\% & 160 / 74 & 720.2 & 0 & 7.2 (1.0\%) & 0 & 3.7 \\
- & BSG, $t = 1$\,s & 17\,309 $\pm$ 15 & $-$7.2\% & 178.2 / 60.8 & 695.2 & 0 & 5 (0.7\%) & 1 & 28.1 \\
+ & BSG, $t = 0.1$\,s & 18\,106 $\pm$ 17 & $-$2.9\% & 158 / 74.4 & 777.6 & 0 & 7.8 (1.0\%) & 4.2 & 0.56 \\
+ & BSG, $t = 1$\,s & 17\,317 $\pm$ 4 & $-$7.1\% & 182.8 / 51.8 & 732.6 & 0 & 0 (0\%) & 1.4 & 3.5 \\
 \midrule
 \multirow{3}{*}{Adapted}
  & RGS & 16\,843 & & & 653 & 0 & 47 (7.2\%) & -- & $\le 1.3$ \\
- & BSG, $t = 0.1$\,s & 16\,240 $\pm$ 17 & $-$3.6\% & 151.4 / 77.6 & 680.0 & 0 & 1.2 (0.2\%) & 1 & 4.9 \\
- & BSG, $t = 1$\,s & 15\,770 $\pm$ 13 & $-$6.4\% & 168.6 / 62.2 & 639.0 & 0 & 2 (0.3\%) & 1 & 35.3 \\
+ & BSG, $t = 0.1$\,s & 16\,203 $\pm$ 25 & $-$3.8\% & 151.4 / 62.8 & 725.8 & 0 & 3 (0.4\%) & 3 & 0.77 \\
+ & BSG, $t = 1$\,s & 15\,461 $\pm$ 6 & $-$8.2\% & 184 / 44.6 & 689.0 & 0 & 0 (0\%) & 0 & 5.2 \\
 \midrule
 \multirow{3}{*}{One}
  & RGS & 16\,166 & & & 729 & 24 (25.9) & 74 (10.1\%) & -- & $\le 1.1$ \\
- & BSG, $t = 0.1$\,s & 15\,396 $\pm$ 10 & $-$4.8\% & 154.6 / 41.4 & 760.6 & 12 (10.4) & 10.8 (1.4\%) & 3 & 5.8 \\
- & BSG, $t = 1$\,s & 14\,866 $\pm$ 6 & $-$8.0\% & 176.4 / 27 & 709.4 & 9 (9.0) & 7.2 (1.0\%) & 5 & 44.0 \\
+ & BSG, $t = 0.1$\,s & 15\,773 $\pm$ 16 & $-$2.4\% & 132.6 / 51.2 & 776.6 & 15.4 (20.0) & 17 (2.2\%) & 11 & 0.89 \\
+ & BSG, $t = 1$\,s & 15\,207 $\pm$ 6 & $-$5.9\% & 171 / 36 & 745.0 & 12 (17.8) & 10.6 (1.4\%) & 8.8 & 6.1 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Figure~\ref{fig:loading} shows a solution in the setting with one ULD of each type: our
-algorithm uses four ULDs instead of the three of the RGS, but their total volume is smaller,
-since besides the ULDs of types 5 and 6 it uses two lower-deck containers of types 3 and 2
-(17.8\,m$^3$) instead of a main-deck ULD of type 4 (20.0\,m$^3$).
+algorithm uses three ULDs, as the RGS, but replaces the main-deck ULD of type 4 (20.0\,m$^3$)
+used by the RGS by a lower-deck container of type 1 (5.3\,m$^3$), and loads the type 6 almost
+completely with the help of the substructure.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/loading.pdf}
-\caption{Solution of the instance with 80 boxes number 4 in the setting with one ULD of each
-type ($t = 0.1$\,s): four ULDs (number of boxes and volume utilization) with a total volume of
-72.8\,m$^3$, against 75.0\,m$^3$ for the three ULDs (types 5, 6 and 4) of the RGS. Types 5 and 2
-have bevelled corners. The load of each ULD has been translated to center its CoG, which is
-within range in the four ULDs.}
+\caption{Solution of the instance with 80 boxes number 8 in the setting with one ULD of each
+type ($t = 0.1$\,s): three ULDs (number of boxes and volume utilization) with a total volume of
+60.3\,m$^3$, against 75.0\,m$^3$ for the ULDs of types 5, 6 and 4 of the RGS. Types 5 and 1 have
+bevelled corners; the type 6 uses the substructure. The load of each ULD has been translated to
+center its CoG, which is within range in the three ULDs.}
 \label{fig:loading}
 \end{figure}
 
 \paragraph{Results by instance size.}
 Tables~\ref{tab:size} and~\ref{tab:size2} report the total volume and the number of ULDs by
 instance size. With $t = 1$\,s our algorithm uses less volume than the RGS in every group of
-every setting, between 0.1\% and 16.5\% less. In the instances with 10 boxes, which fit in one
-ULD, it uses more ULDs than the RGS (43 against 30) but less volume, since it splits the boxes into
-two smaller ULDs when their total volume is smaller than that of one large ULD.
+every setting, between 0.2\% and 16.6\% less. In the instances with 10 boxes, which fit in one
+ULD, it uses more ULDs than the RGS (42--43 against 30) but less volume, since it splits the
+boxes into two smaller ULDs when their total volume is smaller than that of one large ULD.
 
 \begin{table}[htbp]
 \centering
@@ -224,16 +223,16 @@ the ULDs (m$^3$) and number of ULDs ($|C|$) of the RGS and of BSG (mean of five 
 \cmidrule(lr){2-5}\cmidrule(lr){6-8}
 $|I|$ & RGS & $t = 0.1$\,s & $t = 1$\,s & vs RGS & RGS & $t = 0.1$\,s & $t = 1$\,s \\
 \midrule
-10 & 502.4 & 450.2 & 438.1 & $-$12.8\% & 30 & 43 & 43 \\
-20 & 880.7 & 812.5 & 810.5 & $-$8.0\% & 35 & 39.2 & 39 \\
-30 & 1128.5 & 1051.3 & 975.6 & $-$13.5\% & 47 & 51 & 48 \\
-40 & 1485.5 & 1539.0 & 1476.1 & $-$0.6\% & 60 & 66 & 65 \\
-50 & 1735.4 & 1716.8 & 1684.8 & $-$2.9\% & 66 & 72 & 68 \\
-60 & 2073.7 & 1976.7 & 1914.0 & $-$7.7\% & 80 & 72 & 67 \\
-70 & 2278.5 & 2213.7 & 2177.8 & $-$4.4\% & 82 & 83.8 & 80 \\
-80 & 2552.1 & 2506.0 & 2407.7 & $-$5.7\% & 93 & 92.8 & 84 \\
-90 & 2805.4 & 2624.0 & 2610.3 & $-$7.0\% & 102 & 97 & 96.2 \\
-100 & 3205.2 & 2914.1 & 2813.6 & $-$12.2\% & 113 & 103.4 & 105 \\
+10 & 502.4 & 450.2 & 442.3 & $-$12.0\% & 30 & 43 & 42 \\
+20 & 880.7 & 851.7 & 820.6 & $-$6.8\% & 35 & 38.2 & 41 \\
+30 & 1128.5 & 1121.6 & 1034.4 & $-$8.3\% & 47 & 55.8 & 51 \\
+40 & 1485.5 & 1520.3 & 1431.4 & $-$3.6\% & 60 & 72 & 68.6 \\
+50 & 1735.4 & 1753.2 & 1674.3 & $-$3.5\% & 66 & 75.6 & 73 \\
+60 & 2073.7 & 2024.7 & 1916.1 & $-$7.6\% & 80 & 81.2 & 72 \\
+70 & 2278.5 & 2210.1 & 2188.7 & $-$3.9\% & 82 & 94 & 88 \\
+80 & 2552.1 & 2503.4 & 2357.8 & $-$7.6\% & 93 & 95.4 & 88.4 \\
+90 & 2805.4 & 2686.7 & 2623.7 & $-$6.5\% & 102 & 111.2 & 104 \\
+100 & 3205.2 & 2984.3 & 2827.7 & $-$11.8\% & 113 & 111.2 & 104.6 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -251,26 +250,26 @@ Table~\ref{tab:size}).}
  & $|I|$ & RGS & $t = 0.1$\,s & $t = 1$\,s & vs RGS & RGS & $t = 0.1$\,s & $t = 1$\,s \\
 \midrule
 \multirow{10}{*}{Adapted} & 10 & 497.3 & 433.0 & 433.0 & $-$12.9\% & 30 & 43 & 43 \\
- & 20 & 786.6 & 794.1 & 785.6 & $-$0.1\% & 33 & 35 & 34 \\
- & 30 & 1034.3 & 896.6 & 863.7 & $-$16.5\% & 45 & 46.4 & 42 \\
- & 40 & 1341.3 & 1362.9 & 1238.4 & $-$7.7\% & 57 & 65.6 & 58 \\
- & 50 & 1557.0 & 1519.1 & 1516.8 & $-$2.6\% & 60 & 65.2 & 62 \\
- & 60 & 1868.1 & 1790.1 & 1788.4 & $-$4.3\% & 72 & 67 & 66 \\
- & 70 & 2107.7 & 1980.0 & 1957.2 & $-$7.1\% & 78 & 80.6 & 76.2 \\
- & 80 & 2350.8 & 2246.2 & 2143.9 & $-$8.8\% & 86 & 84.6 & 80 \\
- & 90 & 2533.6 & 2490.2 & 2390.9 & $-$5.6\% & 92 & 92.6 & 88 \\
- & 100 & 2766.1 & 2727.6 & 2652.3 & $-$4.1\% & 100 & 100 & 89.8 \\
+ & 20 & 786.6 & 821.6 & 784.9 & $-$0.2\% & 33 & 38 & 35 \\
+ & 30 & 1034.3 & 946.5 & 862.6 & $-$16.6\% & 45 & 45.2 & 39 \\
+ & 40 & 1341.3 & 1324.4 & 1214.6 & $-$9.4\% & 57 & 65.8 & 64 \\
+ & 50 & 1557.0 & 1555.1 & 1507.2 & $-$3.2\% & 60 & 70.8 & 63 \\
+ & 60 & 1868.1 & 1813.1 & 1788.9 & $-$4.2\% & 72 & 76.8 & 73 \\
+ & 70 & 2107.7 & 2002.9 & 1870.9 & $-$11.2\% & 78 & 86 & 86.8 \\
+ & 80 & 2350.8 & 2244.0 & 2142.6 & $-$8.9\% & 86 & 92.2 & 91 \\
+ & 90 & 2533.6 & 2392.8 & 2311.0 & $-$8.8\% & 92 & 103.8 & 90 \\
+ & 100 & 2766.1 & 2669.2 & 2545.8 & $-$8.0\% & 100 & 104.2 & 104.2 \\
 \midrule
-\multirow{10}{*}{One} & 10 & 497.3 & 444.5 & 444.5 & $-$10.6\% & 30 & 43 & 43 \\
- & 20 & 786.6 & 774.1 & 765.6 & $-$2.7\% & 33 & 35 & 34 \\
- & 30 & 1034.3 & 907.6 & 867.9 & $-$16.1\% & 45 & 44.8 & 41 \\
- & 40 & 1341.3 & 1222.8 & 1154.0 & $-$14.0\% & 57 & 65.8 & 59 \\
- & 50 & 1538.2 & 1469.4 & 1403.8 & $-$8.7\% & 62 & 71 & 64 \\
- & 60 & 1825.7 & 1755.4 & 1711.4 & $-$6.3\% & 77 & 80 & 77 \\
- & 70 & 1996.6 & 1947.9 & 1863.0 & $-$6.7\% & 85 & 94.2 & 84.4 \\
- & 80 & 2192.9 & 2144.8 & 2056.1 & $-$6.2\% & 97 & 97.8 & 90 \\
- & 90 & 2358.6 & 2259.7 & 2208.4 & $-$6.4\% & 109 & 105 & 102 \\
- & 100 & 2594.2 & 2470.0 & 2391.6 & $-$7.8\% & 134 & 124 & 115 \\
+\multirow{10}{*}{One} & 10 & 497.3 & 446.8 & 444.5 & $-$10.6\% & 30 & 42 & 43 \\
+ & 20 & 786.6 & 804.8 & 768.7 & $-$2.3\% & 33 & 38 & 34 \\
+ & 30 & 1034.3 & 950.7 & 866.8 & $-$16.2\% & 45 & 44.2 & 38 \\
+ & 40 & 1341.3 & 1248.7 & 1196.5 & $-$10.8\% & 57 & 64 & 63 \\
+ & 50 & 1538.2 & 1518.1 & 1414.5 & $-$8.0\% & 62 & 73.6 & 65 \\
+ & 60 & 1825.7 & 1791.2 & 1758.3 & $-$3.7\% & 77 & 81 & 81 \\
+ & 70 & 1996.6 & 1944.6 & 1891.8 & $-$5.2\% & 85 & 93.8 & 88 \\
+ & 80 & 2192.9 & 2200.4 & 2126.0 & $-$3.1\% & 97 & 99 & 98 \\
+ & 90 & 2358.6 & 2344.0 & 2258.2 & $-$4.3\% & 109 & 109 & 105 \\
+ & 100 & 2594.2 & 2523.6 & 2481.6 & $-$4.3\% & 134 & 132 & 130 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -282,59 +281,63 @@ A lower bound on the total volume of the ULDs is the smallest total volume of a 
 whose volume and weight capacity suffice for the boxes and in which every box fits in some ULD,
 computed with the CP-SAT solver of OR-Tools. It assumes that the ULDs can be completely filled,
 which is far from possible with these boxes: in the Paquay setting the bound is 10\,141\,m$^3$,
-against 17\,309\,m$^3$ for our solutions with $t = 1$\,s, whose ULDs are about 60\% full. A
+against 17\,317\,m$^3$ for our solutions with $t = 1$\,s, whose ULDs are about 60\% full. A
 simple bound on the number of ULDs (the total volume of the boxes divided by the volume of the
-largest ULD) is reached by our solutions in 106 of the 300 instances with $t = 1$\,s, against
+largest ULD) is reached by our solutions in 90 of the 300 instances with $t = 1$\,s, against
 80 for the RGS, although the number of ULDs is only a secondary measure here.
 
 \subsection{Running time}
 \label{sec:exp-time}
 
-With $t = 1$\,s our algorithm takes 28.1--44.0\,s per instance on average (at most 302\,s),
-and with $t = 0.1$\,s 3.7--5.8\,s (at most 36\,s), against 0.2--0.4\,s for the RGS on an Apple
-M2 Pro, which is about 2.5 times faster than one core of our processor according to the
-single-thread rating of PassMark \citep{PassMark}. Most of the time is spent in the reduction
-phase, which loads many ULDs again. Table~\ref{tab:time} shows how the results change with the
-time limit in the Paquay setting. With $t = 0.02$\,s the mean time per instance is 1.0\,s,
-about 0.4\,s on the processor of \citet{Hessler2025}, comparable to the RGS, and the volume is
-0.5\% smaller than that of the RGS (not significant); from $t = 0.05$\,s on, the difference is
-significant and it grows with the time limit up to 7.5\% with $t = 2$\,s. Figure~\ref{fig:time} shows the same curve
-against the mean time per instance, with the time of the RGS on its machine and scaled to ours.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.62\textwidth]{figures/time.pdf}
-\caption{Total volume of the ULDs in the 300 instances of the Paquay setting as a function of the
-mean time per instance (the labels are the time limits per ULD; mean of five runs for 0.1\,s and
-1\,s, one run otherwise), and the RGS of \citet{Hessler2025}: time on their machine (filled
-square) and scaled to ours by the single-thread speed ratio of 2.5 (empty square); the dashed
-line marks its volume.}
-\label{fig:time}
-\end{figure}
+With $t = 0.1$\,s our algorithm takes 0.56--0.89\,s per instance on average (at most 7\,s),
+and with $t = 1$\,s 3.5--6.1\,s (at most 52\,s). The RGS takes 0.19--0.42\,s per instance on
+an Apple M2 Pro, about 0.5--1.1\,s on our processor once its single-thread speed, about 2.5
+times ours according to PassMark \citep{PassMark}, is taken into account. Table~\ref{tab:time}
+and Figure~\ref{fig:time} show how the volume changes with the time limit. At the time of the
+RGS our algorithm already uses about 2--5\% less volume, and the difference grows with the time
+limit, up to 7--9\% with $t = 2$\,s; with a very short time limit ($t = 0.02$\,s) it is
+slightly worse than the RGS. Giving the improvement phases the same time limit as the
+construction, instead of $0.1\,t$, gives better solutions for the same $t$ but at a much higher
+running time: up to about 10\,s per instance, the default is better at the same running time
+(Figure~\ref{fig:time}, Paquay setting).
 
 \begin{table}[htbp]
 \centering
-\small
-\caption{Effect of the time limit $t$ (Paquay setting; one run, five runs for $t = 0.1$ and
-1\,s): volume of the ULDs relative to the RGS, number of ULDs, instances that reach the bound on
-the number of ULDs, ULDs with the CoG out of range, and mean and maximum time per instance (s).}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\caption{Effect of the time limit $t$ (one run, five runs for $t = 0.1$ and 1\,s): volume of the
+ULDs relative to the RGS, mean and maximum time per instance (s), and, with one ULD of each
+type, unloaded volume (m$^3$; RGS: 25.9).}
 \label{tab:time}
-\begin{tabular}{rrrrrrr}
+\begin{tabular}{rrrrrrrrrrr}
 \toprule
-$t$ (s) & vs RGS & ULDs & At bound & CoG$_{xy}$ & Time & Max.\ time \\
+ & \multicolumn{3}{c}{Paquay} & \multicolumn{3}{c}{Adapted} & \multicolumn{4}{c}{One} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-11}
+$t$ (s) & Vol. & Time & Max. & Vol. & Time & Max. & Vol. & Unl. & Time & Max. \\
 \midrule
-0.02 & $-$0.5\% & 763 & 63 & 58 & 1.0 & 7 \\
-0.05 & $-$2.9\% & 750 & 72 & 14 & 2.2 & 13 \\
-0.1 & $-$4.5\% & 720.2 & 81.2 & 7.2 & 3.7 & 19 \\
-0.2 & $-$5.7\% & 716 & 87 & 4 & 6.6 & 47 \\
-0.5 & $-$6.6\% & 706 & 96 & 6 & 14.5 & 129 \\
-1 & $-$7.2\% & 695.2 & 106 & 5 & 28.1 & 191 \\
-2 & $-$7.5\% & 697 & 102 & 5 & 52.4 & 285 \\
+0.02 & $+$2.4\% & 0.24 & 2 & $+$1.2\% & 0.29 & 1 & $+$1.0\% & 40.9 & 0.34 & 3 \\
+0.05 & $-$1.3\% & 0.35 & 2 & $-$1.6\% & 0.46 & 2 & $-$1.4\% & 18.3 & 0.55 & 4 \\
+0.1 & $-$2.9\% & 0.56 & 4 & $-$3.8\% & 0.77 & 4 & $-$2.4\% & 20.0 & 0.89 & 7 \\
+0.2 & $-$5.9\% & 0.94 & 5 & $-$5.9\% & 1.32 & 5 & $-$3.5\% & 10.7 & 1.50 & 13 \\
+0.5 & $-$6.1\% & 1.92 & 14 & $-$6.7\% & 2.77 & 12 & $-$4.4\% & 15.5 & 3.26 & 31 \\
+1 & $-$7.1\% & 3.51 & 16 & $-$8.2\% & 5.15 & 20 & $-$5.9\% & 17.8 & 6.13 & 52 \\
+2 & $-$8.1\% & 6.64 & 32 & $-$8.7\% & 9.62 & 39 & $-$6.9\% & 19.6 & 11.52 & 93 \\
 \midrule
-RGS & & 708 & 80 & 79 & $\le 0.5$ & \\
+RGS\textsuperscript{a} & & 0.48 & & & 1.06 & & & 25.9 & 1.04 & \\
 \bottomrule
+\multicolumn{11}{l}{\textsuperscript{a} Mean time on the Apple M2 Pro scaled to our processor (factor 2.53).}
 \end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/time.pdf}
+\caption{Volume of the ULDs relative to the RGS of \citet{Hessler2025} as a function of the mean
+time per instance (the labels are time limits $t$; mean of five runs for 0.1\,s and 1\,s, one
+run otherwise). The RGS is shown at its time on the Apple M2 Pro (filled square) and scaled to
+our processor by the single-thread speed ratio of 2.53 (empty square). In the Paquay setting,
+the dotted line gives the improvement phases the same time limit $t$ as the construction.}
+\label{fig:time}
+\end{figure}
 
 \subsection{Contribution of the components}
 \label{sec:exp-ablation}
@@ -356,25 +359,25 @@ each type, and mean time per instance in the Paquay setting (s).}
 \cmidrule(lr){2-4}\cmidrule(lr){5-6}\cmidrule(lr){7-9}
 Variant & Vol. & CoG & Time & Vol. & CoG & Vol. & Unl. & CoG \\
 \midrule
-Complete algorithm & $-$4.5\% & 7.2 & 3.7 & $-$3.6\% & 1.2 & $-$4.8\% & 10.4 & 10.8 \\
+Complete algorithm & $-$2.9\% & 7.8 & 0.56 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
 \midrule
-No CoG penalty ($\lambda = 0$) & $-$6.4\% & 446 & 3.5 & $-$3.0\% & 285 & $-$3.3\% & 8.8 & 300 \\
-No translation of the load & $-$1.5\% & 171 & 3.6 & $-$1.6\% & 119 & $-$3.9\% & 15.2 & 178 \\
-CoG in the block evaluation ($\mu = 0.5$) & $-$3.4\% & 8 & 3.2 & $-$3.7\% & 4 & $-$5.2\% & 9.7 & 6 \\
-Spaces anchored at the nearest corner & $-$4.9\% & 7 & 4.4 & $-$2.3\% & 3 & $-$4.3\% & 9.8 & 6 \\
-No substructure & -- & -- & -- & $-$3.2\% & 7 & $-$3.9\% & 14.7 & 13 \\
-Rule of \citet{Hessler2025} (no $\theta$) & $-$3.5\% & 6 & 3.7 & $-$3.4\% & 4 & $-$3.7\% & 11.9 & 11 \\
-No restarts & -- & -- & -- & -- & -- & $-$4.9\% & 19.8 & 12 \\
+No CoG penalty ($\lambda = 0$) & $-$6.0\% & 460 & 0.52 & $-$3.0\% & 281 & $-$1.0\% & 13.5 & 326 \\
+No translation of the load & $-$1.4\% & 183 & 0.52 & $-$2.4\% & 117 & $-$1.9\% & 36.7 & 216 \\
+CoG in the block evaluation ($\mu = 0.5$) & $-$3.6\% & 10 & 0.53 & $-$3.8\% & 2 & $-$3.5\% & 21.6 & 9 \\
+Spaces anchored at the nearest corner & $-$4.2\% & 4 & 0.84 & $-$3.4\% & 2 & $-$2.6\% & 26.1 & 4 \\
+No substructure & -- & -- & -- & $-$2.2\% & 7 & $-$1.6\% & 17.5 & 23 \\
+Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & 0.56 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
+No restarts & -- & -- & -- & -- & -- & $-$2.4\% & 39.6 & 15 \\
 \midrule
-\textsc{Insert} without reload from scratch & $-$3.7\% & 9 & 3.4 & $-$3.0\% & 3 & $-$4.0\% & 13.8 & 15 \\
-\textsc{Insert} without priority reload & $-$3.2\% & 8 & 3.0 & $-$3.0\% & 0 & $-$4.3\% & 11.1 & 13 \\
-\textsc{Insert} without ruin and recreate & $-$4.0\% & 8 & 2.1 & $-$3.0\% & 1 & $-$4.1\% & 10.6 & 13 \\
+\textsc{Insert} with reload from scratch & $-$2.3\% & 10 & 0.58 & $-$2.9\% & 3 & $-$2.4\% & 17.2 & 15 \\
+\textsc{Insert} with priority reload & $-$2.0\% & 12 & 0.57 & $-$2.0\% & 2 & $-$2.6\% & 17.4 & 14 \\
+No \textsc{Insert} & $+$0.2\% & 10 & 0.31 & $+$0.2\% & 4 & $-$1.2\% & 37.1 & 21 \\
 \midrule
-Reduction with one new ULD & $-$4.0\% & 6 & 3.1 & $-$3.0\% & 0 & $-$4.4\% & 10.3 & 11 \\
-Only elimination of ULDs & $-$1.3\% & 9 & 2.6 & $-$0.4\% & 3 & $-$3.7\% & 10.3 & 13 \\
-No reduction phase & $+$0.6\% & 10 & 0.4 & $+$0.8\% & 3 & $-$1.7\% & 10.3 & 17 \\
+Reduction with one new ULD & $-$1.6\% & 8 & 0.40 & $-$2.5\% & 2 & $-$2.2\% & 20.0 & 16 \\
+Only elimination of ULDs & $+$0.3\% & 10 & 0.35 & $+$0.4\% & 4 & $-$1.9\% & 19.3 & 18 \\
+No reduction phase & $+$0.8\% & 10 & 0.19 & $+$0.6\% & 2 & $-$1.0\% & 20.0 & 20 \\
 \midrule
-Basic BSG\textsuperscript{a} & $+$13.7\% & 90 & 0.2 & $+$18.5\% & 60 & $+$10.1\% & 26.9 & 74 \\
+Basic BSG\textsuperscript{a} & $+$13.9\% & 90 & 0.16 & $+$18.4\% & 61 & $+$10.1\% & 43.0 & 72 \\
 \bottomrule
 \multicolumn{9}{l}{\textsuperscript{a} Rule of \citet{Hessler2025}, spaces at the nearest corner,
 no reduction, no substructure, no restarts.}
@@ -382,47 +385,48 @@ no reduction, no substructure, no restarts.}
 \end{table}
 
 \paragraph{Weight distribution.}
-Without the penalty $\lambda$ the CoG is out of range in 285--446 ULDs; the volume of the ULDs
-changes little (it decreases in the Paquay setting, where the CoG limit of 5\% is very strict,
-and increases in the other two). Without the translation of the load the number of violations
-also grows to 119--178 ULDs and the volume increases, since the penalty then rejects loadings
-that a translation would have balanced. Penalizing the CoG excess in the evaluation of the
-blocks ($\mu = 0.5$) does not reduce the number of violations consistently and its effect on the
-volume changes sign from one setting to another; we therefore do not use it. Anchoring the
-spaces at the nearest corner instead of the origin, with a grouped reload of the ULDs whose CoG
-is out of range, gives a similar volume at a higher time, and the anchoring at the origin is
-simpler.
+Without the penalty $\lambda$ the CoG is out of range in 281--460 ULDs; the volume of the ULDs
+decreases in the Paquay setting, where the CoG limit of 5\% is very strict, and increases in the
+other two. Without the translation of the load the number of violations also grows, to 117--216
+ULDs, and the volume increases, since the penalty then rejects loadings that a translation would
+have balanced. Penalizing the CoG excess in the evaluation of the blocks ($\mu = 0.5$) has an
+effect that is not consistent between experiments: in this run it reduced the volume in the
+Paquay setting and with one ULD of each type, whereas in a run with $t = 0.05$\,s it increased
+it in the Paquay and adapted settings; we do not use it, which keeps the algorithm simpler.
+Anchoring the spaces at the nearest corner instead of the origin, with a grouped reload of the
+ULDs whose CoG is out of range, reduces the volume in the Paquay setting but takes 50\% more
+time, and at that time the default algorithm with a longer time limit is better
+(Table~\ref{tab:time}).
 
-\paragraph{Reduction phase.}
-The reduction phase is the component that makes the difference with the RGS: without it, the
-volume is about the same as that of the RGS in the Paquay and adapted settings, and the
-elimination of ULDs alone, which reduces the number of ULDs, recovers only a small part of the
-difference. Allowing the boxes left over to be loaded into two new ULDs instead of one reduces
-the volume by a further 0.4--0.6 points. The three stages of \textsc{Insert} contribute between
-0.5 and 1.3 points each; the reload from scratch matters most for the unloaded volume when the
-number of ULDs is limited.
+\paragraph{Reduction phase and insertion.}
+The reduction phase is the component that makes the difference with the RGS: without it, or
+without \textsc{Insert}, or with the elimination of ULDs alone, the volume is about the same as
+that of the RGS in the Paquay and adapted settings. Allowing the boxes left over to be loaded
+into two new ULDs instead of one reduces the volume by a further 0.2--1.3 points. Adding to
+\textsc{Insert} a reload of each ULD from scratch or with priority to the boxes of the pool, as
+in an earlier version of the algorithm, does not reduce the volume at the same time limit.
 
-\paragraph{Choosing the type of each ULD and restarts.}
+\paragraph{Choosing the type of each ULD, substructure and restarts.}
 Choosing the type of each ULD with $\theta$ instead of the rule of \citet{Hessler2025} alone
-reduces the volume by about one point in the Paquay setting and with one ULD of each type, and
-has a small effect in the adapted one: with an unlimited number of ULDs a poor choice during
-the construction is mostly corrected later by the reduction phase, but with one ULD of each type
-the reduction has few alternatives. In an earlier version without the reduction phase, the same
-rule, as well as evaluating each candidate type by completing the solution with a fast
-construction (a rollout), reduced the volume by less than 1.5\% in the Paquay setting: local
-choices do not anticipate which boxes remain for the next ULDs, which the reduction phase
-handles. The restarts of the construction halve the unloaded volume with one ULD of each type
-(10.4 against 19.8\,m$^3$), at the price of a slightly larger volume of the ULDs, since the
-boxes that are loaded need space.
+changes the volume by less than half a point in this run (in a run with $t = 0.05$\,s, it
+reduced it by 0.8 points in the Paquay setting and with one ULD of each type): with an
+unlimited number of ULDs a poor choice during the construction is mostly corrected later by
+the reduction phase. In an earlier version without the reduction phase, the same rule, as well
+as evaluating each candidate type by completing the solution with a fast construction (a
+rollout), reduced the volume by less than 1.5\% in the Paquay setting: local choices do not
+anticipate which boxes remain for the next ULDs, which the reduction phase handles. The
+substructure reduces the volume by 0.8--1.6 points in the adapted settings, and the restarts of
+the construction halve the unloaded volume with one ULD of each type (20.0 against
+39.6\,m$^3$).
 
 \subsection{Volume of the ULDs versus weight distribution}
 \label{sec:exp-tradeoff}
 
 Table~\ref{tab:lambda} shows the effect of the penalty $\lambda$ of the CoG excess. With
-$\lambda = 0$ the CoG is ignored and 285--446 ULDs violate the constraint; any $\lambda \ge 0.5$
-reduces the violations to at most 21 ULDs, and with $\lambda \ge 2$ to at most 8, with a volume
-that changes by about one point. The constraint can therefore be enforced almost completely
-at a small cost in volume, and the tuned value $\lambda = 1.4$ lies in this flat region.
+$\lambda = 0$ the CoG is ignored and 279--462 ULDs violate the constraint; any $\lambda \ge 0.5$
+reduces the violations to at most 33 ULDs, and $\lambda \ge 2$ to at most 14, with a volume that
+changes by at most 1.6 points. The constraint can therefore be enforced almost completely at a
+small cost in volume, and the tuned value $\lambda = 1.4$ lies in this flat region.
 
 \begin{table}[htbp]
 \centering
@@ -437,13 +441,13 @@ CoG out of range in the length or width direction.}
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
 $\lambda$ & Vol. & CoG & Vol. & CoG & Vol. & CoG \\
 \midrule
-0 & $-$6.3\% & 444 & $-$2.9\% & 288 & $-$3.5\% & 302 \\
-0.5 & $-$3.9\% & 19 & $-$3.9\% & 6 & $-$4.8\% & 21 \\
-1 & $-$4.0\% & 11 & $-$3.6\% & 2 & $-$4.6\% & 14 \\
-1.4 & $-$4.5\% & 7.2 & $-$3.6\% & 1.2 & $-$4.8\% & 10.8 \\
-2 & $-$4.9\% & 6 & $-$3.5\% & 0 & $-$4.9\% & 8 \\
-5 & $-$4.7\% & 5 & $-$3.2\% & 0 & $-$4.8\% & 8 \\
-30 & $-$4.5\% & 5 & $-$3.0\% & 0 & $-$4.6\% & 2 \\
+0 & $-$6.0\% & 462 & $-$3.0\% & 279 & $-$1.0\% & 326 \\
+0.5 & $-$3.3\% & 20 & $-$4.4\% & 8 & $-$2.4\% & 33 \\
+1 & $-$2.2\% & 14 & $-$4.0\% & 5 & $-$2.7\% & 22 \\
+1.4 & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 17 \\
+2 & $-$3.5\% & 7 & $-$3.5\% & 1 & $-$2.3\% & 14 \\
+5 & $-$3.7\% & 6 & $-$3.7\% & 0 & $-$2.6\% & 11 \\
+30 & $-$3.8\% & 6 & $-$4.0\% & 0 & $-$2.6\% & 2 \\
 \bottomrule
 \end{tabular}
 \end{table}
