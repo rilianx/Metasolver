@@ -85,8 +85,6 @@ static vector<int> read_items(const string& file){
  */
 //uso de la subestructura (con borde; --no_substructure la desactiva)
 static bool use_substructure=false;
-//experimental: con borde, cargar siempre sobre la subestructura (no sobre el piso)
-static bool sub_only=false;
 
 static bool fits(const BoxShape& box, const ULD& u){
 	if(box.weight > u.max_weight) return false;
@@ -94,7 +92,7 @@ static bool fits(const BoxShape& box, const ULD& u){
 	for(int o=0; o<6; o++){
 		if(!box.is_valid(o)) continue;
 		long l=box.getL(o), w=box.getW(o), h=box.getH(o);
-		if(!(sub_only && use_substructure) && l<=u.L-2*e && w<=u.W-2*e && h<=u.H){
+		if(l<=u.L-2*e && w<=u.W-2*e && h<=u.H){
 			long x=e, z=0;
 			if(u.adjust(x, z, l, h, e, u.L-e-l, 0, u.H-h, !clpState::support)) return true;
 		}
@@ -336,7 +334,6 @@ static Load load_cog(const ULD& u, const vector<int>& left, const Params& P,
 /** carga el ULD del tipo de u, sin y (si hay borde) con subestructura, y elige la mejor carga */
 static Load load(const ULD& u, const vector<int>& left, const Params& P){
 	int i=uld_index(u);
-	if(use_substructure && sub_only) return load_cog(ulds_sub[i], left, P);
 	Load res = load_cog(ulds[i], left, P);
 	if(use_substructure){
 		Load res2 = load_cog(ulds_sub[i], left, P);
@@ -651,7 +648,6 @@ int main(int argc, char** argv){
 	args::Flag _no_translate(parser, "no_translate", "Ablation: do not translate the load to center its center of gravity", {"no_translate"});
 	args::Flag _corner_anchor(parser, "corner_anchor", "Ablation: anchor each space at its closest corner of the ULD (instead of the origin) and, if the center of gravity is out of range, load the ULD again with the spaces anchored at the origin", {"corner_anchor"});
 	args::Flag _no_regroup(parser, "no_regroup", "Ablation (with --corner_anchor): do not load again a ULD anchoring the spaces at the origin", {"no_regroup"});
-	args::Flag _sub_only(parser, "sub_only", "Experimental: with an edge, always load on the substructure", {"sub_only"});
 	args::Flag _no_substructure(parser, "no_substructure", "Ablation: do not use a substructure", {"no_substructure"});
 	args::Flag _scratch(parser, "scratch", "Ablation: insertion of boxes also with a reload from scratch of each ULD", {"scratch"});
 
@@ -727,7 +723,6 @@ int main(int argc, char** argv){
 			u.dev[1]=(long) (_cog_rel.Get()*u.W/2.0);
 		}
 	}
-	sub_only = _sub_only;
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_reduce_new) reduce_new=_reduce_new.Get();
