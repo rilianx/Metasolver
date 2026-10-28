@@ -214,10 +214,10 @@ limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref
 \subsection{Loading several ULDs}
 \label{sec:alg-multi}
 
-Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential construction loads one
-ULD at a time (lines~\ref{a2:cons}--\ref{a2:add}); when the number of ULDs is limited, the boxes
-left out are inserted into the loaded ULDs and the construction may be restarted
-(lines~\ref{a2:ins}--\ref{a2:restart}); finally, a reduction phase lowers the total volume of the
+Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential construction,
+\textsc{Construct} (Algorithm~\ref{alg:construct}), loads one ULD at a time
+(line~\ref{a2:cons}); when the number of ULDs is limited, the boxes left out are inserted into
+the loaded ULDs and the construction may be restarted (lines~\ref{a2:ins}--\ref{a2:restart}); finally, a reduction phase lowers the total volume of the
 ULDs, the objective of the problem (lines~\ref{a2:red}--\ref{a2:undo}). The phases after the
 first loading of each ULD load many ULDs again, so BSG is given a shorter time limit in them:
 $0.1\,t$ in our experiments, both in \textsc{Insert} and in the reduction phase and when the
@@ -229,19 +229,7 @@ candidate types of a ULD are compared during the construction.
 \begin{algorithmic}[1]
 \State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
 \Repeat
-	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
-	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$} \label{a2:cons}
-		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{a2:cand}
-		\If{$|K| > 1$}
-			\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B)$, time limit $0.1\,t$ \label{a2:sel}
-		\Else{} $k \gets$ the type in $K$
-		\EndIf
-		\State $S \gets \textsc{LoadULD}(k, B)$ with time limit $t$ \label{a2:load}
-		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{a2:prio}
-			\State load these boxes first and complete $S$ with the other boxes of $B$
-		\EndIf
-		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$ \label{a2:add}
-	\EndWhile
+	\State $(\mathcal{S}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
 	\If{$B \neq \emptyset$}
 		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
 	\EndIf
@@ -262,7 +250,8 @@ candidate types of a ULD are compared during the construction.
 \end{algorithm}
 
 \paragraph{Sequential construction.}
-The type of the next ULD is selected as in \citet{Hessler2025} (line~\ref{a2:cand}): among the
+In \textsc{Construct} (Algorithm~\ref{alg:construct}), the type of the next ULD is selected as in
+\citet{Hessler2025} (line~\ref{c:cand}): among the
 ULD types into which the boxes that fit in the fewest available types fit, the type with the
 largest total volume of the remaining boxes that fit in it is selected, ties being broken by the
 larger ULD volume. A box fits in a ULD type if its weight does not exceed the capacity and, in
@@ -270,15 +259,37 @@ some allowed orientation, it can be placed alone on the floor inside the edge or
 substructure. When this rule leaves several candidate types (those that contain the boxes with
 the fewest options), the type is chosen with short loadings and only the chosen one is loaded
 with the full time limit: each candidate is loaded with \textsc{LoadULD} with the time limit
-$0.1\,t$, the one that maximizes $L - \theta V$ is chosen (line~\ref{a2:sel}), where $L$ is the
+$0.1\,t$, the one that maximizes $L - \theta V$ is chosen (line~\ref{c:sel}), where $L$ is the
 loaded volume and $V$ the volume of the ULD, unless it leaves the CoG out of range and another
 candidate does not, and the chosen type is loaded again from scratch with the time limit $t$
-(line~\ref{a2:load}); the short loadings are discarded. With $\theta = 0$ this is the type that loads the
+(line~\ref{c:load}); the short loadings are discarded. With $\theta = 0$ this is the type that loads the
 most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
 When the number of ULDs is limited, some boxes may only fit in the selected type among the ULDs
-still available. If the loading leaves some of them out (line~\ref{a2:prio}), the ULD is loaded
+still available. If the loading leaves some of them out (line~\ref{c:prio}), the ULD is loaded
 again with these boxes first, and the load is then completed with the other boxes, keeping the
 first ones at their positions.
+
+\begin{algorithm}[htbp]
+\caption{\textsc{Construct}$(P)$: sequential construction; the boxes of $P$ are loaded first
+(restarts).}
+\label{alg:construct}
+\begin{algorithmic}[1]
+\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
+\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
+	\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{c:cand}
+	\If{$|K| > 1$}
+		\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B)$, time limit $0.1\,t$ \label{c:sel}
+	\Else{} $k \gets$ the type in $K$
+	\EndIf
+	\State $S \gets \textsc{LoadULD}(k, B)$ with time limit $t$ \label{c:load}
+	\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{c:prio}
+		\State load these boxes first and complete $S$ with the other boxes of $B$
+	\EndIf
+	\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
+\EndWhile
+\State \Return $(\mathcal{S}, B)$
+\end{algorithmic}
+\end{algorithm}
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 The phases after the construction rely on the same procedure, \textsc{Insert}
@@ -321,7 +332,7 @@ When the number of ULDs is limited and some boxes remain unloaded after the cons
 are inserted into the loaded ULDs with \textsc{Insert} (line~\ref{a2:ins}). If some are still
 left out, the construction is restarted, and the boxes left out in the previous constructions
 are also loaded first, into the first ULD in which they fit (the set $P$ in
-line~\ref{a2:prio}). This handles boxes that fit in several types but conflict with each other,
+line~\ref{c:prio} of Algorithm~\ref{alg:construct}). This handles boxes that fit in several types but conflict with each other,
 for instance two large boxes that fit only in the largest types and cannot share a ULD. The
 solution with the smallest unloaded volume is kept (line~\ref{a2:keep}), with at most three
 restarts.
