@@ -38,7 +38,7 @@ overlap-minimization heuristic that works with the exact geometry of the pieces,
 parts. Its new element is an exact axis move. The overlap of two parts is measured by the penetration depth of
 their relative position in their no-fit polytope; along any axis this function is zero outside an interval and
 concave inside it, so the best position of a piece along an axis is found by evaluating a few breakpoints only.
-The rest of the method is deliberately simple and adapts known components from two-dimensional nesting: a greedy
+The rest of the method adapts a few known components from two-dimensional nesting: a greedy
 construction, a strategic oscillation of the container height with guided local search weights, a local
 improvement and restarts. On the benchmarks of polyhedral pieces, the method improves the best known heights of
 11 of 13 instances within two minutes, reaches in 10 seconds the quality that the previous exact local search
@@ -89,7 +89,7 @@ concave on an interval and zero outside it, so the optimal position of a piece a
 interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
 \citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
 \citet{egeblad2009}.
-\item A deliberately simple method built around this move, which adapts known components (a bottom-left
+\item A method built around this move with few components, adapted from known methods (a bottom-left
 construction with gravity, a strategic oscillation of the height, multiplicative GLS weights \citep{gardeyn2025},
 a local improvement and restarts), and an ablation study showing which elements matter: the GLS weights, the
 speed of the move and the effort spent in each separation are decisive, the local improvement is needed to reach
