@@ -218,7 +218,7 @@ Algorithm~\ref{alg:multi} outlines the multi-ULD framework. A sequential constru
 \textsc{Construct} (Algorithm~\ref{alg:construct}), loads one ULD at a time
 (line~\ref{a2:cons}); when the number of ULDs is limited, the boxes left out are inserted into
 the loaded ULDs and the construction may be restarted (lines~\ref{a2:ins}--\ref{a2:restart}); finally, a reduction phase lowers the total volume of the
-ULDs, the objective of the problem (lines~\ref{a2:red}--\ref{a2:undo}). The phases after the
+ULDs, the objective of the problem (\textsc{Reduce}, Algorithm~\ref{alg:reduce}, line~\ref{a2:red}). The phases after the
 first loading of each ULD load many ULDs again, so BSG is given a shorter time limit in them:
 $0.1\,t$ in our experiments, both in \textsc{Insert} and in the reduction phase and when the
 candidate types of a ULD are compared during the construction.
@@ -236,15 +236,7 @@ candidate types of a ULD are compared during the construction.
 	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
 \Until{$B = \emptyset$ or three restarts} \label{a2:restart}
 \State $(\mathcal{S}, B) \gets$ the kept solution
-\Repeat \Comment{reduction of the volume} \label{a2:red}
-	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
-		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{a2:rins}
-		\If{$B' = \emptyset$} remove $S$; \textbf{break} \EndIf
-		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{a2:new}
-		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$; \textbf{break} \EndIf
-		\State undo the changes of \textsc{Insert} \label{a2:undo}
-	\EndFor
-\Until{no ULD was changed}
+\State $\textsc{Reduce}(\mathcal{S})$ \Comment{reduction of the volume} \label{a2:red}
 \State \Return $\mathcal{S}$, $B$
 \end{algorithmic}
 \end{algorithm}
@@ -342,17 +334,34 @@ The construction tends to use the largest ULDs, and its last ULDs are often far 
 reduction phase replaces ULDs by cheaper ones with a single move that generalizes the elimination
 of ULDs. The ULDs are considered in decreasing order of lost volume (the volume of the ULD minus
 the volume of its boxes). The boxes of the selected ULD $S$ are freed and inserted into the other
-ULDs with \textsc{Insert} (line~\ref{a2:rins}). If all of them are inserted, $S$ is eliminated.
-Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}) loads the remaining boxes into one or two
+ULDs with \textsc{Insert} (Algorithm~\ref{alg:reduce}, line~\ref{r:ins}). If all of them are inserted, $S$ is eliminated (line~\ref{r:elim}).
+Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}, line~\ref{r:new}) loads the remaining boxes into one or two
 new ULDs whose total volume is smaller than that of $S$: the combinations of one or two available
 types with enough volume and weight capacity, in which every remaining box fits, are tried in
 increasing order of total volume, loading the larger ULD first with all the remaining boxes and
 the second one with the rest. The first combination that loads all the boxes, without leaving a
 CoG out of range when the CoG of $S$ was not, replaces $S$; otherwise the changes made by
-\textsc{Insert} are undone and the next ULD is tried (line~\ref{a2:undo}). After every change the
+\textsc{Insert} are undone and the next ULD is tried (line~\ref{r:undo}). After every change the
 phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume
 of the ULDs, so the phase terminates; a change may increase the number of ULDs, when one ULD is
 replaced by two smaller ones.
+
+\begin{algorithm}[htbp]
+\caption{\textsc{Reduce}$(\mathcal{S})$: reduction of the total volume of the loaded ULDs
+$\mathcal{S}$.}
+\label{alg:reduce}
+\begin{algorithmic}[1]
+\Repeat
+	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
+		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{r:ins}
+		\If{$B' = \emptyset$} remove $S$ from $\mathcal{S}$; \textbf{break} \EndIf \label{r:elim}
+		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{r:new}
+		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$ in $\mathcal{S}$; \textbf{break} \EndIf
+		\State undo the changes of \textsc{Insert} \label{r:undo}
+	\EndFor
+\Until{no ULD was changed}
+\end{algorithmic}
+\end{algorithm}
 
 \begin{algorithm}[htbp]
 \caption{\textsc{NewULDs}$(S, B')$: load the boxes $B'$ left over from the ULD $S$ into one or two
