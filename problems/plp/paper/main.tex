@@ -716,20 +716,14 @@ instances.
 
 \paragraph{Realistic meshes}
 The cost of a move grows with the number of facets of the NFPs, so pieces with curved surfaces are the hard case.
-We tested the Chess instance of \citet{lamas2023} (32 pieces, meshes of 700--2900 triangles). Since an exact
-convex decomposition of such meshes is impractical, we use a conservative one (the large convex hulls of the NFPs are computed with Qhull \citep{barber1996}): CoACD \citep{wei2022} cuts the
-mesh and takes the convex hull of each piece; the small gaps it leaves between parts are covered by scaling
-each part from its centroid, and containment is checked with interior sample points. With concavity threshold
-0.05 (6--20 parts per piece) the union exceeds the volume of the piece by 4--12\%, and with 0.2 (1--4 parts,
-reduced to at most 42 facet directions) by 38--78\%. The solutions remain feasible for the real geometry.
-However, the NFPs between parts have hundreds of facets and a separation takes 20--35 s instead of a fraction of
-a second. In 20 minutes (5 seeds; Table~\ref{tab:results}) the best (mean) heights are 146.3 (151.2) with the fine decomposition, 149.9 (155.0) with
-the coarse one and 138.6 (148.4) with 15 minutes of coarse search followed by 5 minutes of refinement with the
-fine decomposition, against 131 (best of 10 runs of 1 h) and 135.1 (mean) for
-the voxel VNS of \citet{lamas2023}, whose cost does not depend on the complexity of the surface. Pseudo-blocks of
-two pieces did not help. The other realistic instance of \citet{lamas2023}, Engine (97 pieces with meshes of up to
-342{,}000 triangles), was not tested, for the same reason. Voxels and the proposed method are thus complementary: the latter is faster and exact
-on polyhedral pieces with few facets, the former scales better to curved meshes.
+We tested the Chess instance of \citet{lamas2023} (32 pieces, meshes of 700--2900 triangles) with conservative
+convex decompositions computed with CoACD \citep{wei2022}, whose union contains each piece, so the solutions are
+feasible for the real geometry. The NFPs between parts then have hundreds of facets, and a separation takes
+20--35 s instead of a fraction of a second. Combining a coarse decomposition (1--4 parts per piece, 15 min) with a
+finer one (6--20 parts, 5 min), the method reaches a mean height of 148.4 (best 138.6), against 135.1 (best 131)
+for the voxel VNS of \citet{lamas2023} (Table~\ref{tab:results}), whose cost does not depend on the complexity of
+the surface. Voxels and the proposed method are thus complementary: the latter is faster and exact on polyhedral
+pieces with few facets, the former scales better to curved meshes.
 
 \paragraph{Limitations}
 Rotations are not considered. The method requires a convex decomposition of each piece; for the benchmark
