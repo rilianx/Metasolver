@@ -291,41 +291,17 @@ Table~\ref{tab:size}).}
 With $t = 0.1$\,s our algorithm takes 0.56--1.02\,s per instance on average (at most 8\,s),
 and with $t = 1$\,s 3.5--6.8\,s (at most 54\,s). The RGS takes 0.19--0.42\,s per instance on
 an Apple M2 Pro, about 0.5--1.1\,s on our processor once its single-thread speed, about 2.5
-times ours according to PassMark \citep{PassMark}, is taken into account. Table~\ref{tab:time}
-and Figure~\ref{fig:time} show how the volume changes with the time limit. At the time of the
+times ours according to PassMark \citep{PassMark}, is taken into account. Figure~\ref{fig:time}
+shows how the volume changes with the time limit. At the time of the
 RGS our algorithm already uses about 2--5\% less volume, and the difference grows with the time
 limit, up to 8--9\% with $t = 2$\,s; with a very short time limit ($t = 0.02$\,s) it is
-slightly worse than the RGS. Giving the improvement phases the same time limit as the
+slightly worse than the RGS. With one ULD of each type, the unloaded volume goes from 43.6\,m$^3$
+with $t = 0.02$\,s to 11.5\,m$^3$ with $t = 2$\,s, and is below that of the RGS (25.9\,m$^3$) from
+$t = 0.05$\,s on. Giving the improvement phases the same time limit as the
 construction, instead of $0.1\,t$, gives better solutions for the same $t$ but at a much higher
 running time: up to about 10\,s per instance, the default is better at the same running time
 (Figure~\ref{fig:time}, Paquay setting).
 
-\begin{table}[htbp]
-\centering
-\footnotesize\setlength{\tabcolsep}{4pt}
-\caption{Effect of the time limit $t$ (one run, five runs for $t = 0.1$ and 1\,s): volume of the
-ULDs relative to the RGS, mean and maximum time per instance (s), and, with one ULD of each
-type, unloaded volume (m$^3$; RGS: 25.9).}
-\label{tab:time}
-\begin{tabular}{rrrrrrrrrrr}
-\toprule
- & \multicolumn{3}{c}{Paquay} & \multicolumn{3}{c}{Adapted} & \multicolumn{4}{c}{One} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-11}
-$t$ (s) & Vol. & Time & Max. & Vol. & Time & Max. & Vol. & Unl. & Time & Max. \\
-\midrule
-0.02 & $+$2.4\% & 0.24 & 2 & $+$1.2\% & 0.29 & 1 & $+$0.1\% & 43.6 & 0.43 & 3 \\
-0.05 & $-$1.3\% & 0.35 & 2 & $-$1.6\% & 0.46 & 2 & $-$2.0\% & 20.4 & 0.63 & 5 \\
-0.1 & $-$2.9\% & 0.56 & 4 & $-$3.8\% & 0.77 & 4 & $-$3.4\% & 22.8 & 1.02 & 8 \\
-0.2 & $-$5.9\% & 0.94 & 5 & $-$5.9\% & 1.32 & 5 & $-$4.4\% & 16.6 & 1.71 & 13 \\
-0.5 & $-$6.1\% & 1.92 & 14 & $-$6.7\% & 2.77 & 12 & $-$6.1\% & 11.4 & 3.68 & 28 \\
-1 & $-$7.1\% & 3.51 & 16 & $-$8.2\% & 5.15 & 20 & $-$7.2\% & 12.6 & 6.84 & 54 \\
-2 & $-$8.1\% & 6.64 & 32 & $-$8.7\% & 9.62 & 39 & $-$7.9\% & 11.5 & 12.38 & 103 \\
-\midrule
-RGS\textsuperscript{a} & & 0.48 & & & 1.06 & & & 25.9 & 1.04 & \\
-\bottomrule
-\multicolumn{11}{l}{\textsuperscript{a} Mean time on the Apple M2 Pro scaled to our processor (factor 2.53).}
-\end{tabular}
-\end{table}
 
 \begin{figure}[htbp]
 \centering
