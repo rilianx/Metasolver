@@ -527,8 +527,9 @@ in a $20\times20$ container; the stars, arrows and rings are prisms and are deco
 \paragraph{References}
 3DNest \citep{egeblad2009} uses the same exact geometry; its average and maximum utilization over 10 runs of
 600 s (one core of a 2.16~GHz Core Duo) are converted to heights. \citet{lamas2023} report best and average heights
-of a voxel VNS; their voxelization overestimates the pieces (by 15\% in volume for Merged1, as they note), so
-their heights are not directly comparable. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
+of a voxel VNS; we compare their heights directly, since the voxel representation is part of their method; it
+overestimates the pieces (by 15\% in volume for Merged1, as they note), which is part of the cost of
+the approximation. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
 
 \subsection{Component analysis}
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
@@ -541,10 +542,7 @@ Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 of the tuned criterion~\eqref{eq:greedy}.
 \item \emph{No kick}: the restarts do not move any piece.
 \item \emph{Additive weights}: $w_{ij}\gets w_{ij}+1$ for the overlapping pairs at local minima.
-\item \emph{Time limit of 24 s}: the same runs stopped at 24 s instead of 120 s. A fifth of the time is what the
-method would have if its moves were five times more expensive, e.g., with a costlier overlap measure, so this row
-estimates how much of the performance is due to the speed of the exact axis move of
-Proposition~\ref{prop:axis}.
+\item \emph{Time limit of 24 s}: the same runs stopped at 24 s instead of 120 s, i.e., with a fifth of the time.
 \item \emph{Sensitivity}: step $\rho$ of the oscillation and maximum number of passes of
 \textsc{MinimizeOverlap}.
 \end{itemize}
