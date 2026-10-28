@@ -66,7 +66,8 @@ search in which the children of each node are generated with the best evaluated 
 selected space, and each child is evaluated by the value of its greedy completion. At each
 level, the $w$ children with the best greedy values are kept, and a total of at most $m$
 children are generated, so that each node of the beam is expanded with about $m/w$ blocks. The
-best complete solution found by any greedy completion is returned. BSG is run iteratively with
+best complete solution found by any greedy completion is returned (Figure~\ref{fig:bsg}). BSG is
+run iteratively with
 increasing effort until the time limit $t$ is reached \citep{Araya2017}: it starts with $w = 4$
 and $m = 16$, and after each run $w$ and $m/w$ are multiplied by $\sqrt{2}$. The search also stops
 as soon as a solution loads all the available boxes with the CoG in range, since no better
@@ -79,6 +80,18 @@ stored (identified by a hash of their placed blocks), and when a greedy run reac
 state, the rest of the solution is rebuilt from memory instead of evaluating the blocks again.
 In addition, the volume loss of a block is computed only when an upper bound of its evaluation
 can enter the best ones. None of these optimizations changes the result of the search.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/bsg.tex}}
+\caption{Two levels of BSG with $w = 2$ and $m = 4$. A state $s_i$ is a partial loading of the
+ULD, obtained by placing block $b_i$ in the selected free space of its parent. Every child is
+evaluated by the value $v$ (Equation~\ref{eq:value}) of the complete loading built by the
+greedy algorithm from it (dotted boxes). The $w$ children with the best values are kept in the
+beam and each of them is expanded with $m/w = 2$ blocks at the next level; the others are
+discarded. The best complete loading found by any greedy completion is returned.}
+\label{fig:bsg}
+\end{figure}
 
 \subsection{ULD constraints}
 \label{sec:alg-uld}
