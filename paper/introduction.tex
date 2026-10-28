@@ -40,23 +40,31 @@ be stacked, the CoG of every ULD is constrained, several ULDs of different types
 and all the boxes must be loaded with as few ULDs as possible. Our contributions are the
 following:
 \begin{itemize}
-\item We adapt BSG to load a ULD with bevelled corners, a floor edge and an optional
-	substructure. The blocks are generated so that every box inside a block is supported, and
+\item We adapt BSG \citep{Araya2014,Araya2017}, which builds the load with blocks of boxes
+	\citep{Fanslau2010} placed in maximal free spaces \citep{Parreno2008} and evaluated with the
+	VCS function \citep{Araya2017}, to load a ULD with bevelled corners, a floor edge and an
+	optional substructure, the features introduced by \citet{Paquay2016} and
+	\citet{Hessler2025}. The blocks are generated so that every box inside a block is supported, and
 	each block is placed in a free space only if the boxes of its base are supported according
 	to the corner or area criterion of the problem and no box touches a fragile box. A block that
 	crosses a bevelled side of the ULD is shifted along the length of the ULD to the nearest
 	feasible position.
 \item We handle the CoG constraint in two ways: the value of a solution is penalized by the
-	excess of the CoG deviation over the allowed one, and the final load of each ULD is translated
-	as a whole to center its CoG. To leave room for this translation, all the free spaces are
+	excess of the CoG deviation over the allowed one, so that the beam search takes it into
+	account during the construction instead of in a post-processing step
+	\citep{Davies1999,Paquay2018b}, and the final load of each ULD is translated as a whole to
+	center its CoG, a simple form of the shift operators of \citet{Paquay2018b}. To leave room for this translation, all the free spaces are
 	anchored at the corner closest to the origin of the ULD, which keeps the load grouped.
-\item We embed the single-ULD algorithm into a sequential multi-ULD framework and reduce the total
-	volume of the ULDs, the objective of the problem, with a single move that generalizes the
-	elimination of ULDs: a ULD is removed, its boxes are inserted into the other ULDs and the
+\item We embed the single-ULD algorithm into a sequential multi-ULD framework, which chooses the
+	type of each ULD with the rule of \citet{Hessler2025}, and reduce the total volume of the
+	ULDs, the objective of the problem, with a single move that generalizes the elimination of
+	bins in local search for bin packing \citep{Faroe2003} and the repacking into smaller bins
+	of \citet{Ortmann2010}: a ULD is removed, its boxes are inserted into the other ULDs and the
 	remaining ones are loaded into at most two smaller ULDs. When the number of ULDs is limited,
 	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure,
+	based on ruin and recreate \citep{Schrimpf2000},
 	and the construction is restarted loading first the boxes that were left out.
-\item We tune the parameters once with irace on a separate training set and evaluate the
+\item We tune the parameters once with irace \citep{LopezIbanez2016} on a separate training set and evaluate the
 	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
 	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
 	2.9--7.1\% less ULD volume than the RGS in the original setting, 3.8--8.2\% less in the
