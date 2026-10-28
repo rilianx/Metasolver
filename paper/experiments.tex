@@ -76,8 +76,13 @@ The parameters of the algorithm were tuned once with irace \citep{LopezIbanez201
 in the three settings and for both time limits. The training set consists of 150 preliminary
 instances of \citet{Paquay2018b} (30 instances with 30, 40, 50, 60 and 100 boxes), disjoint
 from the final ones, each one in the three settings (450 runs, presented to irace in blocks of
-the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks (fixed, to bound the time per ULD) and a budget of
-6000 runs; no configuration is discarded before 21 instances. The cost of a run is
+the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks and a budget of 6000 runs; no configuration is
+discarded before 21 instances. $N_{\max}$ was fixed before the tuning, because when irace could
+choose it, it chose the largest value and the running time grew. With the final parameters and
+$t = 0.1$\,s, no other value of $N_{\max}$ is better in the three settings: 1000 blocks reduce the
+volume of the ULDs by one point in the Paquay setting but increase it by one point in the adapted
+one, with 7--12\% more time, and 2000 blocks take 40--70\% more time without reducing it (one
+run with 250, 1000 and 2000 blocks). The cost of a run is
 \[
 \frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
 \]
@@ -371,6 +376,7 @@ Complete algorithm & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
 \midrule
 No CoG penalty ($\lambda = 0$) & $-$6.0\% & \textbf{460} & $-$3.0\% & \textbf{281} & $-$1.0\% & 13.5 & \textbf{326} \\
 No translation of the load & \textbf{$-$1.4\%} & \textbf{183} & $-$2.4\% & \textbf{117} & $-$1.9\% & \textbf{36.7} & \textbf{216} \\
+Single-box blocks ($N_{\max} = 1$) & $-$2.7\% & \textbf{16} & \textbf{$-$2.4\%} & 4 & $-$2.3\% & \textbf{24.0} & 21 \\
 No substructure & -- & -- & \textbf{$-$2.2\%} & 7 & \textbf{$-$1.6\%} & 17.5 & 23 \\
 No restarts & -- & -- & -- & -- & $-$2.4\% & \textbf{39.6} & 15 \\
 Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
@@ -391,8 +397,11 @@ settings, and loading the leftover boxes into two new ULDs instead of one saves 
 without either of them, 117--460 ULDs violate the constraint. Without the penalty the volume
 decreases in the Paquay setting, where the CoG limit of 5\% is very strict, and increases in the
 other two; without the translation it increases in the three settings, since the penalty then
-rejects loadings that a translation would have balanced. The substructure saves 0.8--1.6
-points in the adapted settings, and the restarts halve the unloaded volume with one ULD of each
+rejects loadings that a translation would have balanced. Building the load with blocks of
+several boxes instead of single boxes reduces the volume by 1.4 points in the adapted setting and
+by less elsewhere, halves the CoG violations in the Paquay setting and reduces the unloaded volume
+with one ULD of each type: these boxes are highly heterogeneous, and few identical boxes can be
+grouped. The substructure saves 0.8--1.6 points in the adapted settings, and the restarts halve the unloaded volume with one ULD of each
 type (20.0 against 39.6\,m$^3$). The choice of the ULD type with $\theta$ changes the volume by
 less than half a point in this run (0.8 points in the Paquay setting and with one ULD of each
 type in a run with $t = 0.05$\,s): with an unlimited number of ULDs, a poor choice during the
