@@ -75,7 +75,10 @@ the height (length) is decreased, the pieces are allowed to overlap, and a local
 overlap vanishes \citep{egeblad2007,umetani2009,imamichi2009,elkeran2013,gardeyn2025}. The key ingredients are a
 cheap and informative overlap measure, moves that can be optimized exactly or quickly, and guided local search
 (GLS) weights to escape local minima. This paper brings these ingredients to three-dimensional polyhedra with an
-exact representation.
+exact representation. Most components of the method are adaptations of known ideas, whose origin is given in
+Section~\ref{sec:method}. The new element is the overlap measure and the move built on it: the penetration depth
+in the no-fit polytopes (NFPs) of convex parts which, unlike the overlap volume used by 3DNest, can be minimized
+exactly along an axis by evaluating a few breakpoints.
 
 \paragraph{Contributions}
 \begin{enumerate}
@@ -85,9 +88,12 @@ concave on an interval and zero outside it, so the optimal position of a piece a
 interval endpoint (Proposition~\ref{prop:axis}). The move extends the directional moves of
 \citet{umetani2009} to 3D and non-convex pieces and is much cheaper than the exact overlap volume of
 \citet{egeblad2009}.
-\item A simple strategic oscillation with multiplicative GLS weights \citep{gardeyn2025}, a local improvement
-and restarts, and an ablation study showing that the weights and the effort spent in each separation are
-decisive.
+\item A deliberately simple method built around this move, which adapts known components (a bottom-left
+construction with gravity, a strategic oscillation of the height, multiplicative GLS weights \citep{gardeyn2025},
+a local improvement and restarts), and an ablation study showing which elements matter: the GLS weights, the
+speed of the move and the effort spent in each separation are decisive, the local improvement is needed to reach
+the optima, and the perturbation of the restarts and the tuned construction criterion have no significant
+effect.
 \item New best known solutions on the Merged instances of \citet{egeblad2009} and on classical instances of
 \citet{stoyan2004,stoyan2005}, with a time-matched comparison against the exact method 3DNest, and a comparison
 with the optimal values and bounds of the mixed-integer models of \citet{tollenaere2026}.
