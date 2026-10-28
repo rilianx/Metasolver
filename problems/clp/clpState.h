@@ -171,6 +171,13 @@ public:
 
 	//penalizacion de la desviacion del centro de gravedad en get_value
 	static double cog_penalty;
+	//cajas obligatorias (ULDs limitados): must[t] cajas del tipo t valen (1+must_w) veces su
+	//volumen en get_value y en la evaluacion de los bloques; must_init: cajas disponibles al
+	//comenzar la carga
+	static double must_w;
+	static vector<int> must, must_init;
+	double must_volume() const;
+	int must_left(int t) const { return must[t] - (must_init[t]-left[t]); }
 
 	//la carga se puede desplazar para centrar el centro de gravedad
 	static bool translate_cog;

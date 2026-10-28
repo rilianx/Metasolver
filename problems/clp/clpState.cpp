@@ -70,6 +70,16 @@ static bool corners_supported(const Block& b, long x, long y, const vector<clpSt
 	return true;
 }
 double clpState::cog_penalty=0.0;
+double clpState::must_w=0.0;
+vector<int> clpState::must, clpState::must_init;
+
+/** volumen cargado de las cajas obligatorias */
+double clpState::must_volume() const{
+	double v=0;
+	for(size_t t=0; t<must.size(); t++)
+		if(must[t]>0) v += (double) min(must[t], must_init[t]-left[t]) * types[t]->getVolume();
+	return v;
+}
 
 //bloques ubicados que pueden soportar a otros en la base del espacio actual
 static vector<const PlacedBlock*> support_tops;
@@ -182,6 +192,12 @@ int clpState::eval_space(int isp, VCS_Function& vcs, int n) const{
 		double eval = vcs.eval(*this, *b, sp, x, y, z, threshold);
 		if(eval>0 && cog_greedy>0.0 && uld)
 			eval /= 1.0 + cog_greedy*cog_violation_with(*b, x, y, z);
+		if(eval>0 && must_w>0.0){
+			double vm=0;
+			for(size_t t=0; t<must.size(); t++)
+				if(must[t]>0){ int q=min(b->count(t), must_left(t)); if(q>0) vm += (double) q*types[t]->getVolume(); }
+			eval *= 1.0 + must_w*vm/(double) b->getOccupiedVolume();
+		}
 		if(eval>0 && ((int)ranked.size()<n || ranked.front().eval < eval)){
 			auto pos = upper_bound(ranked.begin(), ranked.end(), eval,
 					[](double e, const Ranked& r){ return e < r.eval; });
@@ -419,6 +435,7 @@ void clpState::translate(long dx, long dy, int r){
 
 double clpState::get_value() const{
 	double v = (double) cont.getOccupiedVolume() / (double) cont.getVolume();
+	if(must_w>0.0) v += must_w*must_volume() / (double) cont.getVolume();
 	if(uld && cog_penalty>0.0 && !cont.blocks.empty()){
 		long dx, dy;
 		v /= 1.0 + cog_penalty*cog_violation(dx, dy);

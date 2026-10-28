@@ -262,15 +262,15 @@ candidate types of a ULD are compared during the construction.
 \begin{algorithmic}[1]
 \State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
 \Repeat
-	\State $(\mathcal{S}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
+	\State $(\mathcal{U}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
 	\If{$B \neq \emptyset$}
-		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
+		\State $\textsc{Insert}(\mathcal{U}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
 	\EndIf
-	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
+	\State keep $(\mathcal{U}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
 \Until{$B = \emptyset$ or three restarts} \label{a2:restart}
-\State $(\mathcal{S}, B) \gets$ the kept solution
-\State $\textsc{Reduce}(\mathcal{S})$ \Comment{reduction of the volume} \label{a2:red}
-\State \Return $\mathcal{S}$, $B$
+\State $(\mathcal{U}, B) \gets$ the kept solution
+\State $\textsc{Reduce}(\mathcal{U})$ \Comment{reduction of the volume} \label{a2:red}
+\State \Return $\mathcal{U}$, $B$
 \end{algorithmic}
 \end{algorithm}
 
@@ -302,7 +302,7 @@ more volume of $M$, even if it loads less volume in total.
 (restarts).}
 \label{alg:construct}
 \begin{algorithmic}[1]
-\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
+\State $B \gets I$; $\mathcal{U} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
 \While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
 	\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{c:cand}
 	\If{$|K| > 1$}
@@ -318,9 +318,9 @@ more volume of $M$, even if it loads less volume in total.
 			\If{$S'$ loads more volume of $M$ than $S$} $S \gets S'$ \EndIf
 		\EndIf
 	\EndIf
-	\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
+	\State $\mathcal{U} \gets \mathcal{U} \cup \{S\}$; $B \gets B \setminus B(S)$ \Comment{$B(S)$: boxes loaded in $S$}
 \EndWhile
-\State \Return $(\mathcal{S}, B)$
+\State \Return $(\mathcal{U}, B)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -338,24 +338,24 @@ empty. Reloading each ULD from scratch with its boxes and the pool, or giving pr
 boxes of the pool, did not improve the results at the same running time.
 
 \begin{algorithm}[htbp]
-\caption{\textsc{Insert}$(\mathcal{S}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
-$\mathcal{S}$ by ruin and recreate.}
+\caption{\textsc{Insert}$(\mathcal{U}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
+$\mathcal{U}$ by ruin and recreate.}
 \label{alg:insert}
 \begin{algorithmic}[1]
 \For{$\rho \in \{0.3, 0.6, 0.9\}$}
 	\If{$B = \emptyset$} \Return \EndIf
-	\State $\mathcal{S}' \gets \mathcal{S}$; $B' \gets B$
-	\For{$S \in \mathcal{S}'$ in decreasing order of free volume}
+	\State $\mathcal{U}' \gets \mathcal{U}$; $B' \gets B$
+	\For{$S \in \mathcal{U}'$ in decreasing order of free volume}
 		\State $R \gets$ boxes removed from $S$, from the highest uncovered one down, until
 			a proportion $\rho$ of its loaded volume is removed
 		\State $S^\circ \gets$ complete $S \setminus R$ with \textsc{LoadULD} on the boxes
 			$R \cup B'$ (time limit $0.1\,t$)
 		\If{$S^\circ$ is feasible \textbf{and} (the CoG of $S^\circ$ is in range \textbf{or} that of $S$ is not)}
-			\State $B' \gets (B' \cup R) \setminus S^\circ$; replace $S$ by $S^\circ$ in $\mathcal{S}'$
+			\State $B' \gets (B' \cup R) \setminus S^\circ$; replace $S$ by $S^\circ$ in $\mathcal{U}'$
 		\EndIf
 		\If{$B' = \emptyset$} \textbf{break} \EndIf
 	\EndFor
-	\If{$V(B') < V(B)$} $\mathcal{S} \gets \mathcal{S}'$; $B \gets B'$ \EndIf
+	\If{$V(B') < V(B)$} $\mathcal{U} \gets \mathcal{U}'$; $B \gets B'$ \EndIf
 \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -388,16 +388,16 @@ of the ULDs, so the phase terminates; a change may increase the number of ULDs, 
 replaced by two smaller ones.
 
 \begin{algorithm}[htbp]
-\caption{\textsc{Reduce}$(\mathcal{S})$: reduction of the total volume of the loaded ULDs
-$\mathcal{S}$.}
+\caption{\textsc{Reduce}$(\mathcal{U})$: reduction of the total volume of the loaded ULDs
+$\mathcal{U}$.}
 \label{alg:reduce}
 \begin{algorithmic}[1]
 \Repeat
-	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
-		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{r:ins}
-		\If{$B' = \emptyset$} remove $S$ from $\mathcal{S}$; \textbf{break} \EndIf \label{r:elim}
+	\For{$S \in \mathcal{U}$ in decreasing order of lost volume}
+		\State $B' \gets B(S)$; $\textsc{Insert}(\mathcal{U} \setminus \{S\}, B')$ \label{r:ins}
+		\If{$B' = \emptyset$} remove $S$ from $\mathcal{U}$; \textbf{break} \EndIf \label{r:elim}
 		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{r:new}
-		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$ in $\mathcal{S}$; \textbf{break} \EndIf
+		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$ in $\mathcal{U}$; \textbf{break} \EndIf
 		\State undo the changes of \textsc{Insert} \label{r:undo}
 	\EndFor
 \Until{no ULD was changed}
