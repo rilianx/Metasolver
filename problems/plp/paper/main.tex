@@ -422,7 +422,9 @@ g++ 13.3), one thread per run, 14 runs in parallel. Each configuration was run w
 instance. All reported solutions were verified with an independent checker that tests every pair of convex parts
 for a separating axis, with a tolerance of $10^{-6}$ on the penetration depth (the containers are 10 to 60 units
 wide). Table~\ref{tab:params} lists the parameters of the method. The parameters of the greedy
-construction were tuned with Optuna on 16 training instances for an earlier version of the method; the weight
+construction were tuned with Optuna on 16 training instances for an earlier version of the method and were not
+re-tuned: replacing the tuned criterion by the largest piece first changes the final heights by only $+0.4\%$
+($p=0.19$, Table~\ref{tab:ablation}), so the final quality depends little on them; the weight
 update follows \citet{gardeyn2025}; the step $\rho$ and the number of passes are analyzed in
 Table~\ref{tab:ablation}.
 
@@ -480,7 +482,10 @@ Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 of the tuned criterion~\eqref{eq:greedy}.
 \item \emph{No kick}: the restarts do not move any piece.
 \item \emph{Additive weights}: $w_{ij}\gets w_{ij}+1$ for the overlapping pairs at local minima.
-\item \emph{Slower separation}: the same runs stopped at 24 s, which corresponds to moves five times slower.
+\item \emph{Slower separation}: the same runs stopped at 24 s instead of 120 s. Since the search does the same
+work in less time, this simulates moves five times more expensive, e.g., with a costlier overlap measure, and
+estimates how much of the performance is due to the speed of the exact axis move of
+Proposition~\ref{prop:axis}.
 \item \emph{Sensitivity}: step $\rho$ of the oscillation and maximum number of passes of
 \textsc{MinimizeOverlap}.
 \end{itemize}
@@ -489,7 +494,9 @@ proposed method over the 70 runs (7 instances, 10 seeds), positive when the heig
 $p$-value of a Wilcoxon signed-rank test that pairs the runs by instance and seed.
 
 The decisive elements are the GLS weights and the effort spent in each separation. Additive weights increase
-the heights by 1.9\% ($p<0.001$), and moves five times slower by 3.2\% ($p<0.001$). The number of passes of
+the heights by 1.9\% ($p<0.001$). Moves five times more expensive increase them by 3.2\% ($p<0.001$) and lose
+most of the advantage over the published values (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
+speed of the move is as important as its exactness. The number of passes of
 \textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 2.6\% ($p<0.001$), since
 separations that would succeed are abandoned, and with 2000 passes by 1.0\% ($p=0.004$), since the time is spent
 on hopeless ones. The local improvement is needed: without it the heights increase by 0.5\% ($p=0.07$) and, in a
@@ -505,13 +512,14 @@ random move is needed only on small instances (Section~\ref{sec:t2025}).
 \caption{Component analysis on the seven hardest instances (120 s, 10 seeds). Gap: mean gap of the height with
 respect to the best published value (Stoyan 2004 Examples 2--5 and Stoyan 2005 Examples 2--3); negative is
 better. Change: mean relative change of the height with respect to the proposed method over the 70 runs,
-including Stoyan 2004 Example 1; positive means higher, i.e., worse ($p$: Wilcoxon signed-rank test).}
+i.e., over the seven instances including Stoyan 2004 Example 1, which has no published reference; positive means
+higher, i.e., worse ($p$: Wilcoxon signed-rank test).}
 \label{tab:ablation}
 \begin{tabular}{lrrr}
 \toprule
 & \multicolumn{2}{c}{Gap} & \\
 \cmidrule(lr){2-3}
-Configuration & Stoyan 2004 & Stoyan 2005 & Change ($p$)\\
+Configuration & S2004 Ex2--5 & S2005 Ex2--3 & Change ($p$)\\
 \midrule
 Proposed method & $-2.9\%$ & $-2.0\%$ & --\\
 Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & $+0.5\%$ (0.07)\\
