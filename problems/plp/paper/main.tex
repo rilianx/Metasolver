@@ -244,7 +244,10 @@ the one that allows the longest step in the descent direction (line~13). The sel
 region of positions where the piece does not overlap the placed parts, and the LP of line~14 minimizes
 $c\cdot u=z+\sigma\,\mathrm{dist}_{\text{wall}}(x,y)$ in it: the piece goes down and, with a small weight $\sigma$,
 towards the nearest walls in $x$ and $y$. The facets are re-selected at the new point and the procedure stops
-when the objective no longer decreases. Figure~\ref{fig:descend} shows the LPs of one descent.
+when the objective no longer decreases. Figure~\ref{fig:descend} shows the LPs of one descent. \textsc{Descend}
+combines two classical ideas: bottom-left placement rules for irregular pieces \citep{jakobs1996}, here with
+priority to gravity, as the minimum potential energy principle of HAPE3D \citep{liu2015}, and the compaction of a
+layout by linear programs over NFP facets \citep{li1995,gomes2006}, here applied to a single piece.
 
 Among all piece types and resulting positions, the greedy places the pair $(k,t)$ that maximizes (line~6)
 \begin{equation}\label{eq:greedy}
@@ -322,6 +325,8 @@ $c\cdot t$: the descent stops. Gravity has priority over the wall term, so the p
 
 \subsection{Local improvement}\label{sec:improve}
 \textsc{Improve} is applied to the feasible layouts: after the construction and after each successful separation.
+It is a compaction of the layout in the sense of \citet{li1995}, performed one piece at a time with
+\textsc{Descend}.
 Taking the pieces in increasing order of $z$, every piece descends again with \textsc{Descend}, with the other
 pieces fixed, and each piece that defines the height is moved to the lowest of the positions generated as in the
 greedy construction, if it is lower. The pass is repeated while the height decreases (at most 50 passes). Without this step the
@@ -339,13 +344,20 @@ container}),\qquad i=1,\dots,n,
 \end{equation}
 which creates overlaps among the pieces near the top. After a failure the target is
 increased by $\rho/4$ and the search continues from the overlapping layout, with the GLS weights of the previous
-attempt. This scheme follows \citet{egeblad2009} and \citet{umetani2009}.
+attempt. This scheme of shrinking the container, allowing overlap and separating the pieces comes from the 2D
+methods of \citet{egeblad2007}, \citet{umetani2009} and \citet{imamichi2009}, and was used in 3D by
+\citet{egeblad2009}; the clamp is the counterpart of moving the pieces that exceed the new strip length inside
+it.
 
 \subsection{Overlap minimization}\label{sec:minover}
 \textsc{MinimizeOverlap} performs passes over the overlapping pieces in random order; for each piece the three
-axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. The pairwise penetrations are
+axes are tried in random order with the exact move of Proposition~\ref{prop:axis}. Moving one piece at a time
+along the axes to the position of minimum overlap is the neighborhood of \citet{egeblad2007,egeblad2009}, who
+minimize the overlap area or volume; \citet{umetani2009} and \citet{imamichi2009} measure the overlap of 2D
+polygons by the penetration depth in the NFP, which we use for 3D unions of convex parts. The pairwise penetrations are
 kept in a matrix and only the row of a moved piece is recomputed. When a pass does not decrease~\eqref{eq:obj},
-the GLS weights are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
+the weights of guided local search \citep{voudouris1999}, used for nesting by \citet{egeblad2007} and
+\citet{umetani2009}, are updated multiplicatively as in \citet{gardeyn2025}: the weight of every overlapping pair is
 multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor $0.95$ (minimum 1). The
 procedure stops when no overlap remains (then verified with a separating-axis test) or after 500 passes.
 Weights persist along the oscillation and are reset after a successful separation or a restart.
@@ -406,7 +418,8 @@ layout is feasible.}
 
 \subsection{Restarts}\label{sec:kicks}
 When the target reaches the best height, the search restarts from the best solution clamped to $(1-\rho)H$, with
-the weights reset, after moving one random piece (a kick) to a random position in the container. On the larger instances the kick itself has no
+the weights reset, after moving one random piece (a kick) to a random position in the container. This is the
+perturbation step of iterated local search \citep{lourenco2003}, which \citet{imamichi2009} applied to nesting. On the larger instances the kick itself has no
 measurable effect (Table~\ref{tab:ablation}): the diversification comes from the restart, with reset weights and
 a new random order of the moves. The random positions are needed on small instances: with two pieces there is a
 single pair, so the weights have no effect, and the search keeps returning to the layout produced by the greedy
