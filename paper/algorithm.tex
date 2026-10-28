@@ -265,17 +265,17 @@ candidate types of a ULD are compared during the construction.
 \caption{Multi-ULD framework.}
 \label{alg:multi}
 \begin{algorithmic}[1]
-\State $P \gets \emptyset$ \Comment{boxes with priority (restarts)}
+\State $P \gets \emptyset$; $(\mathcal{U}^*, B^*) \gets (\emptyset, I)$ \Comment{boxes with priority, best solution}
 \Repeat
 	\State $(\mathcal{U}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
 	\If{$B \neq \emptyset$}
 		\State $\textsc{Insert}(\mathcal{U}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
 	\EndIf
-	\State keep $(\mathcal{U}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
+	\If{$V(B) < V(B^*)$} $(\mathcal{U}^*, B^*) \gets (\mathcal{U}, B)$ \EndIf \label{a2:keep}
+	\State $P \gets P \cup B$ \label{a2:prio}
 \Until{$B = \emptyset$ or three restarts} \label{a2:restart}
-\State $(\mathcal{U}, B) \gets$ the kept solution
-\State $\textsc{Reduce}(\mathcal{U})$ \Comment{reduction of the volume} \label{a2:red}
-\State \Return $\mathcal{U}$, $B$
+\State $\textsc{Reduce}(\mathcal{U}^*)$ \Comment{reduction of the volume} \label{a2:red}
+\State \Return $(\mathcal{U}^*, B^*)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -296,7 +296,7 @@ candidate does not, and the chosen type is loaded again from scratch with the ti
 most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
 When the number of ULDs is limited, some boxes should be loaded in this ULD: those that fit in no
 other available type, which would otherwise remain unloaded, and the boxes of $P$, which
-the restarts load first (line~\ref{a2:restart} of Algorithm~\ref{alg:multi}). These boxes $M$
+the restarts give priority to (line~\ref{a2:prio} of Algorithm~\ref{alg:multi}). These boxes $M$
 (line~\ref{c:prio}) are given priority inside BSG (line~\ref{c:load}): in the value $v$ of the
 loadings and in the evaluation of the blocks, each box of $M$ counts as $1 + \omega$ times its
 volume, with $\omega = 10$. The beam search thus favors the loadings that include the boxes of
