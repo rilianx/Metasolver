@@ -229,7 +229,9 @@ below need.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$, with a time
-limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref{sec:alg-multi}).}
+limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref{sec:alg-multi}).
+In \textsc{Construct}, a third argument $M \subseteq B$ gives priority to some boxes in BSG
+(Section~\ref{sec:alg-multi}).}
 \label{alg:load}
 \begin{algorithmic}[1]
 \State $S^* \gets$ empty loading
@@ -290,16 +292,19 @@ loaded volume and $V$ the volume of the ULD, unless it leaves the CoG out of ran
 candidate does not, and the chosen type is loaded again from scratch with the time limit $t$
 (line~\ref{c:load}); the short loadings are discarded. With $\theta = 0$ this is the type that loads the
 most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
-When the number of ULDs is limited, some boxes must be loaded in this ULD: those that fit in no
+When the number of ULDs is limited, some boxes should be loaded in this ULD: those that fit in no
 other available type, which would otherwise remain unloaded, and the boxes of $P$, which
-the restarts load first (line~\ref{a2:restart} of Algorithm~\ref{alg:multi}). If the loading leaves some of these boxes
-$M$ out (line~\ref{c:prio}), a second loading is built in two steps: BSG first loads the ULD with
-the boxes of $M$ only (line~\ref{c:must}), and the load is then completed with the other boxes,
-keeping the first ones at their positions. The second loading replaces the first one if it loads
-more volume of $M$, even if it loads less volume in total.
+the restarts load first (line~\ref{a2:restart} of Algorithm~\ref{alg:multi}). These boxes $M$
+(line~\ref{c:prio}) are given priority inside BSG (line~\ref{c:load}): in the value $v$ of the
+loadings and in the evaluation of the blocks, each box of $M$ counts as $1 + \omega$ times its
+volume, with $\omega = 10$. The beam search thus favors the loadings that include the boxes of
+$M$, and the greedy completions favor the blocks made of them. On the training instances with
+limited ULDs, this weight halved the unloaded volume with respect to loading the ULD again with
+the boxes of $M$ first, a repair step used in a previous version, and $\omega = 1$ and
+$\omega = 100$ were worse.
 
 \begin{algorithm}[htbp]
-\caption{\textsc{Construct}$(P)$: sequential construction; the boxes of $P$ are loaded first
+\caption{\textsc{Construct}$(P)$: sequential construction; the boxes of $P$ are given priority
 (restarts).}
 \label{alg:construct}
 \begin{algorithmic}[1]
@@ -310,15 +315,11 @@ more volume of $M$, even if it loads less volume in total.
 		\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B)$, time limit $0.1\,t$ \label{c:sel}
 	\Else{} $k \gets$ the type in $K$
 	\EndIf
-	\State $S \gets \textsc{LoadULD}(k, B)$ with time limit $t$ \label{c:load}
 	\If{the ULDs are limited}
-		\State $M \gets$ boxes of $B$ that fit in $k$ and are in $P$ or fit in no other available type
-		\If{$S$ leaves out boxes of $M$} \label{c:prio}
-			\State $S' \gets$ BSG on a ULD of type $k$ with the boxes of $M$ only, time limit $t$ \label{c:must}
-			\State complete $S'$ with the other boxes of $B$, keeping the boxes of $S'$ at their positions
-			\If{$S'$ loads more volume of $M$ than $S$} $S \gets S'$ \EndIf
-		\EndIf
+		\State $M \gets$ boxes of $B$ that fit in $k$ and are in $P$ or fit in no other available type \label{c:prio}
+	\Else{} $M \gets \emptyset$
 	\EndIf
+	\State $S \gets \textsc{LoadULD}(k, B, M)$ with time limit $t$ \Comment{priority to the boxes of $M$} \label{c:load}
 	\State $\mathcal{U} \gets \mathcal{U} \cup \{S\}$; $B \gets B \setminus S$
 \EndWhile
 \State \Return $(\mathcal{U}, B)$
@@ -365,7 +366,7 @@ $\mathcal{U}$ by ruin and recreate.}
 When the number of ULDs is limited and some boxes remain unloaded after the construction, they
 are inserted into the loaded ULDs with \textsc{Insert} (line~\ref{a2:ins}). If some are still
 left out, the construction is restarted, and the boxes left out in the previous constructions
-are also loaded first, into the first ULD in which they fit (the set $P$ in
+are given priority in the first ULD in which they fit (the set $P$ in
 line~\ref{c:prio} of Algorithm~\ref{alg:construct}). This handles boxes that fit in several types but conflict with each other,
 for instance two large boxes that fit only in the largest types and cannot share a ULD. The
 solution with the smallest unloaded volume is kept (line~\ref{a2:keep}), with at most three
