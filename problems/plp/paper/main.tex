@@ -630,12 +630,16 @@ Total & 66 & 27 & 24 & 12 & 32 of 39 & \\
 \end{table}
 
 \subsection{Time-matched comparison}
-Hardware differs by about ten years. Figure~\ref{fig:time} compares the mean utilization over time with that
+Hardware differs by about ten years: 3DNest ran on one core of a 2.16~GHz Intel Core Duo (2006), and the
+single-thread ratings of PassMark \citep{passmark} are 667 for that processor (Core Duo T2600) and 1624 for ours
+(Xeon E5-2620 v4), a factor of about 2.4 per core; this is rather an upper bound, since the rating uses the maximum
+turbo frequency and our runs share the processor. Figure~\ref{fig:time} compares the mean utilization over time with that
 of 3DNest at 10, 60, 300 and 600 seconds. Our first solution is available after about 0.3 seconds (the
 greedy construction), and at 10 seconds our mean utilization already exceeds the mean utilization
 of 3DNest at 600 seconds on all five instances (44.1, 43.1, 44.9, 43.8 and 43.1\% versus 43.0, 42.9, 43.3, 42.0
-and 41.0\%). Even assuming that our machine is five times faster per core, the
-advantage holds at equal effective time.
+and 41.0\%). With the factor 2.4, our 10 seconds correspond to about 24 seconds on the machine of
+\citet{egeblad2009}, and their 600 seconds to about 250 seconds on ours, so the advantage holds at equal
+effective time by more than an order of magnitude.
 
 \begin{figure}[!tbp]
 \centering
