@@ -1,33 +1,26 @@
 instance: TETRAHEDRONS_20_ITEMS
 items: 20
 height_lb: 10
-construction_height (greedy, 0.001658 s): 45.538753
+construction_height (greedy, 0.001645 s): 45.538753
 compaction_height (sin LP): 45.538753
-[separacion] (0.003812 s): altura 45.083366 (kicks 0)
-[separacion] (0.09972 s): altura 44.74524 (kicks 0)
-[separacion] (0.144849 s): altura 44.297788 (kicks 0)
-[separacion] (0.178745 s): altura 43.85481 (kicks 0)
-[separacion] (0.42718 s): altura 43.745173 (kicks 0)
-[separacion] (0.442176 s): altura 43.307721 (kicks 0)
-[separacion] (0.907397 s): altura 43.199452 (kicks 1)
-[separacion] (0.975596 s): altura 42.952891 (kicks 0)
-[separacion] (1.040606 s): altura 42.630744 (kicks 0)
-[separacion] (1.25555 s): altura 42.41759 (kicks 0)
-[separacion] (2.213473 s): altura 42.099459 (kicks 3)
-[separacion] (2.215079 s): altura 41.678464 (kicks 0)
-[separacion] (2.215575 s): altura 41.261679 (kicks 0)
-[separacion] (2.435222 s): altura 41.158525 (kicks 0)
-[separacion] (2.629687 s): altura 41.055629 (kicks 0)
-[separacion] (5.269823 s): altura 40.95299 (kicks 9)
-[separacion] (7.729352 s): altura 40.748225 (kicks 8)
-[separacion] (8.349718 s): altura 40.546887 (kicks 1)
-separations: 370
+[separacion] (0.003589 s): altura 45.083366 (kicks 0)
+[separacion] (0.395347 s): altura 43.662619 (kicks 1)
+[separacion] (0.396057 s): altura 43.048986 (kicks 0)
+[separacion] (0.633648 s): altura 42.588698 (kicks 1)
+[separacion] (2.040374 s): altura 42.375754 (kicks 4)
+[separacion] (2.798332 s): altura 42.269815 (kicks 3)
+[separacion] (5.588271 s): altura 42.16414 (kicks 9)
+[separacion] (5.592411 s): altura 41.741451 (kicks 0)
+[separacion] (5.604313 s): altura 41.324036 (kicks 0)
+[separacion] (5.650342 s): altura 40.910796 (kicks 0)
+[separacion] (14.242958 s): altura 40.538753 (kicks 26)
+separations: 376
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.050165
+time: 30.004961
 feasible: yes
 items: 20
-height: 40.546887
-density: 0.17798941
-max_overlap: 3.8191672e-14
+height: 40.538753
+density: 0.17802513
+max_overlap: 2.0428104e-13
 max_outside: 0

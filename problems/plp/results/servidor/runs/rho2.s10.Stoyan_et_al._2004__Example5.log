@@ -1,35 +1,31 @@
 instance: STOYAN_2004_EXAMPLE_5
 items: 50
 height_lb: 29
-construction_height (greedy, 0.315981 s): 93.838089
+construction_height (greedy, 0.316627 s): 93.838089
 compaction_height (sin LP): 93.838089
-[separacion] (0.34649 s): altura 90.443777 (kicks 0)
-[separacion] (0.383946 s): altura 88.634902 (kicks 0)
-[separacion] (0.387474 s): altura 86.862203 (kicks 0)
-[separacion] (0.411893 s): altura 85.124959 (kicks 0)
-[separacion] (0.426608 s): altura 83.42246 (kicks 0)
-[separacion] (0.712116 s): altura 81.754011 (kicks 0)
-[separacion] (0.811409 s): altura 80.118931 (kicks 0)
-[separacion] (1.122039 s): altura 78.516552 (kicks 0)
-[separacion] (1.595106 s): altura 76.946221 (kicks 0)
-[separacion] (1.981208 s): altura 75.407297 (kicks 0)
-[separacion] (7.192285 s): altura 74.276187 (kicks 1)
-[separacion] (7.509402 s): altura 72.790664 (kicks 0)
-[separacion] (8.455691 s): altura 71.698804 (kicks 0)
-[separacion] (9.331125 s): altura 70.416816 (kicks 0)
-[separacion] (12.700881 s): altura 70.064732 (kicks 0)
-[separacion] (12.74718 s): altura 68.663438 (kicks 0)
-[separacion] (39.422148 s): altura 67.290169 (kicks 7)
-[separacion] (40.511344 s): altura 66.280816 (kicks 0)
-[separacion] (41.880486 s): altura 65.555845 (kicks 0)
-[separacion] (44.538427 s): altura 64.905517 (kicks 0)
-separations: 124
+[separacion] (0.355488 s): altura 90.443777 (kicks 0)
+[separacion] (0.367799 s): altura 88.634902 (kicks 0)
+[separacion] (0.372889 s): altura 86.862203 (kicks 0)
+[separacion] (0.403054 s): altura 85.124959 (kicks 0)
+[separacion] (0.448752 s): altura 83.364775 (kicks 0)
+[separacion] (0.476157 s): altura 81.254848 (kicks 0)
+[separacion] (0.497081 s): altura 79.279677 (kicks 0)
+[separacion] (0.524153 s): altura 77.510999 (kicks 0)
+[separacion] (1.023306 s): altura 75.960779 (kicks 0)
+[separacion] (1.202739 s): altura 74.441563 (kicks 0)
+[separacion] (1.528167 s): altura 72.8 (kicks 0)
+[separacion] (15.411731 s): altura 71.344 (kicks 3)
+[separacion] (16.559878 s): altura 70.27384 (kicks 0)
+[separacion] (28.459633 s): altura 69.473945 (kicks 2)
+[separacion] (30.377023 s): altura 68.431836 (kicks 0)
+[separacion] (31.057988 s): altura 67.063199 (kicks 0)
+separations: 106
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.90842
+time: 120.15178
 feasible: yes
 items: 50
-height: 64.905517
-density: 0.29668864
-max_overlap: 1.0658141e-13
+height: 67.063199
+density: 0.28714302
+max_overlap: 2.4868996e-14
 max_outside: 0

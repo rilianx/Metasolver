@@ -1,31 +1,32 @@
 instance: TETRAHEDRONS_14_ITEMS
 items: 14
 height_lb: 10
-construction_height (greedy, 0.001167 s): 35.179569
+construction_height (greedy, 0.00116 s): 35.179569
 compaction_height (sin LP): 35.179569
-[separacion] (0.001353 s): altura 34.827773 (kicks 0)
-[separacion] (0.001516 s): altura 34.479495 (kicks 0)
-[separacion] (0.001599 s): altura 34.134701 (kicks 0)
-[separacion] (0.001744 s): altura 33.793354 (kicks 0)
-[separacion] (0.002071 s): altura 33.45542 (kicks 0)
-[separacion] (0.002463 s): altura 33.120866 (kicks 0)
-[separacion] (0.002629 s): altura 32.789657 (kicks 0)
-[separacion] (0.004598 s): altura 32.461761 (kicks 0)
-[separacion] (0.007045 s): altura 32.137143 (kicks 0)
-[separacion] (0.008892 s): altura 31.815772 (kicks 0)
-[separacion] (0.012199 s): altura 31.497614 (kicks 0)
-[separacion] (0.015515 s): altura 31.182638 (kicks 0)
-[separacion] (0.043517 s): altura 30.870811 (kicks 0)
-[separacion] (0.054176 s): altura 30.562103 (kicks 0)
-[separacion] (1.772494 s): altura 30.485698 (kicks 11)
-[separacion] (2.869225 s): altura 30.359228 (kicks 7)
-separations: 903
+[separacion] (0.001664 s): altura 34.827773 (kicks 0)
+[separacion] (0.001882 s): altura 34.479495 (kicks 0)
+[separacion] (0.002094 s): altura 34.134701 (kicks 0)
+[separacion] (0.002301 s): altura 33.793354 (kicks 0)
+[separacion] (0.002562 s): altura 33.45542 (kicks 0)
+[separacion] (0.003516 s): altura 33.120866 (kicks 0)
+[separacion] (0.003742 s): altura 32.789657 (kicks 0)
+[separacion] (0.004097 s): altura 32.461761 (kicks 0)
+[separacion] (0.005923 s): altura 32.137143 (kicks 0)
+[separacion] (0.006379 s): altura 31.815772 (kicks 0)
+[separacion] (0.006828 s): altura 31.497614 (kicks 0)
+[separacion] (0.007879 s): altura 31.182638 (kicks 0)
+[separacion] (0.008511 s): altura 30.870811 (kicks 0)
+[separacion] (0.044309 s): altura 30.63928 (kicks 0)
+[separacion] (0.147533 s): altura 30.562682 (kicks 0)
+[separacion] (1.232785 s): altura 30.48071 (kicks 7)
+[separacion] (1.850889 s): altura 30.359228 (kicks 3)
+separations: 816
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.019524
+time: 30.03324
 feasible: yes
 items: 14
 height: 30.359228
 density: 0.16640218
-max_overlap: 1.7763568e-14
+max_overlap: 3.907985e-14
 max_outside: 0

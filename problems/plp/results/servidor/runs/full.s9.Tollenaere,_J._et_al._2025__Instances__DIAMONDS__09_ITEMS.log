@@ -1,32 +1,28 @@
 instance: DIAMONDS_09_ITEMS
 items: 9
 height_lb: 6.6962374
-construction_height (greedy, 1.409502 s): 20.065829
+construction_height (greedy, 1.415109 s): 20.065829
 compaction_height (sin LP): 20.065829
-[separacion] (1.68404 s): altura 19.86517 (kicks 0)
-[separacion] (1.742535 s): altura 19.666519 (kicks 0)
-[separacion] (1.800401 s): altura 19.469853 (kicks 0)
-[separacion] (1.874608 s): altura 19.275155 (kicks 0)
-[separacion] (2.14595 s): altura 19.082403 (kicks 0)
-[separacion] (2.162411 s): altura 18.891579 (kicks 0)
-[separacion] (2.230966 s): altura 18.702663 (kicks 0)
-[separacion] (2.395792 s): altura 18.495117 (kicks 0)
-[separacion] (2.479073 s): altura 18.310166 (kicks 0)
-[separacion] (2.547229 s): altura 18.127064 (kicks 0)
-[separacion] (2.835106 s): altura 17.991111 (kicks 0)
-[separacion] (2.852545 s): altura 17.8112 (kicks 0)
-[separacion] (3.108814 s): altura 17.624392 (kicks 0)
-[separacion] (3.126518 s): altura 17.448148 (kicks 0)
-[separacion] (3.226679 s): altura 17.273666 (kicks 0)
-[separacion] (3.368338 s): altura 17.10093 (kicks 0)
-[separacion] (22.862267 s): altura 16.972506 (kicks 17)
-separations: 113
+[separacion] (1.801697 s): altura 19.827458 (kicks 0)
+[separacion] (1.916747 s): altura 19.511087 (kicks 0)
+[separacion] (2.020679 s): altura 19.218149 (kicks 0)
+[separacion] (2.328753 s): altura 18.961668 (kicks 0)
+[separacion] (2.57344 s): altura 18.772051 (kicks 0)
+[separacion] (2.760731 s): altura 18.58433 (kicks 0)
+[separacion] (3.060076 s): altura 18.097989 (kicks 0)
+[separacion] (3.247104 s): altura 17.917009 (kicks 0)
+[separacion] (3.621035 s): altura 17.728511 (kicks 0)
+[separacion] (3.941165 s): altura 17.413748 (kicks 0)
+[separacion] (4.085332 s): altura 17.070293 (kicks 0)
+[separacion] (6.520208 s): altura 16.893852 (kicks 1)
+[separacion] (26.44028 s): altura 16.851617 (kicks 16)
+separations: 100
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.179253
+time: 30.088079
 feasible: yes
 items: 9
-height: 16.972506
-density: 0.3945344
-max_overlap: 3.0553338e-13
+height: 16.851617
+density: 0.39736468
+max_overlap: 3.5527137e-15
 max_outside: 0

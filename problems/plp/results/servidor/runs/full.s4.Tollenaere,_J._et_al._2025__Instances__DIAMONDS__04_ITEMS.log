@@ -1,18 +1,17 @@
 instance: DIAMONDS_04_ITEMS
 items: 4
 height_lb: 6.19
-construction_height (greedy, 0.086033 s): 18.724531
+construction_height (greedy, 0.086268 s): 18.724531
 compaction_height (sin LP): 18.724531
-[separacion] (0.180089 s): altura 18.276361 (kicks 0)
-[separacion] (0.214903 s): altura 18.093597 (kicks 0)
-[separacion] (0.244271 s): altura 17.912661 (kicks 0)
-separations: 765
+[separacion] (0.184081 s): altura 17.956397 (kicks 0)
+[separacion] (19.052998 s): altura 17.849819 (kicks 129)
+separations: 808
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.034544
+time: 30.020931
 feasible: yes
 items: 4
-height: 17.912661
-density: 0.31054528
-max_overlap: 5.3290705e-15
+height: 17.849819
+density: 0.3116386
+max_overlap: 1.7763568e-15
 max_outside: 0

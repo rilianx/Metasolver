@@ -1,30 +1,27 @@
 instance: STOYAN_2004_EXAMPLE_1
 items: 80
 height_lb: 24.460905
-construction_height (greedy, 0.104914 s): 68.177018
-compaction_height (soplex): 66.138178
-[separacion] (0.614322 s): altura 63.662643 (kicks 0)
-[separacion] (0.797736 s): altura 62.299026 (kicks 0)
-[separacion] (1.025454 s): altura 60.348421 (kicks 0)
-[separacion] (1.282201 s): altura 59.031014 (kicks 0)
-[separacion] (2.023148 s): altura 57.945944 (kicks 0)
-[separacion] (2.946196 s): altura 56.979999 (kicks 0)
-[separacion] (3.695967 s): altura 56 (kicks 0)
-[separacion] (11.235766 s): altura 55.37664 (kicks 2)
-[separacion] (11.897552 s): altura 54.635495 (kicks 0)
-[separacion] (17.692882 s): altura 54.214389 (kicks 2)
-[separacion] (21.892125 s): altura 53.761754 (kicks 1)
-[separacion] (23.328811 s): altura 53.24906 (kicks 0)
-[separacion] (36.260721 s): altura 53.038046 (kicks 3)
-[separacion] (38.284901 s): altura 52.689105 (kicks 0)
-margin_height (1e-07): 52.689107
-separations: 169
+construction_height (greedy, 0.099646 s): 68.177018
+compaction_height (soplex): 63.057251
+[separacion] (1.385605 s): altura 61.111922 (kicks 0)
+[separacion] (2.235745 s): altura 60.000103 (kicks 0)
+[separacion] (3.351297 s): altura 58.707207 (kicks 0)
+[separacion] (4.121721 s): altura 57.726777 (kicks 0)
+[separacion] (6.340579 s): altura 57.065277 (kicks 0)
+[separacion] (10.372017 s): altura 56.558924 (kicks 1)
+[separacion] (15.311104 s): altura 56.062109 (kicks 1)
+[separacion] (26.53121 s): altura 55.464873 (kicks 3)
+[separacion] (28.189068 s): altura 54.626886 (kicks 0)
+[separacion] (31.265213 s): altura 54.148652 (kicks 0)
+[separacion] (41.60057 s): altura 53.912654 (kicks 2)
+margin_height (1e-07): 53.912655
+separations: 143
 rejected: 0
-limits: compact 0/15 (max 2 of 20), lp 0/30 (max 7 of 30)
-time: 120.55398
+limits: compact 0/12 (max 7 of 20), lp 0/65 (max 6 of 30)
+time: 120.14377
 feasible: yes
 items: 80
-height: 52.689107
-density: 0.46424977
+height: 53.912655
+density: 0.45371361
 max_overlap: 0
 max_outside: 0

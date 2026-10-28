@@ -1,31 +1,18 @@
 instance: STOYAN_2005_04_ITEMS
 items: 4
 height_lb: 10
-construction_height (greedy, 0.001762 s): 24
+construction_height (greedy, 0.001694 s): 24
 compaction_height (sin LP): 24
-[separacion] (0.002689 s): altura 23.76 (kicks 0)
-[separacion] (0.002725 s): altura 23.5224 (kicks 0)
-[separacion] (0.00275 s): altura 23.287176 (kicks 0)
-[separacion] (0.002773 s): altura 23.054304 (kicks 0)
-[separacion] (0.002794 s): altura 22.823761 (kicks 0)
-[separacion] (0.003043 s): altura 22.595524 (kicks 0)
-[separacion] (0.003136 s): altura 22.369568 (kicks 0)
-[separacion] (0.003219 s): altura 22.145873 (kicks 0)
-[separacion] (0.003304 s): altura 21.924414 (kicks 0)
-[separacion] (0.003417 s): altura 21.70517 (kicks 0)
-[separacion] (0.003525 s): altura 21.488118 (kicks 0)
-[separacion] (0.003643 s): altura 21.273237 (kicks 0)
-[separacion] (0.003757 s): altura 21.060505 (kicks 0)
-[separacion] (0.003863 s): altura 20.8499 (kicks 0)
-[separacion] (0.003988 s): altura 20.641401 (kicks 0)
-[separacion] (0.023689 s): altura 17 (kicks 1)
-separations: 4569
+[separacion] (0.002749 s): altura 22.705882 (kicks 0)
+[separacion] (0.003074 s): altura 20.554622 (kicks 0)
+[separacion] (0.003961 s): altura 17 (kicks 0)
+separations: 4583
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.002102
+time: 30.005164
 feasible: yes
 items: 4
 height: 17
 density: 0.43371212
-max_overlap: 1.7763568e-15
+max_overlap: 4.4408921e-16
 max_outside: 0

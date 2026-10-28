@@ -1,31 +1,27 @@
 instance: TETRAHEDRONS_11_ITEMS
 items: 11
 height_lb: 10
-construction_height (greedy, 0.00092 s): 28.692542
+construction_height (greedy, 0.000896 s): 28.692542
 compaction_height (sin LP): 28.692542
-[separacion] (0.002413 s): altura 28.405616 (kicks 0)
-[separacion] (0.002885 s): altura 28.12156 (kicks 0)
-[separacion] (0.00374 s): altura 27.840344 (kicks 0)
-[separacion] (0.004545 s): altura 27.561941 (kicks 0)
-[separacion] (0.005596 s): altura 27.286322 (kicks 0)
-[separacion] (0.006511 s): altura 27.013458 (kicks 0)
-[separacion] (0.013597 s): altura 26.743324 (kicks 0)
-[separacion] (0.016627 s): altura 26.475891 (kicks 0)
-[separacion] (0.055767 s): altura 26.335003 (kicks 0)
-[separacion] (0.115057 s): altura 26.071653 (kicks 1)
-[separacion] (0.116338 s): altura 25.810937 (kicks 0)
-[separacion] (0.160085 s): altura 25.681882 (kicks 0)
-[separacion] (0.160628 s): altura 25.425063 (kicks 0)
-[separacion] (0.16381 s): altura 25.170813 (kicks 0)
-[separacion] (0.165686 s): altura 24.919104 (kicks 0)
-[separacion] (0.199063 s): altura 24.794509 (kicks 0)
-separations: 1535
+[separacion] (0.003867 s): altura 28.405616 (kicks 0)
+[separacion] (0.004523 s): altura 28.12156 (kicks 0)
+[separacion] (0.004823 s): altura 27.840344 (kicks 0)
+[separacion] (0.006358 s): altura 27.561941 (kicks 0)
+[separacion] (0.007266 s): altura 27.286322 (kicks 0)
+[separacion] (0.008226 s): altura 27.013458 (kicks 0)
+[separacion] (0.009989 s): altura 26.743324 (kicks 0)
+[separacion] (0.016448 s): altura 25.538796 (kicks 0)
+[separacion] (0.080061 s): altura 25.420088 (kicks 0)
+[separacion] (0.163206 s): altura 25.229437 (kicks 1)
+[separacion] (0.181712 s): altura 24.977142 (kicks 0)
+[separacion] (0.253917 s): altura 24.789814 (kicks 1)
+separations: 1506
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.009551
+time: 30.001905
 feasible: yes
 items: 11
-height: 24.794509
-density: 0.16008803
-max_overlap: 4.0856207e-14
+height: 24.789814
+density: 0.16011835
+max_overlap: 1.9539925e-14
 max_outside: 0

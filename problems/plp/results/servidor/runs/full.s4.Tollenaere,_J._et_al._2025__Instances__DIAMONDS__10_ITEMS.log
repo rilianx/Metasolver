@@ -1,32 +1,30 @@
 instance: DIAMONDS_10_ITEMS
 items: 10
 height_lb: 7.1926746
-construction_height (greedy, 1.514777 s): 21.268467
+construction_height (greedy, 1.518295 s): 21.268467
 compaction_height (sin LP): 21.268467
-[separacion] (2.152121 s): altura 21.055782 (kicks 0)
-[separacion] (2.216022 s): altura 20.827839 (kicks 0)
-[separacion] (2.351183 s): altura 20.61956 (kicks 0)
-[separacion] (2.444045 s): altura 20.413365 (kicks 0)
-[separacion] (2.490296 s): altura 20.209231 (kicks 0)
-[separacion] (2.569972 s): altura 20.007139 (kicks 0)
-[separacion] (2.643776 s): altura 19.807067 (kicks 0)
-[separacion] (2.991291 s): altura 19.608997 (kicks 0)
-[separacion] (3.073263 s): altura 19.412907 (kicks 0)
-[separacion] (3.103627 s): altura 19.218778 (kicks 0)
-[separacion] (3.156075 s): altura 19.02659 (kicks 0)
-[separacion] (3.37775 s): altura 18.836324 (kicks 0)
-[separacion] (3.664096 s): altura 18.382276 (kicks 0)
-[separacion] (3.780531 s): altura 18.198453 (kicks 0)
-[separacion] (7.61658 s): altura 18.152957 (kicks 2)
-[separacion] (8.987161 s): altura 17.976476 (kicks 1)
-[separacion] (18.37163 s): altura 17.886594 (kicks 6)
-separations: 90
+[separacion] (2.383364 s): altura 20.827839 (kicks 0)
+[separacion] (2.652375 s): altura 20.61956 (kicks 0)
+[separacion] (2.956806 s): altura 20.413365 (kicks 0)
+[separacion] (3.266395 s): altura 19.810585 (kicks 0)
+[separacion] (3.759542 s): altura 19.62009 (kicks 0)
+[separacion] (4.353971 s): altura 19.47294 (kicks 0)
+[separacion] (4.5995 s): altura 19.105504 (kicks 0)
+[separacion] (5.703783 s): altura 18.89615 (kicks 0)
+[separacion] (6.738816 s): altura 18.649177 (kicks 0)
+[separacion] (8.152159 s): altura 18.602554 (kicks 0)
+[separacion] (9.438832 s): altura 18.339403 (kicks 0)
+[separacion] (9.614289 s): altura 18.156009 (kicks 0)
+[separacion] (10.409013 s): altura 18.034237 (kicks 0)
+[separacion] (13.967553 s): altura 17.8769 (kicks 2)
+[separacion] (22.833761 s): altura 17.585847 (kicks 6)
+separations: 81
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.354422
+time: 30.317403
 feasible: yes
 items: 10
-height: 17.886594
-density: 0.40212657
-max_overlap: 8.5403664e-07
+height: 17.585847
+density: 0.4090036
+max_overlap: 8.8817842e-16
 max_outside: 0

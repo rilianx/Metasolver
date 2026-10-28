@@ -1,51 +1,44 @@
 instance: LAMAS_FERNANDEZ_2022_CHESS
 items: 32
 height_lb: 50.423009
-construction_height (greedy, 0.598716 s): 211.38195
+construction_height (greedy, 0.59968 s): 211.38195
 compaction_height (sin LP): 211.38195
-[separacion] (0.632604 s): altura 208.85031 (kicks 0)
-[separacion] (0.64396 s): altura 200.69043 (kicks 0)
-[separacion] (0.654621 s): altura 198.68353 (kicks 0)
-[separacion] (0.659886 s): altura 196.69669 (kicks 0)
-[separacion] (0.670247 s): altura 194.72973 (kicks 0)
-[separacion] (0.68715 s): altura 192.78243 (kicks 0)
-[separacion] (0.697381 s): altura 190.8546 (kicks 0)
-[separacion] (0.707622 s): altura 188.94606 (kicks 0)
-[separacion] (0.719007 s): altura 187.02841 (kicks 0)
-[separacion] (0.813654 s): altura 185.15813 (kicks 0)
-[separacion] (0.83049 s): altura 183.30654 (kicks 0)
-[separacion] (1.004553 s): altura 181.47348 (kicks 0)
-[separacion] (1.023598 s): altura 179.65874 (kicks 0)
-[separacion] (1.123926 s): altura 177.86216 (kicks 0)
-[separacion] (1.153671 s): altura 176.08353 (kicks 0)
-[separacion] (1.189026 s): altura 174.3227 (kicks 0)
-[separacion] (1.278276 s): altura 172.57947 (kicks 0)
-[separacion] (2.476727 s): altura 171.28513 (kicks 0)
-[separacion] (2.66066 s): altura 169.57228 (kicks 0)
-[separacion] (3.405465 s): altura 168.30048 (kicks 0)
-[separacion] (10.489155 s): altura 167.83361 (kicks 1)
-[separacion] (12.470995 s): altura 166.99444 (kicks 0)
-[separacion] (12.618618 s): altura 165.3245 (kicks 0)
-[separacion] (13.838718 s): altura 164.08457 (kicks 0)
-[separacion] (14.268728 s): altura 162.44372 (kicks 0)
-[separacion] (15.523137 s): altura 161.22539 (kicks 0)
-[separacion] (26.447303 s): altura 160.41927 (kicks 1)
-[separacion] (27.71655 s): altura 159.33731 (kicks 0)
-[separacion] (29.942019 s): altura 158.14228 (kicks 0)
-[separacion] (76.238016 s): altura 156.95621 (kicks 7)
-[separacion] (164.75738 s): altura 155.77904 (kicks 11)
-[separacion] (169.64032 s): altura 154.6107 (kicks 1)
-[separacion] (329.72737 s): altura 153.83764 (kicks 21)
-[separacion] (506.13085 s): altura 153.45305 (kicks 22)
-[separacion] (525.00178 s): altura 152.68578 (kicks 2)
-[separacion] (740.37083 s): altura 151.15893 (kicks 29)
-separations: 680
+[separacion] (0.66448 s): altura 208.85031 (kicks 0)
+[separacion] (0.766879 s): altura 204.20151 (kicks 0)
+[separacion] (0.803752 s): altura 198.18609 (kicks 0)
+[separacion] (0.821861 s): altura 196.14848 (kicks 0)
+[separacion] (0.840536 s): altura 194.187 (kicks 0)
+[separacion] (0.860357 s): altura 191.97035 (kicks 0)
+[separacion] (1.011083 s): altura 189.88267 (kicks 0)
+[separacion] (1.024738 s): altura 186.89183 (kicks 0)
+[separacion] (1.101684 s): altura 184.82736 (kicks 0)
+[separacion] (1.172659 s): altura 182.97908 (kicks 0)
+[separacion] (1.587985 s): altura 181.14929 (kicks 0)
+[separacion] (1.629449 s): altura 179.3378 (kicks 0)
+[separacion] (2.077985 s): altura 177.54442 (kicks 0)
+[separacion] (2.456246 s): altura 175.76898 (kicks 0)
+[separacion] (3.003926 s): altura 173.56873 (kicks 0)
+[separacion] (3.027527 s): altura 171.83304 (kicks 0)
+[separacion] (3.0762 s): altura 169.88263 (kicks 0)
+[separacion] (3.211135 s): altura 168.08299 (kicks 0)
+[separacion] (4.316695 s): altura 166.82237 (kicks 0)
+[separacion] (4.390168 s): altura 165.15414 (kicks 0)
+[separacion] (4.62661 s): altura 163.5026 (kicks 0)
+[separacion] (6.876419 s): altura 162.27633 (kicks 0)
+[separacion] (22.393632 s): altura 161.05926 (kicks 2)
+[separacion] (84.260797 s): altura 160.24062 (kicks 8)
+[separacion] (130.26561 s): altura 159.84001 (kicks 6)
+[separacion] (157.25878 s): altura 159.03842 (kicks 4)
+[separacion] (457.90576 s): altura 158.06078 (kicks 41)
+[separacion] (459.63826 s): altura 156.87533 (kicks 0)
+[separacion] (891.27602 s): altura 156.07048 (kicks 54)
+separations: 655
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 1202.0472
+time: 1202.1813
 feasible: yes
 items: 32
-height: 151.15893
-density: 0.28506682
-max_overlap: 8.6933017e-07
-max_outside: 0
+height: 156.07048
+density: 0.27609574
+max_overlap: 7.4123818e-11
+max_outside: 7.1054274e-15

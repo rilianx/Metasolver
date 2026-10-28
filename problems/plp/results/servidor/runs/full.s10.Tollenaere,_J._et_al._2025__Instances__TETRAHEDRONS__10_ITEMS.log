@@ -3,23 +3,15 @@ items: 10
 height_lb: 10
 construction_height (greedy, 0.00084 s): 25
 compaction_height (sin LP): 25
-[separacion] (0.001113 s): altura 24.75 (kicks 0)
-[separacion] (0.001254 s): altura 24.5025 (kicks 0)
-[separacion] (0.001491 s): altura 24.257475 (kicks 0)
-[separacion] (0.001726 s): altura 24.0149 (kicks 0)
-[separacion] (0.001917 s): altura 23.774751 (kicks 0)
-[separacion] (0.016222 s): altura 23.596441 (kicks 0)
-[separacion] (0.020739 s): altura 23.360476 (kicks 0)
-[separacion] (0.020848 s): altura 23.126871 (kicks 0)
-[separacion] (0.021305 s): altura 22.895603 (kicks 0)
-[separacion] (0.054308 s): altura 22.723886 (kicks 0)
-separations: 1922
+[separacion] (0.001334 s): altura 23.609208 (kicks 0)
+[separacion] (0.079412 s): altura 22.679547 (kicks 1)
+separations: 1923
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.008625
+time: 30.005667
 feasible: yes
 items: 10
-height: 22.723886
-density: 0.15879583
-max_overlap: 3.4638958e-14
+height: 22.679547
+density: 0.15910628
+max_overlap: 3.5527137e-15
 max_outside: 0

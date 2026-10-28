@@ -1,30 +1,30 @@
 {
     "instancePath": "Tollenaere, J. et al. 2025/Instances/STOYAN_2005/04_ITEMS.json",
-    "totalHeight": 17.013644462571442,
+    "totalHeight": 17,
     "itemOrigin": "AlignToMinimum",
     "gap": 0,
     "items": [
         {
             "name": "polytope7.obj",
             "transformation": {
-                "position": [0, 0, 8.0136444625714418],
+                "position": [0, 0, 8],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [0, 0, 8.0136444625714418, 1]
+                    [0, 0, 8, 1]
                 ]
             }
         },
         {
             "name": "polytope5.obj",
             "transformation": {
-                "position": [4, 2.9999999999999978, 3.6666666666666692],
+                "position": [4, 3, 3.6666666666666656],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [4, 2.9999999999999978, 3.6666666666666692, 1]
+                    [4, 3, 3.6666666666666656, 1]
                 ]
             }
         },

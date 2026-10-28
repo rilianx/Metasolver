@@ -1,39 +1,20 @@
 instance: STOYAN_2005_04_ITEMS
 items: 4
 height_lb: 10
-construction_height (greedy, 0.001719 s): 24
+construction_height (greedy, 0.001713 s): 24
 compaction_height (sin LP): 24
-[separacion] (0.002639 s): altura 23.76 (kicks 0)
-[separacion] (0.002705 s): altura 23.5224 (kicks 0)
-[separacion] (0.002737 s): altura 23.287176 (kicks 0)
-[separacion] (0.00277 s): altura 23.054304 (kicks 0)
-[separacion] (0.0028 s): altura 22.823761 (kicks 0)
-[separacion] (0.002828 s): altura 22.595524 (kicks 0)
-[separacion] (0.002857 s): altura 22.369568 (kicks 0)
-[separacion] (0.002884 s): altura 22.145873 (kicks 0)
-[separacion] (0.002913 s): altura 21.924414 (kicks 0)
-[separacion] (0.00294 s): altura 21.70517 (kicks 0)
-[separacion] (0.002974 s): altura 21.488118 (kicks 0)
-[separacion] (0.00301 s): altura 19.664485 (kicks 0)
-[separacion] (0.003974 s): altura 19.2 (kicks 0)
-[separacion] (0.004038 s): altura 18.898286 (kicks 0)
-[separacion] (0.004087 s): altura 18.601313 (kicks 0)
-[separacion] (0.004133 s): altura 18.4153 (kicks 0)
-[separacion] (0.004176 s): altura 18.231147 (kicks 0)
-[separacion] (0.004218 s): altura 18.048835 (kicks 0)
-[separacion] (0.004262 s): altura 17.868347 (kicks 0)
-[separacion] (0.004296 s): altura 17.689663 (kicks 0)
-[separacion] (0.004427 s): altura 17.512767 (kicks 0)
-[separacion] (0.004522 s): altura 17.337639 (kicks 0)
-[separacion] (0.004643 s): altura 17.164263 (kicks 0)
-[separacion] (0.017226 s): altura 17.035531 (kicks 0)
-separations: 4094
+[separacion] (0.002819 s): altura 19.563636 (kicks 0)
+[separacion] (0.003351 s): altura 18.257143 (kicks 0)
+[separacion] (0.003505 s): altura 18.074571 (kicks 0)
+[separacion] (0.004344 s): altura 17.4 (kicks 0)
+[separacion] (0.004532 s): altura 17 (kicks 0)
+separations: 4677
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.006594
+time: 30.005343
 feasible: yes
 items: 4
-height: 17.035531
-density: 0.43280754
-max_overlap: 4.4408921e-16
+height: 17
+density: 0.43371212
+max_overlap: 3.5527137e-15
 max_outside: 0

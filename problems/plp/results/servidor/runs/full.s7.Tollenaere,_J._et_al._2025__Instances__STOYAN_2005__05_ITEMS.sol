@@ -1,23 +1,47 @@
 {
     "instancePath": "Tollenaere, J. et al. 2025/Instances/STOYAN_2005/05_ITEMS.json",
-    "totalHeight": 15.026929778450116,
+    "totalHeight": 15,
     "itemOrigin": "AlignToMinimum",
     "gap": 0,
     "items": [
         {
             "name": "polytope7.obj",
             "transformation": {
-                "position": [6, 0, 6.0269297784501159],
+                "position": [4.3589743589743586, 0, 5.4358974358974361],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [6, 0, 6.0269297784501159, 1]
+                    [4.3589743589743586, 0, 5.4358974358974361, 1]
                 ]
             }
         },
         {
             "name": "polytope1.obj",
+            "transformation": {
+                "position": [0, 0, 7],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 7, 1]
+                ]
+            }
+        },
+        {
+            "name": "polytope3.obj",
+            "transformation": {
+                "position": [0, 6, 0],
+                "matrix": [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 6, 0, 1]
+                ]
+            }
+        },
+        {
+            "name": "polytope6.obj",
             "transformation": {
                 "position": [0, 0, 0],
                 "matrix": [
@@ -29,38 +53,14 @@
             }
         },
         {
-            "name": "polytope3.obj",
-            "transformation": {
-                "position": [0, 5.9999999999999982, 0],
-                "matrix": [
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0],
-                    [0, 0, 1, 0],
-                    [0, 5.9999999999999982, 0, 1]
-                ]
-            }
-        },
-        {
-            "name": "polytope6.obj",
-            "transformation": {
-                "position": [0, 0, 8],
-                "matrix": [
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0],
-                    [0, 0, 1, 0],
-                    [0, 0, 8, 1]
-                ]
-            }
-        },
-        {
             "name": "polytope5.obj",
             "transformation": {
-                "position": [3.5000000000000018, 1.9999999999999962, 0],
+                "position": [8, 2, 0],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [3.5000000000000018, 1.9999999999999962, 0, 1]
+                    [8, 2, 0, 1]
                 ]
             }
         }

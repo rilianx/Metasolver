@@ -1,33 +1,28 @@
 instance: STOYAN_2004_08_ITEMS
 items: 8
 height_lb: 21
-construction_height (greedy, 0.005897 s): 41.091896
+construction_height (greedy, 0.005908 s): 41.091896
 compaction_height (sin LP): 41.091896
-[separacion] (0.009203 s): altura 40.680977 (kicks 0)
-[separacion] (0.009939 s): altura 40.274168 (kicks 0)
-[separacion] (0.010573 s): altura 39.871426 (kicks 0)
-[separacion] (0.010711 s): altura 39.472712 (kicks 0)
-[separacion] (0.016316 s): altura 39.077985 (kicks 0)
-[separacion] (0.016444 s): altura 38.687205 (kicks 0)
-[separacion] (0.016609 s): altura 38.300333 (kicks 0)
-[separacion] (0.016725 s): altura 37.917329 (kicks 0)
-[separacion] (0.016834 s): altura 37.538156 (kicks 0)
-[separacion] (0.016947 s): altura 37.162775 (kicks 0)
-[separacion] (0.017061 s): altura 36.791147 (kicks 0)
-[separacion] (0.044652 s): altura 36.515213 (kicks 0)
-[separacion] (0.044876 s): altura 36.150061 (kicks 0)
-[separacion] (0.125354 s): altura 36.059686 (kicks 0)
-[separacion] (0.129294 s): altura 35.699089 (kicks 0)
-[separacion] (0.129591 s): altura 35.342098 (kicks 0)
-[separacion] (0.129746 s): altura 34.988677 (kicks 0)
-[separacion] (0.129932 s): altura 34.63879 (kicks 0)
-separations: 1086
+[separacion] (0.009505 s): altura 40.680977 (kicks 0)
+[separacion] (0.010545 s): altura 40.090385 (kicks 0)
+[separacion] (0.011592 s): altura 39.173077 (kicks 0)
+[separacion] (0.012327 s): altura 38.25641 (kicks 0)
+[separacion] (0.021955 s): altura 37.873846 (kicks 0)
+[separacion] (0.022253 s): altura 37.415094 (kicks 0)
+[separacion] (0.025899 s): altura 37 (kicks 0)
+[separacion] (0.026665 s): altura 36.63 (kicks 0)
+[separacion] (0.027329 s): altura 36 (kicks 0)
+[separacion] (0.040037 s): altura 35.433333 (kicks 0)
+[separacion] (0.0403 s): altura 35.079 (kicks 0)
+[separacion] (0.040553 s): altura 34.72821 (kicks 0)
+[separacion] (0.544097 s): altura 34.585311 (kicks 4)
+separations: 1093
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.004804
+time: 30.028318
 feasible: yes
 items: 8
-height: 34.63879
-density: 0.38813262
-max_overlap: 5.3290705e-15
+height: 34.585311
+density: 0.38873279
+max_overlap: 1.7763568e-15
 max_outside: 0

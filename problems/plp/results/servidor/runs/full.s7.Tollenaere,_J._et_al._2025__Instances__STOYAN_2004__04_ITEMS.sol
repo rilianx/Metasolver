@@ -19,12 +19,12 @@
         {
             "name": "polytope4.obj",
             "transformation": {
-                "position": [0, 0, 13],
+                "position": [0, 4, 13],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [0, 0, 13, 1]
+                    [0, 4, 13, 1]
                 ]
             }
         },

@@ -1,34 +1,25 @@
 instance: STOYAN_2004_09_ITEMS
 items: 9
 height_lb: 21
-construction_height (greedy, 0.007694 s): 49.928146
+construction_height (greedy, 0.0063 s): 49.928146
 compaction_height (sin LP): 49.928146
-[separacion] (0.012148 s): altura 49.428865 (kicks 0)
-[separacion] (0.013413 s): altura 48.934576 (kicks 0)
-[separacion] (0.031113 s): altura 47.362883 (kicks 0)
-[separacion] (0.033444 s): altura 46.889254 (kicks 0)
-[separacion] (0.036168 s): altura 46.420362 (kicks 0)
-[separacion] (0.036247 s): altura 45.956158 (kicks 0)
-[separacion] (0.036626 s): altura 45.496597 (kicks 0)
-[separacion] (0.045426 s): altura 45.041631 (kicks 0)
-[separacion] (0.051479 s): altura 44.591214 (kicks 0)
-[separacion] (0.070121 s): altura 44.145302 (kicks 0)
-[separacion] (0.070298 s): altura 43.703849 (kicks 0)
-[separacion] (0.070449 s): altura 43.266811 (kicks 0)
-[separacion] (0.071411 s): altura 42.834143 (kicks 0)
-[separacion] (0.102145 s): altura 42.512887 (kicks 0)
-[separacion] (0.110217 s): altura 42.087758 (kicks 0)
-[separacion] (0.116045 s): altura 41.66688 (kicks 0)
-[separacion] (0.116249 s): altura 41.250211 (kicks 0)
-[separacion] (0.730034 s): altura 41.147086 (kicks 4)
-[separacion] (0.912106 s): altura 40.923077 (kicks 1)
-separations: 900
+[separacion] (0.010284 s): altura 49.049453 (kicks 0)
+[separacion] (0.015295 s): altura 47.155556 (kicks 0)
+[separacion] (0.016147 s): altura 46.684 (kicks 0)
+[separacion] (0.016552 s): altura 44 (kicks 0)
+[separacion] (0.024416 s): altura 43.56 (kicks 0)
+[separacion] (0.11172 s): altura 43.4511 (kicks 0)
+[separacion] (0.112096 s): altura 43.016589 (kicks 0)
+[separacion] (0.134055 s): altura 42.42633 (kicks 0)
+[separacion] (0.212021 s): altura 41.574603 (kicks 0)
+[separacion] (0.233168 s): altura 41 (kicks 0)
+separations: 891
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.031101
+time: 30.003488
 feasible: yes
 items: 9
-height: 40.923077
-density: 0.40876714
-max_overlap: 8.8817842e-15
+height: 41
+density: 0.40800023
+max_overlap: 5.3290705e-15
 max_outside: 0

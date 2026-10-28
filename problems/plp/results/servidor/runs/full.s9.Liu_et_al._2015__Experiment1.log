@@ -1,54 +1,43 @@
 instance: LIU_2015
 items: 36
 height_lb: 10
-construction_height (greedy, 0.02982 s): 43.359228
+construction_height (greedy, 0.030685 s): 43.359228
 compaction_height (sin LP): 43.359228
-[separacion] (0.033533 s): altura 42.925635 (kicks 0)
-[separacion] (0.034086 s): altura 42.496379 (kicks 0)
-[separacion] (0.034753 s): altura 42.071415 (kicks 0)
-[separacion] (0.037521 s): altura 41.650701 (kicks 0)
-[separacion] (0.040011 s): altura 41.234194 (kicks 0)
-[separacion] (0.058778 s): altura 40.821852 (kicks 0)
-[separacion] (0.067671 s): altura 40.413633 (kicks 0)
-[separacion] (0.069206 s): altura 40.009497 (kicks 0)
-[separacion] (0.095017 s): altura 39.609402 (kicks 0)
-[separacion] (0.150535 s): altura 39.213308 (kicks 0)
-[separacion] (0.153342 s): altura 38.821175 (kicks 0)
-[separacion] (0.164594 s): altura 38.432963 (kicks 0)
-[separacion] (0.170502 s): altura 38.048634 (kicks 0)
-[separacion] (0.226104 s): altura 37.675603 (kicks 0)
-[separacion] (0.242423 s): altura 37.298847 (kicks 0)
-[separacion] (0.260483 s): altura 36.925858 (kicks 0)
-[separacion] (0.262385 s): altura 36.5566 (kicks 0)
-[separacion] (0.284153 s): altura 36.191034 (kicks 0)
-[separacion] (0.29374 s): altura 35.829123 (kicks 0)
-[separacion] (0.297211 s): altura 35.470832 (kicks 0)
-[separacion] (0.462012 s): altura 35.116124 (kicks 0)
-[separacion] (0.467904 s): altura 34.764962 (kicks 0)
-[separacion] (0.478841 s): altura 34.417313 (kicks 0)
-[separacion] (1.32703 s): altura 34.07314 (kicks 1)
-[separacion] (1.327768 s): altura 33.732408 (kicks 0)
-[separacion] (1.332963 s): altura 33.395084 (kicks 0)
-[separacion] (2.619651 s): altura 33.144621 (kicks 1)
-[separacion] (2.85289 s): altura 32.896036 (kicks 0)
-[separacion] (5.344164 s): altura 32.813796 (kicks 2)
-[separacion] (5.345156 s): altura 32.485658 (kicks 0)
-[separacion] (5.349975 s): altura 32.160802 (kicks 0)
-[separacion] (5.35688 s): altura 31.839194 (kicks 0)
-[separacion] (5.50101 s): altura 31.6004 (kicks 0)
-[separacion] (6.030933 s): altura 31.442398 (kicks 0)
-[separacion] (7.10887 s): altura 31.127974 (kicks 1)
-[separacion] (7.763213 s): altura 30.972334 (kicks 0)
-[separacion] (7.770685 s): altura 30.662611 (kicks 0)
-[separacion] (7.813146 s): altura 30.355985 (kicks 0)
-[separacion] (11.546823 s): altura 30.204205 (kicks 3)
-separations: 424
+[separacion] (0.035872 s): altura 42.925635 (kicks 0)
+[separacion] (0.037927 s): altura 42.496379 (kicks 0)
+[separacion] (0.042865 s): altura 41.359228 (kicks 0)
+[separacion] (0.052994 s): altura 40.119713 (kicks 0)
+[separacion] (0.07451 s): altura 39.718516 (kicks 0)
+[separacion] (0.077357 s): altura 39.153558 (kicks 0)
+[separacion] (0.138152 s): altura 37.649807 (kicks 0)
+[separacion] (0.140463 s): altura 37.273309 (kicks 0)
+[separacion] (0.250315 s): altura 36.900576 (kicks 0)
+[separacion] (0.260575 s): altura 36.170844 (kicks 0)
+[separacion] (0.778955 s): altura 36 (kicks 0)
+[separacion] (0.785447 s): altura 35.464043 (kicks 0)
+[separacion] (0.790288 s): altura 35.109403 (kicks 0)
+[separacion] (0.816009 s): altura 34.758309 (kicks 0)
+[separacion] (0.8194 s): altura 34.410726 (kicks 0)
+[separacion] (0.82413 s): altura 34.066618 (kicks 0)
+[separacion] (0.82981 s): altura 33.725952 (kicks 0)
+[separacion] (0.902355 s): altura 33.473008 (kicks 0)
+[separacion] (0.918091 s): altura 33.138278 (kicks 0)
+[separacion] (2.088684 s): altura 32.793995 (kicks 1)
+[separacion] (2.100394 s): altura 32.466055 (kicks 0)
+[separacion] (2.127867 s): altura 32.141395 (kicks 0)
+[separacion] (3.132965 s): altura 31.744434 (kicks 1)
+[separacion] (3.14393 s): altura 31.426989 (kicks 0)
+[separacion] (3.158968 s): altura 31.112719 (kicks 0)
+[separacion] (7.778335 s): altura 30.879374 (kicks 4)
+[separacion] (7.782391 s): altura 30.434175 (kicks 0)
+[separacion] (30.748 s): altura 30.205919 (kicks 21)
+separations: 411
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.30633
+time: 120.07489
 feasible: yes
 items: 36
-height: 30.204205
-density: 0.32534433
-max_overlap: 4.6691866e-07
-max_outside: 0
+height: 30.205919
+density: 0.32532586
+max_overlap: 5.5306377e-07
+max_outside: 1.4952817e-17

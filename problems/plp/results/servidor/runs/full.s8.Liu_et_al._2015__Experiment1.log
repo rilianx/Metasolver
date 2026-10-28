@@ -1,54 +1,46 @@
 instance: LIU_2015
 items: 36
 height_lb: 10
-construction_height (greedy, 0.030372 s): 43.359228
+construction_height (greedy, 0.030797 s): 43.359228
 compaction_height (sin LP): 43.359228
-[separacion] (0.03344 s): altura 42.925635 (kicks 0)
-[separacion] (0.033991 s): altura 42.496379 (kicks 0)
-[separacion] (0.034593 s): altura 42.071415 (kicks 0)
-[separacion] (0.036713 s): altura 41.650701 (kicks 0)
-[separacion] (0.037149 s): altura 41.234194 (kicks 0)
-[separacion] (0.037606 s): altura 40.821852 (kicks 0)
-[separacion] (0.044004 s): altura 40.413633 (kicks 0)
-[separacion] (0.045127 s): altura 40.009497 (kicks 0)
-[separacion] (0.049498 s): altura 39.609402 (kicks 0)
-[separacion] (0.051257 s): altura 39.213308 (kicks 0)
-[separacion] (0.051831 s): altura 38.821175 (kicks 0)
-[separacion] (0.054468 s): altura 38.432963 (kicks 0)
-[separacion] (0.065828 s): altura 38.048634 (kicks 0)
-[separacion] (0.11151 s): altura 37.668147 (kicks 0)
-[separacion] (0.118315 s): altura 37.291466 (kicks 0)
-[separacion] (0.212845 s): altura 36.918551 (kicks 0)
-[separacion] (0.224795 s): altura 36.549366 (kicks 0)
-[separacion] (0.228283 s): altura 36.183872 (kicks 0)
-[separacion] (0.246659 s): altura 35.822033 (kicks 0)
-[separacion] (0.25014 s): altura 35.463813 (kicks 0)
-[separacion] (0.334768 s): altura 35.109175 (kicks 0)
-[separacion] (0.403468 s): altura 34.758083 (kicks 0)
-[separacion] (0.506199 s): altura 34.413471 (kicks 0)
-[separacion] (0.695397 s): altura 34.15537 (kicks 0)
-[separacion] (0.696528 s): altura 33.813816 (kicks 0)
-[separacion] (0.703814 s): altura 33.475678 (kicks 0)
-[separacion] (0.880071 s): altura 33.22461 (kicks 0)
-[separacion] (0.970921 s): altura 32.892364 (kicks 0)
-[separacion] (0.996206 s): altura 32.563441 (kicks 0)
-[separacion] (3.525801 s): altura 32.482032 (kicks 2)
-[separacion] (5.317853 s): altura 32.400827 (kicks 1)
-[separacion] (5.470622 s): altura 32.076819 (kicks 0)
-[separacion] (5.475287 s): altura 31.75605 (kicks 0)
-[separacion] (6.824988 s): altura 31.43849 (kicks 1)
-[separacion] (8.611055 s): altura 31.16987 (kicks 2)
-[separacion] (11.6327 s): altura 31.091945 (kicks 2)
-[separacion] (13.704915 s): altura 30.781026 (kicks 2)
-[separacion] (17.4202 s): altura 30.2377 (kicks 3)
-[separacion] (60.940908 s): altura 30 (kicks 34)
-separations: 413
+[separacion] (0.035236 s): altura 42.925635 (kicks 0)
+[separacion] (0.039582 s): altura 41.359228 (kicks 0)
+[separacion] (0.043313 s): altura 40.388382 (kicks 0)
+[separacion] (0.078939 s): altura 39.984262 (kicks 0)
+[separacion] (0.091189 s): altura 39.584419 (kicks 0)
+[separacion] (0.096452 s): altura 39.188575 (kicks 0)
+[separacion] (0.10935 s): altura 38.796689 (kicks 0)
+[separacion] (0.116697 s): altura 38.387561 (kicks 0)
+[separacion] (0.125346 s): altura 38.003685 (kicks 0)
+[separacion] (0.156366 s): altura 37.497328 (kicks 0)
+[separacion] (0.157713 s): altura 37.029068 (kicks 0)
+[separacion] (0.160299 s): altura 36.658777 (kicks 0)
+[separacion] (0.168913 s): altura 36.29219 (kicks 0)
+[separacion] (0.190978 s): altura 35.929268 (kicks 0)
+[separacion] (0.300861 s): altura 35.290174 (kicks 0)
+[separacion] (0.489595 s): altura 35.019486 (kicks 0)
+[separacion] (0.547536 s): altura 34.269461 (kicks 0)
+[separacion] (0.552623 s): altura 33.926766 (kicks 0)
+[separacion] (1.186534 s): altura 33.751485 (kicks 0)
+[separacion] (1.189014 s): altura 33.395323 (kicks 0)
+[separacion] (1.194474 s): altura 33.06137 (kicks 0)
+[separacion] (1.314796 s): altura 32.730756 (kicks 0)
+[separacion] (1.317101 s): altura 32.35439 (kicks 0)
+[separacion] (1.33916 s): altura 32.030846 (kicks 0)
+[separacion] (1.598012 s): altura 31.710538 (kicks 0)
+[separacion] (1.607126 s): altura 31.393432 (kicks 0)
+[separacion] (6.008382 s): altura 31.157982 (kicks 5)
+[separacion] (6.022895 s): altura 30.846402 (kicks 0)
+[separacion] (6.034958 s): altura 30.537938 (kicks 0)
+[separacion] (16.509352 s): altura 30.308903 (kicks 11)
+[separacion] (31.796119 s): altura 30.143674 (kicks 13)
+separations: 419
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.13729
+time: 120.30762
 feasible: yes
 items: 36
-height: 30
-density: 0.32755889
-max_overlap: 2.3719693e-11
+height: 30.143674
+density: 0.32599765
+max_overlap: 2.220446e-15
 max_outside: 0

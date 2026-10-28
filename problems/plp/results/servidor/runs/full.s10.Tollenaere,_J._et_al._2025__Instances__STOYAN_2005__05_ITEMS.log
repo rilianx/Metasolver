@@ -3,37 +3,20 @@ items: 5
 height_lb: 12
 construction_height (greedy, 0.002384 s): 19
 compaction_height (sin LP): 19
-[separacion] (0.00449 s): altura 18.771429 (kicks 0)
-[separacion] (0.004511 s): altura 18.583714 (kicks 0)
-[separacion] (0.004524 s): altura 18.397877 (kicks 0)
-[separacion] (0.004535 s): altura 18.213898 (kicks 0)
-[separacion] (0.004546 s): altura 18.031759 (kicks 0)
-[separacion] (0.004557 s): altura 17.851442 (kicks 0)
-[separacion] (0.004567 s): altura 17.672927 (kicks 0)
-[separacion] (0.004578 s): altura 17.496198 (kicks 0)
-[separacion] (0.004588 s): altura 17.321236 (kicks 0)
-[separacion] (0.004599 s): altura 17.148024 (kicks 0)
-[separacion] (0.006505 s): altura 16.976544 (kicks 0)
-[separacion] (0.006526 s): altura 16.806778 (kicks 0)
-[separacion] (0.006539 s): altura 16.63871 (kicks 0)
-[separacion] (0.00655 s): altura 16.472323 (kicks 0)
-[separacion] (0.006562 s): altura 16.3076 (kicks 0)
-[separacion] (0.006573 s): altura 16.144524 (kicks 0)
-[separacion] (0.008803 s): altura 15.983079 (kicks 0)
-[separacion] (0.008873 s): altura 15.823248 (kicks 0)
-[separacion] (0.008934 s): altura 15.665015 (kicks 0)
-[separacion] (0.008991 s): altura 15.508365 (kicks 0)
-[separacion] (0.015223 s): altura 15.353282 (kicks 0)
-[separacion] (0.015335 s): altura 15.199749 (kicks 0)
-[separacion] (0.019525 s): altura 15.047751 (kicks 0)
-[separacion] (3.529838 s): altura 15.010132 (kicks 109)
-separations: 3549
+[separacion] (0.004741 s): altura 17 (kicks 0)
+[separacion] (0.005532 s): altura 16 (kicks 0)
+[separacion] (0.007648 s): altura 15.84 (kicks 0)
+[separacion] (0.007794 s): altura 15.6816 (kicks 0)
+[separacion] (0.007939 s): altura 15.524784 (kicks 0)
+[separacion] (0.008065 s): altura 15.369536 (kicks 0)
+[separacion] (0.031431 s): altura 15 (kicks 0)
+separations: 3510
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.003681
+time: 30.004461
 feasible: yes
 items: 5
-height: 15.010132
-density: 0.42684131
-max_overlap: 1.7763568e-15
+height: 15
+density: 0.42712963
+max_overlap: 0
 max_outside: 0

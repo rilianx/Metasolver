@@ -1,48 +1,46 @@
 instance: STOYAN_2004_EXAMPLE_5
 items: 50
 height_lb: 29
-construction_height (greedy, 0.282534 s): 94.696246
-compaction_height (sin LP): 94.696246
-[separacion] (0.286323 s): altura 92.921733 (kicks 0)
-[separacion] (0.2873 s): altura 91.992516 (kicks 0)
-[separacion] (0.293445 s): altura 90.79506 (kicks 0)
-[separacion] (0.295186 s): altura 89.367316 (kicks 0)
-[separacion] (0.346465 s): altura 88.473643 (kicks 0)
-[separacion] (0.420054 s): altura 87.588906 (kicks 0)
-[separacion] (0.509335 s): altura 86.713017 (kicks 0)
-[separacion] (0.555114 s): altura 85.845887 (kicks 0)
-[separacion] (0.558386 s): altura 84.987428 (kicks 0)
-[separacion] (0.565663 s): altura 84.137554 (kicks 0)
-[separacion] (0.566977 s): altura 83.296178 (kicks 0)
-[separacion] (0.601445 s): altura 82.463217 (kicks 0)
-[separacion] (0.644542 s): altura 81.638585 (kicks 0)
-[separacion] (0.647597 s): altura 80.822199 (kicks 0)
-[separacion] (0.649904 s): altura 80.013977 (kicks 0)
-[separacion] (0.662982 s): altura 79.213837 (kicks 0)
-[separacion] (0.674823 s): altura 78.421699 (kicks 0)
-[separacion] (0.687515 s): altura 77.637482 (kicks 0)
-[separacion] (0.896265 s): altura 77.249294 (kicks 0)
-[separacion] (0.945719 s): altura 76.476801 (kicks 0)
-[separacion] (1.065366 s): altura 75.767933 (kicks 0)
-[separacion] (1.113285 s): altura 75.010254 (kicks 0)
-[separacion] (1.447522 s): altura 74.635203 (kicks 0)
-[separacion] (1.648181 s): altura 73.908991 (kicks 0)
-[separacion] (2.61869 s): altura 73.539446 (kicks 1)
-[separacion] (3.019241 s): altura 73.226558 (kicks 0)
-[separacion] (14.566879 s): altura 73.043491 (kicks 15)
-[separacion] (14.679858 s): altura 72.495665 (kicks 0)
-[separacion] (14.975167 s): altura 72.133187 (kicks 0)
-[separacion] (15.995579 s): altura 71.772521 (kicks 1)
-[separacion] (18.050479 s): altura 71.555139 (kicks 2)
-[separacion] (85.139434 s): altura 71.352968 (kicks 79)
-[separacion] (90.483038 s): altura 71.137748 (kicks 5)
-separations: 594
+construction_height (greedy, 0.276331 s): 94.696246
+compaction_height (sin LP): 94.343239
+[separacion] (0.297947 s): altura 92.33545 (kicks 0)
+[separacion] (0.304226 s): altura 91.231519 (kicks 0)
+[separacion] (0.311721 s): altura 89.367316 (kicks 0)
+[separacion] (0.327071 s): altura 88.464065 (kicks 0)
+[separacion] (0.36672 s): altura 87.330654 (kicks 0)
+[separacion] (0.381053 s): altura 84.604639 (kicks 0)
+[separacion] (0.418656 s): altura 83.758593 (kicks 0)
+[separacion] (0.45197 s): altura 82.921007 (kicks 0)
+[separacion] (0.487602 s): altura 82.091797 (kicks 0)
+[separacion] (0.547527 s): altura 81.270879 (kicks 0)
+[separacion] (0.581753 s): altura 80.45817 (kicks 0)
+[separacion] (0.788254 s): altura 79.653588 (kicks 0)
+[separacion] (0.856738 s): altura 78.857052 (kicks 0)
+[separacion] (0.936243 s): altura 78.068482 (kicks 0)
+[separacion] (1.072542 s): altura 77.287797 (kicks 0)
+[separacion] (1.230573 s): altura 76.570941 (kicks 0)
+[separacion] (1.990538 s): altura 75.790861 (kicks 1)
+[separacion] (2.002368 s): altura 74.978955 (kicks 0)
+[separacion] (2.186249 s): altura 74.402804 (kicks 0)
+[separacion] (2.479167 s): altura 73.844783 (kicks 0)
+[separacion] (3.073241 s): altura 73.575887 (kicks 0)
+[separacion] (3.702049 s): altura 73.198406 (kicks 0)
+[separacion] (6.325736 s): altura 72.649418 (kicks 3)
+[separacion] (6.54547 s): altura 72.010929 (kicks 0)
+[separacion] (6.727506 s): altura 71.390215 (kicks 0)
+[separacion] (20.8544 s): altura 71.000119 (kicks 19)
+[separacion] (22.134646 s): altura 70.662074 (kicks 2)
+[separacion] (32.166098 s): altura 70.30244 (kicks 13)
+[separacion] (33.534734 s): altura 69.775172 (kicks 1)
+[separacion] (67.017503 s): altura 69.322993 (kicks 48)
+[separacion] (68.685292 s): altura 68.947061 (kicks 2)
+separations: 664
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.00257
+time: 120.04645
 feasible: yes
 items: 50
-height: 71.137748
-density: 0.27069636
-max_overlap: 2.6822988e-13
+height: 68.947061
+density: 0.27929733
+max_overlap: 2.7533531e-13
 max_outside: 0

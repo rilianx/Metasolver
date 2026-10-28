@@ -1,43 +1,20 @@
 instance: TETRAHEDRONS_06_ITEMS
 items: 6
 height_lb: 10
-construction_height (greedy, 0.000536 s): 20
-compaction_height (sin LP): 20
-[separacion] (0.000799 s): altura 19.8 (kicks 0)
-[separacion] (0.000955 s): altura 19.602 (kicks 0)
-[separacion] (0.001103 s): altura 19.40598 (kicks 0)
-[separacion] (0.001255 s): altura 19.21192 (kicks 0)
-[separacion] (0.001398 s): altura 19.019801 (kicks 0)
-[separacion] (0.001531 s): altura 18.829603 (kicks 0)
-[separacion] (0.001604 s): altura 18.641307 (kicks 0)
-[separacion] (0.001759 s): altura 18.454894 (kicks 0)
-[separacion] (0.002218 s): altura 18.270345 (kicks 0)
-[separacion] (0.002271 s): altura 18.087642 (kicks 0)
-[separacion] (0.002313 s): altura 17.906765 (kicks 0)
-[separacion] (0.002359 s): altura 17.727697 (kicks 0)
-[separacion] (0.002412 s): altura 17.55042 (kicks 0)
-[separacion] (0.002458 s): altura 17.374916 (kicks 0)
-[separacion] (0.002502 s): altura 17.201167 (kicks 0)
-[separacion] (0.002553 s): altura 17.029155 (kicks 0)
-[separacion] (0.002859 s): altura 16.858864 (kicks 0)
-[separacion] (0.003075 s): altura 16.690275 (kicks 0)
-[separacion] (0.003169 s): altura 16.523372 (kicks 0)
-[separacion] (0.003258 s): altura 16.358139 (kicks 0)
-[separacion] (0.003377 s): altura 16.194557 (kicks 0)
-[separacion] (0.003463 s): altura 16.032612 (kicks 0)
-[separacion] (0.003584 s): altura 15.872286 (kicks 0)
-[separacion] (0.003697 s): altura 15.713563 (kicks 0)
-[separacion] (0.003782 s): altura 15.556427 (kicks 0)
-[separacion] (0.003868 s): altura 15.400863 (kicks 0)
-[separacion] (0.003965 s): altura 15.246854 (kicks 0)
-[separacion] (0.07757 s): altura 15.208737 (kicks 2)
-separations: 3686
+construction_height (greedy, 0.000554 s): 20
+compaction_height (sin LP): 18.453056
+[separacion] (0.001344 s): altura 15.733159 (kicks 0)
+[separacion] (0.00148 s): altura 15.575827 (kicks 0)
+[separacion] (0.001676 s): altura 15.420069 (kicks 0)
+[separacion] (0.00194 s): altura 15.265868 (kicks 0)
+[separacion] (0.042458 s): altura 15.189539 (kicks 1)
+separations: 3556
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.006618
+time: 30.008278
 feasible: yes
 items: 6
-height: 15.208737
-density: 0.14235732
+height: 15.189539
+density: 0.14253724
 max_overlap: 1.7763568e-15
 max_outside: 0

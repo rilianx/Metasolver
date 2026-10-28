@@ -1,33 +1,28 @@
 instance: STOYAN_2004_06_ITEMS
 items: 6
 height_lb: 21
-construction_height (greedy, 0.004286 s): 33.841429
+construction_height (greedy, 0.004239 s): 33.841429
 compaction_height (sin LP): 33.841429
-[separacion] (0.00623 s): altura 33.503015 (kicks 0)
-[separacion] (0.006351 s): altura 33.167985 (kicks 0)
-[separacion] (0.006423 s): altura 32.836305 (kicks 0)
-[separacion] (0.006564 s): altura 32.507942 (kicks 0)
-[separacion] (0.006691 s): altura 32.182862 (kicks 0)
-[separacion] (0.015704 s): altura 31.861034 (kicks 0)
-[separacion] (0.023992 s): altura 31.542423 (kicks 0)
-[separacion] (0.024286 s): altura 31.226999 (kicks 0)
-[separacion] (0.037581 s): altura 30.992797 (kicks 0)
-[separacion] (0.037917 s): altura 30.682869 (kicks 0)
-[separacion] (0.038168 s): altura 30.37604 (kicks 0)
-[separacion] (0.038451 s): altura 30.072279 (kicks 0)
-[separacion] (0.058201 s): altura 29.846737 (kicks 0)
-[separacion] (0.058251 s): altura 29.54827 (kicks 0)
-[separacion] (0.072546 s): altura 29 (kicks 0)
-[separacion] (0.08737 s): altura 28.71 (kicks 0)
-[separacion] (0.087798 s): altura 28.4229 (kicks 0)
-[separacion] (0.088101 s): altura 28.138671 (kicks 0)
-separations: 1922
+[separacion] (0.006905 s): altura 33.503015 (kicks 0)
+[separacion] (0.007207 s): altura 33.034014 (kicks 0)
+[separacion] (0.007466 s): altura 32.703673 (kicks 0)
+[separacion] (0.007707 s): altura 32.376637 (kicks 0)
+[separacion] (0.007953 s): altura 32.05287 (kicks 0)
+[separacion] (0.016636 s): altura 31.732342 (kicks 0)
+[separacion] (0.018804 s): altura 31.415018 (kicks 0)
+[separacion] (0.028774 s): altura 30.447725 (kicks 0)
+[separacion] (0.029047 s): altura 30.143248 (kicks 0)
+[separacion] (0.030105 s): altura 29 (kicks 0)
+[separacion] (0.193154 s): altura 28.443383 (kicks 3)
+[separacion] (0.193491 s): altura 28.15895 (kicks 0)
+[separacion] (5.668578 s): altura 28 (kicks 96)
+separations: 1910
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.015344
+time: 30.008199
 feasible: yes
 items: 6
-height: 28.138671
-density: 0.37496177
-max_overlap: 0
+height: 28
+density: 0.37681878
+max_overlap: 1.7763568e-15
 max_outside: 0

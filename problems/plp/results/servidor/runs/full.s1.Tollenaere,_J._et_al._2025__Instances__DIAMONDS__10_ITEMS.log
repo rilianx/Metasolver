@@ -1,34 +1,18 @@
 instance: DIAMONDS_10_ITEMS
 items: 10
 height_lb: 7.1926746
-construction_height (greedy, 1.725211 s): 21.204546
+construction_height (greedy, 1.728844 s): 21.204546
 compaction_height (sin LP): 21.204546
-[separacion] (2.0802 s): altura 20.9925 (kicks 0)
-[separacion] (2.123452 s): altura 20.782575 (kicks 0)
-[separacion] (2.171739 s): altura 20.57475 (kicks 0)
-[separacion] (2.219656 s): altura 20.369002 (kicks 0)
-[separacion] (2.267661 s): altura 20.165312 (kicks 0)
-[separacion] (2.313632 s): altura 19.963659 (kicks 0)
-[separacion] (2.36711 s): altura 19.764022 (kicks 0)
-[separacion] (2.420266 s): altura 19.566382 (kicks 0)
-[separacion] (2.48209 s): altura 19.370718 (kicks 0)
-[separacion] (2.552465 s): altura 19.177011 (kicks 0)
-[separacion] (2.61326 s): altura 18.985241 (kicks 0)
-[separacion] (2.728194 s): altura 18.795389 (kicks 0)
-[separacion] (3.680771 s): altura 18.701791 (kicks 0)
-[separacion] (5.385896 s): altura 18.561527 (kicks 1)
-[separacion] (7.366426 s): altura 18.468719 (kicks 1)
-[separacion] (8.840938 s): altura 18.284032 (kicks 1)
-[separacion] (8.982606 s): altura 18.101192 (kicks 0)
-[separacion] (9.138409 s): altura 17.92018 (kicks 0)
-[separacion] (9.280371 s): altura 17.740978 (kicks 0)
-separations: 92
+[separacion] (2.277653 s): altura 18.828485 (kicks 0)
+[separacion] (2.54381 s): altura 17.903223 (kicks 0)
+[separacion] (4.107273 s): altura 17.724191 (kicks 1)
+separations: 77
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.255593
+time: 30.334011
 feasible: yes
 items: 10
-height: 17.740978
-density: 0.40542717
-max_overlap: 3.6415315e-14
+height: 17.724191
+density: 0.40581116
+max_overlap: 2.1316282e-14
 max_outside: 0

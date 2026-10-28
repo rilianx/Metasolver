@@ -1,38 +1,21 @@
 instance: STOYAN_2004_07_ITEMS
 items: 7
 height_lb: 21
-construction_height (greedy, 0.005008 s): 39.55115
-compaction_height (sin LP): 39.55115
-[separacion] (0.006847 s): altura 39.155639 (kicks 0)
-[separacion] (0.007181 s): altura 38.764082 (kicks 0)
-[separacion] (0.007589 s): altura 38.376441 (kicks 0)
-[separacion] (0.007763 s): altura 37.992677 (kicks 0)
-[separacion] (0.007873 s): altura 37.61275 (kicks 0)
-[separacion] (0.007961 s): altura 37.236623 (kicks 0)
-[separacion] (0.008045 s): altura 36.864256 (kicks 0)
-[separacion] (0.008127 s): altura 36.495614 (kicks 0)
-[separacion] (0.013172 s): altura 36.130658 (kicks 0)
-[separacion] (0.013302 s): altura 35.769351 (kicks 0)
-[separacion] (0.013732 s): altura 35.411658 (kicks 0)
-[separacion] (0.018935 s): altura 35.057541 (kicks 0)
-[separacion] (0.019029 s): altura 34.706966 (kicks 0)
-[separacion] (0.019111 s): altura 34.359896 (kicks 0)
-[separacion] (0.019188 s): altura 34.016297 (kicks 0)
-[separacion] (0.019249 s): altura 33.676134 (kicks 0)
-[separacion] (0.01931 s): altura 33.339373 (kicks 0)
-[separacion] (0.019369 s): altura 33.005979 (kicks 0)
-[separacion] (0.034802 s): altura 32.675919 (kicks 0)
-[separacion] (0.092369 s): altura 32.594229 (kicks 0)
-[separacion] (0.109569 s): altura 32.268287 (kicks 0)
-[separacion] (0.109651 s): altura 31.945604 (kicks 0)
-[separacion] (0.109738 s): altura 31.626148 (kicks 0)
-separations: 1566
+construction_height (greedy, 0.004973 s): 39.55115
+compaction_height (sin LP): 36.651211
+[separacion] (0.00766 s): altura 36.284699 (kicks 0)
+[separacion] (0.01715 s): altura 35.921852 (kicks 0)
+[separacion] (0.022994 s): altura 35.562634 (kicks 0)
+[separacion] (0.023226 s): altura 33.155556 (kicks 0)
+[separacion] (0.023718 s): altura 32.642633 (kicks 0)
+[separacion] (0.06512 s): altura 31.657778 (kicks 0)
+separations: 1507
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.019638
+time: 30.008401
 feasible: yes
 items: 7
-height: 31.626148
-density: 0.37899371
+height: 31.657778
+density: 0.37861505
 max_overlap: 3.5527137e-15
 max_outside: 0

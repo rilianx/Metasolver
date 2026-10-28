@@ -1,36 +1,23 @@
 instance: STOYAN_2005_05_ITEMS
 items: 5
 height_lb: 12
-construction_height (greedy, 0.002381 s): 19
+construction_height (greedy, 0.002391 s): 19
 compaction_height (sin LP): 19
-[separacion] (0.004503 s): altura 18.81 (kicks 0)
-[separacion] (0.004525 s): altura 18.6219 (kicks 0)
-[separacion] (0.004537 s): altura 18.435681 (kicks 0)
-[separacion] (0.004548 s): altura 18.251324 (kicks 0)
-[separacion] (0.004558 s): altura 18.068811 (kicks 0)
-[separacion] (0.004571 s): altura 17.888123 (kicks 0)
-[separacion] (0.004582 s): altura 17.709242 (kicks 0)
-[separacion] (0.004593 s): altura 17.532149 (kicks 0)
-[separacion] (0.004605 s): altura 17.356828 (kicks 0)
-[separacion] (0.004616 s): altura 17.183259 (kicks 0)
-[separacion] (0.004627 s): altura 17.011427 (kicks 0)
-[separacion] (0.004741 s): altura 16.841313 (kicks 0)
-[separacion] (0.004776 s): altura 16.672899 (kicks 0)
-[separacion] (0.004806 s): altura 16.50617 (kicks 0)
-[separacion] (0.004886 s): altura 16.341109 (kicks 0)
-[separacion] (0.004949 s): altura 16.177698 (kicks 0)
-[separacion] (0.005017 s): altura 16.015921 (kicks 0)
-[separacion] (0.005536 s): altura 15.855761 (kicks 0)
-[separacion] (0.005664 s): altura 15.697204 (kicks 0)
-[separacion] (0.005787 s): altura 15.540232 (kicks 0)
-[separacion] (0.005881 s): altura 15.384829 (kicks 0)
-[separacion] (0.01094 s): altura 15.230981 (kicks 0)
-[separacion] (0.01108 s): altura 15.078671 (kicks 0)
-[separacion] (0.354366 s): altura 15 (kicks 11)
-separations: 3521
+[separacion] (0.004649 s): altura 17 (kicks 0)
+[separacion] (0.006253 s): altura 16.7 (kicks 0)
+[separacion] (0.006398 s): altura 16.533 (kicks 0)
+[separacion] (0.006532 s): altura 16.36767 (kicks 0)
+[separacion] (0.00666 s): altura 16.203993 (kicks 0)
+[separacion] (0.006788 s): altura 16.041953 (kicks 0)
+[separacion] (0.006907 s): altura 15.881534 (kicks 0)
+[separacion] (0.007032 s): altura 15.722718 (kicks 0)
+[separacion] (0.007151 s): altura 15.565491 (kicks 0)
+[separacion] (0.007278 s): altura 15.409836 (kicks 0)
+[separacion] (0.011851 s): altura 15 (kicks 0)
+separations: 3553
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.004195
+time: 30.001572
 feasible: yes
 items: 5
 height: 15

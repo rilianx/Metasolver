@@ -1,30 +1,30 @@
 {
     "instancePath": "Tollenaere, J. et al. 2025/Instances/STOYAN_2005/05_ITEMS.json",
-    "totalHeight": 15.026023184439957,
+    "totalHeight": 15.000000000000004,
     "itemOrigin": "AlignToMinimum",
     "gap": 0,
     "items": [
         {
             "name": "polytope7.obj",
             "transformation": {
-                "position": [4.0999999999999996, 0, 6.026023184439957],
+                "position": [6, 0, 6.0000000000000027],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [4.0999999999999996, 0, 6.026023184439957, 1]
+                    [6, 0, 6.0000000000000027, 1]
                 ]
             }
         },
         {
             "name": "polytope1.obj",
             "transformation": {
-                "position": [0, 0, 7.026023184439957],
+                "position": [0, 0, 0],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [0, 0, 7.026023184439957, 1]
+                    [0, 0, 0, 1]
                 ]
             }
         },
@@ -43,24 +43,24 @@
         {
             "name": "polytope6.obj",
             "transformation": {
-                "position": [0, 0, 0],
+                "position": [0, 0, 8],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [0, 0, 0, 1]
+                    [0, 0, 8, 1]
                 ]
             }
         },
         {
             "name": "polytope5.obj",
             "transformation": {
-                "position": [8, 2, 0],
+                "position": [3.666666666666667, 2, 0],
                 "matrix": [
                     [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [8, 2, 0, 1]
+                    [3.666666666666667, 2, 0, 1]
                 ]
             }
         }

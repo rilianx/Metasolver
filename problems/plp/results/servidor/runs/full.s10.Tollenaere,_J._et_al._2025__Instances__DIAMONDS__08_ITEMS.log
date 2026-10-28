@@ -1,34 +1,26 @@
 instance: DIAMONDS_08_ITEMS
 items: 8
 height_lb: 6.4551167
-construction_height (greedy, 1.170164 s): 18.318374
+construction_height (greedy, 1.174584 s): 18.318374
 compaction_height (sin LP): 18.318374
-[separacion] (1.656894 s): altura 18.135191 (kicks 0)
-[separacion] (1.73384 s): altura 17.953839 (kicks 0)
-[separacion] (1.791866 s): altura 17.7743 (kicks 0)
-[separacion] (1.843685 s): altura 17.596557 (kicks 0)
-[separacion] (1.914308 s): altura 17.420592 (kicks 0)
-[separacion] (1.984798 s): altura 17.246386 (kicks 0)
-[separacion] (2.00022 s): altura 17.073922 (kicks 0)
-[separacion] (2.125561 s): altura 16.903183 (kicks 0)
-[separacion] (2.400951 s): altura 16.776409 (kicks 0)
-[separacion] (2.471327 s): altura 16.608645 (kicks 0)
-[separacion] (3.211447 s): altura 16.525601 (kicks 0)
-[separacion] (3.258989 s): altura 16.360345 (kicks 0)
-[separacion] (3.480685 s): altura 16.196742 (kicks 0)
-[separacion] (3.495375 s): altura 16.034775 (kicks 0)
-[separacion] (3.509831 s): altura 15.874427 (kicks 0)
-[separacion] (3.571438 s): altura 15.715683 (kicks 0)
-[separacion] (3.631018 s): altura 15.558526 (kicks 0)
-[separacion] (3.934289 s): altura 15.441837 (kicks 0)
-[separacion] (5.633434 s): altura 15.291073 (kicks 1)
-separations: 117
+[separacion] (1.905214 s): altura 17.714183 (kicks 0)
+[separacion] (2.129137 s): altura 17.186171 (kicks 0)
+[separacion] (2.302566 s): altura 16.920885 (kicks 0)
+[separacion] (2.443647 s): altura 16.751676 (kicks 0)
+[separacion] (2.535626 s): altura 16.584148 (kicks 0)
+[separacion] (2.724991 s): altura 16.258369 (kicks 0)
+[separacion] (3.195511 s): altura 16.125563 (kicks 0)
+[separacion] (3.771223 s): altura 15.502005 (kicks 0)
+[separacion] (5.831047 s): altura 15.46325 (kicks 1)
+[separacion] (5.969003 s): altura 15.308618 (kicks 0)
+[separacion] (10.608783 s): altura 15.174288 (kicks 3)
+separations: 104
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.159326
+time: 30.120028
 feasible: yes
 items: 8
-height: 15.291073
-density: 0.39273671
-max_overlap: 9.9804806e-07
+height: 15.174288
+density: 0.39575931
+max_overlap: 3.5527137e-15
 max_outside: 0

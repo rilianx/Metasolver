@@ -1,44 +1,36 @@
 instance: STOYAN_2004_20_ITEMS
 items: 20
 height_lb: 21
-construction_height (greedy, 0.013339 s): 53.562005
+construction_height (greedy, 0.013354 s): 53.562005
 compaction_height (sin LP): 53.562005
-[separacion] (0.014585 s): altura 53.026385 (kicks 0)
-[separacion] (0.016659 s): altura 52.496121 (kicks 0)
-[separacion] (0.017438 s): altura 51.97116 (kicks 0)
-[separacion] (0.02065 s): altura 51.451449 (kicks 0)
-[separacion] (0.021298 s): altura 50.936934 (kicks 0)
-[separacion] (0.022373 s): altura 50.427565 (kicks 0)
-[separacion] (0.023394 s): altura 49.923289 (kicks 0)
-[separacion] (0.024909 s): altura 49.424056 (kicks 0)
-[separacion] (0.026679 s): altura 48.929816 (kicks 0)
-[separacion] (0.028345 s): altura 48.440517 (kicks 0)
-[separacion] (0.036138 s): altura 47.956112 (kicks 0)
-[separacion] (0.04556 s): altura 47.476551 (kicks 0)
-[separacion] (0.111873 s): altura 47.001786 (kicks 0)
-[separacion] (0.128152 s): altura 46.531768 (kicks 0)
-[separacion] (0.151452 s): altura 46.06645 (kicks 0)
-[separacion] (0.21081 s): altura 45.605786 (kicks 0)
-[separacion] (0.240683 s): altura 45.149728 (kicks 0)
-[separacion] (0.249424 s): altura 44.69823 (kicks 0)
-[separacion] (0.255571 s): altura 44.251248 (kicks 0)
-[separacion] (0.266774 s): altura 43.808736 (kicks 0)
-[separacion] (0.481199 s): altura 43.589692 (kicks 0)
-[separacion] (0.497453 s): altura 43.153795 (kicks 0)
-[separacion] (0.530886 s): altura 42.722257 (kicks 0)
-[separacion] (1.070946 s): altura 42.40184 (kicks 1)
-[separacion] (1.254131 s): altura 42.083826 (kicks 0)
-[separacion] (6.794961 s): altura 41.978617 (kicks 11)
-[separacion] (6.816675 s): altura 41.558831 (kicks 0)
-[separacion] (9.020582 s): altura 41.454934 (kicks 4)
-[separacion] (10.979896 s): altura 41.144022 (kicks 4)
-separations: 268
+[separacion] (0.016089 s): altura 51.904907 (kicks 0)
+[separacion] (0.024101 s): altura 48.719122 (kicks 0)
+[separacion] (0.025236 s): altura 48.231931 (kicks 0)
+[separacion] (0.041752 s): altura 47.749612 (kicks 0)
+[separacion] (0.066637 s): altura 47.272116 (kicks 0)
+[separacion] (0.086754 s): altura 46.799394 (kicks 0)
+[separacion] (0.177181 s): altura 46.133617 (kicks 0)
+[separacion] (0.20622 s): altura 45.672281 (kicks 0)
+[separacion] (0.217855 s): altura 45.215558 (kicks 0)
+[separacion] (0.463601 s): altura 44.98948 (kicks 0)
+[separacion] (0.490598 s): altura 44.539586 (kicks 0)
+[separacion] (0.54276 s): altura 44.199174 (kicks 0)
+[separacion] (0.560735 s): altura 43.585373 (kicks 0)
+[separacion] (0.607786 s): altura 43.189441 (kicks 0)
+[separacion] (1.007162 s): altura 43.081467 (kicks 0)
+[separacion] (1.034898 s): altura 42.650653 (kicks 0)
+[separacion] (1.117121 s): altura 42.259373 (kicks 0)
+[separacion] (1.362155 s): altura 42.048076 (kicks 0)
+[separacion] (1.909093 s): altura 41.732716 (kicks 1)
+[separacion] (6.884761 s): altura 41.41972 (kicks 11)
+[separacion] (20.107405 s): altura 41.295618 (kicks 26)
+separations: 261
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.107565
+time: 30.063171
 feasible: yes
 items: 20
-height: 41.144022
-density: 0.43686442
+height: 41.295618
+density: 0.43526068
 max_overlap: 3.5527137e-15
 max_outside: 0

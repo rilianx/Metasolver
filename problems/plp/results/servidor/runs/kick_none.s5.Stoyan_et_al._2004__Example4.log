@@ -1,52 +1,43 @@
 instance: STOYAN_2004_EXAMPLE_4
 items: 40
 height_lb: 29
-construction_height (greedy, 0.211627 s): 78.148453
+construction_height (greedy, 0.210021 s): 78.148453
 compaction_height (sin LP): 78.148453
-[separacion] (0.215094 s): altura 77.366969 (kicks 0)
-[separacion] (0.217179 s): altura 76.593299 (kicks 0)
-[separacion] (0.221459 s): altura 75.827366 (kicks 0)
-[separacion] (0.225678 s): altura 75.069093 (kicks 0)
-[separacion] (0.239265 s): altura 74.318402 (kicks 0)
-[separacion] (0.249153 s): altura 73.575218 (kicks 0)
-[separacion] (0.266115 s): altura 72.839465 (kicks 0)
-[separacion] (0.282875 s): altura 72.111071 (kicks 0)
-[separacion] (0.284933 s): altura 71.38996 (kicks 0)
-[separacion] (0.287964 s): altura 70.676061 (kicks 0)
-[separacion] (0.290001 s): altura 69.9693 (kicks 0)
-[separacion] (0.29413 s): altura 69.269607 (kicks 0)
-[separacion] (0.301088 s): altura 68.576911 (kicks 0)
-[separacion] (0.571656 s): altura 67.901546 (kicks 0)
-[separacion] (0.734703 s): altura 67.222531 (kicks 0)
-[separacion] (1.107605 s): altura 66.550305 (kicks 0)
-[separacion] (1.126469 s): altura 65.884666 (kicks 0)
-[separacion] (1.134561 s): altura 65.225819 (kicks 0)
-[separacion] (1.208177 s): altura 64.573561 (kicks 0)
-[separacion] (1.533002 s): altura 63.927825 (kicks 0)
-[separacion] (2.475533 s): altura 63.448367 (kicks 0)
-[separacion] (4.579745 s): altura 63.289746 (kicks 0)
-[separacion] (4.653974 s): altura 62.656848 (kicks 0)
-[separacion] (4.912511 s): altura 62.03028 (kicks 0)
-[separacion] (5.439639 s): altura 61.409977 (kicks 0)
-[separacion] (7.061273 s): altura 61.102927 (kicks 0)
-[separacion] (7.394851 s): altura 60.491898 (kicks 0)
-[separacion] (12.569186 s): altura 60.340668 (kicks 1)
-[separacion] (13.860058 s): altura 60.038965 (kicks 0)
-[separacion] (14.000834 s): altura 59.438575 (kicks 0)
-[separacion] (14.534647 s): altura 58.992786 (kicks 0)
-[separacion] (15.29713 s): altura 58.575895 (kicks 0)
-[separacion] (15.736475 s): altura 58.014285 (kicks 0)
-[separacion] (16.853601 s): altura 57.63323 (kicks 0)
-[separacion] (17.225975 s): altura 57.056897 (kicks 0)
-[separacion] (21.92463 s): altura 56.628971 (kicks 1)
-[separacion] (22.915707 s): altura 56.204253 (kicks 0)
-separations: 157
+[separacion] (0.227789 s): altura 76.88564 (kicks 0)
+[separacion] (0.236302 s): altura 73.011125 (kicks 0)
+[separacion] (0.270996 s): altura 69.282085 (kicks 0)
+[separacion] (0.284561 s): altura 68.589264 (kicks 0)
+[separacion] (0.307736 s): altura 67.477581 (kicks 0)
+[separacion] (0.424734 s): altura 66.802806 (kicks 0)
+[separacion] (0.437251 s): altura 66.134777 (kicks 0)
+[separacion] (0.966682 s): altura 65.472391 (kicks 0)
+[separacion] (1.164449 s): altura 64.817667 (kicks 0)
+[separacion] (1.284139 s): altura 64.15472 (kicks 0)
+[separacion] (1.684595 s): altura 63.491021 (kicks 0)
+[separacion] (1.976342 s): altura 62.854911 (kicks 0)
+[separacion] (4.621051 s): altura 62.226286 (kicks 1)
+[separacion] (7.557749 s): altura 61.55 (kicks 1)
+[separacion] (10.27427 s): altura 61.061231 (kicks 1)
+[separacion] (10.323963 s): altura 60.450619 (kicks 0)
+[separacion] (13.295814 s): altura 59.846113 (kicks 1)
+[separacion] (13.448263 s): altura 59.247652 (kicks 0)
+[separacion] (13.463339 s): altura 58.655175 (kicks 0)
+[separacion] (13.537715 s): altura 58.068623 (kicks 0)
+[separacion] (14.15938 s): altura 57.633109 (kicks 0)
+[separacion] (14.198145 s): altura 57.056778 (kicks 0)
+[separacion] (19.793752 s): altura 56.546678 (kicks 2)
+[separacion] (20.796645 s): altura 56.06815 (kicks 0)
+[separacion] (32.639884 s): altura 55.520913 (kicks 3)
+[separacion] (32.794228 s): altura 54.965704 (kicks 0)
+[separacion] (33.025542 s): altura 54.416047 (kicks 0)
+[separacion] (34.768451 s): altura 54.04802 (kicks 0)
+separations: 156
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.32076
+time: 120.14245
 feasible: yes
 items: 40
-height: 56.204253
-density: 0.2740964
-max_overlap: 8.6761845e-07
+height: 54.04802
+density: 0.28503142
+max_overlap: 1.181335e-10
 max_outside: 0

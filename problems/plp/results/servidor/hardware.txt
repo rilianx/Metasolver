@@ -1,4 +1,4 @@
-# fecha: 2026-10-27T14:55:11-03:00
+# fecha: 2026-10-27T20:00:26-03:00
 # host: servidor-ignacio
 
 ## CPU (lscpu)
@@ -16,7 +16,7 @@ Thread(s) per core:                      1
 Core(s) per socket:                      8
 Socket(s):                               2
 Stepping:                                1
-CPU(s) scaling MHz:                      43%
+CPU(s) scaling MHz:                      52%
 CPU max MHz:                             3000.0000
 CPU min MHz:                             1200.0000
 BogoMIPS:                                4199.91
@@ -54,30 +54,29 @@ logicos (nproc): 16
 fisicos (core,socket distintos): 16
 
 ## frecuencias por nucleo (MHz, ahora)
-      1 1199.660
-      1 1199.945
-      1 1199.977
-      2 1200.000
-      1 1228.762
-      1 1646.101
-      1 1881.596
-      1 1899.511
-      1 1900.000
-      1 1900.998
-      1 1902.381
-      1 1999.200
-      1 2100.808
-      1 2288.302
-      1 2299.948
+      1 1195.324
+      1 1199.464
+      1 1199.951
+      1 1199.964
+      3 1200.000
+      1 1649.264
+      1 1896.023
+      1 1923.779
+      1 1998.802
+      1 1999.307
+      1 2156.106
+      1 2287.408
+      1 2289.811
+      1 2298.534
 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor: schedutil
 /sys/devices/system/cpu/intel_pstate/no_turbo: 0
 
 ## memoria
 MemTotal:       65845920 kB
-MemFree:        39355128 kB
-MemAvailable:   59401360 kB
+MemFree:        38323404 kB
+MemAvailable:   58428852 kB
                total        used        free      shared  buff/cache   available
-Mem:            62Gi       6.1Gi        37Gi        22Mi        20Gi        56Gi
+Mem:            62Gi       7.1Gi        36Gi        22Mi        20Gi        55Gi
 Swap:          8.0Gi       227Mi       7.8Gi
 
 ## sistema
@@ -86,7 +85,7 @@ VERSION="24.04.1 LTS (Noble Numbat)"
 Linux servidor-ignacio 6.17.0-35-generic #35~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 19:30:42 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 
 ## carga actual
- 14:55:11 up 118 days, 20:29, 14 users,  load average: 0.24, 0.18, 2.78
+ 20:00:26 up 119 days,  1:35, 15 users,  load average: 0.38, 0.17, 0.10
 
 ## compiladores y herramientas
 g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
@@ -94,5 +93,5 @@ cmake version 3.28.3
 Python 3.12.3
 
 ## repositorio
-d9666b2857b4167d11f90e5fd7d018df3092cf5d plp: fase 2 (metodo final)
+f99e6454f013a41b4f8260e17f637761b16d6c8f Merge branch 'claude/nifty-goodall-3cco23' of https://github.com/rilianx/Metasolver into claude/nifty-goodall-3cco23
 ?? ../../../resultados_plp.tgz

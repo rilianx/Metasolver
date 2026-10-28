@@ -1,31 +1,25 @@
 instance: STOYAN_2005_EXAMPLE_2
 items: 12
 height_lb: 16
-construction_height (greedy, 0.008937 s): 31.714286
+construction_height (greedy, 0.008911 s): 31.714286
 compaction_height (soplex): 30.956249
-[separacion] (0.019625 s): altura 27.961279 (kicks 0)
-[separacion] (0.023293 s): altura 27.035714 (kicks 0)
-[separacion] (0.027451 s): altura 25.54552 (kicks 0)
-[separacion] (0.03081 s): altura 24.981277 (kicks 0)
-[separacion] (0.034618 s): altura 24.387435 (kicks 0)
-[separacion] (0.046915 s): altura 23.48983 (kicks 0)
-[separacion] (0.053833 s): altura 23.240197 (kicks 0)
-[separacion] (0.060843 s): altura 23 (kicks 0)
-[separacion] (0.07958 s): altura 22.569601 (kicks 0)
-[separacion] (0.086085 s): altura 22.18931 (kicks 0)
-[separacion] (0.151826 s): altura 21.333665 (kicks 0)
-[separacion] (0.155461 s): altura 21.102315 (kicks 0)
-[separacion] (0.960245 s): altura 20.856914 (kicks 4)
-[separacion] (1.358741 s): altura 20.663834 (kicks 2)
-[separacion] (1.386806 s): altura 20.168126 (kicks 0)
-[separacion] (2.48226 s): altura 20 (kicks 5)
-[separacion] (3.652494 s): altura 19.833333 (kicks 5)
-[separacion] (4.055433 s): altura 19.127509 (kicks 2)
+[separacion] (0.023339 s): altura 27.221826 (kicks 0)
+[separacion] (0.042594 s): altura 26.252025 (kicks 0)
+[separacion] (0.049374 s): altura 25.932995 (kicks 0)
+[separacion] (0.057406 s): altura 25.536329 (kicks 0)
+[separacion] (0.07044 s): altura 24 (kicks 0)
+[separacion] (0.07671 s): altura 23.038251 (kicks 0)
+[separacion] (0.083248 s): altura 22.449231 (kicks 0)
+[separacion] (0.088749 s): altura 22 (kicks 0)
+[separacion] (0.139537 s): altura 20.661855 (kicks 0)
+[separacion] (0.146646 s): altura 20.210815 (kicks 0)
+[separacion] (0.165088 s): altura 20 (kicks 0)
+[separacion] (3.864077 s): altura 19.127509 (kicks 17)
 margin_height (1e-07): 19.127509
-separations: 2048
+separations: 2040
 rejected: 0
-limits: compact 0/19 (max 2 of 20), lp 0/38 (max 5 of 30)
-time: 120.00522
+limits: compact 0/13 (max 3 of 20), lp 0/29 (max 6 of 30)
+time: 120.00868
 feasible: yes
 items: 12
 height: 19.127509

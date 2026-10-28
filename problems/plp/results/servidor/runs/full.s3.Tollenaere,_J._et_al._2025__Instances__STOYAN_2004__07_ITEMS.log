@@ -1,38 +1,23 @@
 instance: STOYAN_2004_07_ITEMS
 items: 7
 height_lb: 21
-construction_height (greedy, 0.005007 s): 39.55115
-compaction_height (sin LP): 39.55115
-[separacion] (0.007113 s): altura 39.155639 (kicks 0)
-[separacion] (0.007388 s): altura 38.764082 (kicks 0)
-[separacion] (0.007774 s): altura 38.376441 (kicks 0)
-[separacion] (0.007937 s): altura 37.992677 (kicks 0)
-[separacion] (0.008028 s): altura 37.61275 (kicks 0)
-[separacion] (0.008114 s): altura 37.236623 (kicks 0)
-[separacion] (0.008208 s): altura 36.864256 (kicks 0)
-[separacion] (0.008287 s): altura 36.495614 (kicks 0)
-[separacion] (0.011432 s): altura 36.130658 (kicks 0)
-[separacion] (0.011543 s): altura 35.769351 (kicks 0)
-[separacion] (0.01172 s): altura 35.411658 (kicks 0)
-[separacion] (0.011849 s): altura 35.057541 (kicks 0)
-[separacion] (0.011975 s): altura 34.706966 (kicks 0)
-[separacion] (0.012165 s): altura 34.359896 (kicks 0)
-[separacion] (0.012317 s): altura 34.016297 (kicks 0)
-[separacion] (0.012603 s): altura 33.676134 (kicks 0)
-[separacion] (0.012882 s): altura 33.339373 (kicks 0)
-[separacion] (0.028234 s): altura 33.005979 (kicks 0)
-[separacion] (0.029016 s): altura 32.675919 (kicks 0)
-[separacion] (0.039288 s): altura 32.34916 (kicks 0)
-[separacion] (0.039386 s): altura 32.025668 (kicks 0)
-[separacion] (0.039466 s): altura 31.705412 (kicks 0)
-[separacion] (0.164275 s): altura 31.626148 (kicks 1)
-separations: 1564
+construction_height (greedy, 0.00496 s): 39.55115
+compaction_height (sin LP): 36.651211
+[separacion] (0.007705 s): altura 36.284699 (kicks 0)
+[separacion] (0.012182 s): altura 33.791667 (kicks 0)
+[separacion] (0.045567 s): altura 33.622708 (kicks 0)
+[separacion] (0.062697 s): altura 33.1 (kicks 0)
+[separacion] (0.063754 s): altura 32.769 (kicks 0)
+[separacion] (0.064834 s): altura 32.44131 (kicks 0)
+[separacion] (0.120303 s): altura 32.360207 (kicks 0)
+[separacion] (0.120573 s): altura 31.657778 (kicks 0)
+separations: 1498
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.007704
+time: 30.011098
 feasible: yes
 items: 7
-height: 31.626148
-density: 0.37899371
-max_overlap: 7.1054274e-15
+height: 31.657778
+density: 0.37861505
+max_overlap: 3.5527137e-15
 max_outside: 0

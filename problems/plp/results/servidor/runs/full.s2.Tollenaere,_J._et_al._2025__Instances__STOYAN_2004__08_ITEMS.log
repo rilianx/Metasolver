@@ -1,32 +1,27 @@
 instance: STOYAN_2004_08_ITEMS
 items: 8
 height_lb: 21
-construction_height (greedy, 0.005878 s): 41.091896
+construction_height (greedy, 0.005925 s): 41.091896
 compaction_height (sin LP): 41.091896
-[separacion] (0.008969 s): altura 40.680977 (kicks 0)
-[separacion] (0.00989 s): altura 40.274168 (kicks 0)
-[separacion] (0.011757 s): altura 39.871426 (kicks 0)
-[separacion] (0.011851 s): altura 39.472712 (kicks 0)
-[separacion] (0.0126 s): altura 39.077985 (kicks 0)
-[separacion] (0.012855 s): altura 38.687205 (kicks 0)
-[separacion] (0.012975 s): altura 38.300333 (kicks 0)
-[separacion] (0.021765 s): altura 37.917329 (kicks 0)
-[separacion] (0.022512 s): altura 37.538156 (kicks 0)
-[separacion] (0.023324 s): altura 37.162775 (kicks 0)
-[separacion] (0.0243 s): altura 36.791147 (kicks 0)
-[separacion] (0.029114 s): altura 36.423235 (kicks 0)
-[separacion] (0.02922 s): altura 36.059003 (kicks 0)
-[separacion] (0.029314 s): altura 35.698413 (kicks 0)
-[separacion] (0.029404 s): altura 35.341429 (kicks 0)
-[separacion] (0.02949 s): altura 34.988015 (kicks 0)
-[separacion] (0.029575 s): altura 34.638134 (kicks 0)
-separations: 1101
+[separacion] (0.009313 s): altura 40.680977 (kicks 0)
+[separacion] (0.010531 s): altura 40.274168 (kicks 0)
+[separacion] (0.011127 s): altura 39.173077 (kicks 0)
+[separacion] (0.011969 s): altura 38.25641 (kicks 0)
+[separacion] (0.014422 s): altura 37.323077 (kicks 0)
+[separacion] (0.014742 s): altura 36.718776 (kicks 0)
+[separacion] (0.031411 s): altura 36.045365 (kicks 0)
+[separacion] (0.032262 s): altura 35.684911 (kicks 0)
+[separacion] (0.033875 s): altura 35.328062 (kicks 0)
+[separacion] (0.035594 s): altura 34.974782 (kicks 0)
+[separacion] (0.292954 s): altura 34.799908 (kicks 2)
+[separacion] (1.076737 s): altura 34.615507 (kicks 6)
+separations: 1090
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.016806
+time: 30.005755
 feasible: yes
 items: 8
-height: 34.638134
-density: 0.38813997
-max_overlap: 1.7763568e-15
+height: 34.615507
+density: 0.38839369
+max_overlap: 7.1054274e-15
 max_outside: 0

@@ -1,27 +1,24 @@
 instance: STOYAN_2005_06_ITEMS
 items: 6
 height_lb: 16
-construction_height (greedy, 0.003592 s): 19
+construction_height (greedy, 0.003534 s): 19
 compaction_height (sin LP): 19
-[separacion] (0.006517 s): altura 18 (kicks 0)
-[separacion] (0.006575 s): altura 17.82 (kicks 0)
-[separacion] (0.006616 s): altura 17.6418 (kicks 0)
-[separacion] (0.00665 s): altura 17.465382 (kicks 0)
-[separacion] (0.010126 s): altura 17 (kicks 0)
-[separacion] (0.012126 s): altura 16.83 (kicks 0)
-[separacion] (0.012185 s): altura 16.6617 (kicks 0)
-[separacion] (0.012232 s): altura 16.495083 (kicks 0)
-[separacion] (0.012276 s): altura 16.330132 (kicks 0)
-[separacion] (0.012318 s): altura 16.166831 (kicks 0)
-[separacion] (0.012358 s): altura 16.005163 (kicks 0)
-[separacion] (0.012397 s): altura 16 (kicks 0)
-separations: 12
+[separacion] (0.006468 s): altura 18 (kicks 0)
+[separacion] (0.008445 s): altura 17.82 (kicks 0)
+[separacion] (0.013478 s): altura 17 (kicks 0)
+[separacion] (0.013671 s): altura 16.83 (kicks 0)
+[separacion] (0.013875 s): altura 16.6 (kicks 0)
+[separacion] (0.052112 s): altura 16.434 (kicks 1)
+[separacion] (0.052273 s): altura 16.26966 (kicks 0)
+[separacion] (0.05242 s): altura 16.106963 (kicks 0)
+[separacion] (0.052793 s): altura 16 (kicks 0)
+separations: 13
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 0.012411
+time: 0.052814
 feasible: yes
 items: 6
 height: 16
 density: 0.46536458
-max_overlap: 4.4408921e-16
+max_overlap: 0
 max_outside: 0

@@ -1,29 +1,29 @@
 instance: STOYAN_2004_03_ITEMS
 items: 3
 height_lb: 13
-construction_height (greedy, 0.001342 s): 22.282051
+construction_height (greedy, 0.001357 s): 22.282051
 compaction_height (sin LP): 22.282051
-[separacion] (0.046212 s): altura 22.059231 (kicks 3)
-[separacion] (0.046652 s): altura 21.838638 (kicks 0)
-[separacion] (0.046692 s): altura 21.620252 (kicks 0)
-[separacion] (0.046725 s): altura 21.40405 (kicks 0)
-[separacion] (0.046759 s): altura 21.190009 (kicks 0)
-[separacion] (0.046789 s): altura 20.978109 (kicks 0)
-[separacion] (0.046822 s): altura 20.768328 (kicks 0)
-[separacion] (0.046854 s): altura 20.560645 (kicks 0)
-[separacion] (0.046885 s): altura 20.355038 (kicks 0)
-[separacion] (0.046916 s): altura 20.151488 (kicks 0)
-[separacion] (0.046957 s): altura 19.949973 (kicks 0)
-[separacion] (0.046998 s): altura 19.750473 (kicks 0)
-[separacion] (0.047034 s): altura 19.552968 (kicks 0)
-[separacion] (0.047076 s): altura 19.357439 (kicks 0)
-separations: 8044
+[separacion] (0.04671 s): altura 21.895522 (kicks 3)
+[separacion] (0.047095 s): altura 21.676567 (kicks 0)
+[separacion] (0.047243 s): altura 21.459801 (kicks 0)
+[separacion] (0.047382 s): altura 21.245203 (kicks 0)
+[separacion] (0.047518 s): altura 21.032751 (kicks 0)
+[separacion] (0.047649 s): altura 20.822424 (kicks 0)
+[separacion] (0.047776 s): altura 20.6142 (kicks 0)
+[separacion] (0.0479 s): altura 20.408058 (kicks 0)
+[separacion] (0.048027 s): altura 20.203977 (kicks 0)
+[separacion] (0.048155 s): altura 20.001937 (kicks 0)
+[separacion] (0.048282 s): altura 19.801918 (kicks 0)
+[separacion] (0.048404 s): altura 19.603899 (kicks 0)
+[separacion] (0.048531 s): altura 19.40786 (kicks 0)
+[separacion] (9.716907 s): altura 19.35934 (kicks 648)
+separations: 8155
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.002348
+time: 30.000128
 feasible: yes
 items: 3
-height: 19.357439
-density: 0.30651438
-max_overlap: 0
+height: 19.35934
+density: 0.30648428
+max_overlap: 1.7763568e-15
 max_outside: 0

@@ -1,36 +1,22 @@
 instance: STOYAN_2004_09_ITEMS
 items: 9
 height_lb: 21
-construction_height (greedy, 0.006343 s): 49.928146
+construction_height (greedy, 0.006329 s): 49.928146
 compaction_height (sin LP): 49.928146
-[separacion] (0.010616 s): altura 49.428865 (kicks 0)
-[separacion] (0.010785 s): altura 48.934576 (kicks 0)
-[separacion] (0.013509 s): altura 48.445231 (kicks 0)
-[separacion] (0.013668 s): altura 47.960778 (kicks 0)
-[separacion] (0.01378 s): altura 47.48117 (kicks 0)
-[separacion] (0.013891 s): altura 47.006359 (kicks 0)
-[separacion] (0.013992 s): altura 46.536295 (kicks 0)
-[separacion] (0.014091 s): altura 46.070932 (kicks 0)
-[separacion] (0.014188 s): altura 45.610223 (kicks 0)
-[separacion] (0.014284 s): altura 45.154121 (kicks 0)
-[separacion] (0.01438 s): altura 44.702579 (kicks 0)
-[separacion] (0.014475 s): altura 44.255554 (kicks 0)
-[separacion] (0.02676 s): altura 43.812998 (kicks 0)
-[separacion] (0.02697 s): altura 43.374868 (kicks 0)
-[separacion] (0.027157 s): altura 42.941119 (kicks 0)
-[separacion] (0.02734 s): altura 42.511708 (kicks 0)
-[separacion] (0.066769 s): altura 42.19287 (kicks 0)
-[separacion] (0.139277 s): altura 41.981906 (kicks 0)
-[separacion] (0.145433 s): altura 41.562087 (kicks 0)
-[separacion] (0.163813 s): altura 41.146466 (kicks 0)
-[separacion] (0.249587 s): altura 40.923077 (kicks 0)
-separations: 920
+[separacion] (0.010976 s): altura 49.003605 (kicks 0)
+[separacion] (0.014325 s): altura 44.150748 (kicks 0)
+[separacion] (0.018491 s): altura 43.709241 (kicks 0)
+[separacion] (0.019343 s): altura 43.272148 (kicks 0)
+[separacion] (0.02506 s): altura 42.839427 (kicks 0)
+[separacion] (0.046594 s): altura 41.923602 (kicks 0)
+[separacion] (0.071921 s): altura 41 (kicks 0)
+separations: 880
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.001011
+time: 30.013154
 feasible: yes
 items: 9
-height: 40.923077
-density: 0.40876714
-max_overlap: 3.5527137e-15
+height: 41
+density: 0.40800023
+max_overlap: 8.8817842e-15
 max_outside: 0

@@ -1,31 +1,19 @@
 instance: TETRAHEDRONS_14_ITEMS
 items: 14
 height_lb: 10
-construction_height (greedy, 0.001194 s): 35.301737
-compaction_height (sin LP): 35.301737
-[separacion] (0.001325 s): altura 34.948719 (kicks 0)
-[separacion] (0.001677 s): altura 34.599232 (kicks 0)
-[separacion] (0.001922 s): altura 34.25324 (kicks 0)
-[separacion] (0.002072 s): altura 33.910707 (kicks 0)
-[separacion] (0.002768 s): altura 33.5716 (kicks 0)
-[separacion] (0.002923 s): altura 33.235884 (kicks 0)
-[separacion] (0.006139 s): altura 32.903525 (kicks 0)
-[separacion] (0.008063 s): altura 32.57449 (kicks 0)
-[separacion] (0.012011 s): altura 32.248745 (kicks 0)
-[separacion] (0.021215 s): altura 31.926258 (kicks 0)
-[separacion] (0.022524 s): altura 31.606995 (kicks 0)
-[separacion] (0.101653 s): altura 31.370535 (kicks 0)
-[separacion] (0.102824 s): altura 31.05683 (kicks 0)
-[separacion] (0.237307 s): altura 30.746262 (kicks 1)
-[separacion] (0.268297 s): altura 30.468467 (kicks 0)
-[separacion] (0.576305 s): altura 30.392296 (kicks 1)
-separations: 939
+construction_height (greedy, 0.001198 s): 35.301737
+compaction_height (sin LP): 33.692542
+[separacion] (0.004578 s): altura 33.355616 (kicks 0)
+[separacion] (0.012175 s): altura 32.959519 (kicks 0)
+[separacion] (0.015758 s): altura 31.510211 (kicks 0)
+[separacion] (0.027563 s): altura 30.359228 (kicks 0)
+separations: 762
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.008308
+time: 30.031533
 feasible: yes
 items: 14
-height: 30.392296
-density: 0.16622113
-max_overlap: 7.9936058e-15
+height: 30.359228
+density: 0.16640218
+max_overlap: 2.3803182e-13
 max_outside: 0

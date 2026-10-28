@@ -1,30 +1,28 @@
 instance: STOYAN_2004_08_ITEMS
 items: 8
 height_lb: 21
-construction_height (greedy, 0.005938 s): 41.091896
+construction_height (greedy, 0.005937 s): 41.091896
 compaction_height (sin LP): 41.091896
-[separacion] (0.008643 s): altura 40.680977 (kicks 0)
-[separacion] (0.0095 s): altura 40.274168 (kicks 0)
-[separacion] (0.009966 s): altura 39.871426 (kicks 0)
-[separacion] (0.010058 s): altura 39.472712 (kicks 0)
-[separacion] (0.01076 s): altura 39.077985 (kicks 0)
-[separacion] (0.011002 s): altura 38.687205 (kicks 0)
-[separacion] (0.011106 s): altura 38.300333 (kicks 0)
-[separacion] (0.032182 s): altura 37.917329 (kicks 0)
-[separacion] (0.037127 s): altura 37.538156 (kicks 0)
-[separacion] (0.038567 s): altura 37.162775 (kicks 0)
-[separacion] (0.041068 s): altura 36.791147 (kicks 0)
-[separacion] (0.088675 s): altura 35.711111 (kicks 0)
-[separacion] (0.089307 s): altura 35.354 (kicks 0)
-[separacion] (0.090101 s): altura 35.00046 (kicks 0)
-[separacion] (1.767221 s): altura 34.650455 (kicks 16)
-separations: 1089
+[separacion] (0.009041 s): altura 40.680977 (kicks 0)
+[separacion] (0.01027 s): altura 40.090385 (kicks 0)
+[separacion] (0.011678 s): altura 39.173077 (kicks 0)
+[separacion] (0.012397 s): altura 38.25641 (kicks 0)
+[separacion] (0.044964 s): altura 37.607843 (kicks 0)
+[separacion] (0.065497 s): altura 36.987377 (kicks 0)
+[separacion] (0.07959 s): altura 36.617503 (kicks 0)
+[separacion] (0.080331 s): altura 36.251328 (kicks 0)
+[separacion] (0.083237 s): altura 35.888815 (kicks 0)
+[separacion] (0.084024 s): altura 35.529927 (kicks 0)
+[separacion] (0.085071 s): altura 35.174627 (kicks 0)
+[separacion] (0.332963 s): altura 34.927869 (kicks 2)
+[separacion] (0.38196 s): altura 34.585311 (kicks 0)
+separations: 1085
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 30.017004
+time: 30.028446
 feasible: yes
 items: 8
-height: 34.650455
-density: 0.38800196
-max_overlap: 8.8817842e-16
+height: 34.585311
+density: 0.38873279
+max_overlap: 3.5527137e-15
 max_outside: 0

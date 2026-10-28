@@ -1,46 +1,48 @@
 instance: STOYAN_2004_EXAMPLE_1
 items: 80
 height_lb: 24.460905
-construction_height (greedy, 0.104209 s): 68.177018
+construction_height (greedy, 0.10729 s): 68.177018
 compaction_height (sin LP): 68.177018
-[separacion] (0.106643 s): altura 67.495248 (kicks 0)
-[separacion] (0.10836 s): altura 66 (kicks 0)
-[separacion] (0.110011 s): altura 65.003594 (kicks 0)
-[separacion] (0.112019 s): altura 64.353558 (kicks 0)
-[separacion] (0.116743 s): altura 63.710022 (kicks 0)
-[separacion] (0.136895 s): altura 63.072922 (kicks 0)
-[separacion] (0.170962 s): altura 62.442193 (kicks 0)
-[separacion] (0.204542 s): altura 61.817771 (kicks 0)
-[separacion] (0.256436 s): altura 61.199593 (kicks 0)
-[separacion] (0.578408 s): altura 60.740596 (kicks 0)
-[separacion] (0.662057 s): altura 60.13319 (kicks 0)
-[separacion] (0.874136 s): altura 59.531859 (kicks 0)
-[separacion] (1.386012 s): altura 59.062403 (kicks 0)
-[separacion] (2.071786 s): altura 58.51716 (kicks 0)
-[separacion] (3.243652 s): altura 58.224575 (kicks 0)
-[separacion] (4.168864 s): altura 57.78789 (kicks 0)
-[separacion] (4.915192 s): altura 57.354481 (kicks 0)
-[separacion] (8.707672 s): altura 56.87905 (kicks 1)
-[separacion] (10.43761 s): altura 56.594655 (kicks 0)
-[separacion] (15.256641 s): altura 56.311681 (kicks 1)
-[separacion] (18.395809 s): altura 55.749201 (kicks 1)
-[separacion] (19.53693 s): altura 55.331082 (kicks 0)
-[separacion] (21.041987 s): altura 54.916099 (kicks 0)
-[separacion] (23.244715 s): altura 54.641519 (kicks 0)
-[separacion] (24.319398 s): altura 54.305945 (kicks 0)
-[separacion] (25.943431 s): altura 53.961526 (kicks 0)
-[separacion] (30.475296 s): altura 53.627284 (kicks 1)
-[separacion] (69.429278 s): altura 53.493216 (kicks 10)
-[separacion] (79.30589 s): altura 53.359483 (kicks 2)
-[separacion] (80.670165 s): altura 52.989591 (kicks 0)
-[separacion] (114.53311 s): altura 52.724643 (kicks 10)
-separations: 176
+[separacion] (0.114544 s): altura 67.032801 (kicks 0)
+[separacion] (0.120858 s): altura 65.538628 (kicks 0)
+[separacion] (0.130521 s): altura 64.883242 (kicks 0)
+[separacion] (0.174147 s): altura 64.147389 (kicks 0)
+[separacion] (0.193162 s): altura 63.242384 (kicks 0)
+[separacion] (0.210062 s): altura 62.497602 (kicks 0)
+[separacion] (0.276214 s): altura 61.868713 (kicks 0)
+[separacion] (0.301166 s): altura 61.250026 (kicks 0)
+[separacion] (0.335592 s): altura 60.637526 (kicks 0)
+[separacion] (0.496346 s): altura 60.031151 (kicks 0)
+[separacion] (0.63746 s): altura 59.430839 (kicks 0)
+[separacion] (1.219903 s): altura 58.836531 (kicks 0)
+[separacion] (1.985407 s): altura 58.395257 (kicks 0)
+[separacion] (2.806695 s): altura 57.957293 (kicks 0)
+[separacion] (5.757341 s): altura 57.649512 (kicks 1)
+[separacion] (6.603834 s): altura 57.21714 (kicks 0)
+[separacion] (13.060113 s): altura 57.074098 (kicks 2)
+[separacion] (13.730339 s): altura 56.646042 (kicks 0)
+[separacion] (16.165414 s): altura 56.221196 (kicks 1)
+[separacion] (16.975317 s): altura 55.799537 (kicks 0)
+[separacion] (38.671922 s): altura 55.659883 (kicks 7)
+[separacion] (40.396592 s): altura 55.381583 (kicks 0)
+[separacion] (45.115155 s): altura 55.104676 (kicks 1)
+[separacion] (45.638553 s): altura 54.69139 (kicks 0)
+[separacion] (50.310693 s): altura 54.417934 (kicks 1)
+[separacion] (51.259127 s): altura 54.012164 (kicks 0)
+[separacion] (52.735275 s): altura 53.742103 (kicks 0)
+[separacion] (53.458557 s): altura 53.339038 (kicks 0)
+[separacion] (63.366157 s): altura 53.029935 (kicks 3)
+[separacion] (64.276483 s): altura 52.63221 (kicks 0)
+[separacion] (76.1758 s): altura 52.489617 (kicks 4)
+[separacion] (80.198508 s): altura 52.227169 (kicks 1)
+[separacion] (114.95473 s): altura 52.096601 (kicks 10)
+separations: 201
 rejected: 0
 limits: compact 0/0 (max 0 of 20), lp 0/0 (max 0 of 30)
-time: 120.29636
+time: 120.05557
 feasible: yes
 items: 80
-height: 52.724643
-density: 0.46393686
-max_overlap: 8.2626046e-07
-max_outside: 0
+height: 52.096601
+density: 0.46952977
+max_overlap: 8.9698599e-07
+max_outside: 7.1054274e-15
