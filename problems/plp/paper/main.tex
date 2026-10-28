@@ -460,7 +460,12 @@ position of least overlap, not to the lowest one. \textsc{Compact} pushes the pi
 compaction of \citet{li1995}, one piece at a time with \textsc{Descend}. Taking the pieces in increasing order of
 $z$, every piece descends again with \textsc{Descend}, with the other pieces fixed, and each piece that defines
 the height is moved to the lowest of the positions generated as in the greedy construction, if it is lower. The
-pass is repeated while the height decreases (at most 50 passes). \textsc{Compact} is applied to every feasible
+pass is repeated while the height decreases (at most 50 passes). A pass can enable moves that were not
+possible in the previous one, for two reasons. First, the constraints of \textsc{Descend} are the NFP facets of
+the neighboring pieces, so when a piece moves, its neighbors face a different feasible region: a piece processed
+earlier in the pass may now slide further down or towards a wall, into the space just freed. Second, once the
+pieces that defined the height have been moved lower, other pieces define it, and only in the next pass are
+they tried at the lowest candidate positions. \textsc{Compact} is applied to every feasible
 layout: after the construction, where it rarely changes anything (the greedy already leaves each piece at the end
 of a descent; in our runs it lowered the first solution of one instance out of 14), and after each successful
 separation, where it matters: without it, the height of the best solution would decrease only in the discrete
