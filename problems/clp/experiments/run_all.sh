@@ -2,7 +2,7 @@
 # Campana completa de experimentos de BSG_ULD (instancias finales de Paquay et al. 2018):
 #   1. corridas finales: 3 escenarios x t in {0.1, 1} s x 5 repeticiones
 #   2. ablacion (t = 0.1 s)
-#   3. barrido de cog_penalty (t = 0.1 s)
+#   3. barridos de cog_penalty y max_bl (t = 0.1 s)
 #   4. curvas del volumen segun el tiempo (tres escenarios) y, en paquay, con las fases de
 #      mejora a t
 # y un resumen en <salida>/summary.txt.
@@ -62,6 +62,7 @@ for v in $SETTINGS; do
 		run abl_${v}_$n $v -t 0.1 $a
 	done
 	for lam in 0 0.5 1 2 5 30; do run lambda${lam}_$v $v -t 0.1 --cog_penalty $lam; done
+	for nb in 250 1000 2000; do run maxbl${nb}_$v $v -t 0.1 --max_bl $nb; done
 done
 
 for v in $SETTINGS; do for t in 0.02 0.05 0.2 0.5 2; do run curve_${v}_t$t $v -t $t; done; done
@@ -83,6 +84,8 @@ esac
 		for d in $OUT/abl_${n}_*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 		echo "== curva de tiempo $n"
 		for d in $OUT/curve_${n}_t*; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
+		echo "== max_bl $n (t=0.1)"
+		for d in $OUT/maxbl*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 		echo "== cog_penalty $n (t=0.1)"
 		for d in $OUT/lambda*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 	done
