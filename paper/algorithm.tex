@@ -269,12 +269,12 @@ candidate types of a ULD are compared during the construction.
 \Repeat
 	\State $(\mathcal{U}, B) \gets \textsc{Construct}(P)$ \Comment{loaded ULDs, unloaded boxes} \label{a2:cons}
 	\If{$B \neq \emptyset$}
-		\State $\textsc{Insert}(\mathcal{U}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
+		\State $(\mathcal{U}, B) \gets \textsc{Insert}(\mathcal{U}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
 	\EndIf
 	\If{$V(B) < V(B^*)$} $(\mathcal{U}^*, B^*) \gets (\mathcal{U}, B)$ \EndIf \label{a2:keep}
 	\State $P \gets P \cup B$ \label{a2:prio}
 \Until{$B = \emptyset$ or three restarts} \label{a2:restart}
-\State $\textsc{Reduce}(\mathcal{U}^*)$ \Comment{reduction of the volume} \label{a2:red}
+\State $\mathcal{U}^* \gets \textsc{Reduce}(\mathcal{U}^*)$ \Comment{reduction of the volume} \label{a2:red}
 \State \Return $(\mathcal{U}^*, B^*)$
 \end{algorithmic}
 \end{algorithm}
@@ -348,11 +348,11 @@ running time.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Insert}$(\mathcal{U}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
-$\mathcal{U}$ by ruin and recreate.}
+$\mathcal{U}$ by ruin and recreate; returns the new loaded ULDs and pool.}
 \label{alg:insert}
 \begin{algorithmic}[1]
 \For{$\rho \in \{0.3, 0.6, 0.9\}$} \label{i:rho}
-	\If{$B = \emptyset$} \Return \EndIf \label{i:empty}
+	\If{$B = \emptyset$} \textbf{break} \EndIf \label{i:empty}
 	\State $\mathcal{U}' \gets \mathcal{U}$; $B' \gets B$
 	\For{$S \in \mathcal{U}'$ in decreasing order of free volume}
 		\State $R \gets \textsc{Ruin}(S, \rho)$ \Comment{top boxes, a proportion $\rho$ of the volume} \label{i:ruin}
@@ -364,6 +364,7 @@ $\mathcal{U}$ by ruin and recreate.}
 	\EndFor
 	\If{$V(B') < V(B)$} $\mathcal{U} \gets \mathcal{U}'$; $B \gets B'$ \EndIf \label{i:acc}
 \EndFor
+\State \Return $(\mathcal{U}, B)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -388,8 +389,8 @@ new ULDs whose total volume is smaller than that of $S$: the combinations of one
 types with enough volume and weight capacity, in which every remaining box fits, are tried in
 increasing order of total volume, loading the larger ULD first with all the remaining boxes and
 the second one with the rest. The first combination that loads all the boxes, without leaving a
-CoG out of range when the CoG of $S$ was not, replaces $S$; otherwise the changes made by
-\textsc{Insert} are undone and the next ULD is tried (line~\ref{r:undo}). After every change the
+CoG out of range when the CoG of $S$ was not, replaces $S$ (line~\ref{r:repl}); otherwise the
+solution $\mathcal{U}'$ returned by \textsc{Insert} is discarded and the next ULD is tried. After every change the
 phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume
 of the ULDs, so the phase terminates; a change may increase the number of ULDs, when one ULD is
 replaced by two smaller ones.
@@ -401,13 +402,13 @@ $\mathcal{U}$.}
 \begin{algorithmic}[1]
 \Repeat
 	\For{$S \in \mathcal{U}$ in decreasing order of lost volume}
-		\State $B' \gets S$; $\textsc{Insert}(\mathcal{U} \setminus \{S\}, B')$ \label{r:ins}
-		\If{$B' = \emptyset$} remove $S$ from $\mathcal{U}$; \textbf{break} \EndIf \label{r:elim}
+		\State $(\mathcal{U}', B') \gets \textsc{Insert}(\mathcal{U} \setminus \{S\}, S)$ \label{r:ins}
+		\If{$B' = \emptyset$} $\mathcal{U} \gets \mathcal{U}'$; \textbf{break} \EndIf \label{r:elim}
 		\State $\mathcal{N} \gets \textsc{NewULDs}(S, B')$ \label{r:new}
-		\If{$\mathcal{N} \neq$ failure} replace $S$ by $\mathcal{N}$ in $\mathcal{U}$; \textbf{break} \EndIf
-		\State undo the changes of \textsc{Insert} \label{r:undo}
+		\If{$\mathcal{N} \neq$ failure} $\mathcal{U} \gets \mathcal{U}' \cup \mathcal{N}$; \textbf{break} \EndIf \label{r:repl}
 	\EndFor
 \Until{no ULD was changed}
+\State \Return $\mathcal{U}$
 \end{algorithmic}
 \end{algorithm}
 
