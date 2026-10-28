@@ -1,0 +1,5 @@
+Block-based beam search adapted to air cargo palletization into non-cuboid ULDs
+Support, fragility and floor edge constraints met when blocks are built and placed
+Center of gravity penalized in the search and corrected by translating the whole load
+ULD volume reduced by replacing each ULD with up to two smaller ones
+Less ULD volume and far fewer center of gravity violations than the state of the art

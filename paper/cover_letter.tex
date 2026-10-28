@@ -1,0 +1,51 @@
+% Carta de presentacion para EJOR. Compilar con: pdflatex cover_letter.tex
+\documentclass[11pt]{letter}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\signature{Ignacio Araya\\Escuela de Ingenier\'ia Inform\'atica\\Pontificia Universidad Cat\'olica de Valpara\'iso}
+\address{Escuela de Ingenier\'ia Inform\'atica\\Pontificia Universidad Cat\'olica de Valpara\'iso\\Avenida Brasil 2950, Valpara\'iso, Chile\\\texttt{ignacio.araya@pucv.cl}}
+
+\begin{document}
+\begin{letter}{Editors\\European Journal of Operational Research}
+
+\opening{Dear Editors,}
+
+Please find enclosed the manuscript \emph{``A beam search for the air cargo palletization problem
+with weight distribution constraints''}, which I submit for consideration for publication in the
+European Journal of Operational Research as a Theory and Methodology paper.
+
+The manuscript addresses the palletization of air cargo into unit load devices (ULDs), a
+three-dimensional multiple bin size bin packing problem with non-cuboid bins, weight capacities,
+fragile boxes, support constraints and center of gravity constraints. The benchmark and the
+current state of the art for this problem were both published in EJOR (Paquay et al., 2018;
+He{\ss}ler et al., 2025), and the paper builds directly on this line of work.
+
+The main contributions are the following:
+\begin{itemize}
+\item The adaptation of a block-based beam search (BSG), one of the best approaches for the
+	container loading problem, to ULDs with bevelled corners, a floor edge and a substructure,
+	handling the support and fragility constraints when the blocks are built and placed.
+\item A treatment of the center of gravity inside the search, through a penalty in the value of
+	the solutions, combined with a final translation of the load.
+\item A multi-ULD framework whose reduction phase replaces each ULD by at most two smaller ones,
+	which accounts for most of the savings in volume.
+\item An evaluation on the 300 benchmark instances in the three settings of He{\ss}ler et al.,
+	with parameters tuned once on a separate training set and a comparison at the same
+	hardware-normalized running time. The algorithm improves on the state of the art in both
+	volume and weight distribution: at a comparable running time it uses 2.9--3.8\% less ULD
+	volume, and at most 1\% of its ULDs violate the center of gravity constraint, against
+	7--11\% for the previous method; with a few seconds per instance the savings in volume reach
+	7.1--8.2\%.
+\end{itemize}
+
+All the solutions are checked by an independent validator, and the code, the instances, the
+solutions and the scripts that reproduce the tables and figures are publicly available at
+\url{https://github.com/rilianx/bsg-uld}.
+
+This manuscript is original, has not been published, and is not under consideration for
+publication elsewhere. The author declares no competing interests.
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}

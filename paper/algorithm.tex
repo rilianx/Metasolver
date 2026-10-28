@@ -97,11 +97,11 @@ $a_j (x + \ell\,[a_j > 0]) + c_j (z + h\,[c_j > 0]) \le d_j$. A block placed at 
 of a space may cross one of the cuts. In that case, the block is shifted along the $x$ axis,
 inside the space, to the closest position that satisfies all the cuts: for a fixed $z$, each
 cut with $a_j > 0$ gives an upper bound and each cut with $a_j < 0$ a lower bound on $x$,
-\[
+\begin{gather*}
 x \le \Bigl\lfloor \frac{d_j - c_j (z + h\,[c_j > 0])}{a_j} \Bigr\rfloor - \ell \quad (a_j > 0),
-\qquad
+\\
 x \ge \Bigl\lceil \frac{d_j - c_j (z + h\,[c_j > 0])}{a_j} \Bigr\rceil \quad (a_j < 0),
-\]
+\end{gather*}
 and the block is moved to the point of the resulting interval, intersected with the extent of
 the space, closest to the anchor; if the interval is empty, the block is not placed in the
 space. Since the cuts are

@@ -1,7 +1,6 @@
-% Documento principal del paper (borrador). Compilar con: latexmk -pdf main.tex
-\documentclass[11pt]{article}
-\usepackage[margin=2.5cm]{geometry}
-\usepackage[T1]{fontenc}
+% Documento principal del paper (formato elsarticle, EJOR). Compilar con: latexmk -pdf main.tex
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+\usepackage{ae,aecompl}
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -11,18 +10,27 @@
 \usepackage{xcolor}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
-\usepackage[round]{natbib}
-\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
 
-\title{A beam search for the air cargo palletization problem\\with weight distribution constraints}
-\author{Ignacio Araya\\[2pt]
-\small Escuela de Ingenier\'ia Inform\'atica, Pontificia Universidad Cat\'olica de Valpara\'iso,\\
-\small Avenida Brasil 2950, Valpara\'iso, Chile\\
-\small \texttt{ignacio.araya@pucv.cl}}
-\date{\today}
+\journal{European Journal of Operational Research}
+
+% vinetas con el simbolo matematico (fuentes vectoriales)
+\renewcommand{\labelitemi}{$\bullet$}
+\setlength{\emergencystretch}{2em}
 
 \begin{document}
-\maketitle
+
+\begin{frontmatter}
+
+\title{A beam search for the air cargo palletization problem with weight distribution constraints}
+
+\author{Ignacio Araya\corref{cor1}}
+\ead{ignacio.araya@pucv.cl}
+\cortext[cor1]{Corresponding author.}
+\affiliation{organization={Escuela de Ingenier\'ia Inform\'atica, Pontificia Universidad Cat\'olica de Valpara\'iso},
+	addressline={Avenida Brasil 2950},
+	city={Valpara\'iso},
+	country={Chile}}
 
 \begin{abstract}
 We address the palletization of air cargo into unit load devices (ULDs): a set of heterogeneous
@@ -43,10 +51,14 @@ and at most 1\% of its ULDs violate the center of gravity constraint, against 7-
 of the previous method; with a few seconds per instance, it uses 7.1--8.2\% less ULD volume, with
 at most 0.5\% of its ULDs out of range. The differences in volume are significant in all the
 settings.
-
-\medskip\noindent\textbf{Keywords:} packing; air transport; three-dimensional bin packing;
-beam search; weight distribution
 \end{abstract}
+
+\begin{keyword}
+Packing \sep Air transport \sep Three-dimensional bin packing \sep Beam search \sep Weight distribution
+\end{keyword}
+
+\end{frontmatter}
+
 
 \input{introduction}
 \input{problem}
@@ -77,6 +89,6 @@ and testing the software, running and analyzing the computational experiments, a
 editing the manuscript. After using this tool, the author reviewed and edited the content as
 needed and takes full responsibility for the content of the published article.
 
-\bibliographystyle{plainnat}
+\bibliographystyle{elsarticle-harv}
 \bibliography{references}
 \end{document}
