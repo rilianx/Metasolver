@@ -330,47 +330,49 @@ $\omega = 100$ were worse.
 
 \paragraph{Insertion of boxes into the loaded ULDs.}
 The phases after the construction rely on the same procedure, \textsc{Insert}
-(Algorithm~\ref{alg:insert}), which inserts a pool of boxes into the ULDs already loaded, without
-adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$, in this
-order, a proportion $\rho$ of the loaded volume of each ULD is removed, taking the boxes with
-nothing on top of them from the highest one down, so that the remaining load is still feasible;
-then the ULDs, in decreasing order of free volume, are completed with \textsc{LoadULD} with the
-removed boxes and the pool, the remaining load being the partial loading $F$. A ULD whose new
-loading has the CoG out of range when the old one had not keeps its old loading. The new solution
-is accepted if the volume of the pool decreases, and the procedure stops as soon as the pool is
-empty. Reloading each ULD from scratch with its boxes and the pool, or giving priority to the
-boxes of the pool, did not improve the results at the same running time.
+(Algorithm~\ref{alg:insert}), which inserts a pool $B$ of boxes into the ULDs already loaded,
+without adding ULDs, by ruin and recreate \citep{Schrimpf2000}. For $\rho = 0.3$, $0.6$ and $0.9$,
+in this order (line~\ref{i:rho}), each ULD is visited in decreasing order of free volume. A
+proportion $\rho$ of its loaded volume is removed, taking the boxes with nothing on top of them
+from the highest one down, so that the remaining load is still feasible (line~\ref{i:ruin}); the
+ULD is then completed with \textsc{LoadULD} with the removed boxes and the pool, the remaining
+load being the partial loading $F$ (line~\ref{i:load}). A ULD whose new loading has the CoG out
+of range when the old one had not keeps its old loading (line~\ref{i:cog}). The new solution is
+accepted if the volume of the pool decreases (line~\ref{i:acc}), and the procedure stops as soon
+as the pool is empty (lines~\ref{i:stop} and~\ref{i:empty}). Reloading each ULD from scratch with its boxes
+and the pool, or giving priority to the boxes of the pool, did not improve the results at the
+same running time.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Insert}$(\mathcal{U}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
 $\mathcal{U}$ by ruin and recreate.}
 \label{alg:insert}
 \begin{algorithmic}[1]
-\For{$\rho \in \{0.3, 0.6, 0.9\}$}
-	\If{$B = \emptyset$} \Return \EndIf
+\For{$\rho \in \{0.3, 0.6, 0.9\}$} \label{i:rho}
+	\If{$B = \emptyset$} \Return \EndIf \label{i:empty}
 	\State $\mathcal{U}' \gets \mathcal{U}$; $B' \gets B$
 	\For{$S \in \mathcal{U}'$ in decreasing order of free volume}
 		\State $R \gets$ boxes removed from $S$, from the highest uncovered one down, until
-			a proportion $\rho$ of its loaded volume is removed
-		\State $S^\circ \gets \textsc{LoadULD}(k_S, R \cup B', 0.1\,t, S \setminus R)$ \Comment{$k_S$: type of $S$}
-		\If{$S^\circ$ is feasible \textbf{and} (the CoG of $S^\circ$ is in range \textbf{or} that of $S$ is not)}
-			\State $B' \gets (B' \cup R) \setminus S^\circ$; replace $S$ by $S^\circ$ in $\mathcal{U}'$
+			a proportion $\rho$ of its loaded volume is removed \label{i:ruin}
+		\State $S' \gets \textsc{LoadULD}(k_S, R \cup B', 0.1\,t, S \setminus R)$ \Comment{$k_S$: type of $S$} \label{i:load}
+		\If{$S'$ is feasible \textbf{and} (the CoG of $S'$ is in range \textbf{or} that of $S$ is not)} \label{i:cog}
+			\State $B' \gets (B' \cup R) \setminus S'$; replace $S$ by $S'$ in $\mathcal{U}'$
 		\EndIf
-		\If{$B' = \emptyset$} \textbf{break} \EndIf
+		\If{$B' = \emptyset$} \textbf{break} \EndIf \label{i:stop}
 	\EndFor
-	\If{$V(B') < V(B)$} $\mathcal{U} \gets \mathcal{U}'$; $B \gets B'$ \EndIf
+	\If{$V(B') < V(B)$} $\mathcal{U} \gets \mathcal{U}'$; $B \gets B'$ \EndIf \label{i:acc}
 \EndFor
 \end{algorithmic}
 \end{algorithm}
 
 \paragraph{Unloaded boxes and restarts.}
 When the number of ULDs is limited and some boxes remain unloaded after the construction, they
-are inserted into the loaded ULDs with \textsc{Insert} (line~\ref{a2:ins}). If some are still
+are inserted into the loaded ULDs with \textsc{Insert} (line~\ref{a2:ins} of Algorithm~\ref{alg:multi}). If some are still
 left out, the construction is restarted, and the boxes left out in the previous constructions
 are given priority in the first ULD in which they fit (the set $P$ in
 line~\ref{c:prio} of Algorithm~\ref{alg:construct}). This handles boxes that fit in several types but conflict with each other,
 for instance two large boxes that fit only in the largest types and cannot share a ULD. The
-solution with the smallest unloaded volume is kept (line~\ref{a2:keep}), with at most three
+solution with the smallest unloaded volume is kept (line~\ref{a2:keep} of Algorithm~\ref{alg:multi}), with at most three
 restarts.
 
 \paragraph{Reduction of the volume.}
