@@ -54,9 +54,7 @@ the volume of the free space that cannot be filled with the remaining boxes afte
 block (estimated with one-dimensional knapsack problems on each dimension of the space),
 $\mathrm{CS}_p(b)$ is the proportion of the surface of the block in contact with the placed
 blocks and the walls of the ULD, where faces at a distance of at most a proportion $p$ of the
-block dimension are considered in contact, and $n(b)$ is the number of boxes of the block. The
-evaluation is penalized by the CoG deviation caused by the block, as explained in
-Section~\ref{sec:alg-cog}.
+block dimension are considered in contact, and $n(b)$ is the number of boxes of the block.
 
 \paragraph{Greedy and beam search.}
 The greedy algorithm repeatedly selects the next free space and places the best evaluated block
@@ -155,9 +153,8 @@ $\lambda = 0$, it is ignored.
 
 The weight and the moments of the partial loading and its interval of feasible translations
 are stored in each state, so that the CoG excess of a greedy completion is computed in constant
-time per placed block. We also tried to penalize the CoG excess in the evaluation of each
-candidate block, but it increased the volume of the ULDs without reducing the number of
-violations noticeably (Section~\ref{sec:exp-ablation}), and it is not used.
+time per placed block. Penalizing the CoG excess also in the evaluation of each candidate block
+had no consistent effect in our experiments, and it is not used.
 
 Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 
@@ -216,11 +213,9 @@ highest one down, so that the remaining load is still feasible; then the ULDs, i
 order of free volume, are completed with \textsc{LoadULD} with the removed boxes and the pool,
 keeping the remaining boxes at their positions. A ULD whose new loading has the CoG out of range
 when the old one had not keeps its old loading. The new solution is accepted if the volume of the
-pool decreases, and the procedure stops as soon as the pool is empty. We also tried two
-additional stages before the ruin, which reload each ULD from scratch with its boxes and the
-pool, or giving priority to the boxes of the pool, and repeating the ruin while the pool
-decreased; they did not improve the results at the same running time
-(Section~\ref{sec:exp-ablation}).
+pool decreases, and the procedure stops as soon as the pool is empty. Reloading each ULD from
+scratch with its boxes and the pool, or giving priority to the boxes of the pool, did not improve
+the results at the same running time.
 
 \paragraph{Unloaded boxes.}
 When the number of ULDs is limited and some boxes remain unloaded after the construction,

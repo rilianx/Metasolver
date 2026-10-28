@@ -77,8 +77,7 @@ in the three settings and for both time limits. The training set consists of 150
 instances of \citet{Paquay2018b} (30 instances with 30, 40, 50, 60 and 100 boxes), disjoint
 from the final ones, each one in the three settings (450 runs, presented to irace in blocks of
 the three settings of an instance), with $t = 0.1$\,s, $N_{\max} = 500$ blocks (fixed, to bound the time per ULD) and a budget of
-6000 runs; no
-configuration is discarded before 21 instances. The cost of a run is
+6000 runs; no configuration is discarded before 21 instances. The cost of a run is
 \[
 \frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
 \]
@@ -88,7 +87,10 @@ volume of the boxes of the instance, so that loading all the boxes comes first, 
 CoG and then the volume of the ULDs. The values of a preliminary tuning were the initial
 configuration. Table~\ref{tab:params} lists the parameters; the four elite
 configurations returned by irace agree on a small $\lambda$ (1.0--1.7), a large $\gamma$
-(0.77--0.97) and $\theta$ between 0.18 and 0.32.
+(0.77--0.97) and $\theta$ between 0.18 and 0.32. The tuning was carried out with an earlier version of the
+improvement phases (with the time limit $t$ and two more stages in \textsc{Insert}); the later
+changes, described in Section~\ref{sec:alg-multi}, mainly reduce the running time, and the
+parameters were not tuned again.
 
 \begin{table}[htbp]
 \centering
@@ -342,82 +344,63 @@ the dotted line gives the improvement phases the same time limit $t$ as the cons
 \subsection{Contribution of the components}
 \label{sec:exp-ablation}
 
-Table~\ref{tab:ablation} reports the results with $t = 0.1$\,s when one component is removed or
-changed (one run; the complete algorithm is the mean of five runs, whose volume varies by about
-0.2\%).
+Table~\ref{tab:ablation} reports the results with $t = 0.1$\,s when one component of the
+algorithm is removed (one run; the complete algorithm is the mean of five runs, whose volume
+varies by about 0.2\%).
 
 \begin{table}[htbp]
 \centering
-\footnotesize\setlength{\tabcolsep}{3pt}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
 \caption{Ablation ($t = 0.1$\,s): volume of the ULDs relative to the RGS, ULDs with the CoG out
-of range in the length or width direction, unloaded volume (m$^3$) in the setting with one ULD of
-each type, and mean time per instance in the Paquay setting (s).}
+of range in the length or width direction and, with one ULD of each type, unloaded volume
+(m$^3$).}
 \label{tab:ablation}
-\begin{tabular}{lrrrrrrrr}
+\begin{tabular}{lrrrrrrr}
 \toprule
- & \multicolumn{3}{c}{Paquay} & \multicolumn{2}{c}{Adapted} & \multicolumn{3}{c}{One} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-6}\cmidrule(lr){7-9}
-Variant & Vol. & CoG & Time & Vol. & CoG & Vol. & Unl. & CoG \\
+ & \multicolumn{2}{c}{Paquay} & \multicolumn{2}{c}{Adapted} & \multicolumn{3}{c}{One} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-8}
+Variant & Vol. & CoG & Vol. & CoG & Vol. & Unl. & CoG \\
 \midrule
-Complete algorithm & $-$2.9\% & 7.8 & 0.56 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
+Complete algorithm & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
 \midrule
-No CoG penalty ($\lambda = 0$) & $-$6.0\% & 460 & 0.52 & $-$3.0\% & 281 & $-$1.0\% & 13.5 & 326 \\
-No translation of the load & $-$1.4\% & 183 & 0.52 & $-$2.4\% & 117 & $-$1.9\% & 36.7 & 216 \\
-CoG in the block evaluation ($\mu = 0.5$) & $-$3.6\% & 10 & 0.53 & $-$3.8\% & 2 & $-$3.5\% & 21.6 & 9 \\
-Spaces anchored at the nearest corner & $-$4.2\% & 4 & 0.84 & $-$3.4\% & 2 & $-$2.6\% & 26.1 & 4 \\
-No substructure & -- & -- & -- & $-$2.2\% & 7 & $-$1.6\% & 17.5 & 23 \\
-Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & 0.56 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
-No restarts & -- & -- & -- & -- & -- & $-$2.4\% & 39.6 & 15 \\
+No CoG penalty ($\lambda = 0$) & $-$6.0\% & 460 & $-$3.0\% & 281 & $-$1.0\% & 13.5 & 326 \\
+No translation of the load & $-$1.4\% & 183 & $-$2.4\% & 117 & $-$1.9\% & 36.7 & 216 \\
+No substructure & -- & -- & $-$2.2\% & 7 & $-$1.6\% & 17.5 & 23 \\
+No restarts & -- & -- & -- & -- & $-$2.4\% & 39.6 & 15 \\
+Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
 \midrule
-\textsc{Insert} with reload from scratch & $-$2.3\% & 10 & 0.58 & $-$2.9\% & 3 & $-$2.4\% & 17.2 & 15 \\
-\textsc{Insert} with priority reload & $-$2.0\% & 12 & 0.57 & $-$2.0\% & 2 & $-$2.6\% & 17.4 & 14 \\
-No \textsc{Insert} & $+$0.2\% & 10 & 0.31 & $+$0.2\% & 4 & $-$1.2\% & 37.1 & 21 \\
+No \textsc{Insert} & $+$0.2\% & 10 & $+$0.2\% & 4 & $-$1.2\% & 37.1 & 21 \\
+Reduction with one new ULD & $-$1.6\% & 8 & $-$2.5\% & 2 & $-$2.2\% & 20.0 & 16 \\
+No reduction phase & $+$0.8\% & 10 & $+$0.6\% & 2 & $-$1.0\% & 20.0 & 20 \\
 \midrule
-Reduction with one new ULD & $-$1.6\% & 8 & 0.40 & $-$2.5\% & 2 & $-$2.2\% & 20.0 & 16 \\
-Only elimination of ULDs & $+$0.3\% & 10 & 0.35 & $+$0.4\% & 4 & $-$1.9\% & 19.3 & 18 \\
-No reduction phase & $+$0.8\% & 10 & 0.19 & $+$0.6\% & 2 & $-$1.0\% & 20.0 & 20 \\
-\midrule
-Basic BSG\textsuperscript{a} & $+$13.9\% & 90 & 0.16 & $+$18.4\% & 61 & $+$10.1\% & 43.0 & 72 \\
+Basic BSG\textsuperscript{a} & $+$13.9\% & 90 & $+$18.4\% & 61 & $+$10.1\% & 43.0 & 72 \\
 \bottomrule
-\multicolumn{9}{l}{\textsuperscript{a} Rule of \citet{Hessler2025}, spaces at the nearest corner,
-no reduction, no substructure, no restarts.}
+\multicolumn{8}{l}{\textsuperscript{a} Rule of \citet{Hessler2025}, spaces anchored at the nearest
+corner of the ULD, no substructure,}\\
+\multicolumn{8}{l}{\phantom{\textsuperscript{a}} no restarts and no reduction phase.}
 \end{tabular}
 \end{table}
 
-\paragraph{Weight distribution.}
-Without the penalty $\lambda$ the CoG is out of range in 281--460 ULDs; the volume of the ULDs
-decreases in the Paquay setting, where the CoG limit of 5\% is very strict, and increases in the
-other two. Without the translation of the load the number of violations also grows, to 117--216
-ULDs, and the volume increases, since the penalty then rejects loadings that a translation would
-have balanced. Penalizing the CoG excess in the evaluation of the blocks ($\mu = 0.5$) has an
-effect that is not consistent between experiments: in this run it reduced the volume in the
-Paquay setting and with one ULD of each type, whereas in a run with $t = 0.05$\,s it increased
-it in the Paquay and adapted settings; we do not use it, which keeps the algorithm simpler.
-Anchoring the spaces at the nearest corner instead of the origin, with a grouped reload of the
-ULDs whose CoG is out of range, reduces the volume in the Paquay setting but takes 50\% more
-time, and at that time the default algorithm with a longer time limit is better
-(Table~\ref{tab:time}).
-
-\paragraph{Reduction phase and insertion.}
 The reduction phase is the component that makes the difference with the RGS: without it, or
-without \textsc{Insert}, or with the elimination of ULDs alone, the volume is about the same as
-that of the RGS in the Paquay and adapted settings. Allowing the boxes left over to be loaded
-into two new ULDs instead of one reduces the volume by a further 0.2--1.3 points. Adding to
-\textsc{Insert} a reload of each ULD from scratch or with priority to the boxes of the pool, as
-in an earlier version of the algorithm, does not reduce the volume at the same time limit.
+without \textsc{Insert}, the volume is about the same as that of the RGS in the Paquay and adapted
+settings, and loading the leftover boxes into two new ULDs instead of one saves a further
+0.2--1.3 points. The CoG penalty $\lambda$ and the translation of the load keep the CoG in range:
+without either of them, 117--460 ULDs violate the constraint. Without the penalty the volume
+decreases in the Paquay setting, where the CoG limit of 5\% is very strict, and increases in the
+other two; without the translation it increases in the three settings, since the penalty then
+rejects loadings that a translation would have balanced. The substructure saves 0.8--1.6
+points in the adapted settings, and the restarts halve the unloaded volume with one ULD of each
+type (20.0 against 39.6\,m$^3$). The choice of the ULD type with $\theta$ changes the volume by
+less than half a point in this run (0.8 points in the Paquay setting and with one ULD of each
+type in a run with $t = 0.05$\,s): with an unlimited number of ULDs, a poor choice during the
+construction is mostly corrected by the reduction phase.
 
-\paragraph{Choosing the type of each ULD, substructure and restarts.}
-Choosing the type of each ULD with $\theta$ instead of the rule of \citet{Hessler2025} alone
-changes the volume by less than half a point in this run (in a run with $t = 0.05$\,s, it
-reduced it by 0.8 points in the Paquay setting and with one ULD of each type): with an
-unlimited number of ULDs a poor choice during the construction is mostly corrected later by
-the reduction phase. In an earlier version without the reduction phase, the same rule, as well
-as evaluating each candidate type by completing the solution with a fast construction (a
-rollout), reduced the volume by less than 1.5\% in the Paquay setting: local choices do not
-anticipate which boxes remain for the next ULDs, which the reduction phase handles. The
-substructure reduces the volume by 0.8--1.6 points in the adapted settings, and the restarts of
-the construction halve the unloaded volume with one ULD of each type (20.0 against
-39.6\,m$^3$).
+Other variants did not improve the algorithm at the same running time: penalizing the CoG
+excess in the evaluation of the blocks (its effect on the volume changed sign between runs),
+anchoring the spaces at the nearest corner of the ULD (less volume in the Paquay setting, but
+with 50\% more time, at which a larger $t$ is better), reloading each ULD from scratch or with
+priority in \textsc{Insert}, eliminating ULDs without replacing them, and choosing the type of
+each ULD by completing the solution with a fast construction (a rollout).
 
 \subsection{Volume of the ULDs versus weight distribution}
 \label{sec:exp-tradeoff}
