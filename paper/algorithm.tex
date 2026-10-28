@@ -188,21 +188,22 @@ The components of Sections~\ref{sec:alg-bsg}--\ref{sec:alg-cog} are combined in
 \textsc{LoadULD} (Algorithm~\ref{alg:load}), which loads a ULD of type $k$ with the available boxes
 $B$. If the ULD has an edge, two loadings are built, one on the floor and one on the substructure
 (line~\ref{a1:for}). For each of them, the blocks that fit in that space are generated
-(line~\ref{a1:gen}), BSG builds a loading within the time limit $t$ (line~\ref{a1:bsg}), the
+(line~\ref{a1:gen}), BSG builds a loading within the time limit $\tau$ (line~\ref{a1:bsg}), the
 loading is translated to center its CoG (line~\ref{a1:tr}), and the one with the larger value
 $v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}). The procedure is also used to
 complete a partial loading, keeping its boxes at their positions, which the multi-ULD phases
 below need.
 
 \begin{algorithm}[htbp]
-\caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$.}
+\caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$, with a time
+limit $\tau$ for each run of BSG ($t$, or $0.1\,t$ in the phases of Section~\ref{sec:alg-multi}).}
 \label{alg:load}
 \begin{algorithmic}[1]
 \State $S^* \gets$ empty loading
 \For{$s \in \{\text{floor}, \text{substructure}\}$} \label{a1:for}
 	\Comment{the substructure only if the ULD has an edge}
 	\State generate the blocks of $B$ that fit in a ULD of type $k$ loaded on $s$ \label{a1:gen}
-	\State $S \gets \textsc{BSG}(k, s, B, t)$ \label{a1:bsg}
+	\State $S \gets \textsc{BSG}(k, s, B, \tau)$ \label{a1:bsg}
 	\State translate $S$ to center its CoG \label{a1:tr}
 	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf \label{a1:best}
 \EndFor
@@ -231,7 +232,11 @@ candidate types of a ULD are compared during the construction.
 	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
 	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$} \label{a2:cons}
 		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{a2:cand}
-		\State $S \gets$ the loading $\textsc{LoadULD}(k, B)$, $k \in K$, that maximizes $L - \theta V$
+		\If{$|K| > 1$}
+			\State $k \gets \arg\max_{k' \in K} (L - \theta V)$ of $\textsc{LoadULD}(k', B)$, time limit $0.1\,t$ \label{a2:sel}
+		\Else{} $k \gets$ the type in $K$
+		\EndIf
+		\State $S \gets \textsc{LoadULD}(k, B)$ with time limit $t$ \label{a2:load}
 		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{a2:prio}
 			\State load these boxes first and complete $S$ with the other boxes of $B$
 		\EndIf
@@ -263,10 +268,12 @@ largest total volume of the remaining boxes that fit in it is selected, ties bei
 larger ULD volume. A box fits in a ULD type if its weight does not exceed the capacity and, in
 some allowed orientation, it can be placed alone on the floor inside the edge or on the
 substructure. When this rule leaves several candidate types (those that contain the boxes with
-the fewest options), each candidate is loaded with \textsc{LoadULD} with the time limit
-$0.1\,t$, the one that maximizes $L - \theta V$ is chosen, where $L$ is the loaded volume and $V$
-the volume of the ULD, unless it leaves the CoG out of range and another candidate does not, and
-it is loaded again with the time limit $t$. With $\theta = 0$ this is the type that loads the
+the fewest options), the type is chosen with short loadings and only the chosen one is loaded
+with the full time limit: each candidate is loaded with \textsc{LoadULD} with the time limit
+$0.1\,t$, the one that maximizes $L - \theta V$ is chosen (line~\ref{a2:sel}), where $L$ is the
+loaded volume and $V$ the volume of the ULD, unless it leaves the CoG out of range and another
+candidate does not, and the chosen type is loaded again from scratch with the time limit $t$
+(line~\ref{a2:load}); the short loadings are discarded. With $\theta = 0$ this is the type that loads the
 most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
 When the number of ULDs is limited, some boxes may only fit in the selected type among the ULDs
 still available. If the loading leaves some of them out (line~\ref{a2:prio}), the ULD is loaded
