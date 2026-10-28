@@ -3,13 +3,12 @@
 #   1. corridas finales: 3 escenarios x t in {0.1, 1} s x 5 repeticiones
 #   2. ablacion (t = 0.1 s)
 #   3. barridos de cog_penalty y max_bl (t = 0.1 s)
-#   4. curvas del volumen segun el tiempo (tres escenarios) y, en paquay, con las fases de
-#      mejora a t
+#   4. curvas del volumen segun el tiempo (tres escenarios), con las fases de mejora a 0.1 t y a t
 # y un resumen en <salida>/summary.txt.
 #
 # uso: problems/clp/experiments/run_all.sh <salida> [JOBS]
-#   SETTINGS: escenarios a correr (por defecto "paquay adapted one"); la curva de tiempo solo
-#   se corre si incluye paquay
+#   SETTINGS: escenarios a correr (por defecto "paquay adapted one")
+#   ONLY_CURVEFULL=1: solo las curvas con las fases de mejora a t
 #   JOBS: procesos en paralelo (por defecto: nucleos fisicos - 2). Como el limite de tiempo es
 #   por reloj de CPU de cada proceso, conviene no usar mas procesos que nucleos fisicos.
 # Requiere: cmake, g++, python3 (scipy opcional, solo para compare_hessler.py).
@@ -46,6 +45,7 @@ run(){ # run <nombre> <escenario> <opciones...>
 }
 
 SETTINGS=${SETTINGS:-paquay adapted one}
+if [ -z "$ONLY_CURVEFULL" ]; then
 for r in 1 2 3 4 5; do for t in 0.1 1; do for v in $SETTINGS; do
 	run final_${v}_t${t}_r$r $v -t $t
 done; done; done
@@ -67,14 +67,13 @@ for v in $SETTINGS; do
 done
 
 for v in $SETTINGS; do for t in 0.02 0.05 0.2 0.5 2; do run curve_${v}_t$t $v -t $t; done; done
-case " $SETTINGS " in *" paquay "*)
-	#fases de mejora con el mismo tiempo que la construccion
-	for t in 0.02 0.05 0.1 0.2 0.5 1; do run curvefull_t$t paquay -t $t --improve_time 1; done;;
-esac
+fi
+#fases de mejora con el mismo tiempo que la construccion
+for v in $SETTINGS; do for t in 0.02 0.05 0.1 0.2 0.5 1; do run curvefull_${v}_t$t $v -t $t --improve_time 1; done; done
 
 # resumen
 {
-	for v in paquay:8 adapted:10 one:12; do
+	[ -z "$ONLY_CURVEFULL" ] && for v in paquay:8 adapted:10 one:12; do
 		n=${v%%:*}; tb=${v#*:}
 		case " $SETTINGS " in *" $n "*) ;; *) continue;; esac
 		for t in 0.1 1; do
@@ -90,9 +89,11 @@ esac
 		echo "== cog_penalty $n (t=0.1)"
 		for d in $OUT/lambda*_$n; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
 	done
-	case " $SETTINGS " in *" paquay "*)
-		echo "== curva de tiempo (paquay)"
-		for d in $OUT/curvefull_t* ; do echo "-- $(basename $d)"; python3 $S --table 8 $d | sed -n 2,3p; done;;
-	esac
+	for v in paquay:8 adapted:10 one:12; do
+		n=${v%%:*}; tb=${v#*:}
+		case " $SETTINGS " in *" $n "*) ;; *) continue;; esac
+		echo "== curva de tiempo con las fases de mejora a t ($n)"
+		for d in $OUT/curvefull_${n}_t* ; do echo "-- $(basename $d)"; python3 $S --table $tb $d | sed -n 2,3p; done
+	done
 } > $OUT/summary.txt
 echo "listo: $OUT/summary.txt"

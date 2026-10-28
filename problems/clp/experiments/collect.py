@@ -3,8 +3,8 @@
 Datos de las figuras del paper a partir de los resultados de run_all.sh.
 
 uso: collect.py <resultados> <directorio de salida>
-escribe time.csv (curvas del volumen de los ULDs segun el tiempo en los tres escenarios y, en
-paquay, con las fases de mejora a t) y
+escribe time.csv (curvas del volumen de los ULDs segun el tiempo en los tres escenarios, con las
+fases de mejora a 0.1 t y a t) y
 tradeoff.csv (volumen, ULDs y violaciones del CoG segun cog_penalty, en los tres escenarios).
 """
 import sys, os, re, glob, statistics as st
@@ -41,8 +41,9 @@ os.makedirs(out, exist_ok=True)
 with open(os.path.join(out, 'time.csv'), 'w') as f:
     f.write('setting,improve,t,vol,ulds,time\n')
     for v in ('paquay', 'adapted', 'one'):
-        for imp, pref in (('0.1', f'curve_{v}_t'), ('1', 'curvefull_t' if v == 'paquay' else None)):
-            if pref is None: continue
+        #curvefull_t: nombre antiguo de las corridas de paquay con las fases de mejora a t
+        full = f'curvefull_{v}_t' if glob.glob(f'{res}/curvefull_{v}_t*') or v != 'paquay' else 'curvefull_t'
+        for imp, pref in (('0.1', f'curve_{v}_t'), ('1', full)):
             pts = {}
             for d in glob.glob(f'{res}/{pref}*'):
                 pts[float(d.split(pref)[1])] = run(d)
