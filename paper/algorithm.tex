@@ -119,7 +119,9 @@ contain positions that are not usable; they are simply not used by any block.
 
 \paragraph{Edge and substructure.}
 The floor edge is handled as a fixed obstacle: four strips of width $e$ and height $\delta$ along
-the border of the floor, which no box may overlap and which give no support. The initial maximal
+the border of the floor, which no box may overlap and which give no support, since no cargo can
+rest on the net locks (\citet{Hessler2025} model them in the same way, with non-stackable dummy
+items). The initial maximal
 spaces of the ULD minus these strips are the space inside the edge,
 $S_1 = [e, L-e] \times [e, W-e] \times [0, H]$, and the space above the edge,
 $S_2 = [0, L] \times [0, W] \times [\delta, H]$ (Figure~\ref{fig:edge}). Similarly, the
