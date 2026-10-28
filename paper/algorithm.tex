@@ -385,11 +385,12 @@ of ULDs. The ULDs are considered in decreasing order of lost volume (the volume 
 the volume of its boxes). The boxes of the selected ULD $S$ are freed and inserted into the other
 ULDs with \textsc{Insert} (Algorithm~\ref{alg:reduce}, line~\ref{r:ins}). If all of them are inserted, $S$ is eliminated (line~\ref{r:elim}).
 Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}, line~\ref{r:new}) loads the remaining boxes into one or two
-new ULDs whose total volume is smaller than that of $S$: the combinations of one or two available
-types with enough volume and weight capacity, in which every remaining box fits, are tried in
-increasing order of total volume, loading the larger ULD first with all the remaining boxes and
-the second one with the rest. The first combination that loads all the boxes, without leaving a
-CoG out of range when the CoG of $S$ was not, replaces $S$ (line~\ref{r:repl}); otherwise the
+new ULDs whose total volume is smaller than that of $S$: the sets of one or two available types
+are tried in increasing order of total volume, loading the larger ULD first with all the remaining
+boxes and the second one with the rest (line~\ref{n:load} of Algorithm~\ref{alg:newulds}); the sets
+without enough volume or weight capacity, or in which some box fits in no type, are skipped
+without loading them. The first set that loads all the boxes with valid CoGs (in range, or out of
+range only if the CoG of $S$ was) replaces $S$ (line~\ref{n:ok}) (line~\ref{r:repl}); otherwise the
 solution $\mathcal{U}'$ returned by \textsc{Insert} is discarded and the next ULD is tried. After every change the
 phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume
 of the ULDs, so the phase terminates; a change may increase the number of ULDs, when one ULD is
@@ -417,18 +418,9 @@ $\mathcal{U}$.}
 new ULDs of smaller total volume.}
 \label{alg:newulds}
 \begin{algorithmic}[1]
-\For{each set $C$ of one or two available ULD types, in increasing order of total volume $V(C)$}
-	\If{$V(C) \ge V(S)$} \Return failure \EndIf
-	\If{$V(C) < V(B')$ \textbf{or} the capacity of $C$ is below the weight of $B'$ \textbf{or}
-		some box of $B'$ fits in no type of $C$} \textbf{continue} \EndIf
-	\State $R \gets B'$; $\mathcal{N} \gets \emptyset$
-	\For{$k \in C$, the larger type first, while $R \neq \emptyset$}
-		\State $S_k \gets \textsc{LoadULD}(k, R, 0.1\,t)$
-		\If{$S_k$ is empty or infeasible, or its CoG is out of range and that of $S$ is not}
-			\textbf{break} \EndIf
-		\State $R \gets R \setminus S_k$; $\mathcal{N} \gets \mathcal{N} \cup \{S_k\}$
-	\EndFor
-	\If{$R = \emptyset$} \Return $\mathcal{N}$ \EndIf
+\For{$C \in \mathcal{C}$ in increasing order of $V(C)$} \Comment{$\mathcal{C}$: sets of 1 or 2 available types, $V(C) < V(S)$}
+	\State $\mathcal{N} \gets$ load $B'$ into the ULDs of $C$, the larger first \Comment{\textsc{LoadULD}, $0.1\,t$} \label{n:load}
+	\If{$B' \subseteq \bigcup \mathcal{N}$ \textbf{and} the CoGs of $\mathcal{N}$ are valid} \Return $\mathcal{N}$ \EndIf \label{n:ok}
 \EndFor
 \State \Return failure
 \end{algorithmic}
