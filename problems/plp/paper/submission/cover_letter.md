@@ -1,4 +1,4 @@
-Valparaíso, [fecha]
+Valparaíso, October 28, 2026
 
 Editor
 European Journal of Operational Research
@@ -28,8 +28,6 @@ publicly available at https://github.com/rilianx/poly3d-packing.
 I believe the paper fits the scope of the journal, which has published most of the recent work on irregular
 packing, including the references compared with. The manuscript has not been published and is not under
 consideration elsewhere. There are no conflicts of interest to declare.
-
-[Posibles revisores (opcional): nombres, afiliaciones y correos]
 
 Sincerely,
 
