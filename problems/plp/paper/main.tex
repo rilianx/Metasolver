@@ -360,9 +360,25 @@ for nesting. GLS changes the objective instead of the layout: each pair of piece
 moves minimize the weighted overlap $\phi=\sum_{i<j}w_{ij}\,\delta_{ij}$ of Eq.~\eqref{eq:obj}, and at a local
 minimum the weights of the pairs that still overlap are increased. A persistent overlap thus becomes more
 expensive, and the next moves remove it even at the cost of creating smaller overlaps elsewhere, which in turn
-gain weight if they persist. We update the weights multiplicatively as in \citet{gardeyn2025}: the weight of
-every overlapping pair is multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the other weights decay by a factor
-$0.95$ (minimum 1). All the weights start at 1.
+gain weight if they persist. We update the weights multiplicatively as in \citet{gardeyn2025}: at each local
+minimum, the weight of every overlapping pair is multiplied by $1.2+0.8\,\delta_{ij}/\max\delta$, and the weights
+of the other pairs decay by a factor $0.95$ (minimum 1). All the weights start at 1. Each element of this rule has
+a simple purpose:
+\begin{itemize}
+\item \emph{Multiplicative growth.} The weight of a pair that keeps overlapping grows geometrically: after five
+consecutive local minima it is between $1.2^5\approx2.5$ and $2^5=32$ times its initial value. A persistent overlap
+therefore soon dominates $\phi$, however many other pairs there are, and the search is forced to remove it. With
+additive weights ($w_{ij}\gets w_{ij}+1$) the growth is linear, so the relative pressure on a persistent pair
+weakens as the weights of all pairs accumulate.
+\item \emph{Factor proportional to the penetration.} The factor ranges from 1.2, for the shallowest overlap, to 2,
+for the deepest one. Shallow overlaps are often removed by the next moves without help, while deep ones need a
+large change of the layout, so the deepest overlaps are penalized fastest.
+\item \emph{Decay.} The weight of a pair that no longer overlaps returns slowly to 1. The weights thus reflect the
+recent history of the search: a pair that overlapped long ago does not keep constraining the moves, and its
+weight starts growing from a low value if it overlaps again.
+\end{itemize}
+The ablation of Section~\ref{sec:exp} confirms that this rule matters: additive weights increase the heights by
+1.4\% (Table~\ref{tab:ablation}).
 
 In Algorithm~\ref{alg:minover}, line~2 computes the penetrations of all pairs, and each iteration of the loop is
 a pass. Only the pieces involved in an overlapping pair are moved (line~7), in random order, each along the three
