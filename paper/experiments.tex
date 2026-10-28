@@ -146,22 +146,23 @@ Each configuration is run five times; we report the mean and the standard deviat
 
 Table~\ref{tab:results} summarizes the results. In the three settings, our algorithm uses less
 ULD volume than the RGS of \citet{Hessler2025}: with $t = 0.1$\,s, at a running time comparable
-to that of the RGS, 2.9\% less in the Paquay setting, 3.8\% less in the adapted one and 2.4\% less
+to that of the RGS, 2.9\% less in the Paquay setting, 3.8\% less in the adapted one and 3.4\% less
 with one ULD of each type, where it also leaves less volume unloaded; with $t = 1$\,s, 7.1\%,
-8.2\% and 5.9\% less. Instance by instance, its solutions are better in 182.8 instances and
-worse in 51.8 in the Paquay setting with $t = 1$\,s (184 and 44.6 in the adapted one, 171 and 36
+8.2\% and 7.2\% less. Instance by instance, its solutions are better in 182.8 instances and
+worse in 51.8 in the Paquay setting with $t = 1$\,s (184 and 44.6 in the adapted one, 184.2 and 29
 with one ULD of each type), and the differences in volume are significant in all the cases
 (Wilcoxon signed-rank test, $p \le 1.2 \cdot 10^{-4}$ with $t = 0.1$\,s and $p < 10^{-12}$ with
 $t = 1$\,s). The total cost of the ULDs given in the instance files decreases in the same way
-(8.1\%, 10.0\% and 6.3\% with $t = 1$\,s). At most 2.2\% of our ULDs violate the CoG constraint
+(8.1\%, 10.0\% and 7.3\% with $t = 1$\,s). At most 1.0\% of our ULDs violate the CoG constraint
 in the length or width direction, and none in the Paquay and adapted settings with $t = 1$\,s,
 whereas 7--11\% of the ULDs of the RGS have the CoG out of range.
 
 Since the objective is the volume, our algorithm replaces large ULDs by smaller ones whenever
-this saves volume, even if it uses more ULDs: with $t = 1$\,s it uses 2--6\% more ULDs than the
-RGS (732.6, 689.0 and 745.0 against 708, 653 and 729), and with $t = 0.1$\,s 7--11\% more. In the
-setting with one ULD of each type, it leaves 12 boxes (17.8\,m$^3$) unloaded with $t = 1$\,s and
-15.4 boxes (20.0\,m$^3$) with $t = 0.1$\,s, against 24 boxes (25.9\,m$^3$) for the RGS.
+this saves volume, even if it uses more ULDs: with $t = 1$\,s it uses 3--6\% more ULDs than the
+RGS in the Paquay and adapted settings (732.6 and 689.0 against 708 and 653) and about the same
+number with one ULD of each type (728.2 against 729), and with $t = 0.1$\,s 4--11\% more. In the
+setting with one ULD of each type, it leaves 12 boxes (12.6\,m$^3$) unloaded with $t = 1$\,s and
+27 boxes (22.8\,m$^3$) with $t = 0.1$\,s, against 24 boxes (25.9\,m$^3$) for the RGS.
 
 The results are stable: the total volume of the five runs of each configuration varies by less
 than 0.2\%. The running time is discussed in Section~\ref{sec:exp-time}.
@@ -193,8 +194,8 @@ Setting & Method & Vol.\ (m$^3$) & vs RGS & B/W & ULDs & Unloaded & CoG$_{xy}$ &
 \midrule
 \multirow{3}{*}{One}
  & RGS & 16\,166 & & & 729 & 24 (25.9) & 74 (10.1\%) & -- & $\le 1.1$ \\
- & BSG, $t = 0.1$\,s & 15\,773 $\pm$ 16 & $-$2.4\% & 132.6 / 51.2 & 776.6 & 15.4 (20.0) & 17 (2.2\%) & 11 & 0.89 \\
- & BSG, $t = 1$\,s & 15\,207 $\pm$ 6 & $-$5.9\% & 171 / 36 & 745.0 & 12 (17.8) & 10.6 (1.4\%) & 8.8 & 6.1 \\
+ & BSG, $t = 0.1$\,s & 15\,622 $\pm$ 7 & $-$3.4\% & 138.2 / 44 & 758.8 & 27 (22.8) & 5 (0.7\%) & 7.8 & 1.02 \\
+ & BSG, $t = 1$\,s & 15\,008 $\pm$ 4 & $-$7.2\% & 184.2 / 29 & 728.2 & 12 (12.6) & 4 (0.5\%) & 7 & 6.8 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -273,14 +274,14 @@ Table~\ref{tab:size}).}
 \midrule
 \multirow{10}{*}{One} & 10 & 497.3 & 446.8 & 444.5 & $-$10.6\% & 30 & 42 & 43 \\
  & 20 & 786.6 & 804.8 & 768.7 & $-$2.3\% & 33 & 38 & 34 \\
- & 30 & 1034.3 & 950.7 & 866.8 & $-$16.2\% & 45 & 44.2 & 38 \\
- & 40 & 1341.3 & 1248.7 & 1196.5 & $-$10.8\% & 57 & 64 & 63 \\
- & 50 & 1538.2 & 1518.1 & 1414.5 & $-$8.0\% & 62 & 73.6 & 65 \\
- & 60 & 1825.7 & 1791.2 & 1758.3 & $-$3.7\% & 77 & 81 & 81 \\
- & 70 & 1996.6 & 1944.6 & 1891.8 & $-$5.2\% & 85 & 93.8 & 88 \\
- & 80 & 2192.9 & 2200.4 & 2126.0 & $-$3.1\% & 97 & 99 & 98 \\
- & 90 & 2358.6 & 2344.0 & 2258.2 & $-$4.3\% & 109 & 109 & 105 \\
- & 100 & 2594.2 & 2523.6 & 2481.6 & $-$4.3\% & 134 & 132 & 130 \\
+ & 30 & 1034.3 & 979.0 & 866.8 & $-$16.2\% & 45 & 44 & 38 \\
+ & 40 & 1341.3 & 1260.2 & 1165.9 & $-$13.1\% & 57 & 66.8 & 63 \\
+ & 50 & 1538.2 & 1457.7 & 1372.1 & $-$10.8\% & 62 & 69 & 61 \\
+ & 60 & 1825.7 & 1798.6 & 1740.4 & $-$4.7\% & 77 & 78 & 75.4 \\
+ & 70 & 1996.6 & 1956.0 & 1873.7 & $-$6.2\% & 85 & 93 & 86 \\
+ & 80 & 2192.9 & 2129.0 & 2088.8 & $-$4.7\% & 97 & 97.2 & 98 \\
+ & 90 & 2358.6 & 2284.7 & 2225.1 & $-$5.7\% & 109 & 103.4 & 103 \\
+ & 100 & 2594.2 & 2505.4 & 2462.1 & $-$5.1\% & 134 & 127.4 & 126.8 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -300,13 +301,13 @@ largest ULD) is reached by our solutions in 90 of the 300 instances with $t = 1$
 \subsection{Running time}
 \label{sec:exp-time}
 
-With $t = 0.1$\,s our algorithm takes 0.56--0.89\,s per instance on average (at most 7\,s),
-and with $t = 1$\,s 3.5--6.1\,s (at most 52\,s). The RGS takes 0.19--0.42\,s per instance on
+With $t = 0.1$\,s our algorithm takes 0.56--1.02\,s per instance on average (at most 8\,s),
+and with $t = 1$\,s 3.5--6.8\,s (at most 54\,s). The RGS takes 0.19--0.42\,s per instance on
 an Apple M2 Pro, about 0.5--1.1\,s on our processor once its single-thread speed, about 2.5
 times ours according to PassMark \citep{PassMark}, is taken into account. Table~\ref{tab:time}
 and Figure~\ref{fig:time} show how the volume changes with the time limit. At the time of the
 RGS our algorithm already uses about 2--5\% less volume, and the difference grows with the time
-limit, up to 7--9\% with $t = 2$\,s; with a very short time limit ($t = 0.02$\,s) it is
+limit, up to 8--9\% with $t = 2$\,s; with a very short time limit ($t = 0.02$\,s) it is
 slightly worse than the RGS. Giving the improvement phases the same time limit as the
 construction, instead of $0.1\,t$, gives better solutions for the same $t$ but at a much higher
 running time: up to about 10\,s per instance, the default is better at the same running time
@@ -325,13 +326,13 @@ type, unloaded volume (m$^3$; RGS: 25.9).}
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-11}
 $t$ (s) & Vol. & Time & Max. & Vol. & Time & Max. & Vol. & Unl. & Time & Max. \\
 \midrule
-0.02 & $+$2.4\% & 0.24 & 2 & $+$1.2\% & 0.29 & 1 & $+$1.0\% & 40.9 & 0.34 & 3 \\
-0.05 & $-$1.3\% & 0.35 & 2 & $-$1.6\% & 0.46 & 2 & $-$1.4\% & 18.3 & 0.55 & 4 \\
-0.1 & $-$2.9\% & 0.56 & 4 & $-$3.8\% & 0.77 & 4 & $-$2.4\% & 20.0 & 0.89 & 7 \\
-0.2 & $-$5.9\% & 0.94 & 5 & $-$5.9\% & 1.32 & 5 & $-$3.5\% & 10.7 & 1.50 & 13 \\
-0.5 & $-$6.1\% & 1.92 & 14 & $-$6.7\% & 2.77 & 12 & $-$4.4\% & 15.5 & 3.26 & 31 \\
-1 & $-$7.1\% & 3.51 & 16 & $-$8.2\% & 5.15 & 20 & $-$5.9\% & 17.8 & 6.13 & 52 \\
-2 & $-$8.1\% & 6.64 & 32 & $-$8.7\% & 9.62 & 39 & $-$6.9\% & 19.6 & 11.52 & 93 \\
+0.02 & $+$2.4\% & 0.24 & 2 & $+$1.2\% & 0.29 & 1 & $+$0.1\% & 43.6 & 0.43 & 3 \\
+0.05 & $-$1.3\% & 0.35 & 2 & $-$1.6\% & 0.46 & 2 & $-$2.0\% & 20.4 & 0.63 & 5 \\
+0.1 & $-$2.9\% & 0.56 & 4 & $-$3.8\% & 0.77 & 4 & $-$3.4\% & 22.8 & 1.02 & 8 \\
+0.2 & $-$5.9\% & 0.94 & 5 & $-$5.9\% & 1.32 & 5 & $-$4.4\% & 16.6 & 1.71 & 13 \\
+0.5 & $-$6.1\% & 1.92 & 14 & $-$6.7\% & 2.77 & 12 & $-$6.1\% & 11.4 & 3.68 & 28 \\
+1 & $-$7.1\% & 3.51 & 16 & $-$8.2\% & 5.15 & 20 & $-$7.2\% & 12.6 & 6.84 & 54 \\
+2 & $-$8.1\% & 6.64 & 32 & $-$8.7\% & 9.62 & 39 & $-$7.9\% & 11.5 & 12.38 & 103 \\
 \midrule
 RGS\textsuperscript{a} & & 0.48 & & & 1.06 & & & 25.9 & 1.04 & \\
 \bottomrule
@@ -372,20 +373,21 @@ no restarts and no reduction phase.}
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-8}
 Variant & Vol. & CoG & Vol. & CoG & Vol. & Unl. & CoG \\
 \midrule
-Complete algorithm & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
+Complete algorithm & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$3.4\% & 22.8 & 5 \\
 \midrule
-No CoG penalty ($\lambda = 0$) & $-$6.0\% & \textbf{460} & $-$3.0\% & \textbf{281} & $-$1.0\% & 13.5 & \textbf{326} \\
-No translation of the load & \textbf{$-$1.4\%} & \textbf{183} & $-$2.4\% & \textbf{117} & $-$1.9\% & \textbf{36.7} & \textbf{216} \\
-Single-box blocks ($N_{\max} = 1$) & $-$2.7\% & \textbf{16} & \textbf{$-$2.4\%} & 4 & $-$2.3\% & \textbf{24.0} & 21 \\
-No substructure & -- & -- & \textbf{$-$2.2\%} & 7 & \textbf{$-$1.6\%} & 17.5 & 23 \\
-No restarts & -- & -- & -- & -- & $-$2.4\% & \textbf{39.6} & 15 \\
-Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
+No CoG penalty ($\lambda = 0$) & $-$6.0\% & \textbf{460} & $-$3.0\% & \textbf{281} & \textbf{$-$2.0\%} & 15.4 & \textbf{308} \\
+No translation of the load & \textbf{$-$1.4\%} & \textbf{183} & $-$2.4\% & \textbf{117} & $-$2.7\% & 16.1 & \textbf{192} \\
+Single-box blocks ($N_{\max} = 1$) & $-$2.7\% & \textbf{16} & \textbf{$-$2.4\%} & 4 & $-$3.0\% & 24.4 & 2 \\
+No substructure & -- & -- & \textbf{$-$2.2\%} & 7 & \textbf{$-$1.7\%} & \textbf{33.0} & 14 \\
+No restarts & -- & -- & -- & -- & $-$3.3\% & \textbf{38.3} & 5 \\
+No priority in BSG ($\omega = 0$) & -- & -- & -- & -- & $-$8.0\% & \textbf{259.5} & 5 \\
+Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & $-$3.6\% & 3 & $-$3.6\% & 25.0 & 5 \\
 \midrule
-No \textsc{Insert} & \textbf{$+$0.2\%} & 10 & \textbf{$+$0.2\%} & 4 & \textbf{$-$1.2\%} & \textbf{37.1} & 21 \\
-Reduction with one new ULD & \textbf{$-$1.6\%} & 8 & \textbf{$-$2.5\%} & 2 & $-$2.2\% & 20.0 & 16 \\
-No reduction phase & \textbf{$+$0.8\%} & 10 & \textbf{$+$0.6\%} & 2 & \textbf{$-$1.0\%} & 20.0 & 20 \\
+No \textsc{Insert} & \textbf{$+$0.2\%} & 10 & \textbf{$+$0.2\%} & 4 & \textbf{$-$2.0\%} & 24.8 & 7 \\
+Reduction with one new ULD & \textbf{$-$1.6\%} & 8 & \textbf{$-$2.5\%} & 2 & $-$3.0\% & 22.8 & 5 \\
+No reduction phase & \textbf{$+$0.8\%} & 10 & \textbf{$+$0.6\%} & 2 & \textbf{$-$1.8\%} & 22.8 & 6 \\
 \midrule
-Basic BSG & \textbf{$+$13.9\%} & \textbf{90} & \textbf{$+$18.4\%} & \textbf{61} & \textbf{$+$10.1\%} & \textbf{43.0} & \textbf{72} \\
+Basic BSG & \textbf{$+$13.9\%} & \textbf{90} & \textbf{$+$18.4\%} & \textbf{61} & \textbf{$+$9.4\%} & \textbf{54.6} & \textbf{59} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -393,7 +395,7 @@ Basic BSG & \textbf{$+$13.9\%} & \textbf{90} & \textbf{$+$18.4\%} & \textbf{61} 
 The reduction phase is the component that makes the difference with the RGS: without it, or
 without \textsc{Insert}, the volume is about the same as that of the RGS in the Paquay and adapted
 settings, and loading the leftover boxes into two new ULDs instead of one saves a further
-0.2--1.3 points. The CoG penalty $\lambda$ and the translation of the load keep the CoG in range:
+0.4--1.3 points. The CoG penalty $\lambda$ and the translation of the load keep the CoG in range:
 without either of them, 117--460 ULDs violate the constraint. Without the penalty the volume
 decreases in the Paquay setting, where the CoG limit of 5\% is very strict, and increases in the
 other two; without the translation it increases in the three settings, since the penalty then
@@ -401,11 +403,14 @@ rejects loadings that a translation would have balanced. Building the load with 
 several boxes instead of single boxes reduces the volume by 1.4 points in the adapted setting and
 by less elsewhere, halves the CoG violations in the Paquay setting and reduces the unloaded volume
 with one ULD of each type: these boxes are highly heterogeneous, and few identical boxes can be
-grouped. The substructure saves 0.8--1.6 points in the adapted settings, and the restarts halve the unloaded volume with one ULD of each
-type (20.0 against 39.6\,m$^3$). The choice of the ULD type with $\theta$ changes the volume by
-less than half a point in this run (0.8 points in the Paquay setting and with one ULD of each
-type in a run with $t = 0.05$\,s): with an unlimited number of ULDs, a poor choice during the
-construction is mostly corrected by the reduction phase.
+grouped. The substructure saves 1.6--1.7 points in the adapted settings. With one ULD of each type, the
+priority of the boxes that fit in no other available ULD is essential: without it ($\omega = 0$),
+259.5\,m$^3$ remain unloaded, which also explains the smaller volume of the ULDs; the restarts
+reduce the unloaded volume from 38.3 to 22.8\,m$^3$. The choice of the ULD type with $\theta$
+changes the volume by less than half a point in this run (0.8 points in the Paquay setting in a
+run with $t = 0.05$\,s), and with one ULD of each type it reduces the unloaded volume from 25.0 to
+22.8\,m$^3$: with an unlimited number of ULDs, a poor choice during the construction is mostly
+corrected by the reduction phase.
 
 Other variants did not improve the algorithm at the same running time: penalizing the CoG
 excess in the evaluation of the blocks (its effect on the volume changed sign between runs),
@@ -419,7 +424,7 @@ each ULD by completing the solution with a fast construction (a rollout).
 
 Table~\ref{tab:lambda} shows the effect of the penalty $\lambda$ of the CoG excess. With
 $\lambda = 0$ the CoG is ignored and 279--462 ULDs violate the constraint; any $\lambda \ge 0.5$
-reduces the violations to at most 33 ULDs, and $\lambda \ge 2$ to at most 14, with a volume that
+reduces the violations to at most 20 ULDs, and $\lambda \ge 2$ to at most 7, with a volume that
 changes by at most 1.6 points. The constraint can therefore be enforced almost completely at a
 small cost in volume, and the tuned value $\lambda = 1.4$ lies in this flat region.
 
@@ -436,13 +441,13 @@ CoG out of range in the length or width direction.}
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
 $\lambda$ & Vol. & CoG & Vol. & CoG & Vol. & CoG \\
 \midrule
-0 & $-$6.0\% & 462 & $-$3.0\% & 279 & $-$1.0\% & 326 \\
-0.5 & $-$3.3\% & 20 & $-$4.4\% & 8 & $-$2.4\% & 33 \\
-1 & $-$2.2\% & 14 & $-$4.0\% & 5 & $-$2.7\% & 22 \\
-1.4 & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 17 \\
-2 & $-$3.5\% & 7 & $-$3.5\% & 1 & $-$2.3\% & 14 \\
-5 & $-$3.7\% & 6 & $-$3.7\% & 0 & $-$2.6\% & 11 \\
-30 & $-$3.8\% & 6 & $-$4.0\% & 0 & $-$2.6\% & 2 \\
+0 & $-$6.0\% & 462 & $-$3.0\% & 279 & $-$2.1\% & 306 \\
+0.5 & $-$3.3\% & 20 & $-$4.4\% & 8 & $-$3.3\% & 17 \\
+1 & $-$2.2\% & 14 & $-$4.0\% & 5 & $-$3.3\% & 11 \\
+1.4 & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$3.4\% & 5 \\
+2 & $-$3.5\% & 7 & $-$3.5\% & 1 & $-$3.2\% & 1 \\
+5 & $-$3.7\% & 6 & $-$3.7\% & 0 & $-$3.4\% & 2 \\
+30 & $-$3.8\% & 6 & $-$4.0\% & 0 & $-$3.4\% & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}

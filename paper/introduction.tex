@@ -62,13 +62,14 @@ following:
 	of \citet{Ortmann2010}: a ULD is removed, its boxes are inserted into the other ULDs and the
 	remaining ones are loaded into at most two smaller ULDs. When the number of ULDs is limited,
 	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure,
-	based on ruin and recreate \citep{Schrimpf2000},
-	and the construction is restarted loading first the boxes that were left out.
+	based on ruin and recreate \citep{Schrimpf2000}, the boxes that fit in no other available
+	ULD are given priority inside BSG, and the construction is restarted giving priority to the
+	boxes that were left out.
 \item We tune the parameters once with irace \citep{LopezIbanez2016} on a separate training set and evaluate the
 	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
 	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
 	2.9--7.1\% less ULD volume than the RGS in the original setting, 3.8--8.2\% less in the
-	adapted one and 2.4--5.9\% less with one ULD of each type, where it also leaves less volume
+	adapted one and 3.4--7.2\% less with one ULD of each type, where it also leaves less volume
 	unloaded. The smaller savings are obtained at a running time comparable to that of the RGS,
 	and the differences are significant in all the settings. Almost none of its ULDs
 	violates the CoG constraint, against 7--11\% of the ULDs of the RGS. All the solutions are
