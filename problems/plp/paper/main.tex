@@ -451,7 +451,7 @@ $(1-\rho)H$, with the weights reset, after moving one random piece (a kick) to a
 container. This is the perturbation step of iterated local search \citep{lourenco2003}, which
 \citet{imamichi2009} applied to nesting. The kick matters on small instances: with two pieces there is a single
 pair, so the weights have no effect, and without it the search keeps returning to the layout produced by the
-greedy order (Section~\ref{sec:t2025}).
+greedy order.
 
 \subsection{Compaction of feasible layouts}\label{sec:improve}
 \textsc{MinimizeOverlap} stops as soon as no overlap remains: the layout fits in the target height, but its
@@ -659,10 +659,7 @@ others. Table~\ref{tab:t2025} summarizes our results (10 seeds, 30 s per instanc
 proven optima in its best run, 12 of them in every run. Two of the others are missed by 0.03\% (19.31 versus 19.30
 and 24.94 versus 24.93, the 3-item instance of the Stoyan 2004 series and the 9-item instance of the Stoyan 2005
 series), and the 10-item instance of the Stoyan 2005 series by 0.6\% (26.20 versus 26.05). On the 39 open instances it improves the best upper bound in 32 cases, by 5\% on
-average, and matches it in most of the others. The random move of the restarts is needed here:
-in an earlier version, whose restarts only reinserted the moved piece at its lowest position, the optimum of two
-2-item instances was missed (by 17\% and 28\%), because the greedy places the larger piece on the floor, the
-optimum needs the opposite arrangement, and neither the GLS weights (a single pair) nor reinsertion can escape.
+average, and matches it in most of the others.
 
 \begin{table}[!tbp]
 \centering\small
