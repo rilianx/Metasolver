@@ -54,7 +54,7 @@ def merged_time():
         ax.plot([EG_T[0]] + [x/CPU for x in EG_T[1:]], EGEBLAD[i], color=OTHER, lw=1.2, ls='--', marker='o', ms=3.5,
                 label='3DNest (mean of 10), times divided by %.1f' % CPU)
         ax.set_xscale('log')
-        ax.set_xticks([0.1, 1, 10, 100, 250]); ax.set_xticklabels(['0', '1', '10', '100', '250'])
+        ax.set_xticks([0.1, 1, 10, 250]); ax.set_xticklabels(['0', '1', '10', '250'])
         ax.axvline(600/CPU, color=MUTED, lw=0.5, ls=':')
         ax.set_title('Merged%d (%d items)' % (i, 15*i), fontsize=8, color=INK)
         ax.grid(axis='y', color='#e4e3df', lw=0.6)
