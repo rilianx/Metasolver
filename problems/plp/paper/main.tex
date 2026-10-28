@@ -460,8 +460,8 @@ instance. All reported solutions were verified with an independent checker that 
 for a separating axis, with a tolerance of $10^{-6}$ on the penetration depth (the containers are 10 to 60 units
 wide). Table~\ref{tab:params} lists the parameters of the method. The parameters of the greedy
 construction were tuned with Optuna on 16 training instances for an earlier version of the method and were not
-re-tuned: replacing the tuned criterion by the largest piece first changes the final heights by only $+0.4\%$
-($p=0.19$, Table~\ref{tab:ablation}), so the final quality depends little on them; the weight
+re-tuned: replacing the tuned criterion by the largest piece first changes the final heights by only $+0.3\%$
+($p=0.22$, Table~\ref{tab:ablation}), so the final quality depends little on them; the weight
 update follows \citet{gardeyn2025}; the step $\rho$ and the number of passes are analyzed in
 Table~\ref{tab:ablation}.
 
@@ -531,16 +531,16 @@ proposed method over the 70 runs (7 instances, 10 seeds), positive when the heig
 $p$-value of a Wilcoxon signed-rank test that pairs the runs by instance and seed.
 
 The decisive elements are the GLS weights and the effort spent in each separation. Additive weights increase
-the heights by 1.9\% ($p<0.001$). With a fifth of the time (24 s), as with moves five times more expensive, the
-heights increase by 3.2\% ($p<0.001$) and most of the advantage over the published values is lost (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
+the heights by 1.4\% ($p<0.001$). With a fifth of the time (24 s), as with moves five times more expensive, the
+heights increase by 2.3\% ($p<0.001$) and most of the advantage over the published values is lost (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
 speed of the move is as important as its exactness. The number of passes of
-\textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 2.6\% ($p<0.001$), since
-separations that would succeed are abandoned, and with 2000 passes by 1.0\% ($p=0.004$), since the time is spent
-on hopeless ones. The local improvement is needed: without it the heights increase by 0.5\% ($p=0.07$) and, in a
+\textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 1.8\% ($p<0.001$), since
+separations that would succeed are abandoned, and with 2000 passes by 0.7\% ($p=0.008$), since the time is spent
+on hopeless ones. The local improvement is needed: without it the heights increase by 0.4\% ($p=0.10$) and, in a
 separate run of all the instances, only 19 instead of 24 of the 27 optima of Section~\ref{sec:t2025} are found,
 because the height of the best solution then decreases only in the discrete steps of the oscillation. The other
-elements have no significant effect ($p\ge0.09$): the wall term ($\sigma=0$: $+0.7\%$), the tuned greedy criterion
-(greedy by volume: $+0.4\%$), the step $\rho$, and the kick (no kick: $+0.3\%$). On these instances the
+elements have no significant effect ($p\ge0.06$): the wall term ($\sigma=0$: $+0.5\%$), the tuned greedy criterion
+(greedy by volume: $+0.3\%$), the step $\rho$, and the kick (no kick: $+0.2\%$). On these instances the
 diversification thus comes from the restart itself, with reset weights and a new random order of the moves; the
 random move is needed only on small instances (Section~\ref{sec:t2025}).
 
@@ -559,17 +559,17 @@ higher, i.e., worse ($p$: Wilcoxon signed-rank test).}
 Configuration & S2004 Ex2--5 & S2005 Ex2--3 & Change ($p$)\\
 \midrule
 Proposed method & $-2.9\%$ & $-2.0\%$ & --\\
-Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & $+0.5\%$ (0.07)\\
-$\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & $+0.7\%$ (0.11)\\
-Greedy by volume & $-2.9\%$ & $-1.4\%$ & $+0.4\%$ (0.19)\\
-No kick (restarts only) & $-2.6\%$ & $-2.1\%$ & $+0.3\%$ (0.32)\\
-Additive GLS weights & $-1.4\%$ & $-0.8\%$ & $+1.9\%$ ($<$0.001)\\
+Without \textsc{Improve} & $-2.6\%$ & $-1.6\%$ & $+0.4\%$ (0.10)\\
+$\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & $+0.5\%$ (0.19)\\
+Greedy by volume & $-2.9\%$ & $-1.4\%$ & $+0.3\%$ (0.22)\\
+No kick (restarts only) & $-2.6\%$ & $-2.1\%$ & $+0.2\%$ (0.29)\\
+Additive GLS weights & $-1.4\%$ & $-0.8\%$ & $+1.4\%$ ($<$0.001)\\
 \midrule
-Time limit 24 s (default 120 s) & $-0.1\%$ & $-1.2\%$ & $+3.2\%$ ($<$0.001)\\
-$\rho=0.5\%$ (default 1\%) & $-2.8\%$ & $-2.1\%$ & $+0.1\%$ (0.59)\\
-$\rho=2\%$ & $-2.2\%$ & $-1.5\%$ & $+0.6\%$ (0.09)\\
-100 passes (default 500) & $-1.1\%$ & $-1.1\%$ & $+2.6\%$ ($<$0.001)\\
-2000 passes & $-2.0\%$ & $-1.2\%$ & $+1.0\%$ (0.004)\\
+Time limit 24 s (default 120 s) & $-0.1\%$ & $-1.2\%$ & $+2.3\%$ ($<$0.001)\\
+$\rho=0.5\%$ (default 1\%) & $-2.8\%$ & $-2.1\%$ & $+0.1\%$ (0.81)\\
+$\rho=2\%$ & $-2.2\%$ & $-1.5\%$ & $+0.4\%$ (0.06)\\
+100 passes (default 500) & $-1.1\%$ & $-1.1\%$ & $+1.8\%$ ($<$0.001)\\
+2000 passes & $-2.0\%$ & $-1.2\%$ & $+0.7\%$ (0.008)\\
 \bottomrule
 \end{tabular}
 \end{table}
