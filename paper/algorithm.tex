@@ -380,17 +380,23 @@ restarts.
 
 \paragraph{Reduction of the volume.}
 The construction tends to use the largest ULDs, and its last ULDs are often far from full. The
-reduction phase replaces ULDs by cheaper ones with a single move that generalizes the elimination
-of ULDs. The ULDs are considered in decreasing order of lost volume (the volume of the ULD minus
+reduction phase replaces ULDs by others of smaller total volume. The ULDs are considered in decreasing order of lost volume (the volume of the ULD minus
 the volume of its boxes). The boxes of the selected ULD $S$ are freed and inserted into the other
 ULDs with \textsc{Insert} (Algorithm~\ref{alg:reduce}, line~\ref{r:ins}). If all of them are inserted, $S$ is eliminated (line~\ref{r:elim}).
-Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}, line~\ref{r:new}) loads the remaining boxes into one or two
-new ULDs whose total volume is smaller than that of $S$: the sets of one or two available types
-are tried in increasing order of total volume, loading the larger ULD first with all the remaining
-boxes and the second one with the rest (line~\ref{n:load} of Algorithm~\ref{alg:newulds}); the sets
-without enough volume or weight capacity, or in which some box fits in no type, are skipped
-without loading them. The first set that loads all the boxes with valid CoGs (in range, or out of
-range only if the CoG of $S$ was) replaces $S$ (line~\ref{n:ok}) (line~\ref{r:repl}); otherwise the
+Otherwise, \textsc{NewULDs} (Algorithm~\ref{alg:newulds}, line~\ref{r:new}) loads the remaining
+boxes $B'$ into one or two new ULDs, of types $k_1$ and $k_2$, whose total volume
+$V(k_1) + V(k_2)$ is smaller than the volume of $S$; $k_2$ may be none, and $V(\text{none}) = 0$.
+The pairs of types are tried in increasing order of total volume (line~\ref{n:for}): the ULD of
+type $k_1$, the larger one, is loaded with $B'$ (line~\ref{n:load}), and the ULD of type $k_2$, if
+any, with the boxes left over. The pairs without enough volume or weight capacity, or in which
+some box fits in neither type, are skipped without loading them. The first pair that loads all
+the boxes with valid CoGs (in range, or out of range only if the CoG of $S$ was) replaces $S$
+(line~\ref{n:ok}; line~\ref{r:repl} of Algorithm~\ref{alg:reduce}). Two new ULDs allow
+replacing a large ULD by two small ones when the leftover boxes fit in no single smaller type;
+with at most one new ULD, the advantage over the RGS at $t = 0.1$\,s drops from 2.9\% to 1.6\% in
+the Paquay setting and from 3.8\% to 2.5\% in the adapted one (Table~\ref{tab:ablation}). We
+limit the move to two new ULDs to keep the number of pairs, and of loadings, small.
+Otherwise, the
 solution $\mathcal{U}'$ returned by \textsc{Insert} is discarded and the next ULD is tried. After every change the
 phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume
 of the ULDs, so the phase terminates; a change may increase the number of ULDs, when one ULD is
@@ -415,12 +421,17 @@ $\mathcal{U}$.}
 
 \begin{algorithm}[htbp]
 \caption{\textsc{NewULDs}$(S, B')$: load the boxes $B'$ left over from the ULD $S$ into one or two
-new ULDs of smaller total volume.}
+new ULDs of smaller total volume. $\mathcal{K}_S$ is the set of pairs of available types $(k_1, k_2)$,
+$k_2$ possibly none, with $V(k_1) \ge V(k_2)$ and $V(k_1) + V(k_2) < V(S)$, where $V(k)$ is the
+volume of a ULD of type $k$ and $V(\text{none}) = 0$.}
 \label{alg:newulds}
 \begin{algorithmic}[1]
-\For{$C \in \mathcal{C}$ in increasing order of $V(C)$} \Comment{$\mathcal{C}$: sets of 1 or 2 available types, $V(C) < V(S)$}
-	\State $\mathcal{N} \gets$ load $B'$ into the ULDs of $C$, the larger first \Comment{\textsc{LoadULD}, $0.1\,t$} \label{n:load}
-	\If{$B' \subseteq \bigcup \mathcal{N}$ \textbf{and} the CoGs of $\mathcal{N}$ are valid} \Return $\mathcal{N}$ \EndIf \label{n:ok}
+\For{$(k_1, k_2) \in \mathcal{K}_S$ in increasing order of $V(k_1) + V(k_2)$} \label{n:for}
+	\State $S_1 \gets \textsc{LoadULD}(k_1, B', 0.1\,t)$; $R \gets B' \setminus S_1$; $\mathcal{N} \gets \{S_1\}$ \label{n:load}
+	\If{$k_2 \neq$ none}
+		\State $S_2 \gets \textsc{LoadULD}(k_2, R, 0.1\,t)$; $R \gets R \setminus S_2$; $\mathcal{N} \gets \{S_1, S_2\}$
+	\EndIf
+	\If{$R = \emptyset$ \textbf{and} the CoGs of $\mathcal{N}$ are valid} \Return $\mathcal{N}$ \EndIf \label{n:ok}
 \EndFor
 \State \Return failure
 \end{algorithmic}
