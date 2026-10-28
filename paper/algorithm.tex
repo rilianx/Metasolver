@@ -39,7 +39,8 @@ origin, so that the load grows from one corner and stays grouped: a grouped load
 translate it, which is needed to center its CoG (Section~\ref{sec:alg-cog}), and when it does
 not fill the ULD it is not spread against several walls. Ties are broken by the larger volume.
 An action places a block that fits in the selected space at its anchor corner, which may be
-modified as explained in Section~\ref{sec:alg-uld}. A state of the
+modified as explained in Section~\ref{sec:alg-uld}; a block is a candidate only if its weight
+does not exceed the remaining weight capacity of the ULD. A state of the
 search is a partial loading of the ULD, with its free spaces and the remaining boxes.
 
 \paragraph{Evaluation of the blocks.}
@@ -83,19 +84,31 @@ can enter the best ones. None of these optimizations changes the result of the s
 \label{sec:alg-uld}
 
 \paragraph{Bevelled corners.}
-A block placed at the anchor corner of a space may cross one of the cuts of the ULD. In that
-case, the block is shifted along the $x$ axis, inside the space, to the closest position that
-satisfies all the cuts, which can be computed in closed form from the half-planes of the cuts;
-if there is no such position, the block is not placed in the space. Since the cuts are
+Each cut of a ULD is a half-plane $a_j x + c_j z \le d_j$ in the $x$-$z$ plane, and the usable space
+is the intersection of the bounding box $[0, L] \times [0, W] \times [0, H]$ with all the cuts. A
+block $[x, x+\ell] \times [z, z+h]$ (in the $x$-$z$ plane) satisfies cut $j$ if and only if its
+corner that maximizes $a_j x + c_j z$ does, that is, if
+$a_j (x + \ell\,[a_j > 0]) + c_j (z + h\,[c_j > 0]) \le d_j$. A block placed at the anchor corner
+of a space may cross one of the cuts. In that case, the block is shifted along the $x$ axis,
+inside the space, to the closest position that satisfies all the cuts: for a fixed $z$, each
+cut with $a_j > 0$ gives an upper bound and each cut with $a_j < 0$ a lower bound on $x$,
+\[
+x \le \Bigl\lfloor \frac{d_j - c_j (z + h\,[c_j > 0])}{a_j} \Bigr\rfloor - \ell \quad (a_j > 0),
+\qquad
+x \ge \Bigl\lceil \frac{d_j - c_j (z + h\,[c_j > 0])}{a_j} \Bigr\rceil \quad (a_j < 0),
+\]
+and the block is moved to the point of the resulting interval, intersected with the extent of
+the space, closest to the anchor; if the interval is empty, the block is not placed in the
+space. Since the cuts are
 orthogonal to the $x$-$z$ plane, shifting the block along $x$ keeps it on the same base, which
 is necessary for its support. The free spaces are still cuboids, so a space next to a cut may
 contain positions that are not usable; they are simply not used by any block.
 
 \paragraph{Edge and substructure.}
 With a floor edge of width $e$ and offset $\delta$, the initial free spaces are the space above
-the floor inside the edge and the space above the height $\delta$ over the whole floor. With a
-substructure, the only initial space is the one above $\delta$, and the floor inside the edge
-is raised to $\delta$. A space above the edge has no support until boxes have been loaded inside
+the floor inside the edge, $[e, L-e] \times [e, W-e] \times [0, H]$, and the space above the height
+$\delta$ over the whole floor, $[0, L] \times [0, W] \times [\delta, H]$. With a substructure, the
+only initial space is the second one, and the floor inside the edge is raised to $\delta$. A space above the edge has no support until boxes have been loaded inside
 it; instead of discarding it, it is kept aside (\emph{dormant}) and reconsidered after the next
 block is placed. Each ULD with an edge is loaded twice, on its floor and on the substructure,
 and the best of the two loadings is kept; the blocks (single boxes and composite blocks) are
@@ -103,16 +116,19 @@ generated for each of the two loadings, since the space in which they must fit i
 
 \paragraph{Support and fragility.}
 The support criterion of the problem (the four corners of the base, or the area criterion of
-Section~\ref{sec:problem}) is checked box by box. Inside a block it is guaranteed by
+Section~\ref{sec:problem}) is checked box by box. Let $R$ be the base of a box placed at height
+$z > 0$, and let the \emph{direct} faces be the top faces of the placed boxes at height $z$ and the
+\emph{padding} faces those at a height in $[z - \hbar, z)$. The box is supported if each of the
+four corners of $R$ lies on a direct face of a non-fragile box or, with the area criterion, if
+it overlaps some direct face and $A_d + A_p \ge o\,|R|$, where $A_d$ and $A_p$ are the areas of
+$R$ covered by direct and padding faces of non-fragile boxes and $o$ is the minimum supported
+proportion ($o = 0.9$ in the adapted settings); the raised floor of the substructure is also a
+direct face. The box is infeasible if $R$ overlaps a direct face of a fragile box, and the
+padding faces of fragile boxes give no support. Inside a block, the support is guaranteed by
 construction: two blocks are joined along $z$ only if the lower block has a complete top face
 without fragile boxes and the upper block fits on it, so that every box of the upper block has
-its whole base, and in particular its four corners, on non-fragile boxes. Therefore, only the
-boxes at the bottom of a block have to be checked when the block is placed. A block is placed on the base of the selected space, and it is feasible if
-each box at its bottom is supported according to the criterion of the instance (the four corners
-of its base or the area criterion of Section~\ref{sec:problem}), considering the top faces of
-the placed boxes at the height of its base (direct support) or at most $\hbar$ below it
-(support by padding material), and if it does not rest directly or through padding on a fragile
-box. Since the corner criterion allows gaps under a box, we also forbid placing a fragile box in
+its whole base, and in particular its four corners, on non-fragile boxes. Therefore, when a
+block is placed on the base of the selected space, only the boxes at its bottom are checked. Since the corner criterion allows gaps under a box, we also forbid placing a fragile box in
 such a gap if it would touch the base of the box above. If no block can be placed in a space
 because of the support, the space is discarded or, with an edge, kept dormant.
 
@@ -127,8 +143,15 @@ Once a ULD has been loaded, the whole load can be translated horizontally withou
 feasibility, as long as every block stays inside the ULD and its cuts and, if the ULD has an
 edge, the blocks below the height $\delta$ stay inside the edge and the blocks on the
 substructure stay on it. These conditions define an interval of feasible translations in $x$
-and in $y$, which can be updated incrementally when a block is placed. The final load of each
-ULD is translated by the feasible amount that brings its CoG closest to the center of the ULD.
+and in $y$: a block $[x_1, x_2] \times [y_1, y_2] \times [z_1, z_2]$ allows
+$\Delta x \in [-x_1, L - x_2]$ and $\Delta y \in [-y_1, W - y_2]$, intersected, for $\Delta x$, with
+the bounds that the cuts give (as above, with $z$ fixed) and, if $z_1 < \delta$ or the block lies
+on the substructure, with $[e - x_1, L - e - x_2]$ and $[e - y_1, W - e - y_2]$. The intervals of
+the load are the intersections over its blocks, so they are updated in constant time when a
+block is placed. The final load of each ULD is translated by
+$\Delta x = \min\bigl(\max(L/2 - \bar x, \Delta x^{\min}), \Delta x^{\max}\bigr)$, and $\Delta y$ in the
+same way, the feasible amount that brings its CoG $(\bar x, \bar y)$ closest to the center of
+the ULD.
 
 \paragraph{CoG excess.}
 Let $(\bar x, \bar y, \bar z)$ be the CoG of a loading after the best feasible translation
@@ -158,19 +181,24 @@ are stored in each state, so that the CoG excess of a greedy completion is compu
 time per placed block. Penalizing the CoG excess also in the evaluation of each candidate block
 had no consistent effect in our experiments, and it is not used.
 
-Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
+Algorithm~\ref{alg:load} summarizes how a ULD of type $k$ is loaded with the available boxes
+$B$. If the ULD has an edge, two loadings are built, one on the floor and one on the substructure
+(line~\ref{a1:for}). For each of them, the blocks that fit in that space are generated
+(line~\ref{a1:gen}), BSG builds a loading within the time limit $t$ (line~\ref{a1:bsg}), the
+loading is translated to center its CoG (line~\ref{a1:tr}), and the one with the larger value
+$v$ (Equation~\ref{eq:value}) is kept (line~\ref{a1:best}).
 
 \begin{algorithm}[htbp]
 \caption{\textsc{LoadULD}$(k, B)$: load a ULD of type $k$ with the available boxes $B$.}
 \label{alg:load}
 \begin{algorithmic}[1]
 \State $S^* \gets$ empty loading
-\For{$s \in \{\text{floor}, \text{substructure}\}$}
+\For{$s \in \{\text{floor}, \text{substructure}\}$} \label{a1:for}
 	\Comment{the substructure only if the ULD has an edge}
-	\State generate the blocks of $B$ that fit in a ULD of type $k$ loaded on $s$
-	\State $S \gets \textsc{BSG}(k, s, B, t)$
-	\State translate $S$ to center its CoG
-	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf
+	\State generate the blocks of $B$ that fit in a ULD of type $k$ loaded on $s$ \label{a1:gen}
+	\State $S \gets \textsc{BSG}(k, s, B, t)$ \label{a1:bsg}
+	\State translate $S$ to center its CoG \label{a1:tr}
+	\If{$v(S) > v(S^*)$} $S^* \gets S$ \EndIf \label{a1:best}
 \EndFor
 \State \Return $S^*$
 \end{algorithmic}
@@ -181,7 +209,16 @@ Algorithm~\ref{alg:load} summarizes how a ULD is loaded.
 
 Algorithm~\ref{alg:multi} outlines the multi-ULD framework. It has a sequential construction
 phase, the insertion of the boxes left unloaded when the number of ULDs is limited, and a phase
-that reduces the total volume of the ULDs, the objective of the problem.
+that reduces the total volume of the ULDs, the objective of the problem. The construction
+(lines~\ref{a2:cons}--\ref{a2:add}) loads one ULD at a time, choosing its type among the
+candidates of the rule of \citet{Hessler2025} (line~\ref{a2:cand}) and, when the ULDs are
+limited, loading first the boxes that would otherwise be left out (line~\ref{a2:prio}). The
+boxes that remain are inserted into the loaded ULDs (line~\ref{a2:ins}); if some are still
+unloaded, the construction is repeated with them in the set $P$ of boxes to load first, and the
+solution with the least unloaded volume is kept (lines~\ref{a2:keep}--\ref{a2:restart}).
+Finally, the reduction phase (lines~\ref{a2:red}--\ref{a2:undo}) tries to replace each ULD by
+inserting its boxes into the others (line~\ref{a2:rins}) and loading the rest into smaller ULDs
+(line~\ref{a2:new}). The three phases are detailed in the following paragraphs.
 
 \paragraph{Sequential construction.}
 The ULDs are loaded one at a time with \textsc{LoadULD}, and the type of the next ULD is selected
@@ -248,28 +285,28 @@ our experiments).
 \State $P \gets \emptyset$ \Comment{boxes to load first (restarts)}
 \Repeat
 	\State $B \gets I$; $\mathcal{S} \gets \emptyset$ \Comment{remaining boxes, loaded ULDs}
-	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$}
-		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025}
+	\While{$B \neq \emptyset$ \textbf{and} some available ULD type fits a box of $B$} \label{a2:cons}
+		\State $K \gets$ candidate ULD types for $B$ \citep{Hessler2025} \label{a2:cand}
 		\State $S \gets$ the loading $\textsc{LoadULD}(k, B)$, $k \in K$, that maximizes $L - \theta V$
-		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type}
+		\If{the ULDs are limited and $S$ leaves out boxes of $P$ or that only fit in its type} \label{a2:prio}
 			\State load these boxes first and complete $S$ with the other boxes of $B$
 		\EndIf
-		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$
+		\State $\mathcal{S} \gets \mathcal{S} \cup \{S\}$; remove the boxes of $S$ from $B$ \label{a2:add}
 	\EndWhile
 	\If{$B \neq \emptyset$}
-		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)}
+		\State $\textsc{Insert}(\mathcal{S}, B)$ \Comment{unloaded boxes (limited ULDs)} \label{a2:ins}
 	\EndIf
-	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$
-\Until{$B = \emptyset$ or three restarts}
+	\State keep $(\mathcal{S}, B)$ if it is the first or leaves less volume unloaded; $P \gets P \cup B$ \label{a2:keep}
+\Until{$B = \emptyset$ or three restarts} \label{a2:restart}
 \State $(\mathcal{S}, B) \gets$ the kept solution
-\Repeat \Comment{reduction of the volume}
+\Repeat \Comment{reduction of the volume} \label{a2:red}
 	\For{$S \in \mathcal{S}$ in decreasing order of lost volume}
-		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$
+		\State $B' \gets$ boxes of $S$; $\textsc{Insert}(\mathcal{S} \setminus \{S\}, B')$ \label{a2:rins}
 		\If{$B' = \emptyset$} remove $S$; \textbf{break} \EndIf
-		\If{$B'$ fits in 1 or 2 new ULDs of smaller total volume than $S$}
+		\If{$B'$ fits in 1 or 2 new ULDs of smaller total volume than $S$} \label{a2:new}
 			\State replace $S$ by them; \textbf{break}
 		\EndIf
-		\State undo the changes of \textsc{Insert}
+		\State undo the changes of \textsc{Insert} \label{a2:undo}
 	\EndFor
 \Until{no ULD was changed}
 \State \Return $\mathcal{S}$, $B$
