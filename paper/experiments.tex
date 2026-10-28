@@ -1,7 +1,4 @@
-% Borrador de la seccion de experimentos (BSG para carga aerea en ULDs).
-% Requiere: booktabs, multirow, siunitx (opcional). \todo{...} marca lo pendiente.
-% (\todo se define en main.tex)
-\providecommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+% Experimentos computacionales
 
 \section{Computational experiments}
 \label{sec:experiments}
@@ -43,8 +40,7 @@ Following \citet{Hessler2025}, we consider three settings:
 	deviation is 10\% of the half length and half width of the ULD. These are the default
 	problem parameters of \citet[Table~2]{Hessler2025}.
 \item \textbf{One}: the adapted instances with only one ULD of each type, so that some boxes may
-	remain unloaded. As in \citet{Hessler2025}, solutions are compared lexicographically: first
-	the loaded volume, then the number of ULDs.
+	remain unloaded.
 \end{itemize}
 In the three settings the objective is the total volume of the ULDs \citep{Paquay2016,Hessler2025}
 (in the setting \emph{One}, after the loaded volume); we also report the number of ULDs. Our
@@ -138,8 +134,9 @@ Each configuration is run five times; we report the mean and the standard deviat
 \subsection{Results}
 \label{sec:exp-results}
 
-Table~\ref{tab:results} summarizes the results. In the three settings, our algorithm uses less
-ULD volume than the RGS of \citet{Hessler2025}: with $t = 0.1$\,s, at a running time comparable
+Table~\ref{tab:results} summarizes the results. In the three settings, our algorithm improves on
+the RGS of \citet{Hessler2025} in both the volume of the ULDs and the weight distribution. It uses
+less ULD volume: with $t = 0.1$\,s, at a running time comparable
 to that of the RGS, 2.9\% less in the Paquay setting, 3.8\% less in the adapted one and 3.4\% less
 with one ULD of each type, where it also leaves less volume unloaded; with $t = 1$\,s, 7.1\%,
 8.2\% and 7.2\% less. Instance by instance, its solutions are better in 182.8 instances and
@@ -147,9 +144,11 @@ worse in 51.8 in the Paquay setting with $t = 1$\,s (184 and 44.6 in the adapted
 with one ULD of each type), and the differences in volume are significant in all the cases
 (Wilcoxon signed-rank test, $p \le 1.2 \cdot 10^{-4}$ with $t = 0.1$\,s and $p < 10^{-12}$ with
 $t = 1$\,s). The total cost of the ULDs given in the instance files decreases in the same way
-(8.1\%, 10.0\% and 7.3\% with $t = 1$\,s). At most 1.0\% of our ULDs violate the CoG constraint
-in the length or width direction, and none in the Paquay and adapted settings with $t = 1$\,s,
-whereas 7--11\% of the ULDs of the RGS have the CoG out of range.
+(8.1\%, 10.0\% and 7.3\% with $t = 1$\,s). At the same time, our solutions respect the CoG
+constraint much better: at most 1.0\% of our ULDs have the CoG out of range in the length or width
+direction (none in the Paquay and adapted settings with $t = 1$\,s), whereas 7--11\% of the ULDs
+of the RGS do. The penalty of the CoG excess guides the search towards balanced loadings and the
+final translation corrects the remaining deviations (Section~\ref{sec:exp-ablation}).
 
 Since the objective is the volume, our algorithm replaces large ULDs by smaller ones whenever
 this saves volume, even if it uses more ULDs: with $t = 1$\,s it uses 3--6\% more ULDs than the

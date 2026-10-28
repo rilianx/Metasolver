@@ -29,7 +29,9 @@ randomized greedy search (RGS) based on a fast extreme-point insertion heuristic
 instance, and it is, to the best of our knowledge, the state of the art for these instances.
 
 In this paper we show that a different algorithmic paradigm, borrowed from the single container
-loading problem, yields considerably better ULD plans. The beam search guided by a greedy
+loading problem, yields considerably better ULD plans, both in the volume of the ULDs and in the
+weight distribution: the RGS leaves 7--11\% of the ULDs with the CoG out of range, while our
+algorithm satisfies the CoG constraint in almost all of them. The beam search guided by a greedy
 (BSG) algorithm \citep{Araya2014,Araya2017} loads a container with \emph{blocks} of identical
 or similar boxes placed in \emph{maximal free spaces}, and selects the blocks with a beam search
 in which each node is evaluated by completing its partial solution with a greedy algorithm. It
@@ -37,7 +39,7 @@ is among the best algorithms for the classical container loading problem
 \citep{Araya2017,Araya2020}, but the air cargo problem differs from it in several respects:
 the ULDs are not cuboids, the support of the boxes and the fragile boxes restrict how boxes can
 be stacked, the CoG of every ULD is constrained, several ULDs of different types must be loaded,
-and all the boxes must be loaded with as few ULDs as possible. Our contributions are the
+and all the boxes must be loaded into ULDs of minimum total volume. Our contributions are the
 following:
 \begin{itemize}
 \item We adapt BSG \citep{Araya2014,Araya2017}, which builds the load with blocks of boxes
@@ -57,10 +59,10 @@ following:
 	anchored at the corner closest to the origin of the ULD, which keeps the load grouped.
 \item We embed the single-ULD algorithm into a sequential multi-ULD framework, which chooses the
 	type of each ULD with the rule of \citet{Hessler2025}, and reduce the total volume of the
-	ULDs, the objective of the problem, with a single move that generalizes the elimination of
-	bins in local search for bin packing \citep{Faroe2003} and the repacking into smaller bins
-	of \citet{Ortmann2010}: a ULD is removed, its boxes are inserted into the other ULDs and the
-	remaining ones are loaded into at most two smaller ULDs. When the number of ULDs is limited,
+	ULDs, the objective of the problem, by removing a ULD, inserting its boxes into the other
+	ULDs and loading the remaining ones into at most two smaller ULDs, a move related to the
+	elimination of bins in local search for bin packing \citep{Faroe2003} and to the repacking
+	into smaller bins of \citet{Ortmann2010}. When the number of ULDs is limited,
 	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure,
 	based on ruin and recreate \citep{Schrimpf2000}, the boxes that fit in no other available
 	ULD are given priority inside BSG, and the construction is restarted giving priority to the
@@ -71,8 +73,9 @@ following:
 	2.9--7.1\% less ULD volume than the RGS in the original setting, 3.8--8.2\% less in the
 	adapted one and 3.4--7.2\% less with one ULD of each type, where it also leaves less volume
 	unloaded. The smaller savings are obtained at a running time comparable to that of the RGS,
-	and the differences are significant in all the settings. Almost none of its ULDs
-	violates the CoG constraint, against 7--11\% of the ULDs of the RGS. All the solutions are
+	and the differences are significant in all the settings. At the same time, at most 1\% of
+	its ULDs violate the CoG constraint, against 7--11\% of the ULDs of the RGS, so that the
+	smaller volume is not obtained at the expense of the weight distribution. All the solutions are
 	checked by an independent validator, and the code, the solutions and the scripts are
 	publicly available.
 \end{itemize}

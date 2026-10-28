@@ -6,8 +6,8 @@ The algorithm loads the ULDs one at a time. Each ULD is loaded by BSG, a beam se
 greedy algorithm, which builds the load with blocks of boxes placed in maximal free spaces
 (Section~\ref{sec:alg-bsg}). The ULD-specific features (the bevelled corners, the edge and the
 substructure, and the support and fragility constraints) are handled in the generation and the
-placement of the blocks (Section~\ref{sec:alg-uld}), and the CoG constraint at several levels
-of the search (Section~\ref{sec:alg-cog}). Section~\ref{sec:alg-load} puts these components
+placement of the blocks (Section~\ref{sec:alg-uld}), and the CoG constraint in the value of the solutions and with a
+translation of the load (Section~\ref{sec:alg-cog}). Section~\ref{sec:alg-load} puts these components
 together to load one ULD, and Section~\ref{sec:alg-multi} describes the multi-ULD framework.
 
 \subsection{Loading one ULD with BSG}
@@ -30,14 +30,12 @@ blocks that form it, which allows us to evaluate the CoG of a load without visit
 The free space of the ULD is represented by the set of maximal free spaces, the largest
 cuboids that do not intersect the placed blocks \citep{Parreno2008}. When a block is placed, the
 free spaces that intersect it are replaced by their maximal parts outside the block, and the
-spaces too small for any remaining box are discarded. In \citet{Araya2014}, each space is anchored at its corner
-closest to a corner of the container, and the next space to fill is the one whose anchor corner
-is closest (in Manhattan distance) to the corresponding corner of the container, so that the
-load grows from all the corners towards the center. Here, instead, every space is anchored at
-its corner closest to the origin of the ULD and the next space is the one closest to the
-origin, so that the load grows from one corner and stays grouped: a grouped load leaves room to
-translate it, which is needed to center its CoG (Section~\ref{sec:alg-cog}), and when it does
-not fill the ULD it is not spread against several walls. Ties are broken by the larger volume.
+spaces too small for any remaining box are discarded. Unlike \citet{Araya2014}, where each
+space is anchored at its nearest corner of the container and the load grows from all the corners,
+every space is anchored at its corner closest to the origin of the ULD, and the next space is
+the one closest to the origin (ties broken by the larger volume). The load thus grows from one
+corner and stays grouped, which leaves room to translate it to center its CoG
+(Section~\ref{sec:alg-cog}).
 An action places a block that fits in the selected space at its anchor corner, which may be
 modified as explained in Section~\ref{sec:alg-uld}; a block is a candidate only if its weight
 does not exceed the remaining weight capacity of the ULD. A state of the
@@ -71,15 +69,9 @@ run iteratively with
 increasing effort until the time limit $t$ is reached \citep{Araya2017}: it starts with $w = 4$
 and $m = 16$, and after each run $w$ and $m/w$ are multiplied by $\sqrt{2}$. The search also stops
 as soon as a solution loads all the available boxes with the CoG in range, since no better
-solution exists for that ULD. The implementation follows
-the optimizations proposed by \citet{Guesser2026} for BSG: the free spaces and the placed
-blocks are stored in contiguous arrays, the contact surface is computed only with the blocks
-near the selected space, the duplicate blocks are detected with a hash during the generation,
-and the greedy completions are memoized: the states visited by the complete greedy runs are
-stored (identified by a hash of their placed blocks), and when a greedy run reaches a known
-state, the rest of the solution is rebuilt from memory instead of evaluating the blocks again.
-In addition, the volume loss of a block is computed only when an upper bound of its evaluation
-can enter the best ones. None of these optimizations changes the result of the search.
+solution exists for that ULD. The implementation includes the optimizations of
+\citet{Guesser2026} for BSG, such as cache-friendly data structures and the memoization of the
+greedy completions, which speed up the search without changing its result.
 
 \begin{figure}[htbp]
 \centering
@@ -211,8 +203,7 @@ $\lambda = 0$, it is ignored.
 
 The weight and the moments of the partial loading and its interval of feasible translations
 are stored in each state, so that the CoG excess of a greedy completion is computed in constant
-time per placed block. Penalizing the CoG excess also in the evaluation of each candidate block
-had no consistent effect in our experiments, and it is not used.
+time per placed block.
 
 \subsection{Loading a ULD}
 \label{sec:alg-load}
@@ -286,13 +277,10 @@ ULD types into which the boxes that fit in the fewest available types fit, the t
 largest total volume of the remaining boxes that fit in it is selected, ties being broken by the
 larger ULD volume. A box fits in a ULD type if its weight does not exceed the capacity and, in
 some allowed orientation, it can be placed alone on the floor inside the edge or on the
-substructure. When this rule leaves several candidate types (those that contain the boxes with
-the fewest options), the type is chosen with short loadings and only the chosen one is loaded
-with the full time limit: each candidate is loaded with \textsc{LoadULD} with the time limit
-$0.1\,t$, the one that maximizes $L - \theta V$ is chosen (line~\ref{c:sel}), where $L$ is the
-loaded volume and $V$ the volume of the ULD, unless it leaves the CoG out of range and another
-candidate does not, and the chosen type is loaded again from scratch with the time limit $t$
-(line~\ref{c:load}); the short loadings are discarded. With $\theta = 0$ this is the type that loads the
+substructure. When this rule leaves several candidate types, each one is loaded with the time
+limit $0.1\,t$ and the one that maximizes $L - \theta V$ is chosen (line~\ref{c:sel}), where $L$
+is the loaded volume and $V$ the volume of the ULD, preferring the candidates with the CoG in
+range; the chosen type is then loaded again with the time limit $t$ (line~\ref{c:load}). With $\theta = 0$ this is the type that loads the
 most volume; a small $\theta > 0$ prefers a smaller ULD when it loads almost the same volume.
 When the number of ULDs is limited, some boxes should be loaded in this ULD: those that fit in no
 other available type, which would otherwise remain unloaded, and the boxes of $P$, which
@@ -301,9 +289,7 @@ the restarts give priority to (line~\ref{a2:prio} of Algorithm~\ref{alg:multi}).
 loadings and in the evaluation of the blocks, each box of $M$ counts as $1 + \omega$ times its
 volume, with $\omega = 10$. The beam search thus favors the loadings that include the boxes of
 $M$, and the greedy completions favor the blocks made of them. On the training instances with
-limited ULDs, this weight halved the unloaded volume with respect to loading the ULD again with
-the boxes of $M$ first, a repair step used in a previous version, and $\omega = 1$ and
-$\omega = 100$ were worse.
+limited ULDs, $\omega = 10$ left less volume unloaded than $\omega = 1$ and $\omega = 100$.
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Construct}$(P)$: sequential construction; the boxes of $P$ are given priority
@@ -342,9 +328,7 @@ boxes of $R \cup B'$ (line~\ref{i:load}). $S'$ replaces $S$ unless its CoG is ou
 that of $S$ is not (line~\ref{i:cog}), and the boxes of $R \cup B'$ that $S'$ does not contain form
 the new pool. The new solution $\mathcal{U}'$ is accepted if $V(B') < V(B)$
 (line~\ref{i:acc}), and the procedure stops as soon as the pool is empty
-(lines~\ref{i:stop} and~\ref{i:empty}). Reloading each ULD from scratch with its boxes and the
-pool, or giving priority to the boxes of the pool, did not improve the results at the same
-running time.
+(lines~\ref{i:stop} and~\ref{i:empty}).
 
 \begin{algorithm}[htbp]
 \caption{\textsc{Insert}$(\mathcal{U}, B)$: insert the boxes of the pool $B$ into the loaded ULDs
@@ -388,15 +372,13 @@ boxes $B'$ into one or two new ULDs, of types $k_1$ and $k_2$, whose total volum
 $V(k_1) + V(k_2)$ is smaller than the volume of $S$; $k_2$ may be none, and $V(\text{none}) = 0$.
 The pairs of types are tried in increasing order of total volume (line~\ref{n:for}): the ULD of
 type $k_1$, the larger one, is loaded with $B'$ (line~\ref{n:load}), and the ULD of type $k_2$, if
-any, with the boxes left over. The pairs whose volume is smaller than that of the boxes, $V(k_1) + V(k_2) < V(B')$, are not
-considered, and those without enough weight capacity, or in which some box fits in neither type,
-are skipped without loading them. The first pair that loads all
+any, with the boxes left over. The pairs without enough weight capacity, or in which some box
+fits in neither type, are skipped without loading them. The first pair that loads all
 the boxes with valid CoGs (in range, or out of range only if the CoG of $S$ was) replaces $S$
 (line~\ref{n:ok}; line~\ref{r:repl} of Algorithm~\ref{alg:reduce}). Two new ULDs allow
-replacing a large ULD by two small ones when the leftover boxes fit in no single smaller type;
-with at most one new ULD, the advantage over the RGS at $t = 0.1$\,s drops from 2.9\% to 1.6\% in
-the Paquay setting and from 3.8\% to 2.5\% in the adapted one (Table~\ref{tab:ablation}). We
-limit the move to two new ULDs to keep the number of pairs, and of loadings, small.
+replacing a large ULD by two small ones when the leftover boxes fit in no single smaller type
+(Section~\ref{sec:exp-ablation}); we limit the move to two new ULDs to keep the number of
+pairs, and of loadings, small.
 Otherwise, the
 solution $\mathcal{U}'$ returned by \textsc{Insert} is discarded and the next ULD is tried. After every change the
 phase starts again, and it stops when no ULD can be changed. Every change reduces the total volume

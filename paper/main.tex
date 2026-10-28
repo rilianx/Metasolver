@@ -14,8 +14,6 @@
 \usepackage[round]{natbib}
 \usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
 
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
-
 \title{A beam search for the air cargo palletization problem\\with weight distribution constraints}
 \author{Ignacio Araya\\[2pt]
 \small Escuela de Ingenier\'ia Inform\'atica, Pontificia Universidad Cat\'olica de Valpara\'iso,\\
@@ -39,11 +37,12 @@ position, and the center of gravity is taken into account in the value of the so
 translation of the load. The ULDs are loaded sequentially, and the
 total volume is then reduced by removing a ULD, inserting its boxes into the others and loading
 the rest into at most two smaller ULDs. On the 300 benchmark instances of Paquay et al.\ and with
-the same parameters in all the settings, the algorithm uses 2.9--3.8\% less ULD volume than the state
-of the art at a comparable running time and 7.1--8.2\% less with a few seconds per instance,
-with significant differences in all the settings, leaves less volume unloaded when the number
-of ULDs is limited, and almost none of its ULDs violates the center of gravity
-constraint, against 7--11\% of the ULDs of the previous method.
+the same parameters in all the settings, the algorithm improves on the state of the art in both
+volume and weight distribution: it uses 2.9--3.8\% less ULD volume at a comparable running time
+and 7.1--8.2\% less with a few seconds per instance, with significant differences in all the
+settings, and at most 1\% of its ULDs violate the center of gravity constraint, against 7--11\%
+of the ULDs of the previous method. It also leaves less volume unloaded when the number of ULDs
+is limited.
 
 \medskip\noindent\textbf{Keywords:} packing; air transport; three-dimensional bin packing;
 beam search; weight distribution
@@ -55,6 +54,28 @@ beam search; weight distribution
 \input{algorithm}
 \input{experiments}
 \input{conclusions}
+
+\section*{Acknowledgments}
+This work was supported by ANID FONDECYT project 1260159.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Ignacio Araya:} Conceptualization, Methodology, Software, Validation, Formal analysis,
+Investigation, Data curation, Visualization, Writing -- original draft, Writing -- review \&
+editing, Funding acquisition.
+
+\section*{Declaration of competing interest}
+The author declares no known competing financial interests or personal relationships that could
+have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+The code, the instances, the solutions of all the experiments and the scripts that reproduce the
+tables and figures are available at \url{https://github.com/rilianx/bsg-uld}.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+During the preparation of this work the author used Claude (Anthropic) to assist in implementing
+and testing the software, running and analyzing the computational experiments, and drafting and
+editing the manuscript. After using this tool, the author reviewed and edited the content as
+needed and takes full responsibility for the content of the published article.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
