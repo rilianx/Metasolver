@@ -456,25 +456,24 @@ greedy order (Section~\ref{sec:t2025}).
 \subsection{Compaction of feasible layouts}\label{sec:improve}
 \textsc{MinimizeOverlap} stops as soon as no overlap remains: the layout fits in the target height, but its
 pieces are where the last moves left them, often with free space below them, since a move along $z$ goes to the
-position of least overlap, not to the lowest one. \textsc{Compact} pushes the pieces down, in the sense of the
-compaction of \citet{li1995}, one piece at a time with \textsc{Descend}. Taking the pieces in increasing order of
-$z$, every piece descends again with \textsc{Descend}, with the other pieces fixed, and each piece that defines
-the height is moved to the lowest of the positions generated as in the greedy construction, if it is lower. The
-pass is repeated while the height decreases (at most 50 passes). A pass can enable moves that were not
-possible in the previous one, because the constraints of \textsc{Descend} are the NFP facets of the neighboring
-pieces, which change when those pieces move. With irregular pieces, the order by the bottom of the pieces is not
-the order in which they support each other. For example, a piece $A$ may lean on the inclined side of a wedge $B$
-whose narrow bottom is higher than the bottom of $A$; $A$ is processed first and cannot move, then $B$ descends
-into a gap below it, and only in the next pass can $A$ follow it down. Similarly, once the pieces that defined
-the height have been moved lower, other pieces define it, and they are tried at the lowest candidate positions
-in the next pass. For example, in a run on Stoyan 2004 Example 2, after a separation at height 40.19, the
-successive passes lowered the height to 39.80, 38.71 and 38.24, by descents alone (7, 4 and 1 pieces moved
-down): most of the gain came after the first pass. \textsc{Compact} is applied to every feasible
-layout: after the construction, where it rarely changes anything (the greedy already leaves each piece at the end
-of a descent), and after each successful
-separation, where it matters: without it, the height of the best solution would decrease only in the discrete
-steps $\rho$ of the oscillation; with it, the pieces settle onto each other and, for instance, the optima of the
-small instances are reached exactly (Section~\ref{sec:t2025}).
+position of least overlap, not to the lowest one. Without a further step, the height of the best solution would
+decrease only in the discrete steps $\rho$ of the oscillation. \textsc{Compact} lets the pieces settle onto each
+other, in the sense of the compaction of \citet{li1995}. It is applied to every feasible layout: after each
+successful separation and after the construction, where it rarely changes anything, since the greedy already
+leaves each piece at the end of a descent.
+
+A pass of \textsc{Compact} takes the pieces in increasing order of $z$; each one descends again with
+\textsc{Descend}, with the other pieces fixed, and if it defines the height, it is moved to the lowest of the
+positions generated as in the greedy construction, if that is lower. Passes are repeated while the height
+decreases (at most 50). A pass can enable moves that were not possible in the previous one, because the
+constraints of \textsc{Descend}, the NFP facets of the neighboring pieces, change when those pieces move, and with
+irregular pieces the order by the bottom is not the order in which they support each other. For example, a piece
+$A$ may lean on the inclined side of a wedge $B$ whose narrow bottom is higher than the bottom of $A$: $A$ is
+processed first and cannot move, then $B$ descends into a gap, and only in the next pass can $A$ follow it.
+Likewise, once the pieces that defined the height have moved lower, other pieces define it and are tried in the
+next pass. In a run on Stoyan 2004 Example 2, after a separation at height 40.19, the successive passes lowered
+the height to 39.80, 38.71 and 38.24, by descents alone: most of the gain came after the first pass. With
+\textsc{Compact}, the optima of the small instances are reached exactly (Section~\ref{sec:t2025}).
 
 % =====================================================================================================
 \section{Computational experiments}\label{sec:exp}
