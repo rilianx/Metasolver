@@ -527,9 +527,8 @@ in a $20\times20$ container; the stars, arrows and rings are prisms and are deco
 \paragraph{References}
 3DNest \citep{egeblad2009} uses the same exact geometry; its average and maximum utilization over 10 runs of
 600 s (one core of a 2.16~GHz Core Duo) are converted to heights. \citet{lamas2023} report best and average heights
-of a voxel VNS; we compare their heights directly, since the voxel representation is part of their method; it
-overestimates the pieces (by 15\% in volume for Merged1, as they note), which is part of the cost of
-the approximation. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
+of a voxel VNS; their voxelization overestimates the pieces (by 15\% in volume for Merged1, as they
+note), so their solutions are feasible for the original pieces. For Stoyan 2004 the only exact reference is \citet{stoyan2004}.
 
 \subsection{Component analysis}
 Table~\ref{tab:ablation} evaluates the components on the seven hardest instances (Stoyan 2004 Examples 1--5 and
@@ -551,9 +550,9 @@ proposed method over the 70 runs (7 instances, 10 seeds), positive when the heig
 $p$-value of a Wilcoxon signed-rank test that pairs the runs by instance and seed.
 
 The decisive elements are the GLS weights and the effort spent in each separation. Additive weights increase
-the heights by 1.4\% ($p<0.001$). With a fifth of the time (24 s), as with moves five times more expensive, the
-heights increase by 2.3\% ($p<0.001$) and most of the advantage over the published values is lost (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
-speed of the move is as important as its exactness. The number of passes of
+the heights by 1.4\% ($p<0.001$). With a fifth of the time (24 s), the heights increase by 2.3\%
+($p<0.001$) and most of the advantage over the published values is lost (the gap on Stoyan 2004 drops from
+$-2.9\%$ to $-0.1\%$): the method needs many moves, so their speed matters as much as their exactness. The number of passes of
 \textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 1.8\% ($p<0.001$), since
 separations that would succeed are abandoned, and with 2000 passes by 0.7\% ($p=0.008$), since the time is spent
 on hopeless ones. The compaction is needed: without it the heights increase by 0.4\% ($p=0.10$) and, in a
