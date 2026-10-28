@@ -482,8 +482,8 @@ Stoyan 2005 Examples 2--3). Each row changes one element of the method:
 of the tuned criterion~\eqref{eq:greedy}.
 \item \emph{No kick}: the restarts do not move any piece.
 \item \emph{Additive weights}: $w_{ij}\gets w_{ij}+1$ for the overlapping pairs at local minima.
-\item \emph{Slower separation}: the same runs stopped at 24 s instead of 120 s. Since the search does the same
-work in less time, this simulates moves five times more expensive, e.g., with a costlier overlap measure, and
+\item \emph{Time limit of 24 s}: the same runs stopped at 24 s instead of 120 s. A fifth of the time is what the
+method would have if its moves were five times more expensive, e.g., with a costlier overlap measure, so this row
 estimates how much of the performance is due to the speed of the exact axis move of
 Proposition~\ref{prop:axis}.
 \item \emph{Sensitivity}: step $\rho$ of the oscillation and maximum number of passes of
@@ -494,8 +494,8 @@ proposed method over the 70 runs (7 instances, 10 seeds), positive when the heig
 $p$-value of a Wilcoxon signed-rank test that pairs the runs by instance and seed.
 
 The decisive elements are the GLS weights and the effort spent in each separation. Additive weights increase
-the heights by 1.9\% ($p<0.001$). Moves five times more expensive increase them by 3.2\% ($p<0.001$) and lose
-most of the advantage over the published values (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
+the heights by 1.9\% ($p<0.001$). With a fifth of the time (24 s), as with moves five times more expensive, the
+heights increase by 3.2\% ($p<0.001$) and most of the advantage over the published values is lost (the gap on Stoyan 2004 drops from $-2.9\%$ to $-0.1\%$): the
 speed of the move is as important as its exactness. The number of passes of
 \textsc{MinimizeOverlap} also matters: with 100 passes the heights increase by 2.6\% ($p<0.001$), since
 separations that would succeed are abandoned, and with 2000 passes by 1.0\% ($p=0.004$), since the time is spent
@@ -527,8 +527,8 @@ $\sigma=0$ (no wall term in \textsc{Descend}) & $-2.3\%$ & $-1.7\%$ & $+0.7\%$ (
 Greedy by volume & $-2.9\%$ & $-1.4\%$ & $+0.4\%$ (0.19)\\
 No kick (restarts only) & $-2.6\%$ & $-2.1\%$ & $+0.3\%$ (0.32)\\
 Additive GLS weights & $-1.4\%$ & $-0.8\%$ & $+1.9\%$ ($<$0.001)\\
-Separation five times slower & $-0.1\%$ & $-1.2\%$ & $+3.2\%$ ($<$0.001)\\
 \midrule
+Time limit 24 s (default 120 s) & $-0.1\%$ & $-1.2\%$ & $+3.2\%$ ($<$0.001)\\
 $\rho=0.5\%$ (default 1\%) & $-2.8\%$ & $-2.1\%$ & $+0.1\%$ (0.59)\\
 $\rho=2\%$ & $-2.2\%$ & $-1.5\%$ & $+0.6\%$ (0.09)\\
 100 passes (default 500) & $-1.1\%$ & $-1.1\%$ & $+2.6\%$ ($<$0.001)\\
