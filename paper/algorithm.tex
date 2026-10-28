@@ -118,14 +118,19 @@ is necessary for its support. The free spaces are still cuboids, so a space next
 contain positions that are not usable; they are simply not used by any block.
 
 \paragraph{Edge and substructure.}
-With a floor edge of width $e$ and offset $\delta$ (Figure~\ref{fig:edge}), the initial free spaces are the space above
-the floor inside the edge, $[e, L-e] \times [e, W-e] \times [0, H]$, and the space above the height
-$\delta$ over the whole floor, $[0, L] \times [0, W] \times [\delta, H]$. With a substructure, the
-only initial space is the second one, and the floor inside the edge is raised to $\delta$. A space above the edge has no support until boxes have been loaded inside
-it; instead of discarding it, it is kept aside (\emph{dormant}) and reconsidered after the next
-block is placed. Each ULD with an edge is loaded twice, on its floor and on the substructure,
-and the best of the two loadings is kept; the blocks (single boxes and composite blocks) are
-generated for each of the two loadings, since the space in which they must fit is different.
+The floor edge is handled as a fixed obstacle: four strips of width $e$ and height $\delta$ along
+the border of the floor, which no box may overlap and which give no support. The initial maximal
+spaces of the ULD minus these strips are the space inside the edge,
+$S_1 = [e, L-e] \times [e, W-e] \times [0, H]$, and the space above the edge,
+$S_2 = [0, L] \times [0, W] \times [\delta, H]$ (Figure~\ref{fig:edge}). Similarly, the
+substructure is a fixed obstacle that fills the floor inside the edge up to the height $\delta$
+and supports the boxes, so that $S_2$ is the only initial space. The only change to the
+maximal-space algorithm is due to $S_2$: its base has no support until boxes of height $\delta$
+have been loaded in $S_1$, and a space whose blocks are all unsupported would otherwise be
+discarded for good, since spaces are only reduced. Such a space is therefore kept aside
+(\emph{dormant}) and reconsidered after the next block is placed. Each ULD with an edge is loaded
+twice, on its floor and on the substructure, and the best of the two loadings is kept; the blocks
+are generated for each of the two loadings, since the space in which they must fit is different.
 
 \begin{figure}[htbp]
 \centering
