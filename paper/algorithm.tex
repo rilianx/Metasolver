@@ -21,8 +21,9 @@ existing blocks along the $x$, $y$ or $z$ axis, so that every block has a guillo
 A joined block is kept only if its boxes are available, it fits in the bounding box of the ULD,
 the boxes fill at least a proportion $f_{\min}$ of its volume, and it is different from the
 blocks already generated (same dimensions and same boxes); the generation stops when
-$N_{\max}$ blocks have been generated ($N_{\max} = 500$). We use $f_{\min} = 0.98$, so that the blocks are
-almost solid. Each block stores its weight and its CoG, computed recursively from the two
+$N_{\max}$ blocks have been generated. We use $f_{\min} = 0.98$, as in BSG
+\citep{Araya2014}, so that the blocks are almost solid, and $N_{\max} = 500$
+(Section~\ref{sec:exp-setup}). Each block stores its weight and its CoG, computed recursively from the two
 blocks that form it, which allows us to evaluate the CoG of a load without visiting its boxes.
 
 \paragraph{Free spaces and actions.}
