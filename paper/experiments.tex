@@ -82,18 +82,16 @@ choose it, it chose the largest value and the running time grew. With the final 
 $t = 0.1$\,s, no other value of $N_{\max}$ is better in the three settings: 1000 blocks reduce the
 volume of the ULDs by one point in the Paquay setting but increase it by one point in the adapted
 one, with 7--12\% more time, and 2000 blocks take 40--70\% more time without reducing it (one
-run with 250, 1000 and 2000 blocks). The cost of a run is
+run with 250, 1000 and 2000 blocks). The cost of a run is the total volume of the ULDs plus two
+penalties, divided by the volume of the boxes so that all the instances weigh the same:
 \[
 \frac{V_{\mathrm{ULD}} + 100\, V_{\mathrm{unl}} + 150\,\mathrm{m}^3 \cdot n_{\mathrm{CoG}}}{V_{\mathrm{boxes}}},
 \]
-where $V_{\mathrm{ULD}}$ is the volume of the ULDs, $V_{\mathrm{unl}}$ the volume left unloaded,
-$n_{\mathrm{CoG}}$ the number of ULDs whose CoG is out of range and $V_{\mathrm{boxes}}$ the
-volume of the boxes of the instance. The two penalties are much larger than any change in the
-volume of the ULDs that the algorithm can make by changing one ULD (the largest ULD has
-31.8\,m$^3$): an unloaded box of 1\,m$^3$ costs as much as 100\,m$^3$ of ULDs and a ULD with the
-CoG out of range as much as 150\,m$^3$, so that irace does not trade boxes left out or CoG
-violations for volume, and the volume of the ULDs decides among configurations that load all
-the boxes with the CoG in range. The values of a preliminary tuning were the initial
+where $V_{\mathrm{unl}}$ is the volume left unloaded and $n_{\mathrm{CoG}}$ the number of ULDs
+with the CoG out of range. Each cubic meter left unloaded counts as 100\,m$^3$ of ULDs, and each
+ULD with the CoG out of range as 150\,m$^3$, about five of the largest ULDs (31.8\,m$^3$). The
+cost is thus in practice hierarchical: first the unloaded volume and the CoG violations, then the
+volume of the ULDs. The values of a preliminary tuning were the initial
 configuration. Table~\ref{tab:params} lists the parameters; the four elite
 configurations returned by irace agree on a small $\lambda$ (1.0--1.7), a large $\gamma$
 (0.77--0.97) and $\theta$ between 0.18 and 0.32. The tuning was carried out with an earlier version of the
