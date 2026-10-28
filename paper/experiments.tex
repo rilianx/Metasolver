@@ -353,7 +353,9 @@ varies by about 0.2\%).
 \footnotesize\setlength{\tabcolsep}{3.5pt}
 \caption{Ablation ($t = 0.1$\,s): volume of the ULDs relative to the RGS, ULDs with the CoG out
 of range in the length or width direction and, with one ULD of each type, unloaded volume
-(m$^3$).}
+(m$^3$). In bold, the measures that get clearly worse than with the complete algorithm. Basic BSG:
+rule of \citet{Hessler2025}, spaces anchored at the nearest corner of the ULD, no substructure,
+no restarts and no reduction phase.}
 \label{tab:ablation}
 \begin{tabular}{lrrrrrrr}
 \toprule
@@ -363,21 +365,18 @@ Variant & Vol. & CoG & Vol. & CoG & Vol. & Unl. & CoG \\
 \midrule
 Complete algorithm & $-$2.9\% & 7.8 & $-$3.8\% & 3 & $-$2.4\% & 20.0 & 17 \\
 \midrule
-No CoG penalty ($\lambda = 0$) & $-$6.0\% & 460 & $-$3.0\% & 281 & $-$1.0\% & 13.5 & 326 \\
-No translation of the load & $-$1.4\% & 183 & $-$2.4\% & 117 & $-$1.9\% & 36.7 & 216 \\
-No substructure & -- & -- & $-$2.2\% & 7 & $-$1.6\% & 17.5 & 23 \\
-No restarts & -- & -- & -- & -- & $-$2.4\% & 39.6 & 15 \\
+No CoG penalty ($\lambda = 0$) & $-$6.0\% & \textbf{460} & $-$3.0\% & \textbf{281} & $-$1.0\% & 13.5 & \textbf{326} \\
+No translation of the load & \textbf{$-$1.4\%} & \textbf{183} & $-$2.4\% & \textbf{117} & $-$1.9\% & \textbf{36.7} & \textbf{216} \\
+No substructure & -- & -- & \textbf{$-$2.2\%} & 7 & \textbf{$-$1.6\%} & 17.5 & 23 \\
+No restarts & -- & -- & -- & -- & $-$2.4\% & \textbf{39.6} & 15 \\
 Rule of \citet{Hessler2025} (no $\theta$) & $-$2.5\% & 7 & $-$3.6\% & 3 & $-$2.7\% & 20.3 & 18 \\
 \midrule
-No \textsc{Insert} & $+$0.2\% & 10 & $+$0.2\% & 4 & $-$1.2\% & 37.1 & 21 \\
-Reduction with one new ULD & $-$1.6\% & 8 & $-$2.5\% & 2 & $-$2.2\% & 20.0 & 16 \\
-No reduction phase & $+$0.8\% & 10 & $+$0.6\% & 2 & $-$1.0\% & 20.0 & 20 \\
+No \textsc{Insert} & \textbf{$+$0.2\%} & 10 & \textbf{$+$0.2\%} & 4 & \textbf{$-$1.2\%} & \textbf{37.1} & 21 \\
+Reduction with one new ULD & \textbf{$-$1.6\%} & 8 & \textbf{$-$2.5\%} & 2 & $-$2.2\% & 20.0 & 16 \\
+No reduction phase & \textbf{$+$0.8\%} & 10 & \textbf{$+$0.6\%} & 2 & \textbf{$-$1.0\%} & 20.0 & 20 \\
 \midrule
-Basic BSG\textsuperscript{a} & $+$13.9\% & 90 & $+$18.4\% & 61 & $+$10.1\% & 43.0 & 72 \\
+Basic BSG & \textbf{$+$13.9\%} & \textbf{90} & \textbf{$+$18.4\%} & \textbf{61} & \textbf{$+$10.1\%} & \textbf{43.0} & \textbf{72} \\
 \bottomrule
-\multicolumn{8}{l}{\textsuperscript{a} Rule of \citet{Hessler2025}, spaces anchored at the nearest
-corner of the ULD, no substructure,}\\
-\multicolumn{8}{l}{\phantom{\textsuperscript{a}} no restarts and no reduction phase.}
 \end{tabular}
 \end{table}
 
