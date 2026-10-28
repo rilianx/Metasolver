@@ -388,8 +388,9 @@ boxes $B'$ into one or two new ULDs, of types $k_1$ and $k_2$, whose total volum
 $V(k_1) + V(k_2)$ is smaller than the volume of $S$; $k_2$ may be none, and $V(\text{none}) = 0$.
 The pairs of types are tried in increasing order of total volume (line~\ref{n:for}): the ULD of
 type $k_1$, the larger one, is loaded with $B'$ (line~\ref{n:load}), and the ULD of type $k_2$, if
-any, with the boxes left over. The pairs without enough volume or weight capacity, or in which
-some box fits in neither type, are skipped without loading them. The first pair that loads all
+any, with the boxes left over. The pairs whose volume is smaller than that of the boxes, $V(k_1) + V(k_2) < V(B')$, are not
+considered, and those without enough weight capacity, or in which some box fits in neither type,
+are skipped without loading them. The first pair that loads all
 the boxes with valid CoGs (in range, or out of range only if the CoG of $S$ was) replaces $S$
 (line~\ref{n:ok}; line~\ref{r:repl} of Algorithm~\ref{alg:reduce}). Two new ULDs allow
 replacing a large ULD by two small ones when the leftover boxes fit in no single smaller type;
@@ -422,7 +423,7 @@ $\mathcal{U}$.}
 \begin{algorithm}[htbp]
 \caption{\textsc{NewULDs}$(S, B')$: load the boxes $B'$ left over from the ULD $S$ into one or two
 new ULDs of smaller total volume. $\mathcal{K}_S$ is the set of pairs of available types $(k_1, k_2)$,
-$k_2$ possibly none, with $V(k_1) \ge V(k_2)$ and $V(k_1) + V(k_2) < V(S)$, where $V(k)$ is the
+$k_2$ possibly none, with $V(k_1) \ge V(k_2)$ and $V(B') \le V(k_1) + V(k_2) < V(S)$, where $V(k)$ is the
 volume of a ULD of type $k$ and $V(\text{none}) = 0$.}
 \label{alg:newulds}
 \begin{algorithmic}[1]
