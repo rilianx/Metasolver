@@ -1,30 +1,182 @@
-# BSG for CLP
+# BSG for the 3D bin packing problem (branch `bsg-bpp`)
 
 Description
 ------
-BSG is a method based on beam search (an adaptation of a branch-and-bound
-algorithm which expands only the most promising nodes at each level of the search tree).
-BSG explores the space to find a path from an initial state (i.e., an empty container)
-to some complete solution or terminal state
-(i.e., a loading plan in which no more boxes can be loaded).
+BSG is a beam search guided by a greedy algorithm (Araya and Riff 2014; Araya et al. 2017): it builds
+the loading of a container with blocks of boxes placed in maximal free spaces, and evaluates each node
+of the beam by completing its partial solution with a greedy algorithm that uses the VCS function.
 
-This branch (`bsg-clp`) contains only the single-objective BSG for the
-Container Loading Problem with instances in BR format
-(Bischoff & Ratcliff / Davies & Bischoff). The multi-objective variants
-(BSG-B, NSGA-II), other problems and plugins are available in `master`.
+This branch adapts BSG to the **three-dimensional bin packing problem** (3D-BPP, multiple container
+loading with identical containers): all the boxes must be loaded into the minimum number of identical
+bins (`BSG_BPP`). It derives from `bsg-uld` (air cargo palletization, which derives from the optimized
+single-container version of `bsg-clp`) and also contains its two programs:
+
+| program | problem | branch where it was developed |
+|---|---|---|
+| `BSG_BPP` | 3D bin packing, identical bins | `bsg-bpp` (this one) |
+| `BSG_ULD` | air cargo palletization into ULDs (Paquay et al. instances) | `bsg-uld` |
+| `BSG_CLP` | single container loading (BR instances) | `bsg-clp` |
+
+The multi-objective variants (BSG-B, NSGA-II), other problems and plugins are available in `master`.
+
+Installation
+-------
+
+     git clone -b bsg-bpp https://github.com/rilianx/Metasolver.git
+     cd Metasolver
+     mkdir build && cd build
+     cmake ..
+     make
+
+This builds `BSG_BPP`, `BSG_ULD` and `BSG_CLP`. The scripts of the experiments use Python 3
+(the prototype `setcover_bpp.py` also uses OR-Tools).
+
+3D bin packing (BSG_BPP)
+-------
+
+### Algorithm
+
+* **Sequential construction.** The bins are loaded one at a time with BSG (with the double search
+  effort, `-t` seconds per bin, default 0.02) using all the remaining boxes. A bin is a `ULD` of
+  `BSG_ULD` without cuts, weight limit or center of gravity constraints; all the spaces are anchored at
+  the origin of the bin (`--corner_anchor`: at their closest corner).
+* **Profit of the boxes.** The value of a loading and the VCS evaluation of the blocks use the profit
+  v^kappa of the boxes instead of their volume (`--kappa`, default 2), so the large boxes are loaded
+  first and are not left alone in the last bins.
+* **Squeaky wheel optimization** (default, `--no_swo` for the ablation). The construction is repeated
+  during the whole time limit (`-T`): after each construction, the profit of the box types of the 10%
+  least loaded bins is multiplied by 1.3 (`--swo_rate`), and every profit by a small random factor. The
+  best solution is kept: fewer bins and, with the same number, the least loaded bin with less volume.
+  The search stops if the number of bins reaches the lower bound.
+* **Emptying of bins** (only with `--swo_frac` < 1, which gives it the rest of the time). The boxes of
+  the least loaded bin are inserted into the other bins with ruin and recreate (the `Insert` of
+  `BSG_ULD`: a proportion of the volume of each bin is removed from the top and the bin is reloaded with
+  the remaining boxes fixed). If some boxes are left over and they fit in one bin, the change is still
+  accepted when it increases the sum of the squared loads (Fleszar and Hindi 2002), which prepares the
+  elimination of the bin. It did not improve the results on the instances below.
+* **Lower bound.** Maximum of the continuous bound and the bounds L1 and L2 of Martello, Pisinger and
+  Vigo (2000) (fixed orientation).
+
+### Usage
+
+     ./build/BSG_BPP problems/clp/benchs/MPV/original/class8/200.txt -i 3 -T 30 -o sol.csv
+     python3 problems/clp/validate_bpp.py problems/clp/benchs/MPV/original/class8/200.txt sol.csv -i 3
+
+Output: `n_bins <bins> lb <lower bound> construction <bins of the first construction> swo <bins after
+the squeaky wheel optimization> t_construction <s> time <s>`, and a line `stats` with counters.
+
+Main options (`./build/BSG_BPP -h` for all of them):
+
+```
+  -T[double]          Total time limit (seconds, CPU time). Default: 60
+  -t[double]          Time limit of BSG in each bin (seconds, without the block generation). Default: 0.02
+  -i[int]             Instance in files with several instances (from 1). Default: 1
+  --kappa=[double]    Profit of each box: volume^kappa. Default: 2
+  --swo_rate=[double] Increase of the profit of the boxes of the least loaded bins. Default: 0.3
+  --swo_frac=[double] Proportion of the time for the squeaky wheel optimization (the rest: emptying of
+                      bins). Default: 1
+  --rot               The boxes can be rotated (6 orientations). Default: fixed orientation
+  --no_swo, --no_improve, --no_ruin, --no_partial   Ablation of the components
+  --columns=[string]  Write the bins generated by the constructions (boxes of each type) to a file
+  -o[string]          Write the solution (one line per box: bin;item;x;y;z;l;w;h)
+  -v                  Print the bins
+```
+
+### Instances
+
+* `problems/clp/benchs/MPV/original/class{1..8}/{50,100,150,200}.txt`: the instances of Martello,
+  Pisinger and Vigo (2000), 10 instances per file. Each instance starts with a line with its number, a
+  lower bound and an upper bound, followed by `n W H D` and one line per box. Bins of 100x100x100
+  (classes 1-5 and 8), 10x10x10 (class 6) and 40x40x40 (class 7).
+* `problems/clp/benchs/MPV/gen_mpv.py`: generator of instances with the same distribution (written from
+  the description of the paper, not the original generator; `benchs/MPV/instances`). They were used to
+  explore the components and to choose the parameters, so the original instances are only used to report.
+* A single instance can also be given as `n L W H` followed by one line `l w h` per box.
+
+`problems/clp/validate_bpp.py` is an independent validator (it does not share code with the solver): every
+box loaded exactly once, in an allowed orientation, inside its bin and without overlapping other boxes.
+
+### Results
+
+240 original instances (classes 1 and 4-8, which are the ones compared in the literature), fixed
+orientation, `-T 30` (30 s of CPU time per instance, one run, 4 runs in parallel), all the solutions
+checked with `validate_bpp.py`. Sum of the number of bins of the 10 instances of each group. LB: the lower
+bound of the instance files. The other methods are from Table 8 of Goncalves and Resende (2013)
+(`benchs/MPV/literature_goncalves2013.csv`, averages x 10): BRKGA (BRKGA-BPP with fitness aNB), GVND
+(Parreño et al. 2010), TS2P (Crainic et al. 2009) and GLS (Faroe et al. 2003). Base: only the sequential
+construction with BSG maximizing the volume (`--kappa 1 --no_improve`).
+
+| class | n | LB | BRKGA | GVND | TS2P | GLS | base | BSG_BPP |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 50 | 125 | 134 | 134 | 134 | 134 | 140 | 134 |
+| 1 | 100 | 251 | 266 | 266 | 267 | 267 | 279 | 266 |
+| 1 | 150 | 347 | 364 | 364 | 370 | 370 | 380 | 365 |
+| 1 | 200 | 484 | 508 | 509 | 511 | 512 | 522 | 510 |
+| 4 | 50 | 289 | 294 | 294 | 294 | 294 | 299 | 294 |
+| 4 | 100 | 576 | 590 | 590 | 589 | 590 | 592 | 590 |
+| 4 | 150 | 852 | 868 | 868 | 868 | 868 | 882 | 868 |
+| 4 | 200 | 1163 | 1188 | 1188 | 1188 | 1190 | 1200 | 1188 |
+| 5 | 50 | 74 | 83 | 83 | 83 | 83 | 88 | 83 |
+| 5 | 100 | 129 | 150 | 150 | 152 | 151 | 161 | 150 |
+| 5 | 150 | 174 | 200 | 201 | 201 | 202 | 219 | 201 |
+| 5 | 200 | 244 | 271 | 271 | 274 | 272 | 297 | 271 |
+| 6 | 50 | 91 | 97 | 98 | 98 | 98 | 108 | 98 |
+| 6 | 100 | 175 | 189 | 190 | 191 | 191 | 204 | 190 |
+| 6 | 150 | 269 | 290 | 292 | 292 | 294 | 314 | 294 |
+| 6 | 200 | 350 | 373 | 374 | 377 | 377 | 406 | 374 |
+| 7 | 50 | 64 | 74 | 74 | 74 | 74 | 80 | 74 |
+| 7 | 100 | 109 | 122 | 125 | 123 | 123 | 135 | 124 |
+| 7 | 150 | 137 | 153 | 160 | 158 | 158 | 171 | **152** |
+| 7 | 200 | 210 | 234 | 235 | 235 | 235 | 257 | 234 |
+| 8 | 50 | 83 | 92 | 92 | 92 | 92 | 96 | 92 |
+| 8 | 100 | 176 | 189 | 189 | 188 | 189 | 199 | 189 |
+| 8 | 150 | 213 | 236 | 241 | 239 | 239 | 260 | 237 |
+| 8 | 200 | 267 | 293 | 298 | 300 | 299 | 319 | 296 |
+| **total** | | **6852** | **7258** | **7286** | **7298** | **7302** | **7608** | **7274** |
+
+BSG_BPP uses fewer bins than GVND, TS2P and GLS, and 16 more than BRKGA (0.2%); in class 7 with 150 boxes
+it uses fewer bins than all of them. Goncalves and Resende (2013) report a mean time to the best solution
+of 0.1-22 s and up to 131 s for 200 generations, with a parallel evaluation on an Intel Core i7-2630QM.
+
+Components (72 generated instances, 3 per class and size, 20 s; gap: bins minus lower bound):
+
+| configuration | bins | gap |
+|---|---|---|
+| construction maximizing the volume (kappa = 1) | 2239 | 229 |
+| construction with the profit v^2 | 2172 | 162 |
+| + emptying of bins with ruin and recreate | 2168 | 158 |
+| + squeaky wheel optimization (half of the time) and emptying of bins | 2142 | 132 |
+| + squeaky wheel optimization (all the time) | 2139 | 129 |
+
+The rate of the squeaky wheel optimization (0.1, 0.3, 0.6) and the time per bin (0.01, 0.02, 0.05 s)
+change the total by at most 6 bins. Choosing the minimum number of bins among all the bins generated by
+the constructions (set covering, `--columns` and `problems/clp/experiments/setcover_bpp.py`, in the
+spirit of Monaci and Toth 2006) did not improve the solutions of the squeaky wheel optimization.
+
+Reproduce (`results/bpp`):
+
+     ./problems/clp/experiments/run_mpv.sh results/bpp/x.csv "1 4 5 6 7 8" "$(seq -s' ' 1 10)" 4 -- -T 30
+     python3 problems/clp/experiments/summarize_mpv.py results/bpp/x.csv
+
+`run_mpv.sh` runs the instances in parallel, writes the solutions and validates them;
+`run_bpp.sh` and `summarize_bpp.py` do the same with the generated instances.
 
 Code structure
 -------
 * `metasolver/`: generic search framework (`State`, `SearchStrategy`) and
   strategies: `Greedy`, `BSG` (beam search guided by greedy solutions) and
   `DoubleEffort` (runs BSG doubling the effort until the time limit).
-* `problems/clp/`: the CLP
+* `problems/clp/`:
   * `clpState`: partial solution (container, remaining boxes and valid blocks),
-    instance reading (`new_state`).
+    instance reading (`new_state`), profits of the boxes (`box_profit`).
   * `Block`: blocks of boxes and guillotine block generation.
   * `Container`: placed blocks and maximal free spaces.
-  * `VCS_Function`: VCS evaluation function (volume, pseudo-contact surface,
+  * `VCS_Function`: VCS evaluation function (volume or profit, pseudo-contact surface,
     volume loss and number of boxes).
+  * `ULD`: ULD shapes (cuts, weight, center of gravity).
+  * `main_bpp.cpp`, `main_uld.cpp`, `main_clp.cpp`: the three programs.
+  * `validate_bpp.py`, `validate_uld.py`: independent validators.
+  * `experiments/`: scripts of the experiments; `benchs/`: instances.
 
 Implementation notes
 -------
@@ -52,17 +204,11 @@ the volume utilization by ~0.17 percentage points w.r.t. the parameters of
 Araya et al. (2017): alpha=4, beta=1, gamma=0.2, p=0.04. With these parameters
 the search is the same as in the original implementation.
 
-Installation
+Single container loading (BSG_CLP)
 -------
+`BSG_CLP` loads one container maximizing the volume utilization (instances in BR format,
+Bischoff and Ratcliff / Davies and Bischoff).
 
-     git clone -b bsg-clp https://github.com/rilianx/Metasolver.git
-     cd Metasolver
-     mkdir build && cd build
-     cmake ..
-     make
-
-Options
---------
 
 ```
 ./BSG_CLP {OPTIONS} [instance-set]
@@ -90,8 +236,8 @@ lengths in the x and y axes when the box cannot be placed with its length in
 vertical. With this option all the allowed orientations are considered (it
 does not change the average results significantly).
 
-Example
------
+Example:
+
      ./build/BSG_CLP problems/clp/benchs/BR/BR2.txt -i 47 -t 10
 
 Air cargo loading (BSG_ULD)
@@ -207,36 +353,3 @@ range in x or y):
 Example:
 
      ./build/BSG_ULD problems/clp/benchs/ULD/Final_instances/n50sample0.csv -t 1 -v
-
-3D bin packing with identical bins (BSG_BPP)
--------
-`BSG_BPP` (branch `bsg-bpp`) solves the three-dimensional bin packing problem (all the boxes must be
-loaded into the minimum number of identical bins, fixed orientation by default, `--rot` for the 6
-orientations). It reuses the BSG of `BSG_ULD` (a ULD without cuts, weight limit or CoG):
-
-* sequential construction: the bins are loaded one at a time with BSG (`-t`, default 0.02 s per bin);
-* profit of the boxes: the value of a loading and the VCS evaluation of the blocks use the profit
-  v^kappa of the boxes instead of their volume (`--kappa`, default 2), so the large boxes are loaded first;
-* squeaky wheel optimization (default, `--no_swo` for the ablation): the construction is repeated during
-  the whole time limit (`-T`), multiplying the profit of the box types of the 10% least loaded bins by 1.3
-  (`--swo_rate`) and by a small random factor; the best solution (fewer bins, then least loaded bin with
-  less volume) is kept;
-* optional (`--swo_frac` < 1): emptying of bins with ruin and recreate (Insert of `BSG_ULD`), accepting
-  partial transfers that increase the sum of the squared loads (Fleszar and Hindi 2002). It did not
-  improve the results on these instances;
-* lower bound: continuous, L1 and L2 of Martello, Pisinger and Vigo (2000).
-
-Instances: `problems/clp/benchs/MPV/original` (Martello, Pisinger and Vigo 2000, classes 1-8, files with
-10 instances, `-i` selects one; each instance header has the instance number, a lower bound and an
-upper bound) and `benchs/MPV/gen_mpv.py` (instances with the same distribution, used for exploration).
-Solutions (`-o`) are checked with the independent validator `validate_bpp.py`.
-
-Results (classes 1, 4-8, 240 instances, one run, `-T 30`, 4 runs in parallel; total number of bins;
-literature from Table 8 of Goncalves and Resende 2013, `benchs/MPV/literature_goncalves2013.csv`):
-
-| LB | TS2P | GLS | GVND | BRKGA | BSG construction (kappa=1) | BSG_BPP (30 s) |
-|---|---|---|---|---|---|---|
-| 6852 | 7298 | 7302 | 7286 | 7258 | 7608 | 7274 |
-
-     ./problems/clp/experiments/run_mpv.sh results/bpp/x.csv "1 4 5 6 7 8" "$(seq -s' ' 1 10)" 4 -- -T 30
-     python3 problems/clp/experiments/summarize_mpv.py results/bpp/x.csv
