@@ -529,8 +529,6 @@ static void insert(vector<Load>& loads, vector<int>& pool, const Params& P){
  * Retorna true si se hizo un cambio (que siempre reduce el volumen total de los ULDs).
  */
 static int reduce_new=2;
-//cota inferior del volumen de los ULDs nuevos: reduce_b * volumen del sobrante
-static double reduce_b=1.0;
 static bool reduce_volume(vector<Load>& loads, const Params& P){
 	vector<int> order(loads.size());
 	for(size_t i=0; i<order.size(); i++) order[i]=i;
@@ -569,7 +567,7 @@ static bool reduce_volume(vector<Load>& loads, const Params& P){
 		for(const vector<int>& C : combos){
 			double vc=cvol(C), wc=0;
 			if(vc >= tg.uld->volume - 1e-6) break;
-			if(vc < reduce_b*pv) continue;
+			if(vc < pv) continue;
 			vector<int> a2=av; bool ok=true;
 			for(int k : C){ wc+=ulds[k].max_weight; if(a2[k]==0) ok=false; else if(a2[k]>0) a2[k]--; }
 			if(!ok || wc < pw) continue;
@@ -659,7 +657,6 @@ int main(int argc, char** argv){
 	args::ValueFlag<double> _improve_time(parser, "double", "Time limit of BSG in the improvement phases (insertion and reduction), relative to -t. Default: 0.1", {"improve_time"});
 	args::ValueFlag<double> _must_w(parser, "double", "Limited ULDs: extra weight, in the value of the loadings and in the evaluation of the blocks, of the boxes that fit in no other available ULD and of the prioritized boxes of the restarts (0: no priority). Default: 10", {"must_w"});
 	args::ValueFlag<int> _restarts(parser, "int", "Limited ULDs: maximum number of restarts of the construction prioritizing the boxes left unloaded. Default: 3", {"restarts"});
-	args::ValueFlag<double> _reduce_b(parser, "double", "Reduction of the volume: the new ULDs must have at least reduce_b times the volume of the leftover boxes. Default: 1", {"reduce_b"});
 	args::ValueFlag<int> _reduce_new(parser, "int", "Reduction of the volume: maximum number of new ULDs for the boxes that are not inserted into the other ULDs (1 or 2). Default: 2", {"reduce_new"});
 	args::Flag _eliminate_only(parser, "eliminate_only", "Ablation: instead of the reduction of the volume, only eliminate ULDs by inserting their boxes into the others", {"eliminate_only"});
 	args::Flag _no_eliminate(parser, "no_eliminate", "Ablation: no reduction of the volume (nor elimination of ULDs)", {"no_eliminate"});
@@ -729,7 +726,6 @@ int main(int argc, char** argv){
 	use_substructure = !_no_substructure && clpState::corner_support && ulds[0].edge>0 && ulds[0].delta>0;
 	regroup = !_no_regroup;
 	if(_reduce_new) reduce_new=_reduce_new.Get();
-	if(_reduce_b) reduce_b=_reduce_b.Get();
 	if(_theta) theta=_theta.Get();
 	if(_restarts) restarts=_restarts.Get();
 	if(_must_w) must_w=_must_w.Get();
