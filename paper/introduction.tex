@@ -39,45 +39,54 @@ is among the best algorithms for the classical container loading problem
 \citep{Araya2017,Araya2020}, but the air cargo problem differs from it in several respects:
 the ULDs are not cuboids, the support of the boxes and the fragile boxes restrict how boxes can
 be stacked, the CoG of every ULD is constrained, several ULDs of different types must be loaded,
-and all the boxes must be loaded into ULDs of minimum total volume. Our contributions are the
-following:
+and all the boxes must be loaded into ULDs of minimum total volume. A direct application of BSG
+does not handle these features: blocks built as in container loading may rest on fragile boxes
+or be partly unsupported, blocks placed at the corners of the free spaces may cross the bevelled
+sides, the CoG is not considered, and BSG loads a single container.
+
+From BSG we keep the general scheme: blocks of boxes \citep{Fanslau2010} placed in maximal free
+spaces \citep{Parreno2008}, the VCS function to evaluate them \citep{Araya2017}, and the beam
+search with greedy completions \citep{Araya2014}. The contributions of this paper are the
+components that make this scheme work for air cargo, and the experimental study:
 \begin{itemize}
-\item We adapt BSG \citep{Araya2014,Araya2017}, which builds the load with blocks of boxes
-	\citep{Fanslau2010} placed in maximal free spaces \citep{Parreno2008} and evaluated with the
-	VCS function \citep{Araya2017}, to load a ULD with bevelled corners, a floor edge and an
-	optional substructure, the features introduced by \citet{Paquay2016} and
-	\citet{Hessler2025}. The blocks are generated so that every box inside a block is supported, and
-	each block is placed in a free space only if the boxes of its base are supported according
-	to the corner or area criterion of the problem and no box touches a fragile box. A block that
-	crosses a bevelled side of the ULD is shifted along the length of the ULD to the nearest
-	feasible position.
-\item We handle the CoG constraint in two ways: the value of a solution is penalized by the
-	excess of the CoG deviation over the allowed one, so that the beam search takes it into
-	account during the construction instead of in a post-processing step
-	\citep{Davies1999,Paquay2018b}, and the final load of each ULD is translated as a whole to
-	center its CoG, a simple form of the shift operators of \citet{Paquay2018b}. To leave room for this translation, all the free spaces are
-	anchored at the corner closest to the origin of the ULD, which keeps the load grouped.
-\item We embed the single-ULD algorithm into a sequential multi-ULD framework, which chooses the
-	type of each ULD with the rule of \citet{Hessler2025}, and reduce the total volume of the
-	ULDs, the objective of the problem, by removing a ULD, inserting its boxes into the other
-	ULDs and loading the remaining ones into at most two smaller ULDs, a move related to the
-	elimination of bins in local search for bin packing \citep{Faroe2003} and to the repacking
-	into smaller bins of \citet{Ortmann2010}. When the number of ULDs is limited,
-	the boxes left unloaded are inserted into the loaded ULDs with the same insertion procedure,
-	based on ruin and recreate \citep{Schrimpf2000}, the boxes that fit in no other available
-	ULD are given priority inside BSG, and the construction is restarted giving priority to the
-	boxes that were left out.
-\item We tune the parameters once with irace \citep{LopezIbanez2016} on a separate training set and evaluate the
-	algorithm on the 300 instances of \citet{Paquay2018b} in the three settings considered by
-	\citet{Hessler2025}. With the same parameters in all the settings, our algorithm uses
-	2.9--7.1\% less ULD volume than the RGS in the original setting, 3.8--8.2\% less in the
-	adapted one and 3.4--7.2\% less with one ULD of each type, where it also leaves less volume
-	unloaded. The smaller savings are obtained at a running time comparable to that of the RGS,
-	and the differences are significant in all the settings. At the same time, at most 1\% of
-	its ULDs violate the CoG constraint, against 7--11\% of the ULDs of the RGS, so that the
-	smaller volume is not obtained at the expense of the weight distribution. All the solutions are
-	checked by an independent validator, and the code, the solutions and the scripts are
-	publicly available.
+\item \emph{Blocks under support and fragility constraints.} The blocks are built so that every
+	box inside a block is supported and no box rests on a fragile one, and a block is placed only
+	if the boxes of its base satisfy the corner or area support criterion of the problem, with
+	padding material \citep{Hessler2025}. Since the support inside a block is guaranteed by
+	construction, only the boxes at the bottom of a block are checked during the search.
+\item \emph{Non-cuboid ULDs, floor edge and substructure.} A block that crosses a bevelled side
+	of the ULD is shifted along the length of the ULD to the nearest feasible position, which
+	keeps it on the same base. The floor edge and the substructure are modelled as fixed
+	obstacles, and the free spaces above the edge, which have no support until boxes have been
+	loaded below them, are kept dormant instead of being discarded.
+\item \emph{The CoG inside the search.} The value of every partial and complete loading is
+	penalized by the excess of the CoG deviation over the allowed one, so that the beam search
+	takes the weight distribution into account during the construction instead of in a
+	post-processing step \citep{Davies1999,Paquay2018b}. The final load is translated as a whole
+	to center its CoG, within an interval of feasible translations that is updated in constant
+	time, and the free spaces are anchored at the origin of the ULD so that the load stays
+	grouped and can be translated.
+\item \emph{A multi-ULD framework with a volume reduction phase.} The ULDs are loaded
+	sequentially, choosing the type of each one by comparing short loadings of the candidate
+	types of the rule of \citet{Hessler2025}. The total volume is then reduced by removing a ULD,
+	inserting its boxes into the other ULDs by ruin and recreate \citep{Schrimpf2000} and
+	loading the remaining ones into at most two smaller ULDs, a move related to the elimination
+	of bins in local search for bin packing \citep{Faroe2003} and to the repacking into smaller
+	bins of \citet{Ortmann2010}. When the number of ULDs is limited, the boxes that must be
+	loaded in a ULD are given priority inside BSG, and the construction is restarted with
+	priority to the boxes left out.
+\item \emph{An extensive experimental study.} We tune the parameters once with irace
+	\citep{LopezIbanez2016} on a separate training set and compare the algorithm instance by
+	instance with the RGS on the 300 instances of \citet{Paquay2018b} in the three settings of
+	\citet{Hessler2025}, at the same hardware-normalized running time and with more time. At a
+	comparable running time our algorithm uses 2.9--3.8\% less ULD volume, and 7.1--8.2\% less
+	with a few seconds per instance, with significant differences in all the settings; at the
+	same time, at most 1\% of its ULDs violate the CoG constraint, against 7--11\% of the ULDs of
+	the RGS. An ablation study shows that most of the savings come from the reduction phase,
+	which considers the whole solution, and that the penalty of the CoG excess and the final
+	translation together keep the CoG in range. All the solutions are checked by an independent
+	validator, and the code, the instances, the solutions and the scripts are publicly
+	available.
 \end{itemize}
 
 The remainder of the paper is organized as follows. Section~\ref{sec:problem} defines the
